@@ -141,7 +141,7 @@ class StockMove(models.Model):
     @api.multi
     def action_cancel(self):
         if any(move.quantity_done for move in self):
-            raise exceptions.UserError(_('You cannot cancel a move move having already consumed material'))
+            raise exceptions.UserError(_('You cannot cancel a stock move having already consumed material'))
         return super(StockMove, self).action_cancel()
 
     @api.multi
@@ -303,7 +303,7 @@ class StockMove(models.Model):
         self.ensure_one()
         view = self.env.ref('mrp.view_stock_move_lots')
         serial = (self.has_tracking == 'serial')
-        only_create = False  # Check picking type in theory
+        only_create = False  # Check operation type in theory
         show_reserved = any([x for x in self.move_lot_ids if x.quantity > 0.0])
         ctx.update({
             'serial': serial,

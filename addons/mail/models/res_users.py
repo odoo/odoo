@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models
+from odoo.tools import pycompat
 
 
 class Users(models.Model):
@@ -23,6 +24,13 @@ class Users(models.Model):
         ('everyone', 'Everyone'),
         ('partners', 'Authenticated Partners'),
         ('followers', 'Followers only')], string='Alias Contact Security', related='alias_id.alias_contact')
+    notification_type = fields.Selection([
+        ('email', 'Handle by Emails'),
+        ('inbox', 'Handle in Odoo')],
+        'Notification Management', required=True, default='email',
+        help="Policy on how to handle Chatter notifications:\n"
+             "- Emails: notifications are sent to your email\n"
+             "- Odoo: notifications appear in your Odoo Inbox")
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
@@ -32,10 +40,10 @@ class Users(models.Model):
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         type(self).SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        type(self).SELF_WRITEABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_WRITEABLE_FIELDS.extend(['notification_type'])
         # duplicate list to avoid modifying the original reference
         type(self).SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        type(self).SELF_READABLE_FIELDS.extend(['notify_email'])
+        type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
     @api.model
@@ -90,7 +98,7 @@ class Users(models.Model):
                 current_pids.append(partner_id[1])
             elif isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
                 current_pids.append(partner_id[2])
-            elif isinstance(partner_id, (int, long)):
+            elif isinstance(partner_id, pycompat.integer_types):
                 current_pids.append(partner_id)
         if user_pid not in current_pids:
             partner_ids.append(user_pid)

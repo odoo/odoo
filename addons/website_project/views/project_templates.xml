@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="28">
+    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="40">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-if="project_count"  t-att-class="page_name == 'project' and 'active' or ''">
-                 <a href="/my/projects">Projects</a>
+            <li t-if="project_count" t-att-class="page_name == 'project' and 'active'">
+                <a href="/my/projects">Projects</a>
             </li>
-            <li t-if="task_count"  t-att-class="page_name == 'task' and 'active' or ''">
-                 <a href="/my/tasks">Tasks</a>
+            <li t-if="task_count" t-att-class="page_name == 'task' and 'active'">
+                <a href="/my/tasks">Tasks</a>
             </li>
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="28">
+    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="40">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 t-if="project_count" class="page-header">
                 <a href="/my/projects">Your Projects
@@ -35,26 +35,16 @@
             <div class="row">
                 <h3 class="page-header">
                     Your Projects
-                    <div class="dropdown pull-right mr8">
-                        <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
-                            <span class="fa fa-sort fa-lg" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="sortby">
-                            <li t-foreach="sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
-                                <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
-                            </li>
-                        </ul>
-                    </div>
+                    <t t-call="website_portal.portal_searchbar"/>
                 </h3>
             </div>
-            <div class="panel panel-default">
-                <t t-if="not projects">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no projects.
-                    </div>
-                </t>
-                <table t-if="projects" class="table table-hover status_table">
+            <t t-if="not projects">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no projects.
+                </div>
+            </t>
+            <div t-if="projects" class="panel panel-default">
+                <div class="table-responsive"><table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th class="col-md-6">Name</th>
@@ -67,14 +57,14 @@
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                             </td>
                             <td>
-                                <a t-if="project.use_tasks" t-attf-href="/my/tasks?project=#{project.id}">
+                                <a t-if="project.use_tasks" t-attf-href="/my/tasks?filterby=#{project.id}">
                                     <t t-esc="project.task_count" />
                                     <t t-esc="project.label_tasks" />
                                 </a>
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
@@ -103,6 +93,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4>
+                                            <t t-call='website_portal.record_pager'/>
                                             Project - <span t-field="project.name"/>
                                         </h4>
                                     </div>
@@ -126,7 +117,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="pull-right">
-                                            <a t-attf-href="/my/tasks?project=#{project.id}" class="btn btn-default btn-lg">
+                                            <a t-attf-href="/my/tasks?filterby=#{project.id}" class="btn btn-default btn-lg">
                                                 <span class="fa fa-tasks" />
                                                 <span t-esc="project.task_count" />
                                                 <span t-field="project.label_tasks" />
@@ -157,36 +148,15 @@
         <t t-call="website_portal.portal_layout">
             <h3 class="page-header">
                 Your Tasks
-                <div class="dropdown pull-right mr8">
-                    <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
-                        <span class="fa fa-sort fa-lg" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="sortby">
-                        <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
-                            <a t-attf-href="/my/tasks?{{ keep_query('date_begin', 'date_end', 'project', sortby=option) }}"><span t-esc="sortings.get(option).get('label')"/></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="dropdown pull-right mr8">
-                    <button id="project_filters" class="btn btn-default" type="button" data-toggle="dropdown">
-                        Projects: <span t-esc="project_filters.get(project, {}).get('label', 'All')"/>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="project_filters">
-                        <li t-foreach="project_filters" t-as="option" t-att-class="project == option and 'active'">
-                            <a t-attf-href="/my/tasks?{{ keep_query('date_begin', 'date_end', 'sortby', project=option) }}"><span t-esc="project_filters.get(option).get('label')"/></a>
-                        </li>
-                    </ul>
-                </div>
+                <t t-call="website_portal.portal_searchbar"/>
             </h3>
-            <div class="panel panel-default">
-                <t t-if="not tasks">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no tasks.
-                    </div>
-                </t>
-                <table t-if="tasks" class="table table-hover status_table">
+            <t t-if="not tasks">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+            <div t-if="tasks" class="panel panel-default">
+                <div class="table-responsive"><table class="table table-hover status_table">
                     <thead>
                         <tr class="active">
                             <th class="col-md-10">Task</th>
@@ -205,7 +175,7 @@
                             </tr>
                         </t>
                     </tbody>
-                </table>
+                </table></div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
@@ -234,6 +204,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4>
+                                            <t t-call='website_portal.record_pager'/>
                                             Task - <span t-field="task.name"/>
                                             <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                             <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>

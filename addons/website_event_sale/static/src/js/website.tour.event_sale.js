@@ -29,7 +29,7 @@ tour.register('event_buy_tickets', {
         {
             content: "Click on `Order Now` button",
             extra_trigger: 'select:eq(1):has(option:contains(2):propSelected)',
-            trigger: '.btn-primary:contains("Order Now")',
+            trigger: '.btn-primary:contains("Register Now")',
         },
         {
             content: "Fill attendees details",

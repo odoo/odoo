@@ -66,7 +66,7 @@
             <field name="res_model">forum.post</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('documentation_toc_id','&lt;&gt;', False)]</field>
+            <field name="domain">[('documentation_toc_id','!=', False)]</field>
         </record>
         <menuitem id="menu_forum_doc_posts"
             parent="website_forum.menu_website_forum" name="Documentation Posts"

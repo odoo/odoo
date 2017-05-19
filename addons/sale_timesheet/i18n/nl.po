@@ -3,17 +3,17 @@
 # * sale_timesheet
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,11 @@ msgid "Analytic Line"
 msgstr "Kostenplaatsregel"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
+msgid "Assign to Order"
+msgstr "Toewijzen aan order"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_company
 msgid "Companies"
 msgstr "Bedrijven"
@@ -41,16 +46,43 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
 msgid ""
-"Create a task under this project on sale order validation. This setting must"
-" be set for each company."
+"Create a task under this project on sales order validation. This setting "
+"must be set for each company."
 msgstr ""
-"Maak een taak aan op dit project bij bevestigen verkooporder. Deze "
-"instellingen moet ingesteld worden per bedrijf."
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
 msgid "Employee"
 msgstr "Werknemer"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+"Aantal dagen voordat een waarschuwing getoond moet worden op het "
+"lot/serienummer."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be"
+" computed on the lot/serial number."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
@@ -59,9 +91,15 @@ msgstr "Orderregel"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_procurement_order
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
 msgid "Procurement"
 msgstr "Verwerving"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
+msgid ""
+"Procurement of the sale order line on which the timesheets should be "
+"assigned"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_product
@@ -103,7 +141,7 @@ msgstr "Project"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
 msgid "Project associated to this sale"
-msgstr "Project gekoppeld aan deze verkoop. "
+msgstr "Project geassocieerd aan deze verkoop. "
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -189,61 +227,20 @@ msgid "Timesheets"
 msgstr "Urenstaten"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het het aantal dagen"
-" voordat een waarschuwing wordt gegeven."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"voordat de producten gevaarlijk zijn en niet meer mogen worden geconsumeerd."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten met dit partijnummer moeten worden verwijderd van de "
-"voorraad."
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Wanneer een nieuw partijnummer wordt aangemaakt, is dit het aantal dagen "
-"waarop de producten verminderen in kwaliteit, maar nog niet gevaarlijk zijn "
-"voor de volksgezondheid."
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:55
 #, python-format
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
+"You can use only one product on timesheet within the same sales order. You "
 "should split your order to include only one contract based on time and "
 "material."
 msgstr ""
-"U kunt maar één product gebruiken op een urenstaat in dezelfde verkooporder."
-" U moet de order opsplitsen zodat deze maar één contract bevat gebaseerd op "
-"de tijd en het materiaal."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:17
 #, python-format
 msgid ""
-"You cannot delete a task related to a Sale Order. You can only archive this "
-"task."
+"You cannot delete a task related to a Sales Order. You can only archive this"
+" task."
 msgstr ""
 "U kan geen taak verwijderen gerelateerd aan een verkooporder. U kan deze "
-"taak enkel archiveren."
+"taak alleen archiveren."

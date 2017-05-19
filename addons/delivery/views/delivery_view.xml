@@ -2,7 +2,17 @@
 <odoo>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
-        <menuitem id="sale_menu_delivery" name="Delivery" parent="sales_team.menu_sale_config" groups="sales_team.group_sale_manager" sequence="12"/>
+
+        <record id="action_delivery_packaging_view" model="ir.actions.act_window">
+            <field name="name">Delivery Packages</field>
+            <field name="res_model">product.packaging</field>
+            <field name="domain">[('product_id', '=', False)]</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('delivery.product_packaging_delivery_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('delivery.product_packaging_delivery_form')})]"/>
+        </record>
+
+        <menuitem id="menu_delivery_packagings" name="Delivery Packages" parent="stock.menu_packages_config" action="action_delivery_packaging_view" groups="stock.group_tracking_lot"/>
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
@@ -38,9 +48,6 @@
                 <form string="Carrier">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
-                            </button>
                             <button name="toggle_prod_environment" type="object" class="oe_stat_button" icon="fa-check-square" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}">
                                 <field name="prod_environment" widget="boolean_button" options='{"terminology": {
                                     "string_true": "Production Environment",
@@ -49,28 +56,32 @@
                                     "hover_false": "Switch to production environment"
                                 }}'/>
                             </button>
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "active"}'/>
+                            </button>
                         </div>
                         <div class="oe_title" name="title">
                             <label for="name" string="Name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" placeholder="e.g. UPS Express"/>
                             </h1>
+                        </div>
+                        <group>
                             <group>
-                                <group>
+                                <label for="delivery_type"/>
+                                <div>
                                     <field name="delivery_type" widget="radio"/>
-                                    <label for="margin"/>
-                                    <div>
-                                        <field name="margin" class="oe_inline"/>%
-                                    </div>
-                                </group>
-                                <group>
                                     <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
-                                </group>
+                                </div>
                             </group>
                             <group>
                                 <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
+                                <label for="margin" string="Margin on Rate"/>
+                                <div>
+                                    <field name="margin" class="oe_inline"/>%
+                                </div>
                             </group>
-                        </div>
+                        </group>
                         <notebook>
                             <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
@@ -89,7 +100,7 @@
                                     <field name="price_rule_ids" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="Destination" name="destination">
+                            <page string="Destination Availability" name="destination">
                                 <group>
                                     <p>
                                         Filling this form allows you to filter delivery carriers according to the delivery address of your customer.
@@ -138,7 +149,7 @@
         </record>
 
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" sequence="1"/>
-        <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale_menu_delivery" sequence="1"/>
+        <menuitem action="action_delivery_carrier_form" id="sale_menu_action_delivery_carrier_form" parent="sale.menu_sales_config" sequence="4"/>
 
         <record id="view_delivery_price_rule_form" model="ir.ui.view">
             <field name="name">delivery.price.rule.form</field>
@@ -245,30 +256,6 @@
                 </field>
             </field>
         </record>
-
-
-        <record id="view_quant_package_form_save" model="ir.ui.view">
-            <field name="name">stock.quant.package.form.save</field>
-            <field name="model">stock.quant.package</field>
-            <field eval="99" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Package">
-                    <group>
-                        <field name="packaging_id" domain="[('package_carrier_type', '=', context.get('current_package_carrier_type'))]"/>
-                        <label for="shipping_weight"/>
-                        <div class="o_row">
-                            <field name="shipping_weight"/>
-                            <span>kg</span>
-                        </div>
-                    </group>
-                    <footer>
-                        <button name="write" type="object" string="Save" class="btn btn-sm btn-primary"/>
-                        <button string="Discard" special="cancel" class="btn btn-sm btn-default"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
 
         <record id="view_move_withweight_form" model="ir.ui.view">
             <field name="name">stock.move.form.weight</field>

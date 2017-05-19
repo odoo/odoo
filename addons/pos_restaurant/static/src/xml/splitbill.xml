@@ -21,14 +21,14 @@
             <ul class="info-list">
                 <t t-if="line.get_quantity_str() !== '1'">
                     <li class="info">
-                        <t t-if='selected and line.get_unit().groupable'>
+                        <t t-if='selected and line.get_unit().is_pos_groupable'>
                             <em class='big'>
                                 <t t-esc='quantity' />
                             </em>
                             /
                             <t t-esc="line.get_quantity_str()" />
                         </t>
-                        <t t-if='!(selected and line.get_unit().groupable)'>
+                        <t t-if='!(selected and line.get_unit().is_pos_groupable)'>
                             <em>
                                 <t t-esc="line.get_quantity_str()" />
                             </em>

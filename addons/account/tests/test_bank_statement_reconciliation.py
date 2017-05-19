@@ -31,10 +31,9 @@ class TestBankStatementReconciliation(AccountingTestCase):
         }])
 
         # check everything went as expected
-        rec_move = st_line.journal_entry_ids[0]
-        self.assertTrue(rec_move)
+        self.assertTrue(st_line.journal_entry_ids)
         counterpart_mv_line = None
-        for l in rec_move.line_ids:
+        for l in st_line.journal_entry_ids:
             if l.account_id.user_type_id.type == 'receivable':
                 counterpart_mv_line = l
                 break

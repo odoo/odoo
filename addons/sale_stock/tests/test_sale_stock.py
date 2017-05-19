@@ -3,6 +3,7 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class TestSaleStock(TestSale):
@@ -16,7 +17,7 @@ class TestSaleStock(TestSale):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in self.products.iteritems()],
+            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in pycompat.items(self.products)],
             'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
@@ -73,7 +74,7 @@ class TestSaleStock(TestSale):
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
             'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in self.products.iteritems()],
+            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for (_, p) in pycompat.items(self.products)],
             'pricelist_id': self.env.ref('product.list0').id,
             'picking_policy': 'direct',
         })
@@ -161,7 +162,7 @@ class TestSaleStock(TestSale):
         default_data = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).default_get(['move_dest_exists', 'original_location_id', 'product_return_moves', 'parent_location_id', 'location_id'])
         return_wiz = StockReturnPicking.with_context(active_ids=pick.ids, active_id=pick.ids[0]).create(default_data)
         return_wiz.product_return_moves.quantity = 2.0 # Return only 2
-        return_wiz.product_return_moves.to_refund_so = True # Refund these 2
+        return_wiz.product_return_moves.to_refund = True # Refund these 2
         res = return_wiz.create_returns()
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 

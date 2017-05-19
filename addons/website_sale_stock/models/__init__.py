@@ -1,1 +1,1 @@
-import website
+from . import website

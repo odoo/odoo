@@ -2,7 +2,10 @@
 import os.path
 import posixpath
 import re
-import urllib
+try:
+    from urllib.request import url2pathname  # pylint: disable=deprecated-module
+except ImportError:
+    from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
 from sphinx import addnodes, util
@@ -71,9 +74,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         tagname = unicode(tagname).lower()
 
         # extract generic attributes
-        attrs = {name.lower(): value for name, value in attributes.iteritems()}
+        attrs = {name.lower(): value for name, value in attributes.items()}
         attrs.update(
-            (name, value) for name, value in node.attributes.iteritems()
+            (name, value) for name, value in node.attributes.items()
             if name.startswith('data-')
         )
 
@@ -97,7 +100,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             prefix=u''.join(prefix),
             tag=tagname,
             attrs=u' '.join(u'{}="{}"'.format(name, self.attval(value))
-                            for name,  value in attrs.iteritems()),
+                            for name,  value in attrs.items()),
             postfix=u''.join(postfix),
         )
     # only "space characters" SPACE, CHARACTER TABULATION, LINE FEED,
@@ -636,7 +639,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     banner = '_static/' + cover
                     base, ext = os.path.splitext(banner)
                     small = "{}.small{}".format(base, ext)
-                    if os.path.isfile(urllib.url2pathname(small)):
+                    if os.path.isfile(url2pathname(small)):
                         banner = small
                     style = u"background-image: url('{}')".format(
                         util.relative_uri(baseuri, banner) or '#')

@@ -136,7 +136,7 @@ def configure_parser():
 
 def main():
     """
-    Receive the email via the stdin and send it to the OpenERP Server
+    Receive the email via the stdin and send it to the Odoo Server
     """
 
     parser = configure_parser()

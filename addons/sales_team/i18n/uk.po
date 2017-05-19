@@ -1,27 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sales_team
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2016
-# ТАрас <tratatuta@i.ua>, 2016
-# Yaroslav Molochko <onorua@gmail.com>, 2016
-# Kateryna Onyshchenko <Katrona17@gmail.com>, 2016
-# Zoriana Zaiats <sorenabell@quintagroup.com>, 2016
+# Bohdan Lisnenko, 2015-2016
+# Bohdan Lisnenko, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Zoriana Zaiats <sorenabell@quintagroup.com>, 2016\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-06-03 19:58+0000\n"
+"Last-Translator: Bohdan Lisnenko\n"
+"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
+"uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: sales_team
 #. openerp-web
@@ -35,7 +33,7 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:137
 #, python-format
 msgid "35,029.39€"
-msgstr "35,029.39€"
+msgstr ""
 
 #. module: sales_team
 #. openerp-web
@@ -49,12 +47,12 @@ msgstr ""
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:169
 #, python-format
 msgid "80.000€"
-msgstr "80.000€"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>New</span>"
-msgstr "<span>Створити</span>"
+msgstr "<span>Новий</span>"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
@@ -69,7 +67,7 @@ msgstr "<span>Перегляд</span>"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_active
 msgid "Active"
-msgstr "Активно"
+msgstr "Активний"
 
 #. module: sales_team
 #. openerp-web
@@ -77,32 +75,6 @@ msgstr "Активно"
 #, python-format
 msgid "Activities Done"
 msgstr "Завершені дії"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Apply"
-msgstr "Застосувати"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-msgid "Archived"
-msgstr "Заархівовано"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_partner_bank_form
-#: model:ir.ui.menu,name:sales_team.menu_config_bank_accounts
-msgid "Bank Accounts"
-msgstr "Банківські рахунки"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_res_bank_form
-msgid "Banks"
-msgstr "Банки"
-
-#. module: sales_team
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Cancel"
-msgstr "Скасувати"
 
 #. module: sales_team
 #: model:ir.actions.act_window,help:sales_team.crm_team_act
@@ -125,6 +97,11 @@ msgid "Click to set"
 msgstr "Встановити"
 
 #. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team_code
+msgid "Code"
+msgstr "Код"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_color
 msgid "Color Index"
 msgstr "Індекс кольору"
@@ -136,69 +113,21 @@ msgid "Company"
 msgstr "Компанія"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_config
-msgid "Configuration"
-msgstr "Налаштування"
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.action_sale_config
-#: model:ir.ui.view,arch_db:sales_team.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Налаштувати продаж"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_category_form
-msgid "Contact Tags"
-msgstr "Теги контакту"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_title_contact
-msgid "Contact Titles"
-msgstr "Звернення Контакту"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_config_address_book
-msgid "Contacts"
-msgstr "Контакти"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_partner
-msgid "Countries"
-msgstr "Країни"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_group
-msgid "Country Group"
-msgstr "Група країн"
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:215
 #, python-format
-msgid "Create a few opportunities in it."
-msgstr ""
+msgid "Create a few opportunities to activate your dashboard."
+msgstr "Створіть декілька нагод, щоб активувати вашу панель приладів."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_create_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Дата створення"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_action_currency_form
-msgid "Currencies"
-msgstr "Валюти"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_partner_form
-msgid "Customers"
-msgstr "Клієнти"
 
 #. module: sales_team
 #. openerp-web
@@ -216,14 +145,8 @@ msgstr "Прямі продажі"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_display_name
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_country_state_partner
-msgid "Fed. States"
-msgstr "Області"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -255,17 +178,8 @@ msgstr "Привіт!"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_id
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_id
 msgid "ID"
-msgstr "ІД"
-
-#. module: sales_team
-#: model:ir.model.fields,help:sales_team.field_res_partner_team_id
-#: model:ir.model.fields,help:sales_team.field_res_users_team_id
-msgid ""
-"If set, sale team used notably for sales and assignations related to this "
-"partner"
-msgstr ""
+msgstr "ID"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_active
@@ -290,7 +204,6 @@ msgstr "В рахунку"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team___last_update
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
@@ -303,25 +216,13 @@ msgstr "Останній місяць"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_uid
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_write_date
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_localisation
-msgid "Localization"
-msgstr "Локалізація"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Manager"
-msgstr "Керівник"
 
 #. module: sales_team
 #. openerp-web
@@ -345,9 +246,9 @@ msgstr "Більше інформації"
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:42
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:44
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:216
-#, python-format
+#, fuzzy, python-format
 msgid "My Pipeline"
-msgstr ""
+msgstr "Ваш конвеєр"
 
 #. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -370,7 +271,7 @@ msgstr "Наступні дії"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "Дійсні тільки цілі числа."
@@ -393,20 +294,9 @@ msgid "Reply-To"
 msgstr "Відповісти до"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_report
-msgid "Reports"
-msgstr "Звіти"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Прайс-лист продажу"
-
-#. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_base_partner
-#: model:ir.ui.menu,name:sales_team.menu_sales
-msgid "Sales"
-msgstr "Продаж"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -429,7 +319,6 @@ msgstr ""
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_act
 #: model:ir.actions.act_window,name:sales_team.sales_team_config_action
-#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "Команди продажу"
 
@@ -449,7 +338,6 @@ msgid "Salesteams Search"
 msgstr "Пошук команди"
 
 #. module: sales_team
-#: model:ir.ui.menu,name:sales_team.menu_sale_general_settings
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Налаштування"
@@ -472,6 +360,11 @@ msgstr "Лідер команди"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Members"
 msgstr "Члени команди"
+
+#. module: sales_team
+#: sql_constraint:crm.team:0
+msgid "The code of the sales team must be unique !"
+msgstr "Код команди повинен бути унікальним!"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_color
@@ -572,24 +465,9 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
 msgstr "Користувачі"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.salesteam_website_sales
-msgid "Website Sales"
-msgstr "Продажі на сайті"
 
 #. module: sales_team
 #. openerp-web
@@ -600,7 +478,7 @@ msgstr "Впіймано нагод"
 
 #. module: sales_team
 #. openerp-web
-#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:83
+#: code:addons/sales_team/static/src/js/sales_team_dashboard.js:84
 #, python-format
 msgid "Wrong value entered!"
 msgstr "Введено невірне значення!"
@@ -613,37 +491,60 @@ msgid "exp. closing"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_ir_ui_view
-msgid "ir.ui.view"
-msgstr "ir.ui.view"
-
-#. module: sales_team
 #. openerp-web
 #: code:addons/sales_team/static/src/xml/sales_team_dashboard.xml:79
 #, python-format
 msgid "overdue"
 msgstr "протерміновано"
 
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#~ msgid "Action Needed"
+#~ msgstr "Необхідна дія"
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr ""
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Дата останнього повідомлення по запису."
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr ""
+#~ msgid "Followers"
+#~ msgstr "Підписники"
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
-msgstr ""
+#~ msgid "Followers (Channels)"
+#~ msgstr "Підписники (Канали)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Підписники (Партнери)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
+
+#~ msgid "Is Follower"
+#~ msgstr "Стежить"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Дата останнього повідомлення"
+
+#~ msgid "Messages"
+#~ msgstr "Повідомлення"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Повідомлення та історія бесіди"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Кількість дій"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Кількість повідомлень, які потебують дії"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Непрочитані повідомлення"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Кількість непрочитаних повідомлень"
+
+#~ msgid "Working Hours"
+#~ msgstr "Робочі кодини"

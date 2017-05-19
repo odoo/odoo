@@ -6,7 +6,7 @@ from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 
 class TestServerActionsEmail(TestServerActionsBase):
 
-    def test_00_state_email(self):
+    def test_email_action(self):
         """ Test ir.actions.server email type """
         # create email_template
         email_template = self.env['mail.template'].create({
@@ -27,3 +27,15 @@ class TestServerActionsEmail(TestServerActionsBase):
         # check email content
         self.assertEqual(mail.body, '<p>Dear TestingPartner, your parent is False</p>',
                          'ir_actions_server: TODO')
+
+    def test_followers_action(self):
+        """ Test ir.actions.server email type """
+        self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
+        self.action.write({
+            'state': 'followers',
+            'partner_ids': [(4, self.env.ref('base.partner_root').id), (4, self.env.ref('base.partner_demo').id)],
+            'channel_ids': [(4, self.env.ref('mail.channel_all_employees').id)]
+        })
+        self.action.with_context(self.context).run()
+        self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_root') | self.env.ref('base.partner_demo'))
+        self.assertEqual(self.test_partner.message_channel_ids, self.env.ref('mail.channel_all_employees'))

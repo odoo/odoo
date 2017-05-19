@@ -3,6 +3,7 @@
 
 from itertools import groupby
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 
 
 class AccountInvoice(models.Model):
@@ -17,7 +18,7 @@ class AccountInvoice(models.Model):
         if invoice_type == 'out_invoice':
             return self.env.user.company_id.sale_note
 
-    team_id = fields.Many2one('crm.team', string='Sales Team', default=_get_default_team, oldname='section_id')
+    team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')
     comment = fields.Text(default=_default_comment)
     partner_shipping_id = fields.Many2one(
         'res.partner',
@@ -56,17 +57,17 @@ class AccountInvoice(models.Model):
     def _refund_cleanup_lines(self, lines):
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
         if self.env.context.get('mode') == 'modify':
-            for i in xrange(0, len(lines)):
-                for name, field in lines[i]._fields.iteritems():
+            for i, line in enumerate(lines):
+                for name, field in pycompat.items(line._fields):
                     if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, lines[i][name].ids)]
-                        lines[i][name] = False
+                        result[i][2][name] = [(6, 0, line[name].ids)]
+                        line[name] = False
         return result
 
     @api.multi
     def order_lines_layouted(self):
         """
-        Returns this sale order lines ordered by sale_layout_category sequence. Used to render the report.
+        Returns this sales order lines ordered by sale_layout_category sequence. Used to render the report.
         """
         self.ensure_one()
         report_pages = [[]]
@@ -97,7 +98,7 @@ class AccountInvoiceLine(models.Model):
         'sale.order.line',
         'sale_order_line_invoice_rel',
         'invoice_line_id', 'order_line_id',
-        string='Sale Order Lines', readonly=True, copy=False)
+        string='Sales Order Lines', readonly=True, copy=False)
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(
         related='layout_category_id.sequence',

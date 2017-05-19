@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from translate import _
+from .translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -71,7 +71,7 @@ def amount_to_text(number, currency):
     cents_number = int(list[1])
     cents_name = (cents_number > 1) and 'Cents' or 'Cent'
 
-    return ' '.join(filter(None, [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name]))
+    return ' '.join(w for w in [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name] if w)
 
 
 #-------------------------------------------------------------
@@ -89,25 +89,8 @@ def amount_to_text(nbr, lang='en', currency='euro'):
         
             1654: thousands six cent cinquante-quatre.
     """
-    import odoo.loglevels as loglevels
-#    if nbr > 10000000:
-#        _logger.warning(_("Number too large '%d', can not translate it"))
-#        return str(nbr)
-    
-    if not _translate_funcs.has_key(lang):
+    if lang not in _translate_funcs:
         _logger.warning(_("no translation function found for lang: '%s'"), lang)
         #TODO: (default should be en) same as above
         lang = 'en'
     return _translate_funcs[lang](abs(nbr), currency)
-
-if __name__=='__main__':
-    from sys import argv
-    
-    lang = 'nl'
-    if len(argv) < 2:
-        for i in range(1,200):
-            print i, ">>", int_to_text(i, lang)
-        for i in range(200,999999,139):
-            print i, ">>", int_to_text(i, lang)
-    else:
-        print int_to_text(int(argv[1]), lang)

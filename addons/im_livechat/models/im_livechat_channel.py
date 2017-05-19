@@ -6,6 +6,7 @@ import re
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, modules, tools
+from odoo.tools import pycompat
 
 
 class ImLivechatChannel(models.Model):
@@ -95,7 +96,7 @@ class ImLivechatChannel(models.Model):
         for record in self:
             dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
             repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
-            total = sum(repartition.values())
+            total = sum(pycompat.values(repartition))
             if total > 0:
                 happy = repartition['great']
                 record.rating_percentage_satisfaction = ((happy*100) / total) if happy > 0 else 0
@@ -195,7 +196,7 @@ class ImLivechatChannel(models.Model):
     def get_livechat_info(self, channel_id, username='Visitor'):
         info = {}
         info['available'] = len(self.browse(channel_id).get_available_users()) > 0
-        info['server_url'] = self.env['ir.config_parameter'].get_param('web.base.url')
+        info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
             info['options'] = self.sudo().get_channel_infos(channel_id)
             info['options']["default_username"] = username

@@ -18,17 +18,17 @@
         </record>
 
         <!--
-        Payment term
+        Payment terms
         -->
         <record id="account_payment_term_immediate" model="account.payment.term">
             <field name="name">Immediate Payment</field>
-            <field name="note">Payment term: Immediate Payment</field>
+            <field name="note">Payment terms: Immediate Payment</field>
         </record>
 
         <record id="account_payment_term_15days" model="account.payment.term">
             <field name="name">15 Days</field>
-            <field name="note">Payment term: 15 Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
+            <field name="note">Payment terms: 15 Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 15, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <record forcecreate="True" id="decimal_payment" model="decimal.precision">
@@ -38,8 +38,8 @@
 
         <record id="account_payment_term_net" model="account.payment.term">
             <field name="name">30 Net Days</field>
-            <field name="note">Payment term: 30 Net Days</field>
-            <field name="line_ids" eval="[(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
+            <field name="note">Payment terms: 30 Net Days</field>
+            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 30, 'option': 'day_after_invoice_date'})]"/>
         </record>
 
         <!--
@@ -106,7 +106,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_customer_refund" model="ir.sequence">
-            <field name="name">Payments customer refunds sequence</field>
+            <field name="name">Payments customer credit notes sequence</field>
             <field name="code">account.payment.customer.refund</field>
             <field name="prefix">CUST.OUT/%(range_year)s/</field>
             <field eval="1" name="number_next"/>
@@ -126,7 +126,7 @@
             <field name="padding">4</field>
         </record>
         <record id="sequence_payment_supplier_refund" model="ir.sequence">
-            <field name="name">Payments supplier refunds sequence</field>
+            <field name="name">Payments supplier credit notes sequence</field>
             <field name="code">account.payment.supplier.refund</field>
             <field name="prefix">SUPP.IN/%(range_year)s/</field>
             <field eval="1" name="number_next"/>

@@ -15,16 +15,14 @@ import threading
 from collections import defaultdict
 from datetime import datetime
 from os.path import join
-from xml.sax.saxutils import escape
 
 from babel.messages import extract
 from lxml import etree
 
 import odoo
-from odoo.tools import config
-from odoo.tools.misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
-from odoo.tools.osutil import walksymlinks
-from odoo import sql_db, SUPERUSER_ID
+from . import config, pycompat
+from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from .osutil import walksymlinks
 
 _logger = logging.getLogger(__name__)
 
@@ -150,133 +148,130 @@ TRANSLATED_ATTRS = {
     'string', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title',
 }
 
-avoid_pattern = re.compile(r"[\s\n]*<!DOCTYPE", re.IGNORECASE)
+avoid_pattern = re.compile(r"\s*<!DOCTYPE", re.IGNORECASE | re.MULTILINE | re.UNICODE)
+node_pattern = re.compile(r"<[^>]*>(.*)</[^<]*>", re.DOTALL | re.MULTILINE | re.UNICODE)
 
-class XMLTranslator(object):
-    """ A sequence of serialized XML/HTML items, with some of them to translate
-        (todo) and others already translated (done). The purpose of this object
-        is to simplify the handling of phrasing elements (like <b>) that must be
-        translated together with their surrounding text.
 
-        For instance, the content of the "div" element below will be translated
-        as a whole (without surrounding spaces):
+def translate_xml_node(node, callback, method, parser=None):
+    """ Return the translation of the given XML/HTML node. """
 
-            <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                <b>sed</b> do eiusmod tempor incididunt ut labore et dolore
-                magna aliqua. <span class="more">Ut enim ad minim veniam,
-                <em>quis nostrud exercitation</em> ullamco laboris nisi ut
-                aliquip ex ea commodo consequat.</span>
-            </div>
+    def nonspace(text):
+        return bool(text) and not text.isspace()
 
-    """
-    def __init__(self, callback, method, parser=None):
-        self.callback = callback        # callback function to translate terms
-        self.method = method            # serialization method ('xml' or 'html')
-        self.parser = parser            # parser for validating translations
-        self._done = []                 # translated strings
-        self._todo = []                 # todo strings that come after _done
-        self.needs_trans = False        # whether todo needs translation
+    def concat(text1, text2):
+        return text2 if text1 is None else text1 + (text2 or "")
 
-    def todo(self, text, needs_trans=True):
-        self._todo.append(text)
-        if needs_trans and text.strip():
-            self.needs_trans = True
+    def append_content(node, source):
+        """ Append the content of ``source`` node to ``node``. """
+        if len(node):
+            node[-1].tail = concat(node[-1].tail, source.text)
+        else:
+            node.text = concat(node.text, source.text)
+        for child in source:
+            node.append(child)
 
-    def all_todo(self):
-        return not self._done
-
-    def get_todo(self):
-        return "".join(self._todo)
-
-    def flush(self):
-        if self._todo:
-            todo = "".join(self._todo)
-            done = self.process_text(todo) if self.needs_trans else todo
-            self._done.append(done)
-            del self._todo[:]
-            self.needs_trans = False
-
-    def done(self, text):
-        self.flush()
-        self._done.append(text)
-
-    def get_done(self):
-        """ Complete the translations and return the result. """
-        self.flush()
-        return "".join(self._done)
-
-    def process_text(self, text):
-        """ Translate text.strip(), but keep the surrounding spaces from text. """
+    def translate_text(text):
+        """ Return the translation of ``text`` (the term to translate is without
+            surrounding spaces), or a falsy value if no translation applies.
+        """
         term = text.strip()
-        trans = term and self.callback(term)
+        trans = term and callback(term)
+        return trans and text.replace(term, trans)
+
+    def translate_content(node):
+        """ Return ``node`` with its content translated inline. """
+        # serialize the node that contains the stuff to translate
+        text = etree.tostring(node, method=method, encoding='utf8').decode('utf8')
+        # retrieve the node's content and translate it
+        match = node_pattern.match(text)
+        trans = translate_text(match.group(1))
         if trans:
+            # replace the content, and convert it back to an XML node
+            text = text[:match.start(1)] + trans + text[match.end(1):]
             try:
-                # parse the translation to validate it
-                etree.fromstring("<div>%s</div>" % encode(trans), parser=self.parser)
+                node = etree.fromstring(encode(text), parser=parser)
             except etree.ParseError:
-                # fallback: escape the translation
-                trans = escape(trans)
-            text = text.replace(term, trans)
-        return text
+                # fallback: escape the translation as text
+                node = etree.Element(node.tag, node.attrib, node.nsmap)
+                node.text = trans
+        return node
 
-    def process_attr(self, attr):
-        """ Translate the given node attribute value. """
-        term = attr.strip()
-        trans = term and self.callback(term)
-        return attr.replace(term, trans) if trans else attr
-
-    def process(self, node):
-        """ Process the given xml `node`: collect `todo` and `done` items. """
+    def process(node):
+        """ If ``node`` can be translated inline, return ``(has_text, node)``,
+            where ``has_text`` is a boolean that tells whether ``node`` contains
+            some actual text to translate. Otherwise return ``(None, result)``,
+            where ``result`` is the translation of ``node`` except for its tail.
+        """
         if (
             isinstance(node, SKIPPED_ELEMENT_TYPES) or
             node.tag in SKIPPED_ELEMENTS or
-            node.get("t-translation", "").strip() == "off" or
-            node.tag == "attribute" and node.get("name") not in TRANSLATED_ATTRS or
-            node.getparent() is None and node.text and '<!DOCTYPE' in node.text
+            node.get('t-translation', "").strip() == "off" or
+            node.tag == 'attribute' and node.get('name') not in TRANSLATED_ATTRS or
+            node.getparent() is None and avoid_pattern.match(node.text or "")
         ):
-            # do not translate the contents of the node
-            tail, node.tail = node.tail, None
-            self.done(etree.tostring(node, method=self.method))
-            self.todo(escape(tail or ""))
-            return
+            return (None, node)
 
-        # process children nodes locally in child_trans
-        child_trans = XMLTranslator(self.callback, self.method, parser=self.parser)
-        if node.text:
-            if avoid_pattern.match(node.text):
-                child_trans.done(escape(node.text)) # do not translate <!DOCTYPE...
-            else:
-                child_trans.todo(escape(node.text))
+        # make an element like node that will contain the result
+        result = etree.Element(node.tag, node.attrib, node.nsmap)
+
+        # use a "todo" node to translate content by parts
+        todo = etree.Element('div', nsmap=node.nsmap)
+        if avoid_pattern.match(node.text or ""):
+            result.text = node.text
+        else:
+            todo.text = node.text
+        todo_has_text = nonspace(todo.text)
+
+        # process children recursively
         for child in node:
-            child_trans.process(child)
+            child_has_text, child = process(child)
+            if child_has_text is None:
+                # translate the content of todo and append it to result
+                append_content(result, translate_content(todo) if todo_has_text else todo)
+                # add translated child to result
+                result.append(child)
+                # move child's untranslated tail to todo
+                todo = etree.Element('div', nsmap=node.nsmap)
+                todo.text, child.tail = child.tail, None
+                todo_has_text = nonspace(todo.text)
+            else:
+                # child is translatable inline; add it to todo
+                todo.append(child)
+                todo_has_text = todo_has_text or child_has_text
 
-        if (child_trans.all_todo() and
-                node.tag in TRANSLATED_ELEMENTS and
-                not any(attr.startswith("t-") for attr in node.attrib)):
-            # serialize the node element as todo
-            self.todo(self.serialize(node.tag, node.attrib, child_trans.get_todo()),
-                      child_trans.needs_trans)
-        else:
-            # complete translations and serialize result as done
-            for attr in TRANSLATED_ATTRS:
-                if node.get(attr):
-                    node.set(attr, self.process_attr(node.get(attr)))
-            self.done(self.serialize(node.tag, node.attrib, child_trans.get_done()))
+        # determine whether node is translatable inline
+        if (
+            node.tag in TRANSLATED_ELEMENTS and
+            not (result.text or len(result)) and
+            not any(name.startswith("t-") for name in node.attrib)
+        ):
+            # complete result and return it
+            append_content(result, todo)
+            result.tail = node.tail
+            has_text = todo_has_text or nonspace(result.text) or nonspace(result.tail)
+            return (has_text, result)
 
-        # add node tail as todo
-        self.todo(escape(node.tail or ""))
+        # translate the content of todo and append it to result
+        append_content(result, translate_content(todo) if todo_has_text else todo)
 
-    def serialize(self, tag, attrib, content):
-        """ Return a serialized element with the given `tag`, attributes
-            `attrib`, and already-serialized `content`.
-        """
-        if content:
-            elem = etree.tostring(etree.Element(tag, attrib), method='xml')
-            assert elem.endswith("/>")
-            return "%s>%s</%s>" % (elem[:-2], content, tag)
-        else:
-            return etree.tostring(etree.Element(tag, attrib), method=self.method)
+        # translate the required attributes
+        for name, value in pycompat.items(result.attrib):
+            if name in TRANSLATED_ATTRS:
+                result.set(name, translate_text(value) or value)
+
+        # add the untranslated tail to result
+        result.tail = node.tail
+
+        return (None, result)
+
+    has_text, node = process(node)
+    if has_text is True:
+        # translate the node as a whole
+        wrapped = etree.Element('div')
+        wrapped.append(node)
+        return translate_content(wrapped)[0]
+
+    return node
 
 
 def xml_translate(callback, value):
@@ -286,17 +281,18 @@ def xml_translate(callback, value):
     if not value:
         return value
 
-    trans = XMLTranslator(callback, 'xml')
     try:
         root = etree.fromstring(encode(value))
-        trans.process(root)
-        return trans.get_done()
+        result = translate_xml_node(root, callback, 'xml')
+        return etree.tostring(result, method='xml', encoding='utf8').decode('utf8')
     except etree.ParseError:
         # fallback for translated terms: use an HTML parser and wrap the term
         wrapped = "<div>%s</div>" % encode(value)
         root = etree.fromstring(wrapped, etree.HTMLParser(encoding='utf-8'))
-        trans.process(root[0][0])               # html > body > div
-        return trans.get_done()[5:-6]           # remove tags <div> and </div>
+        # root is html > body > div; translate the div only
+        result = translate_xml_node(root[0][0], callback, 'xml')
+        # remove tags <div> and </div> from result
+        return etree.tostring(result, method='xml', encoding='utf8').decode('utf8')[5:-6]
 
 def html_translate(callback, value):
     """ Translate an HTML value (string), using `callback` for translating text
@@ -307,13 +303,16 @@ def html_translate(callback, value):
 
     try:
         parser = etree.HTMLParser(encoding='utf-8')
-        trans = XMLTranslator(callback, 'html', parser)
+        # value may be some HTML fragment, wrap it into a div
         wrapped = "<div>%s</div>" % encode(value)
         root = etree.fromstring(wrapped, parser)
-        trans.process(root[0][0])               # html > body > div
-        value = trans.get_done()[5:-6]           # remove tags <div> and </div>
+        # root is html > body > div; translate the div only
+        result = translate_xml_node(root[0][0], callback, 'html', parser)
+        # remove tags <div> and </div> from result
+        value = etree.tostring(result, method='html', encoding='utf8').decode('utf8')[5:-6]
     except ValueError:
         _logger.exception("Cannot translate malformed HTML, using source value instead")
+
     return value
 
 
@@ -337,7 +336,7 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            return sql_db.db_connect(db_name)
+            return odoo.sql_db.db_connect(db_name)
 
     def _get_cr(self, frame, allow_create=True):
         # try, in order: cr, cursor, self.env.cr, self.cr,
@@ -423,7 +422,7 @@ class GettextAlias(object):
                 cr, is_new_cr = self._get_cr(frame)
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
-                    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+                    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                     res = env['ir.translation']._get_source(None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
@@ -533,7 +532,7 @@ class PoFile(object):
                         raise StopIteration()
                     line = self.lines.pop(0)
                 # This has been a deprecated entry, don't return anything
-                return self.next()
+                return next(self)
 
             if not line.startswith('msgid'):
                 raise Exception("malformed file: bad line: %s" % line)
@@ -547,7 +546,7 @@ class PoFile(object):
                 self.extra_lines = []
                 while line:
                     line = self.lines.pop(0).strip()
-                return self.next()
+                return next(self)
 
             while not line.startswith('msgstr'):
                 if not line:
@@ -574,8 +573,9 @@ class PoFile(object):
             if not fuzzy:
                 _logger.warning('Missing "#:" formated comment at line %d for the following source:\n\t%s',
                                 self.cur_line(), source[:30])
-            return self.next()
+            return next(self)
         return trans_type, name, res_id, source, trad, '\n'.join(comments)
+    __next__ = next
 
     def write_infos(self, modules):
         import odoo.release as release
@@ -599,7 +599,7 @@ class PoFile(object):
 
                           % { 'project': release.description,
                               'version': release.version,
-                              'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
+                              'modules': ''.join("#\t* %s\n" % m for m in modules),
                               'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
                             }
                           )
@@ -660,7 +660,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in sorted(grouped_rows.items()):
+            for src, row in sorted(pycompat.items(grouped_rows)):
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
@@ -674,11 +674,11 @@ def trans_export(lang, modules, buffer, format, cr):
                 module = row[0]
                 rows_by_module.setdefault(module, []).append(row)
             tmpdir = tempfile.mkdtemp()
-            for mod, modrows in rows_by_module.items():
+            for mod, modrows in pycompat.items(rows_by_module):
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
-                buf = file(join(tmpmoddir, pofilename), 'w')
+                buf = open(join(tmpmoddir, pofilename), 'w')
                 _process('po', [mod], modrows, buf, lang)
                 buf.close()
 
@@ -726,7 +726,6 @@ def in_modules(object_name, modules):
     module_dict = {
         'ir': 'base',
         'res': 'base',
-        'workflow': 'base',
     }
     module = object_name.split('.')[0]
     module = module_dict.get(module, module)
@@ -780,7 +779,7 @@ def babel_extract_qweb(fileobj, keywords, comment_tags, options):
 
 
 def trans_generate(lang, modules, cr):
-    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     to_translate = set()
 
     def push_translation(module, type, name, id, source, comments=None):
@@ -847,7 +846,7 @@ def trans_generate(lang, modules, cr):
         if model=='ir.model.fields':
             try:
                 field_name = encode(record.name)
-            except AttributeError, exc:
+            except AttributeError as exc:
                 _logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             field_model = env.get(record.model)
@@ -860,24 +859,6 @@ def trans_generate(lang, modules, cr):
                 name = "%s,%s" % (encode(record.model), field_name)
                 for dummy, val in field.selection:
                     push_translation(module, 'selection', name, 0, encode(val))
-
-        elif model=='ir.actions.report.xml':
-            name = encode(record.report_name)
-            fname = ""
-            if record.report_rml:
-                fname = record.report_rml
-                parse_func = trans_parse_rml
-                report_type = "report"
-            elif record.report_xsl:
-                continue
-            if fname and record.report_type in ('pdf', 'xsl'):
-                try:
-                    with file_open(fname) as report_file:
-                        d = etree.parse(report_file)
-                        for t in parse_func(d.iter()):
-                            push_translation(module, report_type, name, 0, t)
-                except (IOError, etree.XMLSyntaxError):
-                    _logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
         for field_name, field in record._fields.iteritems():
             if field.translate:
@@ -1019,7 +1000,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     if verbose:
         _logger.info('loading translation file for language %s', lang)
 
-    env = odoo.api.Environment(cr, SUPERUSER_ID, context or {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, context or {})
     Lang = env['res.lang']
     Translation = env['ir.translation']
 
@@ -1092,7 +1073,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             dic = dict.fromkeys(('type', 'name', 'res_id', 'src', 'value',
                                  'comments', 'imd_model', 'imd_name', 'module'))
             dic['lang'] = lang
-            dic.update(zip(fields, row))
+            dic.update(pycompat.izip(fields, row))
 
             # discard the target from the POT targets.
             src = dic['src']
@@ -1106,7 +1087,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             if not res_id:
                 return
 
-            if isinstance(res_id, (int, long)) or \
+            if isinstance(res_id, pycompat.integer_types) or \
                     (isinstance(res_id, basestring) and res_id.isdigit()):
                 dic['res_id'] = int(res_id)
                 if module_name:
@@ -1130,7 +1111,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src, target in pot_targets.iteritems():
+        for src, target in pycompat.items(pot_targets):
             if target.value:
                 for type, name, res_id in target.targets:
                     pot_rows.append((type, name, res_id, src, target.value, target.comments))
@@ -1196,6 +1177,6 @@ def load_language(cr, lang):
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """
-    env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
     installer = env['base.language.install'].create({'lang': lang})
     installer.lang_install()

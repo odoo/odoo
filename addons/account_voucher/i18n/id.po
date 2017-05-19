@@ -1,42 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-# 
+#
 # Translators:
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# William Surya Permana <zarambie_game@yahoo.com>, 2016
-# Febrasari Almania <febrasari.almania@gmail.com>, 2016
-# Andhitia Rama <andhitia.r@gmail.com>, 2016
-# Deddy Ddr <deddy.ddr@gmail.com>, 2016
-# Lorenz Damara <lorenzrenz@gmail.com>, 2016
-# Bonny Useful <bonny.useful@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Bonny Useful <bonny.useful@gmail.com>, 2017\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-12-18 13:55+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
+"id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher "
+"number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-"* Status 'Konsep' digunakan ketika pengguna meng-encode Voucher baru dan belum dikonfirmasi.\n"
-"* Status 'Pro-forma' digunakan ketika voucher tidak memiliki nomer voucher.\n"
-"* Status 'Posted' digunakan ketika pengguna membuat voucher, kemudian menghasilkan nomor voucher dan pencatatan voucher terbuat di akun.\n"
-"* Status 'Dibatalkan' digunakan ketika pengguna membatalkan voucher."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -50,14 +42,9 @@ msgid "Account Date"
 msgstr "Tanggal Akun"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
-msgid "Accounting Date"
-msgstr "Tanggal akuntansi"
-
-#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
-msgstr "Accounting Voucher"
+msgstr "# baris Voucher"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
@@ -67,7 +54,7 @@ msgstr "Jumlah"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Akun Analitik"
+msgstr "Akun Analisis"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -76,9 +63,7 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Apakah Anda yakin mau membatalkan penerimaan ini?"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Tanggal tagihan"
 
@@ -108,7 +93,7 @@ msgid "Cancelled"
 msgstr "Dibatalkan"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/account_voucher.py:147
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Tidak dapat menghapus voucher(s) yang sudah dibuka atau dibayar."
@@ -133,7 +118,7 @@ msgstr "Perusahaan"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr "Perusahaan terkait jurnal ini"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -161,7 +146,9 @@ msgid "Customer"
 msgstr "Pelanggan"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Tanggal"
 
@@ -197,7 +184,7 @@ msgid "Due Date"
 msgstr "Tanggal Jatuh Tempo"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
 msgid "Effective date for accounting entries"
 msgstr "Efektif tanggal untuk entri akuntansi"
 
@@ -211,7 +198,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Group By"
-msgstr "Dikelompokkan berdasarkan"
+msgstr "Dikelompokan berdasarkan .."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_id
@@ -242,7 +229,7 @@ msgstr "Jurnal"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
 msgid "Journal Entry"
-msgstr "Journal Entry"
+msgstr "Jurnal Masukan"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -254,19 +241,19 @@ msgstr "Item Jurnal"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr "Terakhir diubah pada"
+msgstr "Terakhir Dimodifikasi pada"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_uid
 msgid "Last Updated by"
-msgstr "Terakhir diperbarui oleh"
+msgstr "Diperbaharui oleh"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "Terakhir Diperbaharui pada"
+msgstr "Diperbaharui pada"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -286,7 +273,7 @@ msgstr "Hanya untuk pajak dikecualikan dari harga"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
 msgid "Paid"
-msgstr "Dibayar"
+msgstr "Terbayar"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
@@ -315,13 +302,13 @@ msgid "Payment Reference"
 msgstr "Referensi pembayaran"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/account_voucher.py:183
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Silakan aktifkan urutan Journal dipilih!"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/account_voucher.py:186
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Harap define urutan dalam hal jurnal."
@@ -354,7 +341,7 @@ msgstr "Produk"
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr "Bayar"
+msgstr "Pembelian"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -375,12 +362,12 @@ msgstr "Pembelian Voucher"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
 msgid "Quantity"
-msgstr "Jumlah"
+msgstr "Kwantitas"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Sale"
-msgstr "Promo"
+msgstr "Penjualan"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -408,13 +395,13 @@ msgstr "Cari voucher"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_sequence
 msgid "Sequence"
-msgstr "Urutan"
+msgstr "Berurutan"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr "Set ke Draft"
+msgstr "Atur menjadi draft"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
@@ -457,7 +444,7 @@ msgstr "Voucher telah benar-benar dibayar."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
 msgid "The income or expense account related to the selected product."
-msgstr "Pendapatan atau Akun pengeluaran terkait dengan produk dipilih."
+msgstr "Pendapatan atau rekening pengeluaran terkait dengan produk dipilih."
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
@@ -478,12 +465,12 @@ msgstr "Total"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr "Biaya Total:"
+msgstr "Jumlah Keseluruhan"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
 msgid "Type"
-msgstr "Tipe"
+msgstr "Jenis"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
@@ -509,7 +496,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/account_voucher.py:31
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -560,7 +547,64 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:361
+#: code:addons/account_voucher/account_voucher.py:348
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Anda harus memilih dulu mitra!"
+msgstr "Anda harus memilih rekanan terlebih dahulu"
+
+#~ msgid "Action Needed"
+#~ msgstr "Tindakan diperlukan"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Tanggal pesan terakhir diposting pada catatan."
+
+#~ msgid "Followers"
+#~ msgstr "Pengikut"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Pengikut (saluran)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Pengikut (mitra)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jika dicentang pesan baru membutuhkan perhatian Anda."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jika dicentang, pesan baru memerlukan perhatian Anda."
+
+#~ msgid "Is Follower"
+#~ msgstr "Adalah pengikut"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Tanggal pesan terakhir"
+
+#~ msgid "Messages"
+#~ msgstr "Pesan"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Pesan dan riwayat komunikasi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Jumlah tindakan"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Jumlah pesan yang memerlukan tindakan"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Jumlah pesan yang belum dibaca"
+
+#~ msgid "Open Invoicing Menu"
+#~ msgstr "invoicing"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Pesan Belum Dibaca"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Pesan yang belum dibaca Counter"
+
+#~ msgid "Website Messages"
+#~ msgstr "Pesan situs"
+
+#~ msgid "Website communication history"
+#~ msgstr "Sejarah komunikasi situs"

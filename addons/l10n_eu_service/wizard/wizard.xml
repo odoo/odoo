@@ -54,16 +54,4 @@
             <field name="action_id" ref="action_eu_service"/>
             <field name="type">automatic</field>
         </record>
-
-        <record id="view_account_config_settings_inherit" model="ir.ui.view">
-            <field name="name">account settings</field>
-            <field name="model">account.config.settings</field>
-            <field name="inherit_id" ref="account.view_account_config_settings"/>
-            <field name="arch" type="xml">
-               <field name="default_sale_tax_id" position="after">
-                    <button type="action" name="%(action_eu_service)d"
-                            string="Setup EU MOSS Taxes" class="oe_link"/>
-                </field>         
-            </field>
-        </record>
 </odoo>

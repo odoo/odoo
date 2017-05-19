@@ -44,10 +44,6 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _to_date(self, dt):
-        # TODO remove me in master/saas-14
-        return fields.Date.from_string(dt)
-
     @http.route([
         '/blog',
         '/blog/page/<int:page>',
@@ -108,7 +104,7 @@ class WebsiteBlog(http.Controller):
         # build the domain for blog post to display
         domain = []
         # retrocompatibility to accept tag as slug
-        active_tag_ids = tag and map(int, [unslug(t)[1] for t in tag.split(',')]) or []
+        active_tag_ids = tag and [int(unslug(t)[1]) for t in tag.split(',')] or []
         if active_tag_ids:
             domain += [('tag_ids', 'in', active_tag_ids)]
         if blog:
@@ -153,7 +149,7 @@ class WebsiteBlog(http.Controller):
             else:
                 tag_ids.append(current_tag)
             tag_ids = request.env['blog.tag'].browse(tag_ids).exists()
-            return ','.join(map(slug, tag_ids))
+            return ','.join(slug(tag) for tag in tag_ids)
         values = {
             'blog': blog,
             'blogs': blogs,
@@ -176,7 +172,7 @@ class WebsiteBlog(http.Controller):
     def blog_feed(self, blog, limit='15'):
         v = {}
         v['blog'] = blog
-        v['base_url'] = request.env['ir.config_parameter'].get_param('web.base.url')
+        v['base_url'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r

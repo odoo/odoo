@@ -3,7 +3,7 @@ from datetime import datetime
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.translate import _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.exceptions import UserError
 
 import logging
@@ -266,17 +266,6 @@ class Quant(models.Model):
         # create the quant as superuser, because we want to restrict the creation of quant manually: we should always use this method to create quants
         return self.sudo().create(vals)
 
-    @api.model
-    def _quant_create(self, qty, move, lot_id=False, owner_id=False,
-                      src_package_id=False, dest_package_id=False,
-                      force_location_from=False, force_location_to=False):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_quant_create' has been renamed into '_quant_create_from_move'... Overrides are ignored")
-        return self._quant_create_from_move(
-            qty, move, lot_id=lot_id, owner_id=owner_id,
-            src_package_id=src_package_id, dest_package_id=dest_package_id,
-            force_location_from=force_location_from, force_location_to=force_location_to)
-
     @api.multi
     def _quant_update_from_move(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
         vals = {
@@ -288,12 +277,6 @@ class Quant(models.Model):
         if not entire_pack:
             vals.update({'package_id': dest_package_id})
         self.write(vals)
-
-    @api.multi
-    def move_quants_write(self, move, location_dest_id, dest_package_id, lot_id=False, entire_pack=False):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'move_quants_write' has been renamed into '_quant_update_from_move'... Overrides are ignored")
-        return self._quant_update_from_move(move, location_dest_id, dest_package_id, lot_id=lot_id, entire_pack=entire_pack)
 
     @api.one
     def _quant_reconcile_negative(self, move):
@@ -576,10 +559,7 @@ class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
     _name = "stock.quant.package"
     _description = "Physical Packages"
-    _parent_name = "parent_id"
-    _parent_store = True
-    _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'name'
 
     name = fields.Char(
         'Package Reference', copy=False, index=True,
@@ -592,8 +572,6 @@ class QuantPackage(models.Model):
     ancestor_ids = fields.One2many('stock.quant.package', string='Ancestors', compute='_compute_ancestor_ids')
     children_quant_ids = fields.One2many('stock.quant', string='All Bulk Content', compute='_compute_children_quant_ids')
     children_ids = fields.One2many('stock.quant.package', 'parent_id', 'Contained Packages', readonly=True)
-    parent_left = fields.Integer('Left Parent', index=True)
-    parent_right = fields.Integer('Right Parent', index=True)
     packaging_id = fields.Many2one(
         'product.packaging', 'Package Type', index=True,
         help="This field should be completed only if everything inside the package share the same product, otherwise it doesn't really makes sense.")
@@ -633,7 +611,7 @@ class QuantPackage(models.Model):
 
     @api.multi
     def name_get(self):
-        return self._compute_complete_name().items()
+        return list(pycompat.items(self._compute_complete_name()))
 
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
@@ -698,6 +676,12 @@ class QuantPackage(models.Model):
             package.mapped('quant_ids').sudo().write({'package_id': package.parent_id.id})
             package.mapped('children_ids').write({'parent_id': package.parent_id.id})
         return self.env['ir.actions.act_window'].for_xml_id('stock', 'action_package_view')
+
+    def action_view_picking(self):
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.env['stock.pack.operation'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        action['domain'] = [('id', 'in', pickings.ids)]
+        return action
 
     @api.multi
     def view_content_package(self):

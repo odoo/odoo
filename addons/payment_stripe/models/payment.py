@@ -140,8 +140,7 @@ class PaymentTransactionStripe(models.Model):
                 'date_validate': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
-            if self.callback_eval:
-                safe_eval(self.callback_eval, {'self': self})
+            self.execute_callback()
             return True
         else:
             error = tree['error']['message']

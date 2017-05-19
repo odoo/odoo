@@ -11,7 +11,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError
-from odoo.tools import config, human_size, ustr, html_escape
+from odoo.tools import config, human_size, ustr, html_escape, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
@@ -167,7 +167,7 @@ class IrAttachment(models.Model):
 
         # remove garbage files, and clean up checklist
         removed = 0
-        for fname, filepath in checklist.iteritems():
+        for fname, filepath in pycompat.items(checklist):
             if fname not in whitelist:
                 try:
                     os.unlink(self._full_path(fname))
@@ -291,10 +291,8 @@ class IrAttachment(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrAttachment, self)._auto_init()
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
-        if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
-            self._cr.commit()
+        tools.create_index(self._cr, 'ir_attachment_res_idx',
+                           self._table, ['res_model', 'res_id'])
         return res
 
     @api.model
@@ -320,7 +318,7 @@ class IrAttachment(models.Model):
             model_ids[values['res_model']].add(values['res_id'])
 
         # check access rights on the records
-        for res_model, res_ids in model_ids.iteritems():
+        for res_model, res_ids in pycompat.items(model_ids):
             # ignore attachments that are not attached to a resource anymore
             # when checking access rights (resource was deleted but attachment
             # was not)
@@ -376,12 +374,12 @@ class IrAttachment(models.Model):
 
         # To avoid multiple queries for each attachment found, checks are
         # performed in batch as much as possible.
-        for res_model, targets in model_attachments.iteritems():
+        for res_model, targets in pycompat.items(model_attachments):
             if res_model not in self.env:
                 continue
             if not self.env[res_model].check_access_rights('read', False):
                 # remove all corresponding attachment ids
-                ids.difference_update(itertools.chain(*targets.itervalues()))
+                ids.difference_update(itertools.chain(*pycompat.values(targets)))
                 continue
             # filter ids according to what access rules permit
             target_ids = list(targets)

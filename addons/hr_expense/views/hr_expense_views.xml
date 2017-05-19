@@ -114,7 +114,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
                                             'done': 'success'}}"/>
                                         </span>
                                     </div>
@@ -132,7 +132,7 @@
             <field name="arch" type="xml">
                 <pivot string="Expenses Analysis">
                     <field name="employee_id" type="row"/>
-                    <field name="create_date" interval="month" type="col"/>
+                    <field name="date" interval="month" type="col"/>
                     <field name="total_amount" type="measure"/>
                 </pivot>
             </field>
@@ -143,8 +143,8 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <graph string="Expenses Analysis">
-                    <field name="employee_id" type="col"/>
-                    <field name="create_date" interval="month" type="row"/>
+                    <field name="date" type="col"/>
+                    <field name="employee_id" type="row"/>
                     <field name="total_amount" type="measure"/>
                 </graph>
             </field>
@@ -155,7 +155,7 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                    <field name="name" string="Expenses"/>
+                    <field name="name" string="Expenses" filter_domain="['|',('employee_id','ilike',self),('name','ilike',self)]"/>
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="product_id"/>
@@ -188,7 +188,7 @@
         <record id="hr_expense_actions_all" model="ir.actions.act_window">
             <field name="name">All Expenses</field>
             <field name="res_model">hr.expense</field>
-            <field name="view_mode">pivot,graph,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -376,7 +376,7 @@
             <field name="name">Expenses Analysis</field>
             <field name="res_model">hr.expense</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_uncancelled': 1,
                 }
@@ -504,7 +504,7 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
                                             'done': 'success'}}"/>
                                         </span>
                                     </div>
@@ -640,7 +640,7 @@
         <record id="action_hr_expense_sheet_all_all" model="ir.actions.act_window">
             <field name="name">All Expense Reports</field>
             <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">pivot,graph,tree,kanban,form</field>
+            <field name="view_mode">graph,pivot,tree,kanban,form</field>
             <field name="search_view_id" ref="view_hr_expense_sheet_filter"/>
             <field name="domain">[]</field>
             <field name="context">{}</field>
@@ -722,7 +722,7 @@
             <field name="name">Expense Reports Analysis</field>
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_type">form</field>
-            <field name="view_mode">pivot,graph</field>
+            <field name="view_mode">graph,pivot</field>
             <field name="context">{
                 'search_default_department_id': [active_id],
                 'default_department_id': active_id}
@@ -730,7 +730,7 @@
         </record>
 
         <record id="hr_expense_submit_action_server" model="ir.actions.server">
-            <field name="name">Submit To Manager</field>
+            <field name="name">Expense: Submit To Manager</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="state">code</field>
@@ -765,7 +765,7 @@ if records:
         <menuitem id="menu_hr_expense_sheet_all_to_pay" name="Expense Reports To Pay" sequence="3" parent="menu_hr_expense_accountant"
             action="action_hr_expense_sheet_all_to_pay"/>
 
-        <menuitem id="menu_hr_expense_reports" name="Reports" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
+        <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="All Expenses" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
         <menuitem id="menu_hr_expense_sheet_all_all" name="All Expense Reports" sequence="4" parent="menu_hr_expense_reports"
             action="action_hr_expense_sheet_all_all" groups="hr_expense.group_hr_expense_manager"/>

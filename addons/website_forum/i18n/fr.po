@@ -3,38 +3,39 @@
 # * website_forum
 # 
 # Translators:
-# Olivier Dony <odo@odoo.com>, 2016
-# Clo <clo@odoo.com>, 2016
-# Lucas Deliege <lud@odoo.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2016
-# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Nancy Bolognesi <nb@microcom.ca>, 2016
-# Vincent Briffaux <vincent.briffaux@gmail.com>, 2016
-# Melanie Bernard <mbe@odoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Clo <clo@odoo.com>, 2016
+# Olivier Dony <odo@odoo.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
+# Melanie Bernard <mbe@odoo.com>, 2016
+# Martin Malorni <mmalorni@gmail.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Fabien Pinckaers <fp@openerp.com>, 2016
+# Vincent Briffaux <vincent.briffaux@gmail.com>, 2016
+# Lucas Deliege <lud@odoo.com>, 2016
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2016
+# Nancy Bolognesi <nb@microcom.ca>, 2016
 # Tahina RABEHARIVONY <tahrabe@gmail.com>, 2016
-# Fabri Yohann <psn@fabri.pw>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
-# lucasdeliege <deliegelucas@gmail.com>, 2016
+# Fabri Yohann <psn@fabri.pw>, 2016
 # Magali <mch@openerp.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
-# Martin Malorni <mm@microcom.ca>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
-# Jérémy Kersten <jke@openerp.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
+# Miguel Vidali <mvidali129@gmail.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
+# Jérémy Kersten <jke@openerp.com>, 2016
 # Vincent Hammadache <vhammadache@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Vincent Hammadache <vhammadache@gmail.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1174,14 +1175,14 @@ msgid "Edit Profile"
 msgstr "Modifier le profil"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Edit Your Bio"
-msgstr "Modifiez votre bio"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
 msgstr "Modifiez votre précédente réponse"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Edit Your Profile"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
@@ -1375,6 +1376,7 @@ msgid "Forum Badge Level"
 msgstr "Niveau de votre badge forum"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
 msgid "Forum Karma"
 msgstr "Forum Karma"
@@ -1485,7 +1487,7 @@ msgstr "Super Question"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Group By"
-msgstr "Grouper par"
+msgstr "Regrouper par"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -1973,6 +1975,7 @@ msgstr "Publier"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
 msgstr "Publier votre réponse "
 
@@ -1982,6 +1985,7 @@ msgid "Post Closing Reason"
 msgstr "Motif de fermeture"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
 msgstr "Publier un commentaire"
@@ -2343,21 +2347,21 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:70
+#: code:addons/website_forum/static/src/js/website_forum.js:97
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Vous devez être enregistré pour signaler un message"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:118
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr "Vous devez être enregistré pour pouvoir voter. "
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:168
+#: code:addons/website_forum/static/src/js/website_forum.js:195
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Un utilisateur anonyme ne peut pas accepter une réponse."
@@ -2369,7 +2373,7 @@ msgstr "Désolé, cette question n'est plus disponible."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:113
+#: code:addons/website_forum/static/src/js/website_forum.js:140
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Il n'est pas possible de voter pour votre propre message. "
@@ -2387,7 +2391,7 @@ msgstr "Statistiques"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_state
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_6
@@ -2563,17 +2567,24 @@ msgstr "Ce forum n'accepte pas %s"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:80
+#: code:addons/website_forum/static/src/js/website_forum.js:107
 #, python-format
 msgid "This post can not be flagged"
 msgstr "Ce message ne peut être signalé"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:75
+#: code:addons/website_forum/static/src/js/website_forum.js:102
 #, python-format
 msgid "This post is already flagged"
 msgstr "Ce message a déjà été signalé"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile

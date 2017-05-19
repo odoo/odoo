@@ -10,21 +10,6 @@ from odoo.tools import mute_logger
 
 class TestMailMessage(TestMail):
 
-    def setUp(self):
-        super(TestMailMessage, self).setUp()
-        self.group_private = self.env['mail.channel'].with_context({
-            'mail_create_nolog': True,
-            'mail_create_nosubscribe': True
-        }).create({
-            'name': 'Private',
-            'public': 'private'}
-        ).with_context({'mail_create_nosubscribe': False})
-        self.message = self.env['mail.message'].create({
-            'body': 'My Body',
-            'model': 'mail.channel',
-            'res_id': self.group_private.id,
-        })
-
     def test_mail_message_values_basic(self):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
@@ -69,10 +54,10 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
         self.assertEqual(msg.reply_to, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
@@ -82,11 +67,11 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_document_alias_catchall(self):
@@ -96,22 +81,22 @@ class TestMailMessage(TestMail):
         self.env['ir.config_parameter'].set_param('mail.catchall.alias', alias_catchall)
 
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id
         })
-        self.assertIn('-openerp-%d-mail.channel' % self.group_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
-        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.group_pigs.name, self.group_pigs.alias_name, alias_domain))
+        self.assertIn('-openerp-%d-mail.test' % self.test_pigs.id, msg.message_id, 'mail_message: message_id for a void message should be a "private" one')
+        self.assertEqual(msg.reply_to, '%s %s <%s@%s>' % (self.env.user.company_id.name, self.test_pigs.name, self.test_pigs.alias_name, alias_domain))
         self.assertEqual(msg.email_from, '%s <%s>' % (self.user_employee.name, self.user_employee.email))
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.env['mail.message'].sudo(self.user_employee).create({
-            'model': 'mail.channel',
-            'res_id': self.group_pigs.id,
+            'model': 'mail.test',
+            'res_id': self.test_pigs.id,
             'no_auto_thread': True,
         })
         self.assertIn('reply_to', msg.message_id)
-        self.assertNotIn('mail.channel', msg.message_id)
-        self.assertNotIn('-%d-' % self.group_pigs.id, msg.message_id)
+        self.assertNotIn('mail.test', msg.message_id)
+        self.assertNotIn('-%d-' % self.test_pigs.id, msg.message_id)
 
     def test_mail_message_notify_from_mail_mail(self):
         # Due ot post-commit hooks, store send emails in every step
@@ -127,6 +112,36 @@ class TestMailMessage(TestMail):
         self.email_to_list.extend(itertools.chain.from_iterable(sent_email['email_to'] for sent_email in self._mails if sent_email.get('email_to')))
         self.assertNotIn(u'Ernest Employee <e.e@example.com>', self.email_to_list)
         self.assertIn(u'test@example.com', self.email_to_list)
+
+
+class TestMailMessageAccess(TestMail):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailMessageAccess, cls).setUpClass()
+        Channel = cls.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True
+        })
+        # Pigs: base group for tests
+        cls.group_pigs = Channel.create({
+            'name': 'Pigs',
+            'public': 'groups',
+            'group_public_id': cls.env.ref('base.group_user').id})
+        # Jobs: public group
+        cls.group_public = Channel.create({
+            'name': 'Jobs',
+            'description': 'NotFalse',
+            'public': 'public'})
+        # Private: private gtroup
+        cls.group_private = Channel.create({
+            'name': 'Private',
+            'public': 'private'})
+        cls.message = cls.env['mail.message'].create({
+            'body': 'My Body',
+            'model': 'mail.channel',
+            'res_id': cls.group_private.id,
+        })
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_message_access_search(self):
@@ -253,7 +268,7 @@ class TestMailMessage(TestMail):
         self.env['mail.message'].sudo(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_message_set_star(self):
-        msg = self.group_pigs.message_post(body='My Body', subject='1')
+        msg = self.test_pigs.message_post(body='My Body', subject='1')
         msg_emp = self.env['mail.message'].sudo(self.user_employee).browse(msg.id)
 
         # Admin set as starred
@@ -270,6 +285,6 @@ class TestMailMessage(TestMail):
         self.assertTrue(msg_emp.starred)
 
     def test_60_cache_invalidation(self):
-        msg_cnt = len(self.group_pigs.message_ids)
-        self.group_pigs.message_post(body='Hi!', subject='test')
-        self.assertEqual(len(self.group_pigs.message_ids), msg_cnt + 1)
+        msg_cnt = len(self.test_pigs.message_ids)
+        self.test_pigs.message_post(body='Hi!', subject='test')
+        self.assertEqual(len(self.test_pigs.message_ids), msg_cnt + 1)

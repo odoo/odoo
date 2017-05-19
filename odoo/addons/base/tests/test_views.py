@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
-from itertools import izip_longest
+try:
+    from itertools import zip_longest as izip_longuest
+except ImportError:
+    from itertools import izip_longest
 
 from lxml import etree
 from lxml.builder import E
@@ -638,7 +641,7 @@ class TestViews(ViewCase):
         kw.setdefault('mode', 'extension' if kw.get('inherit_id') else 'primary')
         kw.setdefault('active', True)
 
-        keys = sorted(kw.keys())
+        keys = sorted(kw)
         fields = ','.join('"%s"' % (k.replace('"', r'\"'),) for k in keys)
         params = ','.join('%%(%s)s' % (k,) for k in keys)
 
@@ -755,6 +758,66 @@ class TestViews(ViewCase):
                     thing="bob lolo bibi and co", otherthing="lolo"
                 ),
                 string="Replacement title", version="7.0"))
+
+    def test_view_inheritance_text_inside(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="inside">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(<div>a<p/>b<p/>c</div>)</form>',
+        )
+
+    def test_view_inheritance_text_after(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="after">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(<div/>a<p/>b<p/>c)</form>',
+        )
+
+    def test_view_inheritance_text_before(self):
+        """ Test view inheritance when adding elements and text. """
+        view1 = self.View.create({
+            'name': "alpha",
+            'model': 'ir.ui.view',
+            'arch': '<form string="F">(<div/>)</form>',
+        })
+        view2 = self.View.create({
+            'name': "beta",
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'arch': '<div position="before">a<p/>b<p/>c</div>',
+        })
+        view = self.View.with_context(check_view_ids=view2.ids).fields_view_get(view1.id)
+        self.assertEqual(view['type'], 'form')
+        self.assertEqual(
+            view['arch'],
+            '<form string="F">(a<p/>b<p/>c<div/>)</form>',
+        )
 
     def test_view_inheritance_divergent_models(self):
         view1 = self.View.create({

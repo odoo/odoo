@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgid "\n"
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -155,7 +155,7 @@ msgid "\n"
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -241,7 +241,7 @@ msgid "\n"
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -274,9 +274,14 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:95
+#: code:addons/calendar/static/src/js/base_calendar.js:98
 #, python-format
 msgid " [Me]"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
+msgid "# Meetings Highlight"
 msgstr ""
 
 #. module: calendar
@@ -295,26 +300,26 @@ msgid "${object.event_id.name}: Date updated"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:639
+#: code:addons/calendar/models/calendar.py:658
 #, python-format
 msgid "%s at %s To\n"
 " %s at %s (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:637
+#: code:addons/calendar/models/calendar.py:656
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:191
+#: code:addons/calendar/models/calendar.py:196
 #, python-format
 msgid "%s has accepted invitation"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:199
+#: code:addons/calendar/models/calendar.py:204
 #, python-format
 msgid "%s has declined invitation"
 msgstr ""
@@ -344,7 +349,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:75
+#: code:addons/calendar/static/src/js/base_calendar.js:78
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr ""
@@ -355,14 +360,14 @@ msgid "All Day"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:634
+#: code:addons/calendar/models/calendar.py:653
 #, python-format
 msgid "AllDay , %s"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
-msgid "Amount"
+#: sql_constraint:calendar.contacts:0
+msgid "An user cannot have twice the same contact."
 msgstr ""
 
 #. module: calendar
@@ -394,7 +399,7 @@ msgid "Availability"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1476
+#: code:addons/calendar/models/calendar.py:1506
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -426,6 +431,13 @@ msgid "Calendar Invitation"
 msgstr ""
 
 #. module: calendar
+#: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
+#: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
+#: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
+msgid "Calendar: Event Reminder"
+msgstr ""
+
+#. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Click here to update only this instance and not all recurrences."
 msgstr ""
@@ -451,6 +463,7 @@ msgid "Confirmed"
 msgstr ""
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
 msgid "Contact"
 msgstr ""
@@ -536,7 +549,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:156
+#: code:addons/calendar/static/src/js/base_calendar.js:159
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
 msgstr ""
@@ -557,16 +570,6 @@ msgstr ""
 #: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
 msgid "Email"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr ""
-
-#. module: calendar
-#: model:ir.model,name:calendar.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
 msgstr ""
 
 #. module: calendar
@@ -601,13 +604,13 @@ msgid "Ending at"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:821
+#: code:addons/calendar/models/calendar.py:848
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:819
+#: code:addons/calendar/models/calendar.py:846
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -628,14 +631,14 @@ msgid "Event alarm"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1059
+#: code:addons/calendar/models/calendar.py:1097
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:96
+#: code:addons/calendar/static/src/js/base_calendar.js:99
 #, python-format
 msgid "Everybody's calendars"
 msgstr ""
@@ -656,7 +659,7 @@ msgid "First"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:861
+#: code:addons/calendar/models/calendar.py:888
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -693,7 +696,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1424
+#: code:addons/calendar/models/calendar.py:1453
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -959,12 +962,7 @@ msgid "Participant"
 msgstr ""
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_res_partner
-msgid "Partner"
-msgstr ""
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1072
+#: code:addons/calendar/models/calendar.py:1110
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr ""
@@ -1008,6 +1006,11 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
 msgid "Recurrent Rule"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
+msgid "Remind Before"
 msgstr ""
 
 #. module: calendar
@@ -1278,7 +1281,7 @@ msgid "Yes I'm going."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:124
+#: code:addons/calendar/models/calendar.py:128
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1299,7 +1302,7 @@ msgid "e.g. Business Lunch"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1057
+#: code:addons/calendar/models/calendar.py:1095
 #, python-format
 msgid "interval cannot be negative."
 msgstr ""

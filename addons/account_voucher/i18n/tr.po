@@ -1,42 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_voucher
-# 
+#
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
-# gezgin biri <gezginbiri@hotmail.com>, 2016
-# selim kartal <kartalselim37@gmail.com>, 2016
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-04-27 06:43+0000\n"
+"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_state
 msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed Voucher.\n"
-" * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
-" * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"Voucher.\n"
+" * The 'Pro-forma' status is used when the voucher does not have a voucher "
+"number.\n"
+" * The 'Posted' status is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-"* 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir Makbuz hazırlıyorsa kullanılır.\n"
-"* 'Proforma' durumu, bir makbuzun numaralandırılmamış olması durumunda kullanılır.\n"
-"* 'Yollandı' durumu, kullanıcı bir makbuz oluştururken kullanılır, bir makbuz numarası oluşturulur ve makbuz girişleri hesapta oluşturulur.\n"
+"* 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir Makbuz "
+"hazırlıyorsa kullanılır.\n"
+"* 'Proforma' durumu, bir makbuzun numaralandırılmamış olması durumunda "
+"kullanılır.\n"
+"* 'Yollandı' durumu, kullanıcı bir makbuz oluştururken kullanılır, bir "
+"makbuz numarası oluşturulur ve makbuz girişleri hesapta oluşturulur.\n"
 "* 'İptal edildi' durumu kullanıcı bir makbuzu iptal ettiğinde kullanılır."
 
 #. module: account_voucher
@@ -51,11 +49,6 @@ msgid "Account Date"
 msgstr "Hesap Tarihi"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
-msgid "Accounting Date"
-msgstr "Muhasebe Tarihi"
-
-#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "Muhasebe Fişi"
@@ -68,7 +61,7 @@ msgstr "Tutar"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
 msgid "Analytic Account"
-msgstr "Analitik Hesap"
+msgstr "Analiz Hesabı"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -77,9 +70,7 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "Bu makbuzu iptal etmek istediğinizden emin misiniz?"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "Fatura Tarihi"
 
@@ -96,7 +87,7 @@ msgstr "Fatura Referansı"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Cancel"
-msgstr "İptal"
+msgstr "Vazgeç"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -109,7 +100,7 @@ msgid "Cancelled"
 msgstr "İptal Edildi"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:159
+#: code:addons/account_voucher/account_voucher.py:147
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Hali hazırda açık ya da ödenmiş olan fiş(ler) silinemiyor."
@@ -134,7 +125,7 @@ msgstr "Firma"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr "Bu yevmiyeyle ilişkili firma"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -146,7 +137,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturuldu"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
@@ -162,7 +153,9 @@ msgid "Customer"
 msgstr "Müşteri"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "Tarih"
 
@@ -175,7 +168,7 @@ msgstr "Açıklama"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Adı Göster"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -198,7 +191,7 @@ msgid "Due Date"
 msgstr "Vade Tarihi"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
 msgid "Effective date for accounting entries"
 msgstr "Hesap Girişleri için Yürürlük Tarihi"
 
@@ -230,7 +223,7 @@ msgstr "Vergide yuvarlama sorunu olduğunda, düzeltmek için bu alanı kullanı
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Internal Notes"
-msgstr "İç Notlar"
+msgstr "Dahili Notlar"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_journal_id
@@ -243,19 +236,19 @@ msgstr "Yevmiye"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_move_id
 msgid "Journal Entry"
-msgstr "Yevmiye Kaydı"
+msgstr "Yevmiye Girişleri"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Journal Items"
-msgstr "Yevmiye Kalemleri"
+msgstr "Yevmiye Öğeleri"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher___last_update
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line___last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son değiştirme tarihi"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_uid
@@ -267,7 +260,7 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_write_date
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_write_date
 msgid "Last Updated on"
-msgstr "Son Güncelleme"
+msgstr "Son Güncellenen"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_narration
@@ -277,7 +270,7 @@ msgstr "Notlar"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_number
 msgid "Number"
-msgstr "Numara"
+msgstr "Sayı"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
@@ -316,13 +309,13 @@ msgid "Payment Reference"
 msgstr "Ödeme Referansı"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:195
+#: code:addons/account_voucher/account_voucher.py:183
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr "Lütfen seçilen yevmiyenin seri numarasını etkinleştirin !"
+msgstr "Lütfen seçilen günlüğün seri numarasını etkinleştirin !"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:198
+#: code:addons/account_voucher/account_voucher.py:186
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Yevmiye için lütfen bir seri no tanımlayın."
@@ -350,12 +343,12 @@ msgstr "Proforma"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
 msgid "Product"
-msgstr "Ürün"
+msgstr "Ürünler"
 
 #. module: account_voucher
 #: selection:account.voucher,voucher_type:0
 msgid "Purchase"
-msgstr "Satınalma"
+msgstr "SatınAlma"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -415,7 +408,7 @@ msgstr "Sıra"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Set to Draft"
-msgstr "Taslak olarak ayarla"
+msgstr "Taslak Olarak Ayarla"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_state
@@ -438,7 +431,7 @@ msgstr "Durumu değişti"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_tax_ids
 msgid "Tax"
-msgstr "Vergi"
+msgstr "Tax"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
@@ -479,12 +472,12 @@ msgstr "Toplam"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr "Toplam Tutar"
+msgstr "Total Amount"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type
 msgid "Type"
-msgstr "Türü"
+msgstr "Tür"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_unit
@@ -507,10 +500,10 @@ msgstr "Tedarikçi"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr "Tedarikçi Makbuzu"
+msgstr "Satışı Makbuzu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:97
+#: code:addons/account_voucher/account_voucher.py:31
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -565,7 +558,64 @@ msgstr ""
 "ilgili müşteri ödemesini kaydedebilirsiniz."
 
 #. module: account_voucher
-#: code:addons/account_voucher/models/account_voucher.py:361
+#: code:addons/account_voucher/account_voucher.py:348
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Bir ortak seçmelisiniz ! "
+msgstr "Önce bir iş ortağı seçmek gerekir!"
+
+#~ msgid "Action Needed"
+#~ msgstr "Eylem Gerekiyor"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
+
+#~ msgid "Followers"
+#~ msgstr "İzleyiciler"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "İzleyiciler (Kanallar)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "İzleyiciler (İş ortakları)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
+
+#~ msgid "Is Follower"
+#~ msgstr "Takipçi mi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Son Mesaj Tarihi"
+
+#~ msgid "Messages"
+#~ msgstr "Mesajlar"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Mesajlar ve iletişim geçmişi"
+
+#~ msgid "Number of Actions"
+#~ msgstr "İşlem Sayısı"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Eylem gerektiren mesaj sayısı"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Okunmamış mesaj sayısı"
+
+#~ msgid "Open Invoicing Menu"
+#~ msgstr "Faturalama Menüsünü Aç"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Okunmamış Mesajlar"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Okunmamış Mesaj Sayacı"
+
+#~ msgid "Website Messages"
+#~ msgstr "Websitesi Mesajları"
+
+#~ msgid "Website communication history"
+#~ msgstr "Web Sitesi iletişim geçmişi"

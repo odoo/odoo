@@ -7,23 +7,24 @@
             <field name="priority">5</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page name="sales" position="after">
-                    <page string="Invoicing" name="invoicing" groups="account.group_account_invoice">
+                <page name="inventory" position="after">
+                    <page string="Invoicing" name="invoicing">
                         <group name="properties">
-                            <group>
+                            <group string="Receivables">
+                                <field name="taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_income_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
-                                <field name="taxes_id" widget="many2many_tags"/>
                             </group>
-                            <group>
+                            <group string="Payables" name="payables">
+                                <field name="supplier_taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_expense_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
-                                <field name="supplier_taxes_id" widget="many2many_tags"/>
                             </group>
                         </group>
                         <group name="accounting"/>
+                        <group name="invoicing"/>
                     </page>
                 </page>
             </field>

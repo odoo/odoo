@@ -121,6 +121,14 @@
                                     <field name="state"/>
                                 </tree>
                             </field>
+                            <group string="Exclusions"/>
+                            <p class="oe_grey" attrs="{'invisible': [('exclusion_ids','not in',[None,False])]}"> -This module does not exclude any other module.</p>
+                            <field name="exclusion_ids">
+                                <tree string="Exclusions">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <group string="Created Menus"/>
@@ -206,7 +214,7 @@
             <field name="tag">apps.updates</field>
             <field name="params">{}</field>
         </record>
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl"/>
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" groups="base.group_no_one"/>
 
     </data>
 </odoo>

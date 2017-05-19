@@ -5,19 +5,19 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
-# Fábio Novais <fabionovais@aptu.com.br>, 2016
 # Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Fábio Novais <fabionovais@aptu.com.br>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
-"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Fábio Novais <fabionovais@aptu.com.br>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,11 +247,6 @@ msgid "Click to create a payment acquirer."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
-msgid "Code"
-msgstr "Código"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Empresa"
@@ -267,11 +262,6 @@ msgid "Configure"
 msgstr "Configurar"
 
 #. module: payment
-#: model:ir.ui.view,arch_db:payment.payment_acquirer_installation
-msgid "Configure payment acquiring methods"
-msgstr "Configurar métodos de pagamento"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
 msgstr ""
@@ -280,6 +270,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
 msgid "Count Payment Token"
 msgstr "Contagem do Token de Pagamento"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer_country_ids
+msgid "Countries"
+msgstr "Países"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_country_id
@@ -356,6 +351,11 @@ msgstr "Determina a ordem de exibição"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_display_name
 msgid "Display Name"
 msgstr "Nome para Exibição"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_account_journal_use_in_payment
+msgid "Display this bank account on messages in payment process."
+msgstr ""
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -492,6 +492,11 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
 msgstr "Referência interna do TX"
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_journal
+msgid "Journal"
+msgstr "Diário"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -708,7 +713,7 @@ msgid "Payment Transactions"
 msgstr "Transações de Pagamento"
 
 #. module: payment
-#: code:addons/payment/models/account_payment.py:60
+#: code:addons/payment/models/account_payment.py:59
 #, python-format
 msgid "Payment transaction failed (%s)"
 msgstr ""
@@ -863,7 +868,7 @@ msgid "Thanks Message"
 msgstr "Mensagem de Agradecimento"
 
 #. module: payment
-#: code:addons/payment/models/payment_acquirer.py:472
+#: code:addons/payment/models/payment_acquirer.py:476
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "A referência dessa transação de pagamento deve ser exclusiva!"
@@ -876,13 +881,18 @@ msgstr ""
 "Este campo contém a imagem usada para este provedor, limitada a 1024x1024px"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_acquirer_country_ids
+msgid ""
+"This payment gateway is available for selected countries. If none is "
+"selected it is available for all countries."
+msgstr ""
+
+#. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is be rendered with qWeb with the following evaluation context:"
+"                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
-"Este modelo torna o botão adquirente com todos os valores necessários.\n"
-"                                     É ser rendido com Qweb com o seguinte contexto de avaliação:"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
@@ -894,6 +904,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
 msgid "Type"
 msgstr "Tipo"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_journal_use_in_payment
+msgid "Use in payment"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_date_validate

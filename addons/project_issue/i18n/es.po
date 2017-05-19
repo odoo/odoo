@@ -3,34 +3,32 @@
 # * project_issue
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Alejandro Santana <alejandrosantana@anubia.es>, 2016
-# José Vicente <txusev@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
+# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # Rafael Blasco <rafabn@antiun.com>, 2016
-# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
 # Jairo Llopis <yajo.sk8@gmail.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,15 +52,10 @@ msgid "# of Issues"
 msgstr "Nº de incidencias"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:156
+#: code:addons/project_issue/models/project_issue.py:146
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-msgid "<b>Category:</b>"
-msgstr "Categoría"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -93,20 +86,10 @@ msgstr "Añadir una nota interna..."
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
-"\n"
-"                                           * Normal is the default situation\n"
-"\n"
-"                                           * Blocked indicates something is preventing the progress of this issue\n"
-"\n"
-"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this issue\n"
+" * Green indicates the issue is ready to be pulled to the next stage"
 msgstr ""
-"Un estado kanban de una incidencia indica que hay una situación especial que le afecta:\n"
-"\n"
-"                                           * Normal es la situación por defecto\n"
-"\n"
-"                                           * Bloqueado indica que algo está impidiendo que la incidencia avance\n"
-"\n"
-"                                           * Listo para la siguiente etapa indica que la incidencia está lista para ser incorporada a la siguiente etapa"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -150,23 +133,6 @@ msgstr "Horas de trabajo prom. para cerrar"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_open
 msgid "Avg. Working Hours to Open"
 msgstr "Horas de trabajo prom. para abrir"
-
-#. module: project_issue
-#: selection:project.issue,kanban_state:0
-msgid "Blocked"
-msgstr "Bloqueada"
-
-#. module: project_issue
-#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
-#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
-#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
-#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
-#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
-#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
-#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
-#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
-msgid "Buzz or set as done"
-msgstr "Zumbar o marcar como hecho"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -244,13 +210,18 @@ msgid "Creation Date"
 msgstr "Fecha de Creación"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:296
+#: model:ir.actions.act_window,help:project_issue.project_issue_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:267
 #, python-format
 msgid "Customer"
 msgstr "Cliente"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:298
+#: code:addons/project_issue/models/project_issue.py:269
 #, python-format
 msgid "Customer Email"
 msgstr "Correo electrónico del cliente"
@@ -369,6 +340,16 @@ msgid "Feature description"
 msgstr "Descripción funcionalidad"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Green"
+msgstr "Verde"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
@@ -386,7 +367,7 @@ msgid "High"
 msgstr "Alta"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:271
+#: code:addons/project_issue/models/project_issue.py:242
 #, python-format
 msgid "I take it"
 msgstr "Lo tengo"
@@ -460,6 +441,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_from_partner
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
@@ -539,20 +521,18 @@ msgstr "Baja"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
 msgstr "Mis incidencias"
 
 #. module: project_issue
-#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
-#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
-#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
-#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
-#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
-#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
-#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
-#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
-msgid "Need functional or technical help"
-msgstr "Necesita ayuda funcional o técnica"
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_activity
+msgid "My Next Issue Activities"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -560,18 +540,22 @@ msgid "New"
 msgstr "Nuevo"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
-#, python-format
-msgid "New Issue"
-msgstr "Nueva incidencia"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
 msgid "Next Action"
 msgstr "Próxima acción"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:322
+#: model:ir.ui.view,arch_db:project_issue.project_issue_view_tree_activity
+msgid "Next Activities"
+msgstr "Siguientes actividades"
+
+#. module: project_issue
+#: model:ir.ui.menu,name:project_issue.project_issue_menu_activity
+msgid "Next Issue Activities"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:293
 #, python-format
 msgid "No Subject"
 msgstr "Sin asunto"
@@ -582,18 +566,10 @@ msgid "No customer rating"
 msgstr "Sin puntuación de usuario"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
+#: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project_issue
-#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
-#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
-#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
-#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
-msgid "Not validated"
-msgstr "No validado"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -606,13 +582,16 @@ msgid "Number of Days to open the project issue."
 msgstr "Número de días para abrir la incidencia de proyecto."
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Overdue Activities"
+msgstr "Actividades Atrasadas"
+
+#. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Anula el valor por defecto mostrado por el estado bloqueado por la selección"
-" kanban, cuando la tarea o incidencia esta en el estado."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -620,8 +599,6 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Anular el valor por defecto mostrado para el estado hecho para la selección "
-"kanban, cuando la tarea o incidencia esta en el estado."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -629,8 +606,6 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
-"Anular el valor por defecto mostrado para el estado normal de la selección "
-"kanban, cuando la tarea o incidencia esta en el estado."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -700,18 +675,18 @@ msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
-msgid "Ready for next stage"
-msgstr "Lista para la siguiente etapa"
-
-#. module: project_issue
-#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-msgid "Ready to reopen"
-msgstr "Preparado para reabrir"
+msgid "Red"
+msgstr "Rojo"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
 msgstr "Búsqueda"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -801,6 +776,11 @@ msgid "Timesheets on Issues"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Today Activities"
+msgstr "Actividades de Hoy"
+
+#. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
 msgstr ""
@@ -816,6 +796,11 @@ msgstr "No asignado"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "Mensajes por leer"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
@@ -858,7 +843,7 @@ msgstr ""
 "aquí"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:191
+#: code:addons/project_issue/models/project_issue.py:181
 #, python-format
 msgid "issues"
 msgstr "incidencias"

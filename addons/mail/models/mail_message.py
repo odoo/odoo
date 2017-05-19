@@ -8,7 +8,7 @@ from email.utils import formataddr
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
-
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +18,6 @@ class Message(models.Model):
         comments (OpenChatter discussion) and incoming emails. """
     _name = 'mail.message'
     _description = 'Message'
-    _inherit = ['ir.needaction_mixin']
     _order = 'id desc'
     _rec_name = 'record_name'
 
@@ -62,6 +61,9 @@ class Message(models.Model):
              "message, comment for other messages such as user replies",
         oldname='type')
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
+    mail_activity_type_id = fields.Many2one(
+        'mail.activity.type', 'Mail Activity Type',
+        index=True, ondelete='set null')
     # origin
     email_from = fields.Char(
         'From', default=_get_default_from,
@@ -133,10 +135,6 @@ class Message(models.Model):
         if operator == '=' and operand:
             return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
         return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
-
-    @api.model
-    def _needaction_domain_get(self):
-        return [('needaction', '=', True)]
 
     #------------------------------------------------------
     # Notification API
@@ -282,7 +280,7 @@ class Message(models.Model):
         partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
         trackings = self.env['mail.tracking.value']
-        for key, message in message_tree.iteritems():
+        for key, message in pycompat.items(message_tree):
             if message.author_id:
                 partners |= message.author_id
             if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
@@ -436,7 +434,7 @@ class Message(models.Model):
 
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
-        doc_ids = doc_dict.keys()
+        doc_ids = list(doc_dict)
         allowed_doc_ids = self.env[doc_model].with_context(active_test=False).search([('id', 'in', doc_ids)]).ids
         return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
 
@@ -444,7 +442,7 @@ class Message(models.Model):
     def _find_allowed_doc_ids(self, model_ids):
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
-        for doc_model, doc_dict in model_ids.iteritems():
+        for doc_model, doc_dict in pycompat.items(model_ids):
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
             allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
@@ -605,17 +603,17 @@ class Message(models.Model):
         # Author condition (READ, WRITE, CREATE (private))
         author_ids = []
         if operation == 'read' or operation == 'write':
-            author_ids = [mid for mid, message in message_values.iteritems()
+            author_ids = [mid for mid, message in pycompat.items(message_values)
                           if message.get('author_id') and message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
-            author_ids = [mid for mid, message in message_values.iteritems()
+            author_ids = [mid for mid, message in pycompat.items(message_values)
                           if not message.get('model') and not message.get('res_id')]
 
         # Parent condition, for create (check for received notifications for the created message parent)
         notified_ids = []
         if operation == 'create':
             # TDE: probably clean me
-            parent_ids = [message.get('parent_id') for mid, message in message_values.iteritems()
+            parent_ids = [message.get('parent_id') for mid, message in pycompat.items(message_values)
                           if message.get('parent_id')]
             self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id, channel_partner.partner_id FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
@@ -628,37 +626,37 @@ class Message(models.Model):
                 ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, parent_ids,))
             not_parent_ids = [mid[0] for mid in self._cr.fetchall() if any([mid[1], mid[2]])]
-            notified_ids += [mid for mid, message in message_values.iteritems()
+            notified_ids += [mid for mid, message in pycompat.items(message_values)
                              if message.get('parent_id') in not_parent_ids]
 
         # Recipients condition, for read and write (partner_ids) and create (message_follower_ids)
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation in ['read', 'write']:
-            notified_ids = [mid for mid, message in message_values.iteritems() if message.get('notified')]
+            notified_ids = [mid for mid, message in pycompat.items(message_values) if message.get('notified')]
         elif operation == 'create':
-            for doc_model, doc_ids in model_record_ids.items():
+            for doc_model, doc_ids in pycompat.items(model_record_ids):
                 followers = self.env['mail.followers'].sudo().search([
                     ('res_model', '=', doc_model),
                     ('res_id', 'in', list(doc_ids)),
                     ('partner_id', '=', self.env.user.partner_id.id),
                     ])
                 fol_mids = [follower.res_id for follower in followers]
-                notified_ids += [mid for mid, message in message_values.iteritems()
+                notified_ids += [mid for mid, message in pycompat.items(message_values)
                                  if message.get('model') == doc_model and message.get('res_id') in fol_mids]
 
         # CRUD: Access rights related to the document
         other_ids = other_ids.difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
-        for model, doc_ids in model_record_ids.items():
+        for model, doc_ids in pycompat.items(model_record_ids):
             DocumentModel = self.env[model]
             mids = DocumentModel.browse(doc_ids).exists()
             if hasattr(DocumentModel, 'check_mail_message_access'):
                 DocumentModel.check_mail_message_access(mids.ids, operation)  # ?? mids ?
             else:
                 self.env['mail.thread'].check_mail_message_access(mids.ids, operation, model_name=model)
-            document_related_ids += [mid for mid, message in message_values.iteritems()
+            document_related_ids += [mid for mid, message in pycompat.items(message_values)
                                      if message.get('model') == model and message.get('res_id') in mids.ids]
 
         # Calculate remaining ids: if not void, raise an error
@@ -684,7 +682,7 @@ class Message(models.Model):
         """ Return a specific reply_to: alias of the document through
         message_get_reply_to or take the email_from """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
-        if model:
+        if model and hasattr(self.env[model], 'message_get_reply_to'):
             # return self.env[model].browse(res_id).message_get_reply_to([res_id], default=email_from)[res_id]
             return self.env[model].message_get_reply_to([res_id], default=email_from)[res_id]
         else:
@@ -763,18 +761,16 @@ class Message(models.Model):
 
     @api.multi
     def _notify(self, force_send=False, send_after_commit=True, user_signature=True):
-        """ Add the related record followers to the destination partner_ids if is not a private message.
-            Call mail_notification.notify to manage the email sending
-        """
+        """ Compute recipients to notify based on specified recipients and document
+        followers. Delegate notification to partners to send emails and bus notifications
+        and to channels to broadcast messages on channels """
         group_user = self.env.ref('base.group_user')
-        # have a sudoed copy to manipulate partners (public can go here with 
-        # website modules like forum / blog / ...
+        # have a sudoed copy to manipulate partners (public can go here with website modules like forum / blog / ... )
         self_sudo = self.sudo()
 
-        # TDE CHECK: add partners / channels as arguments to be able to notify a message with / without computation ??
-        self.ensure_one()  # tde: not sure, just for testinh, will see
-        partners = self.env['res.partner'] | self.partner_ids
-        channels = self.env['mail.channel'] | self.channel_ids
+        self.ensure_one()
+        partners_sudo = self.env['res.partner'].sudo() | self_sudo.partner_ids
+        channels_sudo = self.env['mail.channel'].sudo() | self_sudo.channel_ids
 
         # all followers of the mail.message document have to be added as partners and notified
         # and filter to employees only if the subtype is internal
@@ -785,28 +781,38 @@ class Message(models.Model):
             ]).filtered(lambda fol: self.subtype_id in fol.subtype_ids)
             if self_sudo.subtype_id.internal:
                 followers = followers.filtered(lambda fol: fol.channel_id or (fol.partner_id.user_ids and group_user in fol.partner_id.user_ids[0].mapped('groups_id')))
-            channels = self_sudo.channel_ids | followers.mapped('channel_id')
-            partners = self_sudo.partner_ids | followers.mapped('partner_id')
-        else:
-            channels = self_sudo.channel_ids
-            partners = self_sudo.partner_ids
+            channels_sudo |= followers.mapped('channel_id')
+            partners_sudo |= followers.mapped('partner_id')
 
         # remove author from notified partners
         if not self._context.get('mail_notify_author', False) and self_sudo.author_id:
-            partners = partners - self_sudo.author_id
+            partners_sudo = partners_sudo - self_sudo.author_id
 
         # update message, with maybe custom values
         message_values = {
-            'channel_ids': [(6, 0, channels.ids)],
-            'needaction_partner_ids': [(6, 0, partners.ids)]
+            'channel_ids': [(6, 0, channels_sudo.ids)],
+            'needaction_partner_ids': [(6, 0, partners_sudo.ids)]
         }
         if self.model and self.res_id and hasattr(self.env[self.model], 'message_get_message_notify_values'):
             message_values.update(self.env[self.model].browse(self.res_id).message_get_message_notify_values(self, message_values))
         self.write(message_values)
 
         # notify partners and channels
-        partners._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
-        channels._notify(self)
+        # those methods are called as SUPERUSER because portal users posting messages
+        # have no access to partner model. Maybe propagating a real uid could be necessary.
+        email_channels = channels_sudo.filtered(lambda channel: channel.email_send)
+        # make a dedicated search on res.users to avoid user_ids.notification_type that will be user_ids.id in [ARRAY]
+        notif_users = self.env['res.users'].sudo().search([
+            ('partner_id', 'in', partners_sudo.ids),
+            ('notification_type', '=', 'inbox')
+        ])
+        partners_sudo.search([
+            '|',
+            ('id', 'in', (partners_sudo - notif_users.mapped('partner_id')).ids),
+            ('channel_ids', 'in', email_channels.ids),
+            ('email', '!=', self_sudo.author_id and self_sudo.author_id.email or self_sudo.email_from),
+        ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+        channels_sudo._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore
         # change access rights.

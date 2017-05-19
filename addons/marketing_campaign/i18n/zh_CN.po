@@ -4,47 +4,19 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -69,7 +41,7 @@ msgid ""
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
 "一个活动可以有许多小的活动，例如发送邮件，打印信件，分配给一个团队等等\n"
-"这些晓得活动在一些特定情景中被触发；在第一个合同完成10天后，如果线索还没有被关闭的话合同生成,等等。"
+"这些晓得活动在一些特定情景中被触发；在第一个合同完成１０天后，如果线索还没有被关闭的话合同生成"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -93,7 +65,7 @@ msgid "Activity"
 msgstr "活动"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:384
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "在%(interval_nbr)d %(interval_type)s之后"
@@ -101,7 +73,7 @@ msgstr "在%(interval_nbr)d %(interval_type)s之后"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "All"
-msgstr "全部"
+msgstr "All"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -118,12 +90,12 @@ msgstr "带信号的活动可以通过编程方式访问。请小心，当信号
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr "4月"
+msgstr "四月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr "8月"
+msgstr "八月"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -131,7 +103,7 @@ msgid "Automatic"
 msgstr "自动的"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:383
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "自动迁移"
@@ -254,17 +226,7 @@ msgid "Condition"
 msgstr "条件"
 
 #. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_2
-msgid "Congratulations! You are now a Silver Partner!"
-msgstr "祝贺！你现在已经是我们的银牌业务伙伴了！"
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_3
-msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr "祝贺！你现在已经是我们的金牌业务伙伴了！"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:385
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -324,7 +286,7 @@ msgstr "天(s)"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr "12月"
+msgstr "十二月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_sync_mode
@@ -381,7 +343,7 @@ msgid "Email"
 msgstr "Email"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:586
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Email预览"
@@ -390,11 +352,6 @@ msgstr "Email预览"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "Email模板"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Email模板预览"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -478,7 +435,7 @@ msgid ""
 "Fixed cost for running this campaign. You may also specify variable cost and"
 " revenue on each campaign activity. Cost and Revenue statistics are included"
 " in Campaign Reporting."
-msgstr "开展此营销活动的固定成本。你也可以为每个营销活动指定可变成本和收入。成本和收入统计包含在营销活动报告中。"
+msgstr "开展此营销活动的固定成本。你也可以为每个营销活动指定可变成本和收入。成本和收入统计包含在营销活动报表中。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -541,7 +498,7 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
 msgid "Incoming Transitions"
-msgstr "入向转换"
+msgstr "进来的转换"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_run
@@ -561,17 +518,17 @@ msgstr "间隔值"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr "1月"
+msgstr "一月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr "7月"
+msgstr "七月"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr "6月"
+msgstr "六月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis___last_update
@@ -614,7 +571,7 @@ msgstr "发起日期"
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
 msgid "Launch Month"
-msgstr "启动月份"
+msgstr "发起月份"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_root
@@ -624,7 +581,7 @@ msgstr "线索自动化"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr "管理员"
+msgstr "经理"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -634,7 +591,7 @@ msgstr "手工模式"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr "3月"
+msgstr "三月"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
@@ -665,6 +622,20 @@ msgid "Marketing Campaign Statistics"
 msgstr "市场营销统计"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -674,7 +645,7 @@ msgstr "市场报告"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr "5月"
+msgstr "五月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_mode
@@ -699,13 +670,13 @@ msgstr "月"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_segment_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_name
 msgid "Name"
-msgstr "名字"
+msgstr "名称"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr "新建"
+msgstr "新的"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_segment_search
@@ -746,7 +717,7 @@ msgstr "一般"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr "11月"
+msgstr "十一月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_object_id
@@ -756,7 +727,7 @@ msgstr "对象"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
-msgstr "10月"
+msgstr "十月"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -785,17 +756,12 @@ msgstr "出向转换"
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_partner_id
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_partner_id
 msgid "Partner"
-msgstr "合作伙伴"
+msgstr "业务伙伴"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "业务伙伴字段"
-
-#. module: marketing_campaign
-#: model:ir.filters,name:marketing_campaign.filter0
-msgid "Partners"
-msgstr "合作伙伴"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -834,7 +800,7 @@ msgstr ""
 "   -activity：营销活动项\n"
 "   -workitem：营销活动工作项\n"
 "   -resource：营销活动代表的资源对象\n"
-"   -transitions：从此活动出向的营销活动列表\n"
+"   -transitions：从此活动转出的营销活动列表\n"
 "...-re：Python正则表达式模块"
 
 #. module: marketing_campaign
@@ -845,7 +811,7 @@ msgstr "报表"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
+msgid "Reporting"
 msgstr "报告"
 
 #. module: marketing_campaign
@@ -919,7 +885,7 @@ msgstr "片段"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "September"
-msgstr "9月"
+msgstr "九月"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_variable_cost
@@ -927,7 +893,7 @@ msgid ""
 "Set a variable cost if you consider that every campaign item that has "
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
-msgstr "设置一个可变成本，如果你认为每项到达这个点的营销活动项就会需要一定的成本。你可以在报告部分查看成本统计分析结果。"
+msgstr "设置一个可变成本，如果你认为每项到达这个点的营销活动项就会需要一定的成本。你可以在报表栏查看成本统计分析结果。"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_revenue
@@ -935,7 +901,7 @@ msgid ""
 "Set an expected revenue if you consider that every campaign item that has "
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
-msgstr "设置一个期望的收入，即如果你认为每个达到这个点的活动项会产生一定的收入。你可以在报告部分查看到收入统计。"
+msgstr "设置一个期望的收入，即如果你认为每个达到这个点的活动项会产生一定的收入。你可以在报表里面查看到收入统计。"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_form
@@ -1016,7 +982,7 @@ msgid "Test in Realtime"
 msgstr "实时检验"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
@@ -1047,7 +1013,7 @@ msgid "The campaign cannot be started. There are no activities in it."
 msgstr "营销活动未启动，因为其不包含任何活动项。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:609
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "这步没有邮件或者报表。"
@@ -1064,7 +1030,7 @@ msgid ""
 " If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
-msgstr "生成的工作分录会链接到与该记录相关的业务伙伴上。如果该记录就是业务伙伴，此字段留空。此字段用于营销分析或营销跟进等分析报告。"
+msgstr "生成的工作分录会链接到与该记录相关的业务伙伴上。如果该记录就是业务伙伴，此字段留空。此字段用于营销分析或营销跟进等分析报表。"
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -1129,11 +1095,6 @@ msgid "Variable Cost"
 msgstr "可变成本"
 
 #. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_1
-msgid "Welcome to the Odoo Partner Channel!"
-msgstr "欢迎来到Odoo的业务伙伴频道！"
-
-#. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
 msgstr "通过手工确认"
@@ -1146,7 +1107,7 @@ msgstr "工作项"
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Year(s)"
-msgstr "年(s)"
+msgstr "年"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml

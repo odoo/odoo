@@ -1,45 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Dorin Hongu <dhongu@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2015-10-01 09:22+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
-
-#. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
-msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>Referință client:</strong>"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>Incoterms:</strong>"
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_aftersale
-msgid "After-Sale"
-msgstr "După Vânzare"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr "Permite adăugarea costurilor de transport"
+msgstr "Permite adaugarea costurilor de transport"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
@@ -47,16 +36,9 @@ msgid "Allow setting manufacturing order properties per order line (advanced)"
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_sale_order_dates:0
-msgid ""
-"Allow to modify the sales order dates to postpone deliveries and "
-"procurements"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
 msgid "Allows you to tag sales order lines with properties."
-msgstr "Va permite sa marcati liniile comenzii de vânzare cu proprietati."
+msgstr "Va permite sa marcati liniile comenzii de vanzare cu proprietati."
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_route_so_lines:0
@@ -69,24 +51,19 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
-msgid "Date"
-msgstr "Data"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
 msgid "Default Shipping Policy"
-msgstr "Politică implicită de expediere"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Livrează toate produsele odată"
+msgstr "Livreaza toate produsele odata"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver each product when available"
-msgstr "Livrează fiecare produs atunci când este disponibil"
+msgstr "Livreaza fiecare produs atunci cand este disponibil"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -96,7 +73,7 @@ msgstr "Livrare"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "Comenzi de livrare"
+msgstr "Comenzi de Livrare"
 
 #. module: sale_stock
 #: selection:sale.config.settings,group_mrp_properties:0
@@ -109,17 +86,30 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Activați rutele în linia comenzii de vânzare"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
+msgid "Expense Invoice Policy"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
+msgid ""
+"If you invoice at cost, the expense will be invoiced on the sale order at "
+"the cost of the analytic line;if you invoice at sales price, the price of "
+"the product will be used instead."
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
 msgid "Incoterms"
-msgstr "Incoterms"
+msgstr "Incotermeni"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 
 #. module: sale_stock
@@ -144,20 +134,14 @@ msgstr "Factura"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Linie factura"
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_invoiced
-msgid "Invoicing"
-msgstr "Facturare"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
-#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 
 #. module: sale_stock
@@ -171,10 +155,16 @@ msgid "No shipping costs on sales orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:145
+#: code:addons/sale_stock/sale_stock.py:156
 #, python-format
 msgid "Not enough inventory!"
-msgstr "Nu este stoc suficient!"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/res_config.py:42
+#, python-format
+msgid "Only administrators can change the settings"
+msgstr "Doar administratorul poate opera modificările"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
@@ -182,7 +172,7 @@ msgid "Order Routing"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:156
+#: code:addons/sale_stock/sale_stock.py:167
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -203,16 +193,10 @@ msgid "Procurement"
 msgstr "Aprovizionare"
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_sale_order_dates:0
-msgid "Procurements and deliveries dates are based on the sales order dates"
-msgstr ""
-"Aprovizionările și datele de livrare sunt bazate pe data din comanda de "
-"vânzare"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
+#, fuzzy
 msgid "Product"
-msgstr "Produs"
+msgstr "Șablon produs"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
@@ -225,11 +209,6 @@ msgid "Properties on SO Lines"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_return_picking
-msgid "Return Picking"
-msgstr "Retur Ridicare"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
 msgid "Route"
 msgstr "Rută"
@@ -237,36 +216,31 @@ msgstr "Rută"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sale Order"
-msgstr "Comadă vânzare"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
 msgid "Sale Order Lines"
-msgstr "Poziţii comandă de vânzare"
+msgstr "Poziţii comenzi vânzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 msgid "Sales Order"
-msgstr "Comandă de vânzare"
+msgstr "Comanda de vanzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linie comanda de vânzare"
+msgstr "Linie comanda de vanzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Statistici comenzi de vânzare"
+msgstr "Statistici comenzi de vanzare"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
-msgid "Sales Safety Days *"
 msgstr ""
 
 #. module: sale_stock
@@ -288,7 +262,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
 #: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
 msgid "Shipping"
-msgstr "Livrare"
+msgstr "Transport"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -298,7 +272,7 @@ msgstr "Informații de livrare"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
 msgid "Shipping Policy"
-msgstr "Politică de livrare"
+msgstr "Politica de expediere"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -306,31 +280,14 @@ msgid "Stock Move"
 msgstr "Mișcare stoc"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:202
+#: code:addons/sale_stock/sale_stock.py:213
 #, python-format
-msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgid "This product is packaged by %s %s. You should sell %s %s."
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
-msgid "To Refund"
-msgstr "De rambursat"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
-msgid "To Refund in SO"
-msgstr "De rambursat în CV"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Transfer"
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
-#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
-msgid ""
-"Trigger a decrease of the delivered quantity in the associated Sale Order"
 msgstr ""
 
 #. module: sale_stock
@@ -340,13 +297,13 @@ msgid "Warehouse"
 msgstr "Depozit"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:201
+#: code:addons/sale_stock/sale_stock.py:212
 #, python-format
 msgid "Warning"
-msgstr "Atenție"
+msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:157
+#: code:addons/sale_stock/sale_stock.py:168
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -354,21 +311,14 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:146
+#: code:addons/sale_stock/sale_stock.py:157
 #, python-format
 msgid ""
-"You plan to sell %s %s but you only have %s %s available!\n"
-"The stock on hand is %s %s."
+"You plan to sell %.2f %s but you only have %.2f %s available!\n"
+"The stock on hand is %.2f %s."
 msgstr ""
-"Planificați să vindeți %s%s  dar aveți numai %s %s liber!\n"
-"Stocul disponibil este %s %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr "sale.config.settings"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"
+msgstr "setari.config.vanzare"

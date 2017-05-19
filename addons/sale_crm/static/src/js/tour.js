@@ -17,7 +17,7 @@ tour.tours.sale_tour.steps.splice(quotation_button_step_index, 1, {
     position: "right"
 }, {
     trigger: ".o_quotation_view_button",
-    content: _t("Let's have a look at the quotations of this sales team."),
+    content: _t("Let's have a look at the quotations of this sales channel."),
     position: "right"
 });
 });

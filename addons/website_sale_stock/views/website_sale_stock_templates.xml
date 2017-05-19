@@ -7,8 +7,8 @@
           <strong>Delivery Orders</strong>
         </div>
         <div>
-          <t t-foreach="order.picking_ids" t-as="i">
-            <t t-set="report_url" t-value="'/report/pdf/stock.report_picking/%s' % i.id"/>
+          <t t-foreach="order.picking_ids.filtered(lambda picking: picking.picking_type_id.code != 'internal')" t-as="i">
+            <t t-set="report_url" t-value="'/report/pdf/stock.report_deliveryslip/%s' % i.id"/>
             <div id='picking_info'>
               <a t-att-href="report_url"><span class="fa fa-download"/></a>
               <a t-att-href="report_url"><span t-field="i.name"/></a>
@@ -32,3 +32,4 @@
     </xpath>
   </template>
 </odoo>
+

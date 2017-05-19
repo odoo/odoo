@@ -2,33 +2,50 @@ odoo.define('project.update_kanban', function (require) {
 'use strict';
 
 var core = require('web.core');
-var data = require('web.data');
 var Dialog = require('web.Dialog');
-var Model = require('web.Model');
-var session = require('web.session');
-
-var KanbanView = require('web_kanban.KanbanView');
-var KanbanRecord = require('web_kanban.Record');
+var KanbanRecord = require('web.KanbanRecord');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 KanbanRecord.include({
-    on_card_clicked: function () {
-        if (this.model === 'project.project') {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _openRecord: function () {
+        if (this.modelName === 'project.project') {
             this.$('.o_project_kanban_boxes a').first().click();
         } else {
             this._super.apply(this, arguments);
         }
     },
-    on_kanban_action_clicked: function (ev) {
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _onKanbanActionClicked: function (ev) {
         var self = this;
-        if (this.model === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
+        if (this.modelName === 'project.task' && $(ev.currentTarget).data('type') === 'set_cover') {
             ev.preventDefault();
 
-            new Model('ir.attachment').query(['id', 'name'])
-               .filter([['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']])
-               .all().then(open_cover_images_dialog);
+            var domain = [['res_model', '=', 'project.task'], ['res_id', '=', this.id], ['mimetype', 'ilike', 'image']];
+            this._rpc({
+                    model: 'ir.attachment',
+                    method: 'search_read',
+                    domain: domain,
+                    fields: ['id', 'name'],
+                })
+                .then(open_cover_images_dialog);
         } else {
             this._super.apply(this, arguments, ev);
         }
@@ -44,9 +61,9 @@ KanbanRecord.include({
             var dialog = new Dialog(self, {
                 title: _t("Set a Cover Image"),
                 buttons: [{text: _t("Select"), classes: 'btn-primary', close: true, disabled: !cover_id, click: function () {
-                    self.update_record({data: {displayed_image_id: $imgs.filter('.o_selected').data('id')}});
+                    self._updateRecord({displayed_image_id: $imgs.filter('.o_selected').data('id')});
                 }}, {text: _t("Remove Cover Image"), close: true, click: function () {
-                    self.update_record({data: {displayed_image_id: 0}});
+                    self._updateRecord({displayed_image_id: 0});
                 }}, {text: _t("Discard"), close: true}],
                 $content: $content,
             }).open();
@@ -58,7 +75,7 @@ KanbanRecord.include({
             });
 
             $content.on('dblclick', 'img', function (ev) {
-                self.update_record({data: {displayed_image_id: $(ev.currentTarget).data('id')}});
+                self._updateRecord({displayed_image_id: $(ev.currentTarget).data('id')});
                 dialog.close();
             });
         }

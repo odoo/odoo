@@ -68,7 +68,7 @@ class MembershipLine(models.Model):
                 line.state = 'canceled'
                 continue
             istate = fetched[0]
-            if istate in ('draft', 'proforma'):
+            if istate == 'draft':
                 line.state = 'waiting'
             elif istate == 'open':
                 line.state = 'invoiced'

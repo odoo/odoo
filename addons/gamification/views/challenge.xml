@@ -44,7 +44,7 @@
                             class="oe_stat_button"
                             icon="fa-gift"
                             attrs="{'invisible': [('state','=','draft')]}">
-                            <div class="o_form_field o_stat_info">
+                            <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Related</span>
                                 <span class="o_stat_text">Goals</span>
                             </div>
@@ -58,7 +58,7 @@
                         </h1>
                         <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                         <div>
-                            <field name="user_domain" widget="char_domain" options="{'model': 'res.users'}" />
+                            <field name="user_domain" widget="domain" options="{'model': 'res.users'}" />
                             <field name="user_ids" groups="base.group_no_one" widget="many2many_tags" readonly="True" />
                         </div>
                     </div>

@@ -139,7 +139,7 @@ class TestPayment(AccountingTestCase):
         bank_statement = self.reconcile(liquidity_aml, 200, 0, False)
 
         self.assertEqual(liquidity_aml.statement_id, bank_statement)
-        self.assertEqual(liquidity_aml.move_id.statement_line_id, bank_statement.line_ids[0])
+        self.assertEqual(liquidity_aml.statement_line_id, bank_statement.line_ids[0])
 
         self.assertEqual(payment.state, 'reconciled')
 

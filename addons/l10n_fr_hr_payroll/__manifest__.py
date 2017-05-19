@@ -28,8 +28,8 @@ TODO:
     'data': [
         'data/l10n_fr_hr_payroll_data.xml',
         'views/l10n_fr_hr_payroll_view.xml',
+        'views/l10n_fr_hr_payroll_config_settings_views.xml',
         'report/report_l10n_fr_fiche_paye.xml',
         'report/l10n_fr_hr_payroll_report.xml',
-        'views/l10n_fr_hr_payroll_config_settings_views.xml',
     ],
 }

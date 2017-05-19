@@ -5,8 +5,18 @@
         <field name="name">mass.mailing.config.settings.inherit</field>
         <field name="model">mass.mailing.config.settings</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='mass_mailing_group']" position="inside">
-                <field name="group_website_popup_on_exit" widget="radio"/>
+            <xpath expr="//div[@id='module_website_mass_mailing']" position="after">
+                <div class="col-md-6 o_setting_box col-xs-12" title="This adds a new Newsletter Popup snippet to drag &amp; drop on on your website pages. It triggers a popup when visitors land on the page. This popup prompts them to enter their email address to join a mailing list.">
+                    <div class="o_setting_left_pane">
+                        <field name="group_website_popup_on_exit"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="group_website_popup_on_exit"/>
+                        <div class="text-muted">
+                            Encourage to subscribe to mailing lists with a popup
+                        </div>
+                    </div>
+                </div>
             </xpath>
         </field>
     </record>

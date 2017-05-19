@@ -7,6 +7,7 @@
 
 See <http://github.com/ActiveState/appdirs> for details and usage.
 """
+from __future__ import print_function
 # Dev Notes:
 # - MSDN on where to store app data files:
 #   http://support.microsoft.com/default.aspx?scid=kb;en-us;310294#XSLTH3194121123120121120120
@@ -14,7 +15,7 @@ See <http://github.com/ActiveState/appdirs> for details and usage.
 # - XDG spec for Un*x: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
 
 __version_info__ = (1, 3, 0)
-__version__ = '.'.join(map(str, __version_info__))
+__version__ = '.'.join(str(v) for v in __version_info__)
 
 
 import sys
@@ -372,7 +373,11 @@ def _get_win_folder_from_registry(csidl_name):
     registry for this guarantees us the correct answer for all CSIDL_*
     names.
     """
-    import _winreg
+    try:
+        import winreg as _winreg
+    except ImportError:
+        # pylint: disable=bad-python3-import
+        import _winreg
 
     shell_folder_name = {
         "CSIDL_APPDATA": "AppData",

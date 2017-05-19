@@ -5,7 +5,7 @@ import psycopg2
 
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, pycompat
 import odoo.osv.expression as expression
 
 
@@ -85,10 +85,10 @@ class TestExpression(TransactionCase):
             'b ab': [cids['B'], cids['AB']],
         }
         pids = {}
-        for name, cat_ids in partners_config.iteritems():
+        for name, cat_ids in pycompat.items(partners_config):
             pids[name] = partners.create({'name': name, 'category_id': [(6, 0, cat_ids)]}).id
 
-        base_domain = [('id', 'in', pids.values())]
+        base_domain = [('id', 'in', list(pycompat.values(pids)))]
 
         def test(op, value, expected):
             found_ids = partners.search(base_domain + [('category_id', op, value)]).ids
@@ -214,9 +214,8 @@ class TestExpression(TransactionCase):
 
         # create new company with partners, and partners with no company
         company2 = self.env['res.company'].create({'name': 'Acme 2'})
-        for i in xrange(4):
+        for i in range(4):
             Partner.create({'name': 'P of Acme %s' % i, 'company_id': company2.id})
-        for i in xrange(4):
             Partner.create({'name': 'P of All %s' % i, 'company_id': False})
 
         # check if many2one works with negative empty list

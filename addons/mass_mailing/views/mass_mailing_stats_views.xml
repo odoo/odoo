@@ -30,7 +30,6 @@
         <field name="arch" type="xml">
             <tree string="Mail Statistics">
                 <field name="recipient"/>
-                <field name="mail_mail_id_int"/>
                 <field name="message_id"/>
                 <field name="sent"/>
                 <field name="exception"/>
@@ -80,7 +79,16 @@
         <field name="name">Mail Statistics</field>
         <field name="res_model">mail.mail.statistics</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,tree,form</field>
+        <field name="view_mode">graph,tree,form,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_mass_mailing_id': active_id}</field>
+    </record>
+
+    <record id="action_view_mail_mail_statistics_mailing_list" model="ir.actions.act_window">
+        <field name="name">EMails Sent</field>
+        <field name="res_model">mail.mail.statistics</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph,form,pivot</field>
         <field name="domain">[]</field>
         <field name="context">{'search_default_mass_mailing_id': active_id}</field>
     </record>

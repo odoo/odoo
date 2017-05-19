@@ -12,5 +12,7 @@ class ResPartner(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string='# Tasks')
 
     def _compute_task_count(self):
+        fetch_data = self.env['project.task'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
+        result = dict((data['partner_id'][0], data['partner_id_count']) for data in fetch_data)
         for partner in self:
-            partner.task_count = len(partner.task_ids)
+            partner.task_count = result.get(partner.id, 0)

@@ -179,6 +179,7 @@
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
+                            <field name="vat" placeholder="e.g. BE0477472701"/>
                             <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..." options="{'no_create_edit': True}"/>
                         </group>
@@ -217,7 +218,7 @@
                                     <field name="mobile"/>
                                     <field name="fax"/>
                                     <field name="state_id"/>
-                                    <field name="image"/>
+                                    <field name="image_small"/>
                                     <field name="lang"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -225,8 +226,8 @@
                                             <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
                                                 <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
                                                 <div class="o_kanban_image">
-                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
-                                                    <t t-if="!record.image.raw_value">
+                                                    <img t-if="record.image_small.raw_value" t-att-src="'data:image/png;base64,'+record.image_small.raw_value"/>
+                                                    <t t-if="!record.image_small.raw_value">
                                                         <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
                                                         <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
                                                         <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
@@ -257,7 +258,11 @@
                                 </kanban>
                                 <form string="Contact / Address">
                                     <sheet>
+                                        <!-- parent_id and type fields needed in attrs in base_address_city module which overwrites
+                                        _fields_view_get() of partner. It would be better to put those fields there but the web client
+                                        dosen't support when a field is displayed several times in the same view.-->
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="parent_id" invisible="1"/>
                                         <hr/>
                                         <group>
                                             <group attrs="{'invisible': [('type','=', 'contact')]}">
@@ -276,9 +281,9 @@
                                             <group>
                                                 <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                                                 <field name="title" placeholder="e.g. Mr."
-                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
-                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                    attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="email"/>
                                                 <field name="phone" widget="phone"/>
                                                 <field name="mobile" widget="phone"/>
@@ -351,6 +356,7 @@
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <kanban class="o_res_partner_kanban">
+                    <field name="id"/>
                     <field name="color"/>
                     <field name="display_name"/>
                     <field name="title"/>
@@ -459,7 +465,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
+            <field name="context">{'default_customer':1, 'search_default_customer':1, 'default_company_type': 'company','default_is_company': 1}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -507,7 +513,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
+            <field name="domain">[('supplier','!=',1),('customer','!=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
 

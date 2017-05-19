@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, pycompat
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -64,7 +64,7 @@ class AccountAssetCategory(models.Model):
 class AccountAssetAsset(models.Model):
     _name = 'account.asset.asset'
     _description = 'Asset/Revenue Recognition'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread']
 
     entry_count = fields.Integer(compute='_entry_count', string='# Asset Entries')
     name = fields.Char(string='Asset Name', required=True, readonly=True, states={'draft': [('readonly', False)]})
@@ -285,8 +285,7 @@ class AccountAssetAsset(models.Model):
             dummy, tracking_value_ids = asset._message_track(tracked_fields, dict.fromkeys(fields))
             asset.message_post(subject=_('Asset created'), tracking_value_ids=tracking_value_ids)
 
-    @api.multi
-    def set_to_close(self):
+    def _get_disposal_moves(self):
         move_ids = []
         for asset in self:
             unposted_depreciation_line_ids = asset.depreciation_line_ids.filtered(lambda x: not x.move_check)
@@ -318,6 +317,12 @@ class AccountAssetAsset(models.Model):
                 if changes:
                     asset.message_post(subject=_('Asset sold or disposed. Accounting entry awaiting for validation.'), tracking_value_ids=tracking_value_ids)
                 move_ids += asset.depreciation_line_ids[-1].create_move(post_move=False)
+
+        return move_ids
+
+    @api.multi
+    def set_to_close(self):
+        move_ids = self._get_disposal_moves()
         if move_ids:
             name = _('Disposal Move')
             view_mode = 'form'
@@ -369,7 +374,7 @@ class AccountAssetAsset(models.Model):
         vals = self.onchange_category_id_values(self.category_id.id)
         # We cannot use 'write' on an object that doesn't exist yet
         if vals:
-            for k, v in vals['value'].iteritems():
+            for k, v in pycompat.items(vals['value']):
                 setattr(self, k, v)
 
     def onchange_category_id_values(self, category_id):
@@ -578,7 +583,7 @@ class AccountAssetDepreciationLine(models.Model):
             message = ''
             if message_description:
                 message = '<span>%s</span>' % message_description
-            for name, values in tracked_values.iteritems():
+            for name, values in pycompat.items(tracked_values):
                 message += '<div> &nbsp; &nbsp; &bull; <b>%s</b>: ' % name
                 message += '%s</div>' % values
             return message

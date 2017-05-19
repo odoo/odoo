@@ -166,19 +166,16 @@ odoo.define('web_editor.tour', function (require) {
         extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
     }, {
         content: "click on color style",
-        trigger: '.dropdown:has(.link-style) a[data-toggle="dropdown"]',
+        trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
         extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
     }, {
-        content: "choose success style",
-        trigger: '.dropdown ul label.btn-success',
-    }, {
         content: "insert a link url",
-        trigger: '#link-external',
+        trigger: '#o_link_dialog_url_input',
         extra_trigger: 'a#link-preview.btn',
         run: "text http://www.odoo.com",
     }, {
         content: "change text label",
-        trigger: '#link-text',
+        trigger: '#o_link_dialog_label_input',
         run: "text ABC[IMG] DEF",
     }, {
         content: "save link",
@@ -194,14 +191,11 @@ odoo.define('web_editor.tour', function (require) {
         extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
     }, {
         content: "click on color style again",
-        trigger: '.dropdown:has(label.btn-success) a[data-toggle="dropdown"]',
+        trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
         extra_trigger: 'a#link-preview:containsRegex(/^<img [^>]+>$/) img',
     }, {
-        content: "choose success style",
-        trigger: '.dropdown ul label.btn-success',
-    }, {
         content: "insert an email",
-        trigger: '#link-external',
+        trigger: '#o_link_dialog_url_input',
         extra_trigger: 'a#link-preview.btn',
         run: "text test@test.test",
     }, {

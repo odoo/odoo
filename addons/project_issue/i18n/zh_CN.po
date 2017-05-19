@@ -4,14 +4,16 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
+# Talway <9010446@qq.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# liulixia <liu.lixia@elico-corp.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,23 +29,18 @@ msgstr "# 电子邮件"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_res_partner_issue_count
 msgid "# Issues"
-msgstr "# 问题"
+msgstr "# 议题"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
-msgstr "# 发起人"
+msgstr "议题编号"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:156
+#: code:addons/project_issue/models/project_issue.py:146
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-msgid "<b>Category:</b>"
-msgstr "<b>类别:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -58,7 +55,7 @@ msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
 msgid "Activate timesheets on issues"
-msgstr "激活问题上的工时表"
+msgstr "激活议题上的工时单"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -74,12 +71,9 @@ msgstr "添加内部备注"
 #: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
 msgid ""
 "An Issue's kanban state indicates special situations affecting it:\n"
-"\n"
-"                                           * Normal is the default situation\n"
-"\n"
-"                                           * Blocked indicates something is preventing the progress of this issue\n"
-"\n"
-"                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this issue\n"
+" * Green indicates the issue is ready to be pulled to the next stage"
 msgstr ""
 
 #. module: project_issue
@@ -90,7 +84,7 @@ msgstr "分析账户"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr "已存档"
+msgstr "已归档"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -108,12 +102,12 @@ msgstr "分派给"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_close
 msgid "Avg. Delay to Close"
-msgstr "平均延迟关闭"
+msgstr "平均耗用天数"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_delay_open
 msgid "Avg. Delay to Open"
-msgstr "平均延迟开启"
+msgstr "距开始处理"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_working_hours_close
@@ -126,23 +120,6 @@ msgid "Avg. Working Hours to Open"
 msgstr "开启的评价工作时数"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-msgid "Blocked"
-msgstr "阻塞"
-
-#. module: project_issue
-#: model:project.issue,legend_done:project_issue.crm_case_buginaccountsmodule0
-#: model:project.issue,legend_done:project_issue.crm_case_constrainterror0
-#: model:project.issue,legend_done:project_issue.crm_case_errorinprogram0
-#: model:project.issue,legend_done:project_issue.crm_case_improvereportsinpms0
-#: model:project.issue,legend_done:project_issue.crm_case_includeattendancesheetinproject0
-#: model:project.issue,legend_done:project_issue.crm_case_newfeaturestobeadded0
-#: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
-#: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
-msgid "Buzz or set as done"
-msgstr "Buzz or set as done"
-
-#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr "负责人"
@@ -150,7 +127,7 @@ msgstr "负责人"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
 msgid "Channel"
-msgstr "频道"
+msgstr "渠道"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
@@ -185,7 +162,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
-msgstr "联系人"
+msgstr "联系"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_create_date
@@ -216,13 +193,18 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:296
+#: model:ir.actions.act_window,help:project_issue.project_issue_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:267
 #, python-format
 msgid "Customer"
 msgstr "客户"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:298
+#: code:addons/project_issue/models/project_issue.py:269
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
@@ -260,7 +242,7 @@ msgstr "上个动作后的天数"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_open
 msgid "Days to Assign"
-msgstr "分派天数"
+msgstr "分配天数"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_day_close
@@ -311,7 +293,7 @@ msgstr "不在议题上记录工作时间"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
-msgstr "有效期"
+msgstr "持续时间"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
@@ -339,6 +321,16 @@ msgid "Feature description"
 msgstr "功能说明"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Green"
+msgstr "绿色"
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
@@ -356,7 +348,7 @@ msgid "High"
 msgstr "高"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:271
+#: code:addons/project_issue/models/project_issue.py:242
 #, python-format
 msgid "I take it"
 msgstr "我来做"
@@ -378,7 +370,7 @@ msgstr "议题"
 #: model:mail.message.subtype,name:project_issue.mt_issue_blocked
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
 msgid "Issue Blocked"
-msgstr "议题受阻"
+msgstr "等待"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
@@ -415,7 +407,7 @@ msgstr "问题跟踪树形"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr "议题受阻"
+msgstr "等待"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -430,6 +422,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_from_partner
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
@@ -452,7 +445,7 @@ msgstr "议题分析"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr "看板阻塞解释"
+msgstr "看板阻塞说明"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
@@ -509,31 +502,23 @@ msgstr "低"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "My Activities"
+msgstr "我的活动"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Issues"
 msgstr "我的议题"
 
 #. module: project_issue
-#: model:project.issue,legend_blocked:project_issue.crm_case_buginaccountsmodule0
-#: model:project.issue,legend_blocked:project_issue.crm_case_constrainterror0
-#: model:project.issue,legend_blocked:project_issue.crm_case_errorinprogram0
-#: model:project.issue,legend_blocked:project_issue.crm_case_improvereportsinpms0
-#: model:project.issue,legend_blocked:project_issue.crm_case_includeattendancesheetinproject0
-#: model:project.issue,legend_blocked:project_issue.crm_case_newfeaturestobeadded0
-#: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
-#: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
-msgid "Need functional or technical help"
-msgstr "需要功能或者技术帮助"
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_activity
+msgid "My Next Issue Activities"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "New"
-msgstr "新建"
-
-#. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:275
-#, python-format
-msgid "New Issue"
-msgstr "新的议题"
+msgstr "新的"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -541,7 +526,17 @@ msgid "Next Action"
 msgstr "下一行动"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:322
+#: model:ir.ui.view,arch_db:project_issue.project_issue_view_tree_activity
+msgid "Next Activities"
+msgstr "下一步活动"
+
+#. module: project_issue
+#: model:ir.ui.menu,name:project_issue.project_issue_menu_activity
+msgid "Next Issue Activities"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:293
 #, python-format
 msgid "No Subject"
 msgstr "无主题"
@@ -549,21 +544,13 @@ msgstr "无主题"
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "No customer rating"
-msgstr "没有客户点评"
+msgstr "没有客户评级"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
+#: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "一般"
-
-#. module: project_issue
-#: model:project.issue,legend_blocked:project_issue.crm_case_createnewobject0
-#: model:project.issue,legend_blocked:project_issue.crm_case_pagenotfound0
-#: model:project.issue,legend_blocked:project_issue.crm_case_problemloadingpage0
-#: model:project.issue,legend_blocked:project_issue.crm_case_programmingerror0
-msgid "Not validated"
-msgstr "没有确认的"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_close
@@ -574,6 +561,11 @@ msgstr "剩余天数"
 #: model:ir.model.fields,help:project_issue.field_project_issue_report_delay_open
 msgid "Number of Days to open the project issue."
 msgstr "议题开始的天数"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Overdue Activities"
+msgstr "逾期活动"
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
@@ -599,7 +591,7 @@ msgstr "当任务或者议题在这个阶段的时候，覆盖用来看板选择
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
-msgstr "合作伙伴"
+msgstr "业务伙伴"
 
 #. module: project_issue
 #: code:addons/project_issue/models/account_analytic_account.py:16
@@ -652,28 +644,28 @@ msgid ""
 "Provides timesheet support for the issues/bugs management in project.\n"
 "-This installs the module project_issue_sheet."
 msgstr ""
-"提供对议题/错误管理的项目工时表的支持 \n"
+"提供对议题/错误管理的项目时间表的支持 \n"
 "-这将安装项目议题表模块。"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr "议题点评"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
-msgid "Ready for next stage"
-msgstr "准备好下一个阶段"
-
-#. module: project_issue
-#: model:project.issue,legend_done:project_issue.crm_case_logicalerrorinprogram0
-msgid "Ready to reopen"
-msgstr "准备重新打开"
+msgid "Red"
+msgstr "红色"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
 msgstr "搜索"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -750,12 +742,17 @@ msgstr "议题报表用于分析你的支持或售后服务的数量。报表自
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Timesheets"
-msgstr "工时表"
+msgstr "工时单"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
 msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Today Activities"
+msgstr "今天的活动"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
@@ -773,6 +770,11 @@ msgstr "未分派"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Unread Messages"
 msgstr "未读消息"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
@@ -813,7 +815,7 @@ msgid ""
 msgstr "你可以在这里把议题和任务链接起来，也可以直接创建一个"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:191
+#: code:addons/project_issue/models/project_issue.py:181
 #, python-format
 msgid "issues"
 msgstr "议题"

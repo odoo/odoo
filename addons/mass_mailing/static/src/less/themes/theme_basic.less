@@ -1,0 +1,136 @@
+// ============================
+// Mass Mailing "Theme Basic"
+// ============================
+
+// ===== Default Theme palette =====
+@o_mm_basic_color_alpha: #ffffff;
+@o_mm_basic_color_beta: #eeeeee;
+@o_mm_basic_color_gamma: #706482;
+@o_mm_basic_color_delta: #111;
+@o_mm_basic_color_epsilon: darken(@o_mm_basic_color_gamma, 5%);
+@o_mm_basic_color_zeta: #706482;
+@o_mm_basic_color_eta: #87a6b5;
+
+// ===== Default Theme variables =====
+@o_mm_basic_b_radius      : 2px;
+
+@o_mm_basic_font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+@o_mm_basic_text_color    : @o_mm_basic_color_delta;
+
+@o_mm_basic_btn_bg        : @o_mm_basic_color_gamma;
+@o_mm_basic_btn_text      : @o_mm_basic_color_beta;
+
+// ===== Editor =====
+#web_editor_inside_iframe {
+    #wrapwrap > main #editable_area {
+        background-color: transparent;
+    }
+}
+
+// ===== Colors =====
+.bg-beta {
+    background-color: @o_mm_basic_color_zeta;
+    color:  @o_mm_basic_color_beta;
+}
+.text-beta {
+    color: @o_mm_basic_color_zeta;
+}
+.bg-delta {
+    background-color: @o_mm_basic_color_eta;
+}
+.bg-gray-lighter {
+    background-color: @o_mm_basic_color_beta;
+}
+
+
+// ===== Layout =====
+.o_layout.o_basic_theme {
+    font-family: @o_mm_basic_font;
+    color: lighten @o_mm_basic_text_color;
+    background-color: @o_mm_basic_color_alpha;
+    padding: 0;
+
+    > .o_mail_wrapper {
+        max-width: none;
+        border: none;
+        background-color: @o_mm_basic_color_alpha;
+    }
+}
+
+// ===== Snippets (general) =====
+.o_mail_snippet_general {
+    max-width: none;
+
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        color: @o_mm_basic_text_color;
+    }
+
+    .btn.btn-primary {
+        color: @o_mm_basic_btn_text;
+        font-family: @o_mm_basic_font;
+        border-radius: @o_mm_basic_b_radius;
+        background-color: @o_mm_basic_btn_bg;
+    }
+
+    a, .btn.btn-link {
+        color: @o_mm_basic_color_epsilon;
+    }
+
+    .separator {
+        background-color: @o_mm_basic_color_beta;
+    }
+
+    .bg-beta {
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: @o_mm_basic_color_alpha;
+        }
+
+        .btn.btn-primary {
+            background-color: @o_mm_basic_color_eta;
+        }
+
+        a, .btn.btn-link {
+            color: @o_mm_basic_color_eta;
+        }
+    }
+}
+
+// ===== Snippets (specific) =====
+.o_mail_block_steps {
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: @o_mm_basic_color_beta;
+}
+
+.o_mail_block_event {
+    .o_mail_snippet_general{
+        background: darken(@o_mm_basic_color_beta, 2%);
+    }
+}
+
+.o_mail_block_comparison_table {
+    .separator {
+        background-color: darken(@o_mm_basic_color_beta, 15%);
+    }
+}
+
+.o_mail_block_discount2 {
+    .o_code {
+        background: @o_mm_basic_color_beta;
+    }
+}
+
+.o_mail_block_footer_tag_line {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.o_mail_block_footer_social {
+    .o_mail_table_styles {
+        border-top: 2px solid @o_mm_basic_color_beta;
+    }
+
+    .o_mail_footer_copy {
+        color: lighten(@o_mm_basic_text_color, 30%);
+    }
+}

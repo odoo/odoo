@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cgi
 import logging
 import lxml.html.clean as clean
 import random
@@ -16,6 +15,7 @@ from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
+from odoo.tools import pycompat, misc
 
 _logger = logging.getLogger(__name__)
 
@@ -42,13 +42,21 @@ class _Cleaner(clean.Cleaner):
     _style_re = re.compile('''([\w-]+)\s*:\s*((?:[^;"']|"[^"]*"|'[^']*')+)''')
 
     _style_whitelist = [
-        'font-size', 'font-family', 'background-color', 'color', 'text-align',
+        'font-size', 'font-family', 'font-weight', 'background-color', 'color', 'text-align',
+        'line-height', 'letter-spacing', 'text-transform', 'text-decoration',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right'
         # box model
-        'border', 'border-color', 'border-radius', 'height', 'margin', 'padding', 'width', 'max-width', 'min-width',
+        'border', 'border-color', 'border-radius', 'border-style', 'height',
+        'margin', 'padding', 'width', 'max-width', 'min-width',
         # tables
         'border-collapse', 'border-spacing', 'caption-side', 'empty-cells', 'table-layout']
+
+    _style_whitelist.extend(
+        ['border-%s-%s' % (position, attribute)
+            for position in ['top', 'bottom', 'left', 'right']
+            for attribute in ('style', 'color', 'width', 'left-radius', 'right-radius')]
+    )
 
     strip_classes = False
     sanitize_style = False
@@ -76,7 +84,7 @@ class _Cleaner(clean.Cleaner):
             new_node.text = text
             new_node.tail = tail
             if attrs:
-                for key, val in attrs.iteritems():
+                for key, val in pycompat.items(attrs):
                     new_node.set(key, val)
             return new_node
 
@@ -145,7 +153,7 @@ class _Cleaner(clean.Cleaner):
                 if style[0].lower() in self._style_whitelist:
                     valid_styles[style[0].lower()] = style[1]
             if valid_styles:
-                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.iteritems())
+                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in pycompat.items(valid_styles))
             else:
                 del el.attrib['style']
 
@@ -169,10 +177,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
     # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
-    src = part.sub(lambda m: ('cite=' not in m.group(1) and 'alt=' not in m.group(1)) and cgi.escape(m.group(1)) or m.group(1), src)
+    src = part.sub(lambda m: ('cite=' not in m.group(1) and 'alt=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
-    src = src.replace('<%', cgi.escape('<%'))
-    src = src.replace('%>', cgi.escape('%>'))
+    src = src.replace('<%', misc.html_escape('<%'))
+    src = src.replace('%>', misc.html_escape('%>'))
 
     kwargs = {
         'page_structure': True,
@@ -225,7 +233,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaned = cleaned.replace('%&gt;', '%>')
         # html considerations so real html content match database value
         cleaned.replace(u'\xa0', '&nbsp;')
-    except etree.ParserError, e:
+    except etree.ParserError as e:
         if 'empty' in str(e):
             return ""
         if not silent:
@@ -325,7 +333,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
-        html entities, using cgi.escape().
+        html entities, using misc.html_escape().
         - all \n,\r are replaced by <br />
         - enclose content into <p>
         - convert url into clickable link
@@ -334,7 +342,7 @@ def plaintext2html(text, container_tag=False):
         :param string container_tag: container of the html; by default the
             content is embedded into a <div>
     """
-    text = cgi.escape(ustr(text))
+    text = misc.html_escape(ustr(text))
 
     # 1. replace \n and \r
     text = text.replace('\n', '<br/>')
@@ -428,7 +436,7 @@ def generate_tracking_message_id(res_id):
     except NotImplementedError:
         rnd = random.random()
     rndstr = ("%.15f" % rnd)[2:]
-    return "<%.15f.%s-openerp-%s@%s>" % (time.time(), rndstr, res_id, socket.gethostname())
+    return "<%s.%.15f-openerp-%s@%s>" % (rndstr, time.time(), res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
@@ -522,4 +530,4 @@ def decode_smtp_header(smtp_header):
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
-    return separator.join(map(decode_smtp_header, filter(None, message.get_all(header, []))))
+    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)

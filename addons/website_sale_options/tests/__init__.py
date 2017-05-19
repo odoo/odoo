@@ -1,1 +1,1 @@
-import test_customize
+from . import test_customize

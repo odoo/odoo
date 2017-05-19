@@ -5,6 +5,7 @@
       <xpath expr="." position="inside">
           <link rel='stylesheet' href='/website_portal/static/src/less/website_portal.less'/>
           <script type="text/javascript" src="/website_portal/static/src/js/website_portal.js"></script>
+          <script type="text/javascript" src="/website_portal/static/src/js/website_portal_tour.js"></script>
       </xpath>
     </template>
 
@@ -26,9 +27,78 @@
         </ul>
     </template>
 
+    <!--
+        The search bar is composed of 2 buttons : a "filter by" and a "sort by". Changing the 'sortby'
+        criteria will keep the number of page, query params, ... Changing the 'filterby' param will
+        redirect the user to the beginning of document list, keeping query parameters.
+
+        These 2 buttons can be prepended by a advanced search input, to activate it, search_input need
+        to be initialized at 'True' and the content of the t-call is the list of li elements searchable.
+
+        :param dict searchbar_sortings : containing the sort criteria like
+            {'date': {'label': _('Newest'), 'order': 'create_date desc'}}
+        :param string sortby : name of the sort criteria
+        :param dict searchbar_filters : containing the filter criteria like
+            {'open': {'label': _('In Progress'), 'domain': [('state', '=', 'open')]}}
+        :param string filterby : name of the filter criteria
+        :param default_url : the base url of the pages (like '/my/orders')
+        :param boolean o_portal_search_panel : set to True to active the input search
+        :param html $0 : content of the t-call, <li>a</li><li>b</li>
+    -->
+    <template id="portal_searchbar" name="Portal Search Bar">
+        <t t-if='searchbar_inputs'>
+            <div class='hidden-xs pull-right o_portal_search_panel'>
+                 <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_label">Search</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
+                                <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control search_panel_fixed_width" t-att-value='search' name="search"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </t>
+        <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_sortby" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-sort fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div t-if="searchbar_filters" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_filters" class="search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-filter fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
+                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                        <span t-esc="searchbar_filters[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </template>
+
     <template id="portal_layout" name="Portal Layout">
         <t t-call="website.layout">
-            <div class="container mt16">
+            <div class="container mt16 o_website_portal">
                 <div class="navbar navbar-default">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
@@ -46,21 +116,23 @@
                     </div>
                 </div>
             </div>
-            <div id="wrap">
+            <div id="wrap" class='portal-wrap'>
                 <div class="container mb64">
-                    <div class="col-md-8">
-                        <t t-raw="0"/>
-                    </div>
-                    <div id="o_my_sidebar" class="col-md-3 col-md-offset-1 o_my_sidebar">
-                        <div class="o_my_contact" t-if="sales_rep">
-                            <t t-call="website_portal.contact"/>
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8">
+                            <t t-raw="0"/>
                         </div>
-                        <div class="o_my_details">
-                            <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
-                            <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
-                        </div>
-                        <div class="o_my_archives" t-if="archive_groups">
-                            <t t-call="website_portal.portal_archive_groups"/>
+                        <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                            <div class="o_my_contact" t-if="sales_rep">
+                                <t t-call="website_portal.contact"/>
+                            </div>
+                            <div class="o_my_details">
+                                <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                            </div>
+                            <div class="o_my_archives" t-if="archive_groups">
+                                <t t-call="website_portal.portal_archive_groups"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -87,7 +159,7 @@
     </template>
 
     <template id="contact" name="Contact">
-        <h3 class="page-header">Saleman</h3>
+        <h3 class="page-header">Salesperson</h3>
           <h5 t-esc="sales_rep.name"/>
           <p><a t-att-href="'mailto:'+sales_rep.email" t-esc="sales_rep.email"/></p>
           <p t-esc="sales_rep.phone"/>
@@ -196,6 +268,15 @@
         <xpath expr="//li[@id='o_logout']" position="before">
             <li><a href="/my/home" role="menuitem">My Account</a></li>
         </xpath>
+    </template>
+
+    <template id="record_pager" name="Portal Record Pager">
+        <t t-if='prev_record or next_record'>
+          <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </t>
     </template>
 
 </odoo>

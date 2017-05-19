@@ -22,7 +22,7 @@ from tempfile import NamedTemporaryFile
 #----------------------------------------------------------
 # Utils
 #----------------------------------------------------------
-execfile(join(dirname(__file__), '..', 'odoo', 'release.py'))
+exec(open(join(dirname(__file__), '..', 'odoo', 'release.py'), 'rb').read())
 version = version.split('-')[0]
 docker_version = version.replace('+', '')
 timestamp = time.strftime("%Y%m%d", time.gmtime())

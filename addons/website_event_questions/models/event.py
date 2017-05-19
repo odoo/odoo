@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+
+class EventType(models.Model):
+    _inherit = 'event.type'
+
+    use_questions = fields.Boolean('Questions to Attendees')
+    question_ids = fields.One2many(
+        'event.question', 'event_type_id',
+        string='Questions', copy=True)
 
 
 class EventEvent(models.Model):
@@ -13,6 +23,23 @@ class EventEvent(models.Model):
                                            domain=[('is_individual', '=', False)])
     specific_question_ids = fields.One2many('event.question', 'event_id', 'Specific Questions',
                                             domain=[('is_individual', '=', True)])
+
+    @api.onchange('event_type_id')
+    def _onchange_type(self):
+        super(EventEvent, self)._onchange_type()
+        if self.event_type_id.use_questions and self.event_type_id.question_ids:
+            self.question_ids = [(5, 0, 0)] + [
+                (0, 0, {
+                    'title': question.title,
+                    'sequence': question.sequence,
+                    'is_individual': question.is_individual,
+                    'answer_ids': [(0, 0, {
+                        'name': answer.name,
+                        'sequence': answer.sequence,
+                    }) for answer in question.answer_ids]
+                })
+                for question in self.event_type_id.question_ids
+            ]
 
 
 class EventRegistrationAnswer(models.Model):
@@ -41,12 +68,18 @@ class EventQuestion(models.Model):
     _order = 'sequence,id'
 
     title = fields.Char(required=True, translate=True)
-    event_id = fields.Many2one('event.event', required=True, ondelete='cascade')
+    event_type_id = fields.Many2one('event.type', 'Event Type', ondelete='cascade')
+    event_id = fields.Many2one('event.event', 'Event', ondelete='cascade')
     answer_ids = fields.One2many('event.answer', 'question_id', "Answers", required=True, copy=True)
     sequence = fields.Integer(default=10)
     is_individual = fields.Boolean('Ask each attendee',
                                    help="If True, this question will be asked for every attendee of a reservation. If "
                                         "not it will be asked only once and its value propagated to every attendees.")
+
+    @api.constrains('event_type_id', 'event_id')
+    def _constrains_event(self):
+        if any(question.event_type_id and question.event_id for question in self):
+            raise UserError(_('Question should belong to either event category or event but not both'))
 
 
 class EventAnswer(models.Model):

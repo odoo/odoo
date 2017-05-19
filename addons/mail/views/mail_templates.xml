@@ -11,12 +11,18 @@
                 <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chat_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/systray.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/chat_mixin.js"></script>
 
                 <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
@@ -27,13 +33,21 @@
                 <link rel="stylesheet" href="/mail/static/src/less/followers.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/systray.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/mail_activity.less"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/chat_window_test.js"></script>
             </xpath>
         </template>
 
         <template id="message_origin_link">
             <p>This <t t-esc="self._description.lower()"/> has been <span t-if="edit">modified</span><span t-if="not edit">created</span> from:
                 <t t-foreach="origin" t-as="o">
-                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
                 </t>
             </p>
         </template>
@@ -47,7 +61,19 @@
                     View <t t-esc="object._description.lower()"/>
                 </a>
             </p>
-            <p style="color:#9E588B;">Powered by <a href="https://www.odoo.com">Odoo</a>.</p>
+            <p style="color:#9E588B;">Powered by <a target="_blank" href="https://www.odoo.com">Odoo</a>.</p>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <strong><span t-attf-class="fa #{activity.activity_type_id.icon}"/></strong> <span t-field="activity.activity_type_id.name"/> done
+        by <span t-field="activity.user_id.name"/>:
+        <span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-field="activity.note"/>
+    <div t-if="activity.feedback"><strong> Feedback : </strong><p t-field="activity.feedback"></p></div>
+</div>
         </template>
 
     </data>

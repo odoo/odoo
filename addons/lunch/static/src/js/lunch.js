@@ -1,75 +1,94 @@
-odoo.define('lunch.form_widgets', function (require) {
+odoo.define('lunch.previous_orders', function (require) {
 "use strict";
 
+var AbstractField = require('web.AbstractField');
 var core = require('web.core');
-var form_common = require('web.form_common');
-var form_widgets = require('web.form_widgets');
-var form_relational = require('web.form_relational');
-var _t = core._t;
+var field_registry = require('web.field_registry');
+var field_utils = require('web.field_utils');
+
 var QWeb = core.qweb;
 
-var LunchPreviousOrdersWidget = form_relational.AbstractManyField.extend(form_common.ReinitializeWidgetMixin, {
-    className: 'row o_lunch_last_orders',
+var LunchPreviousOrdersWidget = AbstractField.extend({
     events: {
-        'click .o_add_button': 'set_order_line',
+        'click .o_add_button': '_onAddOrder',
     },
-    init: function(field_manager, node) {
+    supportedFieldTypes: ['one2many'],
+    /**
+     * @override
+     */
+    init: function () {
         this._super.apply(this, arguments);
-        this.lunch_data = {};
-        this.fields_to_read = ['product_id', 'supplier', 'note', 'price', 'category_id', 'currency_id'];
-        this.monetary = new form_widgets.FieldMonetary(field_manager, node); // create instance to use format_value
-        this.monetary.__edispatcherRegisteredEvents = []; // remove all bind events
+        this.lunchData = JSON.parse(this.value);
     },
-    fetch_value: function(){
-        var self = this;
-        return this.dataset.read_ids(this.get('value'), this.fields_to_read)
-            .then(function(data) {
-                _.each(data, function(order) {
-                    self.lunch_data[order['id']] = order;
-                });
-                return data;
-            });
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Used by the widget to render the previous order price like a monetary.
+     *
+     * @private
+     * @param {Object} order
+     * @returns {string} the monetary formatting of order price
+     */
+    _formatValue: function (order) {
+        var options = _.extend({}, this.nodeOptions, order);
+        return field_utils.format.monetary(order.price, this.field, options);
     },
-    get_line_value: function(id) {
-        var data = _.clone(this.lunch_data[id]);
-        if (typeof this.lunch_data[id]['product_id'][0] != 'undefined'){
-            data['product_id'] = this.lunch_data[id]['product_id'][0];
+    /**
+     * @private
+     * @override
+     */
+    _render: function () {
+        if (this.lunchData !== false) {
+            // group data by supplier for display
+            var categories = _.groupBy(this.lunchData, 'supplier');
+            this.$el.html(QWeb.render('LunchPreviousOrdersWidgetList', {
+                formatValue: this._formatValue.bind(this),
+                categories: categories,
+            }));
+        } else {
+            return this.$el.html(QWeb.render('LunchPreviousOrdersWidgetNoOrder'));
         }
-        if (typeof this.lunch_data[id]['supplier'][0] != 'undefined'){
-            data['supplier'] = this.lunch_data[id]['supplier'][0];
-        }
-        if (typeof this.lunch_data[id]['category_id'][0] != 'undefined'){
-            data['category_id'] = this.lunch_data[id]['category_id'][0];
-        }
-        return data;
     },
-    set_order_line: function(event) {
-        var data = this.get_line_value(parseInt($(event.currentTarget).data('id')));
-        var order_line_ids = this.field_manager.fields.order_line_ids;
-        order_line_ids.data_create(data);
-        order_line_ids.reload_current_view();
-    },
-    render_value: function() {
-        var self = this;
-        return this.fetch_value().then(function(data) {
-            if (_.isEmpty(data)) {
-                return self.$el.html(QWeb.render("lunch_order_widget_no_previous_order"));
-            }
-            var categories = _.groupBy(data,function(data1){return data1['supplier'][1];});
-            return self.$el.html(QWeb.render("lunch_order_widget_previous_orders_list", {'widget': self, 'categories': categories}));
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAddOrder: function (event) {
+        // Get order details from line
+        var lineID = parseInt($(event.currentTarget).data('id'));
+        if (!lineID) {
+            return;
+        }
+        var values = {
+            product_id: {
+                id: this.lunchData[lineID].product_id,
+                display_name: this.lunchData[lineID].product_name,
+            },
+            note: this.lunchData[lineID].note,
+            price: this.lunchData[lineID].price,
+        };
+
+        // create a new order line
+        this.trigger_up('field_changed', {
+            dataPointID: this.dataPointID,
+            changes: {
+                order_line_ids: {
+                    operation: 'CREATE',
+                    data: values,
+                },
+            },
         });
-    },
-    destroy: function() {
-        this.monetary.destroy();
-        this._super();
-    },
-    is_false: function() {
-        return false;
     },
 });
 
-core.form_widget_registry.add('previous_order', LunchPreviousOrdersWidget);
-
-return LunchPreviousOrdersWidget;
+field_registry.add('previous_order', LunchPreviousOrdersWidget);
 
 });

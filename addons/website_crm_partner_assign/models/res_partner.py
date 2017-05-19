@@ -37,6 +37,7 @@ class ResPartner(models.Model):
     partner_weight = fields.Integer('Level Weight', default=lambda *args: 0,
         help="Gives the probability to assign a lead to this partner. (0 means no assignation.)")
     grade_id = fields.Many2one('res.partner.grade', 'Level')
+    grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
     activation = fields.Many2one('res.partner.activation', 'Activation', index=True)
     date_partnership = fields.Date('Partnership Date')
     date_review = fields.Date('Latest Partner Review')
@@ -49,6 +50,12 @@ class ResPartner(models.Model):
         'res.partner', 'assigned_partner_id',
         string='Implementation References',
     )
+    implemented_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
+
+    @api.one
+    @api.depends('implemented_partner_ids', 'implemented_partner_ids.website_published', 'implemented_partner_ids.active')
+    def _compute_implemented_partner_count(self):
+        self.implemented_count = len(self.implemented_partner_ids.filtered('website_published'))
 
     @api.onchange('grade_id')
     def _onchange_grade_id(self):

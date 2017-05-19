@@ -20,8 +20,48 @@
         margin-left: auto
         margin-right: auto
 
-.oe_website_sale ul ul
-    margin-left: 1.5em
+.oe_website_sale
+    ul ul
+        margin-left: 1.5em
+
+    .td-product_name, h1[itemprop="name"], .oe_product_cart form h5
+        word-wrap: break-word
+
+    .td-product_name
+        min-width: 140px
+    .td-img
+        width: 100px
+
+    .td-qty
+        width: 130px
+
+    .td-price, .td-price-total
+        width: 100px
+
+    @media (max-width: 767px)
+        .td-img, .td-price-total
+            display: none
+        .td-qty
+            width: 60px
+        .td-price
+            width: 80px
+
+    @media (max-width: 476px)
+        .td-qty
+            width: 60px
+
+        .oe_cart table thead, #modal_optional_products table thead
+            display: none
+
+        .oe_cart table td.td-img, #modal_optional_products table td.td-img
+            display: none
+
+        .oe_cart a span.hidden-xs, #modal_optional_products a span.hidden-xs
+            display: none !important
+
+        .oe_cart a span.visible-xs-inline, #modal_optional_products a span.visible-xs-inline
+            display: inline !important
+
 
 /* ---- Default Styles ---- */
 
@@ -265,45 +305,6 @@ div#payment_method
         padding-bottom: 5px
 
 
-@media (max-width: 992px)
-    #modal_optional_products table:last-child
-        td:last-child
-            overflow: hidden
-        td:nth-child(2)
-            width: 50%
-        td:nth-child(3)
-            width: 20%
-        td:last-child, td:nth-last-child(2)
-            width: 15%
-@media (max-width: 500px)
-    .oe_cart table, #modal_optional_products table
-        display: inline-block
-        thead
-            display: none
-        tbody, tr, td
-            float: left
-            width: 100% !important
-            display: inline-block
-        td:first-child
-            display: none
-        td:nth-child(2)
-            border-top-style: double
-            border-top-width: 6px
-        td:last-child
-            margin-bottom: 16px
-        &:last-child tr:last-child td:last-child
-            margin-bottom: 0
-        td:last-child, td:nth-last-child(2)
-            width: 50% !important
-            height: 46px
-            text-align: center
-    #modal_optional_products table:last-child td:nth-child(3) > div
-        float: none !important
-    .oe_cart a, #modal_optional_products a
-        span.hidden-xs
-            display: none !important
-        span.visible-xs-inline
-            display: inline !important
 /* ---- Product list style ---- */
 
 @media (min-width: 400px)
@@ -471,6 +472,12 @@ ul.wizard li:first-child
     padding-left: 15px
     border-radius: 4px 0 0 4px
 
+ul.wizard li:last-child
+    border-radius: 0 4px 4px 0
+    border-right-width: 1px
+    .chevron
+        display: none
+
 /* Shipping & Billing */
 .label-optional
     font-weight: normal
@@ -545,3 +552,28 @@ a.no-decoration
 
 .ecom-zoomable img[data-zoom]
     cursor: zoom-in
+
+
+.break-word
+    word-wrap: break-word
+
+#coupon_box form
+  max-width: 300px
+
+.font-weight-normal
+    font-weight: normal
+
+.o_website_sale_animate
+    opacity: 0.7
+    position: absolute
+    height: 150px
+    width: 150px
+    z-index: 1020
+
+.o_red_highlight
+    background: #db0700 !important
+    box-shadow: 0 0 0px 0px rgba(240,8,0,0.4)
+    transition: all 0.5s linear
+
+.o_shadow_animation
+    box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important

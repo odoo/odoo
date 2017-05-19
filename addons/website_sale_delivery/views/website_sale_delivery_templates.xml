@@ -5,7 +5,7 @@
         <xpath expr="//div[@id='order_total_untaxed']" position="before">
             <div class="row" id="order_delivery" t-if="website_sale_order and website_sale_order.has_delivery">
                   <span class="col-xs-6 text-right text-muted" title="Delivery will be updated after choosing a new delivery method"> Delivery:</span>
-                  <span class="col-xs-6 text-left text-muted">
+                  <span class="col-xs-6 text-right-not-xs text-left-xs text-muted">
                       <span t-field="website_sale_order.amount_delivery" style="white-space: nowrap;" t-options='{
                               "widget": "monetary",
                               "display_currency": website_sale_order.currency_id,
@@ -23,12 +23,13 @@
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
         <xpath expr="//div[@id='payment_method']" position="before">
-            <div t-if="deliveries" class="row" id="delivery_carrier">
-                <div class="col-lg-5 col-sm-6">
-                <h4>Choose your Delivery Method</h4>
-                    <ul class="list-unstyled">
-                        <li t-foreach="deliveries" t-as="delivery">
-                            <t t-if="delivery.available">
+            <div t-if="deliveries" class="col-md-12 row" id="delivery_carrier">
+                <div class="col-lg-7 col-sm-8">
+                <h4>Choose a delivery method</h4>
+                <ul class="list-unstyled">
+                    <li t-foreach="deliveries" t-as="delivery">
+                        <t t-if="delivery.available">
+                            <div id="delivery_method">
                                 <label>
                                     <input t-att-value="delivery.id" type="radio" name="delivery_type"
                                         t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
@@ -41,9 +42,14 @@
                                         }'/>
                                     <div t-field="delivery.website_description" class="text-muted"/>
                                 </label>
-                            </t>
-                        </li>
-                    </ul>
+                            </div>
+                        </t>
+                    </li>
+                </ul>
+                <a class="btn btn-default btn-block"
+                        t-attf-href="/web#return_label=Website&amp;action=#{delivery_action_id}">
+                    <i class="fa fa-plus-square" aria-hidden="true"></i> Setup delivery methods
+                </a>
                 </div>
             </div>
         </xpath>

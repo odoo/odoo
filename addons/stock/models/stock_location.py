@@ -118,8 +118,12 @@ class Route(models.Model):
     name = fields.Char('Route Name', required=True, translate=True)
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
-    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True)
-    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True)
+    pull_ids = fields.One2many('procurement.rule', 'route_id', 'Procurement Rules', copy=True, 
+        help="The demand represented by a procurement from e.g. a sale order, a reordering rule, another move, needs to be solved by applying a procurement rule. Depending on the action on the procurement rule,"\
+        "this triggers a purchase order, manufacturing order or another move. This way we create chains in the reverse order from the endpoint with the original demand to the starting point. "\
+        "That way, it is always known where we need to go and that is why they are preferred over push rules.")
+    push_ids = fields.One2many('stock.location.path', 'route_id', 'Push Rules', copy=True, 
+        help="When a move is foreseen to a location, the push rule will automatically create a move to a next location after. This is mainly only needed when creating manual operations e.g. 2/3 step manual purchase order or 2/3 step finished product manual manufacturing order. In other cases, it is important to use pull rules where you know where you are going based on a demand.")
     product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ")
     product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
     warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
@@ -168,13 +172,13 @@ class Route(models.Model):
 class PushedFlow(models.Model):
     _name = "stock.location.path"
     _description = "Pushed Flow"
-    _order = "name"
+    _order = "sequence, name"
 
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
-    route_id = fields.Many2one('stock.location.route', 'Route')
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
         help="This rule can be applied when a move is confirmed that has this location as destination location")
@@ -183,8 +187,8 @@ class PushedFlow(models.Model):
         help="The new location where the goods need to go")
     delay = fields.Integer('Delay (days)', default=0, help="Number of days needed to transfer the goods")
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type', required=True,
-        help="This is the picking type that will be put on the stock moves")
+        'stock.picking.type', 'Operation Type', required=True,
+        help="This is the operation type that will be put on the stock moves")
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',

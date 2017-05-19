@@ -4,43 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid "\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-""
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid "\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
-"<p>Thank you,</p>\n"
-""
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid "\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-""
-msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -83,7 +56,7 @@ msgid "Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:384
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr ""
@@ -119,7 +92,7 @@ msgid "Automatic"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:383
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr ""
@@ -241,17 +214,7 @@ msgid "Condition"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_2
-msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_3
-msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:385
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -359,7 +322,7 @@ msgid "Email"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:586
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr ""
@@ -367,11 +330,6 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
 msgstr ""
 
 #. module: marketing_campaign
@@ -626,6 +584,20 @@ msgid "Marketing Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -753,11 +725,6 @@ msgid "Partner Field"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.filters,name:marketing_campaign.filter0
-msgid "Partners"
-msgstr ""
-
-#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Preview"
@@ -798,7 +765,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
+msgid "Reporting"
 msgstr ""
 
 #. module: marketing_campaign
@@ -962,7 +929,7 @@ msgid "Test in Realtime"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
@@ -991,7 +958,7 @@ msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:609
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -1065,11 +1032,6 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_1
-msgid "Welcome to the Odoo Partner Channel!"
 msgstr ""
 
 #. module: marketing_campaign

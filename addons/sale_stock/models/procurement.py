@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 
 
 class ProcurementOrder(models.Model):
@@ -12,3 +12,7 @@ class ProcurementOrder(models.Model):
         if self.sale_line_id:
             vals.update({'sequence': self.sale_line_id.sequence})
         return vals
+
+class ProcurementGroup(models.Model):
+	_inherit = 'procurement.group'
+	sale_order_id = fields.Many2one('sale.order', string='Sale Order')

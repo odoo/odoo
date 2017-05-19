@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import product
-import sale_order
-import website
+from . import product
+from . import sale_order
+from . import website

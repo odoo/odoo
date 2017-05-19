@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty
+from odoo.tools import frozendict, classproperty, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ class Params(object):
         params = []
         for arg in self.args:
             params.append(repr(arg))
-        for item in sorted(self.kwargs.iteritems()):
+        for item in sorted(pycompat.items(self.kwargs)):
             params.append("%s=%r" % item)
         return ', '.join(params)
 
@@ -100,7 +100,7 @@ class Meta(type):
         # dummy parent class to catch overridden methods decorated with 'returns'
         parent = type.__new__(meta, name, bases, {})
 
-        for key, value in attrs.items():
+        for key, value in list(pycompat.items(attrs)):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
@@ -916,7 +916,7 @@ class Environment(Mapping):
     def remove_todo(self, field, records):
         """ Mark ``field`` as recomputed on ``records``. """
         recs_list = [recs - records for recs in self.all.todo.pop(field, [])]
-        recs_list = filter(None, recs_list)
+        recs_list = [r for r in recs_list if r]
         if recs_list:
             self.all.todo[field] = recs_list
 
@@ -938,15 +938,14 @@ class Environment(Mapping):
         # make a full copy of the cache, and invalidate it
         cache_dump = dict(
             (field, dict(field_cache))
-            for field, field_cache in self.cache.iteritems()
+            for field, field_cache in pycompat.items(self.cache)
         )
         self.invalidate_all()
 
         # re-fetch the records, and compare with their former cache
         invalids = []
-        for field, field_dump in cache_dump.iteritems():
-            ids = filter(None, field_dump)
-            records = self[field.model_name].browse(ids)
+        for field, field_dump in pycompat.items(cache_dump):
+            records = self[field.model_name].browse(f for f in field_dump if f)
             for record in records:
                 try:
                     cached = field_dump[record.id]

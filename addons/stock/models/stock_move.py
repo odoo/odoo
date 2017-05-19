@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 
@@ -128,12 +128,12 @@ class StockMove(models.Model):
         help="Remaining Quantity in default UoM according to operations matched with this move")
     procurement_id = fields.Many2one('procurement.order', 'Procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
-    rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', help='The procurement rule that created this stock move')
-    push_rule_id = fields.Many2one('stock.location.path', 'Push Rule', help='The push rule that created this stock move')
+    rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
+    push_rule_id = fields.Many2one('stock.location.path', 'Push Rule', ondelete='restrict', help='The push rule that created this stock move')
     propagate = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
-    picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type')
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type')
     inventory_id = fields.Many2one('stock.inventory', 'Inventory')
     lot_ids = fields.Many2many('stock.production.lot', string='Lots/Serial Numbers', compute='_compute_lot_ids')
     origin_returned_move_id = fields.Many2one('stock.move', 'Origin return move', copy=False, help='Move that created the return move')
@@ -257,7 +257,7 @@ class StockMove(models.Model):
         Picking = self.env['stock.picking']
         # Check that we do not modify a stock.move which is done
         frozen_fields = ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'product_id']
-        if any(fname in frozen_fields for fname in vals.keys()) and any(move.state == 'done' for move in self):
+        if any(fname in frozen_fields for fname in vals) and any(move.state == 'done' for move in self):
             raise UserError(_('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
 
         propagated_changes_dict = {}
@@ -373,9 +373,6 @@ class StockMove(models.Model):
                     rules = Push.search(domain + [('route_id', 'in', move.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
                 elif move.picking_id.picking_type_id.warehouse_id:
                     rules = Push.search(domain + [('route_id', 'in', move.picking_id.picking_type_id.warehouse_id.route_ids.ids)], order='route_sequence, sequence', limit=1)
-            if not rules:
-                # if no specialized push rule has been found yet, we try to find a general one (without route)
-                rules = Push.search(domain + [('route_id', '=', False)], order='sequence', limit=1)
             # Make sure it is not returning the return
             if rules and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rules.location_dest_id.id):
                 rules._apply(move)
@@ -493,7 +490,7 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for key, moves in to_assign.items():
+        for key, moves in pycompat.items(to_assign):
             moves.assign_picking()
         self._push_apply()
         return self
@@ -643,7 +640,7 @@ class StockMove(models.Model):
             if move.state != 'assigned' and not self.env.context.get('reserve_only_ops'):
                 qty_already_assigned = move.reserved_availability
                 qty = move.product_qty - qty_already_assigned
-                
+
                 quants = Quant.quants_get_preferred_domain(qty, move, domain=main_domain[move.id], preferred_domain_list=[])
                 Quant.quants_reserve(quants, move)
 
@@ -712,7 +709,7 @@ class StockMove(models.Model):
                 Add reserved false lots lot by lot
                 Check if there are not reserved quants or reserved elsewhere with that lot or without lot (with the traditional method)
         """
-        return self.browse(lot_move_qty.keys())._move_quants_by_lot_v10(quants_taken, false_quants, ops, lot_qty, lot_move_qty, quant_dest_package_id)
+        return self.browse(lot_move_qty)._move_quants_by_lot_v10(quants_taken, false_quants, ops, lot_qty, lot_move_qty, quant_dest_package_id)
 
     @api.multi
     def _move_quants_by_lot_v10(self, quants_taken, false_quants, pack_operation, lot_quantities, lot_move_quantities, dest_package_id):
@@ -730,7 +727,7 @@ class StockMove(models.Model):
                     lot_to_quants[quant[0].lot_id.id].append(quant)
 
             false_quants_move = [x for x in false_quants if x[0].reservation_id.id == move_rec_updateme.id]
-            for lot_id in lot_quantities.keys():
+            for lot_id in lot_quantities:
                 redo_false_quants = False
 
                 # Take remaining reserved quants with  no lot first
@@ -810,7 +807,7 @@ class StockMove(models.Model):
             qty = operation.product_qty
             if operation.product_uom_id and operation.product_uom_id != operation.product_id.uom_id:
                 qty = operation.product_uom_id._compute_quantity(qty, operation.product_id.uom_id)
-            if operation.pack_lot_ids and float_compare(sum(lot_quantities.values()), qty, precision_rounding=operation.product_id.uom_id.rounding) != 0.0:
+            if operation.pack_lot_ids and float_compare(sum(pycompat.values(lot_quantities)), qty, precision_rounding=operation.product_id.uom_id.rounding) != 0.0:
                 raise UserError(_('You have a difference between the quantity on the operation and the quantities specified for the lots. '))
 
             quants_taken = []
@@ -822,7 +819,7 @@ class StockMove(models.Model):
                 prout_move_qty[link.move_id] = prout_move_qty.get(link.move_id, 0.0) + link.qty
 
             # Process every move only once for every pack operation
-            for move in prout_move_qty.keys():
+            for move in list(prout_move_qty):
                 # TDE FIXME: do in batch ?
                 move.check_tracking(operation)
 
@@ -955,7 +952,7 @@ class StockMove(models.Model):
         # TDE CLEANME: used only in write in this file, to clean
         # ctx['do_not_propagate'] = True
         self.with_context(do_not_propagate=True).write({'product_uom_qty': self.product_uom_qty - uom_qty})
-        
+
         if self.move_dest_id and self.propagate and self.move_dest_id.state not in ('done', 'cancel'):
             new_move_prop = self.move_dest_id.split(qty)
             new_move.write({'move_dest_id': new_move_prop})

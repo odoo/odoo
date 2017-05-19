@@ -4,62 +4,23 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"\n"
-"<p>Hallo,</p>\n"
-"<p>We zijn verheugd om u te laten weten dat u tot onze Gold Partner cirkel bent toegelaten!</p>\n"
-"<p>Bedankt.</p>\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"\n"
-"<p>Hallo,</p>\n"
-"<p>We zijn verheugt om je te verwelkomen tot de groep van Silver partners sinds vandaag!</p>\n"
-"<p>Bedankt,</p>\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-"\n"
-"<p>Hella,</p>\n"
-"<p>Hallo, uw ontvangt binnenkort een welkomstgeschenk per e-mail</p>\n"
-"<p>Bedankt,</p>\n"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -108,7 +69,7 @@ msgid "Activity"
 msgstr "Activiteit"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:384
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Na %(interval_nbr)d %(interval_type)s"
@@ -149,7 +110,7 @@ msgid "Automatic"
 msgstr "Automatisch"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:383
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "Automatische overgang"
@@ -275,17 +236,7 @@ msgid "Condition"
 msgstr "Voorwaarde"
 
 #. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_2
-msgid "Congratulations! You are now a Silver Partner!"
-msgstr "Gefeliciteerd! U bent nu zilver partner!"
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_3
-msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr "Gefeliciteerd! U bent nu een van onze Gold Partners!"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:385
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -374,7 +325,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_transition_display_name
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_workitem_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_keep_if_condition_not_met
@@ -409,7 +360,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:586
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Email voorbeeld"
@@ -418,11 +369,6 @@ msgstr "Email voorbeeld"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
 msgstr "E-mailsjabloon"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-msgid "Email Template Preview"
-msgstr "Email sjabloon voorbeeld"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_mail_template
@@ -669,7 +615,7 @@ msgstr "Leadautomatisering"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr "Manager"
+msgstr "Beheerder"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -710,11 +656,25 @@ msgid "Marketing Campaign Statistics"
 msgstr "Statistieken marketingcampagne"
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
 msgid "Marketing Reports"
-msgstr "Marketing rapportages"
+msgstr "Marketingrapporten"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -736,7 +696,7 @@ msgstr "Model van filter moet gelijk zijn aan model van de campagne "
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Month(s)"
-msgstr "Maand(en)"
+msgstr "Maand(e)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_name
@@ -841,11 +801,6 @@ msgid "Partner Field"
 msgstr "Relatie veld"
 
 #. module: marketing_campaign
-#: model:ir.filters,name:marketing_campaign.filter0
-msgid "Partners"
-msgstr "Relaties"
-
-#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_tree
 msgid "Preview"
@@ -889,11 +844,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
 #: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
-msgstr "Rapportage"
+msgstr "Rapport"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
+msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: marketing_campaign
@@ -1075,7 +1030,7 @@ msgid "Test in Realtime"
 msgstr "Test in realtime"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:401
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
 #, python-format
 msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
@@ -1112,7 +1067,7 @@ msgstr ""
 "De campagne kan niet worden gestart. De campagne bevat geen activiteiten."
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/models/marketing_campaign.py:609
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "De huidige stap voor dit item heeft geen email of rapport voorbeeld."
@@ -1201,11 +1156,6 @@ msgstr "Gebruiker"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "Variabele kosten"
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_1
-msgid "Welcome to the Odoo Partner Channel!"
-msgstr "Welkom op het Odoo partner kanaal!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0

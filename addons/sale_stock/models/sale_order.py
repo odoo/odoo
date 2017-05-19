@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
 
     def _prepare_procurement_group(self):
         res = super(SaleOrder, self)._prepare_procurement_group()
-        res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id})
+        res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id, 'sale_order_id': self.id})
         return res
 
     @api.model
@@ -86,9 +86,8 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    product_packaging = fields.Many2one('product.packaging', string='Packaging', default=False)
-    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)])
-    product_tmpl_id = fields.Many2one('product.template', related='product_id.product_tmpl_id', string='Product Template', readonly=True)
+    product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
+    route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -137,14 +136,21 @@ class SaleOrderLine(models.Model):
             return {}
         if self.product_id.type == 'product':
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            product = self.product_id.with_context(warehouse=self.order_id.warehouse_id.id)
             product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
-            if float_compare(self.product_id.virtual_available, product_qty, precision_digits=precision) == -1:
+            if float_compare(product.virtual_available, product_qty, precision_digits=precision) == -1:
                 is_available = self._check_routing()
                 if not is_available:
+                    message =  _('You plan to sell %s %s but you only have %s %s available in %s warehouse.') % \
+                            (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
+                    # We check if some products are available in other warehouses.
+                    if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
+                        message += _('\nThere are %s %s available accross all warehouses.') % \
+                                (self.product_id.virtual_available, product.uom_id.name)
+
                     warning_mess = {
                         'title': _('Not enough inventory!'),
-                        'message' : _('You plan to sell %s %s but you only have %s %s available!\nThe stock on hand is %s %s.') % \
-                            (self.product_uom_qty, self.product_uom.name, self.product_id.virtual_available, self.product_id.uom_id.name, self.product_id.qty_available, self.product_id.uom_id.name)
+                        'message' : message
                     }
                     return {'warning': warning_mess}
         return {}
@@ -162,7 +168,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
         vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
-        date_planned = datetime.strptime(self.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT)\
+        date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
         vals.update({
             'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
@@ -176,7 +182,7 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _get_delivered_qty(self):
-        """Computes the delivered quantity on sale order lines, based on done stock moves related to its procurements
+        """Computes the delivered quantity on sales order lines, based on done stock moves related to its procurements
         """
         self.ensure_one()
         super(SaleOrderLine, self)._get_delivered_qty()
@@ -185,7 +191,7 @@ class SaleOrderLine(models.Model):
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id:
                     qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage == "internal" and move.to_refund_so:
+            elif move.location_dest_id.usage == "internal" and move.to_refund:
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
 

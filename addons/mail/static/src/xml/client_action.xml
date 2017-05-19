@@ -82,6 +82,10 @@
         </t>
     </t>
     <t t-name="mail.chat.SidebarItems">
+        <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
+            <span t-if="display_hash">#</span>
+            <input type="text" t-attf-placeholder="#{input_placeholder}"/>
+        </div>
         <t t-foreach="channels" t-as="channel">
             <t t-set="counter" t-value="channel.is_chat ? channel.unread_counter : channel.needaction_counter"/>
             <div t-if="channel.type === channel_type" t-att-data-channel-id="channel.id" t-att-title="channel.name"
@@ -97,27 +101,16 @@
                     <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 </span>
                 <t t-call="mail.chat.SidebarNeedaction"/>
-                <span t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
+                <span t-if="! channel.group_based_subscription" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       title="Leave this channel" t-att-data-channel-id="channel.id"/>
             </div>
         </t>
-        <div t-if="!disable_add_channel" class="o_mail_add_channel" t-attf-data-type="#{channel_type}">
-            <span t-if="display_hash">#</span>
-            <input type="text" t-attf-placeholder="#{input_placeholder}"/>
-        </div>
     </t>
 
     <t t-name="mail.chat.UserStatus">
         <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online"/>
         <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle"/>
         <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline"/>
-    </t>
-
-    <t t-name="mail.chat.UndoSnackbar">
-        <div class="alert o_mail_snackbar" data-dismiss="alert" role="alert">
-            <t t-esc="nb_needactions"/> mention(s) marked as read.
-            <a href="#" class="alert-link o_snackbar_undo">Undo</a>
-        </div>
     </t>
 
     <t t-name="mail.chat.MessageSentSnackbar">
@@ -132,7 +125,7 @@
         <div>
             <button type="button" class="btn btn-primary btn-sm o_mail_toggle_channels visible-xs-inline" title="Toggle Channels">Channels</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite" title="Invite people">Invite</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
+            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read hidden-xs" title="Mark all as read">Mark all read</button>
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe" title="Unsubscribe from channel">Unsubscribe</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>

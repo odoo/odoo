@@ -3,16 +3,15 @@
 # * sale_crm
 # 
 # Translators:
-# gezza <geza.nagy@oregional.hu>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Kisrobert <kisrobi@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +23,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
-msgstr "# Ügyek"
+msgstr "# Bejelentések"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -51,6 +50,11 @@ msgstr ""
 " tagságának állapotát."
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
+msgid "Activation"
+msgstr "Aktiválás"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
 msgid "Associate Member"
 msgstr "Hozzárendelt tag"
@@ -58,7 +62,7 @@ msgstr "Hozzárendelt tag"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Tagság érvénytelenítési dátuma"
+msgstr "Tagsági tátum visszavonása"
 
 #. module: sale_crm
 #. openerp-web
@@ -103,14 +107,38 @@ msgid "Free Member"
 msgstr "Ingyenes tag"
 
 #. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_partner_weight
+msgid ""
+"Gives the probability to assign a lead to this partner. (0 means no "
+"assignation.)"
+msgstr ""
+"A partnerhez kiadható érdeklődés valószínűségét adja meg. (A nincs kiadást a"
+" 0 jelenti)"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_partner_ids
+msgid "Implementation References"
+msgstr "Kivitelezési hivatkozások"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
+msgstr "Végrehajtás számláló"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
+msgid "Implemented by"
+msgstr "Végrehajtotta"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
 msgstr "Számla"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr "Vásárlói megrendelés követésen számlázva"
+msgid "Invoiced in Sales Orders Target"
+msgstr "Vásárlói megrendelések követésen számlázva"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -132,6 +160,11 @@ msgstr ""
 "-Fizető tag: Tag, aki kifizette a tagsági díját."
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
+msgid "Latest Partner Review"
+msgstr "Legutóbbi partner felülvizsgálat"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Érdeklődő/Lehetőség"
@@ -140,8 +173,18 @@ msgstr "Érdeklődő/Lehetőség"
 #. openerp-web
 #: code:addons/sale_crm/static/src/js/tour.js:20
 #, python-format
-msgid "Let's have a look at the quotations of this sales team."
-msgstr "Nézzük meg ennek az értékesítési csapatnak az árajánlatait."
+msgid "Let's have a look at the quotations of this sales channel."
+msgstr "Nézzük meg ennek az értékesítési csatornának az árajánlatait."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
+msgid "Level"
+msgstr "Szint"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_partner_weight
+msgid "Level Weight"
+msgstr "Szint súlyozása"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
@@ -184,6 +227,11 @@ msgid "New Quotation"
 msgstr "Új árajánlat"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review_next
+msgid "Next Partner Review"
+msgstr "Következő partner felülvizsgálata"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
 msgid "Number of Quotations"
 msgstr "Árajánlatok száma"
@@ -199,9 +247,20 @@ msgid "Orders"
 msgstr "Megrendelések"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
+msgid "Partnership Date"
+msgstr "Partnerkapcsolat dátuma"
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
 msgid "Payment Tokens"
 msgstr "Fizetési tokenek"
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr "Folyamat"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -212,6 +271,11 @@ msgstr "Árajánlat"
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
 msgid "Quotations"
 msgstr "Árajánlatok"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr "Értékesítési csatorna"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
@@ -236,6 +300,11 @@ msgstr ""
 "A \"Figyelmeztetés\" lehetőség kiválasztása a felhasználót egy üzenettel "
 "értesíti, az \"Üzenet blokkolása\" lehetőség egy kivételt küld az üzenethez "
 "és leblokkolja a folyamatot. Az üzenetet a következő mezőbe kell beírni."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr "Sorszám"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn

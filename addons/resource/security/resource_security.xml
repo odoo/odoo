@@ -2,15 +2,22 @@
 <odoo>
 <data noupdate="1">
 
-    <record model="ir.rule" id="resource_own_leaves">
-        <field name="name">Resource: see own leaves</field>
+    <record model="ir.rule" id="resource_calendar_leaves_rule_group_user_create">
+        <field name="name">resource.calendar.leaves: employee reads own or global</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">['|',
-                                        ('resource_id', '=', False),
-                                        ('resource_id.user_id', '=', user.id),
-                                    ]</field>
+        <field name="domain_force">['|', ('resource_id', '=', False), ('resource_id.user_id', '=', user.id)]</field>
+		<field name="perm_write" eval="False"/>
+		<field name="perm_create" eval="False"/>
+		<field name="perm_unlink" eval="False"/>
     </record>
 
+    <record model="ir.rule" id="resource_calendar_leaves_rule_group_user_modify">
+        <field name="name">resource.calendar.leaves: employee modifies own</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('resource_id.user_id', '=', user.id)]</field>
+		<field name="perm_read" eval="False"/>
+    </record>
 </data>
 </odoo>

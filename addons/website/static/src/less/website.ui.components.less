@@ -1,6 +1,9 @@
+///
+/// This file regroups the style of website UI components (edition modals, forms, ...).
+///
+
 // MODALS
 body .modal {
-
     &.o_website_modal {
         .o-w-preserve-base();
         .o-w-preserve-headings();
@@ -308,14 +311,30 @@ body .modal {
     z-index: 1001;
 }
 
-// PLANNER DIALOG
-#PlannerDialog {
-    top: @odoo-navbar-height + 10;
-    box-shadow: 0 3px 9px #666666;
-}
-
 // POPOVER NAVIGATION
 .tour .popover-navigation {
     margin-left: 13px;
     margin-bottom: 8px;
+}
+
+// PUBLISH
+.css_published {
+    .btn-danger, .css_publish {
+        display: none;
+    }
+}
+.css_unpublished {
+    .btn-success, .css_unpublish {
+        display: none;
+    }
+}
+[data-publish='off'] > *:not(.css_options) {
+    opacity: 0.5;
+}
+
+// Do not show path behind the links in browser printing
+@media print {
+    a[href]:after {
+        content: initial;
+    }
 }

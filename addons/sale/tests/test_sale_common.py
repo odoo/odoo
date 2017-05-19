@@ -15,7 +15,7 @@ class TestSale(AccountingTestCase):
             'login': 'manager',
             'email': 'a.m@example.com',
             'signature': '--\nAndreww',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [group_manager.id])]
         })
         self.user = self.env['res.users'].create({
@@ -23,7 +23,7 @@ class TestSale(AccountingTestCase):
             'login': 'user',
             'email': 'm.u@example.com',
             'signature': '--\nMark',
-            'notify_email': 'always',
+            'notification_type': 'email',
             'groups_id': [(6, 0, [group_user.id])]
         })
         # create quotation with differend kinds of products (all possible combinations)

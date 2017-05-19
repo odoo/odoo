@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools import pycompat
 
 
 class IrUiMenu(models.Model):
@@ -18,7 +19,7 @@ class IrUiMenu(models.Model):
         menu_ids = [menu.id for menu in self.browse(menu_root['all_menu_ids']) if menu.load_xmlid]
         xmlids = {
             d.res_id: d.module + "." + d.name
-            for d in self.env['ir.model.data'].search([('res_id', 'in', menu_ids), ('model', '=', 'ir.ui.menu')])
+            for d in self.env['ir.model.data'].sudo().search([('res_id', 'in', menu_ids), ('model', '=', 'ir.ui.menu')])
         }
 
         def _find_subtree(tree, node_id):
@@ -31,7 +32,7 @@ class IrUiMenu(models.Model):
                     if subtree:
                         return subtree
 
-        for menu_id, menu_xmlid in xmlids.iteritems():
+        for menu_id, menu_xmlid in pycompat.items(xmlids):
             _find_subtree(menu_root, menu_id)['xmlid'] = menu_xmlid
 
         return menu_root

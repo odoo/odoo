@@ -3,10 +3,10 @@ odoo.define('website_links.website_links', function (require) {
 
 var ajax = require('web.ajax');
 var core = require('web.core');
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
-var Model = require('web.Model');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -20,7 +20,7 @@ if(!$('.o_website_links_create_tracked_url').length) {
 
     var SelectBox = Widget.extend({
         init: function(obj) {
-            this.obj = new Model(obj);
+            this.obj = obj;
         },
         start: function(element, placeholder) {
             var self = this;
@@ -49,11 +49,15 @@ if(!$('.o_website_links_create_tracked_url').length) {
             });
         },
         fetch_objects: function() {
-            return this.obj.call('search_read', [[]]).then(function(result) {
-                return _.map(result, function(val) {
-                    return {id: val.id, text:val.name};
+            return rpc.query({
+                    model: this.obj,
+                    method: 'search_read',
+                })
+                .then(function(result) {
+                    return _.map(result, function(val) {
+                        return {id: val.id, text:val.name};
+                    });
                 });
-            });
         },
         object_exists: function(query) {
             return _.find(this.objects, function(val) {
@@ -68,10 +72,15 @@ if(!$('.o_website_links_create_tracked_url').length) {
         create_object: function(name) {
             var self = this;
 
-            return this.obj.call('create', [{name:name}]).then(function(record) {
-                self.element.attr('value', record);
-                self.objects.push({'id': record, 'text': name});
-            });
+            return rpc.query({
+                    model: this.obj,
+                    method: 'create',
+                    args: [{name:name}],
+                })
+                .then(function(record) {
+                    self.element.attr('value', record);
+                    self.objects.push({'id': record, 'text': name});
+                });
         },
     });
     

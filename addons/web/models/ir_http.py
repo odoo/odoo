@@ -5,6 +5,8 @@ import json
 
 from odoo import models
 from odoo.http import request
+import pytz
+import datetime
 
 import odoo
 
@@ -24,8 +26,9 @@ class Http(models.AbstractModel):
         version_info = odoo.service.common.exp_version()
         return {
             "session_id": request.session.sid,
+            "tzOffset": self._context.get('tz') and datetime.datetime.now(pytz.timezone(self._context['tz'])).utcoffset().total_seconds() / 60 or False,
             "uid": request.session.uid,
-            "is_admin": request.env.user.has_group('base.group_system'),
+            "is_system": request.env.user._is_system(),
             "is_superuser": request.env.user._is_superuser(),
             "user_context": request.session.get_context() if request.session.uid else {},
             "db": request.session.db,
@@ -37,6 +40,7 @@ class Http(models.AbstractModel):
             "partner_id": request.env.user.partner_id.id if request.session.uid and request.env.user.partner_id else None,
             "user_companies": {'current_company': (user.company_id.id, user.company_id.name), 'allowed_companies': [(comp.id, comp.name) for comp in user.company_ids]} if display_switch_company_menu else False,
             "currencies": self.get_currencies(),
+            "web.base.url": self.env['ir.config_parameter'].sudo().get_param('web.base.url', default=''),
         }
 
     def get_currencies(self):

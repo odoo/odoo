@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Assets -->
-<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets">
+<template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
@@ -10,13 +10,20 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Frontend Assets">
+<template id="qunit_suite" inherit_id="web.qunit_suite">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
+    </xpath>
+</template>
+
+<template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.wrapwrap.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
-        <link rel="stylesheet" type="text/css" href="/website/static/src/less/website.zoomodoo.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/bootstrap.extend.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
@@ -26,7 +33,7 @@
     </xpath>
 </template>
 
-<template id="website.assets_editor" name="Website Editor Assets">
+<template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
     <t t-call="web.less_helpers"/>
 
     <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
@@ -92,7 +99,7 @@
                 <t t-set="title" t-value="main_object.website_meta_title"/>
             </t>
             <t t-else="">
-                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-esc="(website or res_company).name"/></t>
+                <t t-set="title"><t t-if="additional_title"><t t-raw="additional_title"/> | </t><t t-raw="(website or res_company).name"/></t>
             </t>
         </t>
         <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
@@ -123,7 +130,10 @@
             <script type="text/javascript">
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                     is_frontend: true,
+                    is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
+                    user_id: <t t-esc="json.dumps(request.env.user.id)" />
                 };
             </script>
 
@@ -179,7 +189,7 @@
             <main>
                 <t t-raw="0"/>
             </main>
-            <footer>
+            <footer >
                 <div id="footer">
                 </div>
             </footer>
@@ -200,8 +210,8 @@
     <xpath expr="//footer" position="inside">
         <div class="container mt16 mb8">
             <div class="pull-right" t-ignore="true" t-if="not editable">
-                Create a <a href="http://www.odoo.com/page/website-builder">free website</a> with
-                <a class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
+                Create a <a target="_blank" href="http://www.odoo.com/page/website-builder">free website</a> with
+                <a target="_blank" class="label label-danger" href="http://www.odoo.com/page/website-builder">Odoo</a>
             </div>
             <div class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">
                 Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
@@ -213,7 +223,7 @@
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
     <xpath expr="//header//a[@class='navbar-brand']" position="replace">
         <a href="/" class="navbar-brand logo">
-            <img src="/logo.png" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+            <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
     </xpath>
 </template>
@@ -240,7 +250,7 @@
 
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
-        <div class="oe_structure" id="footer">
+        <div class="oe_structure" id="footer" t-if='not no_footer'>
             <section>
                 <div class="container">
                     <div class="row">
@@ -292,8 +302,8 @@
 </template>
 
 <template id="footer_default" inherit_id="website.footer_custom" customize_show="True" name="Automatic Footer">
-    <xpath expr="//div[@id='footer']" position="replace">
-        <div id="footer" class="container hidden-print">
+    <xpath expr="//div[@id='footer']" position="replace" >
+        <div id="footer" class="container hidden-print" t-if='not no_footer'>
             <div class="row">
                 <div class="col-md-4 col-lg-3">
                     <h4>Our Products &amp; Services</h4>
@@ -345,7 +355,7 @@
 <!-- Util template -->
 <template id="publish_management">
     <div groups="website.group_website_publisher" t-ignore="true" class="pull-right css_editable_mode_hidden" t-att-style="style or None">
-        <div t-attf-class="btn-group js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
+        <div t-attf-class="btn-group #{btn_class} js_publish_management #{object.website_published and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name" t-att-data-controller="publish_controller">
             <button class="btn btn-danger js_publish_btn">Unpublished</button>
             <button class="btn btn-success js_publish_btn">Published</button>
             <button type="button" t-attf-class="btn btn-default dropdown-toggle" t-att-id="'dopprod-%s' % object.id" data-toggle="dropdown">
@@ -493,7 +503,7 @@
                     <small>Odoo Version <t t-raw="version.get('server_version')"/></small>
                 </h1>
                 <p>
-                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a href="https://www.odoo.com">Open Source ERP</a>.
+                    Information about the <t t-esc="res_company.name"/> instance of Odoo, the <a target="_blank" href="https://www.odoo.com">Open Source ERP</a>.
                 </p>
 
                 <div class="alert alert-warning alert-dismissable mt16" groups="website.group_website_publisher">

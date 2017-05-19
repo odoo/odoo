@@ -73,12 +73,12 @@
             <field name="priority" eval="20"/>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_purchase_order)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-shopping-cart">
                         <field string="Purchases" name="purchase_order_count" widget="statinfo"/>
                     </button>
-                </div>
+                </button>
                 <page name="internal_notes" position="inside">
                     <group colspan="2" col="2" groups="purchase.group_warning_purchase">
                         <separator string="Warning on the Purchase Order" colspan="4"/>
@@ -97,12 +97,12 @@
             <field name="priority" eval="20"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
-                <div name="button_box" position="inside">
+                <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Vendor Bills">
                         <field string="Vendor Bills." name="supplier_invoice_count" widget="statinfo"/>
                     </button>
-                </div>
+                </button>
             </field>
         </record>
 </odoo>

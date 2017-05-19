@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,11 +44,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_configuration
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Configuration"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.ui.view,arch_db:fetchmail.inherit_view_general_configuration
-msgid "Configure the incoming email gateway"
 msgstr ""
 
 #. module: fetchmail
@@ -128,6 +123,11 @@ msgid "Inbound Mail Server"
 msgstr ""
 
 #. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Incoming Email Servers"
+msgstr ""
+
+#. module: fetchmail
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_form
 #: model:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Incoming Mail Server"
@@ -180,6 +180,13 @@ msgid "Login Information"
 msgstr ""
 
 #. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
+
+#. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server_message_ids
 msgid "Messages"
@@ -198,6 +205,11 @@ msgstr ""
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server_action_id
 msgid "Optional custom server action to trigger for each incoming mail, on the record that was created or updated by this mail"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.ui.view,arch_db:fetchmail.base_config_settings_view_form_inherit_fetchmail
+msgid "Outgoing Email Servers"
 msgstr ""
 
 #. module: fetchmail

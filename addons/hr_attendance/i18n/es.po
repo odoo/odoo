@@ -6,27 +6,25 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# David de León <leceda09@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
-# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Roberto Lizana <robertolizana@trey.es>, 2016
-# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# David Perez <david@closemarketing.es>, 2016
+# David de León <leceda09@gmail.com>, 2017
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
-# Cristian Salamea <ovnicraft@gmail.com>, 2017
+# Roberto Lizana <robertolizana@trey.es>, 2017
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2017
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# David Perez <david@closemarketing.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: David Perez <david@closemarketing.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +51,11 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s desde %(check_in)s hasta %(check_out)s"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
@@ -74,9 +77,11 @@ msgstr "Aplicar"
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr "Servicio"
 
@@ -84,7 +89,7 @@ msgstr "Servicio"
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
 msgid "Attendance Analysis"
-msgstr "Análisis de Asistencias"
+msgstr "Análisis de asistencias"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -92,12 +97,8 @@ msgid "Attendance Settings"
 msgstr "Configuración de Asistencias"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
-msgid "Attendance ids"
-msgstr "ID de asistencias"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
@@ -157,26 +158,31 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_in
 msgid "Check In"
-msgstr "Entrada"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
 msgid "Check Out"
-msgstr "Salida"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:53
 #, python-format
 msgid "Check in"
-msgstr "Entrada"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:49
 #, python-format
 msgid "Check out"
-msgstr "Salida"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -270,8 +276,6 @@ msgstr "Nombre a mostrar"
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
 msgstr ""
-"Temprano a la cama y temprano para levantarse, hace a un hombre sano, rico y"
-" sabio"
 
 #. module: hr_attendance
 #. openerp-web
@@ -304,7 +308,6 @@ msgid "Employee attendances"
 msgstr "Asistencia empleado"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
 msgid "Employee's Name"
 msgstr "Nombre del empleado"
@@ -339,7 +342,7 @@ msgstr "Habilitar uso de PIN"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
 msgid "Enable or disable employee PIN identification at check in"
-msgstr "Activar o desactivar PIN de empleado para ingreso"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -443,7 +446,7 @@ msgstr "Que tenga una buena noche"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "Ten un buen almuerzo!"
+msgstr ""
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -480,6 +483,11 @@ msgid "Kiosk Mode"
 msgstr "Modo Quiosco"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+msgid "Last Attendance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
@@ -493,11 +501,6 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
-msgid "Last attendance id"
-msgstr "ID de última asistencia"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
@@ -525,7 +528,6 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "Mis asistencias"
@@ -534,6 +536,11 @@ msgstr "Mis asistencias"
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
 msgstr "No hay registro de salida"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "No attendance records to display."
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -594,7 +601,7 @@ msgstr "Imprimir Identificación"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
-msgid "Reports"
+msgid "Reporting"
 msgstr "Informes"
 
 #. module: hr_attendance
@@ -722,8 +729,7 @@ msgstr "base.config.settings"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:18
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:37
+#: code:addons/hr_attendance/static/src/js/presence_widgets.js:20
 #, python-format
 msgid "employee presence<br/>green: checked in<br/>red: checked out"
 msgstr ""

@@ -8,9 +8,7 @@ class MassMailingConfiguration(models.TransientModel):
     _name = 'mass.mailing.config.settings'
     _inherit = 'res.config.settings'
 
-    group_mass_mailing_campaign = fields.Selection([
-        (0, "Do not organize and schedule mail campaigns (easy)"),
-        (1, "Allow using marketing campaigns (advanced)")], string="Campaigns",
-        implied_group='mass_mailing.group_mass_mailing_campaign',
-        help="""Manage mass mailign using Campaigns""")
-    module_mass_mailing_themes = fields.Boolean("Mass mailing themes")
+    group_mass_mailing_campaign = fields.Boolean(string="Mass Mailing Campaigns", implied_group='mass_mailing.group_mass_mailing_campaign', help="""This is useful if your marketing campaigns are composed of several emails""")
+    module_mass_mailing_themes = fields.Boolean("Email Templates")
+    module_website_mass_mailing = fields.Boolean("Website Call-to-Action")
+    module_crm = fields.Boolean("Leads/Opportunities")

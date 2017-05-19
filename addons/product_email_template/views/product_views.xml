@@ -6,11 +6,11 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <group name="email_template_and_project" position="attributes">
-                    <attribute name="string">Miscellaneous</attribute>
+                    <attribute name="string">Email</attribute>
                     <attribute name="attrs"></attribute>
                 </group>
                 <group name="email_template_and_project" position="inside">
-                    <field name="email_template_id" string="Invoice Confirmation Email"
+                    <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is paid"
                         domain="[('model','=','product.template')]"
                         context="{
                             'form_view_ref':'product_email_template.email_template_form_simplified',
@@ -18,7 +18,6 @@
                             'default_subject': name,
                             'default_name': name,
                         }"/>
-                    />
                 </group>
             </field>
         </record>

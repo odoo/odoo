@@ -7,14 +7,14 @@
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgid "Approved"
 msgstr "Goedgekeurd"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:137
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
 msgstr "Een niet ingediende urenstaat kan niet goedgekeurd worden."
@@ -127,7 +127,7 @@ msgstr "Details"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
@@ -156,14 +156,14 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "HR Department"
+msgstr "HR afdeling"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Uren"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "Hr Department"
-msgstr "HR afdeling"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -178,8 +178,8 @@ msgid "In Draft"
 msgstr "In concept"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:106
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:116
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:103
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:113
 #, python-format
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
@@ -223,11 +223,6 @@ msgid "My Current Timesheet"
 msgstr "Mijn huidige urenstaat"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
-msgid "My Timesheet"
-msgstr "Mijn urenstaten"
-
-#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
@@ -246,16 +241,16 @@ msgstr "Nieuwe urenstaat goed te keuren."
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
 msgid "Note"
-msgstr "Notitie"
+msgstr "Opmerking"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:135
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
 msgstr "Alleen een HR functionaris of manager kan urenstaten goedkeuren."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:120
 #, python-format
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
@@ -278,7 +273,7 @@ msgstr "Open urenstaat"
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 #: model:ir.model.fields,help:hr_timesheet_sheet.field_res_company_timesheet_range
 msgid "Periodicity on which you validate your timesheets."
-msgstr "Frequentie waarmee u de urenstaten bevestigd."
+msgstr "Frequentie waarmee u de urenstaten controleert."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_name
@@ -321,7 +316,7 @@ msgstr "Formulier"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_state
 msgid "Status"
-msgstr "Status"
+msgstr "Fase"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
@@ -342,12 +337,17 @@ msgstr "Urenstaat"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Activities"
-msgstr "Urenstaten activiteiten"
+msgstr "Urenstaat activiteiten"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
 msgstr "Urenstaten periode"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
+msgid "Timesheet Sheet: My Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
@@ -452,7 +452,7 @@ msgstr "Ongelezen berichten"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
 msgid "Unvalidated Timesheets"
-msgstr "Niet bevestigde urenstaten"
+msgstr "Niet gevalideerde urenstaten"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_user_id
@@ -471,19 +471,19 @@ msgid "Week"
 msgstr "Week"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:146
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:143
 #, python-format
 msgid "Week "
 msgstr "Week"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:154
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:151
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "U kunt geen urenstaat verwijderen welke al is bevestigd"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:100
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:97
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Het is niet mogelijk een urenstaat te dupliceren."
@@ -503,7 +503,7 @@ msgid ""
 "                validated by a manager."
 msgstr ""
 "U moet uw urenstaat elke dag invullen en bevestigen op het einde\n"
-"van de week. Eenmaal de urenstaat bevestigd is, moet hij bevestigd\n"
+"van de week. Eenmaal de urenstaat bevestigd is, moet hij gevalideerd\n"
 "worden door een manager."
 
 #. module: hr_timesheet_sheet

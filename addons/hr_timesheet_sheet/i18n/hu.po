@@ -3,16 +3,16 @@
 # * hr_timesheet_sheet
 # 
 # Translators:
-# Oregional <geza.nagy@oregional.hu>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# krnkris <krnkris@freemail.hu>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,7 @@ msgstr "Sor hozzáadása"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Analitikus/elemző tételsor"
+msgstr "Analitikus/elemző tétel"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_ids
@@ -60,7 +60,7 @@ msgid "Approved"
 msgstr "Jóváhagyott"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:137
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
 msgstr "Nem lehet jóváhagyni egy beadatlan munkaidő-kiosztást."
@@ -154,14 +154,14 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: hr_timesheet_sheet
+#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
+msgid "HR Department"
+msgstr "Emberi erőforrás Osztály, részleg"
+
+#. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Hours"
 msgstr "Órák"
-
-#. module: hr_timesheet_sheet
-#: model:ir.model,name:hr_timesheet_sheet.model_hr_department
-msgid "Hr Department"
-msgstr "Emberi erőforrás Osztály, részleg"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_current_open_id
@@ -176,8 +176,8 @@ msgid "In Draft"
 msgstr "Tervezet"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:106
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:116
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:103
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:113
 #, python-format
 msgid ""
 "In order to create a timesheet for this employee, you must link him/her to a"
@@ -221,11 +221,6 @@ msgid "My Current Timesheet"
 msgstr "Az én jelenlegi időkimutatásom"
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
-msgid "My Timesheet"
-msgstr "Munkaidő-kiosztásom"
-
-#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
@@ -247,7 +242,7 @@ msgid "Note"
 msgstr "Jegyzet"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:135
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
 msgstr ""
@@ -255,7 +250,7 @@ msgstr ""
 "kiosztásokat."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:120
 #, python-format
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
@@ -349,6 +344,11 @@ msgstr "Időkimutatás tevékenység"
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_sheet_form
 msgid "Timesheet Period"
 msgstr "Időkimutatás időszak"
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timesheet_sheet
+msgid "Timesheet Sheet: My Timesheet"
+msgstr "Időkimutatás: Én időkimutatásaim"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
@@ -472,19 +472,19 @@ msgid "Week"
 msgstr "Hét"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:146
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:143
 #, python-format
 msgid "Week "
 msgstr "Hét "
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:154
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:151
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
 msgstr "Nem törölhet olyan időkimutatást, mely már visszaigazolt."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:100
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:97
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Nem többszörözhet egy időkimutatást."

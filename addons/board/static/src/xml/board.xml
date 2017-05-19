@@ -10,7 +10,7 @@
     <table t-att-data-layout="node.attrs.layout" t-attf-class="oe_dashboard oe_dashboard_layout_#{node.attrs.layout}" cellspacing="0" cellpadding="0" border="0">
     <tr>
         <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
-             t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">
+             t-att-id="'column_' + column_index" t-attf-class="oe_dashboard_column index_#{column_index}">
 
             <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
         </td>
@@ -28,7 +28,7 @@
             <span class='oe_icon oe_maximize oe_fold' t-if="action.attrs.fold"></span>
         </h2>
         
-        <div t-attf-id="#{view.element_id}_action_#{column_index}_#{action_index}" class="oe_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
+        <div t-attf-id="#{element_id}_action_#{column_index}_#{action_index}" class="oe_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
 <t t-name="DashBoard.layouts">
@@ -39,7 +39,7 @@
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
                 <img t-attf-src="/board/static/src/img/layout_#{layout}.png"/>
-                <i t-if="layout == current_layout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
+                <i t-if="layout == currentLayout" class="oe_dashboard_selected_layout fa fa-check fa-lg text-success"/>
             </li>
         </ul>
     </div>

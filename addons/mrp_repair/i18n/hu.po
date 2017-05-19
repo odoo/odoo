@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
+# Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:55+0000\n"
-"PO-Revision-Date: 2016-11-14 15:55+0000\n"
-"Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,7 +133,7 @@ msgstr "Csak tervezet javításokat tud jóváhagyni."
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_make_invoice
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégse"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
@@ -150,7 +150,7 @@ msgstr "Javítási rendelés visszavonás"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavont"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:221
@@ -185,7 +185,7 @@ msgstr "Javítás megerősítése"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Confirmed"
-msgstr "Megerősített"
+msgstr "Jóváhagyott"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:508
@@ -235,8 +235,8 @@ msgstr "Szállítás innen"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "Default address id"
-msgstr "Alapértelmezett cím id azonosító"
+msgid "Default Address"
+msgstr "Alapértelmezett cím"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -452,6 +452,11 @@ msgid "Move created by the repair order"
 msgstr "Tétel mozgás a javítási megrendelés által létrehozva"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
+msgstr "Tevékenységeim"
+
+#. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "No Invoice"
 msgstr "Nincs számla"
@@ -503,6 +508,11 @@ msgstr "Műveleti sorok"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
 msgstr "Műveletek"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
+msgstr "Lejárt tevékenységek"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_id
@@ -732,6 +742,13 @@ msgid "Set to Draft"
 msgstr "Beállítás tervezetnek"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Mutassa az összes rekordot melyre a következő műveleti dátum a mai nap "
+"előtti"
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
 msgid "Source Location"
 msgstr "Forráshely"
@@ -823,6 +840,11 @@ msgid "To be Invoiced"
 msgstr "Még számlázandó"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
+msgstr "Mai napi tevékenységek"
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_total
 msgid "Total"
 msgstr "Összesen"
@@ -863,6 +885,11 @@ msgstr "Nettó érték"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
 msgstr "Nettó érték"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
+msgstr "Elkövetkező műveletek (7 nap)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder

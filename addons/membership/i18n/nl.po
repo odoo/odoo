@@ -3,17 +3,16 @@
 # * membership
 # 
 # Translators:
-# Cas Vissers <casvissers@brahoo.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +75,7 @@ msgstr "Bedrag voor het lidmaatschap"
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr "Gekoppeld lid"
+msgstr "Buitengewoon lid"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -130,7 +129,7 @@ msgstr "Klik om een lid toe te voegen"
 #: model:ir.model.fields,field_description:membership.field_report_membership_company_id
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -197,7 +196,7 @@ msgstr "Datum tot wanneer het lidmaatschap actief blijft."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
@@ -238,12 +237,12 @@ msgstr "Fout! Einddatum kan niet voor de begindatum liggen."
 #: code:addons/membership/models/partner.py:159
 #, python-format
 msgid "Error ! You cannot create recursive associated members."
-msgstr "Fout! Het is niet mogelijk om recursieve gekoppelde leden te maken"
+msgstr "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Forecast"
-msgstr "Planning"
+msgstr "Prognose"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_free_member
@@ -487,6 +486,13 @@ msgid "Membership products"
 msgstr "Producten voor leden"
 
 #. module: membership
+#: model:ir.actions.server,name:membership.ir_cron_update_membership_ir_actions_server
+#: model:ir.cron,cron_name:membership.ir_cron_update_membership
+#: model:ir.cron,name:membership.ir_cron_update_membership
+msgid "Membership: update memberships"
+msgstr ""
+
+#. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 msgid "Memberships"
 msgstr "Lidmaatschappen"
@@ -515,7 +521,7 @@ msgid ""
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 "Odoo laat u toe om gemakkelijk alle activiteiten van leden op te volgen:\n"
-"Huidige status van het lidmaatschap, discussies en historie van het lidmaatschap, enz."
+"Huidige status van het lidmaatschap, discussies en historiek van het lidmaatschap, enz."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -566,7 +572,7 @@ msgstr "Hoeveelheid"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
-msgid "Reports"
+msgid "Reporting"
 msgstr "Rapportages"
 
 #. module: membership
@@ -604,7 +610,7 @@ msgstr "Eerste maand van lidmaatschap"
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Taxes"
-msgstr "BTW"
+msgstr "Belastingen"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount

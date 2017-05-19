@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 14:00+0000\n"
-"PO-Revision-Date: 2016-09-29 14:00+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,14 +31,14 @@ msgid "Add your comments here for translator...."
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_auto_approve
-#: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_auto_approve
-msgid "Auto Approve Translation ?"
+#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
+msgid "Auto Approve Translation"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Auto Approve Translation*"
+#: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_auto_approve
+#: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_auto_approve
+msgid "Auto Approve Translation ?"
 msgstr ""
 
 #. module: base_gengo
@@ -64,7 +64,7 @@ msgstr ""
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Comment*"
+msgid "Comment"
 msgstr ""
 
 #. module: base_gengo
@@ -141,11 +141,6 @@ msgid "Gengo Translation Service Level"
 msgstr ""
 
 #. module: base_gengo
-#: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Gengo Translator"
-msgstr ""
-
-#. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:84
 #, python-format
 msgid "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."
@@ -162,6 +157,20 @@ msgstr ""
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.actions.server,name:base_gengo.gengo_sync_send_request_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:base_gengo.gengo_sync_send_request_scheduler
+#: model:ir.cron,name:base_gengo.gengo_sync_send_request_scheduler
+msgid "Gengo: Sync translation (Request)"
+msgstr ""
+
+#. module: base_gengo
+#: model:ir.actions.server,name:base_gengo.gengo_sync_receive_request_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:base_gengo.gengo_sync_receive_request_scheduler
+#: model:ir.cron,name:base_gengo.gengo_sync_receive_request_scheduler
+msgid "Gengo: Sync translation (Response)"
 msgstr ""
 
 #. module: base_gengo
@@ -207,7 +216,7 @@ msgstr ""
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Private Key*"
+msgid "Private Key"
 msgstr ""
 
 #. module: base_gengo
@@ -217,7 +226,7 @@ msgstr ""
 
 #. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Public Key*"
+msgid "Public Key"
 msgstr ""
 
 #. module: base_gengo
@@ -228,12 +237,8 @@ msgstr ""
 #. module: base_gengo
 #: model:ir.model.fields,field_description:base_gengo.field_base_config_settings_gengo_sandbox
 #: model:ir.model.fields,field_description:base_gengo.field_res_company_gengo_sandbox
-msgid "Sandbox Mode"
-msgstr ""
-
-#. module: base_gengo
 #: model:ir.ui.view,arch_db:base_gengo.view_general_configuration_form_inherit_base_gengo
-msgid "Sandbox Mode*"
+msgid "Sandbox Mode"
 msgstr ""
 
 #. module: base_gengo

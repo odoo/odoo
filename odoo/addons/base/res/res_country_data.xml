@@ -352,6 +352,7 @@
             <field name="name">Colombia</field>
             <field name="code">co</field>
             <field file="base/static/img/country_flags/co.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="COP" />
             <field eval="57" name="phone_code" />
             <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" />
@@ -803,6 +804,8 @@
             <field name="code">jp</field>
             <field file="base/static/img/country_flags/jp.png" name="image" type="base64" />
             <field name="currency_id" ref="JPY" />
+            <field name="address_format" eval="'%(zip)s\n%(state_name)s %(city)s\n%(street)s\n%(street2)\n%(country_name)s'"/>
+            <field name="name_position">after</field>
             <field eval="81" name="phone_code" />
         </record>
         <record id="ke" model="res.country">
@@ -1584,6 +1587,7 @@
             <field name="name">Turkey</field>
             <field name="code">tr</field>
             <field file="base/static/img/country_flags/tr.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="TRY" />
             <field eval="90" name="phone_code" />
         </record>
@@ -1782,6 +1786,14 @@
                 ref('lv'),ref('lt'),ref('lu'),ref('mt'),ref('nl'),
                 ref('pl'),ref('pt'),ref('ro'),ref('sk'),ref('si'),
                 ref('es'),ref('se'),ref('uk')])]"/>
+        </record>
+
+        <record id="south_america" model="res.country.group">
+            <field name="name">South America</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('ar'),ref('bo'),ref('br'),ref('cl'),ref('co'),
+                ref('ec'),ref('fk'),ref('gs'),ref('gf'),ref('gy'),
+                ref('py'),ref('pe'),ref('sr'),ref('uy'),ref('ve')])]"/>
         </record>
     </data>
 </odoo>

@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="external_layout_barcode_right" inherit_id="report.external_layout" primary="True">
-            <xpath expr="//t[@t-call='report.external_layout_header']" position="attributes">
-                <attribute name="t-call">stock.external_layout_header_barcode_right</attribute>
-            </xpath>
-        </template>
-        <template id="external_layout_header_barcode_right" inherit_id="report.external_layout_header" primary="True">
-            <xpath expr="//div[@name='company_address']" position="after">
-                <div class="col-xs-4 pull-right mt8" name="right_box">
-                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;"/>
-                </div>
-            </xpath>
-        </template>
+
         <template id="report_picking">
-            <t t-call="report.html_container">
+            <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
-                    <t t-call="stock.external_layout_barcode_right">
+                    <t t-call="web.external_layout">
                         <div class="page">
-                            <br/>
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
@@ -50,7 +38,12 @@
                                 </div>
                             </div>
                             <br/>
-                            <h1 t-field="o.name" class="mt0"/>
+                            <img
+                                t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)"
+                                style="width:300px;height:50px" class="pull-right mb16"
+                                />
+                            <h1 t-field="o.name" class="mt0 pull-left"/>
+                            <div class="clearfix"/>
                             <table class="table table-condensed">
                             <thead>
                                 <tr>
@@ -97,9 +90,7 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <t t-set="pack_operation_ids" t-value="o.pack_operation_ids"/>
-                                <t groups="base.group_portal" t-set="pack_operation_ids" t-value="o.pack_operation_ids.sudo()"/>
-                                <tr t-foreach="pack_operation_ids" t-as="pack_operation">
+                                <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
                                     <td><span t-field="pack_operation.product_id"/><br/>
                                         <span t-field="pack_operation.product_id.description_picking"/>
                                         <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>

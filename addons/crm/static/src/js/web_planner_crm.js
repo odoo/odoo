@@ -6,10 +6,9 @@ var core = require('web.core');
 var _t = core._t;
 
 planner.PlannerDialog.include({
-    prepare_planner_event: function() {
-        var self = this;
+    prepare_planner_event: function () {
         this._super.apply(this, arguments);
-        if(self.planner['planner_application'] == 'planner_crm') {
+        if (this.planner['planner_application'] === 'planner_crm') {
             var stages = {
                 'solution_selling': [
                     _t('Territory'), _t('Qualified'), _t('Qualified Sponsor'),
@@ -33,8 +32,8 @@ planner.PlannerDialog.include({
                 'odoo_default': [
                     _t('New'), _t('Qualified'), _t('Proposition'), _t('Negotiation'), _t('Won'), _t('Lost'), '',
                     '', '', '', '', '', '', '']
-            }
-            self.$el.on('change', '#input_element_pipeline', function(ev) {
+            };
+            this.$el.on('change', '#input_element_pipeline', function(ev) {
                 var option = $(ev.target).find(":selected").val();
                 if (_.has(stages, option)) {
                     var values = stages[option];

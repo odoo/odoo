@@ -5,14 +5,17 @@ import datetime
 import logging
 import re
 import uuid
-from urlparse import urljoin
 from collections import Counter, OrderedDict
 from itertools import product
+
+from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.website.models.website import slug
+
+from odoo.tools import pycompat
 
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
@@ -23,8 +26,7 @@ def dict_keys_startswith(dictionary, string):
         .. note::
             This function uses dictionary comprehensions (Python >= 2.7)
     """
-    matched_keys = [key for key in dictionary.keys() if key.startswith(string)]
-    return dict((k, dictionary[k]) for k in matched_keys)
+    return {k: v for k, v in pycompat.items(dictionary) if k.startswith(string)}
 
 
 class SurveyStage(models.Model):
@@ -53,7 +55,7 @@ class Survey(models.Model):
     _name = 'survey.survey'
     _description = 'Survey'
     _rec_name = 'title'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _default_stage(self):
         return self.env['survey.stage'].search([], limit=1).id
@@ -104,11 +106,12 @@ class Survey(models.Model):
 
     def _compute_survey_url(self):
         """ Computes a public URL for the survey """
-        base_url = '/' if self.env.context.get('relative_url') else self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = '/' if self.env.context.get('relative_url') else \
+                   self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for survey in self:
-            survey.public_url = urljoin(base_url, "survey/start/%s" % (slug(survey)))
-            survey.print_url = urljoin(base_url, "survey/print/%s" % (slug(survey)))
-            survey.result_url = urljoin(base_url, "survey/results/%s" % (slug(survey)))
+            survey.public_url = urls.url_join(base_url, "survey/start/%s" % (slug(survey)))
+            survey.print_url = urls.url_join(base_url, "survey/print/%s" % (slug(survey)))
+            survey.result_url = urls.url_join(base_url, "survey/results/%s" % (slug(survey)))
             survey.public_url_html = '<a href="%s">%s</a>' % (survey.public_url, _("Click here to start survey"))
 
     @api.model
@@ -150,7 +153,7 @@ class Survey(models.Model):
         if page_id == 0:
             return (pages[0][1], 0, len(pages) == 1)
 
-        current_page_index = pages.index((filter(lambda p: p[1].id == page_id, pages))[0])
+        current_page_index = pages.index(next(p for p in pages if p[1].id == page_id))
 
         # All the pages have been displayed
         if current_page_index == len(pages) - 1 and not go_back:
@@ -237,7 +240,7 @@ class Survey(models.Model):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
-            result_summary = {'answers': answers.values(), 'comments': comments}
+            result_summary = {'answers': list(pycompat.values(answers)), 'comments': comments}
 
         # Calculate and return statistics for matrix
         if question.type == 'matrix':
@@ -247,7 +250,7 @@ class Survey(models.Model):
             comments = []
             [rows.update({label.id: label.value}) for label in question.labels_ids_2]
             [answers.update({label.id: label.value}) for label in question.labels_ids]
-            for cell in product(rows.keys(), answers.keys()):
+            for cell in product(rows, answers):
                 res[cell] = 0
             for input_line in question.user_input_line_ids:
                 if input_line.answer_type == 'suggestion' and (not(current_filters) or input_line.user_input_id.id in current_filters) and input_line.value_suggested_row:
@@ -637,7 +640,7 @@ class SurveyQuestion(models.Model):
             if self.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # Preventing answers with blank value
-            if all([True if not answer.strip() else False for answer in answer_candidates.values()]) and answer_candidates:
+            if all(not answer.strip() for answer in pycompat.values(answer_candidates)) and answer_candidates:
                 errors.update({answer_tag: self.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and self.comment_count_as_answer and (not comment_flag or not comment_answer):
@@ -659,7 +662,7 @@ class SurveyQuestion(models.Model):
             if self.matrix_subtype == 'simple':
                 answer_number = len(answer_candidates)
             elif self.matrix_subtype == 'multiple':
-                answer_number = len(set([sk.rsplit('_', 1)[0] for sk in answer_candidates.keys()]))
+                answer_number = len({sk.rsplit('_', 1)[0] for sk in answer_candidates})
             else:
                 raise RuntimeError("Invalid matrix subtype")
             # Validate that each line has been answered

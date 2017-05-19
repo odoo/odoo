@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -18,9 +19,9 @@ class ProjectTaskType(models.Model):
         'mail.template',
         string='Rating Email Template',
         domain=lambda self: self._default_domain_rating_template_id(),
-        help="Select an email template. An email will be sent to the customer when the task reach this step.")
+        help="If set and if the project's rating configuration is 'Rating when changing stage', then an email will be sent to the customer when the task reaches this step.")
     auto_validation_kanban_state = fields.Boolean('Automatic kanban status', default=False,
-        help="Automatically modify the kanban state when the customer reply to the feedback for this stage.\n"
+        help="Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
             " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
             " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n")
 
@@ -33,15 +34,14 @@ class Task(models.Model):
     def write(self, values):
         res = super(Task, self).write(values)
         if 'stage_id' in values and values.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail()
+            self.filtered(lambda x: x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         return res
 
-    def _send_task_rating_mail(self):
+    def _send_task_rating_mail(self, force_send=False):
         for task in self:
             rating_template = task.stage_id.rating_template_id
             if rating_template:
-                force_send = self.env.context.get('force_send', True)
-                task.rating_send_request(rating_template, reuse_rating=False, force_send=force_send)
+                task.rating_send_request(rating_template, lang=task.partner_id.lang, force_send=force_send)
 
     def rating_get_partner_id(self):
         res = super(Task, self).rating_get_partner_id()
@@ -53,6 +53,7 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="rating_project.mt_task_rating")
 
+
 class Project(models.Model):
 
     _inherit = "project.project"
@@ -61,7 +62,7 @@ class Project(models.Model):
     @api.model
     def _send_rating_all(self):
         projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
-        projects.with_context(force_send=False)._send_rating_mail()
+        projects._send_rating_mail()
         projects._compute_rating_request_deadline()
 
     def _send_rating_mail(self):
@@ -73,13 +74,13 @@ class Project(models.Model):
         domain = [('create_date', '>=', fields.Datetime.to_string(fields.datetime.now() - timedelta(days=30)))]
         for project in self:
             activity = project.tasks.rating_get_grades(domain)
-            project.percentage_satisfaction_project = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+            project.percentage_satisfaction_project = activity['great'] * 100 / sum(pycompat.values(activity)) if sum(pycompat.values(activity)) else -1
 
     @api.one
     @api.depends('tasks.rating_ids.rating')
     def _compute_percentage_satisfaction_task(self):
         activity = self.tasks.rating_get_grades()
-        self.percentage_satisfaction_task = activity['great'] * 100 / sum(activity.values()) if sum(activity.values()) else -1
+        self.percentage_satisfaction_task = activity['great'] * 100 / sum(pycompat.values(activity)) if sum(pycompat.values(activity)) else -1
 
     percentage_satisfaction_task = fields.Integer(
         compute='_compute_percentage_satisfaction_task', string="Happy % on Task", store=True, default=-1)

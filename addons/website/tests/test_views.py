@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import itertools
+try:
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
 
 import unittest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
 from odoo.tests import common
+from odoo.tools import pycompat
 
 
 def attrs(**kwargs):
-    return dict(('data-oe-%s' % key, str(value)) for key, value in kwargs.iteritems())
+    return {'data-oe-%s' % key: str(value) for key, value in pycompat.items(kwargs)}
 
 
 class TestViewSaving(common.TransactionCase):
@@ -21,7 +25,7 @@ class TestViewSaving(common.TransactionCase):
         self.assertEqual(a.attrib, b.attrib)
         self.assertEqual((a.text or '').strip(), (b.text or '').strip())
         self.assertEqual((a.tail or '').strip(), (b.tail or '').strip())
-        for ca, cb in itertools.izip_longest(a, b):
+        for ca, cb in zip_longest(a, b):
             self.eq(ca, cb)
 
     def setUp(self):
@@ -54,7 +58,7 @@ class TestViewSaving(common.TransactionCase):
             h.SPAN("My Company", attrs(model='res.company', id=1, field='name', type='char')),
             h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')),
         ]
-        for actual, expected in itertools.izip_longest(fields, expect):
+        for actual, expected in zip_longest(fields, expect):
             self.eq(actual, expected)
 
     def test_embedded_save(self):
@@ -139,21 +143,13 @@ class TestViewSaving(common.TransactionCase):
         Company = self.env['res.company']
         View = self.env['ir.ui.view']
 
-        # create a view with an xmlid, like the file import would
-        with self.env.norecompute():
-            self.view_id = View.create({
-                'name': "Test View",
-                'type': 'qweb',
-                'arch': ET.tostring(self.arch, encoding='utf-8').decode('utf-8')
-            })
+        # create an xmlid for the view
         imd = self.env['ir.model.data'].create({
             'module': 'website',
             'name': 'test_view',
-            'model': 'ir.ui.view',
-            'res_id': self.view_id,
+            'model': self.view_id._name,
+            'res_id': self.view_id.id,
         })
-
-        # the xml_id of the view should not be flagged as 'noupdate'
         self.assertEqual(self.view_id.model_data_id, imd)
         self.assertFalse(imd.noupdate)
 

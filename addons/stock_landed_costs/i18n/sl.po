@@ -1,31 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
-# Matjaž Mozetič <m.mozetic@matmoz.si>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Dejan Sraka <dejan.sraka@picolabs.si>, 2016
-# Vida Potočnik <vida.potocnik@mentis.si>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Vida Potočnik <vida.potocnik@mentis.si>, 2016\n"
-"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-10-22 04:28+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
+"sl/)\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sl\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:359
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:376
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr " že zunaj"
@@ -33,7 +31,7 @@ msgstr " že zunaj"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_account_id
 msgid "Account"
-msgstr "Račun"
+msgstr "Konto"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
@@ -72,7 +70,7 @@ msgstr "Po masi"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cancel"
-msgstr "Prekliči"
+msgstr "Preklic"
 
 #. module: stock_landed_costs
 #: selection:stock.landed.cost,state:0
@@ -111,14 +109,6 @@ msgid "Cost Lines"
 msgstr "Stroškovne postavke"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
-#, python-format
-msgid ""
-"Cost and adjustments lines do not match. You should maybe recompute the "
-"landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -144,7 +134,7 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:18
+#: code:addons/stock_landed_costs/purchase_config_settings.py:18
 #, python-format
 msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
@@ -156,7 +146,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_display_name
 msgid "Display Name"
-msgstr "Prikazni naziv"
+msgstr "Prikaz naziva"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -204,7 +194,7 @@ msgstr "Prejšnja cena (na enoto)"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Združi po"
+msgstr "Združeno po"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_id
@@ -298,14 +288,7 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
-#, python-format
-msgid ""
-"No valuation adjustments lines. You should maybe recompute the landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -316,7 +299,7 @@ msgid "Pickings"
 msgstr "Zbirniki"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
+#: code:addons/stock_landed_costs/stock_landed_costs.py:90
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Nastavite konto stroškov zalog za proizvod: %s."
@@ -330,7 +313,7 @@ msgstr "Knjiženo"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_product_id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_product_id
 msgid "Product"
-msgstr "Izdelek"
+msgstr "Proizvod"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
@@ -390,12 +373,12 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Postavke popravkov vrednotenja zaloge"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/stock_landed_costs.py:52
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
 "Izbrani zbirnik ne vsebuje premikov, na katere vplivajo stroški "
@@ -414,7 +397,7 @@ msgid "Validate"
 msgstr "Potrditev"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -433,7 +416,7 @@ msgid "Volume"
 msgstr "Prostornina"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:17
+#: code:addons/stock_landed_costs/purchase_config_settings.py:17
 #, python-format
 msgid "Warning!"
 msgstr "Opozorilo!"
@@ -444,6 +427,14 @@ msgid "Weight"
 msgstr "Masa"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
+#, python-format
+msgid ""
+"You cannot validate a landed cost which has no valid valuation adjustments "
+"lines. Did you click on Compute?"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "opis karakteristik izdelka"
@@ -452,3 +443,57 @@ msgstr "opis karakteristik izdelka"
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr "purchase.config.settings"
+
+#~ msgid "Action Needed"
+#~ msgstr "Potreben je ukrep"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
+
+#~ msgid "Followers"
+#~ msgstr "Sledilci"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Sledilci (kanali)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Sledilci (partnerji)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#~ msgid "Is Follower"
+#~ msgstr "Je sledilec"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Datum zadnjega sporočila"
+
+#~ msgid "Messages"
+#~ msgstr "Sporočila"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Komunikacije in kronologija"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Število aktivnosti"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Število neprebranih sporočil"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Neprebrana sporočila"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Števec neprebranih sporočil"
+
+#~ msgid "Website Messages"
+#~ msgstr "Sporočila iz spletne strani"
+
+#~ msgid "Website communication history"
+#~ msgstr "Kronologija komunikacij spletne strani"

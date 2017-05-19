@@ -2,11 +2,11 @@
 <odoo>
     <data noupdate="1">
         <record id="project.project_project_1" model="project.project">
-            <field name="partner_id" ref="portal.partner_demo_portal"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="privacy_visibility">portal</field>
         </record>
 
         <function model="project.project" name="message_subscribe"
-            eval="[ref('project.project_project_1')], [ref('portal.partner_demo_portal')]"/>
+            eval="[ref('project.project_project_1')], [ref('base.partner_demo_portal')]"/>
     </data>
 </odoo>

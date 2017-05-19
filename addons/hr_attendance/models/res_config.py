@@ -5,8 +5,10 @@ from odoo import fields, models
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _name = 'attendance.config.settings'
+    _inherit = 'res.config.settings'
 
-    group_attendance_use_pin = fields.Selection([(0, 'Employees do not need to enter their PIN to check in manually in the "Kiosk Mode".'),
-                                                 (1, 'Employees must enter their PIN to check in manually in the "Kiosk Mode".')],
-                                                string='Employee PIN', help='Enable or disable employee PIN identification at check in', implied_group="hr_attendance.group_hr_attendance_use_pin")
+    group_attendance_use_pin = fields.Boolean(string='Employee PIN',
+        implied_group="hr_attendance.group_hr_attendance_use_pin")
+    module_hr_timesheet = fields.Boolean(string='Timesheets')
+    module_hr_holidays = fields.Boolean(string='Leave Management')

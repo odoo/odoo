@@ -24,13 +24,13 @@ class TestMrpCommon(common2.TestStockCommon):
             'name': 'Hilda Ferachwal',
             'login': 'hilda',
             'email': 'h.h@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_mrp_user.id])]})
         cls.user_mrp_manager = Users.create({
             'name': 'Gary Youngwomen',
             'login': 'gary',
             'email': 'g.g@example.com',
-            'notify_email': 'none',
+            'notification_type': 'inbox',
             'groups_id': [(6, 0, [user_group_mrp_manager.id])]})
 
         cls.workcenter_1 = cls.env['mrp.workcenter'].create({

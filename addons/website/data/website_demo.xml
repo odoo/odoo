@@ -9,9 +9,6 @@
             <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
         </record>
 
-        <record id="base.main_company" model="res.company">
-            <field name="rml_header1">Great Product for Great People</field>
-        </record>
     </data>
 
     <data noupdate="1">
@@ -38,8 +35,7 @@
         </template>
 
         <record id="action_partner_post" model="ir.actions.server">
-            <field name="name">Website Partner Post and Thanks Demo</field>
-            <field name="condition">True</field>
+            <field name="name">Website: Partner Post and Thanks Demo</field>
             <field name="website_published" eval="True"/>
             <field name="website_path">partner_thanks</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -114,8 +110,7 @@ response = request.website.render("website.template_partner_post", {'partner': p
         </template>
 
         <record id="action_partner_comment" model="ir.actions.server">
-            <field name="name">Website Partners Comment Form</field>
-            <field name="condition">True</field>
+            <field name="name">Website: Partners Comment Form</field>
             <field name="website_published" eval="True"/>
             <field name="website_path">partner_comment</field>
             <field name="model_id" ref="base.model_res_partner"/>

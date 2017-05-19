@@ -19,26 +19,12 @@ class PurchaseOrderLine(models.Model):
 
     def _get_bom_delivered(self, bom=False):
         self.ensure_one()
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
-        # In the case of a kit, we need to check if all components are received or not.
-        # nothing policy. A product can have several BoMs, we don't know which one was used when the
-        # receipt was created.
-        bom_delivered = {}
+        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+        # have changed, we don't compute the quantities but verify the move state.
         if bom:
-            bom_delivered[bom.id] = False
-            product_uom_qty_bom = self.product_uom._compute_quantity(self.product_qty, bom.product_uom_id) / bom.product_qty
-            boms, lines = bom.explode(self.product_id, product_uom_qty_bom)
-            for bom_line, data in lines:
-                qty = 0.0
-                for move in self.move_ids.filtered(lambda x: x.state == 'done' and x.product_id == bom_line.product_id):
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, bom_line.product_uom_id)
-                if float_compare(qty, data['qty'], precision_digits=precision) < 0:
-                    bom_delivered[bom.id] = False
-                    break
-                else:
-                    bom_delivered[bom.id] = True
-        if bom_delivered and any(bom_delivered.values()):
-            return self.product_qty
-        elif bom_delivered:
-            return 0.0
+            bom_delivered = all([move.state == 'done' for move in self.move_ids])
+            if bom_delivered:
+                return self.product_qty
+            else:
+                return 0.0

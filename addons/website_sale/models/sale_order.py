@@ -6,6 +6,7 @@ import random
 from odoo import api, models, fields, tools, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class SaleOrder(models.Model):
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
-    payment_tx_id = fields.Many2one('payment.transaction', string='Transaction', copy=False)
+    payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
 
     @api.multi
@@ -29,17 +30,6 @@ class SaleOrder(models.Model):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
-
-    @api.model
-    def _get_errors(self, order):
-        return []
-
-    @api.model
-    def _get_website_data(self, order):
-        return {
-            'partner': order.partner_id.id,
-            'order': order
-        }
 
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
@@ -95,7 +85,7 @@ class SaleOrder(models.Model):
 
         # add untracked attributes in the name
         untracked_attributes = []
-        for k, v in attributes.items():
+        for k, v in pycompat.items(attributes):
             # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
             attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
             if attribute_value and not attribute_value.attribute_id.create_variant:
@@ -117,7 +107,7 @@ class SaleOrder(models.Model):
         order_line = False
         if self.state != 'draft':
             request.session['sale_order_id'] = None
-            raise UserError(_('It is forbidden to modify a sale order which is not in draft status'))
+            raise UserError(_('It is forbidden to modify a sales order which is not in draft status'))
         if line_id is not False:
             order_lines = self._cart_find_product_line(product_id, line_id, **kwargs)
             order_line = order_lines and order_lines[0]
@@ -183,7 +173,7 @@ class Website(models.Model):
     pricelist_id = fields.Many2one('product.pricelist', compute='_compute_pricelist_id', string='Default Pricelist')
     currency_id = fields.Many2one('res.currency', related='pricelist_id.currency_id', string='Default Currency')
     salesperson_id = fields.Many2one('res.users', string='Salesperson')
-    salesteam_id = fields.Many2one('crm.team', string='Sales Team')
+    salesteam_id = fields.Many2one('crm.team', string='Sales Channel')
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
 
@@ -341,13 +331,13 @@ class Website(models.Model):
 
     @api.multi
     def sale_get_order(self, force_create=False, code=None, update_pricelist=False, force_pricelist=False):
-        """ Return the current sale order after mofications specified by params.
-        :param bool force_create: Create sale order if not already existing
+        """ Return the current sales order after mofications specified by params.
+        :param bool force_create: Create sales order if not already existing
         :param str code: Code to force a pricelist (promo code)
                          If empty, it's a special case to reset the pricelist with the first available else the default.
-        :param bool update_pricelist: Force to recompute all the lines from sale order to adapt the price with the current pricelist.
+        :param bool update_pricelist: Force to recompute all the lines from sales order to adapt the price with the current pricelist.
         :param int force_pricelist: pricelist_id - if set,  we change the pricelist with this one
-        :returns: browse record for the current sale order
+        :returns: browse record for the current sales order
         """
         self.ensure_one()
         partner = self.env.user.partner_id
@@ -498,4 +488,4 @@ class ResCountry(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sale Order')
+    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order')

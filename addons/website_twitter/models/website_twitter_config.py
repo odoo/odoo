@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from urllib2 import URLError, HTTPError
+
+import requests
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -26,16 +28,16 @@ class WebsiteTwitterConfig(models.TransientModel):
 
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key',
-        string='Twitter API Key',
-        help='Twitter API key you can get it from https://apps.twitter.com/app/new')
+        string='API Key',
+        help='Twitter API key you can get it from https://apps.twitter.com/')
     twitter_api_secret = fields.Char(
         related='website_id.twitter_api_secret',
-        string='Twitter API secret',
-        help='Twitter API secret you can get it from https://apps.twitter.com/app/new')
+        string='API secret',
+        help='Twitter API secret you can get it from https://apps.twitter.com/')
     twitter_tutorial = fields.Boolean(string='Show me how to obtain the Twitter API Key and Secret')
     twitter_screen_name = fields.Char(
         related='website_id.twitter_screen_name',
-        string='Get favorites from this screen name',
+        string='Favorites From',
         help='Screen Name of the Twitter Account from which you want to load favorites.'
              'It does not have to match the API Key/Secret.')
 
@@ -49,13 +51,13 @@ class WebsiteTwitterConfig(models.TransientModel):
         try:
             self.website_id.fetch_favorite_tweets()
 
-        except HTTPError, e:
-            _logger.info("%s - %s" % (e.code, e.reason), exc_info=True)
-            raise UserError("%s - %s" % (e.code, e.reason) + ':' + self._get_twitter_exception_message(e.code))
-        except URLError, e:
+        except requests.HTTPError as e:
+            _logger.info("%s - %s" % (e.response.status_code, e.response.reason), exc_info=True)
+            raise UserError("%s - %s" % (e.response.status_code, e.response.reason) + ':' + self._get_twitter_exception_message(e.response.status_code))
+        except IOError:
             _logger.info(_('We failed to reach a twitter server.'), exc_info=True)
             raise UserError(_('Internet connection refused') + ' ' + _('We failed to reach a twitter server.'))
-        except Exception, e:
+        except Exception:
             _logger.info(_('Please double-check your Twitter API Key and Secret!'), exc_info=True)
             raise UserError(_('Twitter authorization error!') + ' ' + _('Please double-check your Twitter API Key and Secret!'))
 

@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
-"PO-Revision-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -19,134 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: event
-#: model:mail.template,body_html:event.event_reminder
-msgid ""
-"\n"
-"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
-"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
-"    <table style=\"width:600px;margin:5px auto;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td>\n"
-"                    <a href=\"/\">\n"
-"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
-"                    </a>\n"
-"                </td>\n"
-"                <td style=\"text-align:right;vertical-align:middle;\">\n"
-"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
-"                    % endif\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <h2 style=\"font-weight:300;\">\n"
-"                        Hi ${object.name},\n"
-"                    </h2>\n"
-"                    <p style=\"font-size:16px;\">\n"
-"                        Please keep in mind that the event\n"
-"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
-"                        % else:\n"
-"                            <strong>${object.event_id.name}</strong>\n"
-"                        % endif\n"
-"                        takes place on\n"
-"                        <strong>${object.get_date_range_str()}</strong>\n"
-"                    </p>\n"
-"                </td>\n"
-"            </tr>\n"
-"            <tr>\n"
-"                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
-"                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
-"                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id.address_id.street\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.city:\n"
-"                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.state_id.name:\n"
-"                                    ${object.event_id.address_id.state_id.name},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.zip:\n"
-"                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.country_id.name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
-"                                % endif\n"
-"                            </td>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
-"                            </td>\n"
-"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
-"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
-"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
-"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                    % if object.event_id.organizer_id.email:\n"
-"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                            <tr>\n"
-"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
-"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
-"                                </td>\n"
-"                            </tr>\n"
-"                        </table>\n"
-"                    % endif\n"
-"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
-"                        <tr>\n"
-"                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Add this event to your calendar</strong>\n"
-"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
-"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
-"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
-"                            </td>\n"
-"                        </tr>\n"
-"                    </table>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
-"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
-"        </a>\n"
-"    </div>\n"
-"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
-"        <tbody>\n"
-"            <tr>\n"
-"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
-"                </td>\n"
-"            </tr>\n"
-"        </tbody>\n"
-"    </table>\n"
-"</div>\n"
-"            "
-msgstr ""
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -165,7 +37,7 @@ msgid ""
 "                </td>\n"
 "                <td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
-"                        <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">More Events</a>\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a>\n"
 "                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
@@ -174,50 +46,53 @@ msgid ""
 "    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
-"                <td style=\"padding:15px 20px 0px 20px;\">\n"
-"                    <h2 style=\"font-weight:300;\">\n"
-"                        Hi ${object.name}, here is your order confirmation for\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We are happy to confirm your registration to the event:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li>Event: \n"
 "                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
 "                        % else:\n"
 "                            <strong>${object.event_id.name}</strong>\n"
 "                        % endif\n"
-"                    </h2>\n"
+"                        </li>\n"
+"                        <li>Attendee: ${object.name}</li>\n"
+"                    </ul>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        See you soon,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
 "                </td>\n"
 "            </tr>\n"
 "            <tr>\n"
 "                <td style=\"padding:15px 20px 0px 20px;\">\n"
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
-"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
-"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            <td style=\"padding:25px 0px; text-align:center;\">\n"
+"                                <p>\n"
+"                                    Don't forget to <strong>add it to your calendar</strong>:\n"
+"                                </p>\n"
+"                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&text=${object.event_id.name}&dates=${date_begin}/${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Google</a>\n"
+"                                <a href=\"https://bay02.calendar.live.com/calendar/calendar.aspx?rru=addevent&summary=${object.event_id.name}&dtstart=${date_begin}&dtend=${date_end}&location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Outlook</a>\n"
+"                                <a href=\"https://calendar.yahoo.com/?v=60&view=d&type=20&title=${object.event_id.name}&in_loc=${location}&st=${format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%S')}&et=${format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\"> Yahoo</a>\n"
 "                            </td>\n"
-"                            <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
-"                                % if object.event_id.address_id.street:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street},</p>\n"
-"                                    % set location = object.event_id.address_id.street\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.street2:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2},</p>\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.city:\n"
-"                                    ${object.event_id.address_id.city},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.state_id.name:\n"
-"                                    ${object.event_id.address_id.state_id.name},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.zip:\n"
-"                                    ${object.event_id.address_id.zip},\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
-"                                % endif\n"
-"                                % if object.event_id.address_id.country_id.name:\n"
-"                                    <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
-"                                    % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
-"                                % endif\n"
-"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
 "                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
 "                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
 "                            </td>\n"
@@ -226,6 +101,197 @@ msgid ""
 "                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
 "                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
 "                            </td>\n"
+"                            % if object.event_id.address_id.country_id.name:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    % if object.event_id.organizer_id:\n"
+"                        <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding:10px 0px 25px 0px;\">\n"
+"                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
+"                                    <p>Please contact the organizer:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
+"\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    % if object.event_id.address_id:\n"
+"    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"        </a>\n"
+"    </div>\n"
+"    % endif\n"
+"    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                    <div>Sent by ${object.company_id.name}</div>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: event
+#: model:mail.template,body_html:event.event_reminder
+msgid ""
+"\n"
+"<div style=\"background:#F3F5F6;color:#515166;padding:25px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"% set date_begin = format_tz(object.event_id.date_begin, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"% set date_end = format_tz(object.event_id.date_end, tz='UTC', format='%Y%m%dT%H%M%SZ')\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td>\n"
+"                    <a href=\"/\">\n"
+"                        <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                    </a>\n"
+"                </td>\n"
+"                <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                        <a href=\"${object.event_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">View Event</a>\n"
+"                    % endif\n"
+"                </td>\n"
+"            </tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px; font-size:16px;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hello,\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We are excited to remind you that the event\n"
+"                        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                            <a href=\"${object.event_id.website_url}\" style=\"color:#875A7B;text-decoration:none;\">${object.event_id.name}</a>\n"
+"                        % else:\n"
+"                            ${object.event_id.name}\n"
+"                        % endif\n"
+"                        is starting\n"
+"                        <strong>${object.get_date_range_str()}</strong>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We confirm your registration and hope to meet you there,\n"
+"                    </p><p style=\"font-size:16px; margin-bottom: 30px\">\n"
+"                        <i>\n"
+"                           -- <br/>\n"
+"                        % if object.event_id.organizer_id:\n"
+"                            ${object.event_id.organizer_id.name}\n"
+"                        % else:\n"
+"                            The organizers.\n"
+"                        % endif\n"
+"                        </i>\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            <tr>\n"
+"                <td style=\"padding:15px 20px 0px 20px;\">\n"
+"                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                        <tr>\n"
+"                            <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                <img src=\"/web_editor/font_to_img/61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                            </td>\n"
+"                            <td style=\"padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                <div><strong>From</strong> ${object.event_id.date_begin_located}</div>\n"
+"                                <div><strong>To</strong> ${object.event_id.date_end_located}</div>\n"
+"                                <div style=\"font-size:12px;color:#9e9e9e\"><i><strong>TZ</strong> ${object.event_id.date_tz}</i></div>\n"
+"                            </td>\n"
+"                            % if object.event_id.address_id:\n"
+"                                <td style=\"padding:25px 0px;vertical-align:top;\">\n"
+"                                    <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" height=\"34\">\n"
+"                                </td>\n"
+"                                <td style=\"padding:30px 10px 25px 10px;width:50%;vertical-align:top;\">\n"
+"                                    % set location = ''\n"
+"                                    % if object.event_id.address_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.name}</p>\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street}</p>\n"
+"                                        % set location = object.event_id.address_id.street\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.street2:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.street2}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.street2)\n"
+"                                    % endif\n"
+"                                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                                    % if object.event_id.address_id.city:\n"
+"                                        ${object.event_id.address_id.city},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.city)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.state_id.name:\n"
+"                                        ${object.event_id.address_id.state_id.name},\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.state_id.name)\n"
+"                                    % endif\n"
+"                                    % if object.event_id.address_id.zip:\n"
+"                                        ${object.event_id.address_id.zip}\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.zip)\n"
+"                                    % endif\n"
+"                                    </p>\n"
+"                                    % if object.event_id.address_id.country_id.name:\n"
+"                                        <p style=\"margin:0px 0px 0px 0px;\">${object.event_id.address_id.country_id.name}</p>\n"
+"                                        % set location = '%s, %s' % (location, object.event_id.address_id.country_id.name)\n"
+"                                    % endif\n"
+"                                </td>\n"
+"                            % endif\n"
 "                        </tr>\n"
 "                    </table>\n"
 "                    % if object.event_id.organizer_id.email:\n"
@@ -233,7 +299,16 @@ msgid ""
 "                            <tr>\n"
 "                                <td style=\"padding:10px 0px 25px 0px;\">\n"
 "                                    <h2 style=\"font-weight:300;margin:10px 0px\">Questions about this event?</h2>\n"
-"                                    <div>Please contact the organizer at <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></div>\n"
+"                                    <p>Please contact the organizer:</p>\n"
+"                                    <ul>\n"
+"                                        <li>${object.event_id.organizer_id.name}</li>\n"
+"                                        % if object.event_id.organizer_id.email\n"
+"                                            <li>Mail: <a href=\"mailto:${object.event_id.organizer_id.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.event_id.organizer_id.email}</a></li>\n"
+"                                        % endif\n"
+"                                        % if object.event_id.organizer_id.phone\n"
+"                                            <li>Phone: ${object.event_id.organizer_id.phone}</li>\n"
+"                                        % endif\n"
+"                                    </ul>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                        </table>\n"
@@ -252,17 +327,23 @@ msgid ""
 "            </tr>\n"
 "        </tbody>\n"
 "    </table>\n"
+"    % if object.event_id.address_id:\n"
 "    <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
 "        <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
-"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x100&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
+"            <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\" />\n"
 "        </a>\n"
 "    </div>\n"
+"    % endif\n"
 "    <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
 "        <tbody>\n"
 "            <tr>\n"
 "                <td style=\"padding-top:10px;font-size: 12px;\">\n"
-"                    <div>This email was sent to <a href=\"mailto:${object.email}\" style=\"text-decoration:none;color:#875A7B;\">${object.email}</a></div>\n"
-"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Copyright © ${object.company_id.name}</p>\n"
+"                    <p style=\"margin:0px 0px 9px 0px;padding-top:10px;\">Sent by ${object.company_id.name}</p>\n"
+"                    % if 'website_url' in object.event_id and object.event_id.website_url:\n"
+"                    <div>\n"
+"                        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"                    </div>\n"
+"                    % endif\n"
 "                </td>\n"
 "            </tr>\n"
 "        </tbody>\n"
@@ -304,52 +385,14 @@ msgid " # No of Draft Registrations"
 msgstr " Tervezett regisztrációk száma"
 
 #. module: event
+#: model:mail.template,subject:event.event_reminder
+msgid "${object.event_id.name}: ${object.get_date_range_str()}"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "(stats)"
 msgstr "(Statisztikák)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "5 Intensive Days"
-msgstr "5 intenzív nap"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid ""
-"<em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the"
-" event or change the dates on which it is held.)</em>"
-msgstr ""
-"<em>(Terem Munka törlésének joga fenntartva, nevezze-újra vagy helyezze-"
-"át<br>az eseményt vagy változtassa meg a szervezési dátumot.)</em>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-msgid ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn <i>Odoo"
-" Programming</i></font>"
-msgstr ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">megtanulni az "
-"<i>Odoo rendszer programozását</i></font>"
-
-#. module: event
-#: model:event.event,description:event.event_1
-msgid ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">to learn "
-"<i>technical aspects</i></font>"
-msgstr ""
-"<font style=\"color: rgb(255, 255, 255); font-size: 24px;\">megtanulni "
-"a<i>műszaki sajátosságokat</i></font>"
-
-#. module: event
-#: model:event.event,description:event.event_3
-msgid ""
-"<font style=\"font-size: 24px;\">to learn <i>business applications "
-"development</i></font>"
-msgstr ""
-"<font style=\"font-size: 24px;\">megtanulni az <i>üzleti alkalmazás "
-"fejlesztést</i></font>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -361,48 +404,10 @@ msgstr ""
 "                                        <b>Eddig</b>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to create dynamic page interacting with the ORM.</i>"
-msgstr ""
-"<i>Képes lesz egy dinamikus oldalt létrehozására, hogy kölcsönhatásba lépjen"
-" a halgatókkal.</i>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to develop a full application with backend and user "
-"interface.</i>"
-msgstr ""
-"<i>Képes lesz egy teljes alkalmazás fejlesztésére háttér támogatással és "
-"felhasználói interfésszel.</i>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<i>You will be able to develop simple dynamic components in HTML pages.</i>"
-msgstr ""
-"<i>Képes lesz egy egyszerű dinamikus részekből álló HTML oldal "
-"fejlesztésére.</i>"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "<i>to</i>"
 msgstr "<i>eddig</i>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<small>John Doe, CEO</small>"
-msgstr "<small>John Doe, CEO</small>"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -416,80 +421,9 @@ msgstr ""
 "                                            </span>"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<span style=\"text-align: -webkit-center; \">This course is dedicated to "
-"developers who need to grasp knowledge of the <strong>business applications "
-"development </strong>process. This course is for new developers or for IT "
-"professionals eager to learn more about technical aspects.</span>"
-msgstr ""
-"<span style=\"text-align: -webkit-center; \">Ez az előadássorozat olyan "
-"fejlesztők részére ajánlott  akik az <strong>üzleti alkalmazás "
-"fejlesztés</strong>folyamatáról szeretnének ismereteket szerezni. Ez az "
-"előadás sorozat új fejlesztőknek vagy IT szakembereknek akik műszaki "
-"szemszögből szeretnének tanulni.</span>"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "<strong>Conference on Business Apps</strong>"
-msgstr "<strong>Konferencia az üzleti alkalmazáshoz</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"<strong>Having attended this course, participants should be able "
-"to:</strong>"
-msgstr ""
-"<strong>Jelentkezett erre az előadás sorozatra, résztvevők tudnak "
-"majd:</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_2
-#: model:event.event,description:event.event_3
-msgid "<strong>Objectives:</strong>"
-msgstr "<strong>Célkitűzések:</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<strong>Our prices include:</strong>"
-msgstr "<strong>Áraink magukban foglalják:</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "<strong>Program:</strong>"
-msgstr "<strong>Program:</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "<strong>Requirements:</strong>"
-msgstr "<strong>Követelmények:</strong>"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "<strong>Where to find us:</strong>"
-msgstr "<strong>Hol talál minket:</strong>"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
 msgstr "Aktív"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Advanced JQuery"
-msgstr "Haladó JQuery"
 
 #. module: event
 #: selection:event.mail,interval_type:0
@@ -532,13 +466,6 @@ msgstr "Alkalmaz"
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
 msgstr "Archivált"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Arrays"
-msgstr "Tömbök"
 
 #. module: event
 #: selection:event.registration,state:0
@@ -625,43 +552,10 @@ msgid "Before the event"
 msgstr "Az esemény előtt"
 
 #. module: event
-#: model:event.event,description:event.event_2
-msgid "Best regards,"
-msgstr "Legjobbakat,"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Bootstrap CSS"
-msgstr "Rendszertöltő CSS"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Bring your own laptop."
-msgstr "Hozz saját laptopot."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Building a Full Application"
-msgstr "Építs egy teljes alkalmazást"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Calling the ORM"
-msgstr "ORM hívása"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégse"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -679,7 +573,7 @@ msgstr "Regisztráció törlése"
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
-msgstr "Törölt"
+msgstr "Visszavont"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
@@ -687,17 +581,12 @@ msgid "Category"
 msgstr "Kategória"
 
 #. module: event
-#: model:event.event,description:event.event_2
-msgid "Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)"
-msgstr "Chamber Works 60, Rosewood Court Detroit, MI 48212 (Egyesőlt Államok)"
-
-#. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
 msgstr "Kattintson új esemény létrehozásához."
 
 #. module: event
-#: code:addons/event/models/event.py:220
+#: code:addons/event/models/event.py:216
 #, python-format
 msgid "Closing Date cannot be set before Beginning Date."
 msgstr "Befejezés dátuma nem lehet a kezdő dátum előtti."
@@ -711,20 +600,10 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: event
-#: code:addons/event/models/event.py:416
+#: code:addons/event/models/event.py:412
 #, python-format
 msgid "Compose Email"
 msgstr "Email írás"
-
-#. module: event
-#: model:event.type,name:event.event_type_2
-msgid "Conference"
-msgstr "Konferencia"
-
-#. module: event
-#: model:event.event,name:event.event_2
-msgid "Conference on Business Apps"
-msgstr "Konferencia az üzleti alkalmazásoknak"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -740,7 +619,7 @@ msgstr "Esemény beállítása"
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
 msgid "Confirm"
-msgstr "Megerősítés"
+msgstr "Megerősít"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -768,7 +647,7 @@ msgstr "Jóváhagyás nem szükséges"
 #: selection:report.event.registration,event_state:0
 #: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
-msgstr "Megerősített"
+msgstr "Jóváhagyott"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -786,23 +665,9 @@ msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Controllers and Views"
-msgstr "Vezérlők és nézetek"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
 msgstr "Ország"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Course Summary"
-msgstr "Előadás sorozat összegzés"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_create_uid
@@ -832,37 +697,16 @@ msgid "Creation Date"
 msgstr "Létrehozás dátuma"
 
 #. module: event
-#: code:addons/event/models/event.py:393
+#: code:addons/event/models/event.py:389
 #, python-format
 msgid "Customer"
 msgstr "Vásárló"
 
 #. module: event
-#: code:addons/event/models/event.py:395
+#: code:addons/event/models/event.py:391
 #, python-format
 msgid "Customer Email"
-msgstr "Vásárlói e-mail"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Day 1"
-msgstr "Nap 1"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Day 2"
-msgstr "Nap 2"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Day 3"
-msgstr "Nap 3"
+msgstr "Vevői e-mail"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -890,13 +734,6 @@ msgid "Description"
 msgstr "Leírás"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Develop a new module for a particular application."
-msgstr "Fejlesszen új modult egy bizonyos alkalmazáshoz."
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_display_name
 #: model:ir.model.fields,field_description:event.field_event_confirm_display_name
 #: model:ir.model.fields,field_description:event.field_event_event_display_name
@@ -914,13 +751,6 @@ msgid "Display order"
 msgstr "Sorrend megjelenítés"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Dive into Strings"
-msgstr "Merüljön el a szövegben"
-
-#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -931,15 +761,6 @@ msgstr "Elvégezve"
 #: selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "Tervezet"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid ""
-"During this conference, our team will give a detailed overview of our "
-"business applications. You’ll know all the benefits of using it."
-msgstr ""
-"Konferencia alatt, csoportunk részletes áttekintést fog adni az üzleti "
-"alkalmazásainkról. Tudni fogja a használata előnyeit."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
@@ -1094,10 +915,19 @@ msgid "Event on Registration"
 msgstr "Regisztráció a rendezvényre"
 
 #. module: event
+#: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
+#: model:ir.cron,cron_name:event.event_mail_scheduler
+#: model:ir.cron,name:event.event_mail_scheduler
+msgid "Event: Mail Scheduler"
+msgstr ""
+
+#. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.model.fields,field_description:event.field_res_partner_event_count
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
 #: model:ir.ui.menu,name:event.menu_report_event_registration
+#: model:ir.ui.view,arch_db:event.res_partner_view_tree
 #: model:ir.ui.view,arch_db:event.view_event_configuration
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1131,11 +961,6 @@ msgid "Events which are in confirm state"
 msgstr "Események melyek visszaigazolt állapotúak"
 
 #. module: event
-#: model:event.type,name:event.event_type_1
-msgid "Exhibition"
-msgstr "Kiállítás"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Expected"
 msgstr "Elvárt"
@@ -1154,11 +979,6 @@ msgstr "Kiterjesztett szűrők..."
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Finish Event"
 msgstr "Esemény vége"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "For any additional information, please contact us at"
-msgstr "További információkért, kérjük keressenek fel bennünket itt"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_seats_max
@@ -1181,23 +1001,6 @@ msgstr ""
 "eseményt nem lehet jóváhagyni (a szabály elkerüléséhez adja be a 0 értéket) "
 
 #. module: event
-#: model:event.event,name:event.event_1
-msgid "Functional Webinar"
-msgstr "Webképzés a működésről"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Functional flow of the main applications;"
-msgstr "A fő alkalmazások alkalmazott folyamata;"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Functions"
-msgstr "Beosztások"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 #: model:ir.ui.view,arch_db:event.view_report_event_registration_search
@@ -1205,39 +1008,9 @@ msgid "Group By"
 msgstr "Csoportosítás"
 
 #. module: event
-#: model:event.event,description:event.event_2
-msgid "Having attended this conference, participants should be able to:"
-msgstr "Jelentkezett erre az előadásra, résztvevők tudnak majd:"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Hello World"
-msgstr "Helló világ"
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Hour(s)"
 msgstr "Óra(k)"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "How to Debug"
-msgstr "Hogyan keressen hibát"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"I did not expect such a great learning experience. I feel like I can develop"
-" anything now."
-msgstr ""
-"Nem vártam ezt a nagyszerű tanulási élményt. Úgy érzem már mindenfélét tudok"
-" fejleszteni."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_id
@@ -1270,13 +1043,6 @@ msgid "Immediately"
 msgstr "Azonnal"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Install and administer your own server;"
-msgstr "Telepítse és felügyelje a saját szerverét;"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_config_settings_module_event_barcode
 msgid "Install the event_barcode module"
 msgstr "Telepítse a event_barcode modult"
@@ -1297,43 +1063,9 @@ msgid "Install the website_event_questions module"
 msgstr "Telepítse a website_event_questions modult"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Integrated Help"
-msgstr "Segítség integrálása"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_nbr
 msgid "Interval"
 msgstr "Intervallum"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Introduction to JQuery"
-msgstr "JQuery bemutatása"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Introduction to Javascript"
-msgstr "Javascript bemutatása"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Introduction to QWeb"
-msgstr "QWeb bemutatása"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Introduction, CRM, Sales Management"
-msgstr ""
-"Bemutatás, CRM ügyfélkapcsolat-kezelő rendszer, Értékesítés szervezése"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_default_registration_max
@@ -1399,16 +1131,9 @@ msgid "Location"
 msgstr "Helyszín"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Loops"
-msgstr "Ciklusok"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Luigi Roni, Senior Event Manager"
-msgstr "Luigi Roni, Rangidős esemény vezető"
+#: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
+msgid "Mail Registration"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1434,11 +1159,6 @@ msgstr "Levél elküldve"
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_sent
 msgid "Mail Sent on Event"
 msgstr "Eseményről levél elküldve "
-
-#. module: event
-#: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
-msgid "Mail registration ids"
-msgstr "Email regisztráció id azonosítói"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1471,13 +1191,6 @@ msgid "Minimum Attendees"
 msgstr "Minimum Résztvevők"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Modules"
-msgstr "Modulok"
-
-#. module: event
 #: selection:event.mail,interval_unit:0
 msgid "Month(s)"
 msgstr "Hónap(ok)"
@@ -1493,12 +1206,6 @@ msgid "New"
 msgstr "Új"
 
 #. module: event
-#: code:addons/event/models/event.py:442
-#, python-format
-msgid "Next month"
-msgstr "Következő hónap"
-
-#. module: event
 #: selection:event.config.settings,module_website_event_questions:0
 msgid "No extra questions on registrations"
 msgstr "Nincs extra kérdés a feliratkozásokon"
@@ -1509,13 +1216,13 @@ msgid "No mini website per event"
 msgstr "Nincs mini weboldal az eseményekhez"
 
 #. module: event
-#: code:addons/event/models/event.py:214
+#: code:addons/event/models/event.py:210
 #, python-format
 msgid "No more available seats."
 msgstr "Nincs több szék."
 
 #. module: event
-#: code:addons/event/models/event.py:314
+#: code:addons/event/models/event.py:310
 #, python-format
 msgid "No more seats available for this event."
 msgstr "Nincs több szabad ülőhely ehhez az eseményhez"
@@ -1546,18 +1253,9 @@ msgid "Number of Registrations"
 msgstr "Jelentkezők száma"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Odoo Official Website"
-msgstr "Odoo hivatalos weboldal"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Odoo Web Client"
-msgstr "Odoo Web kliens"
+#: model:ir.model.fields,help:event.field_res_partner_event_count
+msgid "Number of events the partner has participated."
+msgstr ""
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1569,11 +1267,6 @@ msgstr ""
 "Odoo rendszer segít az eseményei, rendezvényei hatékony \n"
 "    megszervezésében és szervezésében: feliratkozások, részvételek nyomon követése, \n"
 "    automatikus email igazolások, jegy eladás, stb."
-
-#. module: event
-#: model:event.event,name:event.event_0
-msgid "Open Days in Los Angeles"
-msgstr "Nyílt napok Los Angeles-ben"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -1591,28 +1284,7 @@ msgid "Participant / Contact Name"
 msgstr "Résztvevő / kapcsolat neve"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"Participants are expected to have some knowledge in programming. A basic "
-"knowledge of the Python programming is recommended."
-msgstr ""
-"Résztvevőktől elvárt, hogy a programozásban járatosak legyenek. A Python "
-"programozás alap szintje ajánlott."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"Participants preferably have a functional knowledge of our software (see "
-"Functional Training)."
-msgstr ""
-"Résztevőknek ajánlott a programjaink funkcionális ismerete (lásd "
-"Funkcionális gyakorlat)."
-
-#. module: event
+#: model:ir.model,name:event.model_res_partner
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Partner"
 msgstr "Partner"
@@ -1623,43 +1295,11 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: event
-#: model:event.event,description:event.event_2
-msgid "Point of Sale (POS), Introduction to report customization."
-msgstr ""
-"Értékesítési pont (POS) kassza, Kimutatás testreszabásának bemutatása."
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Project management, Human resources, Contract management."
-msgstr "Projekt téma szervezés, Emberi erőforrások, Szerződés kezelés."
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Beszerzés, Értékesítés &amp; Beszerzés szervezés, Pénzügyi könyvelés."
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Python Objects"
-msgstr "Python objektum"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Read Great Contents"
-msgstr "Olvasson nagyszerű  tartalmakat"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
 msgid ""
-"Reference of the document that created the registration, for example a sale "
-"order"
+"Reference of the document that created the registration, for example a sales"
+" order"
 msgstr ""
-"A regisztrációt létrehozó dokumentum hivatkozása, például egy vásárlói "
-"megrendelés"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1735,11 +1375,6 @@ msgid "Registrations"
 msgstr "Regisztrációk"
 
 #. module: event
-#: model:mail.template,subject:event.event_reminder
-msgid "Reminder for ${object.event_id.name}"
-msgstr "Emlékeztető erre  ${object.event_id.name}"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_default_reply_to
 msgid "Reply To"
 msgstr "Ide megválaszolva"
@@ -1750,23 +1385,9 @@ msgid "Reply-To Email"
 msgstr "Válasz E-mail"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Report Engine"
-msgstr "Kimutatás motor"
-
-#. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
-msgid "Reports"
-msgstr "Kimutatások"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Requirements"
-msgstr "Követelmények"
+msgid "Reporting"
+msgstr "Riport készítés"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_reserved
@@ -1795,11 +1416,6 @@ msgid "Scheduled Time"
 msgstr "Tervezett idő"
 
 #. module: event
-#: model:event.type,name:event.event_type_0
-msgid "Seminar"
-msgstr "Szeminárium"
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
 msgstr "Küldés Email-ben"
@@ -1823,11 +1439,6 @@ msgstr "Visszaigazolatlanra állítja"
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
 msgstr "Beállítások"
-
-#. module: event
-#: model:event.type,name:event.event_type_3
-msgid "Show"
-msgstr "Mutat"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
@@ -1863,11 +1474,6 @@ msgid "Subscribe"
 msgstr "Feliratkozás"
 
 #. module: event
-#: model:event.event,name:event.event_3
-msgid "Technical Training"
-msgstr "Műstaki képzés"
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_event_reply_to
 msgid ""
 "The email address of the organizer is likely to be put here, with the effect"
@@ -1880,35 +1486,12 @@ msgstr ""
 "beteheti az e-mail átjárójából, ha használ ilyet."
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid ""
-"This course help me build my first application within a month. Definetly "
-"worth its price."
-msgstr ""
-"Ez a kurzus segítséget nyújt az első alkalmazásom egy hónap alatti "
-"felépítésében. Feltétlen megérte az árát."
-
-#. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
 msgstr ""
 "Ez a mező az e-mail sablont tartalmazza amit mindig el fog küldeni  "
 "automatikusan"
-
-#. module: event
-#: code:addons/event/models/event.py:440
-#, python-format
-msgid "This month"
-msgstr "Ebben a hónapban"
-
-#. module: event
-#: code:addons/event/models/event.py:438
-#, python-format
-msgid "This week"
-msgstr "Ezen a héten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_event_sale
@@ -1921,40 +1504,9 @@ msgid "Timezone"
 msgstr "Időzóna"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "To get more information, visit the"
-msgstr "További információért, látogassa meg a"
-
-#. module: event
-#: code:addons/event/models/event.py:434
-#, python-format
-msgid "Today"
-msgstr "Ma"
-
-#. module: event
-#: code:addons/event/models/event.py:436
-#, python-format
-msgid "Tomorrow"
-msgstr "Holnap"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_config_settings_module_website_event_track
 msgid "Tracks and Agenda"
 msgstr "Nyomon követés és Napirend"
-
-#. module: event
-#: model:event.type,name:event.event_type_4
-msgid "Training"
-msgstr "Képzés"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Training Center Module"
-msgstr "Képző központ modul"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -1966,25 +1518,6 @@ msgstr "Nincs megerősítve"
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
 msgstr "Visszaigazolatlan lefoglalt székek"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Underscore"
-msgstr "Aláhúzott"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Understand the development concepts and architecture;"
-msgstr "Fejlesztés fogalmának és felépítésének megérése;"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Understand the various modules;"
-msgstr "Különböző modulok megértése;"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
@@ -2026,18 +1559,6 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Variables &amp; Operators"
-msgstr "Változók &amp; Műveletirányítók"
-
-#. module: event
-#: model:event.event,description:event.event_2
-msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr "Raktár kezelés, Gyártás (MRP) &amp; Értékesítés, Import/Export."
-
-#. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
@@ -2052,33 +1573,12 @@ msgid "Week(s)"
 msgstr "Hét(ek)"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What do people say about this course?"
-msgstr "Mit mondanak erről a kurzusról?"
-
-#. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "What you will learn?"
-msgstr "Mit fog tanulni?"
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_type
 msgid "When to Run "
 msgstr "Mikor futtassa"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "Workflows"
-msgstr "Munkafolyamatok"
-
-#. module: event
-#: code:addons/event/models/event.py:246
+#: code:addons/event/models/event.py:242
 #, python-format
 msgid ""
 "You have already set a registration for this event as 'Attended'. Please "
@@ -2088,7 +1588,7 @@ msgstr ""
 "tervezetre, ha vissza szeretné vonni ezt a jelentkezést."
 
 #. module: event
-#: code:addons/event/models/event.py:371
+#: code:addons/event/models/event.py:367
 #, python-format
 msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
@@ -2111,13 +1611,6 @@ msgid "badge_of_${(object.event_id.name or '').replace('/','_')}"
 msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "drinks and lunch;"
-msgstr "italok és étkezés;"
-
-#. module: event
 #: model:ir.model,name:event.model_event_config_settings
 msgid "event.config.settings"
 msgstr "event.config.settings"
@@ -2133,9 +1626,28 @@ msgid "event.mail"
 msgstr "event.mail"
 
 #. module: event
-#: model:event.event,description:event.event_2
-msgid "events@openerp.com"
-msgstr "events@openerp.com"
+#: code:addons/event/models/event.py:434
+#, python-format
+msgid "in %d days"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:438
+#, python-format
+msgid "next month"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:436
+#, python-format
+msgid "next week"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:440
+#, python-format
+msgid "on "
+msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_report_event_registration
@@ -2143,8 +1655,13 @@ msgid "report.event.registration"
 msgstr "report.event.registration"
 
 #. module: event
-#: model:event.event,description:event.event_0
-#: model:event.event,description:event.event_1
-#: model:event.event,description:event.event_3
-msgid "training material."
-msgstr "képzési anyag."
+#: code:addons/event/models/event.py:430
+#, python-format
+msgid "today"
+msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:432
+#, python-format
+msgid "tomorrow"
+msgstr ""

@@ -1,27 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_picking_wave
-# 
+#
 # Translators:
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2016
-# zbik2607 <darek@krokus.com.pl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2016
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2015
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"PO-Revision-Date: 2016-06-27 10:30+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pl\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
@@ -75,19 +72,19 @@ msgstr "Potwierdź pobranie"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_uid
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzone przez"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_date
 msgid "Created on"
-msgstr "Data utworzenia"
+msgstr "Utworzono"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
-msgstr "Nazwa wyświetlana"
+msgstr "Wyświetlana nazwa "
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -108,7 +105,7 @@ msgstr "Wymuś dostępność"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "Group By"
-msgstr "Grupuj wg"
+msgstr "Pogrupuj wg"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_id
@@ -120,13 +117,14 @@ msgstr "ID"
 #: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
 msgid "Ice Cream Chocolate"
-msgstr "Lody czekoladowe"
+msgstr "lody czekoladowe"
 
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
+#, fuzzy
 msgid "Ice Cream Chocolate with sticks"
-msgstr ""
+msgstr "lody czekoladowe z posypką"
 
 #. module: stock_picking_wave
 #: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
@@ -134,7 +132,7 @@ msgstr ""
 #: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
 #: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
 msgid "Ice Cream Vanilla"
-msgstr "Lody waniliowe"
+msgstr "lody waniliowe"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -145,19 +143,19 @@ msgstr "W toku"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave___last_update
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave___last_update
 msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
+msgstr "Ostatnio modyfikowano"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_uid
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio aktualizowane przez"
+msgstr "Ostatnio modyfikowane przez"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_write_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_write_date
 msgid "Last Updated on"
-msgstr "Data ostatniej aktualizacji"
+msgstr "Ostatnia zmiana"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_picking_ids
@@ -170,7 +168,7 @@ msgid "Name of the picking wave"
 msgstr "Nazwa fali pobrań"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
+#: code:addons/stock_picking_wave/stock_picking_wave.py:42
 #, python-format
 msgid "Nothing to print."
 msgstr "Nie ma niczego do drukowania."
@@ -181,10 +179,10 @@ msgid "Person responsible for this wave"
 msgstr "Osoba odpowiedzialna za falę"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
+#: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9894
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -207,7 +205,7 @@ msgid "Picking Waves not finished"
 msgstr "Nieskończone fale pobrań"
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9894
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
 msgid "Picking wave associated to this picking"
 msgstr "Fala związana z tym pobraniem"
 
@@ -219,8 +217,8 @@ msgstr "Pobrania"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print"
-msgstr "Drukuj"
+msgid "Print all pickings"
+msgstr "Drukuj wszystkie pobrania"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -243,14 +241,14 @@ msgid "Select a wave"
 msgstr "Wybierz falę"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
 "availability before setting this wave to done."
 msgstr ""
-"Część pobrań ciągle czeka na dostępność. Sprawdź albo wymuś dostępność przed"
-" ustawieniem tej fali na wykonaną."
+"Część pobrań ciągle czeka na dostępność. Sprawdź albo wymuś dostępność przed "
+"ustawieniem tej fali na wykonaną."
 
 #. module: stock_picking_wave
 #: model:product.product,name:stock_picking_wave.product_product_dry_specu
@@ -286,9 +284,12 @@ msgstr "Fale pobrań"
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid ""
 "The goal of the picking waves is to group operations that may\n"
-"                (needs to) be done together in order to increase their efficiency.\n"
-"                It may also be useful to assign jobs (one person = one wave) or\n"
-"                help the timing management of operations (tasks to be done at 1pm)."
+"                (needs to) be done together in order to increase their "
+"efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) "
+"or\n"
+"                help the timing management of operations (tasks to be done "
+"at 1pm)."
 msgstr ""
 
 #. module: stock_picking_wave
@@ -297,7 +298,7 @@ msgid "Transfer"
 msgstr "Pobierz"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
+#: code:addons/stock_picking_wave/stock_picking_wave.py:60
 #, python-format
 msgid "Transferred by"
 msgstr "Pobrane przez"
@@ -311,3 +312,57 @@ msgstr "Użytkownik"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "Fala"
+
+#~ msgid "Action Needed"
+#~ msgstr "Wymagana akcja"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data ostatniej wiadomości w rekordzie."
+
+#~ msgid "Followers"
+#~ msgstr "Obserwatorzy"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Obserwatorzy (kanały)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Obserwatorzy (partnerzy)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
+
+#~ msgid "Is Follower"
+#~ msgstr "Jest obserwatorem"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data ostatniej wiadomości"
+
+#~ msgid "Messages"
+#~ msgstr "Wiadomosći"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Wiadomości i historia komunikacji"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Liczba akcji"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Liczba wiadomości wymagających akcji"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Liczba nieprzeczytanych wiadomości"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Nieprzeczytane wiadomości"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Licznik nieprzeczytanych wiadomości"
+
+#~ msgid "Website Messages"
+#~ msgstr "Wiadomości"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia rozmowy"

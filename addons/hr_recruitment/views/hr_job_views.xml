@@ -19,15 +19,14 @@
                 <field name="department_id"/>
                 <field name="no_of_recruitment"/>
                 <field name="color"/>
-                <field name="document_ids"/>
                 <field name="no_of_hired_employee"/>
                 <field name="manager_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
-                            <div class="o_kanban_card_header">
+                        <div>
+                            <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary"><t t-esc="record.name.value"/></div>
                                     <div t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'" class="o_secondary o_job_alias">
@@ -35,7 +34,7 @@
                                     </div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
-                                    <a class="o_kanban_manage_toggle_button" href="#">More <i class="fa fa-caret-down"/></a>
+                                    <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                 </div>
                             </div>
                             <div class="container o_kanban_card_content o_visible">
@@ -45,17 +44,9 @@
                                             <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">Application(s)</button>
                                         </div>
                                         <div class="col-xs-6 o_kanban_primary_right">
-                                            <div t-if="record.document_ids.raw_value.length > 0" class="row">
-                                                <div class="col-xs-9">
-                                                    <a name="action_get_attachment_tree_view" type="object">
-                                                        Document(s)
-                                                    </a>
-                                                </div>
-                                                <div class="col-xs-3">
-                                                    <span><t t-esc="record.document_ids.raw_value.length"/></span>
-                                                </div>
-                                            </div>
-
+                                            <a name="action_get_attachment_tree_view" type="object">
+                                                Documents
+                                            </a>
                                             <div class="row" name="recruitment">
                                                 <div class="col-xs-12">
                                                     <a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a>
@@ -65,14 +56,14 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 o_kanban_primary_bottom">
-                                            <field name="no_of_hired_employee" widget="progress" title="Hired Employees" options="{'current_value': 'no_of_hired_employee', 'max_value': 'no_of_recruitment', 'editable': true, 'edit_max_value': true, 'on_change': 'action_set_no_of_recruitment'}"/>
+                                            <field name="no_of_hired_employee" widget="progressbar" title="Hired Employees" options="{'current_value': 'no_of_hired_employee', 'max_value': 'no_of_recruitment', 'editable': true, 'edit_max_value': true}"/>
                                         </div>
                                     </div>
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
                                         <div class="col-xs-12 o_kanban_primary_left">
-                                            <button class="btn btn-primary" name="set_recruit" type="object">Start Recruitment</button>
+                                            <button class="btn btn-secondary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
                                     </div>
                                 </t>
@@ -101,7 +92,7 @@
                                     </div>
                                     <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_reports">
                                         <div class="o_kanban_card_manage_title">
-                                            <span>Reports</span>
+                                            <span>Reporting</span>
                                         </div>
 
                                         <div>

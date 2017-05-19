@@ -6,7 +6,7 @@ import json
 import time
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.float_utils import float_compare
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
@@ -14,21 +14,21 @@ from odoo.exceptions import UserError
 
 class PickingType(models.Model):
     _name = "stock.picking.type"
-    _description = "The picking type determines the picking view"
+    _description = "The operation type determines the picking view"
     _order = 'sequence, id'
 
-    name = fields.Char('Picking Type Name', required=True, translate=True)
+    name = fields.Char('Operation Types Name', required=True, translate=True)
     color = fields.Integer('Color')
     sequence = fields.Integer('Sequence', help="Used to order the 'All Operations' kanban view")
     sequence_id = fields.Many2one('ir.sequence', 'Reference Sequence', required=True)
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
-        help="This is the default source location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
+        help="This is the default source location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the supplier location on the partner. ")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Default Destination Location',
-        help="This is the default destination location when you create a picking manually with this picking type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
+        help="This is the default destination location when you create a picking manually with this operation type. It is possible however to change it or that the routes put another location. If it is empty, it will check for the customer location on the partner. ")
     code = fields.Selection([('incoming', 'Vendors'), ('outgoing', 'Customers'), ('internal', 'Internal')], 'Type of Operation', required=True)
-    return_picking_type_id = fields.Many2one('stock.picking.type', 'Picking Type for Returns')
+    return_picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type for Returns')
     show_entire_packs = fields.Boolean('Allow moving packs', help="If checked, this shows the packs to be moved as a whole in the Operations tab all the time, even if there was no entire pack reserved.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', ondelete='cascade',
@@ -39,7 +39,7 @@ class PickingType(models.Model):
         help="If this is checked only, it will suppose you want to create new Lots/Serial Numbers, so you can provide them in a text field. ")
     use_existing_lots = fields.Boolean(
         'Use Existing Lots/Serial Numbers', default=True,
-        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this picking type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
+        help="If this is checked, you will be able to choose the Lots/Serial Numbers. You can also decide to not put lots in this operation type.  This means it will create stock with no lot or not put a restriction on the lot taken. ")
 
     # Statistics for the kanban view
     last_done_picking = fields.Char('Last 10 Done Pickings', compute='_compute_last_done_picking')
@@ -83,7 +83,10 @@ class PickingType(models.Model):
             data = self.env['stock.picking'].read_group(domains[field] +
                 [('state', 'not in', ('done', 'cancel')), ('picking_type_id', 'in', self.ids)],
                 ['picking_type_id'], ['picking_type_id'])
-            count = dict(map(lambda x: (x['picking_type_id'] and x['picking_type_id'][0], x['picking_type_id_count']), data))
+            count = {
+                x['picking_type_id'][0]: x['picking_type_id_count']
+                for x in data if x['picking_type_id']
+            }
             for record in self:
                 record[field] = count.get(record.id, 0)
         for record in self:
@@ -157,7 +160,7 @@ class PickingType(models.Model):
 
 class Picking(models.Model):
     _name = "stock.picking"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
     _order = "priority desc, date asc, id desc"
 
@@ -178,7 +181,7 @@ class Picking(models.Model):
         help="If this shipment was split, then this field links to the shipment which contains the already processed part.")
 
     move_type = fields.Selection([
-        ('direct', 'Partial'), ('one', 'All at once')], 'Delivery Type',
+        ('direct', 'Partial'), ('one', 'All at once')], 'Shipping Policy',
         default='direct', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="It specifies goods to be deliver partially or all at once")
@@ -239,7 +242,7 @@ class Picking(models.Model):
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     picking_type_code = fields.Selection([
@@ -445,7 +448,7 @@ class Picking(models.Model):
     @api.multi
     def do_print_picking(self):
         self.write({'printed': True})
-        return self.env["report"].get_action(self, 'stock.report_picking')
+        return self.env.ref('stock.action_report_picking').report_action(self)
 
     @api.multi
     def action_confirm(self):
@@ -497,20 +500,15 @@ class Picking(models.Model):
         todo_moves.action_done()
         return True
 
-    @api.multi
-    def recheck_availability(self):
-        self.action_assign()
-        self.do_prepare_partial()
-
     def _prepare_pack_ops(self, quants, forced_qties):
         """ Prepare pack_operations, returns a list of dict to give at create """
         # TDE CLEANME: oh dear ...
         valid_quants = quants.filtered(lambda quant: quant.qty > 0)
         _Mapping = namedtuple('Mapping', ('product', 'package', 'owner', 'location', 'location_dst_id'))
 
-        all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties.keys()) | self.move_lines.mapped('product_id')
+        all_products = valid_quants.mapped('product_id') | self.env['product.product'].browse(p.id for p in forced_qties) | self.move_lines.mapped('product_id')
         computed_putaway_locations = dict(
-            (product, self.location_dest_id.get_putaway_strategy(product) or self.location_dest_id.id) for product in all_products)
+            (product, self.location_dest_id.get_putaway_strategy(product).id or self.location_dest_id.id) for product in all_products)
 
         product_to_uom = dict((product.id, product.uom_id) for product in all_products)
         picking_moves = self.move_lines.filtered(lambda move: move.state not in ('done', 'cancel'))
@@ -550,7 +548,7 @@ class Picking(models.Model):
                 lots_grouped.setdefault(key, dict()).setdefault(quant.lot_id.id, 0.0)
                 lots_grouped[key][quant.lot_id.id] += quant.qty
         # Do the same for the forced quantities (in cases of force_assign or incomming shipment for example)
-        for product, qty in forced_qties.items():
+        for product, qty in pycompat.items(forced_qties):
             if qty <= 0.0:
                 continue
             key = _Mapping(product, self.env['stock.quant.package'], self.owner_id, self.location_id, computed_putaway_locations[product])
@@ -560,7 +558,7 @@ class Picking(models.Model):
         # Create the necessary operations for the grouped quants and remaining qtys
         Uom = self.env['product.uom']
         product_id_to_vals = {}  # use it to create operations using the same order as the picking stock moves
-        for mapping, qty in qtys_grouped.items():
+        for mapping, qty in pycompat.items(qtys_grouped):
             uom = product_to_uom[mapping.product.id]
             val_dict = {
                 'picking_id': self.id,
@@ -573,7 +571,7 @@ class Picking(models.Model):
                 'product_uom_id': uom.id,
                 'pack_lot_ids': [
                     (0, 0, {'lot_id': lot, 'qty': 0.0, 'qty_todo': lots_grouped[mapping][lot]})
-                    for lot in lots_grouped.get(mapping, {}).keys()],
+                    for lot in lots_grouped.get(mapping, {})],
             }
             product_id_to_vals.setdefault(mapping.product.id, list()).append(val_dict)
 
@@ -920,7 +918,7 @@ class Picking(models.Model):
         self.ensure_one()
         moves = self.env['stock.move']
         for pack_operation in self.pack_operation_ids:
-            for product, remaining_qty in pack_operation._get_remaining_prod_quantities().items():
+            for product, remaining_qty in pycompat.items(pack_operation._get_remaining_prod_quantities()):
                 if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
                     vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
                     moves |= moves.create(vals)
@@ -993,7 +991,7 @@ class Picking(models.Model):
         return backorders
 
     @api.multi
-    def put_in_pack(self):
+    def _put_in_pack(self):
         # TDE FIXME: reclean me
         QuantPackage = self.env["stock.quant.package"]
         package = False
@@ -1024,6 +1022,11 @@ class Picking(models.Model):
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
+
+
+    @api.multi
+    def put_in_pack(self):
+        return self._put_in_pack()
 
     @api.multi
     def button_scrap(self):

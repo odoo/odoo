@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models
+
+from odoo import api, fields, models, _
 
 
 class BaseConfigSettings(models.TransientModel):
@@ -8,42 +9,49 @@ class BaseConfigSettings(models.TransientModel):
     _name = 'base.config.settings'
     _inherit = 'res.config.settings'
 
-    group_multi_company = fields.Boolean(string='Manage multiple companies',
-        help='Work in multi-company environments, with appropriate security access between companies.',
-        implied_group='base.group_multi_company')
+    group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    module_share = fields.Boolean(string='Allow documents sharing',
-        help="""Share or embed any screen of Odoo.""")
-    module_portal = fields.Boolean(string='Activate the customer portal',
-        help="""Give your customers access to their documents.""")
-    module_auth_oauth = fields.Boolean(string='Use external authentication providers (OAuth)')
-    module_base_import = fields.Boolean(string="Allow users to import data from CSV/XLS/XLSX/ODS files")
-    module_google_drive = fields.Boolean(string='Attach Google documents to any record',
-        help="""This installs the module google_docs.""")
+    default_user_rights = fields.Boolean("Default Access Rights")
+    default_external_email_server = fields.Boolean("External Email Servers")
+    module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
+    module_pad = fields.Boolean("External Pads")
     module_google_calendar = fields.Boolean(
-        string='Allow the users to synchronize their calendar  with Google Calendar',
-        help="""This installs the module google_calendar.""")
-    module_inter_company_rules = fields.Boolean(string='Manage Inter Company',
-        help="""This installs the module inter_company_rules.\n Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.""")
+        string='Allow the users to synchronize their calendar  with Google Calendar')
+    module_google_drive = fields.Boolean("Attach Google documents to any record")
+    module_google_spreadsheet = fields.Boolean("Google Spreadsheet")
+    module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
+    module_auth_ldap = fields.Boolean("LDAP Authentification")
+    module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
+    module_inter_company_rules = fields.Boolean("Manage Inter Company")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
              " * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies.")
+    default_custom_report_footer = fields.Boolean("Custom Report Footer")
+    report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.")
     group_multi_currency = fields.Boolean(string='Allow multi currencies',
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
+    paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format')
+    external_report_layout = fields.Selection(related="company_id.external_report_layout")
 
-    # Report config from base/res/res_company.py
-    custom_footer = fields.Boolean(related="company_id.custom_footer", string="Custom footer *", help="Check this to define the report footer manually. Otherwise it will be filled in automatically.")
-    rml_footer = fields.Text(related="company_id.rml_footer", string='Custom Report Footer *', help="Footer text displayed at the bottom of all reports.")
-    rml_footer_readonly = fields.Text(related='rml_footer', string='Report Footer *', readonly=True)
-    rml_paper_format = fields.Selection(related="company_id.rml_paper_format", string="Paper Format *", required=True)
-    font = fields.Many2one(related='company_id.font', string="Font *", help="Set the font into the report header, it will be used as default font in the RML reports of the user company")
-    rml_header = fields.Text(related="company_id.rml_header", string="RML Header *")
-    rml_header2 = fields.Text(related="company_id.rml_header2", string='RML Internal Header *')
-    rml_header3 = fields.Text(related="company_id.rml_header3", string='RML Internal Header for Landscape Reports *')
+    @api.model
+    def get_default_fields(self, fields):
+        default_external_email_server = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_external_email_server', default=False)
+        default_user_rights = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_user_rights', default=False)
+        default_custom_report_footer = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_custom_report_footer', default=False)
+        return {
+            'default_external_email_server': default_external_email_server,
+            'default_user_rights': default_user_rights,
+            'default_custom_report_footer': default_custom_report_footer,
+        }
 
+    @api.multi
+    def set_default_fields(self):
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
+        self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
 
     @api.multi
     def open_company(self):
@@ -56,11 +64,9 @@ class BaseConfigSettings(models.TransientModel):
             'res_id': self.env.user.company_id.id,
             'target': 'current',
         }
-
     @api.multi
     def open_default_user(self):
         action = self.env.ref('base.action_res_users').read()[0]
-        action['context'] = self.env.context
         action['res_id'] = self.env.ref('base.default_user').id
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
@@ -77,5 +83,33 @@ class BaseConfigSettings(models.TransientModel):
         for config in self:
             partner_rule.write({'active': not config.company_share_partner})
 
-    def act_discover_fonts(self):
-        self.company_id.act_discover_fonts()
+    @api.model
+    def _prepare_report_view_action(self, template):
+        template_id = self.env.ref(template)
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.ui.view',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': template_id.id,
+        }
+
+    @api.multi
+    def edit_external_header(self):
+        return self._prepare_report_view_action('web.external_layout_' + self.external_report_layout)
+
+    @api.multi
+    def change_report_template(self):
+        self.ensure_one()
+        template = self.env.ref('base.view_company_report_form')
+        return {
+            'name': _('Choose Your Document Layout'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_id': self.env.user.company_id.id,
+            'res_model': 'res.company',
+            'views': [(template.id, 'form')],
+            'view_id': template.id,
+            'target': 'new',
+        }

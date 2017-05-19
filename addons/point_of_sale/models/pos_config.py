@@ -53,17 +53,21 @@ class PosConfig(models.Model):
     def _get_group_pos_user(self):
         return self.env.ref('point_of_sale.group_pos_user')
 
+    def _compute_default_customer_html(self):
+        return self.env['ir.qweb'].render('point_of_sale.customer_facing_display_html')
+
     name = fields.Char(string='Point of Sale Name', index=True, required=True, help="An internal identification of the point of sale")
     journal_ids = fields.Many2many(
         'account.journal', 'pos_config_journal_rel',
         'pos_config_id', 'journal_id', string='Available Payment Methods',
         domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",)
-    picking_type_id = fields.Many2one('stock.picking.type', string='Picking Type')
+    picking_type_id = fields.Many2one('stock.picking.type', string='Operation Type')
+    use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots')
     stock_location_id = fields.Many2one(
         'stock.location', string='Stock Location',
         domain=[('usage', '=', 'internal')], required=True, default=_get_default_location)
     journal_id = fields.Many2one(
-        'account.journal', string='Sale Journal',
+        'account.journal', string='Sales Journal',
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to post sales entries.",
         default=_default_sale_journal)
@@ -77,6 +81,7 @@ class PosConfig(models.Model):
     iface_payment_terminal = fields.Boolean(string='Payment Terminal', help="Enables Payment Terminal integration")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration")
     iface_vkeyboard = fields.Boolean(string='Virtual KeyBoard', help="Enables an integrated Virtual Keyboard")
+    iface_customer_facing_display = fields.Boolean(string='Customer Facing Display', help="Enables a remotely connected customer facing display")
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner")
     iface_invoicing = fields.Boolean(string='Invoicing', help='Enables invoice generation from the Point of Sale', default=True)
@@ -93,6 +98,8 @@ class PosConfig(models.Model):
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown')
     iface_display_categ_images = fields.Boolean(string='Display Category Pictures',
         help="The product categories will be displayed with pictures.")
+    restrict_price_control = fields.Boolean(string='Restrict Price Modifications to Managers',
+        help="Check to box to restrict the price control to managers only on point of sale orders.")
     cash_control = fields.Boolean(string='Cash Control', help="Check the amount of the cashbox at opening and closing.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt")
@@ -104,6 +111,9 @@ class PosConfig(models.Model):
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders.", copy=False)
+    sequence_line_id = fields.Many2one('ir.sequence', string='Order Line IDs Sequence', readonly=True,
+        help="This sequence is automatically created by Odoo but you can change it "
+        "to customize the reference numbers of your orders lines.", copy=False)
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
     current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
     current_session_state = fields.Char(compute='_compute_current_session')
@@ -125,6 +135,7 @@ class PosConfig(models.Model):
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_cashbox_lines_ids = fields.One2many('account.cashbox.line', 'default_pos_id', string='Default Balance')
+    customer_facing_display_html = fields.Html(string='Customer facing display content', translate=True, default=_compute_default_customer_html)
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id')
     def _compute_currency(self):
@@ -139,7 +150,7 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = pos_config.session_ids.filtered(lambda r: r.user_id.id == self.env.uid and \
                 not r.state == 'closed' and \
-                '(RESCUE FOR' not in r.name)
+                not r.rescue)
             # sessions ordered by id desc
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
@@ -162,7 +173,7 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state == 'opened' and '(RESCUE FOR' not in s.name)
+            session = pos_config.session_ids.filtered(lambda s: s.state == 'opened' and not s.rescue)
             pos_config.pos_session_username = session and session[0].user_id.name or False
 
     @api.constrains('company_id', 'stock_location_id')
@@ -173,7 +184,7 @@ class PosConfig(models.Model):
     @api.constrains('company_id', 'journal_id')
     def _check_company_journal(self):
         if self.journal_id and self.journal_id.company_id.id != self.company_id.id:
-            raise UserError(_("The company of the sale journal is different than the one of point of sale"))
+            raise UserError(_("The company of the sales journal is different than the one of point of sale"))
 
     @api.constrains('company_id', 'invoice_journal_id')
     def _check_company_journal(self):
@@ -222,22 +233,22 @@ class PosConfig(models.Model):
         # force sequence_id field to new pos.order sequence
         values['sequence_id'] = IrSequence.create(val).id
 
-        # TODO master: add field sequence_line_id on model
-        # this make sure we always have one available per company
         val.update(name=_('POS order line %s') % values['name'], code='pos.order.line')
-        IrSequence.create(val)
+        values['sequence_line_id'] = IrSequence.create(val).id
         return super(PosConfig, self).create(values)
 
     @api.multi
     def unlink(self):
-        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id):
+        for pos_config in self.filtered(lambda pos_config: pos_config.sequence_id or pos_config.sequence_line_id):
             pos_config.sequence_id.unlink()
+            pos_config.sequence_line_id.unlink()
         return super(PosConfig, self).unlink()
 
     # Methods to open the POS
     @api.multi
     def open_ui(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ open the pos interface """
+        self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
             'url':   '/pos/web/',
@@ -245,15 +256,13 @@ class PosConfig(models.Model):
         }
 
     @api.multi
-    def open_existing_session_cb_close(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
-        if self.current_session_id.cash_control:
-            self.current_session_id.action_pos_session_closing_control()
-        return self.open_session_cb()
-
-    @api.multi
     def open_session_cb(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ new session button
+
+        create one if none exist
+        access cash control interface if enabled or start a session
+        """
+        self.ensure_one()
         if not self.current_session_id:
             self.current_session_id = self.env['pos.session'].create({
                 'user_id': self.env.uid,
@@ -266,7 +275,11 @@ class PosConfig(models.Model):
 
     @api.multi
     def open_existing_session_cb(self):
-        assert len(self.ids) == 1, "you can open only one session at a time"
+        """ close session button
+
+        access session form to validate entries
+        """
+        self.ensure_one()
         return self._open_session(self.current_session_id.id)
 
     def _open_session(self, session_id):

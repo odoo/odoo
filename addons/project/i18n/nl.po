@@ -6,17 +6,17 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
 # Volluta <volluta@tutanota.com>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
-# wilcobergacker <wilcobergacker@gmail.com>, 2016
+# wilcobergacker <wilcobergacker@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
-"Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,11 +109,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -130,123 +129,6 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Your Odoo Project application is up and running</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">What’s next?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Try creating a task by sending an email to </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Invite new users</span></a></span>\n"
-"                                        <span>to collaborate</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Discover the </span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">project planner</span></a></span>\n"
-"                                <span> to activate extra features</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Track hours with timesheets,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Plan tasks and resources with forecasts,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Get smart reporting and accurate dashboards,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Bill time on tasks or issues,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>And much more...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Need Help?</span>\n"
-"                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
-"                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Enjoy your Odoo experience,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
-
-#. module: project
-#: model:mail.template,body_html:project.mail_template_data_project_task
-msgid ""
-"\n"
-"<p>Dear ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Thank you for your enquiry.<br /></p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
-msgstr ""
-"\n"
-"<p>Beste ${object.partner_id.name or 'customer'},</p>\n"
-"<p>Bedankt voor uw aanvraag.<br /></p>\n"
-"<p>Indien u vragen heeft kan u ons steeds contacteren.</p>\n"
-"<p>Met vriendelijke groeten,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
@@ -280,10 +162,10 @@ msgstr "# Taken"
 
 #. module: project
 #: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:410
+#: code:addons/project/models/project.py:407
 #, python-format
 msgid "%s (copy)"
-msgstr "%s (kopie)"
+msgstr "%s (copy)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -314,7 +196,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:72
+#: code:addons/project/static/src/js/tour.js:69
 #, python-format
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
@@ -325,22 +207,24 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:83
+#: code:addons/project/static/src/js/tour.js:80
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
 msgstr ""
-"<b>Klik op de opslaan knop</b> om de wijzigingen door te voeren op je taak."
+"Klik op de <em>Opslaan</em> knop om de wijzigingen door te voeren op je "
+"taak."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr "<b>Versleep taken</b> tussen kolommen al je aan de taken werkt."
+msgstr ""
+"<b>Drag &amp; drop taken</b> tussen kolommen al je aan de taken werkt."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:97
+#: code:addons/project/static/src/js/tour.js:94
 #, python-format
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
@@ -468,7 +352,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
-"                                            <strong> Maak gepersonaliseerde rapportages</strong>\n"
+"                                            <strong> Maak gepersonaliseerde rapporten</strong>\n"
 "                                        </span>"
 
 #. module: project
@@ -580,6 +464,13 @@ msgstr ""
 "                                    </span>"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
+msgid ""
+"<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
+"the destination task)</span>"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
@@ -605,7 +496,7 @@ msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
-"<span><strong>We zijn hier om u te helpen:</strong>Als u niet slaagt in het behalen van uw favoriete KPIs, neem dan contact met ons op dan kunnen wij u helpen bij het maken van uw aangepaste rapportages.\n"
+"<span><strong>We zijn hier om u te helpen:</strong>Als u niet slaagt in het behalen van uw favoriete KPIs, neem dan contact met ons op dan kunnen wij u helpen bij het maken van uw aangepaste rapporten.\n"
 "</span>"
 
 #. module: project
@@ -720,7 +611,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr "<strong>Analyseer rapportages</strong> (elk jaar)"
+msgstr "<strong>Analyseer rapporten</strong> (elk jaar)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -826,7 +717,7 @@ msgid ""
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
 "<strong>Volg elke meeting met een herhalende e-mail</strong>\n"
-"Publiceer gespreksverslagen direct nadat de meeting voorbij is en deel ze samen met de bijgewerkte project schema's, issues/actie items matrix, en eender welke toepasselijke documenten. Probeer hetzelfde sjabloon gebruiken doorheen meetings en verbeter het constant."
+"Publiceer gespreksverslagen direct nadat de meeting voorbij is en deel ze samen met de geüpdatet project schema's, issues/actie items matrix, en eender welke toepasselijke documenten. Probeer hetzelfde sjabloon gebruiken doorheen meetings en verbeter het constant."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -835,7 +726,7 @@ msgid ""
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
 msgstr ""
 "<strong>Volg alleen wat u nodig heeft</strong><br/>\n"
-"De gemakkelijkste weg om notificaties te gebruiken is door een heel project te volgen: u ontvangt dan al de geselecteerde notificaties voor alle bestaande en nieuwe taken/issues van een project."
+"De gemakkelijkste weg om notificaties te gebruiken is door een heel project te volgen: u ontvangt dan al de geselecteerde notificaties voor alle bestaande en nieuwe taken/issues."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -870,7 +761,7 @@ msgid ""
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
 "<strong>Heb heldere verantwoordelijkheden</strong><br/>\n"
-"De persoon toegewezen aan de taken is verantwoordelijk voor de vooruitgang en hun avatar wordt getoond in de Kanban weergave voor een snelle referentie. Natuurlijk kan de verantwoordelijkheid voor een taak wijzigen afhankelijk van de fase."
+"De persoon toegewezen aan de taken is verantwoordelijk voor de vooruitgang en hun avatar wordt getoond in de Kanban weergave voor een snelle referentie. Natuurlijk kan de verantwoordelijkheid voor een taak veranderen afhankelijk van de fase."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -934,8 +825,8 @@ msgstr ""
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
-"<strong>Hulp nodig bij het definiëren van uw projecten? Neem nu contact "
-"op:</strong><br/>"
+"<strong>Hulp nodig bij het definiëren van uw projecten? Contacteer ons "
+"nu:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1099,14 +990,10 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
 msgid ""
 "A task's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this task\n"
-" * Ready for next stage indicates the task is ready to be pulled to the next stage"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this task\n"
+" * Green indicates the task is ready to be pulled to the next stage"
 msgstr ""
-"Een kanban taak status geeft een speciale situatie aan. De status kan zijn:\n"
-" * Normaal, de standaard situatie\n"
-" * Geblokkeerd, geeft aan dat iets de voortgang van de taak blokkeert\n"
-" * Gereed voor volgende fase, geeft aan dat de taak gereed is om de verschuiven naar de volgende fase"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1120,7 +1007,7 @@ msgstr "Accountvoorkeuren"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:38
+#: code:addons/project/static/src/js/web_planner_project.js:39
 #, python-format
 msgid "Action has a clear description"
 msgstr "Actie heeft een duidelijke omschrijving"
@@ -1133,11 +1020,6 @@ msgid ""
 msgstr ""
 "Activeer 'Sta facturering op urenstaat basis' vanuit het <i>Personeelsbeheer"
 " instellingen</i> menu."
-
-#. module: project
-#: model:ir.actions.server,name:project.activate_sample_project
-msgid "Activate Sample Project"
-msgstr "Activeer voorbeeld project"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_active
@@ -1168,7 +1050,7 @@ msgstr "Voeg toe/verwijder uit favorieten"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:55
+#: code:addons/project/static/src/js/web_planner_project.js:56
 #, python-format
 msgid "Added in current sprint"
 msgstr "Toegevoegd aan huidige sprint"
@@ -1294,6 +1176,7 @@ msgid "Assigned To"
 msgstr "Toegewezen aan"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_user_id
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -1358,9 +1241,9 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:31
-#: code:addons/project/static/src/js/web_planner_project.js:47
-#: code:addons/project/static/src/js/web_planner_project.js:63
+#: code:addons/project/static/src/js/web_planner_project.js:32
+#: code:addons/project/static/src/js/web_planner_project.js:48
+#: code:addons/project/static/src/js/web_planner_project.js:64
 #, python-format
 msgid "Backlog"
 msgstr "Backlog"
@@ -1390,7 +1273,22 @@ msgstr ""
 "korter dan een uur te houden."
 
 #. module: project
-#: selection:project.task,kanban_state:0
+#: model:project.task,legend_blocked:project.project_task_data_0
+#: model:project.task,legend_blocked:project.project_task_data_1
+#: model:project.task,legend_blocked:project.project_task_data_11
+#: model:project.task,legend_blocked:project.project_task_data_12
+#: model:project.task,legend_blocked:project.project_task_data_13
+#: model:project.task,legend_blocked:project.project_task_data_14
+#: model:project.task,legend_blocked:project.project_task_data_2
+#: model:project.task,legend_blocked:project.project_task_data_4
+#: model:project.task,legend_blocked:project.project_task_data_5
+#: model:project.task,legend_blocked:project.project_task_data_6
+#: model:project.task,legend_blocked:project.project_task_data_7
+#: model:project.task,legend_blocked:project.project_task_data_8
+#: model:project.task,legend_blocked:project.project_task_data_9
+#: model:project.task.type,legend_blocked:project.project_stage_data_0
+#: model:project.task.type,legend_blocked:project.project_stage_data_1
+#: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
 msgid "Blocked"
 msgstr "Geblokkeerd"
@@ -1407,39 +1305,21 @@ msgstr ""
 "samen te werken, of waarom projecten organiseren op rol fout is."
 
 #. module: project
-#: model:project.task,legend_done:project.project_task_10
-#: model:project.task,legend_done:project.project_task_11
-#: model:project.task,legend_done:project.project_task_13
-#: model:project.task,legend_done:project.project_task_14
-#: model:project.task,legend_done:project.project_task_17
-#: model:project.task,legend_done:project.project_task_2
-#: model:project.task,legend_done:project.project_task_21
-#: model:project.task,legend_done:project.project_task_22
-#: model:project.task,legend_done:project.project_task_23
-#: model:project.task,legend_done:project.project_task_4
-#: model:project.task,legend_done:project.project_task_5
-#: model:project.task,legend_done:project.project_task_6
-#: model:project.task,legend_done:project.project_task_7
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
-msgstr "Buzz of stel in als gereed"
-
-#. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
 msgid "By Responsible"
 msgstr "Op verantwoordelijke"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "Annuleer"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:69
-#: code:addons/project/static/src/js/web_planner_project.js:84
-#: code:addons/project/static/src/js/web_planner_project.js:98
-#: model:project.task.type,name:project.project_stage_3
+#: code:addons/project/static/src/js/web_planner_project.js:70
+#: code:addons/project/static/src/js/web_planner_project.js:85
+#: code:addons/project/static/src/js/web_planner_project.js:99
 #, python-format
 msgid "Cancelled"
 msgstr "Geannuleerd"
@@ -1447,7 +1327,7 @@ msgstr "Geannuleerd"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Change their Stages in the Project Stages tab"
-msgstr "Wijzig de fase in de project fase tab"
+msgstr "Verander de fase in de project fase tab"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_use_tasks
@@ -1474,7 +1354,7 @@ msgstr "Kies een project e-mail"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:54
+#: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Clear description and purpose"
 msgstr "Duidelijke omschrijving en doel"
@@ -1498,7 +1378,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:67
+#: code:addons/project/static/src/js/tour.js:64
 #, python-format
 msgid "Click on this button to modify the task."
 msgstr "Klik op deze knop om de taak te wijzigen."
@@ -1548,7 +1428,7 @@ msgstr "Bedrijven"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Company"
-msgstr "Bedrijf"
+msgstr "Bedijf"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
@@ -1564,7 +1444,7 @@ msgstr "Instellingen"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:93
+#: code:addons/project/static/src/js/tour.js:90
 #, python-format
 msgid "Configuration options are available in the Settings app."
 msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
@@ -1612,15 +1492,25 @@ msgstr "Controleer projectkwaliteit en tevredenheid"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:33
+#: code:addons/project/static/src/js/web_planner_project.js:34
 #, python-format
 msgid "Copywriting / Design"
 msgstr "Copywriting / Ontwerp"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
+msgid "Cover Image"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create"
 msgstr "Aanmaken"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_create_date
+msgid "Create Date"
+msgstr "Aanmaakdatum"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1636,6 +1526,11 @@ msgstr "Maak project aan"
 #: model:ir.actions.act_window,help:project.open_view_project_all_config
 msgid "Create a new project."
 msgstr "Maak een nieuw project."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
+msgid "Create a new task"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1654,12 +1549,7 @@ msgstr "Maak tenminste 3 taken aan"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create bills automatically based on Time &amp; Material."
-msgstr "Maak automatisch facturen aan gebaseerd op Tijd &amp; Materiaal."
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_create_date
-msgid "Create date"
-msgstr "Aanmaakdatum"
+msgstr "Maak automatisch rekeningen aan gebaseerd op Tijd &amp; Materiaal."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1671,6 +1561,7 @@ msgstr "Maak projecten aan"
 #: model:ir.model.fields,field_description:project.field_project_project_create_uid
 #: model:ir.model.fields,field_description:project.field_project_tags_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -1679,6 +1570,7 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
 #: model:ir.model.fields,field_description:project.field_project_project_create_date
 #: model:ir.model.fields,field_description:project.field_project_tags_create_date
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
@@ -1718,7 +1610,12 @@ msgid "Current Timesheet"
 msgstr "Huidige urenstaat"
 
 #. module: project
-#: code:addons/project/models/project.py:643
+#: model:ir.actions.act_window,help:project.project_task_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:638
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1727,7 +1624,7 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: project
-#: code:addons/project/models/project.py:643
+#: code:addons/project/models/project.py:638
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
@@ -1739,28 +1636,28 @@ msgstr "Klantendienst"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:73
+#: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Customer feedback has been requested"
 msgstr "Klant feedback is aangevraagd"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:91
+#: code:addons/project/static/src/js/web_planner_project.js:92
 #, python-format
 msgid "Customer has cancelled repair"
 msgstr "Klant heeft reparatie geannuleerd"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:71
+#: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Customer has reported new issue"
 msgstr "Klant heeft een nieuwe issue gerapportreerd"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:70
+#: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer service has found new issue"
 msgstr "Klantenservice heeft een probleem gevonden"
@@ -1833,7 +1730,7 @@ msgstr "Inzetten"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:19
+#: code:addons/project/static/src/js/web_planner_project.js:20
 #, python-format
 msgid "Deployment"
 msgstr "Implementatie"
@@ -1847,7 +1744,7 @@ msgstr "Omschrijving"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:17
+#: code:addons/project/static/src/js/web_planner_project.js:18
 #, python-format
 msgid "Development"
 msgstr "Ontwikkeling"
@@ -1863,33 +1760,29 @@ msgstr "Ontwikkelproces"
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
-msgstr "Annuleren"
+msgstr "Negeren"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
 #: model:ir.model.fields,field_description:project.field_project_project_display_name
 #: model:ir.model.fields,field_description:project.field_project_tags_display_name
 #: model:ir.model.fields,field_description:project.field_project_task_display_name
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
-msgid "Displayed Image"
-msgstr "Weergegeven afbeelding"
+msgstr "Schermnaam"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:34
+#: code:addons/project/static/src/js/web_planner_project.js:35
 #, python-format
 msgid "Distribute"
 msgstr "Distribueer"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:42
+#: code:addons/project/static/src/js/web_planner_project.js:43
 #, python-format
 msgid "Distribution is completed"
 msgstr "Distributie is voltooid"
@@ -1901,7 +1794,7 @@ msgstr "Maak niet automatisch een e-mail alias aan"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:50
+#: code:addons/project/static/src/js/web_planner_project.js:51
 #, python-format
 msgid "Documentation"
 msgstr "Documentatie"
@@ -1942,11 +1835,10 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:35
-#: code:addons/project/static/src/js/web_planner_project.js:68
-#: code:addons/project/static/src/js/web_planner_project.js:83
-#: code:addons/project/static/src/js/web_planner_project.js:97
-#: model:project.task.type,name:project.project_stage_2
+#: code:addons/project/static/src/js/web_planner_project.js:36
+#: code:addons/project/static/src/js/web_planner_project.js:69
+#: code:addons/project/static/src/js/web_planner_project.js:84
+#: code:addons/project/static/src/js/web_planner_project.js:98
 #, python-format
 msgid "Done"
 msgstr "Verwerkt"
@@ -2001,7 +1893,7 @@ msgid "Ending Date"
 msgstr "Einddatum"
 
 #. module: project
-#: code:addons/project/models/project.py:418
+#: code:addons/project/models/project.py:415
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr "Fout! Startdatum van taak moet voor einddatum liggen."
@@ -2027,7 +1919,7 @@ msgid ""
 "                        This person will have the responsibility for validating each stage and ensuring that the requirements to move to the next stage are met."
 msgstr ""
 "Zelfs als er geen specifiek veld is in Odoo is het belangrijk om elke persoon zijn verantwoordelijk te definiëren voor elke fase van uw project.<br/>\n"
-"Deze persoon heeft de verantwoordelijkheid voor het bevestigen van elke fase en verzekeren dat de vereisten om naar de volgende fase te gaan zijn voldaan."
+"Deze persoon heeft de verantwoordelijkheid voor het valideren van elke fase en verzekeren dat de vereisten om naar de volgende fase te gaan zijn voldaan."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2045,7 +1937,7 @@ msgstr "Voorbeelden"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:74
+#: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Expert advice has been requested"
 msgstr "Advies van een expert is aangevraagd"
@@ -2058,11 +1950,9 @@ msgstr "Vervaldatum"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_legend_priority
 msgid ""
-"Explanation text to help users using the star and priority mechanism on "
-"stages or issues that are in this stage."
+"Explanation text to help users using the star on tasks or issues in this "
+"stage."
 msgstr ""
-"Uitleg om de gebruikers op weg te helpen bij het gebruik van sterren en "
-"prioriteiten bij fases of issues in deze fase."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2081,14 +1971,14 @@ msgstr "Extra handig wanneer u met een klant bent of in meeting zit."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:88
+#: code:addons/project/static/src/js/web_planner_project.js:89
 #, python-format
 msgid "Feedback from customer requested"
 msgstr "Feedback van klant is aangevraagd"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:26
+#: code:addons/project/static/src/js/web_planner_project.js:27
 #, python-format
 msgid "Finally task is deployed"
 msgstr "Taak is eindelijk opgesteld"
@@ -2096,7 +1986,7 @@ msgstr "Taak is eindelijk opgesteld"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
 msgid "Folded in Kanban"
-msgstr "Gebouwen in kanban"
+msgstr "Gevouwen in kanban"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2147,7 +2037,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Forecasts"
-msgstr "Planningen"
+msgstr "Prognoses"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
@@ -2196,7 +2086,7 @@ msgstr "Geeft de volgorde weer wanneer de lijst van taken wordt weergegeven."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:102
+#: code:addons/project/static/src/js/tour.js:99
 #, python-format
 msgid ""
 "Good job! Your completed the Project Management tour. You can continue with "
@@ -2213,12 +2103,32 @@ msgid "Good luck!"
 msgstr "Veel succes!"
 
 #. module: project
+#: selection:project.task,kanban_state:0
+msgid "Green"
+msgstr "Groen"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
+msgid "Green Kanban Label"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
-"Groen: de taak is klaar voor de volgende fase (de taak voor deze fase is "
+"Groen: de taak is klaar voor de volgende fase (de job voor deze fase is "
 "voltooid)"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+msgid "Grey"
+msgstr "Grijs"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
+msgid "Grey Kanban Label"
+msgstr "Grijs kanban label"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2244,12 +2154,6 @@ msgid "Here, you can create new tasks"
 msgstr "Hier kan u nieuwe taken aanmaken"
 
 #. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "High"
-msgstr "Hoog"
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_project_privacy_visibility
 msgid ""
 "Holds visibility of the tasks or issues that belong to the current project:\n"
@@ -2263,10 +2167,10 @@ msgstr ""
 "- Alleen op uitnodiging: Werknemers kunnen alleen de gevolgde projecten, taken of issues zien\n"
 "- Zichtbaar voor alle werknemers: Werknemers kunnen alle projecten, taken of issues zien\n"
 "- Zichtbaar voor volgende klanten: de werknemers kunnen alles zien;\n"
-"Als de website is geactiveerd, kunnen gebruikers van de portal projecten, taken of issues zien, als deze gevolgd worden door iemand van hun onderneming\n"
+"Als website is geactiveerd, kunnen gebruikers van de portal projecten, taken of issues zien, als deze gevolgd worden door iemand van hun onderneming\n"
 
 #. module: project
-#: code:addons/project/models/project.py:567
+#: code:addons/project/models/project.py:564
 #, python-format
 msgid "I take it"
 msgstr "Ik neem het"
@@ -2276,6 +2180,7 @@ msgstr "Ik neem het"
 #: model:ir.model.fields,field_description:project.field_project_project_id
 #: model:ir.model.fields,field_description:project.field_project_tags_id
 #: model:ir.model.fields,field_description:project.field_project_task_id
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_id
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
@@ -2292,14 +2197,14 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:103
+#: code:addons/project/static/src/js/web_planner_project.js:104
 #, python-format
 msgid "Idea has been transformed into concrete actions"
 msgstr "Idee is getransformeerd in concrete acties"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:102
+#: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea is fully explained"
 msgstr "Idee is volledig uitgelegd"
@@ -2311,7 +2216,7 @@ msgstr "Ideaal is een persoon verantwoordelijk voor maar één project."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:95
+#: code:addons/project/static/src/js/web_planner_project.js:96
 #, python-format
 msgid "Ideas"
 msgstr "Ideeën"
@@ -2385,24 +2290,38 @@ msgid "Improve collaboration with customers"
 msgstr "Verbeter het samenwerken met klanten"
 
 #. module: project
-#: selection:project.task,kanban_state:0
-#: model:project.task.type,name:project.project_stage_1
+#: model:project.task,legend_normal:project.project_task_data_0
+#: model:project.task,legend_normal:project.project_task_data_1
+#: model:project.task,legend_normal:project.project_task_data_11
+#: model:project.task,legend_normal:project.project_task_data_12
+#: model:project.task,legend_normal:project.project_task_data_13
+#: model:project.task,legend_normal:project.project_task_data_14
+#: model:project.task,legend_normal:project.project_task_data_2
+#: model:project.task,legend_normal:project.project_task_data_4
+#: model:project.task,legend_normal:project.project_task_data_5
+#: model:project.task,legend_normal:project.project_task_data_6
+#: model:project.task,legend_normal:project.project_task_data_7
+#: model:project.task,legend_normal:project.project_task_data_8
+#: model:project.task,legend_normal:project.project_task_data_9
+#: model:project.task.type,legend_normal:project.project_stage_data_0
+#: model:project.task.type,legend_normal:project.project_stage_data_1
+#: model:project.task.type,legend_normal:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
 msgid "In Progress"
 msgstr "In Behandeling"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:32
-#: code:addons/project/static/src/js/web_planner_project.js:65
-#: code:addons/project/static/src/js/web_planner_project.js:80
+#: code:addons/project/static/src/js/web_planner_project.js:33
+#: code:addons/project/static/src/js/web_planner_project.js:66
+#: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "In progress"
 msgstr "In behandeling"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:79
+#: code:addons/project/static/src/js/web_planner_project.js:80
 #, python-format
 msgid "Incoming"
 msgstr "Inkomend"
@@ -2449,14 +2368,14 @@ msgstr "Issue versie"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:72
+#: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Issue is being worked on"
 msgstr "Aan het issue wordt gewerkt"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:75
+#: code:addons/project/static/src/js/web_planner_project.js:76
 #, python-format
 msgid "Issue is resolved"
 msgstr "Issue is opgelost"
@@ -2525,13 +2444,11 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
 msgstr "Kanban geblokkeerde uitleg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
 msgstr "Kanban lopende uitleg"
 
@@ -2553,7 +2470,6 @@ msgstr "Kanban Status"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
 msgstr "Kanban valide uitleg"
 
@@ -2577,6 +2493,7 @@ msgstr "Laatste bericht"
 #: model:ir.model.fields,field_description:project.field_project_project___last_update
 #: model:ir.model.fields,field_description:project.field_project_tags___last_update
 #: model:ir.model.fields,field_description:project.field_project_task___last_update
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard___last_update
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
@@ -2592,6 +2509,7 @@ msgstr "Laatste fase aanpassing"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
 #: model:ir.model.fields,field_description:project.field_project_project_write_uid
 #: model:ir.model.fields,field_description:project.field_project_tags_write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
@@ -2601,6 +2519,7 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
 #: model:ir.model.fields,field_description:project.field_project_project_write_date
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
@@ -2648,15 +2567,10 @@ msgid "List, plan and track things to do"
 msgstr "Lijst, plan en traceer dingen die te doen zijn"
 
 #. module: project
-#: selection:report.project.task.user,priority:0
-msgid "Low"
-msgstr "Laag"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:res.groups,name:project.group_project_manager
 msgid "Manager"
-msgstr "Manager"
+msgstr "Beheerder"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2699,6 +2613,21 @@ msgid "Members"
 msgstr "Leden"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
+msgid "Merge Selected Tasks"
+msgstr "Geselecteerde taken samenvoegen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
+msgid "Merge Tasks"
+msgstr "Taken samenvoegen"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
+msgid "Merge into an existing task"
+msgstr "In een bestaande taak samenvoegen"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
@@ -2714,9 +2643,19 @@ msgid "More efficient communication between employees"
 msgstr "Meer efficiënte communicatie tussen werknemers"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "My Activities"
+msgstr "Mijn activiteiten"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
 msgstr "Mijn favorieten"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_task_action_activity
+msgid "My Next Task Activities"
+msgstr "Mijn volgende taak activiteiten"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2729,45 +2668,35 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: project
-#: model:project.task,legend_blocked:project.project_task_10
-#: model:project.task,legend_blocked:project.project_task_11
-#: model:project.task,legend_blocked:project.project_task_13
-#: model:project.task,legend_blocked:project.project_task_14
-#: model:project.task,legend_blocked:project.project_task_17
-#: model:project.task,legend_blocked:project.project_task_2
-#: model:project.task,legend_blocked:project.project_task_21
-#: model:project.task,legend_blocked:project.project_task_22
-#: model:project.task,legend_blocked:project.project_task_23
-#: model:project.task,legend_blocked:project.project_task_4
-#: model:project.task,legend_blocked:project.project_task_5
-#: model:project.task,legend_blocked:project.project_task_6
-#: model:project.task,legend_blocked:project.project_task_7
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "Functionele of technische hulp nodig"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:64
+#: code:addons/project/static/src/js/web_planner_project.js:65
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
-#: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:project.task.type,name:project.project_stage_data_0
 #, python-format
 msgid "New"
 msgstr "Nieuw"
 
 #. module: project
-#: code:addons/project/models/project.py:571
-#, python-format
-msgid "New Task"
-msgstr "Nieuwe taak"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:86
+#: code:addons/project/static/src/js/web_planner_project.js:87
 #, python-format
 msgid "New repair added"
 msgstr "Nieuwe reparatie toegevoegd"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
+msgid "New task name"
+msgstr "Nieuwe taaknaam"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_task_view_tree_activity
+msgid "Next Activities"
+msgstr "Volgende activiteiten"
+
+#. module: project
+#: model:ir.ui.menu,name:project.project_task_menu_activity
+msgid "Next Task Activities"
+msgstr "Volgende taak activiteiten"
 
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
@@ -2777,24 +2706,13 @@ msgstr "Geen klantenbeoordeling"
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
-msgid "Normal"
-msgstr "Normaal"
-
-#. module: project
-#: model:project.task,legend_blocked:project.project_task_1
-#: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_20
-#: model:project.task,legend_blocked:project.project_task_25
-#: model:project.task,legend_blocked:project.project_task_26
-#: model:project.task,legend_blocked:project.project_task_9
-#: model:project.task.type,legend_blocked:project.project_stage_0
-msgid "Not validated"
-msgstr "Niet bevestigd"
+msgid "Non Starred"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_notes
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr "Notities"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2917,6 +2835,11 @@ msgstr ""
 "gespreksverslagen"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Overdue Activities"
+msgstr "Activiteiten over tijd"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
 msgstr "Overschreden taken"
@@ -2997,7 +2920,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: project
-#: code:addons/project/models/project.py:723
+#: code:addons/project/models/project.py:718
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3023,17 +2946,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Prepare"
 msgstr "Voorbereiden"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_priority
-#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
-msgid "Priority"
-msgstr "Prioriteit"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
-msgid "Priority Management Explanation"
-msgstr "Toelichting bij het toekennen van prioriteiten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
@@ -3081,7 +2993,7 @@ msgstr "Projectbeheer"
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Project Manager"
-msgstr "Project leider"
+msgstr "Projectbeheerder"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3123,6 +3035,11 @@ msgid "Project's tasks"
 msgstr "Projecttaken"
 
 #. module: project
+#: model:ir.actions.server,name:project.ir_actions_server_project_sample
+msgid "Project: Activate Sample Project"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_project_ids
@@ -3135,73 +3052,85 @@ msgid "Projects"
 msgstr "Projecten"
 
 #. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-msgid "Projects & Tasks"
-msgstr "Projecten & Taken"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
 msgid "Rating on task"
 msgstr "Beoordeling op taken"
 
 #. module: project
+#: model:project.task,legend_done:project.project_task_data_0
+#: model:project.task,legend_done:project.project_task_data_1
+#: model:project.task,legend_done:project.project_task_data_11
+#: model:project.task,legend_done:project.project_task_data_12
+#: model:project.task,legend_done:project.project_task_data_13
+#: model:project.task,legend_done:project.project_task_data_14
+#: model:project.task,legend_done:project.project_task_data_2
+#: model:project.task,legend_done:project.project_task_data_4
+#: model:project.task,legend_done:project.project_task_data_5
+#: model:project.task,legend_done:project.project_task_data_6
+#: model:project.task,legend_done:project.project_task_data_7
+#: model:project.task,legend_done:project.project_task_data_8
+#: model:project.task,legend_done:project.project_task_data_9
+#: model:project.task.type,legend_done:project.project_stage_data_0
+#: model:project.task.type,legend_done:project.project_stage_data_1
+#: model:project.task.type,legend_done:project.project_stage_data_2
+msgid "Ready for Next Stage"
+msgstr ""
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:40
+#: code:addons/project/static/src/js/web_planner_project.js:41
 #, python-format
 msgid "Ready for layout / copywriting"
 msgstr "Klaar voor lay-out / copywriting"
 
 #. module: project
-#: selection:project.task,kanban_state:0
 #: selection:report.project.task.user,state:0
 msgid "Ready for next stage"
 msgstr "Klaar voor volgende fase"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:58
+#: code:addons/project/static/src/js/web_planner_project.js:59
 #, python-format
 msgid "Ready for release"
 msgstr "Klaar voor vrijgave"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:56
+#: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Ready for testing"
 msgstr "Klaar voor testen"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:41
+#: code:addons/project/static/src/js/web_planner_project.js:42
 #, python-format
 msgid "Ready to be displayed, published or sent"
 msgstr "Klaar om te tonen, publiceren of verzenden"
 
 #. module: project
-#: model:project.task,legend_done:project.project_task_16
-#: model:project.task,legend_done:project.project_task_19
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr "Klaar om te heropenen"
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:76
-#: code:addons/project/static/src/js/web_planner_project.js:105
+#: code:addons/project/static/src/js/web_planner_project.js:77
+#: code:addons/project/static/src/js/web_planner_project.js:106
 #, python-format
 msgid "Reason for cancellation has been documented"
 msgstr "De reden van annulering is gedocumenteerd"
 
 #. module: project
-#: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
-msgstr "Ontvangst van ${object.name}"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "Record Thread ID"
+
+#. module: project
+#: selection:project.task,kanban_state:0
+msgid "Red"
+msgstr "Rood"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
+msgid "Red Kanban Label"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3215,7 +3144,7 @@ msgstr "Referentie"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:51
+#: code:addons/project/static/src/js/web_planner_project.js:52
 #, python-format
 msgid "Release"
 msgstr "Vrijgeven"
@@ -3239,31 +3168,27 @@ msgstr "Reparatie werkplaats"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:87
+#: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Repair has started"
 msgstr "Reparatie is gestart"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:90
+#: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Repair is completed"
 msgstr "Reparatie is gereed"
 
 #. module: project
+#: model:ir.ui.menu,name:project.menu_project_report
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Reporting"
-msgstr "Rapportages"
-
-#. module: project
-#: model:ir.ui.menu,name:project.menu_project_report
-msgid "Reports"
-msgstr "Rapportages"
+msgstr "Rapportering"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:89
+#: code:addons/project/static/src/js/web_planner_project.js:90
 #, python-format
 msgid "Request for parts has been sent"
 msgstr "Verzoek voor onderdelen is verstuurd"
@@ -3368,6 +3293,11 @@ msgid "Show Project on dashboard"
 msgstr "Toon project op dashboard"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "So if you're looking for the history of a Task, or the latest message on an "
@@ -3384,28 +3314,28 @@ msgstr "Software ontwikkeling"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:15
+#: code:addons/project/static/src/js/web_planner_project.js:16
 #, python-format
 msgid "Specification"
 msgstr "Specificatie"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:23
+#: code:addons/project/static/src/js/web_planner_project.js:24
 #, python-format
 msgid "Specification is validated"
 msgstr "Specificatie is bevestigd"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:22
+#: code:addons/project/static/src/js/web_planner_project.js:23
 #, python-format
 msgid "Specification of task is written"
 msgstr "Specificatie van taak is geschreven"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:48
+#: code:addons/project/static/src/js/web_planner_project.js:49
 #, python-format
 msgid "Sprint"
 msgstr "Sprint"
@@ -3421,7 +3351,7 @@ msgstr "Fase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Fase gewijzigd"
+msgstr "Fase veranderd"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3436,13 +3366,27 @@ msgstr "Naam fase"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Fase gewijzigd"
+msgstr "Fase veranderd"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
 msgstr "Fases"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_priority
+#: model:ir.model.fields,field_description:project.field_report_project_task_user_priority
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Starred"
+msgstr "Met ster"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
+msgid "Starred Explanation"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3479,6 +3423,11 @@ msgid "Tags of project's tasks, issues..."
 msgstr "Labels van projecttaken, issues..."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
+msgid "Target Project"
+msgstr ""
+
+#. module: project
 #: model:ir.model,name:project.model_project_task
 #: model:ir.ui.view,arch_db:project.view_task_form2
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3512,7 +3461,7 @@ msgstr "Taak pijplijn"
 #: model:mail.message.subtype,name:project.mt_project_task_ready
 #: model:mail.message.subtype,name:project.mt_task_ready
 msgid "Task Ready"
-msgstr "Taak gereed"
+msgstr "Taak klaar"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -3524,7 +3473,7 @@ msgstr "Taak fase"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Taak fase gewijzigd"
+msgstr "Taak fase veranderd"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_name
@@ -3549,21 +3498,21 @@ msgstr "Taakomschrijving is platte tekst"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:24
+#: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
 msgid "Task is Developed"
 msgstr "Taak is ontwikkeld"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:104
+#: code:addons/project/static/src/js/web_planner_project.js:105
 #, python-format
 msgid "Task is completed"
 msgstr "Taak is voltooid"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:25
+#: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Task is tested"
 msgstr "Taak is getest"
@@ -3581,6 +3530,7 @@ msgstr "Taak is klaar voor volgende fase"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.actions.act_window,name:project.project_task_action_from_partner
 #: model:ir.model.fields,field_description:project.field_project_project_task_count
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
@@ -3609,7 +3559,7 @@ msgstr "Taken &amp; Issues"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tasks Analysis"
-msgstr "Taken analyse"
+msgstr "Takenanalyse"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_type_ids
@@ -3620,7 +3570,7 @@ msgstr "Taken fases"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr "Taken analyse"
+msgstr "Takenanalyse"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3633,22 +3583,27 @@ msgid "Tasks by user and project"
 msgstr "Taken per gebruiker en project"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
+msgid "Tasks to Merge"
+msgstr ""
+
+#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:49
+#: code:addons/project/static/src/js/web_planner_project.js:50
 #, python-format
 msgid "Test"
 msgstr "Test"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:57
+#: code:addons/project/static/src/js/web_planner_project.js:58
 #, python-format
 msgid "Test is OK, need to document"
 msgstr "Test is OK, moet gedocumenteerd worden"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:18
+#: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Testing"
 msgstr "Testing"
@@ -3669,6 +3624,16 @@ msgstr ""
 "marketing communicatie te beheren of persoonlijke projecten. Maar omdat het "
 "kan wilt het niet zeggen dat dit altijd een goed idee is: laten we starten "
 "door u te doen begrijpen wat een goed project kan zijn."
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "The following task has been merged into this one:"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "The following tasks have been merged into this one:"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3771,6 +3736,11 @@ msgstr ""
 "deze fase om weer te geven."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.mail_template_task_merge
+msgid "This task has been merged into the following task:"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
@@ -3845,8 +3815,7 @@ msgstr "Rooster met werktijden ter correctie van de GANTT-diagrammen."
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:96
-#: model:project.task.type,name:project.project_stage_0
+#: code:addons/project/static/src/js/web_planner_project.js:97
 #, python-format
 msgid "To Do"
 msgstr "Te doen"
@@ -3869,6 +3838,11 @@ msgstr "Om issues te gebruiken installeert u de"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
 msgstr "Om urenstaten te gebruiken gaat u naar"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Today Activities"
+msgstr "Activiteiten van vandaag"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3897,6 +3871,11 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Upcoming Activities (7 days)"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_use_tasks
 #: model:ir.model.fields,field_description:project.field_project_project_use_tasks
 msgid "Use Tasks"
@@ -3923,7 +3902,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:106
+#: code:addons/project/static/src/js/tour.js:103
 #, python-format
 msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
@@ -3934,16 +3913,11 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/tour.js:88
+#: code:addons/project/static/src/js/tour.js:85
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
 "Gebruik het kruimelpad om <b> terug te gaan naar uw taken pijplijn</b>."
-
-#. module: project
-#: model:project.task.type,legend_priority:project.project_stage_0
-msgid "Use the priority for tasks related to gold customers"
-msgstr "Gebruik de prioriteit voor taken gerelateerd aan gouden klanten"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3970,10 +3944,10 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:16
+#: code:addons/project/static/src/js/web_planner_project.js:17
 #, python-format
 msgid "Validation"
-msgstr "Validatie"
+msgstr "Bevestiging"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4001,16 +3975,16 @@ msgstr "Zichtbaar voor volgende klanten"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:66
-#: code:addons/project/static/src/js/web_planner_project.js:81
+#: code:addons/project/static/src/js/web_planner_project.js:67
+#: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Customer"
 msgstr "Wacht. Klant"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:67
-#: code:addons/project/static/src/js/web_planner_project.js:82
+#: code:addons/project/static/src/js/web_planner_project.js:68
+#: code:addons/project/static/src/js/web_planner_project.js:83
 #, python-format
 msgid "Wait. Expert"
 msgstr "Wacht. Expert"
@@ -4043,7 +4017,7 @@ msgid ""
 "We can implement custom reports based on your Word or GoogleDocs templates, "
 "for example:"
 msgstr ""
-"Wij kunnen aangepaste rapportages implementeren gebaseerd op uw Word of "
+"Wij kunnen aangepaste rapporten implementeren gebaseerd op uw Word of "
 "GoogleDocs sjablonen, bijvoorbeeld:"
 
 #. module: project
@@ -4067,7 +4041,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr "Welko"
+msgstr "Welkom"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4115,7 +4089,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/web_planner_project.js:39
+#: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Work has started"
 msgstr "Werk is gestart"
@@ -4132,7 +4106,7 @@ msgstr "Workload"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
-msgid "Write date"
+msgid "Write Date"
 msgstr "Schrijfdatum"
 
 #. module: project
@@ -4192,8 +4166,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
 msgstr ""
-"U kan uw rapportages ook opslaan om ze later gemakkelijk opnieuw te "
-"gebruiken"
+"U kan uw rapporten ook opslaan om ze later gemakkelijk opnieuw te gebruiken"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -4273,12 +4246,17 @@ msgid "project.config.settings"
 msgstr "project.config.settings"
 
 #. module: project
+#: model:ir.model,name:project.model_project_task_merge_wizard
+msgid "project.task.merge.wizard"
+msgstr "project.task.merge.wizard"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
 msgstr "verzend ons een e-mail"
 
 #. module: project
-#: code:addons/project/models/project.py:466
+#: code:addons/project/models/project.py:463
 #, python-format
 msgid "tasks"
 msgstr "taken"

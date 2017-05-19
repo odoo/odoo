@@ -7,18 +7,20 @@ import json
 import xml.etree.ElementTree as ET
 import logging
 import re
-import urllib2
+
+import requests
 import werkzeug.utils
 import werkzeug.wrappers
 
 import odoo
-from odoo import http
+from odoo import http, models
 from odoo import fields
 from odoo.http import request
-from odoo.osv.orm import browse_record
 
 from odoo.addons.website.models.website import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
+
+from odoo.tools import pycompat
 
 logger = logging.getLogger(__name__)
 
@@ -36,13 +38,13 @@ class QueryURL(object):
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
-        for key, value in self.args.items():
+        for key, value in pycompat.items(self.args):
             kw.setdefault(key, value)
         path_args = set(path_args or []).union(self.path_args)
         paths, fragments = [], []
-        for key, value in kw.items():
+        for key, value in pycompat.items(kw):
             if value and key in path_args:
-                if isinstance(value, browse_record):
+                if isinstance(value, models.BaseModel):
                     paths.append((key, slug(value)))
                 else:
                     paths.append((key, value))
@@ -110,13 +112,13 @@ class Website(Home):
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
-            return request.redirect('/page/' + page[8:], code=301)
+            return request.redirect('/page/%s?%s' % (page[8:], request.httprequest.query_string), code=301)
         elif '.' not in page:
             page = 'website.%s' % page
 
         try:
             request.website.get_template(page)
-        except ValueError, e:
+        except ValueError as e:
             # page not found
             if request.website.is_publisher():
                 values.pop('deletable')
@@ -168,7 +170,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_context(use_public_user=True).enumerate_pages()
+            locs = request.website.sudo(user=request.website.user_id.id).enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -192,7 +194,7 @@ class Website(Home):
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = map(lambda p: "%d-%d" % (current_website.id, p), range(1, pages + 1))
+                pages_with_website = ["%d-%d" % (current_website.id, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
                 content = View.render_template('website.sitemap_index_xml', {
@@ -207,7 +209,7 @@ class Website(Home):
     def website_info(self):
         try:
             request.website.get_template('website.website_info').name
-        except Exception, e:
+        except Exception as e:
             return request.env['ir.http']._handle_exception(e, 404)
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])
@@ -247,6 +249,11 @@ class Website(Home):
     def snippets(self):
         return request.env['ir.ui.view'].render_template('website.snippets')
 
+    @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
+    def get_switchable_related_views(self, key):
+        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+
     @http.route('/website/reset_templates', type='http', auth='user', methods=['POST'], website=True)
     def reset_template(self, templates, redirect='/'):
         templates = request.httprequest.form.getlist('templates')
@@ -266,15 +273,6 @@ class Website(Home):
             if modules:
                 modules.button_immediate_upgrade()
         return request.redirect(redirect)
-
-    @http.route('/website/customize_template_get', type='json', auth='user', website=True)
-    def customize_template_get(self, key, full=False, bundles=False):
-        """ Get inherit view's informations of the template ``key``.
-            returns templates info (which can be active or not)
-            ``full=False`` returns only the customize_show template
-            ``bundles=True`` returns also the asset bundles
-        """
-        return request.env["ir.ui.view"].customize_template_get(key, full=full, bundles=bundles)
 
     @http.route('/website/translations', type='json', auth="public", website=True)
     def get_website_translations(self, lang, mods=None):
@@ -303,12 +301,13 @@ class Website(Home):
         language = lang.split("_")
         url = "http://google.com/complete/search"
         try:
-            req = urllib2.Request("%s?%s" % (url, werkzeug.url_encode({
-                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})))
-            response = urllib2.urlopen(req)
-        except (urllib2.HTTPError, urllib2.URLError):
+            req = requests.get(url, params={
+                'ie': 'utf8', 'oe': 'utf8', 'output': 'toolbar', 'q': keywords, 'hl': language[0], 'gl': language[1]})
+            req.raise_for_status()
+            response = req.content
+        except IOError:
             return []
-        xmlroot = ET.fromstring(response.read())
+        xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
     #------------------------------------------------------

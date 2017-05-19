@@ -4,12 +4,13 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_utils
+from odoo.tools import float_utils, pycompat
 
 
 class Inventory(models.Model):
     _name = "stock.inventory"
     _description = "Inventory"
+    _order = "date desc, id desc"
 
     @api.model
     def _default_location_id(self):
@@ -250,7 +251,7 @@ class Inventory(models.Model):
 
         for product_data in self.env.cr.dictfetchall():
             # replace the None the dictionary by False, because falsy values are tested later on
-            for void_field in [item[0] for item in product_data.items() if item[1] is None]:
+            for void_field in [item[0] for item in pycompat.items(product_data) if item[1] is None]:
                 product_data[void_field] = False
             product_data['theoretical_qty'] = product_data['product_qty']
             if product_data['product_id']:

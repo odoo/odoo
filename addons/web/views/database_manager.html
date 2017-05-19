@@ -54,8 +54,7 @@
 
 {% macro create_form() -%}
   <p>Odoo is up and running! <br />
-  Create a new database by filling out the form,
-  you'll be able to install your first app in a minute.</p>
+  Fill out this form to create a new database. You will install your first app afterwards.</p>
   {{ master_input() }}
   <div class="form-group">
     <div class="row">
@@ -130,7 +129,10 @@
       {% if databases %}
         <div class="list-group">
           {% for db in databases %}
-          <a href="/web?db={{ db }}" class="list-group-item">
+          <a href="/web?db={{ db }}" class="list-group-item" >
+            {% if db in incompatible_databases %}
+              <i class="icon fa fa-warning pull-right text-warning" title="This database may not be compatible"></i>
+            {% endif %}
             {{ db }}
             {% if manage %}
             <div class="text-right pull-right">

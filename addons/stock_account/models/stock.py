@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -127,7 +127,7 @@ class StockQuant(models.Model):
             quant_cost_qty[quant.cost] += quant.qty
 
         AccountMove = self.env['account.move']
-        for cost, qty in quant_cost_qty.iteritems():
+        for cost, qty in pycompat.items(quant_cost_qty):
             move_lines = move._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id)
             if move_lines:
                 date = self._context.get('force_period_date', fields.Date.context_today(self))
@@ -137,6 +137,9 @@ class StockQuant(models.Model):
                     'date': date,
                     'ref': move.picking_id.name})
                 new_account_move.post()
+                new_account_move.message_post_with_view('mail.message_origin_link',
+                        values={'self': new_account_move, 'origin': move.picking_id},
+                        subtype_id=self.env.ref('mail.mt_note').id)
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)
@@ -173,11 +176,14 @@ class StockQuant(models.Model):
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)",
+                               help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')
+
     def _set_default_price_moves(self):
         # When the cost method is in real or average price, the price can be set to 0.0 on the PO
         # So the price doesn't have to be updated
         moves = super(StockMove, self)._set_default_price_moves()
-        return moves.filtered(lambda m: not m.product_id.cost_method in ('real', 'average'))
+        return moves.filtered(lambda m: m.product_id.cost_method not in ('real', 'average'))
 
     @api.multi
     def action_done(self):
@@ -349,3 +355,24 @@ class StockMove(models.Model):
             }
             res.append((0, 0, price_diff_line))
         return res
+
+
+class StockReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    @api.multi
+    def _create_returns(self):
+        new_picking_id, pick_type_id = super(StockReturnPicking, self)._create_returns()
+        new_picking = self.env['stock.picking'].browse([new_picking_id])
+        for move in new_picking.move_lines:
+            return_picking_line = self.product_return_moves.filtered(lambda r: r.move_id == move.origin_returned_move_id)
+            if return_picking_line and return_picking_line.to_refund:
+                move.to_refund = True
+
+        return new_picking_id, pick_type_id
+
+
+class StockReturnPickingLine(models.TransientModel):
+    _inherit = "stock.return.picking.line"
+
+    to_refund = fields.Boolean(string="To Refund (update SO/PO)", help='Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order')

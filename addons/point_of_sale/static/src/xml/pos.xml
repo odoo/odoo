@@ -92,6 +92,21 @@
         </div>
     </t>
 
+        <t t-name="ClientScreenWidget">
+        <div class="oe_status">
+            <span class="oe_customer_display_text"></span>
+            <div class="js_warning oe_icon oe_orange oe_hidden">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+             <div class="js_disconnected oe_icon oe_red">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+            <div class="js_connected oe_icon oe_green oe_hidden">
+                <i class='fa fa-fw fa-desktop'></i>
+            </div>
+        </div>
+    </t>
+
     <t t-name="HeaderButtonWidget">
         <div class="header-button">
             <t t-esc="widget.label" />
@@ -1323,6 +1338,7 @@
                 <p class="category">Hardware Status</p>
                 <ul>
                     <li class="status weighing">Weighing</li>
+                    <li class="button display_refresh">Refresh Display</li>
                 </ul>
                 <p class="category">Hardware Events</p>
                 <ul>
@@ -1600,4 +1616,53 @@
         </div>
     </t>
 
+<!-- This is a duplicate of xml_id = point_of_sale.extra_head . We could have told models.js to do an extra rpc call for this-->
+    <t t-name="CustomerFacingDisplayHead">
+        <div class="resources">
+            <base t-att-href="origin"/>
+            <link href="/point_of_sale/static/src/css/customer_facing_display.css" rel="stylesheet"/>
+            <script type="text/javascript">
+                // This function needs to be named that way, call it the foreign JS API
+                // The posbox will execute it, with the behavior intended
+                function foreign_js(){
+                    if ($('.pos-adv').hasClass('pos-hidden')) {
+                        $('.pos-customer_facing_display').addClass('pos-js_no_ADV');
+                    }
+                    $(window).on('resize', function () {
+                        $('.pos-customer_facing_display').toggleClass('pos-js_no_ADV', $('.pos-adv').hasClass('pos-hidden'));
+                    }).trigger('resize');
+                };
+            </script>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrderLines">
+        <t t-foreach="orderlines" t-as="orderline">
+            <div class="pos_orderlines_item">
+                <div><div t-attf-style="background-image:url(#{orderline.product.image_base64})"/></div>
+                    <div><t t-esc="orderline.product.display_name" /></div>
+                    <div><t t-esc="orderline.get_quantity_str()" /></div>
+                    <div><t t-esc="widget.format_currency(orderline.get_display_price())"/></div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="CustomerFacingDisplayPaymentLines">
+        <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+            <div>
+                <span><t t-esc="paymentline.name"/></span>
+            </div>
+            <div>
+                <span><t t-esc="widget.format_currency(paymentline.get_amount())"/></span>
+            </div>
+        </t>
+        <t t-if="order.get_paymentlines().length > 0">
+            <div>
+                <span class="pos-change_title">Change:</span>
+            </div>
+            <div >
+                <span class="pos-change_amount"><t t-esc="widget.format_currency(order.get_change())"/></span>
+            </div>
+        </t>
+    </t>
 </templates>

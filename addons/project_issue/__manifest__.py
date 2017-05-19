@@ -20,7 +20,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     ],
     'data': [
         'data/mail_message_subtype_data.xml',
-        'report/project_issue_report_views.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
         'views/project_issue_views.xml',

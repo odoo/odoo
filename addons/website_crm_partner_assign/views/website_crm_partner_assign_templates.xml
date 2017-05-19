@@ -99,7 +99,7 @@
                                 <div t-field="partner.website_short_description"/>
                                 <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
                                     <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
-                                        <t t-raw="len([p for p in partner.implemented_partner_ids if p.website_published])"/> reference(s)
+                                        <t t-esc="partner.implemented_count"/> reference(s)
                                     </a></small>
                                 </t>
                             </div>
@@ -192,12 +192,14 @@
             <script type="text/javascript" src="/website_crm_partner_assign/static/src/js/crm_partner_assign.js" />
         </xpath>
     </template>
-    <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="website_portal.portal_layout" priority="22">
+    <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="website_portal.portal_layout" priority="15">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <t t-if="user.commercial_partner_id.grade_id">
+            <t t-if="user.commercial_partner_id.grade_id and lead_count">
                 <li t-att-class="page_name == 'lead' and 'active'">
                      <a href="/my/leads">Leads</a>
                 </li>
+            </t>
+            <t t-if="user.commercial_partner_id.grade_id">
                 <li t-att-class="page_name == 'opportunity' and 'active'">
                      <a href="/my/opportunities">Opportunities</a>
                 </li>
@@ -205,18 +207,13 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="website_portal.portal_my_home" priority="22">
+    <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="website_portal.portal_my_home" priority="15">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <t t-if="user.commercial_partner_id.grade_id">
-                <h3 class="page-header">
+                <h3 t-if="lead_count" class="page-header">
                     <a href="/my/leads">Your Leads
                         <small class="ml8">
-                            <t t-if="lead_count">
-                                <span class='badge'><t t-esc="lead_count"/></span>
-                            </t>
-                            <t t-if="not lead_count">
-                                There are currently no leads for your account.
-                            </t>
+                            <span class='badge'><t t-esc="lead_count"/></span>
                         </small>
                     </a>
                 </h3>
@@ -227,7 +224,7 @@
                                 <span class='badge'><t t-esc="opp_count"/></span>
                             </t>
                             <t t-if="not opp_count">
-                                There are currently no opportunities for your account.
+                                There are currently no opportunities.
                             </t>
                         </small>
                     </a>
@@ -240,17 +237,7 @@
         <t t-call="website_portal.portal_layout">
             <h3 class="page-header">
                 Your Leads
-                <div class="dropdown pull-right mr8">
-                    <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
-                        <span class="fa fa-sort fa-lg" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="sortby">
-                        <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
-                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'lead', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
-                        </li>
-                    </ul>
-                </div>
+                <t t-call="website_portal.portal_searchbar"/>
             </h3>
             <div t-if="not leads" class="alert alert-warning mt8" role="alert">
                 There are no leads.
@@ -285,41 +272,50 @@
         <t t-call="website_portal.portal_layout">
             <h3 class="page-header">
                 Your Opportunities
-                <div class="dropdown pull-right mr8">
-                    <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown">
-                        <span class="fa fa-sort fa-lg" /> <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="sortby">
-                        <li t-foreach="sortings" t-as="option" t-att-class="sortby == option and 'active'">
-                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'opportunity', sortby=option)"><span t-esc="sortings.get(option).get('label')"/></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="dropdown pull-right mr8">
-                    <button id="filters" class="btn btn-default" type="button" data-toggle="dropdown">
-                        <span class="fa fa-filter fa-lg" /> <span t-esc="filters.get(opportunity, {}).get('label', 'All')"/>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="filters">
-                        <li t-foreach="filters" t-as="option" t-att-class="opportunity == option and 'active'">
-                            <a t-att-href="default_url + '?' + keep_query('date_begin', 'date_end', 'sortby', opportunity=option)"><span t-esc="filters.get(option).get('label')"/></a>
-                        </li>
-                    </ul>
-                </div>
+                <t t-call="website_portal.portal_searchbar"/>
+                <button name='new_opp' data-toggle="modal" data-target=".modal_new_opp" class="btn btn-default pull-right mr8"><i class="fa fa-plus fa-lg" /></button>
             </h3>
-            <div class="panel panel-default">
-                <t t-if="not opportunities">
-                    <div class="alert alert-warning mt8" role="alert">
-                        There are no opportunities.
-                    </div>
-                </t>
-                <table t-if="opportunities" class="table table-hover">
+            <div class="modal fade modal_new_opp" role="form" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="POST" class="modal-content js_website_submit_form new_opp_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                            <h4 class="modal-title">New Opportunity</h4>
+                        </div>
+                        <div class="modal-body" id="new-opp-dialog">
+                            <div class="form-group">
+                                <label class="control-label hdd4" for="contact_name">Contact name</label>
+                                <input type='text' name="contact_name" class="form-control contact_name"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label h4dd" for="title">Title</label>
+                                <input type='text' name="title" class="form-control title"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label hdd4" for="description">Description</label>
+                                <textarea row="3" name="description" class="form-control description"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button t-attf-class="btn btn-primary new_opp_confirm">Confirm</button> or
+                            <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <t t-if="not opportunities">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no opportunities.
+                </div>
+            </t>
+            <div class="panel panel-default" t-if="opportunities">
+                <table class="table table-hover">
                     <thead>
                         <tr class="active">
                             <th class="col-xs-2">Date</th>
                             <th class="col-md-4">Name</th>
-                            <th class="col-md-2">Expected Revenue</th>
+                            <th class="col-md-2">Expected</th>
                             <th>Contact Name</th>
                             <th>Stage</th>
                         </tr>
@@ -416,7 +412,7 @@
                                         <span class="col-xs-8" t-field="lead.user_id" />
                                     </div>
                                     <div class="row" t-if="lead.team_id">
-                                        <label class="col-xs-4">Sales Team</label>
+                                        <label class="col-xs-4">Sales Channel</label>
                                         <span class="col-xs-8" t-field="lead.team_id" />
                                     </div>
                                 </div>
@@ -474,8 +470,8 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button> or
-                                            <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                            <button t-attf-class="btn btn-primary interested_partner_assign_confirm">Confirm</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                         </div>
                                     </form>
                                 </div>
@@ -507,8 +503,8 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button> or
-                                            <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                            <button t-attf-class="btn btn-primary desinterested_partner_assign_confirm">Confirm</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                         </div>
                                     </form>
                                 </div>
@@ -656,8 +652,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button> or
-                                                        <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                                        <button t-attf-class="btn btn-primary edit_contact_confirm">Confirm</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -758,41 +754,41 @@
                                                         <div class="form-group">
                                                             <label class="control-label" for="next_activity">Next Activity</label>
                                                             <select class="form-control next_activity" name="next_activity">
-                                                                <t t-foreach="activities" t-as="activity">
-                                                                    <option t-att-data="activity.id" t-att-selected="activity.id == opportunity.next_activity_id.id" t-att-name="activity.name" t-att-days="activity.days" t-att-description="activity.description"><t t-esc="activity.name"/></option>
+                                                                <t t-foreach="activity_types" t-as="activity_type">
+                                                                    <option t-att-data="activity_type.id" t-att-selected="activity_type.id == user_activity.activity_type_id.id" t-att-name="activity_type.name" t-att-days="activity_type.days" t-att-summary="activity_type.summary"><t t-esc="activity_type.name"/></option>
                                                                 </t>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label" for="title_action">Details Next Activity</label>
-                                                            <textarea row="3" name="title_action" class="form-control title_action"><t t-esc="opportunity.title_action"/></textarea>
+                                                            <label class="control-label" for="activity_summary">Details Next Activity</label>
+                                                            <textarea row="3" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label" for="date_action">Next Activity Date</label>
+                                                            <label class="control-label" for="activity_date_deadline">Next Activity Date</label>
                                                             <div class='input-group date'>
-                                                                <input type="text" name="date_action" t-att-value="opportunity.date_action" class="form-control date_action" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
+                                                                <input type="text" name="activity_date_deadline" t-att-value="user_activity.date_deadline" class="form-control activity_date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD" />
                                                                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button> or
-                                                        <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
+                                                        <button t-attf-class="btn btn-primary edit_opp_confirm">Confirm</button>
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" t-if="user_activity">
                                         <label class="col-xs-4">Next Activity</label>
                                         <span class="col-xs-8">
-                                            <span t-field="opportunity.next_activity_id"/>
-                                            <span t-if="opportunity.date_action">&#160;on&#160;</span>
-                                            <span t-field="opportunity.date_action"/>
+                                            <span t-field="user_activity.activity_type_id"/>
+                                            <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
+                                            <span t-field="user_activity.date_deadline"/>
                                         </span>
                                     </div>
-                                    <div class="row">
-                                        <span class="col-xs-8 col-xs-offset-4" t-field="opportunity.title_action"/>
+                                    <div class="row" t-if="user_activity">
+                                        <span class="col-xs-8 col-xs-offset-4" t-field="user_activity.summary"/>
                                     </div>
                                 </div>
                             </div>

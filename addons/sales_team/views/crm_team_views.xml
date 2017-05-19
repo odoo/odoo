@@ -26,7 +26,6 @@
                 <menuitem action="base.action_res_bank_form" id="menu_action_res_bank_form" parent="menu_config_bank_accounts" sequence="1" groups="base.group_no_one"/>
                 <menuitem action="base.action_res_partner_bank_account_form" id="menu_action_res_partner_bank_form" parent="menu_config_bank_accounts" groups="base.group_no_one" sequence="2"/>
 
-
     
         <!-- Cateamions Search view -->
         <record id="crm_team_salesteams_search" model="ir.ui.view">
@@ -34,7 +33,7 @@
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <search string="Salesteams Search">
-                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                   <filter name="my_favorites" string="My Favorites" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="name"/>
@@ -52,15 +51,14 @@
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_my_favorites': 1}</field>
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
+                    Click here to define a new sales channel.
                 </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
                 </p>
             </field>
         </record>
@@ -71,7 +69,7 @@
             <field name="name">crm.team.form</field>
             <field name="model">crm.team</field>
             <field name="arch" type="xml">
-                <form string="Sales Team">
+                <form string="Sales Channel">
                     <sheet>
                       <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
@@ -79,23 +77,26 @@
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Sales team"/>
+                            <label for="name" class="oe_edit_only" string="Sales Channel"/>
                             <h1>
                                 <field name="name" placeholder="Salesteam name..."/>
                             </h1>
-                            <div name="options_active"/>
+                            <div name="options_active" attrs="{'invisible': ['&amp;', ('team_type', '!=', 'sales'), ('team_type', '!=', 'website')]}"/>
                         </div>
                         <group>
                             <group name="left">
+                                <field name="team_type" groups="base.group_no_one"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                             <group name="right">
                             </group>
                         </group>
                         <notebook>
-                            <page name="members" string="Team Members">
-                                <field name="member_ids" widget="many2many_kanban" options="{'not_delete': True}">
+                            <page name="members" string="Team Members" attrs="{'invisible': [('team_type', 'in', ['pos', 'ebay'])]}">
+                                <field name="member_ids" options="{'not_delete': True}">
                                     <kanban quick_create="false" create="true" delete="true">
+                                        <field name="id"/>
                                         <field name="name"/>
                                         <templates>
                                             <t t-name="kanban-box">
@@ -113,9 +114,11 @@
                                     </kanban>
                                 </field>
                             </page>
-                            <page string="More Info" name="more_info" groups="base.group_no_one">
-                                <group string="Company" groups="base.group_multi_company">
-                                    <field name="company_id" options="{'no_create': True}"/>
+                            <page string="Dashboard" name="dashboard">
+                                <group string="Graph" name="graph">
+                                    <field name="dashboard_graph_model" attrs="{'readonly': [('team_type', 'in', ['pos', 'ebay'])]}"/>
+                                    <field name="dashboard_graph_period"/>
+                                    <field name="dashboard_graph_group"/>
                                 </group>
                             </page>
                         </notebook>
@@ -134,7 +137,7 @@
             <field name="model">crm.team</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Sales Team">
+                <tree string="Sales Channel">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="user_id"/>
@@ -143,17 +146,16 @@
         </record>
 
         <record id="crm_team_act" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
+            <field name="name">Sales Channels</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_team_view_tree"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
+                    Click here to define a new sales channel.
                 </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
                 </p>
             </field>
         </record>
@@ -170,10 +172,10 @@
             </xpath>
         </template>
 
-        <menuitem id="menu_sale_report" name="Reports" parent="sales_team.menu_base_partner" sequence="99" groups="sales_team.group_sale_manager"/>
+        <menuitem id="menu_sale_report" name="Reporting" parent="sales_team.menu_base_partner" sequence="99" groups="sales_team.group_sale_manager"/>
 
         <record id="sales_team_config_action" model="ir.actions.act_window">
-            <field name="name">Sales Teams</field>
+            <field name="name">Sales Channels</field>
             <field name="res_model">crm.team</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -181,19 +183,32 @@
             <field name="view_id" ref="crm_team_salesteams_search"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                    Click here to define a new sales team.
+                    Click here to define a new sales channel.
                 </p><p>
-                    Use sales team to organize your different salespersons or
-                    departments into separate teams. Each team will work in
-                    its own list of opportunities.
+                    Use sales channels to organize your sales departments. 
+                    Each channel will work with a separate pipeline.
                 </p>
             </field>
         </record>
 
-        <menuitem name="Sales Teams"
+        <menuitem name="Sales Channels"
             id="sales_team_config"
             parent="sales_team.menu_sale_config"
-            action="sales_team_config_action"/>
+            action="sales_team_config_action"
+            sequence="2"/>
+
+        <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+            <field name="name">Activity Types</field>
+            <field name="res_model">mail.activity.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'res.partner')]</field>
+        </record>
+        <menuitem name="Activity Types"
+            id="sales_team_menu_config_activity_types"
+            sequence="2"
+            action="mail_activity_type_action_config_sales"
+            parent="sales_team.menu_sale_config"/>
 
     </data>
 </odoo>

@@ -2,24 +2,23 @@
 <odoo>
 <data>
 <template id="report_invoice_document">
-    <t t-call="report.external_layout">
+    <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
         <div class="page">
             <div class="row">
                 <div name="invoice_address" class="col-xs-5 col-xs-offset-7">
                     <address t-field="o.partner_id"
                         t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
-                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                    <div t-if="o.partner_id.vat" class="mt16">VAT: <span t-field="o.partner_id.vat"/></div>
                 </div>
             </div>
 
             <h2>
                 <span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span>
-                <span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">PRO-FORMA</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                 <span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
-                <span t-if="o.type == 'out_refund'">Refund</span>
-                <span t-if="o.type == 'in_refund'">Vendor Refund</span>
+                <span t-if="o.type == 'out_refund'">Credit Note</span>
+                <span t-if="o.type == 'in_refund'">Vendor Credit Note</span>
                 <span t-if="o.type == 'in_invoice'">Vendor Bill</span>
                 <span t-field="o.number"/>
             </h2>
@@ -63,7 +62,7 @@
                         <th class="text-right">Unit Price</th>
                         <th t-if="display_discount" class="text-right">Disc.(%)</th>
                         <th class="text-right">Taxes</th>
-                        <th class="text-right">Tax Excluded Price</th>
+                        <th class="text-right">Amount</th>
                     </tr>
                 </thead>
                 <tbody class="invoice_tbody">
@@ -88,10 +87,19 @@
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
                     </tr>
+                    <tr t-foreach="range(max(5-len(o.invoice_line_ids),0))" t-as="l">
+                        <td>&amp;nbsp;</td>
+                        <td class="hidden"></td>
+                        <td></td>
+                        <td></td>
+                        <td t-if="display_discount" groups="sale.group_discount_per_so_line"></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                 </tbody>
             </table>
 
-            <div class="row">
+            <div id="total" class="row">
                 <div class="col-xs-4 pull-right">
                     <table class="table table-condensed">
                         <tr class="border-black">
@@ -117,7 +125,6 @@
                     </table>
                 </div>
             </div>
-
             <!-- DO NOT REMOVE THIS TABLE. MANDATORY IN SOME COUNTRIES -->
             <div class="row" t-if="len(o.tax_line_ids) > 0">
                 <div class="col-xs-6">
@@ -143,16 +150,13 @@
                     </table>
                 </div>
             </div>
-
             <p t-if="o.comment">
-                <strong>Comment:</strong>
                 <span t-field="o.comment"/>
             </p>
             <p t-if="o.payment_term_id">
                 <span t-field="o.payment_term_id.note"/>
             </p>
             <p t-if="o.fiscal_position_id.note">
-                <strong>Fiscal Position Remark:</strong>
                 <span t-field="o.fiscal_position_id.note"/>
             </p>
         </div>
@@ -160,7 +164,7 @@
 </template>
 
 <template id="report_invoice">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="account.report_invoice_document" t-lang="o.partner_id.lang"/>
         </t>
@@ -171,7 +175,7 @@
     <xpath expr="//h2" position="replace">
         <h2>
             <span>Duplicate</span>
-            <span t-if="o.type == 'out_refund'">refund</span>
+            <span t-if="o.type == 'out_refund'">credit note</span>
             <span t-if="o.type == 'out_invoice'">invoice</span>
             <span t-field="o.number"/>
         </h2>
@@ -179,7 +183,7 @@
 </template>
 
 <template id="account_invoice_report_duplicate_main">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="account.account_invoice_report_duplicate" t-lang="o.partner_id.lang"/>
         </t>

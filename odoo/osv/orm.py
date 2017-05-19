@@ -1,6 +1,9 @@
 import json
+import warnings
+
 from lxml import etree
 
+from odoo.tools import pycompat
 from ..exceptions import except_orm
 from ..models import (
     MetaModel,
@@ -16,17 +19,25 @@ from odoo.tools.safe_eval import safe_eval
 # extra definitions for backward compatibility
 browse_record_list = BaseModel
 
-class browse_record(object):
-    """ Pseudo-class for testing record instances """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and len(inst) <= 1
+class BRM(type):
+    def __instancecheck__(self, inst):
+        warnings.warn(DeprecationWarning(
+            "browse_record is a deprecated concept and should not be used "
+            "anymore, you can replace `isinstance(o, browse_record)` by "
+            "`isinstance(o, BaseModel)`"
+        ))
+        return isinstance(inst, BaseModel) and len(inst) <= 1
+browse_record = BRM('browse_record', (object,), {})
 
-class browse_null(object):
-    """ Pseudo-class for testing null instances """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and not inst
+class NBM(type):
+    def __instancecheck__(self, inst):
+        warnings.warn(DeprecationWarning(
+            "browse_record is a deprecated concept and should not be used "
+            "anymore, you can replace `isinstance(o, browse_null)` by "
+            "`isinstance(o, BaseModel) and not o`"
+        ))
+        return isinstance(inst, BaseModel) and not inst
+browse_null = NBM('browse_null', (object,), {})
 
 
 def transfer_field_to_modifiers(field, modifiers):
@@ -35,12 +46,12 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in (field.get("states",{})).items():
+    for state, modifs in pycompat.items(field.get("states",{})):
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
 
-    for attr, default_value in default_values.items():
+    for attr, default_value in pycompat.items(default_values):
         if state_exceptions[attr]:
             modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
         else:

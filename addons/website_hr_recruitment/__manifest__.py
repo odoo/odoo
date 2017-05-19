@@ -4,6 +4,7 @@
 {
     'name': 'Online Jobs',
     'category': 'Website',
+    'sequence': 142,
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',
     'description': """

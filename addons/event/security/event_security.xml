@@ -41,16 +41,5 @@
                                         ]
             </field>
         </record>
-        <record model="ir.rule" id="report_event_registration_company_rule">
-            <field name="name">Event/Report Registration: multi-company</field>
-            <field name="model_id" ref="model_report_event_registration"/>
-            <field name="global" eval="True"/>
-            <field name="domain_force">['|',
-                                            ('company_id', '=', False),
-                                            ('company_id', 'child_of', [user.company_id.id]),
-                                        ]
-            </field>
-        </record>
-
     </data>
 </odoo>

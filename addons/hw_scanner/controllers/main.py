@@ -5,7 +5,10 @@ import logging
 import time
 from os import listdir
 from os.path import join
-from Queue import Queue, Empty
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty # pylint: disable=deprecated-module
 from select import select
 from threading import Thread, Lock
 

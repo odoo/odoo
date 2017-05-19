@@ -1,26 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-# 
+#
 # Translators:
-# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Manuela Silva <manuela.silva@sky.com>, 2016
-# Daniel C Santos <dcs@thinkopensolutions.pt>, 2016
-# Vitor Fernandes <vmlf01@gmail.com>, 2016
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016
+# Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2016\n"
-"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-09-23 11:32+0000\n"
+"Last-Translator: Ricardo Martins <ricardo.nbs.martins@gmail.com>\n"
+"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
+"pt/)\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
@@ -40,14 +36,9 @@ msgid "By sticky note Category"
 msgstr "Por Categoria de nota pegajosa"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
-msgid "Click to add a new tag."
-msgstr "Clique para adicionar uma nova etiqueta."
-
-#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr "Clique para adicionar uma nota pessoal."
+msgstr "Clique para adicionar uma nota pessoal"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
@@ -82,14 +73,14 @@ msgstr "Data efetuada"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr "Eliminar"
+msgstr "Apagar"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_display_name
 #: model:ir.model.fields,field_description:note.field_note_stage_display_name
 #: model:ir.model.fields,field_description:note.field_note_tag_display_name
 msgid "Display Name"
-msgstr "Nome a Exibir"
+msgstr "Nome a Mostrar"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
@@ -106,7 +97,7 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:note.field_note_stage_id
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
-msgstr "Id."
+msgstr "ID"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
@@ -120,14 +111,14 @@ msgstr "Última Modificação em"
 #: model:ir.model.fields,field_description:note.field_note_stage_write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag_write_uid
 msgid "Last Updated by"
-msgstr "Última Atualização por"
+msgstr "Última Actualização por"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_date
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Última Atualização em"
+msgstr "Última Actualização em"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
@@ -141,7 +132,7 @@ msgid "New"
 msgstr "Novo"
 
 #. module: note
-#: code:addons/note/models/note.py:129
+#: code:addons/note/note.py:165
 #, python-format
 msgid "New Note"
 msgstr "Nova Nota"
@@ -185,12 +176,12 @@ msgstr "Notas"
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
-msgstr "Proprietário"
+msgstr "Dono"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage"
-msgstr ""
+msgid "Owner of the note stage."
+msgstr "Dono da etapa da nota."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -242,18 +233,16 @@ msgid "Tag name already exists !"
 msgstr "Nome da etiqueta já existe!"
 
 #. module: note
-#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
-#: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiquetas"
 
 #. module: note
+#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr "Esta Semana"
+msgstr "Esta semana"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
@@ -270,8 +259,10 @@ msgstr "Amanhã"
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
+"            notes are private; no one else will be able to see them. "
+"However\n"
+"            you can share some notes with other people by inviting "
+"followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
@@ -295,5 +286,53 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-"Pode personalizar o modo de processamento das suas notas/tarefas, adicionando, \n"
-"removendo ou modificando as colunas."
+"Pode customizar como processa as suas notas/tarefas ao adicionar, \n"
+"remover ou modificar colunas."
+
+#~ msgid "Action Needed"
+#~ msgstr "Ação Necessária"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data da Ultmia Mensagem Inserida no Registo"
+
+#~ msgid "Followers"
+#~ msgstr "Seguidores"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Seguidores (Canais)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Seguidores (Parceiros)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr "Se marcado, há novas mensagens que pedem a sua atenção."
+
+#~ msgid "Is Follower"
+#~ msgstr "É um seguidor"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data da Última Mensagem"
+
+#~ msgid "Messages"
+#~ msgstr "Mensagens"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Histórico de mensagens e comunicação"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Número de Ações"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Número de mensagens que requerem uma ação"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Número de mensagens por ler"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mensagens por ler"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Contador de Mensagens por Ler"

@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-import event
+from . import event

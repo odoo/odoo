@@ -4,6 +4,7 @@
 from datetime import datetime
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.tools import pycompat
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -88,7 +89,7 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread', 'ir.needaction_mixin', 'utm.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _mail_mass_mailing = _('Applicants')
 
     def _default_stage_id(self):
@@ -135,14 +136,12 @@ class Applicant(models.Model):
     date_closed = fields.Datetime("Closed", readonly=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
-    date_action = fields.Date("Next Action Date")
-    title_action = fields.Char("Next Action", size=64)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job")
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages")
-    salary_proposed = fields.Float("Proposed Salary", help="Salary Proposed by the Organisation")
-    salary_expected = fields.Float("Expected Salary", help="Salary Expected by Applicant")
+    salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation")
+    salary_expected = fields.Float("Expected Salary", group_operator="avg", help="Salary Expected by Applicant")
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working")
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32)
@@ -152,6 +151,7 @@ class Applicant(models.Model):
     reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
+    delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of Delay to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
@@ -171,6 +171,7 @@ class Applicant(models.Model):
             date_create = datetime.strptime(self.create_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             date_closed = datetime.strptime(self.date_closed, tools.DEFAULT_SERVER_DATETIME_FORMAT)
             self.day_close = (date_closed - date_create).total_seconds() / (24.0 * 3600)
+            self.delay_close = self.day_close - self.day_open
 
     @api.multi
     def _get_attachment_number(self):
@@ -250,7 +251,7 @@ class Applicant(models.Model):
             self = self.with_context(default_department_id=vals.get('department_id'))
         if vals.get('job_id') or self._context.get('default_job_id'):
             job_id = vals.get('job_id') or self._context.get('default_job_id')
-            for key, value in self._onchange_job_id_internal(job_id)['value'].iteritems():
+            for key, value in pycompat.items(self._onchange_job_id_internal(job_id)['value']):
                 if key not in vals:
                     vals[key] = value
         if vals.get('user_id'):
@@ -307,7 +308,6 @@ class Applicant(models.Model):
         }
         return res
 
-
     @api.multi
     def action_get_attachment_tree_view(self):
         attachment_action = self.env.ref('base.action_attachment')
@@ -329,7 +329,7 @@ class Applicant(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         record = self[0]
-        if 'emp_id' in init_values and record.emp_id:
+        if 'emp_id' in init_values and record.emp_id and record.emp_id.active:
             return 'hr_recruitment.mt_applicant_hired'
         elif 'stage_id' in init_values and record.stage_id and record.stage_id.sequence <= 1:
             return 'hr_recruitment.mt_applicant_new'
@@ -378,6 +378,19 @@ class Applicant(models.Model):
         if custom_values:
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
+
+    def _message_post_after_hook(self, message):
+        if self.email_from and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email_from', '=', new_partner.email),
+                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+        return super(Applicant, self)._message_post_after_hook(message)
 
     @api.multi
     def create_employee_from_applicant(self):
@@ -428,7 +441,7 @@ class ApplicantCategory(models.Model):
     _description = "Category of applicant"
 
     name = fields.Char("Name", required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=10)
 
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),

@@ -7,6 +7,7 @@ from lxml import etree, html
 
 from odoo.exceptions import AccessError
 from odoo import api, models
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -83,8 +84,8 @@ class IrUiView(models.Model):
     @api.model
     def to_field_ref(self, el):
         # filter out meta-information inserted in the document
-        attributes = dict((k, v) for k, v in el.items()
-                          if not k.startswith('data-oe-'))
+        attributes = {k: v for k, v in pycompat.items(el.attrib)
+                           if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
 
         out = html.html_parser.makeelement(el.tag, attrib=attributes)
@@ -121,7 +122,7 @@ class IrUiView(models.Model):
     def _view_obj(self, view_id):
         if isinstance(view_id, basestring):
             return self.env.ref(view_id)
-        elif isinstance(view_id, (int, long)):
+        elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)
         # assume it's already a view object (WTF?)
         return view_id
@@ -175,21 +176,11 @@ class IrUiView(models.Model):
         return views_to_return
 
     @api.model
-    def _customize_template_get_views(self, key, full=False, bundles=False):
-        """ Get inherit views of the template ``key``.
-            returns views (which can be active or not)
-            ``bundles=True`` returns also the asset bundles
-        """
-        user_groups = set(self.env.user.groups_id)
-        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
-        views = views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))
-        return views
-
-    @api.model
-    def customize_template_get(self, key, full=False, bundles=False):
+    def get_related_views(self, key, bundles=False):
         """ Get inherit view's informations of the template ``key``.
             returns templates info (which can be active or not)
             ``bundles=True`` returns also the asset bundles
         """
-        views = self._customize_template_get_views(key, full=full, bundles=bundles)
-        return views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
+        user_groups = set(self.env.user.groups_id)
+        views = self.with_context(active_test=False)._views_get(key, bundles=bundles)
+        return views.filtered(lambda v: not v.groups_id or len(user_groups.intersection(v.groups_id)))

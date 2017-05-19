@@ -15,10 +15,11 @@ class ActivityReport(models.Model):
     date = fields.Datetime('Date', readonly=True)
     author_id = fields.Many2one('res.partner', 'Created By', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
+    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True)
     lead_id = fields.Many2one('crm.lead', "Lead", readonly=True)
     subject = fields.Char('Summary', readonly=True)
-    subtype_id = fields.Many2one('mail.message.subtype', 'Activity', readonly=True)
+    subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', readonly=True)
+    mail_activity_type_id = fields.Many2one('mail.activity.type', 'Activity Type', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     stage_id = fields.Many2one('crm.stage', 'Stage', readonly=True)
@@ -37,6 +38,7 @@ class ActivityReport(models.Model):
                 select
                     m.id,
                     m.subtype_id,
+                    m.mail_activity_type_id,
                     m.author_id,
                     m.date,
                     m.subject,
@@ -57,5 +59,5 @@ class ActivityReport(models.Model):
                 on
                     (m.res_id = l.id)
                 WHERE
-                    (m.model = 'crm.lead')
+                    (m.model = 'crm.lead' AND m.mail_activity_type_id IS NOT NULL)
             )""")

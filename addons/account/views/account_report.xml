@@ -11,6 +11,15 @@
             file="account.report_invoice"
             attachment_use="True"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            print_report_name="(
+                object.type == 'out_invoice' and object.state == 'draft' and 'Draft Invoice' or
+                object.type == 'out_invoice' and object.state in ('open','paid') and 'Invoice - %s' % (object.number) or
+                object.type == 'out_refund' and object.state == 'draft' and 'Credit Note' or
+                object.type == 'out_refund' and 'Credit Note - %s' % (object.number) or
+                object.type == 'in_invoice' and object.state == 'draft' and 'Vendor Bill' or
+                object.type == 'in_invoice' and object.state in ('open','paid') and 'Vendor Bill - %s' % (object.number) or
+                object.type == 'in_refund' and object.state == 'draft' and 'Vendor Credit Note' or
+                object.type == 'in_refund' and 'Vendor Credit Note - %s' % (object.number))"
         />
 
         <report 
@@ -21,6 +30,15 @@
             name="account.account_invoice_report_duplicate_main"
             file="account.report_invoice_duplicate"
             attachment_use="False"
+            print_report_name="(
+                object.type == 'out_invoice' and object.state == 'draft' and 'Duplicate Invoice' or
+                object.type == 'out_invoice' and object.state in ('open','paid') and 'Duplicate Invoice - %s' % (object.number) or
+                object.type == 'out_refund' and object.state == 'draft' and 'Duplicate Credit Note' or
+                object.type == 'out_refund' and 'Duplicate Credit Note - %s' % (object.number) or
+                object.type == 'in_invoice' and object.state == 'draft' and 'Duplicate Vendor Bill' or
+                object.type == 'in_invoice' and object.state in ('open','paid') and 'Duplicate Vendor Bill - %s' % (object.number) or
+                object.type == 'in_refund' and object.state == 'draft' and 'Duplicate Vendor Credit Note' or
+                object.type == 'in_refund' and 'Duplicate Vendor Credit Note - %s' % (object.number))"
         />
 
         <report 
@@ -30,7 +48,8 @@
             string="Due Payments"
             name="account.report_overdue"
             file="account.report_overdue"
-            />
+            print_report_name="'Due Payments - %s' % (object.name)"
+        />
 
         <report 
             id="action_report_general_ledger"
@@ -86,6 +105,16 @@
             name="account.report_partnerledger"
             file="account.report_partnerledger"
             />
+
+        <report
+            id="action_report_payment_receipt"
+            model="account.payment"
+            string="Print Receipt"
+            report_type="qweb-pdf"
+            name="account.report_payment_receipt"
+            file="account.report_payment_receipt"
+            menu="False"
+        />
 
     </data>
 </odoo>

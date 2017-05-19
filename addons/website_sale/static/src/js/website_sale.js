@@ -202,6 +202,7 @@ odoo.define('website_sale.website_sale', function (require) {
 
         $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
             if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
+                event.preventDefault();
                 $(this).closest('form').submit();
             }
             if ($(this).hasClass('a-submit-disable')){
@@ -220,6 +221,7 @@ odoo.define('website_sale.website_sale', function (require) {
         });
         $('form.js_attributes input, form.js_attributes select', oe_website_sale).on('change', function (event) {
             if (!event.isDefaultPrevented()) {
+                event.preventDefault();
                 $(this).closest("form").submit();
             }
         });

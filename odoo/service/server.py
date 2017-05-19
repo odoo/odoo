@@ -36,10 +36,11 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
+from odoo.modules.module import run_unit_tests, runs_post_install
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 import odoo.tools.config as config
-from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -172,7 +173,7 @@ class CommonServer(object):
         """
         try:
             sock.shutdown(socket.SHUT_RDWR)
-        except socket.error, e:
+        except socket.error as e:
             if e.errno == errno.EBADF:
                 # Werkzeug > 0.9.6 closes the socket itself (see commit
                 # https://github.com/mitsuhiko/werkzeug/commit/4d8ca089)
@@ -215,7 +216,7 @@ class ThreadedServer(CommonServer):
             time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
             registries = odoo.modules.registry.Registry.registries
             _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.iteritems():
+            for db_name, registry in pycompat.items(registries):
                 while registry.ready:
                     try:
                         acquired = odoo.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
@@ -433,7 +434,7 @@ class PreforkServer(CommonServer):
     def pipe_ping(self, pipe):
         try:
             os.write(pipe[1], '.')
-        except IOError, e:
+        except IOError as e:
             if e.errno not in [errno.EAGAIN, errno.EINTR]:
                 raise
 
@@ -479,7 +480,7 @@ class PreforkServer(CommonServer):
     def worker_kill(self, pid, sig):
         try:
             os.kill(pid, sig)
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.ESRCH:
                 self.worker_pop(pid)
 
@@ -517,14 +518,14 @@ class PreforkServer(CommonServer):
                     _logger.critical(msg, wpid)
                     raise Exception(msg % wpid)
                 self.worker_pop(wpid)
-            except OSError, e:
+            except OSError as e:
                 if e.errno == errno.ECHILD:
                     break
                 raise
 
     def process_timeout(self):
         now = time.time()
-        for (pid, worker) in self.workers.items():
+        for (pid, worker) in pycompat.items(self.workers):
             if worker.watchdog_timeout is not None and \
                     (now - worker.watchdog_time) >= worker.watchdog_timeout:
                 _logger.error("%s (%s) timeout after %ss",
@@ -545,8 +546,8 @@ class PreforkServer(CommonServer):
     def sleep(self):
         try:
             # map of fd -> worker
-            fds = dict([(w.watchdog_pipe[0], w) for k, w in self.workers.items()])
-            fd_in = fds.keys() + [self.pipe[0]]
+            fds = {w.watchdog_pipe[0]: w for k, w in pycompat.items(self.workers)}
+            fd_in = list(pycompat.keys(fds)) + [self.pipe[0]]
             # check for ping or internal wakeups
             ready = select.select(fd_in, [], [], self.beat)
             # update worker watchdogs
@@ -557,11 +558,11 @@ class PreforkServer(CommonServer):
                     # empty pipe
                     while os.read(fd, 1):
                         pass
-                except OSError, e:
+                except OSError as e:
                     if e.errno not in [errno.EAGAIN]:
                         raise
-        except select.error, e:
-            if e[0] not in [errno.EINTR]:
+        except select.error as e:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def start(self):
@@ -595,7 +596,7 @@ class PreforkServer(CommonServer):
         if graceful:
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
-            for pid in self.workers.keys():
+            for pid in self.workers:
                 self.worker_kill(pid, signal.SIGINT)
             while self.workers and time.time() < limit:
                 try:
@@ -607,7 +608,7 @@ class PreforkServer(CommonServer):
                 time.sleep(0.1)
         else:
             _logger.info("Stopping forcefully")
-        for pid in self.workers.keys():
+        for pid in self.workers:
             self.worker_kill(pid, signal.SIGTERM)
         if self.socket:
             self.socket.close()
@@ -637,7 +638,7 @@ class PreforkServer(CommonServer):
                 _logger.debug("Multiprocess clean stop")
                 self.stop()
                 break
-            except Exception, e:
+            except Exception as e:
                 _logger.exception(e)
                 self.stop(False)
                 return -1
@@ -670,8 +671,8 @@ class Worker(object):
     def sleep(self):
         try:
             select.select([self.multi.socket], [], [], self.multi.beat)
-        except select.error, e:
-            if e[0] not in [errno.EINTR]:
+        except select.error as e:
+            if e.args[0] not in [errno.EINTR]:
                 raise
 
     def process_limit(self):
@@ -759,7 +760,7 @@ class WorkerHTTP(Worker):
         # receiving the full reply
         try:
             self.server.process_request(client, addr)
-        except IOError, e:
+        except IOError as e:
             if e.errno != errno.EPIPE:
                 raise
         self.request_count += 1
@@ -768,7 +769,7 @@ class WorkerHTTP(Worker):
         try:
             client, addr = self.multi.socket.accept()
             self.process_request(client, addr)
-        except socket.error, e:
+        except socket.error as e:
             if e[0] not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
 
@@ -874,7 +875,7 @@ def _reexec(updated_modules=None):
 
 def load_test_file_yml(registry, test_file):
     with registry.cursor() as cr:
-        odoo.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'init')
+        odoo.tools.convert_yaml_import(cr, 'base', open(test_file, 'rb'), 'test', {}, 'init')
         if config['test_commit']:
             _logger.info('test %s has been commited', test_file)
             cr.commit()
@@ -885,7 +886,7 @@ def load_test_file_yml(registry, test_file):
 def load_test_file_py(registry, test_file):
     # Locate python module based on its filename and run the tests
     test_path, _ = os.path.splitext(os.path.abspath(test_file))
-    for mod_name, mod_mod in sys.modules.items():
+    for mod_name, mod_mod in list(pycompat.items(sys.modules)):
         if mod_mod:
             mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
             if test_path == mod_path:
@@ -904,22 +905,36 @@ def load_test_file_py(registry, test_file):
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""
     # TODO: move all config checks to args dont check tools.config here
-    config = odoo.tools.config
-    test_file = config['test_file']
     dbnames = dbnames or []
     rc = 0
     for dbname in dbnames:
         try:
             update_module = config['init'] or config['update']
             registry = Registry.new(dbname, update_module=update_module)
+
             # run test_file if provided
-            if test_file:
+            if config['test_file']:
+                test_file = config['test_file']
                 _logger.info('loading test file %s', test_file)
                 with odoo.api.Environment.manage():
                     if test_file.endswith('yml'):
                         load_test_file_yml(registry, test_file)
                     elif test_file.endswith('py'):
                         load_test_file_py(registry, test_file)
+
+            # run post-install tests
+            if config['test_enable']:
+                t0 = time.time()
+                t0_sql = odoo.sql_db.sql_counter
+                module_names = (registry.updated_modules if update_module else
+                                registry._init_modules)
+                with odoo.api.Environment.manage():
+                    for module_name in module_names:
+                        result = run_unit_tests(module_name, registry.db_name,
+                                                position=runs_post_install)
+                        registry._assertion_report.record_result(result)
+                _logger.info("All post-tested in %.2fs, %s queries",
+                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
             if registry._assertion_report.failures:
                 rc += 1

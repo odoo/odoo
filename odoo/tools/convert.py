@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cStringIO
+import io
 import csv
 import logging
 import os.path
@@ -17,7 +17,7 @@ from lxml import etree, builder
 
 import odoo
 import odoo.release
-from . import assertion_report
+from . import assertion_report, pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
@@ -98,7 +98,7 @@ def _eval_xml(self, node, env):
             q = safe_eval(f_search, idref2)
             ids = env[f_model].search(q).ids
             if f_use != 'id':
-                ids = map(lambda x: x[f_use], env[f_model].browse(ids).read([f_use]))
+                ids = [x[f_use] for x in env[f_model].browse(ids).read([f_use])]
             _fields = env[f_model]._fields
             if (f_name in _fields) and _fields[f_name].type == 'many2many':
                 return ids
@@ -285,16 +285,18 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.get(f,'').encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('file','report_rml'),('xml','report_xml'),('xsl','report_xsl'),
-                           ('attachment','attachment'),('attachment_use','attachment_use'), ('usage','usage'),
-                           ('report_type', 'report_type'), ('parser', 'parser')):
+        for field, dest in (('attachment', 'attachment'),
+                            ('attachment_use', 'attachment_use'),
+                            ('usage', 'usage'),
+                            ('file', 'report_file'),
+                            ('report_type', 'report_type'),
+                            ('parser', 'parser'),
+                            ('print_report_name', 'print_report_name'),
+                            ):
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
             res['auto'] = safe_eval(rec.get('auto','False'))
-        if rec.get('sxw'):
-            sxw_content = file_open(rec.get('sxw')).read()
-            res['report_sxw_content'] = sxw_content
         if rec.get('header'):
             res['header'] = safe_eval(rec.get('header','False'))
 
@@ -319,19 +321,19 @@ form: module.record_id""" % (xml_id,)
             pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
 
-        id = self.env['ir.model.data']._update("ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.env['ir.model.data']._update("ir.actions.report", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
         if not rec.get('menu') or safe_eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir.actions.report,'+str(id)
             action = self.env['ir.values'].set_action(res['name'], keyword, res['model'], value)
-            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': action.id})
+            self.env['ir.actions.report'].browse(id).write({'ir_values_id': action.id})
         elif self.mode=='update' and safe_eval(rec.get('menu','False'))==False:
             # Special check for report having attribute menu=False on update
-            value = 'ir.actions.report.xml,'+str(id)
+            value = 'ir.actions.report,'+str(id)
             self._remove_ir_values(res['name'], value, res['model'])
-            self.env['ir.actions.report.xml'].browse(id).write({'ir_values_id': False})
+            self.env['ir.actions.report'].browse(id).write({'ir_values_id': False})
         return id
 
     def _tag_function(self, rec, data_node=None, mode=None):
@@ -471,25 +473,6 @@ form: module.record_id""" % (xml_id,)
                 ir_values.set_default(model, field_name=res['name'], value=res['value'], condition=res['key2'])
             elif res['key'] == 'action':
                 ir_values.set_action(res['name'], action_slot=res['key2'], model=model, action=res['value'], res_id=res_id)
-
-    def _tag_workflow(self, rec, data_node=None, mode=None):
-        if self.isnoupdate(data_node) and self.mode != 'init':
-            return
-        model = rec.get('model').encode('ascii')
-        w_ref = rec.get('ref')
-        if w_ref:
-            id = self.id_get(w_ref)
-        else:
-            number_children = len(rec)
-            assert number_children > 0,\
-                'You must define a child node if you dont give a ref'
-            assert number_children == 1,\
-                'Only one child node is accepted (%d given)' % number_children
-            id = _eval_xml(self, rec[0], self.env)
-
-        uid = self.get_uid(data_node, rec)
-        record = self.env(user=uid)[model].browse(id)
-        record.signal_workflow(rec.get('action').encode('ascii'))
 
     def _tag_menuitem(self, rec, data_node=None, mode=None):
         rec_id = rec.get("id",'').encode('ascii')
@@ -682,7 +665,7 @@ form: module.record_id""" % (xml_id,)
                 _fields = self.env[rec_model]._fields
                 # if the current field is many2many
                 if (f_name in _fields) and _fields[f_name].type == 'many2many':
-                    f_val = [(6, 0, map(lambda x: x[f_use], s))]
+                    f_val = [(6, 0, [x[f_use] for x in s])]
                 elif len(s):
                     # otherwise (we are probably in a many2one field),
                     # take the first element of the search
@@ -730,7 +713,7 @@ form: module.record_id""" % (xml_id,)
             'model': 'ir.ui.view',
         }
         for att in ['forcecreate', 'context']:
-            if att in el.keys():
+            if att in el.attrib:
                 record_attrs[att] = el.attrib.pop(att)
 
         Field = builder.E.field
@@ -756,7 +739,7 @@ form: module.record_id""" % (xml_id,)
             record.append(Field(name='customize_show', eval=el.get('customize_show')))
         groups = el.attrib.pop('groups', None)
         if groups:
-            grp_lst = map(lambda x: "ref('%s')" % x, groups.split(','))
+            grp_lst = [("ref('%s')" % x) for x in groups.split(',')]
             record.append(Field(name="groups_id", eval="[(6, 0, ["+', '.join(grp_lst)+"])]"))
         if el.attrib.pop('page', None) == 'True':
             record.append(Field(name="page", eval="True"))
@@ -797,10 +780,14 @@ form: module.record_id""" % (xml_id,)
             elif rec.tag in self._tags:
                 try:
                     self._tags[rec.tag](rec, de, mode=mode)
-                except Exception, e:
+                except Exception as e:
                     self.cr.rollback()
                     exc_info = sys.exc_info()
-                    raise ParseError, (ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline), exc_info[2]
+                    pycompat.reraise(
+                        ParseError,
+                        ParseError(ustr(e), etree.tostring(rec).rstrip(), rec.getroottree().docinfo.URL, rec.sourceline),
+                        exc_info[2]
+                    )
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
@@ -821,7 +808,6 @@ form: module.record_id""" % (xml_id,)
             'function': self._tag_function,
             'menuitem': self._tag_menuitem,
             'template': self._tag_template,
-            'workflow': self._tag_workflow,
             'report': self._tag_report,
             'ir_set': self._tag_ir_set, # deprecated:: 9.0
             'act_window': self._tag_act_window,
@@ -865,9 +851,9 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     #remove folder path from model
     head, model = os.path.split(model)
 
-    input = cStringIO.StringIO(csvcontent) #FIXME
+    input = io.BytesIO(csvcontent) #FIXME
     reader = csv.reader(input, quotechar='"', delimiter=',')
-    fields = reader.next()
+    fields = next(reader)
 
     if not (mode == 'init' or 'id' in fields):
         _logger.error("Import specification does not contain 'id' and we are in init mode, Cannot continue.")
@@ -878,7 +864,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         if not (line and any(line)):
             continue
         try:
-            datas.append(map(ustr, line))
+            datas.append([ustr(v) for v in line])
         except Exception:
             _logger.error("Cannot import the line: %s", line)
 
@@ -907,10 +893,10 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
 
     if idref is None:
         idref={}
-    if isinstance(xmlfile, file):
-        xml_filename = xmlfile.name
-    else:
+    if isinstance(xmlfile, basestring):
         xml_filename = xmlfile
+    else:
+        xml_filename = xmlfile.name
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot(), mode=mode)
     return True

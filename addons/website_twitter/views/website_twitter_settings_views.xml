@@ -1,56 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-        <record id="view_website_config_settings" model="ir.ui.view">
-            <field name="name">Twitter settings</field>
-            <field name="model">website.config.settings</field>
-            <field name="inherit_id" ref="website.view_website_config_settings"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='social_twitter']" position="after">
-                      <label for="id" string="Twitter API"/>
-                      <div>
-                          <p>Set your Twitter API access below to be able to use the Twitter Scroller Website snippet.<br/>
-                             You can get your API credentials from <a href="https://apps.twitter.com/app/new" target="new">https://apps.twitter.com/app/new</a>
-                          </p>
-                          <div>
-                              <field name="twitter_tutorial" class="oe_inline"/><label for="twitter_tutorial"/>
-
-                              <blockquote class="small" attrs="{'invisible':[('twitter_tutorial','=',False)]}">
-                                  <h2>How to configure the Twitter API access</h2>
-                                  <ol>
-                                      <li>Create a new Twitter application on <a href="https://apps.twitter.com/app/new" target="new">https://apps.twitter.com/app/new</a>
-                                          with the following values:
-                                         <ul>
-                                            <li><strong>Name: </strong> Odoo Tweet Scroller</li>
-                                            <li><strong>Description: </strong> Odoo Tweet Scroller </li>
-                                            <li><strong>Website: </strong> <tt>https://www.odoo.com</tt></li>
-                                            <li><strong>Callback URL: </strong> leave it blank</li>
-                                            <li>Accept terms of use and click on the Create button at the bottom</li>
-                                         </ul>
-                                      </li>
-                                      <li>Switch to the API Keys tab: <br/>
-                                          <img src='/website_twitter/static/src/img/api_key.png'/>
-                                      </li>
-                                      <li>Copy/Paste API Key and Secret below</li>
-                                      <li>Enter the screen name from which you want to load favorite Tweets (does not need to be the same as the API keys)</li>
-                                  </ol>
-                              </blockquote>
-                          </div>
-                          <div>
-                              <label for="twitter_api_key"/>
-                              <field name="twitter_api_key" class="oe_inline"/>
-                          </div>
-                          <div>
-                              <label for="twitter_api_secret"/>
-                              <field name="twitter_api_secret" class="oe_inline"/>
-                          </div>
-                          <div>
-                              <label for="twitter_screen_name"/>
-                              <field name="twitter_screen_name" class="oe_inline"/>
-                          </div>
-                      </div>
-                </xpath>
-            </field>
-        </record>
-
+    <record id="website_config_settings_view_form_inherit_website_twitter" model="ir.ui.view">
+        <field name="name">website.config.settings.form.inherit.twitter</field>
+        <field name="model">website.config.settings</field>
+        <field name="inherit_id" ref="website.website_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="msg_twitter_roller_install_setting" position="replace">
+                <div class="content-group" attrs="{'invisible': [('module_website_twitter', '=', False)]}">
+                    <div class="mt16">
+                        <div class="row">
+                            <label class="col-md-3 o_light_label" string="API Key" for="twitter_api_key"/>
+                            <field name="twitter_api_key" class="oe_inline"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-md-3 o_light_label" string="API secret" for="twitter_api_secret"/>
+                            <field name="twitter_api_secret" class="oe_inline"/>
+                        </div>
+                        <div class="row">
+                            <label class="col-md-3 o_light_label" string="Favorites From" for="twitter_screen_name"/>
+                            <field name="twitter_screen_name" class="oe_inline"/>
+                        </div>
+                        <div>
+                            <a data-toggle="modal" class="oe_link fa fa-arrow-right" href="#" data-target="#twitter_tutorial">
+                                Tutorial
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form class="oe_form_configuration">
+                <div id="twitter_tutorial" class="modal fade" role="dialog" tabindex="-1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <a class="close" data-dismiss="modal" aria-hidden="true">×</a>
+                                <h3 class="modal-title">How to configure the Twitter API access</h3>
+                            </div>
+                            <div class="modal-body">
+                                <ol>
+                                    <li>Create a new Twitter application on <a href="https://apps.twitter.com/" target="new">
+                                            https://apps.twitter.com/
+                                        </a>
+                                        with the following values:
+                                       <ul>
+                                          <li><strong>Name: </strong> Odoo Tweet Scroller</li>
+                                          <li><strong>Description: </strong> Odoo Tweet Scroller </li>
+                                          <li><strong>Website: </strong> <tt>https://www.odoo.com</tt></li>
+                                          <li><strong>Callback URL: </strong> leave it blank</li>
+                                          <li>Accept terms of use and click on the Create button at the bottom</li>
+                                       </ul>
+                                    </li>
+                                    <li>Switch to the API Keys tab: <br/>
+                                        <img src='/website_twitter/static/src/img/api_key.png'/>
+                                    </li>
+                                    <li>Copy/Paste API Key and Secret below</li>
+                                    <li>Enter the screen name from which you want to load favorite Tweets (does not need to be the same as the API keys)</li>
+                                </ol>
+                            </div>
+                            <div class="modal-footer">
+                                <a type="button" class="btn btn-primary" data-dismiss="modal">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
 </odoo>

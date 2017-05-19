@@ -44,7 +44,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
         var split = splitlines[line_id] || {'quantity': 0, line: null};
         var line  = order.get_orderline(line_id);
         
-        if( !line.get_unit().groupable ){
+        if( !line.get_unit().is_pos_groupable ){
             if( split.quantity !== line.get_quantity()){
                 split.quantity = line.get_quantity();
             }else{

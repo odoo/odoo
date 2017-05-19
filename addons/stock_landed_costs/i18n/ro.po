@@ -1,29 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2015-09-19 08:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:359
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:376
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr ""
@@ -109,14 +113,6 @@ msgid "Cost Lines"
 msgstr "Linii cost"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
-#, python-format
-msgid ""
-"Cost and adjustments lines do not match. You should maybe recompute the "
-"landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -142,7 +138,7 @@ msgid "Description"
 msgstr "Descriere"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:18
+#: code:addons/stock_landed_costs/purchase_config_settings.py:18
 #, python-format
 msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
@@ -154,7 +150,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_display_name
 msgid "Display Name"
-msgstr "Nume afișat"
+msgstr "Afiseaza nume"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -224,7 +220,7 @@ msgstr "Descriere poziție"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_move_id
 msgid "Journal Entry"
-msgstr "Notă contabilă"
+msgstr "Înregistrare în Jurnal"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
@@ -296,14 +292,7 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
-#, python-format
-msgid ""
-"No valuation adjustments lines. You should maybe recompute the landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -314,7 +303,7 @@ msgid "Pickings"
 msgstr "Ridicări"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
+#: code:addons/stock_landed_costs/stock_landed_costs.py:90
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -333,7 +322,7 @@ msgstr "Produs"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Product Name"
-msgstr "Nume produs"
+msgstr "Numele Produsului"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_product_template
@@ -355,12 +344,12 @@ msgstr "Cantitate"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
 msgid "Split Method"
-msgstr "Metodă separare"
+msgstr "Metodă separate"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
 msgid "State"
-msgstr "Stare"
+msgstr "Judeţ"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -388,12 +377,12 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/stock_landed_costs.py:52
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
 
@@ -405,10 +394,10 @@ msgstr "Total"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
-msgstr "Valideaza"
+msgstr "Validați"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -419,7 +408,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Valuation Adjustments"
-msgstr "Cont evaluare stoc"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_volume
@@ -427,22 +416,57 @@ msgid "Volume"
 msgstr "Volum"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:17
+#: code:addons/stock_landed_costs/purchase_config_settings.py:17
 #, python-format
 msgid "Warning!"
-msgstr "Atenție!"
+msgstr "Avertizare!"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
-msgstr "Masă"
+msgstr "Greutate"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
+#, python-format
+msgid ""
+"You cannot validate a landed cost which has no valid valuation adjustments "
+"lines. Did you click on Compute?"
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
-msgstr "descrie caracteristicile produsului..."
+msgstr "descrieti caracteristicile produsului..."
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
-msgstr "purchase.config.settings"
+msgstr "purchase.config.settings (achizitie.config.setari)"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data ultimului mesaj postat pe înregistrare."
+
+#~ msgid "Followers"
+#~ msgstr "Urmări"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data ultimului mesaj"
+
+#~ msgid "Messages"
+#~ msgstr "Mesaje"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Istoric mesaje și conversații"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Mesaje necitite"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mesaje Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Istoric comunicare website"

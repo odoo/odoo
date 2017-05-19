@@ -1,38 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_setup
-# 
+#
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Bole <bole@dajmi5.com>, 2016
-# Boško Stojaković <bluesoft83@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-19 12:35+0000\n"
-"PO-Revision-Date: 2016-09-19 12:35+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2016\n"
-"Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-06-05 14:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
+"Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bs\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "(reload fonts)"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Ova konfiguracija se odnosi na kompaniju u koju ste trenutno "
-"prijavljeni.</span>"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
@@ -47,7 +31,7 @@ msgstr "Dozvoli dijeljenje dokumenata"
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allow multi currencies"
-msgstr "Dozvoli mult-valutni sistem"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
@@ -66,6 +50,7 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Apply"
 msgstr "Primjeni"
 
@@ -81,20 +66,20 @@ msgstr "Autentifikacija"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
 msgid "Cancel"
 msgstr "Otkaži"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_custom_footer
-msgid ""
-"Check this to define the report footer manually. Otherwise it will be filled"
-" in automatically."
-msgstr ""
+#: selection:base.setup.terminology,partner:0
+msgid "Client"
+msgstr "Klijent"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
-msgid "Company"
-msgstr "Kompanija"
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
+msgid "Configure Sales"
+msgstr "Postavke prodaje"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -108,33 +93,34 @@ msgstr "Upišite podatke o Vašoj kompaniji"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Kreirano"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
-msgid "Custom Report Footer *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_custom_footer
-msgid "Custom footer *"
-msgstr ""
+#: selection:base.setup.terminology,partner:0
+msgid "Customer"
+msgstr "Kupac"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Prikaži naziv"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Edit default access rights for new users"
-msgstr ""
+#: selection:base.setup.terminology,partner:0
+msgid "Donor"
+msgstr "Donator"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -142,19 +128,7 @@ msgid "Email"
 msgstr "E-Mail"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_font
-msgid "Font *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Footer text displayed at the bottom of all reports."
-msgstr "Tekst podnožja prikazan na dnu svih izvještaja"
-
-#. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.menu,name:base_setup.menu_config
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "General Settings"
 msgstr "Opšte postavke"
@@ -180,7 +154,19 @@ msgid "Google Integration"
 msgstr ""
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Guest"
+msgstr "Gost"
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
+msgid "How do you call a Customer"
+msgstr "Koji temin želite koristiti za kupce"
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
@@ -196,16 +182,22 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Zadnje mijenjano"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Zadnji ažurirao"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
+#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
+#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Zadnje ažurirano"
 
@@ -220,6 +212,11 @@ msgid "Manage multiple companies"
 msgstr "Upravljajte sa više kompanija"
 
 #. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Member"
+msgstr "Član"
+
+#. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Company"
 msgstr "Višekompanijska"
@@ -227,24 +224,24 @@ msgstr "Višekompanijska"
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Multi Currencies"
-msgstr "Više valuta"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "New users access rights"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
-"Once installed, you can configure your API credentials for \"Google "
-"calendar\""
+"Once installed, you can configure your API credentials for \"Google calendar"
+"\""
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_paper_format
-msgid "Paper Format *"
-msgstr ""
+#: selection:base.setup.terminology,partner:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Patient"
+msgstr "Pacijent"
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -252,51 +249,9 @@ msgid "Portal access"
 msgstr "Pristup portalu"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Preview RML Report"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header
-msgid "RML Header *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header2
-msgid "RML Internal Header *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_header3
-msgid "RML Internal Header for Landscape Reports *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "RML Report Configuration"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Report Configuration"
-msgstr "Konfiguracija izvještaja"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer_readonly
-msgid "Report Footer *"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_font
-msgid ""
-"Set the font into the report header, it will be used as default font in the "
-"RML reports of the user company"
-msgstr ""
-
-#. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embed any screen of Odoo."
-msgstr ""
+msgid "Share or embbed any screen of Odoo."
+msgstr "Dijeli ili ugradi bilo koji Odoo ekran."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
@@ -307,13 +262,25 @@ msgstr "Dijeli partnere sa svim kompanijama"
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_company_share_partner
 msgid ""
 "Share your partners to all companies defined in your instance.\n"
-" * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its partner (partners where company is defined). Partners not related to a company are visible for all companies."
+" * Checked : Partners are visible for every companies, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its partner (partners where company "
+"is defined). Partners not related to a company are visible for all companies."
 msgstr ""
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid "Shared resources"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid "Specify Your Terminology"
+msgstr "Specifirajte vašu terminologiju"
+
+#. module: base_setup
+#: selection:base.setup.terminology,partner:0
+msgid "Tenant"
 msgstr ""
 
 #. module: base_setup
@@ -330,35 +297,56 @@ msgstr ""
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
 msgid ""
 "This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company."
+" Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
 msgstr ""
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "Druga riječ da kažete \"Kupac\""
+
+#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers (OAuth)"
-msgstr ""
+msgid "Use external authentication providers, sign in with Google..."
+msgstr "Koristi eksterne provajdere autentifikacije, prijavi se sa Google..."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
 msgid ""
 "When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will be\n"
-"                                    able to signup to get all his documents,\n"
-"                                    read your company news, check his projects,\n"
+"                                    (quotation, invoice), your customer will "
+"be\n"
+"                                    able to signup to get all his "
+"documents,\n"
+"                                    read your company news, check his "
+"projects,\n"
 "                                    etc."
 msgstr ""
 "Kad pošaljete mailom dokument partneru\n"
-"                                                                              (predračun, računa), vaš partner će se moći\n"
-"                                                                              prijaviti i preuzeti sve svoje dokumente,\n"
-"                                                                              pročitati novosti vaše organizacije, provjeriti svoje projekte\n"
+"                                                                              (predračun, "
+"računa), vaš partner će se moći\n"
+"                                                                              prijaviti "
+"i preuzeti sve svoje dokumente,\n"
+"                                                                              pročitati "
+"novosti vaše organizacije, provjeriti svoje projekte\n"
 "                                                                              isl."
 
 #. module: base_setup
 #: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
 msgid ""
-"Work in multi-company environments, with appropriate security access between"
-" companies."
+"Work in multi-company environments, with appropriate security access between "
+"companies."
 msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
+msgid ""
+"You can use this wizard to change the terminologies for customers in the "
+"whole application."
+msgstr ""
+"Možete koristiti ovaj čarobnjak da izmjenite terminologiju kupaca u cijeloj "
+"aplikaciji."
 
 #. module: base_setup
 #: model:ir.ui.view,arch_db:base_setup.view_general_configuration
@@ -373,3 +361,13 @@ msgstr ""
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
 msgstr ""
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"

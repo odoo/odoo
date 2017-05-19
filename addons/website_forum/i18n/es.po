@@ -3,32 +3,32 @@
 # * website_forum
 # 
 # Translators:
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Jose Manuel <admin@jaboweb.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Sergio Flores <vitavitae1@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
+# Jose Manuel <admin@jaboweb.com>, 2016
+# José Vicente <txusev@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Luis Martínez Ontalba <luismaront@gmail.com>, 2016
-# Sergio Hevia <sah@talleresbernesga.com>, 2016
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # luis galaviz galindo <luisg-96@hotmail.com>, 2016
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1127,14 +1127,14 @@ msgid "Edit Profile"
 msgstr "Editar perfil"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Edit Your Bio"
-msgstr "Editar su biografía"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
 msgstr "Editar su respuesta previa"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Edit Your Profile"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
@@ -1323,6 +1323,7 @@ msgid "Forum Badge Level"
 msgstr "Nivel de insignias del foro"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
 msgid "Forum Karma"
 msgstr "Karma del foro"
@@ -1908,6 +1909,7 @@ msgstr "Publicar"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
 msgstr ""
 
@@ -1917,6 +1919,7 @@ msgid "Post Closing Reason"
 msgstr "Publicar razón de cierre"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
 msgstr "publicar comentario"
@@ -2269,21 +2272,21 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:70
+#: code:addons/website_forum/static/src/js/website_forum.js:97
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Lo sentimos debes iniciar sesión para marcar un post"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:118
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:168
+#: code:addons/website_forum/static/src/js/website_forum.js:195
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr ""
@@ -2295,7 +2298,7 @@ msgstr "Lo sentimos, la pregunta ya no está disponible."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:113
+#: code:addons/website_forum/static/src/js/website_forum.js:140
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "DIsculpe, no puede votar sus propias publicaciones"
@@ -2470,16 +2473,23 @@ msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:80
+#: code:addons/website_forum/static/src/js/website_forum.js:107
 #, python-format
 msgid "This post can not be flagged"
 msgstr ""
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:75
+#: code:addons/website_forum/static/src/js/website_forum.js:102
 #, python-format
 msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 
 #. module: website_forum

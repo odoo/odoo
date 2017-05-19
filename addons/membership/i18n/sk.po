@@ -1,23 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * membership
-# 
+#
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
-"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-02-28 18:24+0000\n"
+"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
+"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
+"Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: membership
@@ -38,9 +36,11 @@ msgstr "# Čakajúce"
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
 msgid ""
-"A member with whom you want to associate your membership. It will consider "
+"A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Člen, s ktorým sa chcete spojiť svoje členstvo. To zváži stav členstva "
+"pridruženého člena."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -126,12 +126,7 @@ msgstr "Kliknite pre pridanie nového člena"
 #: model:ir.model.fields,field_description:membership.field_report_membership_company_id
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Spoločnosť"
-
-#. module: membership
-#: model:ir.ui.menu,name:membership.menu_marketing_config_association
-msgid "Configuration"
-msgstr "Nastavenie"
+msgstr "Spoločnost"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -142,13 +137,13 @@ msgstr "Kontakty"
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_create_uid
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_uid
 msgid "Created by"
-msgstr "Created by "
+msgstr "Vytvoril"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_create_date
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_create_date
 msgid "Created on"
-msgstr "Created on "
+msgstr "Vytvorené"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_membership_state
@@ -193,7 +188,7 @@ msgstr "Dátum dokedy bude členstvo aktívne"
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Názov obrazovky "
+msgstr "Zobraziť meno"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
@@ -231,10 +226,14 @@ msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr "Chyba! Dátum ukončenia nie je možné nastaviť pred dátumom začatia."
 
 #. module: membership
-#: code:addons/membership/models/partner.py:159
-#, python-format
+#: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
 msgstr "Chyba! Nie je možné vytvoriť rekurzívne pridružených členov."
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "Chyba, tento produkt členstva je zastaraný"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -263,7 +262,7 @@ msgstr "Z mesiaca"
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Group By"
-msgstr "Zoskupiť podľa..."
+msgstr "Zoskupiť podľa"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -291,7 +290,7 @@ msgstr "Faktúra"
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Riadok faktúry"
+msgstr "Položky faktúry"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
@@ -318,7 +317,8 @@ msgid ""
 "-Non Member: A partner who has not applied for any membership.\n"
 "-Cancelled Member: A member who has cancelled his membership.\n"
 "-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Waiting Member: A member who has applied for the membership and whose "
+"invoice is going to be created.\n"
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
@@ -326,7 +326,8 @@ msgstr ""
 "-Nečlen: Partner, ktorý nepožiadal o akékoľvek členstvo.\n"
 "-Zrušený člen: Člen, ktorý zrušil svoje členstvo.\n"
 "-Bývalý člen: Člen, ktorého dátum členstva vypršal.\n"
-"-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude vytvorená.\n"
+"-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude "
+"vytvorená.\n"
 "-Vyfaktúrovaný člen: Člen, ktorého faktúra bola vytvorená.\n"
 "-Platiaci člen: Člen, ktorý zaplatil členský poplatok."
 
@@ -334,13 +335,27 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
 msgid ""
 "It indicates the membership status.\n"
-"-Non Member: A member who has not applied for any membership.\n"
-"-Cancelled Member: A member who has cancelled his membership.\n"
-"-Old Member: A member whose membership date has expired.\n"
-"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
-"-Invoiced Member: A member whose invoice has been created.\n"
-"-Paid Member: A member who has paid the membership amount."
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
 msgstr ""
+"To indikuje stav členstva.\n"
+"-Nečlen: Člen, ktorý nepožiadal o akékoľvek členstvo.\n"
+"-Zrušený člen: Člen, ktorý zrušil svoje členstvo.\n"
+"-Bývalý člen: Člen, ktorého dátum členstva vypršal.\n"
+"-Čakajúci člen: Člen, ktorý požiadal o členstvo a ktorého faktúra bude "
+"vytvorená.\n"
+"-Vyfaktúrovaný člen: Člen, ktorého faktúra bola vytvorená.\n"
+"-Zaplatený člen: Člen, ktorý zaplatil členský poplatok."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
@@ -378,7 +393,6 @@ msgstr "Cena člena"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
-#: model:ir.ui.menu,name:membership.menu_association
 #: model:ir.ui.menu,name:membership.menu_membership
 #: model:ir.ui.view,arch_db:membership.membership_members_tree
 msgid "Members"
@@ -501,7 +515,8 @@ msgstr "Žiadne/Zrušené/Staré/Čakajúce"
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
-"                 Current Membership Status, Discussions and History of Membership, etc."
+"                 Current Membership Status, Discussions and History of "
+"Membership, etc."
 msgstr ""
 "Odoo vám pomáha ľahko sledovať všetky aktivity súvisiace s členom: \n"
 "Aktuálny stav členstva, Diskusie a História členstva, atď."
@@ -527,13 +542,13 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: membership
-#: code:addons/membership/models/partner.py:181
+#: code:addons/membership/membership.py:351
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Partner nemá adresu na vytvorenie faktúry."
 
 #. module: membership
-#: code:addons/membership/models/partner.py:179
+#: code:addons/membership/membership.py:349
 #, python-format
 msgid "Partner is a free Member."
 msgstr "Partner má bezplatné členstvo"
@@ -546,7 +561,7 @@ msgstr "Očakávaná suma"
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr "Šablóna produktu"
+msgstr "šablona produktu"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_quantity
@@ -618,7 +633,7 @@ msgstr "Toto zobrazí čakajúce, vyfaktúrované a celkovo čakajúce stĺpce"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_to
 msgid "To"
-msgstr "Pre"
+msgstr "Do"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -636,3 +651,12 @@ msgstr "Čakajúci člen"
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
 msgstr "membership.membership_line"
+
+#~ msgid "Basic Membership"
+#~ msgstr "Základné členstvo"
+
+#~ msgid "Gold Membership"
+#~ msgstr "Zlaté členstvo"
+
+#~ msgid "Silver Membership"
+#~ msgstr "Strieborné členstvo"

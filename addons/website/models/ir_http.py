@@ -14,7 +14,7 @@ import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
 from odoo.http import request
-from odoo.tools import config
+from odoo.tools import config, pycompat
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
@@ -241,7 +241,7 @@ class Http(models.AbstractModel):
     def _postprocess_args(cls, arguments, rule):
         super(Http, cls)._postprocess_args(arguments, rule)
 
-        for key, val in arguments.items():
+        for key, val in pycompat.items(arguments):
             # Replace uid placeholder by the current request.uid
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 arguments[key] = val.sudo(request.uid)
@@ -249,7 +249,7 @@ class Http(models.AbstractModel):
         try:
             _, path = rule.build(arguments)
             assert path is not None
-        except Exception, e:
+        except Exception as e:
             return cls._handle_exception(e, code=404)
 
         if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
@@ -276,7 +276,7 @@ class Http(models.AbstractModel):
                 else:
                     # if parent excplicitely returns a plain response, then we don't touch it
                     return response
-            except Exception, e:
+            except Exception as e:
                 if 'werkzeug' in config['dev_mode'] and (not isinstance(exception, QWebException) or not exception.qweb.get('cause')):
                     raise
                 exception = e
@@ -361,10 +361,8 @@ class ModelConverter(ir.ir_http.ModelConverter):
                 record_id = abs(record_id)
         return env[self.model].browse(record_id)
 
-    def generate(self, query=None, args=None):
-        Model = request.env[self.model]
-        if request.context.get('use_public_user'):
-            Model = Model.sudo(request.website.user_id.id)
+    def generate(self, uid, query=None, args=None):
+        Model = request.env[self.model].sudo(uid)
         domain = safe_eval(self.domain, (args or {}).copy())
         if query:
             domain.append((Model._rec_name, 'ilike', '%' + query + '%'))
@@ -376,14 +374,14 @@ class ModelConverter(ir.ir_http.ModelConverter):
 class PageConverter(werkzeug.routing.PathConverter):
     """ Only point of this converter is to bundle pages enumeration logic """
 
-    def generate(self, query=None, args={}):
-        View = request.env['ir.ui.view']
+    def generate(self, uid, query=None, args={}):
+        View = request.env['ir.ui.view'].sudo(uid)
         domain = [('page', '=', True)]
         query = query and query.startswith('website.') and query[8:] or query
         if query:
             domain += [('key', 'like', query)]
-        website_id = request.context.get('website_id') or request.env['website'].search([], limit=1).id
-        domain += ['|', ('website_id', '=', website_id), ('website_id', '=', False)]
+        website = request.env['website'].get_current_website()
+        domain += ['|', ('website_id', '=', website.id), ('website_id', '=', False)]
 
         views = View.search_read(domain, fields=['key', 'priority', 'write_date'], order='name')
         for view in views:

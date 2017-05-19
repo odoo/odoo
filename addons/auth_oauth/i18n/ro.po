@@ -1,46 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-# 
+#
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2016
-# Cozmin Candea <office@terrabit.ro>, 2016
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Sorin Trifu <sorin.trifu@gmail.com>, 2016
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Sorin Trifu <sorin.trifu@gmail.com>, 2016\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2015-09-07 16:14+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
+"#-#-#-#-#  ro.po (Odoo 9.0)  #-#-#-#-#\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:99
+#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+msgid ""
+"<br/>\n"
+"                                    - Create a new project<br/>\n"
+"                                    - Go to Api Access<br/>\n"
+"                                    - Create an oauth client_id<br/>\n"
+"                                    - Edit settings and set both Authorized "
+"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
+"                                    <br/>\n"
+"                                    Now copy paste the client_id here:"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Access Denied"
-msgstr "Acces interzis"
+msgstr "Acces Interzis"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_payable_id
 msgid "Account Payable"
-msgstr "Cont Plăți"
+msgstr "Cont Plati"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Cont încasări"
+msgstr "Cont Incasari"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid "Allow users to sign in with Google"
 msgstr "Le permite utilizatorilor sa se conecteze cu Google"
 
@@ -48,11 +61,6 @@ msgstr "Le permite utilizatorilor sa se conecteze cu Google"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
 msgid "Allowed"
 msgstr "Permis"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Authentication"
-msgstr "Autentificare"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
@@ -67,31 +75,12 @@ msgstr "Bancă"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
 msgid "Body"
-msgstr "Conținut"
+msgstr "Continut"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_css_class
 msgid "CSS class"
 msgstr "clasa CSS"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Check that the application type is set on <b>Web Application</b>. \n"
-"                                        Now configure the allowed pages on which you will be redirected."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Click on <b>Create Project</b> and enter the project name and \n"
-"                                        other details."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Click on <b>Use Google APIs</b>"
-msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
@@ -103,11 +92,6 @@ msgstr "ID Client"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
 msgstr "Companii care se raporteaza la partener"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Connect to your Google account and go to"
-msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
@@ -128,12 +112,12 @@ msgstr "Creat în"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
 msgid "Currency"
-msgstr "Valuta"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Terms"
-msgstr "Termene de plată client"
+msgid "Customer Payment Term"
+msgstr "Termenul de Plata al Clientului"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
@@ -143,19 +127,12 @@ msgstr "URL Date"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
 msgid "Degree of trust you have in this debtor"
-msgstr "Gradul de încredere în acest debitor"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr "Nume afișat"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Fill in your address, email and the product name (for example odoo) \n"
-"                                        and then save."
-msgstr ""
+msgstr "Afiseaza nume"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
@@ -164,23 +141,18 @@ msgstr "Poziție fiscală"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google Client ID:"
-msgstr ""
+msgid "Google APIs console"
+msgstr "Consola Google API"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
 msgid "Has unreconciled entries"
-msgstr "Are elemente nereconciliate"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
 msgid "ID"
 msgstr "ID"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn
-msgid "Invoice"
-msgstr "Factura"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
@@ -191,7 +163,7 @@ msgstr "Facturi"
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
 msgid "Journal Items"
-msgstr "Elemente registru"
+msgstr "Elementele Jurnalului"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
@@ -219,12 +191,7 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr "Ultima dată de reconciliere Facturi & Plăți"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_warn_msg
-msgid "Message for Invoice"
-msgstr "Mesaj pentru factură"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -267,21 +234,6 @@ msgid "Oauth Provider user_id"
 msgstr "id_utilizator Furnizor Oauth"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"On the left side menu, select the sub menu <b>Credentials</b> \n"
-"                                        (from <b>API Manager</b>) then select <b>OAuth consent screen</b>."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Once done, you receive two information (your <b>Client ID</b> and <b>\n"
-"                                        Client Secret</b>). You have to insert your <b>Client ID</b> in \n"
-"                                        the field below."
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
 msgid "Payable Limit"
 msgstr "Limita de plată"
@@ -297,48 +249,12 @@ msgid "Providers"
 msgstr "Furnizori"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Return to Top"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_scope
 msgid "Scope"
 msgstr "Scope"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_invoice_warn
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
-"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
-"va bloca fluxul. Mesajul trebuie scris în campul urmator."
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "Sequence"
-msgstr "Secvență"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_server_uri_google
-msgid "Server uri"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Show Tutorial"
-msgstr "Arata Instructiuni"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_tutorial_enabled
-msgid "Show tutorial"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:97
+#: code:addons/auth_oauth/controllers/main.py:96
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr "Inregistrarea nu este permisă pe această bază de date."
@@ -355,18 +271,6 @@ msgstr ""
 msgid ""
 "The partner has at least one unreconciled debit and credit since last time "
 "the invoices & payments matching was performed."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"Then click on <b>Add Credentials</b> and select the second option \n"
-"                                        (OAuth 2.0 Client ID)."
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Then click on <b>Create</b>."
 msgstr ""
 
 #. module: auth_oauth
@@ -406,15 +310,10 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
 msgid ""
-"To achieve this, complete the field <b>Authorized redirect URIs</b>.\n"
-"                                        Copy paste the following link in the box"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To setup the sign in process with Google, you have to perform \n"
-"                                    the following steps first."
+"To setup the signin process with Google, first you have to perform the "
+"following steps:<br/>\n"
+"                                    <br/>\n"
+"                                    - Go to the"
 msgstr ""
 
 #. module: auth_oauth
@@ -430,7 +329,7 @@ msgstr "Total de plată"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
 msgid "Total Receivable"
-msgstr "Total de încasat"
+msgstr "Total de Încasat"
 
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users_credit
@@ -459,11 +358,21 @@ msgstr "URL Validare"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Terms"
-msgstr "Termene plată furnizor"
+msgid "Vendor Payment Term"
+msgstr ""
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:101
+#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: auth_oauth
+#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
@@ -476,14 +385,14 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
 msgid "arch"
 msgstr "arc"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_base_config_settings
 msgid "base.config.settings"
-msgstr "base.config.settings"
+msgstr "base.config.settings (setari.config.de_baza)"
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
@@ -491,11 +400,11 @@ msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr "e.g. 1234-xyz.apps.googleusercontent.com"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "https://console.developers.google.com/"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_ir_config_parameter
 msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "unknown"
+msgstr "necunoscut(a)"

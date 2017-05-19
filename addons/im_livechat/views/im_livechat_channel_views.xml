@@ -25,6 +25,7 @@
             <field name="model">im_livechat.channel</field>
             <field name="arch" type="xml">
                 <kanban>
+                    <field name="id"/>
                     <field name="name"/>
                     <field name="web_page" widget="url"/>
                     <field name="are_you_inside"/>
@@ -87,8 +88,9 @@
                     </div>
                     <group>
                         <group string="Operators">
-                            <field name="user_ids" widget="many2many_kanban" nolabel="1" colspan="2">
+                            <field name="user_ids" nolabel="1" colspan="2">
                                 <kanban>
+                                    <field name="id"/>
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -124,14 +126,14 @@
                         <p>
                             or copy this url and send it by email to your customers or suppliers:
                         </p>
-                        <field name="web_page" readonly="1" class="badge" widget="url"/>
-                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Settings > Website Settings and select the Website Live Chat Channel you want to add on your website.</p>
+                        <field name="web_page" readonly="1" class="badge"/>
+                        <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Website Admin > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
                     </div>
 
                     <group string="Channel Rules">
                         <field name="rule_ids" nolabel="1"/>
                     </group>
-                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be install on your server, otherwise, the countries of the rule will not be taken into account.</span>
+                    <span>Define rules for your live support channel. You can apply an action (disable the support, automatically open your support, or just make the button available) for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
                 </sheet>
                 </form>
             </field>

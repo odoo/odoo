@@ -20,7 +20,7 @@ class AccountInvoice(models.Model):
     def get_access_action(self):
         """ Instead of the classic form view, redirect to the online invoice for portal users. """
         self.ensure_one()
-        if self.env.user.share:
+        if self.env.user.share or self.env.context.get('force_website'):
             try:
                 self.check_access_rule('read')
             except exceptions.AccessError:
@@ -33,3 +33,11 @@ class AccountInvoice(models.Model):
                     'res_id': self.id,
                 }
         return super(AccountInvoice, self).get_access_action()
+
+    @api.multi
+    def get_signup_url(self):
+        self.ensure_one()
+        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
+            action='/mail/view',
+            model=self._name,
+            res_id=self.id)[self.partner_id.id]

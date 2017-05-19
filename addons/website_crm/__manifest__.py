@@ -1,6 +1,7 @@
 {
     'name': 'Contact Form',
     'category': 'Website',
+    'sequence': 54,
     'website': 'https://www.odoo.com/page/website-builder',
     'summary': 'Create Leads From Contact Form',
     'version': '2.0',
@@ -13,6 +14,7 @@ Odoo Contact Form
     'data': [
         'data/website_crm_data.xml',
         'views/website_crm_templates.xml',
+        'views/website_crm_config_settings_views.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,

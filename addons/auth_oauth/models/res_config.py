@@ -23,7 +23,6 @@ class BaseConfigSettings(models.TransientModel):
     auth_oauth_google_enabled = fields.Boolean(string='Allow users to sign in with Google')
     auth_oauth_google_client_id = fields.Char(string='Client ID')
     server_uri_google = fields.Char(compute='_compute_server_uri', string='Server uri')
-    auth_oauth_tutorial_enabled = fields.Boolean(string='Show tutorial')
 
     @api.model
     def default_get(self, fields):

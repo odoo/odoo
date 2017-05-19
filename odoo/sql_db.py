@@ -12,7 +12,6 @@ from contextlib import contextmanager
 from functools import wraps
 import logging
 import time
-import urlparse
 import uuid
 
 import psycopg2
@@ -20,6 +19,9 @@ import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
+from werkzeug import urls
+
+from .tools import pycompat
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -41,13 +43,13 @@ def undecimalize(symb, cr):
         return None
     return float(symb)
 
-for name, typeoid in types_mapping.items():
+for name, typeoid in pycompat.items(types_mapping):
     psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 
-import tools
-from tools.func import frame_codeinfo
+from . import tools
+from .tools.func import frame_codeinfo
 from datetime import timedelta
 import threading
 from inspect import currentframe
@@ -184,9 +186,9 @@ class Cursor(object):
         row = self._obj.fetchone()
         return row and self.__build_dict(row)
     def dictfetchmany(self, size):
-        return map(self.__build_dict, self._obj.fetchmany(size))
+        return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
     def dictfetchall(self):
-        return map(self.__build_dict, self._obj.fetchall())
+        return [self.__build_dict(row) for row in self._obj.fetchall()]
 
     def __del__(self):
         if not self._closed and not self._cnx.closed:
@@ -216,9 +218,9 @@ class Cursor(object):
         try:
             params = params or None
             res = self._obj.execute(query, params)
-        except Exception:
+        except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.info("bad query: %s", self._obj.query or query)
+                _logger.info("bad query: %s \nERROR: %s", self._obj.query or query, e)
             raise
 
         # simple query count is always computed
@@ -254,11 +256,9 @@ class Cursor(object):
             sqllogs = {'from': self.sql_from_log, 'into': self.sql_into_log}
             sum = 0
             if sqllogs[type]:
-                sqllogitems = sqllogs[type].items()
-                sqllogitems.sort(key=lambda k: k[1][1])
+                sqllogitems = pycompat.items(sqllogs[type])
                 _logger.debug("SQL LOG %s:", type)
-                sqllogitems.sort(lambda x, y: cmp(x[1][0], y[1][0]))
-                for r in sqllogitems:
+                for r in sorted(sqllogitems, key=lambda k: k[1]):
                     delay = timedelta(microseconds=r[1][1])
                     _logger.debug("table: %s: %s/%s", r[0], delay, r[1][0])
                     sum += r[1][1]
@@ -469,7 +469,7 @@ class LazyCursor(object):
         if cr is None:
             from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
-            for _ in xrange(self._depth):
+            for _ in range(self._depth):
                 cr.__enter__()
         return getattr(cr, name)
 
@@ -652,7 +652,7 @@ def connection_info_for(db_or_uri):
     """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urlparse.urlsplit(db_or_uri)
+        us = urls.url_parse(db_or_uri)
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:

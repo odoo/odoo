@@ -15,5 +15,5 @@ class PlannerProject(models.Model):
 
     def _prepare_planner_project_data(self):
         return {
-            'timesheet_menu': self.env.ref('hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current', raise_if_not_found=False),
+            'timesheet_menu': self.env.ref('hr_timesheet.timesheet_menu_root', raise_if_not_found=False),
         }

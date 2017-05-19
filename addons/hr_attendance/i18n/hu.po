@@ -8,10 +8,10 @@
 # Oregional <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,11 @@ msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
 msgstr "%(empl_name)s ettől %(check_in)s eddig %(check_out)s"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Attendance</span>"
+msgstr ""
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:117
 #, python-format
@@ -55,14 +60,16 @@ msgstr "Ismét egy jó munkanap! Nemsokára találkozunk!"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr "Alkalmazás"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_state
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Attendance"
 msgstr "Jelenlét"
 
@@ -78,12 +85,8 @@ msgid "Attendance Settings"
 msgstr "Megjelentek beállításai"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
-msgid "Attendance ids"
-msgstr "Jelenlét id azonosítók"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
@@ -99,7 +102,7 @@ msgstr "Jelvény ID azonosító"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Cancel"
-msgstr "Érvénytelenít"
+msgstr "Mégse"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -148,6 +151,11 @@ msgid "Check In"
 msgstr "Belépés"
 
 #. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
+msgid "Check In / Check Out"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
 msgid "Check Out"
 msgstr "Kilépés"
@@ -176,7 +184,7 @@ msgstr "Belépett"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:109
 #, python-format
 msgid "Checked in at"
-msgstr "Ekkor lépet be"
+msgstr "Ekkor lépett be"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -292,7 +300,6 @@ msgid "Employee attendances"
 msgstr "Alkalmazotti jelenlétek"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_kanban_inherit_hr_attendance
 msgid "Employee's Name"
 msgstr "Alkalmazott neve"
@@ -372,7 +379,7 @@ msgstr "Kellemes délutánt"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:78
 #, python-format
 msgid "Good evening"
-msgstr "Jó éjt"
+msgstr "Jó estét"
 
 #. module: hr_attendance
 #. openerp-web
@@ -406,7 +413,7 @@ msgstr "Csoportosítás"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:120
 #, python-format
 msgid "Have a good afternoon"
-msgstr "Legyen jó délutántja"
+msgstr "Legyen jó délutánja"
 
 #. module: hr_attendance
 #. openerp-web
@@ -427,7 +434,7 @@ msgstr "Jó estét kívánok"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:113
 #, python-format
 msgid "Have a nice lunch!"
-msgstr "Jó ebédet kívánok!"
+msgstr "Jó étvágyat kívánok!"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -464,6 +471,11 @@ msgid "Kiosk Mode"
 msgstr "Kioszk mód"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
+msgid "Last Attendance"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
@@ -479,11 +491,6 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
-msgid "Last attendance id"
-msgstr "Utolsó jelenlét id azonosító"
-
-#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
 msgstr "Jelenlétek kezelése"
@@ -491,7 +498,7 @@ msgstr "Jelenlétek kezelése"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Manager"
-msgstr "Igazgató"
+msgstr "Menedzser"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
@@ -509,7 +516,6 @@ msgid "Month"
 msgstr "Hónap"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
 msgstr "Jelenléti íveim"
@@ -518,6 +524,11 @@ msgstr "Jelenléti íveim"
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
 msgstr "Nincs kilépés"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+msgid "No attendance records to display."
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -574,8 +585,8 @@ msgstr "Jelvény nyomtatás"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
-msgid "Reports"
-msgstr "Kimutatások"
+msgid "Reporting"
+msgstr "Riport készítés"
 
 #. module: hr_attendance
 #. openerp-web
@@ -700,8 +711,7 @@ msgstr "base.config.settings"
 
 #. module: hr_attendance
 #. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:18
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:37
+#: code:addons/hr_attendance/static/src/js/presence_widgets.js:20
 #, python-format
 msgid "employee presence<br/>green: checked in<br/>red: checked out"
 msgstr "alkalmazott jelenléte<br/>zöld: belépett<br/>piros: kilépett"

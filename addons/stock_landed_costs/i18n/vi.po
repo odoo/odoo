@@ -1,32 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_landed_costs
-# 
+#
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# son dang <son.dang@doda100.com>, 2016
-# Phạm Lân <phamquanglan@gmail.com>, 2016
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Hoang Loc Le Huu <loclhh@gmail.com>, 2016\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"PO-Revision-Date: 2016-07-20 03:11+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
+"vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:355
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:359
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:376
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:380
+#: code:addons/stock_landed_costs/stock_landed_costs.py:127
+#: code:addons/stock_landed_costs/stock_landed_costs.py:131
+#: code:addons/stock_landed_costs/stock_landed_costs.py:147
+#: code:addons/stock_landed_costs/stock_landed_costs.py:151
 #, python-format
 msgid " already out"
 msgstr ""
@@ -112,14 +108,6 @@ msgid "Cost Lines"
 msgstr "Chi tiết"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
-#, python-format
-msgid ""
-"Cost and adjustments lines do not match. You should maybe recompute the "
-"landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -131,7 +119,7 @@ msgstr "Được tạo bởi"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_date
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_date
 msgid "Created on"
-msgstr "Thời điểm tạo"
+msgstr "Được tạo vào"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_date
@@ -145,7 +133,7 @@ msgid "Description"
 msgstr "Miêu tả"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:18
+#: code:addons/stock_landed_costs/purchase_config_settings.py:18
 #, python-format
 msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
@@ -205,7 +193,7 @@ msgstr "Former Cost(Per Unit)"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 msgid "Group By"
-msgstr "Nhóm theo"
+msgstr "Group By"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_id
@@ -278,7 +266,7 @@ msgstr "Sửa lần cuối vào"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_write_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Last Updated by"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_write_date
@@ -299,14 +287,7 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
-#, python-format
-msgid ""
-"No valuation adjustments lines. You should maybe recompute the landed costs."
-msgstr ""
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
+#: code:addons/stock_landed_costs/stock_landed_costs.py:203
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -317,7 +298,7 @@ msgid "Pickings"
 msgstr "Pickings"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:322
+#: code:addons/stock_landed_costs/stock_landed_costs.py:90
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Vui lòng cấu hình tài khoản chi phí kho cho sản phẩm: %s."
@@ -391,12 +372,12 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Stock Valuation Adjustment Lines"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/stock_landed_costs.py:52
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
-"landed costs. Landed costs are only possible for products configured in real"
-" time valuation with real price costing method. Please make sure it is the "
+"landed costs. Landed costs are only possible for products configured in real "
+"time valuation with real price costing method. Please make sure it is the "
 "case, or you selected the correct picking"
 msgstr ""
 
@@ -411,7 +392,7 @@ msgid "Validate"
 msgstr "Xác nhận"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
+#: code:addons/stock_landed_costs/stock_landed_costs.py:261
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -430,7 +411,7 @@ msgid "Volume"
 msgstr "Thể tích"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/purchase_config_settings.py:17
+#: code:addons/stock_landed_costs/purchase_config_settings.py:17
 #, python-format
 msgid "Warning!"
 msgstr "Cảnh báo!"
@@ -441,6 +422,14 @@ msgid "Weight"
 msgstr "Trọng lượng"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/stock_landed_costs.py:205
+#, python-format
+msgid ""
+"You cannot validate a landed cost which has no valid valuation adjustments "
+"lines. Did you click on Compute?"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "miêu tả đặc tính sản phẩm..."
@@ -449,3 +438,39 @@ msgstr "miêu tả đặc tính sản phẩm..."
 #: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
 msgid "purchase.config.settings"
 msgstr ""
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
+
+#~ msgid "Followers"
+#~ msgstr "Người dõi theo"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Người theo dõi (Các kênh)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Người theo dõi (Các đối tác)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
+
+#~ msgid "Is Follower"
+#~ msgstr "Trở thành người theo dõi"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Ngày thông điệp cuối cùng"
+
+#~ msgid "Messages"
+#~ msgstr "Thông điệp"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Lịch sử trao đổi"
+
+#~ msgid "Unread Messages"
+#~ msgstr "Thông điệp chưa đọc"
+
+#~ msgid "Website Messages"
+#~ msgstr "Thông điệp Website"
+
+#~ msgid "Website communication history"
+#~ msgstr "Lịch sử thông tin liên lạc website"

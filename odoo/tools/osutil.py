@@ -39,7 +39,7 @@ def walksymlinks(top, topdown=True, onerror=None):
         if topdown:
             yield dirpath, dirnames, filenames
 
-        symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
+        symlinks = (dirname for dirname in dirnames if os.path.islink(os.path.join(dirpath, dirname)))
         for s in symlinks:
             for x in walksymlinks(os.path.join(dirpath, s), topdown, onerror):
                 yield x

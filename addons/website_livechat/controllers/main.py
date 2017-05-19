@@ -3,6 +3,7 @@
 
 from odoo import http
 from odoo.http import request
+from odoo.tools import pycompat
 
 
 class WebsiteLivechat(http.Controller):
@@ -26,7 +27,7 @@ class WebsiteLivechat(http.Controller):
         # compute percentage
         percentage = dict.fromkeys(['great', 'okay', 'bad'], 0)
         for grade in repartition:
-            percentage[grade] = repartition[grade] * 100 / sum(repartition.values()) if sum(repartition.values()) else 0
+            percentage[grade] = repartition[grade] * 100 / sum(pycompat.values(repartition)) if sum(pycompat.values(repartition)) else 0
 
         # the value dict to render the template
         values = {

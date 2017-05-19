@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:43+0000\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
 "PO-Revision-Date: 2016-06-27 15:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/hr.py:120
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (ასლი)"
@@ -110,7 +110,6 @@ msgid "A good job in a young and dynamic team"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department_active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_active
 msgid "Active"
 msgstr "აქტიური"
@@ -121,19 +120,8 @@ msgid "Analyse needs, write specification documents and quotation"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_account_analytic_account
-msgid "Analytic Account"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_department_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Archived"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_event_registration
-msgid "Attendee"
 msgstr ""
 
 #. module: hr
@@ -201,6 +189,11 @@ msgid "City"
 msgstr "ქალაქი"
 
 #. module: hr
+#: model:web.tip,description:hr.hr_tip_2
+msgid "Click here to change the recruitment goal!"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -209,6 +202,11 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
 msgid "Click to create a department."
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid "Click to define a new department."
 msgstr ""
 
 #. module: hr
@@ -282,6 +280,11 @@ msgid "Contributions to open source projects"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.view_department_form_installer
+msgid "Create Your Departments"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_employee_create_uid
@@ -325,6 +328,7 @@ msgid "Deliver generic Odoo functional training sessions"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_department_id
 #: model:ir.ui.view,arch_db:hr.view_department_filter
@@ -346,11 +350,6 @@ msgid "Departments"
 msgstr "განყოფილებები"
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_channel
-msgid "Discussion channel"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_display_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_display_name
@@ -366,16 +365,6 @@ msgstr "გაყრილი"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
 msgid "Efficiency Factor"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_alias
-msgid "Email Aliases"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_thread
-msgid "Email Thread"
 msgstr ""
 
 #. module: hr
@@ -437,20 +426,15 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:254
+#: code:addons/hr/hr.py:294 constraint:hr.department:0
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:167
+#: code:addons/hr/hr.py:264 constraint:hr.employee:0
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_event_event
-msgid "Event"
 msgstr ""
 
 #. module: hr
@@ -490,19 +474,14 @@ msgid "Followers"
 msgstr "მიმდევრები"
 
 #. module: hr
-#: model:ir.model,name:hr.model_gamification_badge
-msgid "Gamification badge"
-msgstr ""
-
-#. module: hr
-#: model:ir.model,name:hr.model_gamification_challenge
-msgid "Gamification challenge"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_gender
 msgid "Gender"
 msgstr "სქესი"
+
+#. module: hr
+#: model:web.tip,description:hr.hr_tip_1
+msgid "Get all applications related to this job position."
+msgstr ""
 
 #. module: hr
 #: model:hr.job,website_description:hr.job_developer
@@ -586,11 +565,6 @@ msgid "Home Address"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "Hr Department"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "ადამიანური რესურსები"
@@ -652,11 +626,6 @@ msgid "Increase the visibility of the product"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model:ir.ui.view,arch_db:hr.view_hr_job_tree
@@ -670,12 +639,24 @@ msgid "Job Description"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
+msgid "Job Name"
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Position"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Job Position Name"
+msgstr ""
+
+#. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job_position
+#: model:ir.ui.menu,name:hr.menu_hr_job_position_config
 msgid "Job Positions"
 msgstr ""
 
@@ -692,7 +673,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Title"
 msgstr ""
 
@@ -765,14 +745,8 @@ msgstr "მამრობითი"
 #: model:ir.model.fields,field_description:hr.field_hr_department_manager_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_parent_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
-#: model:res.groups,name:hr.group_hr_manager
 msgid "Manager"
 msgstr "მენეჯერი"
-
-#. module: hr
-#: model:res.groups,name:hr.group_hr_attendance
-msgid "Manual Attendance"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
@@ -836,7 +810,9 @@ msgid "Must have ..."
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
+#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
 msgid "Name"
 msgstr "სახელი"
 
@@ -854,11 +830,6 @@ msgstr ""
 #: model:hr.job,website_description:hr.job_marketing
 #: model:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr ""
-
-#. module: hr
-#: selection:hr.job,state:0
-msgid "Not Recruiting"
 msgstr ""
 
 #. module: hr
@@ -893,11 +864,6 @@ msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
 "                leaves and holidays, recruitments, etc."
-msgstr ""
-
-#. module: hr
-#: model:res.groups,name:hr.group_hr_user
-msgid "Officer"
 msgstr ""
 
 #. module: hr
@@ -991,6 +957,11 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.job,state:0
+msgid "Recruitment Closed"
+msgstr ""
+
+#. module: hr
+#: selection:hr.job,state:0
 msgid "Recruitment in Progress"
 msgstr ""
 
@@ -1023,11 +994,6 @@ msgstr "მოთხოვნები"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
 msgid "Resource"
 msgstr "რესურსი"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-msgid "Resource Name"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
@@ -1155,20 +1121,8 @@ msgid "Team spirit and good communication"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_test
-msgid "Test Mail Model"
-msgstr ""
-
-#. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
-msgstr ""
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_attendance
-msgid ""
-"The user will gain access to the human resources attendance menu, enabling "
-"him to manage his own attendance."
 msgstr ""
 
 #. module: hr
@@ -1209,11 +1163,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Unread Messages"
 msgstr "წაუკითხავი შეტყობინებები"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -1524,22 +1473,12 @@ msgid "You will work closely with all trainees"
 msgstr ""
 
 #. module: hr
-#: model:mail.template,subject:hr.mail_template_data_unknown_employee_email_address
-msgid "Your document has not been created"
-msgstr ""
-
-#. module: hr
-#: model:mail.template,body_html:hr.mail_template_data_unknown_employee_email_address
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
 msgid ""
-"Your document has not been created because your email address is not "
-"recognized. Please send emails with the email address recorded on your "
-"employee information, or contact your HR manager."
-msgstr ""
-
-#. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "alias %s does not accept unknown employees"
+"Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc."
 msgstr ""
 
 #. module: hr
@@ -1552,25 +1491,8 @@ msgstr "განყოფილება"
 msgid "e.g. Part Time"
 msgstr ""
 
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "e.g. Sales Manager"
-msgstr ""
+#~ msgid "Last Message Date"
+#~ msgstr "ბოლო შეტყობინების თარიღი"
 
-#. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "skipping"
-msgstr ""
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_user
-msgid "the user will be able to approve document created by employees."
-msgstr ""
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_manager
-msgid ""
-"the user will have an access to the human resources configuration as well as "
-"statistic reports."
-msgstr ""
+#~ msgid "Update Date"
+#~ msgstr "განახლების თარიღი"

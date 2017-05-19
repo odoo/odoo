@@ -2,8 +2,8 @@
 <odoo>
 
     <template id="report_delivery_document">
-        <t t-call="report.html_container">
-            <t t-call="report.external_layout">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
                 <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
                 <div class="page">
                     <div class="row" name="customer_address">
@@ -85,6 +85,12 @@
                             <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
                                 <td>
                                     <span t-field="pack_operation.product_id"/>
+                                    <p t-if="o.picking_type_code == 'outgoing'">
+                                        <span t-field="pack_operation.product_id.description_pickingout"/>
+                                    </p>
+                                    <p t-if="o.picking_type_code == 'incoming'">
+                                        <span t-field="pack_operation.product_id.description_pickingin"/>
+                                    </p>
                                     <t t-if="not pack_operation.product_id and pack_operation.package_id">
                                         <span  t-field="pack_operation.package_id"/>
                                     </t>

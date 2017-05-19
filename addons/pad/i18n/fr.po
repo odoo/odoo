@@ -3,19 +3,19 @@
 # * pad
 # 
 # Translators:
-# Olivier Dony <odo@odoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Richard Mathot <rim@odoo.com>, 2016
+# lucasdeliege <deliegelucas@gmail.com>, 2017
 # zeroheure <xavier@alternatif.org>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: zeroheure <xavier@alternatif.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+msgid "API Key"
+msgstr "Clé API"
+
+#. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
 msgstr "Sociétés"
@@ -32,7 +37,7 @@ msgstr "Sociétés"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_base_config_settings_pad_key
@@ -45,6 +50,21 @@ msgstr "Clé api de l'etherpad lite."
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Serveur etherpad lite. Exemple: beta.primarypad.com"
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:27
+#, python-format
+msgid "Exit full screen"
+msgstr ""
+
+#. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:27
+#: code:addons/pad/static/src/xml/pad.xml:14
+#, python-format
+msgid "Full screen"
+msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_id
@@ -67,6 +87,11 @@ msgid "Pad Api Key *"
 msgstr "Clé API du pad"
 
 #. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
+msgid "Pad Server"
+msgstr "Serveur du pad"
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_server
 msgid "Pad Server *"
 msgstr "Serveur du pad"
@@ -82,38 +107,29 @@ msgstr ""
 "le serveur de pad."
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company_pad_server
-msgid "Pad server"
-msgstr "Serveur du pad"
-
-#. module: pad
-#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
-msgid "Pads"
-msgstr "Pads"
-
-#. module: pad
 #. openerp-web
 #: code:addons/pad/static/src/xml/pad.xml:6
 #, python-format
 msgid ""
 "Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings > Configure your company data', in the 'Configuration' tab of your "
-"company."
+"Settings'."
 msgstr ""
-"Veuillez entrer vos identifiants Etherpad dans le menu Configuration > "
-"Paramètres généraux > Configurer les données de votre société, dans l'onglet"
-" Configuration de votre société."
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+msgid "Server"
+msgstr "Serveur"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:53
+#: code:addons/pad/static/src/js/pad.js:55
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Ce pad sera initialisé lors de la première modification"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:50
+#: code:addons/pad/static/src/js/pad.js:52
 #, python-format
 msgid "Unable to load pad"
 msgstr "Impossible de charger le pad"
@@ -124,7 +140,7 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_general_configuration_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
 msgid "e.g. beta.primarypad.com"
 msgstr "p. ex. beta.primarypad.com"
 

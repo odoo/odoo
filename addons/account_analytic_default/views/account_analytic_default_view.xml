@@ -37,6 +37,34 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_default_kanban" model="ir.ui.view">
+            <field name="name">account.analytic.default.kanban</field>
+            <field name="model">account.analytic.default</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="analytic_id"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div>
+                                    <strong><span><field name="analytic_id"/></span></strong>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                </div>
+                                <div t-if="record.date_start.value"><i class="fa fa-calendar"></i> From <field name="date_start"/> <t t-if="record.date_stop.value">to <field name="date_stop"/></t></div>
+                                <div t-if="record.product_id.value"><strong>Product</strong> <field name="product_id"/> </div>
+                                <div t-if="record.partner_id.value"><strong>Customer</strong> <field name="partner_id"/> </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_account_analytic_default_form_search" model="ir.ui.view">
             <field name="name">account.analytic.default.search</field>
             <field name="model">account.analytic.default</field>
@@ -63,7 +91,7 @@
             <field name="name">Analytic Defaults</field>
             <field name="res_model">account.analytic.default</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_account_analytic_default_form_search"/>
             <field name="context">{"search_default_current":1}</field>
         </record>

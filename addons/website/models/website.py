@@ -6,9 +6,9 @@ import logging
 import math
 import unicodedata
 import re
-import urlparse
 import hashlib
-import werkzeug
+
+from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
@@ -19,7 +19,7 @@ except ImportError:
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.tools import ustr
+from odoo.tools import ustr, pycompat
 from odoo.http import request
 from odoo.tools.translate import _
 
@@ -44,10 +44,10 @@ def url_for(path_or_uri, lang=None):
         current_path = current_path.encode('utf-8')
     location = path_or_uri.strip()
     force_lang = lang is not None
-    url = urlparse.urlparse(location)
+    url = urls.url_parse(location)
 
     if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urlparse.urljoin(current_path, location)
+        location = urls.url_join(current_path, location)
 
         lang = lang or request.context.get('lang')
         langs = [lg[0] for lg in request.website.get_languages()]
@@ -174,9 +174,10 @@ class Website(models.Model):
     social_youtube = fields.Char('Youtube Account')
     social_googleplus = fields.Char('Google+ Account')
     google_analytics_key = fields.Char('Google Analytics Key')
+    google_management_client_id = fields.Char('Google Client ID')
+    google_management_client_secret = fields.Char('Google Client Secret')
 
     user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
-    compress_html = fields.Boolean('Compress HTML') # TODO: REMOVE ME IN SAAS-14
     cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='')
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
@@ -204,12 +205,16 @@ class Website(models.Model):
     #----------------------------------------------------------
 
     @api.model
-    def new_page(self, name, template='website.default_page', ispage=True):
+    def new_page(self, name, template='website.default_page', ispage=True, namespace=None):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
+            :param namespace : module part of the xml_id if none, the template module name is used
         """
-        template_module, dummy = template.split('.')
+        if namespace:
+            template_module = namespace
+        else:
+            template_module, dummy = template.split('.')
         website_id = self._context.get('website_id')
 
         # completely arbitrary max_length
@@ -362,7 +367,7 @@ class Website(models.Model):
 
         def get_url_localized(router, lang):
             arguments = dict(request.endpoint_arguments)
-            for key, val in arguments.items():
+            for key, val in list(pycompat.items(arguments)):
                 if isinstance(val, models.BaseModel):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
@@ -416,7 +421,7 @@ class Website(models.Model):
     @api.model
     def get_template(self, template):
         View = self.env['ir.ui.view']
-        if isinstance(template, (int, long)):
+        if isinstance(template, pycompat.integer_types):
             view_id = template
         else:
             if '.' not in template:
@@ -454,7 +459,7 @@ class Website(models.Model):
         def get_url(page):
             _url = "%s/page/%s" % (url, page) if page > 1 else url
             if url_args:
-                _url = "%s?%s" % (_url, werkzeug.url_encode(url_args))
+                _url = "%s?%s" % (_url, urls.url_encode(url_args))
             return _url
 
         return {
@@ -481,7 +486,7 @@ class Website(models.Model):
                 'num': pmax
             },
             "pages": [
-                {'url': get_url(page), 'num': page} for page in xrange(pmin, pmax+1)
+                {'url': get_url(page), 'num': page} for page in range(pmin, pmax+1)
             ]
         }
 
@@ -494,7 +499,7 @@ class Website(models.Model):
         endpoint = rule.endpoint
         methods = endpoint.routing.get('methods') or ['GET']
 
-        converters = rule._converters.values()
+        converters = list(pycompat.values(rule._converters))
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
@@ -526,7 +531,6 @@ class Website(models.Model):
                       of the same.
             :rtype: list({name: str, url: str})
         """
-        request.context = dict(request.context, **self.env.context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()
@@ -538,15 +542,15 @@ class Website(models.Model):
             if query_string and not converters and (query_string not in rule.build([{}], append_unknown=False)[1]):
                 continue
             values = [{}]
-            convitems = converters.items()
             # converters with a domain are processed after the other ones
-            gd = lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]')
-            convitems.sort(lambda x, y: cmp(gd(x), gd(y)))
+            convitems = sorted(
+                pycompat.items(converters),
+                key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
                 for val in values:
                     query = i == len(convitems)-1 and query_string
-                    for value_dict in converter.generate(query=query, args=val):
+                    for value_dict in converter.generate(uid=self.env.uid, query=query, args=val):
                         newval.append(val.copy())
                         value_dict[name] = value_dict['loc']
                         del value_dict['loc']
@@ -556,7 +560,7 @@ class Website(models.Model):
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
-                for key, val in value.items():
+                for key, val in pycompat.items(value):
                     if key.startswith('__'):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):
@@ -594,8 +598,14 @@ class Website(models.Model):
             cdn_filters = (request.website.cdn_filters or '').splitlines()
             for flt in cdn_filters:
                 if flt and re.match(flt, uri):
-                    return urlparse.urljoin(cdn_url, uri)
+                    return urls.url_join(cdn_url, uri)
         return uri
+
+    @api.model
+    def action_dashboard_redirect(self):
+        if self.env.user.has_group('base.group_system') or self.env.user.has_group('website.group_website_designer'):
+            return self.env.ref('website.backend_dashboard').read()[0]
+        return self.env.ref('website.action_website').read()[0]
 
 
 class Menu(models.Model):

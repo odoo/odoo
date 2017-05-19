@@ -36,6 +36,7 @@
     var job_deps = [];
     var job_deferred = [];
 
+
     var services = Object.create({});
 
     var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/mg;
@@ -50,6 +51,7 @@
         remaining_jobs: jobs,
 
         __DEBUG__: {
+            didLogInfo: $.Deferred(),
             get_dependencies: function (name, transitive) {
                 var deps = name instanceof Array ? name: [name],
                     changed;
@@ -137,6 +139,9 @@
             this.process_jobs(jobs, services);
         },
         log: function () {
+            var missing = [];
+            var failed = [];
+
             if (jobs.length) {
                 var debug_jobs = {};
                 var rejected = [];
@@ -176,8 +181,8 @@
                         }
                     }
                 }
-                var missing = odoo.__DEBUG__.get_missing_jobs();
-                var failed = odoo.__DEBUG__.get_failed_jobs();
+                missing = odoo.__DEBUG__.get_missing_jobs();
+                failed = odoo.__DEBUG__.get_failed_jobs();
                 var unloaded = _.filter(debug_jobs, function (job) { return job.missing; });
 
                 var log = [(_.isEmpty(failed) ? (_.isEmpty(unloaded) ? 'info' : 'warning' ) : 'error') + ':', 'Some modules could not be started'];
@@ -192,10 +197,14 @@
                     console[_.isEmpty(failed) || _.isEmpty(unloaded) ? 'info' : 'error'].apply(console, log);
                 }
             }
+            odoo.__DEBUG__.js_modules = {
+                missing: missing,
+                failed: _.pluck(failed, 'name'),
+            };
+            odoo.__DEBUG__.didLogInfo.resolve();
         },
         process_jobs: function (jobs, services) {
             var job;
-            var require;
 
             function process_job (job) {
                 var require = make_require(job);
@@ -251,6 +260,7 @@
             return services;
         }
     });
+
 
     // automatically log errors detected when loading modules
     var log_when_loaded = function () {

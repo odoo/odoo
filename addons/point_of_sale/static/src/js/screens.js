@@ -31,9 +31,9 @@ var PosBaseWidget = require('point_of_sale.BaseWidget');
 var gui = require('point_of_sale.gui');
 var models = require('point_of_sale.models');
 var core = require('web.core');
-var Model = require('web.DataModel');
+var rpc = require('web.rpc');
 var utils = require('web.utils');
-var formats = require('web.formats');
+var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -364,12 +364,17 @@ var NumpadWidget = PosBaseWidget.extend({
         this.state = new models.NumpadState();
     },
     start: function() {
+        this.check_price_control_rights();
         this.state.bind('change:mode', this.changedMode, this);
         this.changedMode();
         this.$el.find('.numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
         this.$el.find('.numpad-minus').click(_.bind(this.clickSwitchSign, this));
         this.$el.find('.number-char').click(_.bind(this.clickAppendNewChar, this));
         this.$el.find('.mode-button').click(_.bind(this.clickChangeMode, this));
+    },
+    check_price_control_rights: function() {
+        var has_rights = !this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager';
+        this.$el.find('.mode-button[data-mode="price"]').toggleClass('disabled-mode', !has_rights).prop('disabled', !has_rights);
     },
     clickDeleteLastChar: function() {
         return this.state.deleteLastChar();
@@ -1209,15 +1214,19 @@ var ClientListScreenWidget = ScreenWidget.extend({
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
 
-        new Model('res.partner').call('create_from_ui',[fields]).then(function(partner_id){
-            self.saved_client_details(partner_id);
-        },function(err,event){
-            event.preventDefault();
-            self.gui.show_popup('error',{
-                'title': _t('Error: Could not Save Changes'),
-                'body': _t('Your Internet connection is probably down.'),
+        rpc.query({
+                model: 'res.partner',
+                method: 'create_from_ui',
+                args: [fields],
+            })
+            .then(function(partner_id){
+                self.saved_client_details(partner_id);
+            },function(type,err){
+                self.gui.show_popup('error',{
+                    'title': _t('Error: Could not Save Changes'),
+                    'body': _t('Your Internet connection is probably down.'),
+                });
             });
-        });
     },
     
     // what happens when we've just pushed modifications for a partner of id partner_id
@@ -1638,7 +1647,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 var amount = this.inputbuffer;
 
                 if (this.inputbuffer !== "-") {
-                    amount = formats.parse_value(this.inputbuffer, {type: "float"}, 0.0);
+                    amount = field_utils.parse.float(this.inputbuffer);
                 }
 
                 order.selected_paymentline.set_amount(amount);
@@ -1772,7 +1781,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             'title': tip ? _t('Change Tip') : _t('Add Tip'),
             'value': self.format_currency_no_symbol(value),
             'confirm': function(value) {
-                order.set_tip(formats.parse_value(value, {type: "float"}, 0));
+                order.set_tip(field_utils.parse.float(value));
                 self.order_changes();
                 self.render_paymentlines();
             }

@@ -82,7 +82,7 @@ class HrTimesheetSheet(models.Model):
         """
         self.ensure_one()
         if any(self.attendances_ids.filtered(lambda r: not r.check_out)):
-            raise UserError(_("The timesheet cannot be validated as it contains an attendance record with no Check Out)."))
+            raise UserError(_("The timesheet cannot be validated as it contains an attendance record with no Check Out."))
         return True
 
 

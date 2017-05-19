@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
 # Volluta <volluta@tutanota.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Volluta <volluta@tutanota.com>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -144,8 +144,8 @@ msgid ""
 "(Un)archiving a forum automatically (un)archives its posts. Do you want to "
 "proceed?"
 msgstr ""
-"(On)archiveren van een kanaal (on)archiveert automatisch de berichten. Wilt "
-"u verder gaan?"
+"(On)archiveren van een kanaal (on)archiveert automatisch de posts. Wilt u "
+"verder gaan?"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -320,7 +320,7 @@ msgid ""
 "    search questions by their title or tags.  It’s also OK to\n"
 "    answer your own question."
 msgstr ""
-"<b>Controleer of er al een gelijkwaardige vraag bestaat - voordat u ze stelt.</b> U kan\n"
+"<b>Controleer of er al een gelijkaardige vraag bestaat - voordat u ze stelt.</b> U kan\n"
 "vragen zoeken op hun titel of labels. Het is ook OK om\n"
 "uw eigen vraag te beantwoorden."
 
@@ -351,8 +351,8 @@ msgid ""
 "        - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "        - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Probeer alsjeblieft een nuttig antwoord te geven.</b> Indien u wou reageren of de vraag of het antwoord, <b>gebruikt u de opmerking knop.</b> Denk er aan dat u uw <b>antwoorden altijd kan herzien</b>\n"
-"- het heeft geen zin om dezelfde vraag twee keer te beantwoord. <b>Vergeet ook niet om te stemmen</b>\n"
+"<b>Probeer alsjeblieft een substantieel antwoord te geven.</b> Indien u wou reageren of de vraag of het antwoord, <b>gebruikt u de community tool.</b> Denk er aan dat u uw <b>antwoorden altijd kan herzien</b>\n"
+"- geen nood om dezelfde vraag twee keer te beantwoord. <b>Vergeet ook niet om te stemmen</b>\n"
 "- Het helpt het de beste vragen en antwoorden selecteren!"
 
 #. module: website_forum
@@ -672,7 +672,7 @@ msgstr "Stel vragen"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_post
 msgid "Ask questions without validation"
-msgstr "Stel vragen zonder validatie"
+msgstr "Stel vragen zonder bevestiging"
 
 #. module: website_forum
 #. openerp-web
@@ -806,7 +806,7 @@ msgstr "Kan vragen"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_post
 msgid "Can Automatically be Validated"
-msgstr "Kan automatisch bevestigd worden"
+msgstr "Kan automatisch gevalideerd worden"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_can_close
@@ -889,7 +889,7 @@ msgstr "Hoofd commentator"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_profile
 msgid "City"
-msgstr "Plaats"
+msgstr "Gemeente"
 
 #. module: website_forum
 #. openerp-web
@@ -954,7 +954,7 @@ msgstr "Sluit alle berichten"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_close_own
 msgid "Close own posts"
-msgstr "Sluit eigen bericht"
+msgstr "Sluit eigen post"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_closed_uid
@@ -1187,7 +1187,7 @@ msgstr "Discussies"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote_display_name
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag_display_name
 msgid "Display Name"
-msgstr "Weergave naam"
+msgstr "Schermnaam"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_user_bio
@@ -1210,14 +1210,14 @@ msgid "Edit Profile"
 msgstr "Profiel bewerken"
 
 #. module: website_forum
-#: model:ir.ui.view,arch_db:website_forum.user_detail_full
-msgid "Edit Your Bio"
-msgstr "Wijzig je bio"
-
-#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit Your Previous Answer"
 msgstr "Wijzig je vorige antwoord"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.user_detail_full
+msgid "Edit Your Profile"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_edit_all
@@ -1412,6 +1412,7 @@ msgid "Forum Badge Level"
 msgstr "Forum badge niveau"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.res_users_view_form_preference
 #: model:ir.ui.view,arch_db:website_forum.view_users_form_forum
 msgid "Forum Karma"
 msgstr "Forum Karma"
@@ -1575,8 +1576,8 @@ msgid ""
 "If this approach is not for you, please respect the community and use Google+\n"
 "    communities instead."
 msgstr ""
-"Als deze aanpak niet voor u niet geschikt is, respecteer de community en "
-"gebruik een ander platform."
+"Als deze aanpak niet voor u is respecteer de community en gebruik een ander "
+"platform."
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
@@ -1904,7 +1905,7 @@ msgstr "Aantal gevlagde berichten"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_count_posts_waiting_validation
 msgid "Number of posts waiting for validation"
-msgstr "Aantal berichten die wachten op validatie"
+msgstr "Aantal berichten die wachten op bevestiging"
 
 #. module: website_forum
 #: selection:forum.post,state:0
@@ -2008,10 +2009,11 @@ msgstr "Populaire vraag (500)"
 #: model:ir.ui.view,arch_db:website_forum.post_comment
 #: model:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "Verstuur"
+msgstr "Boeken"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_answer
+#: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
 msgstr "Plaats antwoord"
 
@@ -2021,6 +2023,7 @@ msgid "Post Closing Reason"
 msgstr "Verstuur reden van sluiten"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answer
 #: model:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Comment"
 msgstr "Plaats reactie"
@@ -2302,7 +2305,7 @@ msgstr "Tweede relevante parameter"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr "Bekijk bericht"
+msgstr "Bekijk post"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -2350,7 +2353,7 @@ msgid ""
 "            If the community vote on your post, it will get traction by being promoted\n"
 "            in the homepage."
 msgstr ""
-"Deel een geweldige link. Uw vraag verschijnt in bij het top-menu 'Nieuwste'.\n"
+"Deel een geweldige link. Uw vraag verschijnt in de 'Nieuwste' top-menu.\n"
 "Als de community stemt op uw vraag krijgt het tractie door gepromoot te worden\n"
 "op de homepagina."
 
@@ -2384,21 +2387,21 @@ msgstr "Sorry u moet ingelogd zijn om deze actie uit te voeren"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:70
+#: code:addons/website_forum/static/src/js/website_forum.js:97
 #, python-format
 msgid "Sorry you must be logged to flag a post"
 msgstr "Sorry u moet aangemeld zijn om een bericht te markeren"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:118
+#: code:addons/website_forum/static/src/js/website_forum.js:145
 #, python-format
 msgid "Sorry you must be logged to vote"
 msgstr "Sorry u moet ingelogd zijn om te stemmen"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:168
+#: code:addons/website_forum/static/src/js/website_forum.js:195
 #, python-format
 msgid "Sorry, anonymous users cannot choose correct answer."
 msgstr "Sorry, anonieme gebruikers kunnen geen correct antwoord kiezen."
@@ -2410,7 +2413,7 @@ msgstr "Sorry, deze vraag is niet meer beschikbaar."
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:113
+#: code:addons/website_forum/static/src/js/website_forum.js:140
 #, python-format
 msgid "Sorry, you cannot vote for your own posts"
 msgstr "Sorry, u kan niet stemmen op uw eigen bericht"
@@ -2520,7 +2523,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:9
 #, python-format
 msgid "Thanks for posting!"
-msgstr "Bedankt voor uw bericht!"
+msgstr "Bedankt om te posten!"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
@@ -2549,7 +2552,7 @@ msgstr "De offensieve wachtrij is leeg."
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "The validation queue is empty."
-msgstr "De validatie wachtrij is leeg."
+msgstr "De bevestiging wachtrij is leeg."
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2603,17 +2606,24 @@ msgstr "Dit forum staat niet %s toe"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:80
+#: code:addons/website_forum/static/src/js/website_forum.js:107
 #, python-format
 msgid "This post can not be flagged"
 msgstr "Dit bericht kan niet gemarkeerd worden"
 
 #. module: website_forum
 #. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:75
+#: code:addons/website_forum/static/src/js/website_forum.js:102
 #, python-format
 msgid "This post is already flagged"
 msgstr "Dit bericht is al gemarkeerd"
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
+msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
@@ -2768,7 +2778,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 msgid "Validate question"
-msgstr "Bevestig vraag"
+msgstr "Valideer vraag"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -2795,17 +2805,17 @@ msgstr "Stemmen"
 #. module: website_forum
 #: selection:forum.post,state:0
 msgid "Waiting Validation"
-msgstr "Wachtend op validatie"
+msgstr "Wachtend op bevestiging"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Waiting for validation"
-msgstr "Wacht op validatie"
+msgstr "Wacht op bevestiging"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_res_users_forum_waiting_posts_count
 msgid "Waiting post"
-msgstr "Wachtend bericht"
+msgstr "Wachtende berichten"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -2873,7 +2883,7 @@ msgid ""
 "            Please wait for a moderator to validate your previous post before continuing."
 msgstr ""
 "Je hebt al een wachtend bericht.<br/>\n"
-"Wacht op een moderator om uw vorige bericht te valideren alvorens verder te gaan."
+"Wacht op een moderator van uw vorige bericht alvorens verder te valideren."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:139
@@ -2935,7 +2945,7 @@ msgstr "en"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.close_post
 msgid "back to post"
-msgstr "terug naar bericht"
+msgstr "terug naar post"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_question
@@ -3005,12 +3015,12 @@ msgstr "verwijder eigen reactie"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.faq
 msgid "downvote"
-msgstr "omlaag stemmen"
+msgstr "Omlaag stemmen"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
 msgid "duplicate post"
-msgstr "dupliceer bericht"
+msgstr "dupliceer post"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.new_link
@@ -3073,7 +3083,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "has been posted. Click here to access the post :"
-msgstr "is geplaatst. Klik hier om dit bericht te bekijken:"
+msgstr "is geplaatst. Klik hier om deze post te bekijken:"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3164,7 +3174,7 @@ msgstr "lid sinds"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
 msgid "not a real post"
-msgstr "niet een echt bericht"
+msgstr "niet een echte post"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
@@ -3277,7 +3287,7 @@ msgstr "stemmen"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "waiting for validation"
-msgstr "wachtend op validatie"
+msgstr "wachtend op bevestiging"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

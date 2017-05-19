@@ -23,7 +23,7 @@ class WebsiteRatingProject(http.Controller):
         project = request.env['project.project'].sudo().browse(project_id)
         # to avoid giving any access rights on projects to the public user, let's use sudo
         # and check if the user should be able to view the project (project managers only if it's unpublished or has no rating)
-        if not ((project.rating_status<>'no') and project.website_published) and not user.sudo(user).has_group('project.group_project_manager'):
+        if not ((project.rating_status!='no') and project.website_published) and not user.sudo(user).has_group('project.group_project_manager'):
             raise NotFound()
         values = {
             'project': project,
@@ -45,7 +45,7 @@ class WebsiteRatingProject(http.Controller):
             domdate = domain + [('create_date', '<=', yesterday), ('create_date', '>=', todate)]
             stats[x] = {1: 0, 5: 0, 10: 0}
             rating_stats = request.env['rating.rating'].read_group(domdate, [], ['rating'])
-            total = reduce(lambda x, y: y['rating_count'] + x, rating_stats, 0)
+            total = sum(st['rating_count'] for st in rating_stats)
             for rate in rating_stats:
                 stats[x][rate['rating']] = float("%.2f" % (rate['rating_count'] * 100.0 / total))
         return {'ratings': ratings, 'stats': stats}

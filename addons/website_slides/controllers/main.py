@@ -263,10 +263,10 @@ class WebsiteSlides(http.Controller):
                 'caption': slide.name,
                 'url': slide.website_url
             }
-        vals = map(slide_mapped_dict, slide.get_related_slides(slides_to_suggest))
+        vals = [slide_mapped_dict(s) for s in slide.get_related_slides(slides_to_suggest)]
         add_more_slide = slides_to_suggest - len(vals)
         if max(add_more_slide, 0):
-            vals += map(slide_mapped_dict, slide.get_most_viewed_slides(add_more_slide))
+            vals.extend(slide_mapped_dict(s) for s in slide.get_most_viewed_slides(add_more_slide))
         return vals
 
     # --------------------------------------------------
@@ -319,7 +319,7 @@ class WebsiteSlides(http.Controller):
             return {'error': e.name}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e.message}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
         return {'url': "/slides/slide/%s" % (slide_id.id)}
 
     # --------------------------------------------------
@@ -333,7 +333,7 @@ class WebsiteSlides(http.Controller):
 
         # determine if it is embedded from external web page
         referrer_url = request.httprequest.headers.get('Referer', '')
-        base_url = request.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         is_embedded = referrer_url and not bool(base_url in referrer_url) or False
         # try accessing slide, and display to corresponding template
         try:

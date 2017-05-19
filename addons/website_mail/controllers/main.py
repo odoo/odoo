@@ -7,27 +7,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http
 from odoo.http import request
 
-
-def object_shasign(record=False, res_model='', res_id=None, **kw):
-    """ Generate a sha signature using the current time, database secret and the
-    record object or the res_model and res_id parameters
-        Return the sha signature and the time of generation in a tuple
-
-        :deprecated: Support for this SHA1-based signature was discontinued
-                     in `_message_post_helper()`, use the `token` parameter
-                     to allow posting from public sessions instead.
-    """
-    secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-    shasign = False
-    timestamp = int(time())
-    if record:
-        shasign = sha1('%s%s%s%s' % (record._name, record.id, secret, timestamp)).hexdigest()
-    elif res_model and res_id:
-        shasign = sha1('%s%s%s%s' % (res_model, res_id, secret, timestamp)).hexdigest()
-    return (shasign, timestamp)
-
-
-def _message_post_helper(res_model='', res_id=None, message='', token='', token_field='token', sha_in='', sha_time=None, nosubscribe=True, **kw):
+def _message_post_helper(res_model='', res_id=None, message='', token='', token_field='token', nosubscribe=True, **kw):
     """ Generic chatter function, allowing to write on *any* object that inherits mail.thread.
         If a token is specified, all logged in users will be able to write a message regardless
         of access rights; if the user is the public user, the message will be posted under the name
@@ -41,8 +21,6 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
         :param string token: access token if the object's model uses some kind of public access
                              using tokens (usually a uuid4) to bypass access rules
         :param string token_field: name of the field that contains the token on the object (defaults to 'token')
-        :param string sha_in: Deprecated, use `token` and `token_field` instead
-        :param str sha_time: Deprecated, use `token` and `token_field` instead
         :param bool nosubscribe: set False if you want the partner to be set as follower of the object when posting (default to True)
 
         The rest of the kwargs are passed on to message_post()

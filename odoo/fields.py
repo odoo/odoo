@@ -7,20 +7,22 @@ from collections import OrderedDict, defaultdict
 from datetime import date, datetime
 from functools import partial
 from operator import attrgetter
-from types import NoneType
-import json
 import logging
 import pytz
-import xmlrpclib
+try:
+    from xmlrpc.client import MAXINT
+except ImportError:
+    #pylint: disable=bad-python3-import
+    from xmlrpclib import MAXINT
 
 import psycopg2
 
 from odoo.sql_db import LazyCursor
-from odoo.tools import float_precision, float_repr, float_round, frozendict, \
-                       html_sanitize, human_size, pg_varchar, ustr, OrderedSet
+from odoo.tools import float_precision, float_repr, float_round, frozendict, html_sanitize, human_size, pg_varchar, ustr, OrderedSet, pycompat
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools.translate import html_translate, _
+import odoo.tools.sql as sql
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
@@ -102,6 +104,9 @@ class MetaField(type):
 
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
+        if not hasattr(cls, 'type'):
+            return
+
         if cls.type and cls.type not in MetaField.by_type:
             MetaField.by_type[cls.type] = cls
 
@@ -115,7 +120,7 @@ class MetaField(type):
                 cls.description_attrs.append((attr[13:], attr))
 
 
-class Field(object):
+class Field(MetaField('DummyField', (object,), {})):
     """ The field descriptor contains the field definition, and manages accesses
         and assignments of the corresponding field on records. The following
         attributes may be provided when instanciating a field:
@@ -254,17 +259,6 @@ class Field(object):
 
         :param company_dependent: whether the field is company-dependent (boolean)
 
-        .. _field-sparse:
-
-        .. rubric:: Sparse fields
-
-        Sparse fields have a very small probability of being not null. Therefore
-        many such fields can be serialized compactly into a common location, the
-        latter being a so-called "serialized" field.
-
-        :param sparse: the name of the field where the value of this field must
-            be stored.
-
         .. _field-incremental-definition:
 
         .. rubric:: Incremental definition
@@ -288,7 +282,6 @@ class Field(object):
                 state = fields.Selection(help="Blah blah blah")
 
     """
-    __metaclass__ = MetaField
 
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one
@@ -296,6 +289,7 @@ class Field(object):
 
     column_type = None                  # database column type (ident, spec)
     column_format = '%s'                # placeholder for value in queries
+    column_cast_from = ()               # column types that may be cast to this
 
     _slots = {
         'args': EMPTY_DICT,             # the parameters given to __init__()
@@ -323,7 +317,6 @@ class Field(object):
         'related': None,                # sequence of field names, for related fields
         'related_sudo': True,           # whether related fields should be read as admin
         'company_dependent': False,     # whether ``self`` is company-dependent (property field)
-        'sparse': None,                 # the name of the corresponding serialized field, if any
         'default': None,                # default(recs) returns the default value
 
         'string': None,                 # field label
@@ -343,7 +336,7 @@ class Field(object):
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
-        args = {key: val for key, val in kwargs.iteritems() if val is not Default}
+        args = {key: val for key, val in pycompat.items(kwargs) if val is not Default}
         self.args = args or EMPTY_DICT
         self._setup_done = None
 
@@ -372,7 +365,7 @@ class Field(object):
         """ Set all field attributes at once (with slot defaults). """
         # optimization: we assign slots only
         assign = object.__setattr__
-        for key, val in self._slots.iteritems():
+        for key, val in pycompat.items(self._slots):
             assign(self, key, attrs.pop(key, val))
         if attrs:
             assign(self, '_attrs', attrs)
@@ -415,8 +408,8 @@ class Field(object):
         """ Return whether ``self`` can retrieve parameters from ``field``. """
         return isinstance(field, type(self))
 
-    def _setup_attrs(self, model, name):
-        """ Determine field parameter attributes. """
+    def _get_attrs(self, model, name):
+        """ Return the field parameter attributes as a dictionary. """
         # determine all inherited field attributes
         attrs = {}
         if not (self.args.get('automatic') or self.args.get('manual')):
@@ -448,14 +441,12 @@ class Field(object):
             if not attrs.get('readonly'):
                 attrs['inverse'] = self._inverse_company_dependent
             attrs['search'] = self._search_company_dependent
-        if attrs.get('sparse'):
-            # by default, sparse fields are not stored and not copied
-            attrs['store'] = False
-            attrs['copy'] = attrs.get('copy', False)
-            attrs['compute'] = self._compute_sparse
-            if not attrs.get('readonly'):
-                attrs['inverse'] = self._inverse_sparse
 
+        return attrs
+
+    def _setup_attrs(self, model, name):
+        """ Initialize the field parameter attributes. """
+        attrs = self._get_attrs(model, name)
         self.set_all_attrs(attrs)
 
         # check for renamed attributes (conversion errors)
@@ -470,7 +461,10 @@ class Field(object):
 
         if not self.string and not self.related:
             # related fields get their string from their parent field
-            self.string = name.replace('_', ' ').capitalize()
+            self.string = (
+                name[:-4] if name.endswith('_ids') else
+                name[:-3] if name.endswith('_id') else name
+            ).replace('_', ' ').title()
 
         # self.default must be a callable
         if self.default is not None:
@@ -549,7 +543,7 @@ class Field(object):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in field._attrs.iteritems():
+        for attr, value in pycompat.items(field._attrs):
             if attr not in self._attrs:
                 setattr(self, attr, value)
 
@@ -572,7 +566,7 @@ class Field(object):
         """ Compute the related field ``self`` on ``records``. """
         # when related_sudo, bypass access rights checks when reading values
         others = records.sudo() if self.related_sudo else records
-        for record, other in zip(records, others):
+        for record, other in pycompat.izip(records, others):
             if not record.id and record.env != other.env:
                 # draft records: copy record's cache to other's cache first
                 copy_cache(record, other.env)
@@ -631,31 +625,6 @@ class Field(object):
         return Property.search_multi(self.name, self.model_name, operator, value)
 
     #
-    # Sparse fields
-    #
-
-    def _compute_sparse(self, records):
-        for record in records:
-            values = record[self.sparse]
-            record[self.name] = values.get(self.name)
-        if self.relational:
-            for record in records:
-                record[self.name] = record[self.name].exists()
-
-    def _inverse_sparse(self, records):
-        for record in records:
-            values = record[self.sparse]
-            value = self.convert_to_read(record[self.name], record, use_name_get=False)
-            if value:
-                if values.get(self.name) != value:
-                    values[self.name] = value
-                    record[self.sparse] = values
-            else:
-                if self.name in values:
-                    values.pop(self.name)
-                    record[self.sparse] = values
-
-    #
     # Setup of field triggers
     #
     # The triggers of ``self`` are a collection of pairs ``(field, path)`` of
@@ -682,7 +651,7 @@ class Field(object):
                 model = model0.env.get(field.comodel_name)
 
         # add self's model dependencies
-        for mname, fnames in model0._depends.iteritems():
+        for mname, fnames in pycompat.items(model0._depends):
             model = model0.env[mname]
             for fname in fnames:
                 field = model._fields[fname]
@@ -770,7 +739,7 @@ class Field(object):
 
     def convert_to_column(self, value, record):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
-        if value is None or value == False:
+        if value is None or value is False:
             return None
         if isinstance(value, unicode):
             return value.encode('utf8')
@@ -830,14 +799,91 @@ class Field(object):
 
     ############################################################################
     #
-    # Read from/write to database
+    # Update database schema
     #
 
-    def check_schema(self, model):
-        """ Make sure the database contains everything for this field. Return
-        ``True`` if the schema was altered and the field must be recomputed.
+    def update_db(self, model, columns):
+        """ Update the database schema to implement this field.
+
+            :param model: an instance of the field's model
+            :param columns: a dict mapping column names to their configuration in database
+            :return: ``True`` if the field must be recomputed on existing rows
         """
-        pass
+        if not self.column_type:
+            return
+
+        column = columns.get(self.name)
+        if not column and hasattr(self, 'oldname'):
+            # column not found; check whether it exists under its old name
+            column = columns.get(self.oldname)
+            if column:
+                sql.rename_column(model._cr, model._table, self.oldname, self.name)
+
+        # create/update the column, not null constraint, indexes
+        self.update_db_column(model, column)
+        self.update_db_notnull(model, column)
+        self.update_db_index(model, column)
+
+        return not column
+
+    def update_db_column(self, model, column):
+        """ Create/update the column corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        if not column:
+            # the column does not exist, create it
+            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+            return
+        if column['udt_name'] == self.column_type[0]:
+            return
+        if column['udt_name'] in self.column_cast_from:
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        else:
+            newname = (self.name + '_moved{}').format
+            i = 0
+            while sql.column_exists(model._cr, model._table, newname(i)):
+                i += 1
+            if column['is_nullable'] == 'NO':
+                sql.drop_not_null(model._cr, model._table, self.name)
+            sql.rename_column(model._cr, model._table, self.name, newname(i))
+            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+
+    def update_db_notnull(self, model, column):
+        """ Add or remove the NOT NULL constraint on ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        has_notnull = column and column['is_nullable'] == 'NO'
+
+        if not column or (self.required and not has_notnull):
+            # the column is new or it becomes required; initialize its values
+            if model._table_has_rows():
+                model._init_column(self.name)
+
+        if self.required and not has_notnull:
+            sql.set_not_null(model._cr, model._table, self.name)
+        elif not self.required and has_notnull:
+            sql.drop_not_null(model._cr, model._table, self.name)
+
+    def update_db_index(self, model, column):
+        """ Add or remove the index corresponding to ``self``.
+
+            :param model: an instance of the field's model
+            :param column: the column's configuration (dict) if it exists, or ``None``
+        """
+        indexname = '%s_%s_index' % (model._table, self.name)
+        if self.index:
+            sql.create_index(model._cr, indexname, model._table, ['"%s"' % self.name])
+        else:
+            sql.drop_index(model._cr, indexname, model._table)
+
+    ############################################################################
+    #
+    # Read from/write to database
+    #
 
     def read(self, records):
         """ Read the value of ``self`` on ``records``, and store it in cache. """
@@ -957,7 +1003,7 @@ class Field(object):
                     # HACK: if result is in the wrong cache, copy values
                     if recs.env != env:
                         computed = record._field_computed[self]
-                        for source, target in zip(recs, recs.with_env(env)):
+                        for source, target in pycompat.izip(recs, recs.with_env(env)):
                             try:
                                 values = target._convert_to_cache({
                                     f.name: source[f.name] for f in computed
@@ -1026,8 +1072,8 @@ class Field(object):
         for field, path in records._field_triggers[self]:
             bymodel[field.model_name][path].append(field)
 
-        for model_name, bypath in bymodel.iteritems():
-            for path, fields in bypath.iteritems():
+        for model_name, bypath in pycompat.items(bymodel):
+            for path, fields in pycompat.items(bypath):
                 if path and any(field.compute and field.store for field in fields):
                     # process stored fields
                     stored = set(field for field in fields if field.compute and field.store)
@@ -1127,7 +1173,7 @@ class Integer(Field):
     def convert_to_read(self, value, record, use_name_get=True):
         # Integer values greater than 2^31-1 are not supported in pure XMLRPC,
         # so we have to pass them as floats :-(
-        if value and value > xmlrpclib.MAXINT:
+        if value and value > MAXINT:
             return float(value)
         return value
 
@@ -1148,6 +1194,7 @@ class Float(Field):
                    cursor and returning a pair (total, decimal)
     """
     type = 'float'
+    column_cast_from = ('int4', 'numeric', 'float8')
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
         'group_operator': 'sum',
@@ -1208,6 +1255,7 @@ class Monetary(Field):
     """
     type = 'monetary'
     column_type = ('numeric', 'numeric')
+    column_cast_from = ('float8',)
     _slots = {
         'currency_field': None,
         'group_operator': 'sum',
@@ -1324,6 +1372,7 @@ class Char(_String):
         translation of terms.
     """
     type = 'char'
+    column_cast_from = ('text',)
     _slots = {
         'size': None,                   # maximum size of values (deprecated)
     }
@@ -1332,20 +1381,25 @@ class Char(_String):
     def column_type(self):
         return ('varchar', pg_varchar(self.size))
 
+    def update_db_column(self, model, column):
+        if (
+            column and column['udt_name'] == 'varchar' and column['character_maximum_length'] and
+            (self.size is None or column['character_maximum_length'] < self.size)
+        ):
+            # the column's varchar size does not match self.size; convert it
+            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
+        super(Char, self).update_db_column(model, column)
+
     _related_size = property(attrgetter('size'))
     _description_size = property(attrgetter('size'))
 
     def _setup_regular_base(self, model):
         super(Char, self)._setup_regular_base(model)
-        assert isinstance(self.size, (NoneType, int)), \
+        assert self.size is None or isinstance(self.size, int), \
             "Char field %s with non-integer size %r" % (self, self.size)
 
     def convert_to_column(self, value, record):
-        #TODO:
-        # * we need to remove the "value==False" from the next line BUT
-        #   for now too many things rely on this broken behavior
-        # * the value==None test should be common to all data types
-        if value is None or value == False:
+        if value is None or value is False:
             return None
         # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
@@ -1369,6 +1423,7 @@ class Text(_String):
     """
     type = 'text'
     column_type = ('text', 'text')
+    column_cast_from = ('varchar',)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1438,6 +1493,7 @@ class Html(_String):
 class Date(Field):
     type = 'date'
     column_type = ('date', 'date')
+    column_cast_from = ('timestamp',)
 
     @staticmethod
     def today(*args):
@@ -1501,6 +1557,7 @@ class Date(Field):
 class Datetime(Field):
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
+    column_cast_from = ('date',)
 
     @staticmethod
     def now(*args):
@@ -1599,7 +1656,7 @@ class Binary(Field):
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, buffer):
             return str(value)
-        if isinstance(value, (int, long)) and \
+        if isinstance(value, pycompat.integer_types) and \
                 (record._context.get('bin_size') or
                  record._context.get('bin_size_' + self.name)):
             # If the client requests only the size of the field, we return that
@@ -1699,7 +1756,7 @@ class Selection(Field):
             if 'selection_add' in field.args:
                 # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
-                self.selection = OrderedDict(self.selection + selection_add).items()
+                self.selection = list(pycompat.items(OrderedDict(self.selection + selection_add)))
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1878,7 +1935,34 @@ class Many2one(_Relational):
         super(Many2one, self)._setup_attrs(model, name)
         # determine self.delegate
         if not self.delegate:
-            self.delegate = name in model._inherits.values()
+            self.delegate = name in pycompat.values(model._inherits)
+
+    def update_db(self, model, columns):
+        comodel = model.env[self.comodel_name]
+        if not model.is_transient() and comodel.is_transient():
+            raise ValueError('Many2one %s from Model to TransientModel is forbidden' % self)
+        if model.is_transient() and not comodel.is_transient():
+            # Many2one relations from TransientModel Model are annoying because
+            # they can block deletion due to foreign keys. So unless stated
+            # otherwise, we default them to ondelete='cascade'.
+            self.ondelete = self.ondelete or 'cascade'
+        return super(Many2one, self).update_db(model, columns)
+
+    def update_db_column(self, model, column):
+        super(Many2one, self).update_db_column(model, column)
+        model.pool.post_init(self.update_db_foreign_key, model, column)
+
+    def update_db_foreign_key(self, model, column):
+        comodel = model.env[self.comodel_name]
+        # ir_actions is inherited, so foreign key doesn't work on it
+        if not comodel._auto or comodel._table == 'ir_actions':
+            return
+        # create/update the foreign key, and reflect it in 'ir.model.constraint'
+        process = sql.fix_foreign_key if column else sql.add_foreign_key
+        new = process(model._cr, model._table, self.name, comodel._table, 'id', self.ondelete or 'set null')
+        if new:
+            conname = '%s_%s_fkey' % (model._table, self.name)
+            model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, self._module)
 
     def _update(self, records, value):
         """ Update the cached value of ``self`` for ``records`` with ``value``.
@@ -2138,7 +2222,7 @@ class One2many(_RelationalMulti):
         fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, record, fnames)
 
-    def check_schema(self, model):
+    def update_db(self, model, columns):
         if self.comodel_name in model.env:
             comodel = model.env[self.comodel_name]
             if self.inverse_name not in comodel._fields:
@@ -2293,34 +2377,41 @@ class Many2many(_RelationalMulti):
                 # add self in m2m, so that its inverse field can find it
                 m2m[(self.relation, self.column1, self.column2)] = self
 
-    def check_schema(self, model):
+    def update_db(self, model, columns):
         cr = model._cr
-        rel, id1, id2 = self.relation, self.column1, self.column2
-        # do not create relations for custom fields as they do not belong to a module
-        # they will be automatically removed when dropping the corresponding ir.model.field
-        # table name for custom relation all starts with x_, see __init__
-        if not rel.startswith('x_'):
-            model._save_relation_table(rel, self._module)
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (rel,))
-        if not cr.dictfetchall():
-            if self.comodel_name not in model.env:
-                raise UserError(_('Many2many comodel does not exist: %r') % (self.comodel_name,))
+        # Do not reflect relations for custom fields, as they do not belong to a
+        # module. They are automatically removed when dropping the corresponding
+        # 'ir.model.field'.
+        if not self.manual:
+            model.pool.post_init(model.env['ir.model.relation']._reflect_relation,
+                                 model, self.relation, self._module)
+        if not sql.table_exists(cr, self.relation):
             comodel = model.env[self.comodel_name]
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (rel, id1, id2, id1, id2))
-            # create foreign key references with ondelete=cascade, unless the targets are SQL views
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (comodel._table,))
-            if not cr.fetchall():
-                model._m2o_add_foreign_key_unchecked(rel, id2, comodel, 'cascade', self._module)
-            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (model._table,))
-            if not cr.fetchall():
-                model._m2o_add_foreign_key_unchecked(rel, id1, model, 'cascade', self._module)
-
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id1))
-            cr.execute('CREATE INDEX ON "%s" ("%s")' % (rel, id2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (rel, model._table, comodel._table))
-            cr.commit()
-            _schema.debug("Create table '%s': m2m relation between '%s' and '%s'", rel, model._table, comodel._table)
+            query = """
+                CREATE TABLE "{rel}" ("{id1}" INTEGER NOT NULL,
+                                      "{id2}" INTEGER NOT NULL,
+                                      UNIQUE("{id1}","{id2}"));
+                COMMENT ON TABLE "{rel}" IS %s;
+                CREATE INDEX ON "{rel}" ("{id1}");
+                CREATE INDEX ON "{rel}" ("{id2}")
+            """.format(rel=self.relation, id1=self.column1, id2=self.column2)
+            cr.execute(query, ['RELATION BETWEEN %s AND %s' % (model._table, comodel._table)])
+            _schema.debug("Create table %r: m2m relation between %r and %r", self.relation, model._table, comodel._table)
+            model.pool.post_init(self.update_db_foreign_keys, model)
             return True
+
+    def update_db_foreign_keys(self, model):
+        """ Add the foreign keys corresponding to the field's relation table. """
+        cr = model._cr
+        comodel = model.env[self.comodel_name]
+        reflect = model.env['ir.model.constraint']._reflect_constraint
+        # create foreign key references with ondelete=cascade, unless the targets are SQL views
+        if sql.table_kind(cr, model._table) != 'v':
+            sql.add_foreign_key(cr, self.relation, self.column1, model._table, 'id', 'cascade')
+            reflect(model, '%s_%s_fkey' % (self.relation, self.column1), 'f', None, self._module)
+        if sql.table_kind(cr, comodel._table) != 'v':
+            sql.add_foreign_key(cr, self.relation, self.column2, comodel._table, 'id', 'cascade')
+            reflect(model, '%s_%s_fkey' % (self.relation, self.column2), 'f', None, self._module)
 
     def read(self, records):
         comodel = records.env[self.comodel_name]
@@ -2402,23 +2493,6 @@ class Many2many(_RelationalMulti):
                 link(act[2])
 
 
-class Serialized(Field):
-    """ Serialized fields provide the storage for sparse fields. """
-    type = 'serialized'
-    _slots = {
-        'prefetch': False,              # not prefetched by default
-    }
-    column_type = ('text', 'text')
-
-    def convert_to_column(self, value, record):
-        return json.dumps(value)
-
-    def convert_to_cache(self, value, record, validate=True):
-        # cache format: dict
-        value = value or {}
-        return value if isinstance(value, dict) else json.loads(value)
-
-
 class Id(Field):
     """ Special case for field 'id'. """
     type = 'integer'
@@ -2428,6 +2502,9 @@ class Id(Field):
         'store': True,
         'readonly': True,
     }
+
+    def update_db(self, model, columns):
+        pass                            # this column is created with the table
 
     def __get__(self, record, owner):
         if record is None:

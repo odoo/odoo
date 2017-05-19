@@ -14,7 +14,7 @@ class MrpProduction(models.Model):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name = 'date_planned_start'
-    _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_planned_start asc,id'
 
     @api.model
@@ -64,7 +64,7 @@ class MrpProduction(models.Model):
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         default=_get_default_picking_type, required=True)
     location_src_id = fields.Many2one(
         'stock.location', 'Raw Materials Location',

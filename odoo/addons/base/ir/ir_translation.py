@@ -8,6 +8,7 @@ from difflib import get_close_matches
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.modules import get_module_path, get_module_resource
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -47,7 +48,8 @@ class IrTranslationImport(object):
         # of ir_translation, so this copy will be much faster.
         query = """ CREATE TEMP TABLE %s (
                         imd_model VARCHAR(64),
-                        imd_name VARCHAR(128)
+                        imd_name VARCHAR(128),
+                        noupdate BOOLEAN
                     ) INHERITS (%s) """ % (self._table, self._model_table)
         self._cr.execute(query)
 
@@ -104,7 +106,8 @@ class IrTranslationImport(object):
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute(""" UPDATE %s AS ti
-                       SET res_id = imd.res_id
+                       SET res_id = imd.res_id,
+                           noupdate = imd.noupdate
                        FROM ir_model_data AS imd
                        WHERE ti.res_id IS NULL
                        AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
@@ -125,7 +128,7 @@ class IrTranslationImport(object):
         env = api.Environment(cr, SUPERUSER_ID, {})
         src_relevant_fields = []
         for model in env:
-            for field_name, field in env[model]._fields.items():
+            for field_name, field in pycompat.items(env[model]._fields):
                 if hasattr(field, 'translate') and callable(field.translate):
                     src_relevant_fields.append("%s,%s" % (model, field_name))
 
@@ -150,7 +153,10 @@ class IrTranslationImport(object):
                                src = ti.src,
                                state = 'translated'
                            FROM %s AS ti
-                           WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
+                           WHERE %s
+                           AND ti.value IS NOT NULL
+                           AND ti.value != ''
+                           AND noupdate IS NOT TRUE
                        """ % (self._model_table, self._table, find_expr),
                        (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
@@ -255,29 +261,9 @@ class IrTranslation(models.Model):
     @api.model_cr_context
     def _auto_init(self):
         res = super(IrTranslation, self)._auto_init()
-        cr = self._cr
-
-        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname LIKE 'ir_translation_%'")
-        indexes = [row[0] for row in cr.fetchall()]
-
-        # Removed because there is a size limit on btree indexed values (problem with column src):
-        # cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
-        # cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
-        #
-        # Removed because hash indexes are not compatible with postgres streaming replication:
-        # cr.execute('CREATE INDEX ir_translation_src_hash_idx ON ir_translation USING hash (src)')
-        if set(indexes) & set(['ir_translation_ltns', 'ir_translation_lts', 'ir_translation_src_hash_idx']):
-            cr.execute('DROP INDEX IF EXISTS ir_translation_ltns, ir_translation_lts, ir_translation_src_hash_idx')
-            cr.commit()
-
         # Add separate md5 index on src (no size limit on values, and good performance).
-        if 'ir_translation_src_md5' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_src_md5 ON ir_translation (md5(src))')
-            cr.commit()
-
-        if 'ir_translation_ltn' not in indexes:
-            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
-            cr.commit()
+        tools.create_index(self._cr, 'ir_translation_src_md5', self._table, ['md5(src)'])
+        tools.create_index(self._cr, 'ir_translation_ltn', self._table, ['name', 'lang', 'type'])
         return res
 
     @api.model
@@ -410,7 +396,7 @@ class IrTranslation(models.Model):
         if isinstance(types, basestring):
             types = (types,)
         if res_id:
-            if isinstance(res_id, (int, long)):
+            if isinstance(res_id, pycompat.integer_types):
                 res_id = (res_id,)
             else:
                 res_id = tuple(res_id)
@@ -501,7 +487,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' strings as a dictionary `{field_name: field_string}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.field_description for field in fields}
 
     @api.model
@@ -513,7 +499,7 @@ class IrTranslation(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' help as a dictionary `{field_name: field_help}`
         """
-        fields = self.env['ir.model.fields'].search([('model', '=', model_name)])
+        fields = self.env['ir.model.fields'].sudo().search([('model', '=', model_name)])
         return {field.name: field.help for field in fields}
 
     @api.multi
@@ -544,7 +530,7 @@ class IrTranslation(models.Model):
 
         # check for read/write access on translated field records
         fmode = 'read' if mode == 'read' else 'write'
-        for mname, ids in model_ids.iteritems():
+        for mname, ids in pycompat.items(model_ids):
             records = self.env[mname].browse(ids)
             records.check_access_rights(fmode)
             records.check_field_access_rights(fmode, model_fields[mname])
@@ -654,7 +640,7 @@ class IrTranslation(models.Model):
             return ['&', ('res_id', '=', rec.id), ('name', '=', name)]
 
         # insert missing translations, and extend domain for related fields
-        for name, fld in record._fields.items():
+        for name, fld in pycompat.items(record._fields):
             if not fld.translate:
                 continue
 

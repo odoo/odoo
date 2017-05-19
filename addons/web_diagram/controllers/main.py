@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 import odoo.http as http
+from odoo.tools import pycompat
 
 from odoo.tools.safe_eval import safe_eval
 
@@ -10,19 +10,19 @@ from odoo.tools.safe_eval import safe_eval
 class DiagramView(http.Controller):
 
     @http.route('/web_diagram/diagram/get_diagram_info', type='json', auth='user')
-    def get_diagram_info(self, req, id, model, node, connector,
+    def get_diagram_info(self, id, model, node, connector,
                          src_node, des_node, label, **kw):
 
-        visible_node_fields = kw.get('visible_node_fields',[])
-        invisible_node_fields = kw.get('invisible_node_fields',[])
-        node_fields_string = kw.get('node_fields_string',[])
-        connector_fields = kw.get('connector_fields',[])
-        connector_fields_string = kw.get('connector_fields_string',[])
+        visible_node_fields = kw.get('visible_node_fields', [])
+        invisible_node_fields = kw.get('invisible_node_fields', [])
+        node_fields_string = kw.get('node_fields_string', [])
+        connector_fields = kw.get('connector_fields', [])
+        connector_fields_string = kw.get('connector_fields_string', [])
 
         bgcolors = {}
         shapes = {}
-        bgcolor = kw.get('bgcolor','')
-        shape = kw.get('shape','')
+        bgcolor = kw.get('bgcolor', '')
+        shape = kw.get('shape', '')
 
         if bgcolor:
             for color_spec in bgcolor.split(';'):
@@ -44,9 +44,13 @@ class DiagramView(http.Controller):
         isolate_nodes = {}
         for blnk_node in graphs['blank_nodes']:
             isolate_nodes[blnk_node['id']] = blnk_node
-        else:
-            y = map(lambda t: t['y'],filter(lambda x: x['y'] if x['x']==20 else None, nodes.values()))
-            y_max = (y and max(y)) or 120
+        y = [
+            t['y']
+            for t in pycompat.values(nodes)
+            if t['x'] == 20
+            if t['y']
+        ]
+        y_max = (y and max(y)) or 120
 
         connectors = {}
         list_tr = []
@@ -95,11 +99,11 @@ class DiagramView(http.Controller):
                 color='white',
                 options={}
             )
-            for color, expr in bgcolors.items():
+            for color, expr in pycompat.items(bgcolors):
                 if safe_eval(expr, act):
                     n['color'] = color
 
-            for shape, expr in shapes.items():
+            for shape, expr in pycompat.items(shapes):
                 if safe_eval(expr, act):
                     n['shape'] = shape
 
@@ -109,5 +113,5 @@ class DiagramView(http.Controller):
         _id, name = http.request.env[model].browse([id]).name_get()[0]
         return dict(nodes=nodes,
                     conn=connectors,
-                    name=name,
+                    display_name=name,
                     parent_field=graphs['node_parent_field'])

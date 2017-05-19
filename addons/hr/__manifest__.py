@@ -31,13 +31,14 @@ You can manage:
         'base_setup',
         'mail',
         'resource',
-        'web_kanban',
+        'web',
     ],
     'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'views/hr_views.xml',
         'views/hr_templates.xml',
+        'views/hr_config_settings_views.xml',
         'data/hr_data.xml',
     ],
     'demo': [

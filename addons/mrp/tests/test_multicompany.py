@@ -29,5 +29,5 @@ class TestMrpMulticompany(common.TransactionCase):
             if defaults.get(field):
                 try:
                     StockLocation.check_access_rule([defaults[field]], 'read')
-                except Exception, exc:
+                except Exception as exc:
                     assert False, "unreadable location %s: %s" % (field, exc)

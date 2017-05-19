@@ -3,7 +3,7 @@
 
 import hmac
 
-from urlparse import urljoin
+from werkzeug import urls
 
 from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
@@ -17,7 +17,7 @@ class MailGroup(models.Model):
     def message_get_email_values(self, notif_mail=None):
         self.ensure_one()
         res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         headers = {}
         if res.get('headers'):
             try:
@@ -47,7 +47,7 @@ class MailGroup(models.Model):
             # generate a new token per subscriber
             token = self._generate_action_token(partner_id, action=action)
 
-            token_url = urljoin(base_url, route % {
+            token_url = urls.url_join(base_url, route % {
                 'action': action,
                 'channel': self.id,
                 'partner': partner_id,

@@ -8,7 +8,7 @@ class RecruitmentSettings(models.TransientModel):
     _name = 'hr.recruitment.config.settings'
     _inherit = ['res.config.settings']
 
-    module_hr_recruitment_survey = fields.Selection(selection=[
-        (0, "Do not use interview forms"),
-        (1, "Use interview forms during the recruitment process")
-        ], string='Interview Form')
+    module_website_hr_recruitment = fields.Boolean(string='Online Posting')
+    module_hr_recruitment_survey = fields.Boolean(string='Interview Forms')
+    module_website_sign = fields.Boolean(string='eSign')
+    module_hr_appraisal = fields.Boolean(string='Appraisals')

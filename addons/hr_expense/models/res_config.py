@@ -7,7 +7,14 @@ class HrExpenseConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     alias_prefix = fields.Char('Default Alias Name for Expenses')
-    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].get_param("mail.catchall.domain"))
+    alias_domain = fields.Char('Alias Domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
+    group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
+        implied_group='analytic.group_analytic_accounting')
+    group_uom = fields.Boolean("Units of Measure",
+        implied_group='product.group_uom')
+    default_alias_email = fields.Boolean(string='Let your employees record expenses by email', default_model='hr.expense.config.settings')
+    module_project = fields.Boolean(string="Project")
+    module_sale = fields.Boolean(string="Customer Billing")
 
     @api.model
     def get_default_alias_prefix(self, fields):

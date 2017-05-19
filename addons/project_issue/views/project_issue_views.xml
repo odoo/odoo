@@ -17,7 +17,7 @@
                                 options='{"terminology": "archive"}'/>
                         </button>
                     </div>
-                    <field name="kanban_state" class="oe_inline" widget="kanban_state_selection"/>
+                    <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Issue Summary..."/></h1>
                     </div>
@@ -60,7 +60,8 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
                 </div>
                 </form>
             </field>
@@ -86,6 +87,21 @@
             </field>
         </record>
 
+        <record id="project_issue_view_tree_activity" model="ir.ui.view">
+            <field name="name">project.issue.view.tree.activity</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="activity_date_deadline"/>
+                    <field name="activity_type_id"/>
+                    <field name="activity_summary"/>
+                    <field name="stage_id"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_project_issue_filter" model="ir.ui.view">
             <field name="name">project.issue.search.view</field>
             <field name="model">project.issue</field>
@@ -105,6 +121,18 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter string="My Activities" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities (7 days)" name="activities_week"
+                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                        ]"/>
+                    <filter string="Overdue Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
                     <group expand="0" string="Group By" >
                         <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
                         <filter string="Project" name="project" context="{'group_by':'project_id'}" />
@@ -125,7 +153,7 @@
             <field name="model">project.issue</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
+                <calendar string="Issues" date_start="date" date_delay="duration" color="user_id">
                     <field name="name"/>
                     <field name="partner_id"/>
                 </calendar>
@@ -150,6 +178,8 @@
                     <field name="legend_blocked"/>
                     <field name="legend_done"/>
                     <field name="legend_normal"/>
+                    <field name="activity_ids" />
+                    <field name="activity_state" />
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -182,9 +212,12 @@
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
+                                        <div class="o_kanban_inline_block ml4 mr4">
+                                            <field name="activity_ids" widget="kanban_activity" />
+                                        </div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                         <div class="pull-left" groups="base.group_user">
-                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="kanban_state" widget="state_selection"/>
                                         </div>
                                     </div>
                                 </div>
@@ -254,6 +287,7 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph,pivot</field>
+            <field name="search_view_id" ref="view_project_issue_filter"/>
             <field name="context">{
                     'search_default_project_id': [active_id],
                     'default_project_id': active_id,
@@ -273,6 +307,7 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="search_view_id" ref="view_project_issue_filter"/>
             <field name="help" type="html">
                 <p>
                     The Odoo issues tracker allows you to efficiently manage things
@@ -280,6 +315,13 @@
                     complaints, project troubles, material breakdowns, etc.
                 </p>
             </field>
+        </record>
+
+        <record id="project_issue_action_from_partner" model="ir.actions.act_window">
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="name">Issues</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
 
         <record id="project_issue_categ_act0" model="ir.actions.act_window">
@@ -297,6 +339,7 @@
                           (0, 0, {'view_mode': 'tree', 'view_id': ref('project_issue_tree_view')}),
                           (0, 0, {'view_mode': 'calendar', 'view_id': ref('project_issue_calendar_view')}),
                           (0, 0, {'view_mode': 'form', 'view_id': ref('project_issue_form_view')}),
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('project_issue_pivot_view')}),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('project_issue_graph_view')}),
                           ]"/>
             <field name="help" type="html">
@@ -308,6 +351,128 @@
             </field>
         </record>
 
+        <record id="project_issue_action_activity" model="ir.actions.act_window">
+            <field name="name">My Next Issue Activities</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban,calendar</field>
+            <field name="view_id" ref="project_issue_view_tree_activity"/>
+            <field name="context">{'search_default_activities_my':1}</field>
+            <field name="domain">[('activity_date_deadline', '!=', False)]</field>
+            <field name="help" type="html">
+                <p>
+                    Currently there are not any activity scheduled.
+                </p>
+            </field>
+        </record>
+
         <menuitem id="menu_project_issue_track" name="Issues" parent="project.menu_project_management"
                 action="project_issue_categ_act0" sequence="15"/>
+
+
+        <menuitem id="project_issue_menu_activity"
+            name="Next Issue Activities"
+            parent="project.menu_project_management"
+            action="project_issue_action_activity"
+            sequence="25"/>
+
+        <record id="project.mail_activity_type_action_config_project_types" model="ir.actions.act_window">
+            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['project.task', 'project.issue'])]</field>
+        </record>
+
+        <record id="project_issue_view_pivot" model="ir.ui.view">
+            <field name="name">project.issue.pivot</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <pivot string="Project Issue" disable_linking="True">
+                    <field name="project_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="project_issue_view_graph" model="ir.ui.view">
+            <field name="name">project.issue.graph</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <graph string="Project Issue">
+                    <field name="project_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="project_issue_view_search" model="ir.ui.view">
+            <field name="name">project.issue.search</field>
+            <field name="model">project.issue</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="stage_id"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
+                    <group  expand="1" string="Group By">
+                        <filter string="Assigned to" name="Responsible" context="{'group_by':'user_id'}" />
+                        <filter string="Project" name="project" context="{'group_by':'project_id'}" />
+                        <filter string="Priority" context="{'group_by':'priority'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Create Day" context="{'group_by':'create_date:day'}" help="Create Date"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="project_issue_action_analysis" model="ir.actions.act_window">
+            <field name="name">Issues Analysis</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">{'search_default_year':1,'search_default_This Month':1,'search_default_project':1}</field>
+            <field name="search_view_id" ref="project_issue_view_search"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'pivot', 'view_id': ref('project_issue_view_pivot')}),
+                (0, 0, {'view_mode': 'graph', 'view_id': ref('project_issue_view_graph')})]"/>
+            <field name="help">This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues.</field>
+        </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="project_issue_filter_delay" model="ir.filters">
+            <field name="name">Delay</field>
+            <field name="model_id">project.issue</field>
+            <field name="user_id" eval="False"/>
+            <field name="action_id" ref="project_issue_action_analysis"/>
+            <field name="context">{'group_by': ['project_id'], 'measures': ['delay_close', 'delay_open']}</field>
+        </record>
+        <record id="project_issue_filter_responsible" model="ir.filters">
+            <field name="name">By Responsible</field>
+            <field name="model_id">project.issue</field>
+            <field name="user_id" eval="False"/>
+            <field name="action_id" ref="project_issue_action_analysis"/>
+            <field name="context">{'group_by': ['project_id', 'user_id']}</field>
+        </record>
+
+        <record id="action_project_issue_report_filtered" model="ir.actions.act_window">
+            <field name="name">Issues Analysis</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="context">{
+                'search_default_year':1,
+                'search_default_This Month':1,
+                'search_default_project':1,
+                'search_default_project_id': [active_id],
+                'default_project_id': active_id,
+            }
+            </field>
+            <field name="search_view_id" ref="project_issue_view_search"/>
+            <field name="view_id"></field>  <!-- force empty -->
+            <field name="help">This report on the project issues allows you to analyse the quality of your support or after-sales services. You can track the issues per age. You can analyse the time required to open or close an issue, the number of email to exchange and the time spent on average by issues.</field>
+        </record>
+
+        <menuitem id="menu_project_issue_report_tree" action="project_issue_action_analysis"
+            parent="project.menu_project_report" sequence="20"/>
+
 </odoo>

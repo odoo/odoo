@@ -17,7 +17,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_cancel']" position="replace">
-                    <button name="action_invoice_cancel" type="object" states="draft,proforma2,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -28,7 +28,7 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_invoice_cancel']" position="replace">
-                    <button name="action_invoice_cancel" type="object" states="draft,proforma2,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
+                    <button name="action_invoice_cancel" type="object" states="draft,open" string="Cancel Invoice" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
@@ -54,7 +54,7 @@
                 </field>
                 <xpath expr="//field[@name='bank_account_id']" position="after">
                     <field name="state" invisible="1"/>
-                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Cancel" type="object" icon="fa fa-undo text-warning"/>
+                    <button name="button_cancel_reconciliation" attrs="{'invisible': ['|',('journal_entry_ids', '=', []), ('state', '=', 'confirm')]}" string="Revert reconciliation" type="object" icon="fa fa-undo text-warning"/>
                 </xpath>
             </field>
         </record>
@@ -65,7 +65,7 @@
             <field name="inherit_id" ref="account.view_account_payment_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//header/field[@name='state']" position="before">
-                    <button name="cancel" attrs="{'invisible': [('state', '=', 'draft')]}" string="Cancel" type="object"/>
+                    <button name="cancel" states="posted,sent,reconciled" string="Cancel" type="object"/>
                 </xpath>
             </field>
         </record>

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from lxml import etree
-from StringIO import StringIO
+import io
 import unittest
 
 from odoo.tools.view_validation import (
@@ -11,7 +11,7 @@ from odoo.tools.view_validation import (
     valid_field_in_graph, valid_field_in_tree,
 )
 
-invalid_form = etree.parse(StringIO('''\
+invalid_form = etree.parse(io.BytesIO('''\
 <form>
     <label></label>
     <group>
@@ -34,7 +34,7 @@ invalid_form = etree.parse(StringIO('''\
 </form>
 ''')).getroot()
 
-valid_form = etree.parse(StringIO('''\
+valid_form = etree.parse(io.BytesIO('''\
 <form string="">
     <field name=""></field>
     <field name=""></field>
@@ -54,7 +54,7 @@ valid_form = etree.parse(StringIO('''\
 </form>
 ''')).getroot()
 
-invalid_graph = etree.parse(StringIO('''\
+invalid_graph = etree.parse(io.BytesIO('''\
 <graph>
     <label/>
     <group>
@@ -66,14 +66,14 @@ invalid_graph = etree.parse(StringIO('''\
 </graph>
 ''')).getroot()
 
-valid_graph = etree.parse(StringIO('''\
+valid_graph = etree.parse(io.BytesIO('''\
 <graph string="">
     <field name=""></field>
     <field name=""></field>
 </graph>
 ''')).getroot()
 
-invalid_tree = etree.parse(StringIO('''\
+invalid_tree = etree.parse(io.BytesIO('''\
 <tree>
   <group>
     <div>
@@ -84,7 +84,7 @@ invalid_tree = etree.parse(StringIO('''\
 </tree>
 ''')).getroot()
 
-valid_tree = etree.parse(StringIO('''\
+valid_tree = etree.parse(io.BytesIO('''\
 <tree string="">
     <field name=""></field>
     <field name=""></field>

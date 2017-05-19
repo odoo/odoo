@@ -131,7 +131,7 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice(self):
         """
-        copy incoterm from sale order to invoice
+        copy incoterm from sales order to invoice
         """
         invoice = super(SaleOrder, self)._prepare_invoice()
         if self.incoterm:

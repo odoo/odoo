@@ -4,11 +4,13 @@
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from odoo.tools.misc import split_every
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, registry, _
 from odoo.osv import expression
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, \
+    float_round, pycompat
 
 import logging
 
@@ -26,7 +28,7 @@ class ProcurementRule(models.Model):
 
     location_id = fields.Many2one('stock.location', 'Procurement Location')
     location_src_id = fields.Many2one('stock.location', 'Source Location', help="Source location is action=move")
-    route_id = fields.Many2one('stock.location.route', 'Route', help="If route_id is False, the rule is global")
+    route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     procure_method = fields.Selection([
         ('make_to_stock', 'Take From Stock'),
         ('make_to_order', 'Create Procurement')], string='Move Supply Method',
@@ -34,9 +36,9 @@ class ProcurementRule(models.Model):
         help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there.""")
     route_sequence = fields.Integer('Route Sequence', related='route_id.sequence', store=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Picking Type',
+        'stock.picking.type', 'Operation Type',
         required=True,
-        help="Picking Type determines the way the picking should be shown in the view, reports, ...")
+        help="Operation Type determines the way the picking should be shown in the view, reports, ...")
     delay = fields.Integer('Number of Days', default=0)
     partner_address_id = fields.Many2one('res.partner', 'Partner Address')
     propagate = fields.Boolean(
@@ -131,8 +133,6 @@ class ProcurementOrder(models.Model):
             warehouse_routes = self.warehouse_id.route_ids
             if warehouse_routes:
                 res = Pull.search(expression.AND([[('route_id', 'in', warehouse_routes.ids)], domain]), order='route_sequence, sequence', limit=1)
-        if not res:
-            res = Pull.search(expression.AND([[('route_id', '=', False)], domain]), order='sequence', limit=1)
         return res
 
     def _get_stock_move_values(self):
@@ -175,11 +175,6 @@ class ProcurementOrder(models.Model):
             'propagate': self.rule_id.propagate,
             'priority': self.priority,
         }
-
-    def _run_move_create(self):
-        # FIXME - remove me in master/saas-14
-        _logger.warning("'_run_move_create' has been renamed into '_get_stock_move_values'... Overrides are ignored")
-        return self._get_stock_move_values()
 
     @api.multi
     def _run(self):
@@ -246,9 +241,9 @@ class ProcurementOrder(models.Model):
 
             # Search all confirmed stock_moves and try to assign them
             confirmed_moves = self.env['stock.move'].search([('state', '=', 'confirmed')], limit=None, order='priority desc, date_expected asc')
-            for x in xrange(0, len(confirmed_moves.ids), 100):
+            for moves_chunk in split_every(100, confirmed_moves.ids):
                 # TDE CLEANME: muf muf
-                self.env['stock.move'].browse(confirmed_moves.ids[x:x + 100]).action_assign()
+                self.env['stock.move'].browse(moves_chunk).action_assign()
                 if use_new_cursor:
                     self._cr.commit()
             if use_new_cursor:
@@ -316,7 +311,7 @@ class ProcurementOrder(models.Model):
                 location_data[key]['orderpoints'] += orderpoint
                 location_data[key]['groups'] = self._procurement_from_orderpoint_get_groups([orderpoint.id])
 
-            for location_id, location_data in location_data.iteritems():
+            for location_id, location_data in pycompat.items(location_data):
                 location_orderpoints = location_data['orderpoints']
                 product_context = dict(self._context, location=location_orderpoints[0].location_id.id)
                 substract_quantity = location_orderpoints.subtract_procurements_from_orderpoints()

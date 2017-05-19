@@ -6,15 +6,15 @@ import logging.handlers
 import os
 import platform
 import pprint
-import release
+from . import release
 import sys
 import threading
 
 import psycopg2
 
 import odoo
-import sql_db
-import tools
+from . import sql_db
+from . import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -24,32 +24,6 @@ def log(logger, level, prefix, msg, depth=None):
     for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
         logger.log(level, indent+line)
         indent=indent_after
-
-def LocalService(name):
-    """
-    The odoo.netsvc.LocalService() function is deprecated. It still works
-    in two cases: workflows and reports. For workflows, instead of using
-    LocalService('workflow'), odoo.workflow should be used (better yet,
-    methods on odoo.osv.orm.Model should be used). For reports,
-    odoo.report.render_report() should be used (methods on the Model should
-    be provided too in the future).
-    """
-    assert odoo.conf.deprecation.allow_local_service
-    _logger.warning("LocalService() is deprecated since march 2013 (it was called with '%s')." % name)
-
-    if name == 'workflow':
-        return odoo.workflow
-
-    if name.startswith('report.'):
-        report = odoo.report.interface.report_int._reports.get(name)
-        if report:
-            return report
-        else:
-            dbname = getattr(threading.currentThread(), 'dbname', None)
-            if dbname:
-                registry = odoo.registry(dbname)
-                with registry.cursor() as cr:
-                    return registry['ir.actions.report.xml']._lookup_report(cr, name[len('report.'):])
 
 path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 
@@ -116,7 +90,7 @@ def init_logger():
 
     logging.addLevelName(25, "INFO")
 
-    from tools.translate import resetlocale
+    from .tools.translate import resetlocale
     resetlocale()
 
     # create a format for log messages and dates
@@ -195,7 +169,6 @@ def init_logger():
         _logger.debug('logger level set: "%s"', logconfig_item)
 
 DEFAULT_LOG_CONFIGURATION = [
-    'odoo.workflow.workitem:WARNING',
     'odoo.http.rpc.request:INFO',
     'odoo.http.rpc.response:INFO',
     'odoo.addons.web.http:INFO',

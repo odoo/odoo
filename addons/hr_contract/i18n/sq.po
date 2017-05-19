@@ -1,24 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-# 
+#
 # Translators:
-# Anri Haxhi <anrihaxhi@gmail.com>, 2016
-# artxcenter <artxcenter@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Full Name <endrit.veseli@inveen.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Full Name <endrit.veseli@inveen.com>, 2016\n"
-"Language-Team: Albanian (https://www.transifex.com/odoo/teams/41243/sq/)\n"
+"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"PO-Revision-Date: 2016-03-31 14:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Albanian (http://www.transifex.com/odoo/odoo-9/language/sq/)\n"
+"Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: sq\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
@@ -42,11 +38,6 @@ msgid "Basic Salary of the employee"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
-msgid "Click here to create new contracts."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr ""
@@ -59,7 +50,7 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5769
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -83,12 +74,6 @@ msgstr ""
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr ""
-
-#. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:84
-#, python-format
-msgid "Contract start date must be less than contract end date."
 msgstr ""
 
 #. module: hr_contract
@@ -118,7 +103,7 @@ msgstr "Krijuar nga"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
 msgid "Created on"
-msgstr "Krijuar në"
+msgstr "Krijuar me"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
@@ -141,7 +126,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
 msgid "Display Name"
-msgstr "Emri i shfaqur"
+msgstr "Emri i paraqitur"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -164,6 +149,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Data Perfundimtare"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -203,11 +193,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Important Messages"
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
 msgid "In kilometers"
 msgstr ""
@@ -242,13 +227,13 @@ msgstr "Modifikimi i fundit në"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_uid
 msgid "Last Updated by"
-msgstr "Perditësimi i fundit nga"
+msgstr "Modifikuar per here te fundit nga"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_write_date
 msgid "Last Updated on"
-msgstr "Përditësimi i fundit në"
+msgstr "Modifikuar per here te fundit me"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_contract_id
@@ -315,7 +300,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
-msgstr "Renditje"
+msgstr "Sekuencë"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
@@ -353,6 +338,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
 msgid "Trial Start Date"
 msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Unread Messages"
+msgstr "Mesazhe të Palexuara"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
@@ -393,3 +383,56 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr ""
+
+#~ msgid "Action Needed"
+#~ msgstr "Veprimet e nevojshme"
+
+#~ msgid "Date of the last message posted on the record."
+#~ msgstr "Data e mesazhit të fundit të postuar në regjistër"
+
+#~ msgid "Followers"
+#~ msgstr "Ndjekesit"
+
+#~ msgid "Followers (Channels)"
+#~ msgstr "Ndjekesit (Kanalet)"
+
+#~ msgid "Followers (Partners)"
+#~ msgstr "Ndjekesit (Partnerët)"
+
+#~ msgid "If checked new messages require your attention."
+#~ msgstr "Nëqoftëse është e çekuar mesazhet e reja kërkojnë vëmëndjen tuaj."
+
+#~ msgid "If checked, new messages require your attention."
+#~ msgstr ""
+#~ "Nëqoftëse është e çekuar,\n"
+#~ " mesazhet e reja kërkojnë vëmëndjen tuaj."
+
+#~ msgid "Is Follower"
+#~ msgstr "Eshte Ndjekës"
+
+#~ msgid "Last Message Date"
+#~ msgstr "Data e Mesazhit të Fundit"
+
+#~ msgid "Messages"
+#~ msgstr "Mesazhet"
+
+#~ msgid "Messages and communication history"
+#~ msgstr "Historiku i mesazheve dhe komunikimeve"
+
+#~ msgid "Number of Actions"
+#~ msgstr "Numri i Veprimeve"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Numri i mesazheve që kërkojnë një veprim"
+
+#~ msgid "Number of unread messages"
+#~ msgstr "Numri i mesazheve të palexuara"
+
+#~ msgid "Unread Messages Counter"
+#~ msgstr "Numëruesi i Mesazheve të Palexuara"
+
+#~ msgid "Website Messages"
+#~ msgstr "Mesazhe të Website-it"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historiku i Komunikimeve të Website-it"

@@ -115,7 +115,7 @@
             <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
-                        <div class="o_form_field o_stat_info">
+                        <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="scrap_count"/></span>
                             <span class="o_stat_text">Scraps</span>
                         </div>
@@ -135,7 +135,7 @@
                     </group>
                     <div class="alert alert-danger alert-dismissible text-left" role="alert" attrs="{'invisible': [('production_messages', '=', False)]}">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>
-                        <field name="production_messages" style="height: 50px;"/>
+                        <field name="production_messages"/>
                     </div>
                 </group>
                 <notebook>
@@ -272,7 +272,7 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar color="workcenter_id" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id">
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
             </calendar>
@@ -450,7 +450,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
-        <field name="view_mode">pivot,graph</field>
+        <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="view_workcenter_load_pivot"/>
     </record>
 

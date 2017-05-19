@@ -24,7 +24,7 @@ class ReportJournal(models.AbstractModel):
             query += 'am.name'
         query += ', "account_move_line".move_id, acc.code'
         self.env.cr.execute(query, tuple(params))
-        ids = map(lambda x: x[0], self.env.cr.fetchall())
+        ids = (x[0] for x in self.env.cr.fetchall())
         return self.env['account.move.line'].browse(ids)
 
     def _sum_debit(self, data, journal_id):
@@ -94,14 +94,14 @@ class ReportJournal(models.AbstractModel):
         return self.env['account.move.line'].with_context(data['form'].get('used_context', {}))._query_get()
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         target_move = data['form'].get('target_move', 'all')
         sort_selection = data['form'].get('sort_selection', 'date')
 
         res = {}
         for journal in data['form']['journal_ids']:
             res[journal] = self.with_context(data['form'].get('used_context', {})).lines(target_move, journal, sort_selection, data)
-        docargs = {
+        return {
             'doc_ids': data['form']['journal_ids'],
             'doc_model': self.env['account.journal'],
             'data': data,
@@ -112,4 +112,3 @@ class ReportJournal(models.AbstractModel):
             'sum_debit': self._sum_debit,
             'get_taxes': self._get_taxes,
         }
-        return self.env['report'].render('account.report_journal', docargs)

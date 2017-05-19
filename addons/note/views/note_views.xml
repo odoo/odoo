@@ -49,11 +49,23 @@
       </field>
     </record>
 
+    <!-- note Tag Tree View -->
+    <record id="note_tag_view_tree" model="ir.ui.view">
+      <field name="name">note.tag.tree</field>
+      <field name="model">note.tag</field>
+      <field name="arch" type="xml">
+        <tree string="Tags" editable="bottom">
+            <field name="name"/>
+        </tree>
+      </field>
+    </record>
+
     <!-- note Tag Action -->
     <record id="note_tag_action" model="ir.actions.act_window">
       <field name="name">Tags</field>
       <field name="res_model">note.tag</field>
       <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
           Click to add a new tag.
@@ -76,6 +88,8 @@
           <field name="date_done"/>
           <field name="message_partner_ids"/>
           <field name="tag_ids"/>
+          <field name="activity_ids" />
+          <field name="activity_state" />
           <templates>
             <t t-name="kanban-box">
 
@@ -100,6 +114,11 @@
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
+                  <div class="oe_kanban_bottom_right">
+                    <div class="o_kanban_inline_block mt16 mr4">
+                        <field name="activity_ids" widget="kanban_activity" />
+                    </div>
+                  </div>
                 </span>
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
@@ -139,11 +158,12 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
                 <sheet>
-                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags" options="{'no_create_edit': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
                     <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
@@ -160,6 +180,18 @@
           <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <separator/>
+          <filter string="My Activities" name="activities_my"
+                  domain="[('activity_ids.user_id', '=', uid)]"/>
+          <filter string="Today Activities" name="activities_today"
+                  domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+          <filter string="Upcoming Activities (7 days)" name="activities_week"
+                  domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                           ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
+                  ]"/>
+          <filter string="Overdue Activities" name="activities_overdue"
+                  domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                  help="Show all records which has next action date is before today"/>
           <group expand="0" string="Group By">
             <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>

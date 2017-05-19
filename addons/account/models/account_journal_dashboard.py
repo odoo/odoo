@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
+from odoo.release import version
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from odoo.tools.misc import formatLang
 
@@ -29,6 +30,16 @@ class account_journal(models.Model):
     def toggle_favorite(self):
         self.write({'show_on_dashboard': False if self.show_on_dashboard else True})
         return False
+
+    def _graph_title_and_key(self):
+        if self.type == 'sale':
+            return ['', _('Sales: Untaxed Total')]
+        elif self.type == 'purchase':
+            return ['', _('Purchase: Untaxed Total')]
+        elif self.type == 'cash':
+            return ['', _('Cash: Balance')]
+        elif self.type == 'bank':
+            return ['', _('Bank: Balance')]
 
     @api.multi
     def get_line_graph_datas(self):
@@ -87,7 +98,9 @@ class account_journal(models.Model):
                 short_name = format_date(show_date, 'd MMM', locale=locale)
                 data.append({'x': short_name, 'y':last_balance, 'name': name})
 
-        return [{'values': data, 'area': True}]
+        [graph_title, graph_key] = self._graph_title_and_key()
+        color = '#875A7B' if '+e' in version else '#7c7bad'
+        return [{'values': data, 'title': graph_title, 'key': graph_key, 'area': True, 'color': color}]
 
     @api.multi
     def get_bar_graph_datas(self):
@@ -130,13 +143,13 @@ class account_journal(models.Model):
             if query_results[index].get('aggr_date') != None:
                 data[index]['value'] = query_results[index].get('total')
 
-        return [{'values': data}]
+        [graph_title, graph_key] = self._graph_title_and_key()
+        return [{'values': data, 'title': graph_title, 'key': graph_key}]
 
     @api.multi
     def get_journal_dashboard_datas(self):
         currency = self.currency_id or self.company_id.currency_id
         number_to_reconcile = last_balance = account_sum = 0
-        ac_bnk_stmt = []
         title = ''
         number_draft = number_waiting = number_late = 0
         sum_draft = sum_waiting = sum_late = 0.0
@@ -144,23 +157,16 @@ class account_journal(models.Model):
             last_bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)], order="date desc, id desc", limit=1)
             last_balance = last_bank_stmt and last_bank_stmt[0].balance_end or 0
             #Get the number of items to reconcile for that bank journal
-            self.env.cr.execute("""SELECT COUNT(DISTINCT(statement_line_id)) 
-                        FROM account_move where statement_line_id 
-                        IN (SELECT line.id 
-                            FROM account_bank_statement_line AS line 
-                            LEFT JOIN account_bank_statement AS st 
-                            ON line.statement_id = st.id 
-                            WHERE st.journal_id IN %s and st.state = 'open')""", (tuple(self.ids),))
-            already_reconciled = self.env.cr.fetchone()[0]
-            self.env.cr.execute("""SELECT COUNT(line.id) 
-                            FROM account_bank_statement_line AS line 
-                            LEFT JOIN account_bank_statement AS st 
-                            ON line.statement_id = st.id 
-                            WHERE st.journal_id IN %s and st.state = 'open'""", (tuple(self.ids),))
-            all_lines = self.env.cr.fetchone()[0]
-            number_to_reconcile = all_lines - already_reconciled
+            self.env.cr.execute("""SELECT COUNT(DISTINCT(line.id))
+                            FROM account_bank_statement_line AS line
+                            LEFT JOIN account_bank_statement AS st
+                            ON line.statement_id = st.id
+                            WHERE st.journal_id IN %s AND st.state = 'open'
+                            AND not exists (select 1 from account_move_line aml where aml.statement_line_id = line.id)
+                        """, (tuple(self.ids),))
+            number_to_reconcile = self.env.cr.fetchone()[0]
             # optimization to read sum of balance from account_move_line
-            account_ids = tuple(filter(None, [self.default_debit_account_id.id, self.default_credit_account_id.id]))
+            account_ids = tuple(ac for ac in [self.default_debit_account_id.id, self.default_credit_account_id.id] if ac)
             if account_ids:
                 amount_field = 'balance' if not self.currency_id else 'amount_currency'
                 query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s;""" % (amount_field,)
@@ -185,7 +191,7 @@ class account_journal(models.Model):
                 else:
                     factor = 1
                 cur = self.env['res.currency'].browse(result.get('currency'))
-                if result.get('state') in ['draft', 'proforma', 'proforma2']:
+                if result.get('state') == 'draft':
                     number_draft += 1
                     sum_draft += cur.compute(result.get('amount_total'), currency) * factor
                 elif result.get('state') == 'open':
@@ -231,7 +237,7 @@ class account_journal(models.Model):
                 ctx.update({'default_type': 'in_refund', 'type': 'in_refund'})
             view_id = self.env.ref('account.invoice_supplier_form').id
         else:
-            ctx.update({'default_journal_id': self.id})
+            ctx.update({'default_journal_id': self.id, 'view_no_maturity': True})
             view_id = self.env.ref('account.view_move_form').id
             model = 'account.move'
         return {

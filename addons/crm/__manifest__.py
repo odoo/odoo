@@ -29,7 +29,6 @@ Dashboard for CRM will include:
 """,
     'website': 'https://www.odoo.com/page/crm',
     'depends': [
-        'base_action_rule',
         'base_setup',
         'sales_team',
         'mail',
@@ -44,7 +43,6 @@ Dashboard for CRM will include:
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
-        'data/crm_activity_data.xml',
         'data/crm_data.xml',
         'data/crm_stage_data.xml',
         'data/sales_config_settings_data.xml',
@@ -53,7 +51,6 @@ Dashboard for CRM will include:
         'data/mail_template_data.xml',
 
         'wizard/base_partner_merge_views.xml',
-        'wizard/crm_activity_log_views.xml',
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
@@ -64,7 +61,6 @@ Dashboard for CRM will include:
 
         'views/crm_templates.xml',
         'views/crm_views.xml',
-        'views/crm_activity_views.xml',
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
@@ -74,9 +70,8 @@ Dashboard for CRM will include:
     ],
     'demo': [
         'data/crm_demo.xml',
+        'data/mail_activity_demo.xml',
         'data/crm_lead_demo.xml',
-        'data/crm_activity_demo.xml',
-        'data/base_action_rule_demo.xml',
     ],
     'css': ['static/src/css/crm.css'],
     'installable': True,

@@ -6,7 +6,7 @@
     'version': '1.1',
     'website' : 'https://www.odoo.com/page/accounting',
     'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail', 'report'],
+    'depends' : ['base', 'decimal_precision', 'mail'],
     'description': """
 Module for defining analytic accounting object.
 ===============================================

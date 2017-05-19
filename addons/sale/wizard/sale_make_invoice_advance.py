@@ -160,6 +160,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     'product_uom': self.product_id.uom_id.id,
                     'product_id': self.product_id.id,
                     'tax_id': [(6, 0, tax_ids)],
+                    'is_downpayment': True,
                 })
                 self._create_invoice(order, so_line, amount)
         if self._context.get('open_invoices', False):
