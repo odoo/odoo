@@ -335,12 +335,14 @@ For example:
   $ odoo-bin --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
 
 .. warning:: The Enterprise git repository **does not contain the full Odoo
-    source code**. It is actually only a series of extra add-ons. The main server
+    source code**. It is only a collection of extra add-ons. The main server
     code is in the Community version.  Running the Enterprise version actually
     means running the server from the Community version with the addons-path option
-    set to the folder with the Enterprise version. You need to clone both the
-    Community and Enterprise repository to have a working Odoo installation. The
-    Download_ page contains the entire source code but is not updateable as easily.
+    set to the folder with the Enterprise version.
+    
+    You need to clone both the Community and Enterprise repository to have a working
+    Odoo installation. The Download_ page contains the entire source code but is not
+    updateable as easily.
 
 
 
