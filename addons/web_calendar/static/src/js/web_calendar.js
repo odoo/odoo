@@ -484,7 +484,7 @@ var CalendarView = View.extend({
         var self = this;
         var to_get = {};
         _(this.info_fields).each(function (fieldname) {
-            if (!_(["many2one", "one2one"]).contains(
+            if (!_(["many2one"]).contains(
                 self.fields[fieldname].type))
                 return;
             to_get[fieldname] = [];
