@@ -1058,10 +1058,22 @@ actual arch.
     def render(self, values=None, engine='ir.qweb'):
         assert isinstance(self.id, pycompat.integer_types)
 
+        qcontext = self._prepare_qcontext()
+        qcontext.update(values or {})
+
+        return self.env[engine].render(self.id, qcontext)
+
+    @api.model
+    def _prepare_qcontext(self):
+        """ Returns the qcontext : rendering context with website specific value (required
+            to render website layout template)
+        """
         qcontext = dict(
             env=self.env,
+            user_id=self.env["res.users"].browse(self.env.user.id),
+            res_company=self.env.user.company_id.sudo(),
             keep_query=keep_query,
-            request=request, # might be unbound if we're not in an httprequest context
+            request=request,  # might be unbound if we're not in an httprequest context
             debug=request.debug if request else False,
             json=json,
             quote_plus=werkzeug.url_quote_plus,
@@ -1070,9 +1082,7 @@ actual arch.
             relativedelta=relativedelta,
             xmlid=self.key,
         )
-        qcontext.update(values or {})
-
-        return self.env[engine].render(self.id, qcontext)
+        return qcontext
 
     #------------------------------------------------------
     # Misc
