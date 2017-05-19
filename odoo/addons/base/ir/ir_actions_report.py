@@ -17,19 +17,15 @@ import tempfile
 import subprocess
 import re
 
-from collections import namedtuple
+from lxml import etree
 from contextlib import closing
-from PyPDF2 import PdfFileWriter, PdfFileReader
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
+from cStringIO import StringIO
+from PyPDF2 import PdfFileWriter, PdfFileReader
 
 
 _logger = logging.getLogger(__name__)
-
-
-WkhtmltopdfObj = namedtuple('WkhtmltopdfObj',
-                            ['header', 'content', 'footer', 'res_id', 'attachment_id', 'attachment_name', 'attachment_use'])
-
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
 # started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
@@ -40,6 +36,7 @@ try:
     createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1).asString('png')
 except Exception:
     pass
+
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -71,38 +68,6 @@ else:
     else:
         _logger.info('Wkhtmltopdf seems to be broken.')
         wkhtmltopdf_state = 'broken'
-
-
-def _merge_pdf(documents):
-    '''Merge PDF files into one.
-
-    :param documents: list of path of pdf files
-    :returns: path of the merged pdf
-    '''
-    writer = PdfFileWriter()
-    streams = []  # We have to close the streams *after* PdfFilWriter's call to write()
-    try:
-        for document in documents:
-            pdfreport = open(document, 'rb')
-            streams.append(pdfreport)
-            reader = PdfFileReader(pdfreport, overwriteWarnings=False)
-            for page in range(0, reader.getNumPages()):
-                writer.addPage(reader.getPage(page))
-
-        merged_file_fd, merged_file_path = tempfile.mkstemp(suffix='.html', prefix='report.merged.tmp.')
-        with closing(os.fdopen(merged_file_fd, 'w')) as merged_file:
-            writer.write(merged_file)
-    finally:
-        for stream in streams:
-            try:
-                stream.close()
-            except Exception:
-                pass
-
-    for stream in streams:
-        stream.close()
-
-    return merged_file_path
 
 
 class IrActionsReport(models.Model):
@@ -180,76 +145,50 @@ class IrActionsReport(models.Model):
     # Main report methods
     #--------------------------------------------------------------------------
     @api.multi
-    def retrieve_attachment(self, record_id, attachment_name=None):
+    def retrieve_attachment(self, record):
         '''Retrieve an attachment for a specific record.
 
-        :param res_id: The record_id.
-        :param attachment_name: The name of the attachment.
-        :return: A recordset of length <= 1
+        :param record: The record owning of the attachment.
+        :param attachment_name: The optional name of the attachment.
+        :return: A recordset of length <=1 or None
         '''
+        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
         if not attachment_name:
-            attachment_name = safe_eval(self.attachment, {'object': record_id, 'time': time})
+            return None
         return self.env['ir.attachment'].search([
                 ('datas_fname', '=', attachment_name),
                 ('res_model', '=', self.model),
-                ('res_id', '=', record_id.id)
+                ('res_id', '=', record.id)
         ], limit=1)
 
-    @api.model
-    def create_wkhtmltopdf_obj(self, header, content, footer, res_id=None):
-        '''Create an object using namedtuple that represents a "sub-report" in wkhtmltopdf.
-        This object contains header, content, footer, res_id and data related to the attachment:
-        * attachment_id: an existing attachment_id found for the record.
-        * attachment_name: the expected name of the attachment created (if necessary) after calling wkhtmltopdf.
-
-        :param header: The header as a string.
-        :param content: The content as a string.
-        :param footer: The footer as a string.
-        :param res_id: The related record of the report.
-        :return: A new instance of WkhtmltopdfObj.
-        '''
-        attachment_id = attachment_name = None
-        attachment_use = False
-        if res_id and len(self._ids) == 1 and self.attachment:
-            record_id = self.env[self.model].browse(res_id)
-            attachment_name = safe_eval(self.attachment, {'object': record_id, 'time': time})
-            attachment_id = self.retrieve_attachment(record_id, attachment_name)
-            attachment_use = self.attachment_use
-        return WkhtmltopdfObj(
-            header=header,
-            content=content,
-            footer=footer,
-            res_id=res_id,
-            attachment_id=attachment_id,
-            attachment_name=attachment_name,
-            attachment_use=attachment_use
-        )
-
-    @api.model
-    def postprocess_pdf_report(self, res_id, pdfreport_path, attachment_name):
+    @api.multi
+    def postprocess_pdf_report(self, record, buffer):
         '''Hook to handle post processing during the pdf report generation.
         The basic behavior consists to create a new attachment containing the pdf
         base64 encoded.
 
-        :param res_id: The record id.
-        :param pdfreport_path: The path to the pdf content newly generated by wkhtmltopdf.
-        :param attachment_name: The name of the attachment.
+        :param record_id: The record that will own the attachment.
+        :param pdf_content: The optional name content of the file to avoid reading both times.
+        :return: The newly generated attachment if no AccessError, else None.
         '''
-        with open(pdfreport_path, 'rb') as pdfreport:
-            attachment_content = pdfreport.read()
-        attachment = {
+        attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
+        if not attachment_name:
+            return None
+        attachment_vals = {
             'name': attachment_name,
-            'datas': base64.encodestring(attachment_content),
+            'datas': base64.encodestring(buffer.getvalue()),
             'datas_fname': attachment_name,
             'res_model': self.model,
-            'res_id': res_id,
+            'res_id': record.id,
         }
+        attachment = None
         try:
-            self.env['ir.attachment'].create(attachment)
+            attachment = self.env['ir.attachment'].create(attachment_vals)
         except AccessError:
-            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
+            _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
         else:
-            _logger.info('The PDF document %s is now saved in the database', attachment['name'])
+            _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
+        return attachment
 
     @api.model
     def get_wkhtmltopdf_state(self):
@@ -267,17 +206,17 @@ class IrActionsReport(models.Model):
     @api.model
     def _build_wkhtmltopdf_args(
             self,
-            paperformat,
+            paperformat_id,
             landscape,
             specific_paperformat_args=None,
             set_viewport_size=False):
         '''Build arguments understandable by wkhtmltopdf bin.
 
-        :param paperformat: A report.paperformat record.
+        :param paperformat_id: A report.paperformat record.
         :param landscape: Force the report orientation to be landscape.
         :param specific_paperformat_args: A dictionary containing prioritized wkhtmltopdf arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
-        :return: A list of string representing the wkhtmltopdf arguments.
+        :return: A list of string representing the wkhtmltopdf process command args.
         '''
         command_args = []
         if set_viewport_size:
@@ -294,39 +233,39 @@ class IrActionsReport(models.Model):
         command_args.extend(['--quiet'])
 
         # Build paperformat args
-        if paperformat:
-            if paperformat.format and paperformat.format != 'custom':
-                command_args.extend(['--page-size', paperformat.format])
+        if paperformat_id:
+            if paperformat_id.format and paperformat_id.format != 'custom':
+                command_args.extend(['--page-size', paperformat_id.format])
 
-            if paperformat.page_height and paperformat.page_width and paperformat.format == 'custom':
-                command_args.extend(['--page-width', str(paperformat.page_width) + 'mm'])
-                command_args.extend(['--page-height', str(paperformat.page_height) + 'mm'])
+            if paperformat_id.page_height and paperformat_id.page_width and paperformat_id.format == 'custom':
+                command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
+                command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
                 command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
             else:
-                command_args.extend(['--margin-top', str(paperformat.margin_top)])
+                command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-dpi'):
                 command_args.extend(['--dpi', str(specific_paperformat_args['data-report-dpi'])])
-            elif paperformat.dpi:
-                if os.name == 'nt' and int(paperformat.dpi) <= 95:
+            elif paperformat_id.dpi:
+                if os.name == 'nt' and int(paperformat_id.dpi) <= 95:
                     _logger.info("Generating PDF on Windows platform require DPI >= 96. Using 96 instead.")
                     command_args.extend(['--dpi', '96'])
                 else:
-                    command_args.extend(['--dpi', str(paperformat.dpi)])
+                    command_args.extend(['--dpi', str(paperformat_id.dpi)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
-            elif paperformat.header_spacing:
-                command_args.extend(['--header-spacing', str(paperformat.header_spacing)])
+            elif paperformat_id.header_spacing:
+                command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
-            command_args.extend(['--margin-left', str(paperformat.margin_left)])
-            command_args.extend(['--margin-bottom', str(paperformat.margin_bottom)])
-            command_args.extend(['--margin-right', str(paperformat.margin_right)])
-            if not landscape and paperformat.orientation:
-                command_args.extend(['--orientation', str(paperformat.orientation)])
-            if paperformat.header_line:
+            command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
+            command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+            command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
+            if not landscape and paperformat_id.orientation:
+                command_args.extend(['--orientation', str(paperformat_id.orientation)])
+            if paperformat_id.header_line:
                 command_args.extend(['--header-line'])
 
         if landscape:
@@ -334,20 +273,22 @@ class IrActionsReport(models.Model):
 
         return command_args
 
-    @api.model
-    def _extract_wkhtmltopdf_data_from_html(self, res_ids, html):
-        '''Extract information from the html passed as parameter and returns it as
-         a dictionary.
+    @api.multi
+    def _prepare_html(self, html):
+        '''Divide and recreate the header/footer html by merging all found in html.
+        The bodies are extracted and added to a list. Then, extract the specific_paperformat_args.
+        The idea is to put all headers/footers together. Then, we will use a javascript trick
+        (see minimal_layout template) to set the right header/footer during the processing of wkhtmltopdf.
+        This allows the computation of multiple reports in a single call to wkhtmltopdf.
 
-        :param res_ids: The records ids.
-        :param html: The html as a string.
-        :return: data found in the html as a dictionary.
+        :param html: The html rendered by render_qweb_html.
+        :type: bodies: list of string representing each one a html body.
+        :type header: string representing the html header.
+        :type footer: string representing the html footer.
+        :type specific_paperformat_args: dictionary of prioritized paperformat values.
+        :return: bodies, header, footer, specific_paperformat_args
         '''
         IrConfig = self.env['ir.config_parameter'].sudo()
-        headers = []
-        contents = []
-        footers = []
-        ids = []
         base_url = IrConfig.get_param('report.url') or IrConfig.get_param('web.base.url')
 
         # Return empty dictionary if 'web.minimal_layout' not found.
@@ -359,49 +300,31 @@ class IrActionsReport(models.Model):
         root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
+        header_node = etree.Element('div', id='minimal_layout_report_headers')
+        footer_node = etree.Element('div', id='minimal_layout_report_footers')
+        bodies = []
+        res_ids = []
+
         # Retrieve headers
         for node in root.xpath(match_klass.format('header')):
-            body = lxml.html.tostring(node)
-            header = layout.render(dict(subst=True, body=body, base_url=base_url))
-            headers.append(header)
+            header_node.append(node)
 
         # Retrieve footers
         for node in root.xpath(match_klass.format('footer')):
-            body = lxml.html.tostring(node)
-            footer = layout.render(dict(subst=True, body=body, base_url=base_url))
-            footers.append(footer)
+            footer_node.append(node)
 
-        # Retrieve content & ids
+        # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
-            # Previously, we marked some reports to be saved in attachment via their ids, so we
-            # must set a relation between report ids and report's content. We use the QWeb
-            # branding in order to do so: searching after a node having a data-oe-model
-            # attribute with the value of the current report model and read its oe-id attribute
-            if res_ids and len(res_ids) == 1:
-                report_id = res_ids[0]
+            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            bodies.append(body)
+            oemodelnode = node.find(".//*[@data-oe-model='%s']" % self.model)
+            if oemodelnode is not None:
+                res_id = oemodelnode.get('data-oe-id')
+                if res_id:
+                    res_id = int(res_id)
             else:
-                oemodelnode = node.find(".//*[@data-oe-model='%s']" % self.model)
-                if oemodelnode is not None:
-                    report_id = oemodelnode.get('data-oe-id')
-                    if report_id:
-                        report_id = int(report_id)
-                else:
-                    report_id = False
-
-            # Extract the body
-            body = lxml.html.tostring(node)
-            content = layout.render(dict(subst=False, body=body, base_url=base_url))
-
-            contents.append(content)
-            ids.append(report_id)
-
-        # Create a list of wkhtmltopdf_objs, each one representing a "sub-report".
-        wkhtmltopdf_objs = []
-        for i in range(0, len(contents)):
-            header = headers[i] if headers else None
-            footer = footers[i] if footers else None
-            wkhtmltopdf_obj = self.create_wkhtmltopdf_obj(header, contents[i], footer, ids[i])
-            wkhtmltopdf_objs.append(wkhtmltopdf_obj)
+                res_id = False
+            res_ids.append(res_id)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
@@ -410,106 +333,85 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        return {
-            'wkhtmltopdf_objs': wkhtmltopdf_objs,
-            'specific_paperformat_args': specific_paperformat_args,
-        }
+        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
+        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+
+        return bodies, res_ids, header, footer, specific_paperformat_args
 
     @api.model
     def _run_wkhtmltopdf(
             self,
-            wkhtmltopdf_objs,
-            landscape,
-            paperformat,
+            bodies,
+            header=None,
+            footer=None,
+            landscape=False,
             specific_paperformat_args=None,
             set_viewport_size=False):
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
-        :param wkhtmltopdf_objs: A list of WkhtmltopdfObj generated by the method create_wkhtmltopdf_obj in ir.actions.report
+        :param bodies: The html bodies of the report, one per page.
+        :param header: The html header of the report containing all headers.
+        :param footer: The html footer of the report containing all footers.
         :param landscape: Force the pdf to be rendered under a landscape format.
-        :param paperformat: ir.actions.report.paperformat to generate the wkhtmltopf arguments.
         :param specific_paperformat_args: dict of prioritized paperformat arguments.
         :param set_viewport_size: Enable a viewport sized '1024x1280' or '1280x1024' depending of landscape arg.
-        :param postprocess_method: A method that will be called for each "sub-report" to perform a post processing like
-                                    the generation of report attachments.
         :return: Content of the pdf as a string
         '''
+        paperformat_id = self.paperformat_id or self.env.user.company_id.paperformat_id
+
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
-            paperformat,
+            paperformat_id,
             landscape,
             specific_paperformat_args=specific_paperformat_args,
             set_viewport_size=set_viewport_size)
 
-        # Execute WKhtmltopdf
-        pdfdocuments = []
+        files_command_args = []
         temporary_files = []
+        if header:
+            head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
+            with closing(os.fdopen(head_file_fd, 'w')) as head_file:
+                head_file.write(header)
+            temporary_files.append(head_file_path)
+            files_command_args.extend(['--header-html', head_file_path])
+        if footer:
+            foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
+            with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
+                foot_file.write(footer)
+            temporary_files.append(foot_file_path)
+            files_command_args.extend(['--footer-html', foot_file_path])
 
-        for wkhtmltopdf_obj in wkhtmltopdf_objs:
-            local_command_args = []
-            pdfreport_fd, pdfreport_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
-            temporary_files.append(pdfreport_path)
+        paths = []
+        for i, body in enumerate(bodies):
+            prefix = '%s%d.' % ('report.body.tmp.', i)
+            body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
+            with closing(os.fdopen(body_file_fd, 'w')) as body_file:
+                body_file.write(body)
+            paths.append(body_file_path)
+            temporary_files.append(body_file_path)
 
-            # Directly load the document if we already have it
-            if wkhtmltopdf_obj.attachment_id and wkhtmltopdf_obj.attachment_use:
-                with closing(os.fdopen(pdfreport_fd, 'w')) as pdfreport:
-                    pdfreport.write(base64.decodestring(wkhtmltopdf_obj.attachment_id.datas))
-                pdfdocuments.append(pdfreport_path)
-                continue
-            else:
-                os.close(pdfreport_fd)
+        pdf_report_fd, pdf_report_path = tempfile.mkstemp(suffix='.pdf', prefix='report.tmp.')
+        os.close(pdf_report_fd)
+        temporary_files.append(pdf_report_path)
 
-            # Wkhtmltopdf handles header/footer as separate pages. Create them if necessary.
-            if wkhtmltopdf_obj.header:
-                head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
-                temporary_files.append(head_file_path)
-                with closing(os.fdopen(head_file_fd, 'w')) as head_file:
-                    head_file.write(wkhtmltopdf_obj.header)
-                local_command_args.extend(['--header-html', head_file_path])
-            if wkhtmltopdf_obj.footer:
-                foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
-                temporary_files.append(foot_file_path)
-                with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
-                    foot_file.write(wkhtmltopdf_obj.footer)
-                local_command_args.extend(['--footer-html', foot_file_path])
+        try:
+            wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + files_command_args + paths + [pdf_report_path]
+            process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            out, err = process.communicate()
 
-            # Body stuff
-            content_file_fd, content_file_path = tempfile.mkstemp(suffix='.html', prefix='report.body.tmp.')
-            temporary_files.append(content_file_path)
-            with closing(os.fdopen(content_file_fd, 'w')) as content_file:
-                content_file.write(wkhtmltopdf_obj.content)
+            if process.returncode not in [0, 1]:
+                if process.returncode == -11:
+                    message = _(
+                        'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
+                else:
+                    message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
+                raise UserError(message % (str(process.returncode), err[-1000:]))
+        except:
+            raise
 
-            try:
-                wkhtmltopdf = [_get_wkhtmltopdf_bin()] + command_args + local_command_args
-                wkhtmltopdf += [content_file_path] + [pdfreport_path]
-                process = subprocess.Popen(wkhtmltopdf, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                out, err = process.communicate()
-
-                if process.returncode not in [0, 1]:
-                    if process.returncode == -11:
-                        message = _(
-                            'Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file number of subprocess reached. Message : %s')
-                    else:
-                        message = _('Wkhtmltopdf failed (error code: %s). Message: %s')
-                    raise UserError(message % (str(process.returncode), err[-1000:]))
-                pdfdocuments.append(pdfreport_path)
-            except:
-                raise
-
-            # Call the postprocess method on the ir.actions.report.
-            if wkhtmltopdf_obj.res_id and wkhtmltopdf_obj.attachment_name and not wkhtmltopdf_obj.attachment_id:
-                self.postprocess_pdf_report(wkhtmltopdf_obj.res_id, pdfreport_path, wkhtmltopdf_obj.attachment_name)
-
-        # Return the entire document
-        if len(pdfdocuments) == 1:
-            entire_report_path = pdfdocuments[0]
-        else:
-            entire_report_path = _merge_pdf(pdfdocuments)
-            temporary_files.append(entire_report_path)
-
-        with open(entire_report_path, 'rb') as pdfdocument:
-            content_read = pdfdocument.read()
+        with open(pdf_report_path, 'rb') as pdf_document:
+            pdf_content = pdf_document.read()
 
         # Manual cleanup of the temporary files
         for temporary_file in temporary_files:
@@ -518,7 +420,7 @@ class IrActionsReport(models.Model):
             except (OSError, IOError):
                 _logger.error('Error when trying to remove file %s' % temporary_file)
 
-        return content_read
+        return pdf_content
 
     @api.model
     def _get_report_from_name(self, report_name):
@@ -531,6 +433,7 @@ class IrActionsReport(models.Model):
         context = self.env['res.users'].context_get()
         return report_obj.with_context(context).search(conditions, limit=1)
 
+    @api.model
     def barcode(self, barcode_type, value, width=600, height=100, humanreadable=0):
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
@@ -546,7 +449,7 @@ class IrActionsReport(models.Model):
         except (ValueError, AttributeError):
             raise ValueError("Cannot convert into barcode.")
 
-    @api.model
+    @api.multi
     def render_template(self, template, values=None):
         """Allow to render a QWeb template python-side. This function returns the 'ir.ui.view'
         render but embellish it with some variables/methods used in reports.
@@ -578,19 +481,98 @@ class IrActionsReport(models.Model):
         )
         return view_obj.render_template(template, values)
 
-    @api.model
-    def render_qweb_pdf(self, res_ids, html=None, data=None):
+    @api.multi
+    def _post_pdf(self, save_in_attachment, pdf_content=None, res_ids=None):
+        '''Merge the existing attachments by adding one by one the content of the attachments
+        and then, we add the pdf_content if exists. Create the attachments for each record individually
+        if required.
+
+        :param save_in_attachment: The retrieved attachments as map record.id -> attachment_id.
+        :param pdf_content: The pdf content newly generated by wkhtmltopdf.
+        :param res_ids: the ids of record to allow postprocessing.
+        :return: The pdf content of the merged pdf.
+        '''
+
+        def close_streams(streams):
+            for stream in streams:
+                try:
+                    stream.close()
+                except Exception:
+                    pass
+
+        # Check special case having only one record with existing attachment.
+        if len(save_in_attachment) == 1 and not pdf_content:
+            return base64.decodestring(save_in_attachment.values()[0].datas)
+
+        # Create a list of streams representing all sub-reports part of the final result
+        # in order to append the existing attachments and the potentially modified sub-reports
+        # by the postprocess_pdf_report calls.
+        streams = []
+
+        # In wkhtmltopdf has been called, we need to split the pdf in order to call the postprocess method.
+        if pdf_content:
+            pdf_content_stream = StringIO(pdf_content)
+            # Build a record_map mapping id -> record
+            record_map = {r.id: r for r in self.env[self.model].browse([res_id for res_id in res_ids if res_id])}
+
+            # If no value in attachment or no record specified, only append the whole pdf.
+            if not record_map or not self.attachment:
+                streams.append(pdf_content_stream)
+            else:
+                if len(res_ids) == 1:
+                    # Only one record, so postprocess directly and append the whole pdf.
+                    if res_ids[0] in record_map and not res_ids[0] in save_in_attachment:
+                        self.postprocess_pdf_report(record_map[res_ids[0]], pdf_content_stream)
+                    streams.append(pdf_content_stream)
+                else:
+                    # In case of multiple docs, we need to split the pdf according the records.
+                    # To do so, we split the pdf based on outlines computed by wkhtmltopdf.
+                    # An outline is a <h?> html tag found on the document. To retrieve this table,
+                    # we look on the pdf structure using pypdf to compute the outlines_pages that is
+                    # an array like [0, 3, 5] that means a new document start at page 0, 3 and 5.
+                    reader = PdfFileReader(pdf_content_stream)
+                    outlines_pages = sorted(
+                        [outline.getObject()[0] for outline in reader.trailer['/Root']['/Dests'].values()])
+                    assert len(outlines_pages) == len(res_ids)
+                    for i, num in enumerate(outlines_pages):
+                        to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
+                        attachment_writer = PdfFileWriter()
+                        for j in range(num, to):
+                            attachment_writer.addPage(reader.getPage(j))
+                        stream = StringIO()
+                        attachment_writer.write(stream)
+                        if res_ids[i] and res_ids[i] not in save_in_attachment:
+                            self.postprocess_pdf_report(record_map[res_ids[i]], stream)
+                        streams.append(stream)
+                    close_streams([pdf_content_stream])
+
+        # If attachment_use is checked, the records already having an existing attachment
+        # are not been rendered by wkhtmltopdf. So, create a new stream for each of them.
+        if self.attachment_use:
+            for attachment_id in save_in_attachment.values():
+                content = base64.decodestring(attachment_id.datas)
+                streams.append(StringIO(content))
+
+        # Build the final pdf.
+        writer = PdfFileWriter()
+        for stream in streams:
+            reader = PdfFileReader(stream)
+            writer.appendPagesFromReader(reader)
+        result_stream = StringIO()
+        streams.append(result_stream)
+        writer.write(result_stream)
+        result = result_stream.getvalue()
+
+        # We have to close the streams after PdfFileWriter's call to write()
+        close_streams(streams)
+        return result
+
+    @api.multi
+    def render_qweb_pdf(self, res_ids, data=None):
         # In case of test environment without enough workers to perform calls to wkhtmltopdf,
         # fallback to render_html.
         if tools.config['test_enable'] and not tools.config['test_report_directory']:
             return self.render_qweb_html(res_ids, data=data)
-
-        if self.get_wkhtmltopdf_state() == 'install':
-            # wkhtmltopdf is not installed
-            # the call should be catched before (cf /report/check_wkhtmltopdf) but
-            # if get_pdf is called manually (email template), the check could be
-            # bypassed
-            raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
         # As the assets are generated during the same transaction as the rendering of the
         # templates calling them, there is a scenario where the assets are unreachable: when
@@ -612,36 +594,54 @@ class IrActionsReport(models.Model):
         # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
         context['debug'] = False
 
-        if html is None:
-            html = self.with_context(context).render_qweb_html(res_ids, data=data)[0]
-
         # The test cursor prevents the use of another environnment while the current
         # transaction is not finished, leading to a deadlock when the report requests
         # an asset bundle during the execution of test scenarios. In this case, return
         # the html version.
         if isinstance(self.env.cr, TestCursor):
-            return html
+            return self.with_context(context).render_qweb_html(res_ids, data=data)[0]
 
-        html = html.decode('utf-8')  # Ensure the current document is utf-8 encoded.
-
-        # Get the paperformat associated to the report, otherwise fallback on the company one.
-        if not self.paperformat_id:
-            user = self.env['res.users'].browse(self.env.uid)  # Rebrowse to avoid sudo user from self.env.user
-            paperformat = user.company_id.paperformat_id
+        # Dispatch the records by ones having an attachment and ones requesting a call to
+        # wkhtmltopdf.
+        save_in_attachment = {}
+        Model = self.env[self.model]
+        record_ids = Model.browse(res_ids)
+        wk_record_ids = Model
+        if self.attachment:
+            for record_id in record_ids:
+                attachment_id = self.retrieve_attachment(record_id)
+                if attachment_id:
+                    save_in_attachment[record_id.id] = attachment_id
+                if not self.attachment_use or not attachment_id:
+                    wk_record_ids += record_id
         else:
-            paperformat = self.paperformat_id
+            wk_record_ids = record_ids
 
-        html_data = self.with_context(context)._extract_wkhtmltopdf_data_from_html(res_ids, html)
-        wkhtmltopdf_objs = html_data.get('wkhtmltopdf_objs', [])
-        specific_paperformat_args = html_data.get('specific_paperformat_args', None)
+        pdf_content = None
+        if wk_record_ids:
+            if self.get_wkhtmltopdf_state() == 'install':
+                # wkhtmltopdf is not installed
+                # the call should be catched before (cf /report/check_wkhtmltopdf) but
+                # if get_pdf is called manually (email template), the check could be
+                # bypassed
+                raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-        return self._run_wkhtmltopdf(
-            wkhtmltopdf_objs,
-            context.get('landscape'),
-            paperformat,
-            specific_paperformat_args=specific_paperformat_args,
-            set_viewport_size=context.get('set_viewport_size'),
-        ), 'pdf'
+            html = self.with_context(context).render_qweb_html(wk_record_ids.ids, data=data)[0]
+
+            # Ensure the current document is utf-8 encoded.
+            html = html.decode('utf-8')
+
+            bodies, res_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+
+            pdf_content = self._run_wkhtmltopdf(
+                bodies,
+                header=header,
+                footer=footer,
+                landscape=context.get('landscape'),
+                specific_paperformat_args=specific_paperformat_args,
+                set_viewport_size=context.get('set_viewport_size'),
+            )
+        return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=res_ids), 'pdf'
 
     @api.model
     def render_qweb_html(self, docids, data=None):
