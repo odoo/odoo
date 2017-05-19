@@ -178,7 +178,7 @@
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@id='company_currency']" position="after">
-                    <label for="id" string=""/>
+                    <label string=" "/>
                     <p class="text-muted oe_edit_only">
                         <a href="" type="action" name="%(base.action_currency_all_form)d">Activate Other Currencies</a>
                     </p>
