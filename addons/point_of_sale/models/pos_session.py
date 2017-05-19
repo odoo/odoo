@@ -122,7 +122,7 @@ class PosSession(models.Model):
                         session.cash_control = True
                         session.cash_journal_id = statement.journal_id.id
                         session.cash_register_id = statement.id
-                if not session.cash_control:
+                if not session.cash_control and session.state != 'closed':
                     raise UserError(_("Cash control can only be applied to cash journals."))
 
     @api.constrains('user_id', 'state')
