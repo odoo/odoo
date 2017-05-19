@@ -62,10 +62,8 @@ class Http(models.AbstractModel):
             website = env['website'].get_current_website()
             if website:
                 request.uid = website.user_id.id
-            else:
-                request.uid = env.ref('base.public_user').id
-        else:
-            request.uid = request.session.uid
+        if not request.uid:
+            super(Http, cls)._auth_method_public()
 
     bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
 
