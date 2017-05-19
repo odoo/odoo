@@ -15,47 +15,63 @@ class WebsiteCustomer(http.Controller):
     @http.route([
         '/customers',
         '/customers/page/<int:page>',
-        '/customers/country/<int:country_id>',
-        '/customers/country/<country_name>-<int:country_id>',
-        '/customers/country/<int:country_id>/page/<int:page>',
-        '/customers/country/<country_name>-<int:country_id>/page/<int:page>',
-        '/customers/tag/<tag_id>',
-        '/customers/tag/<tag_id>/page/<int:page>',
-        '/customers/tag/<tag_id>/country/<int:country_id>',
-        '/customers/tag/<tag_id>/country/<country_name>-<int:country_id>',
-        '/customers/tag/<tag_id>/country/<int:country_id>/page/<int:page>',
-        '/customers/tag/<tag_id>/country/<country_name>-<int:country_id>/page/<int:page>',
+        '/customers/country/<model("res.country"):country>',
+        '/customers/country/<model("res.country"):country>/page/<int:page>',
+        '/customers/industry/<model("res.partner.industry"):industry>',
+        '/customers/industry/<model("res.partner.industry"):industry>/page/<int:page>',
+        '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>',
+        '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>/page/<int:page>',
     ], type='http', auth="public", website=True)
-    def customers(self, country_id=0, page=0, country_name='', tag_id=0, **post):
-        Country = request.env['res.country']
+    def customers(self, country=None, industry=None, page=0, **post):
         Tag = request.env['res.partner.tag']
         Partner = request.env['res.partner']
-        partner_name = post.get('search', '')
+        search_value = post.get('search')
 
         domain = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
-        if partner_name:
+        if search_value:
             domain += [
-                '|',
-                ('name', 'ilike', post.get("search")),
-                ('website_description', 'ilike', post.get("search"))
+                '|', '|',
+                ('name', 'ilike', search_value),
+                ('website_description', 'ilike', search_value),
+                ('industry_id.name', 'ilike', search_value),
             ]
 
+        tag_id = post.get('tag_id')
         if tag_id:
             tag_id = unslug(tag_id)[1] or 0
             domain += [('website_tag_ids', 'in', tag_id)]
+
+        # group by industry, based on customers found with the search(domain)
+        industries = Partner.sudo().read_group(domain, ["id", "industry_id"], groupby="industry_id", orderby="industry_id")
+        partners_count = Partner.sudo().search_count(domain)
+
+        if industry:
+            domain.append(('industry_id', '=', industry.id))
+            if industry.id not in (x['industry_id'][0] for x in industries if x['industry_id']):
+                if industry.exists():
+                    industries.append({
+                        'industry_id_count': 0,
+                        'industry_id': (industry.id, industry.name)
+                    })
+
+        industries.sort(key=lambda d: (d.get('industry_id') or (0, ''))[1])
+
+        industries.insert(0, {
+            'industry_id_count': partners_count,
+            'industry_id': (0, _("All Sectors of Activity"))
+        })
 
         # group by country, based on customers found with the search(domain)
         countries = Partner.sudo().read_group(domain, ["id", "country_id"], groupby="country_id", orderby="country_id")
         country_count = Partner.sudo().search_count(domain)
 
-        if country_id:
-            domain += [('country_id', '=', country_id)]
-            curr_country = Country.browse(country_id)
-            if country_id not in (x['country_id'][0] for x in countries if x['country_id']):
-                if curr_country.exists():
+        if country:
+            domain += [('country_id', '=', country.id)]
+            if country.id not in (x['country_id'][0] for x in countries if x['country_id']):
+                if country.exists():
                     countries.append({
                         'country_id_count': 0,
-                        'country_id': (curr_country.id, curr_country.name)
+                        'country_id': (country.id, country.name)
                     })
                 countries.sort(key=lambda d: d['country_id'] and d['country_id'][1])
 
@@ -69,8 +85,10 @@ class WebsiteCustomer(http.Controller):
 
         # pager
         url = '/customers'
-        if country_id:
-            url += '/country/%s' % country_id
+        if industry:
+            url += '/industry/%s' % industry.id
+        if country:
+            url += '/country/%s' % country.id
         pager = request.website.pager(
             url=url, total=partner_count, page=page, step=self._references_per_page,
             scope=7, url_args=post
@@ -85,8 +103,11 @@ class WebsiteCustomer(http.Controller):
 
         values = {
             'countries': countries,
-            'current_country_id': country_id or 0,
-            'current_country': curr_country if country_id else False,
+            'current_country_id': country.id if country else 0,
+            'current_country': country or False,
+            'industries': industries,
+            'current_industry_id': industry.id if industry else 0,
+            'current_industry': industry or False,
             'partners': partners,
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
