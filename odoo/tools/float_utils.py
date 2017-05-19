@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
+import decimal
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
@@ -68,6 +69,13 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         sign = cmp(normalized_value, 0)
         normalized_value -= sign*epsilon
         rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+
+    elif rounding_method == 'HALF-EVEN':
+        decimal_value = decimal.Decimal(repr(value))
+        test = decimal_value.quantize(
+            decimal.Decimal(repr(rounding_factor)),
+            rounding=decimal.ROUND_HALF_EVEN)
+        return float(test)
 
     result = rounded_value * rounding_factor # de-normalize
     return result
@@ -189,6 +197,7 @@ if __name__ == "__main__":
     expected_rounding = {
         'HALF-UP':   ['.33', '.67', '.85', '.56', '.85', '.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556'],
         'UP':        ['.34', '.67', '.86', '.56', '.85', '.00', '.02', '.02', '.68', '.68', '.46', '.456', '.4556'],
+        'HALF-EVEN': ['.3', '.7', '.9', '.6', '.8', '.0', '.02', '.02', '.68', '.68', '.46', '.456', '.4556'],
     }
     precisions = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 4]
     for rounding_method in expected_rounding:
