@@ -4,6 +4,7 @@
 from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools import consteq
 
 from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
@@ -135,15 +136,17 @@ class website_account(website_account):
         })
         return request.render("website_portal_sale.portal_my_orders", values)
 
-    @http.route(['/my/orders/<int:order>'], type='http', auth="user", website=True)
-    def orders_followup(self, order=None, **kw):
+    @http.route(['/my/orders/<int:order>'], type='http', auth="public", website=True)
+    def orders_followup(self, order=None, access_token=None, **kw):
         order = request.env['sale.order'].browse([order])
+        order_sudo = order.sudo()
         try:
             order.check_access_rights('read')
             order.check_access_rule('read')
         except AccessError:
-            return request.render("website.403")
-        order_sudo = order.sudo()
+            if not access_token or not consteq(order_sudo.access_token, access_token):
+                return request.render("website.403")
+
         order_invoice_lines = {il.product_id.id: il.invoice_id for il in order_sudo.invoice_ids.mapped('invoice_line_ids')}
         history = request.session.get('my_orders_history', [])
 
@@ -151,5 +154,5 @@ class website_account(website_account):
             'order': order_sudo,
             'order_invoice_lines': order_invoice_lines,
         }
-        values.update(get_records_pager(history, order))
+        values.update(get_records_pager(history, order_sudo))
         return request.render("website_portal_sale.orders_followup", values)
