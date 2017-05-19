@@ -350,7 +350,6 @@ var DataImport = Widget.extend(ControlPanelMixin, {
 
                     callback(item_finder(default_value));
                 },
-                containerCssClass: 'o_import_selection',
                 placeholder: _t('Don\'t import'),
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'

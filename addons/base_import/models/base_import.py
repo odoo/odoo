@@ -294,8 +294,8 @@ class Import(models.TransientModel):
         # If all values can be cast to int type is either id, float or monetary
         # Exception: if we only have 1 and 0, it can also be a boolean
         try:
-            field_type = ['id', 'integer', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
-            res = set(int(v) for v in preview_values)
+            field_type = ['id', 'integer', 'char', 'float', 'monetary', 'many2one', 'many2many', 'one2many']
+            res = set(int(v) for v in preview_values if v)
             if {0, 1}.issuperset(res):
                 field_type.append('boolean')
             return field_type
@@ -379,7 +379,7 @@ class Import(models.TransientModel):
             options['datetime_format'] = current_datetime_pattern
             return ['datetime']
 
-        return ['text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
+        return ['id', 'text', 'char', 'datetime', 'selection', 'many2one', 'one2many', 'many2many', 'html']
 
     @api.model
     def _find_type_from_preview(self, options, preview):
