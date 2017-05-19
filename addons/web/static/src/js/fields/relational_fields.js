@@ -147,6 +147,11 @@ var FieldMany2One = AbstractField.extend({
                 });
             },
             select: function (event, ui) {
+                // stop propagation of event so that if autocomplete is open then we dod not want to go to next line
+                // autocomplete is open and if user press ENTER then we will select m2o value from autocomplete
+                if (event.which === 13) {
+                    event.stopPropagation();
+                }
                 var item = ui.item;
                 self.floating = false;
                 if (item.id) {
@@ -158,6 +163,11 @@ var FieldMany2One = AbstractField.extend({
             },
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
+            },
+            close: function(event, ui) {
+                if (event.which === 27) {
+                    event.stopPropagation();
+                }
             },
             autoFocus: true,
             html: true,
