@@ -4,10 +4,7 @@
     <t t-name="account_accountant.AccountDashboard">
         <div class="o_account_dashboard_header o_form_view" t-if="values['show_setup_bar']">
             <div class="o_form_statusbar">
-                <div class="o_statusbar_status" data-original-title="" title="">
-                    <button t-attf-class="btn btn-sm o_arrow_button btn-default">
-                        <i class="fa fa-gift fa-2x" style="color: #cccccc"/>
-                    </button>
+                <div class="o_statusbar_status" data-original-title="" title="" >
                     <button name="setting_opening_move_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_accountant_dashboard_action #{values['initial_balance'] and 'o_action_done' or ''}">
                         <i class="fa fa-check" t-if="values['initial_balance']"/>
                         Initial Balances
@@ -28,9 +25,8 @@
                         <i class="fa fa-check" t-if="values['company']"/>
                         Company Data
                     </button>
-                    <button class="btn btn-sm o_arrow_button btn-primary disabled">
-                        Configuration Steps:
-                    </button>
+
+                    <h4>Configuration Steps:</h4>
                 </div>
                 <div class="pull-right" style="padding: 7px;">
                     <button aria-hidden="true" data-dismiss="modal" type="company_object" name="setting_hide_setup_bar" class="account_accountant_dashboard_action close">×</button>
