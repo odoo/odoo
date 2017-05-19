@@ -4,6 +4,7 @@
 import random
 import werkzeug.urls
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
@@ -96,6 +97,21 @@ class ResPartner(models.Model):
     @api.multi
     def action_signup_prepare(self):
         return self.signup_prepare()
+
+    def signup_get_auth_param(self):
+        """ Get a signup token related to the partner if signup is enabled.
+            If the partner already has a user, get the login parameter.
+        """
+        res = defaultdict(dict)
+
+        allow_signup = self.env['ir.config_parameter'].get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        for partner in self:
+            if allow_signup and not partner.user_ids:
+                partner.signup_prepare()
+                res[partner.id]['auth_signup_token'] = partner.signup_token
+            elif partner.user_ids:
+                res[partner.id]['auth_login'] = partner.user_ids[0].login
+        return res
 
     @api.multi
     def signup_cancel(self):
