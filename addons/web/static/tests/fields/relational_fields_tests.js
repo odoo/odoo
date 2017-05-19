@@ -125,7 +125,7 @@ QUnit.module('relational_fields', {
             },
             user: {
                 fields: {
-                    name: {string: "Name", type: "char"}
+                    name: {string: "Name", type: "char"},
                 },
                 records: [{
                     id: 17,
@@ -196,6 +196,56 @@ QUnit.module('relational_fields', {
         // updated on close
         form.destroy();
     });
+
+    QUnit.test('onchanges on many2ones trigger when editing record in form view', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.onchanges.user_id = function () {};
+        this.data.user.fields.other_field = {string: "Other Field", type: "char"};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="user_id"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'user,false,form': '<form string="Users"><field name="other_field"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                if (args.method === 'onchange') {
+                    assert.strictEqual(args.args[1].user_id, 17,
+                        "onchange is triggered with correct user_id");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // open the many2one in form view and change something
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_external_button').click();
+        $('.modal-body input[name="other_field"]').val('wood').trigger('input');
+
+        // save the modal and make sure an onchange is triggered
+        $('.modal .modal-footer .btn-primary').first().click();
+        assert.verifySteps(['read', 'get_formview_id', 'read', 'write', 'onchange', 'read']);
+
+        // save the main record, and check that no extra rpcs are done (record
+        // is not dirty, only a related record was modified)
+        form.$buttons.find('.o_form_button_save').click();
+        assert.verifySteps(['read', 'get_formview_id', 'read', 'write', 'onchange', 'read']);
+        form.destroy();
+    });
+
 
     QUnit.test('many2one readonly fields with option "no_open"', function (assert) {
         assert.expect(1);
@@ -3718,6 +3768,49 @@ QUnit.module('relational_fields', {
         $('.modal .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
 
         assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many list with onchange and edition of a record', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.turtles.type = "many2many";
+        this.data.partner.onchanges.turtles = function () {};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'turtle,false,form': '<form string="Turtle Power"><field name="turtle_bar"/></form>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('td.o_data_cell:first').click();
+
+        $('.modal-body input[type="checkbox"]').click();
+        $('.modal .modal-footer .btn-primary').first().click();
+        assert.verifySteps([
+            'read', // read initial record (on partner)
+            'read', // read many2many turtles
+            'read', // read missing field when opening record in modal form view
+            'write', // when saving the modal
+            'onchange', // onchange should be triggered on partner
+            'read', // reload many2many
+            ]);
 
         form.destroy();
     });

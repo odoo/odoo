@@ -980,6 +980,17 @@ var BasicModel = AbstractModel.extend({
             record._changes[fieldName] = false;
             return $.when();
         }
+
+        // here, we check that the many2one really changed. If the res_id is the
+        // same, we do not need to do any extra work. It can happen when the
+        // user edited a manyone (with the small form view button) with an
+        // onchange.  In that case, the onchange is triggered, but the actual
+        // value did not change.
+        var relatedID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
+        var relatedRecord = this.localData[relatedID];
+        if (relatedRecord && (data.id === this.localData[relatedID].res_id)) {
+            return $.when();
+        }
         var rel_data = _.pick(data, 'id', 'display_name');
         var def;
         if (rel_data.display_name === undefined) {
