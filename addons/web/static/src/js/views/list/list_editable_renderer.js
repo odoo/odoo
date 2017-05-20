@@ -251,6 +251,12 @@ ListRenderer.include({
      * @private
      */
     _moveToNextLine: function () {
+        var record = this.state.data[this.currentRow];
+        var fieldNames = this.canBeSaved(record.id);
+        if (fieldNames.length) {
+            return;
+        }
+
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
