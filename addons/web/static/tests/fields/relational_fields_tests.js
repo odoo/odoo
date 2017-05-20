@@ -816,7 +816,6 @@ QUnit.module('relational_fields', {
         });
     });
 
-
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
@@ -1718,6 +1717,44 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('tr.o_data_row').length, 0,
             "should have 0 data rows (invalid line has been discarded");
 
+        form.destroy();
+    });
+
+    QUnit.test('pressing enter in a o2m with a required empty m2o', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit mode, then click on Add an item, then click elsewhere
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+        assert.ok(form.$('input[name="turtle_foo"]').hasClass('o_field_invalid'),
+            "input should be marked invalid");
+        assert.verifySteps(['read', 'default_get']);
         form.destroy();
     });
 
