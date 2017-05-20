@@ -88,6 +88,7 @@ var FieldMany2One = AbstractField.extend({
         'click .o_external_button': '_onExternalButtonClick',
         'click': '_onClick',
     }),
+    AUTOCOMPLETE_DELAY: 200,
 
     init: function () {
         this._super.apply(this, arguments);
@@ -147,6 +148,11 @@ var FieldMany2One = AbstractField.extend({
                 });
             },
             select: function (event, ui) {
+                // we do not want the select event to trigger any additional
+                // effect, such as navigating to another field.
+                event.stopImmediatePropagation();
+                event.preventDefault();
+
                 var item = ui.item;
                 self.floating = false;
                 if (item.id) {
@@ -162,7 +168,7 @@ var FieldMany2One = AbstractField.extend({
             autoFocus: true,
             html: true,
             minLength: 0,
-            delay: 200,
+            delay: this.AUTOCOMPLETE_DELAY,
         });
         this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
         this.autocomplete_bound = true;
