@@ -470,6 +470,14 @@ var FieldMany2One = AbstractField.extend({
         }
     },
     /**
+     * @override
+     * @private
+     */
+    _onKeydown: function () {
+        this.floating = false;
+        this._super.apply(this, arguments);
+    },
+    /**
      * Stops the left/right navigation move event if the cursor is not at the
      * start/end of the input element. Stops any navigation move event if the
      * user is selecting text.

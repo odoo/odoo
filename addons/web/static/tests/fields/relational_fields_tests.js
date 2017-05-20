@@ -760,6 +760,62 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]', function (assert) {
+        // this is the same test as the previous one, but the onchange is just
+        // resolved slightly later
+        assert.expect(6);
+        var done = assert.async();
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges.product_id = function (obj) {
+            obj.int_field = obj.product_id || 0;
+        };
+
+        var def = $.Deferred();
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="product_id"/><field name="int_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        list.$('td.o_data_cell:first').click();
+        list.$('td.o_data_cell input:first').val('a').trigger('input');
+        concurrency.delay(0).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keyup', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            def.resolve();
+            assert.strictEqual($('div.modal').length, 0, "should not have any modal in DOM");
+            assert.verifySteps(['name_search', 'onchange', 'write', 'read']);
+            list.destroy();
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+        });
+    });
+
 
     QUnit.module('FieldOne2Many');
 
