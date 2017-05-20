@@ -256,6 +256,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _reset: function () {
         this._super.apply(this, arguments);
+        this.floating = false;
         this.m2o_value = field_utils.format.many2one(this.value);
     },
     /**
