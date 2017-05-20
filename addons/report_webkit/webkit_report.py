@@ -51,42 +51,18 @@ from urllib import urlencode, quote as quote
 
 _logger = logging.getLogger(__name__)
 
-try:
-    # We use a jinja2 sandboxed environment to render mako templates.
-    # Note that the rendering does not cover all the mako syntax, in particular
-    # arbitrary Python statements are not accepted, and not all expressions are
-    # allowed: only "public" attributes (not starting with '_') of objects may
-    # be accessed.
-    # This is done on purpose: it prevents incidental or malicious execution of
-    # Python code that may break the security of the server.
-    from jinja2.sandbox import SandboxedEnvironment
-    mako_template_env = SandboxedEnvironment(
-        block_start_string="<%",
-        block_end_string="%>",
-        variable_start_string="${",
-        variable_end_string="}",
-        comment_start_string="<%doc>",
-        comment_end_string="</%doc>",
-        line_statement_prefix="%",
-        line_comment_prefix="##",
-        trim_blocks=True,               # do not output newline after blocks
-        autoescape=True,                # XML/HTML automatic escaping
-    )
-    mako_template_env.globals.update({
-        'str': str,
-        'quote': quote,
-        'urlencode': urlencode,
-    })
-except ImportError:
-    _logger.warning("jinja2 not available, templating features will not work!")
+
+from mako.template import Template
+from mako.lookup import TemplateLookup
+
 
 def mako_template(text):
     """Build a Mako template.
 
     This template uses UTF-8 encoding
     """
-
-    return mako_template_env.from_string(text)
+    tmp_lookup = TemplateLookup() #we need it in order to allow inclusion and inheritance
+    return Template(text, input_encoding='utf-8', output_encoding='utf-8', lookup=tmp_lookup)
 
 _extender_functions = {}
 
@@ -171,13 +147,15 @@ class WebKitParser(report_sxw):
         if header :
             with tempfile.NamedTemporaryFile(suffix=".head.html",
                                              delete=False) as head_file:
-                head_file.write(self._sanitize_html(header.encode('utf-8')))
+#                head_file.write(self._sanitize_html(header.encode('utf-8')))
+                head_file.write(self._sanitize_html(header))
             file_to_del.append(head_file.name)
             command.extend(['--header-html', head_file.name])
         if footer :
             with tempfile.NamedTemporaryFile(suffix=".foot.html",
                                              delete=False) as foot_file:
-                foot_file.write(self._sanitize_html(footer.encode('utf-8')))
+#                foot_file.write(self._sanitize_html(footer.encode('utf-8')))
+                foot_file.write(self._sanitize_html(footer))
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
 
@@ -198,7 +176,8 @@ class WebKitParser(report_sxw):
             with tempfile.NamedTemporaryFile(suffix="%d.body.html" %count,
                                              delete=False) as html_file:
                 count += 1
-                html_file.write(self._sanitize_html(html.encode('utf-8')))
+#                html_file.write(self._sanitize_html(html.encode('utf-8')))
+                html_file.write(self._sanitize_html(html))
             file_to_del.append(html_file.name)
             command.append(html_file.name)
         command.append(out_filename)
@@ -318,7 +297,7 @@ class WebKitParser(report_sxw):
             for obj in parser_instance.localcontext['objects']:
                 ctx['objects'] = [obj]
                 try :
-                    html = body_mako_tpl.render(dict(ctx))
+                    html = body_mako_tpl.render(**dict(ctx))
                     htmls.append(html)
                 except Exception, e:
                     msg = u"%s" % e
@@ -326,7 +305,7 @@ class WebKitParser(report_sxw):
                     raise except_osv(_('Webkit render!'), msg)
         else:
             try :
-                html = body_mako_tpl.render(dict(parser_instance.localcontext))
+                html = body_mako_tpl.render(**dict(parser_instance.localcontext))
                 htmls.append(html)
             except Exception, e:
                 msg = u"%s" % e
@@ -334,21 +313,21 @@ class WebKitParser(report_sxw):
                 raise except_osv(_('Webkit render!'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=False))
+            head = head_mako_tpl.render(**dict(parser_instance.localcontext, _debug=False))
         except Exception, e:
             raise except_osv(_('Webkit render!'), u"%s" % e)
         foot = False
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(dict(parser_instance.localcontext))
+                foot = foot_mako_tpl.render(**dict(parser_instance.localcontext))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)
                 raise except_osv(_('Webkit render!'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
+                deb = head_mako_tpl.render(**dict(parser_instance.localcontext, _debug=tools.ustr("\n".join(htmls))))
             except Exception, e:
                 msg = u"%s" % e
                 _logger.error(msg)

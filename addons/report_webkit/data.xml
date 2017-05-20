@@ -55,7 +55,7 @@
     <body style="border:0; margin: 0;" onload="subst()">
         <table class="header" style="border-bottom: 0px solid black; width: 100%">
             <tr>
-                <td>${helper.embed_company_logo()|safe}</td>
+                <td>${helper.embed_company_logo()|n}</td>
                 <td style="text-align:right"> </td>
             </tr>
             <tr>
@@ -77,7 +77,7 @@
             <tr>
                 <td>Mail: ${company.partner_id.email or ''}<br/></td>
             </tr>
-        </table> ${_debug or ''|safe} </body>
+        </table> ${_debug or ''|n} </body>
 </html>]]>
 </field>
             <field eval="55.0" name="margin_top"/>
