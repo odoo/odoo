@@ -154,21 +154,33 @@ class stock_quant(osv.osv):
 
     @api.cr_uid_ids_context
     def _price_update(self, cr, uid, quant_ids, newprice, context=None):
-        ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustemnts and the update of the product cost price if needed
+        ''' This function is called at the end of negative quant reconciliation and does the accounting entries adjustments and the update of the product and stock move cost price if needed
         '''
         if context is None:
             context = {}
         account_move_obj = self.pool['account.move']
-        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
+
+        # Store quant costs prior to quant cost update
+        quant_costs = {}
         for quant in self.browse(cr, uid, quant_ids, context=context):
+            quant_costs[quant] = quant.cost
+
+        # Update quant costs
+        super(stock_quant, self)._price_update(cr, uid, quant_ids, newprice, context=context)
+
+        for quant, quant_cost_old in quant_costs.items():
             move = self._get_latest_move(cr, uid, quant, context=context)
-            valuation_update = newprice - quant.cost
+            valuation_update = newprice - quant_cost_old
             # this is where we post accounting entries for adjustment, if needed
             if not quant.company_id.currency_id.is_zero(valuation_update):
                 # If neg quant period already closed (likely with manual valuation), skip update
                 if account_move_obj._check_lock_date(cr, uid, [move.id], context=context):
                     ctx = dict(context, force_valuation_amount=valuation_update)
                     self._account_entry_move(cr, uid, [quant], move, context=ctx)
+
+                # If using average costing, update move cost to balance with accounts
+                if (quant.product_id.cost_method == "average") and quant.location_id.usage != "internal":
+                    self.pool.get('stock.move')._adjust_average_cost_price_with_quant_difference(cr, uid, move, quant.qty, valuation_update, context=context)
 
             #update the standard price of the product, only if we would have done it if we'd have had enough stock at first, which means
             #1) the product cost's method is 'real'
@@ -408,6 +420,15 @@ class stock_move(osv.osv):
         ctx = dict(context or {}, force_company=move.company_id.id)
         product_obj.write(cr, SUPERUSER_ID, [move.product_id.id], {'standard_price': average_valuation_price}, context=ctx)
         self.write(cr, uid, [move.id], {'price_unit': average_valuation_price}, context=context)
+
+    def _adjust_average_cost_price_with_quant_difference(self, cr, uid, move, quant_qty, quant_cost_difference, context=None):
+        ''' This function is called by stock_quant._price_update in order to update a move cost after negative quant reconciliation
+        '''
+        total_cost_pre = move.product_qty * move.price_unit
+        total_cost_post = total_cost_pre + (quant_qty * quant_cost_difference)
+        average_cost_post = total_cost_post / move.product_qty
+
+        self.write(cr, uid, [move.id], {'price_unit': average_cost_post}, context=context)
 
     def product_price_update_before_done(self, cr, uid, ids, context=None):
         product_obj = self.pool.get('product.product')
