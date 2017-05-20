@@ -1,8 +1,10 @@
 odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
+var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -628,6 +630,82 @@ QUnit.module('relational_fields', {
         assert.strictEqual($('.modal').length, 0, "should not display the create modal");
         form.destroy();
     });
+
+    QUnit.test('pressing enter in a m2o in an editable list', function (assert) {
+        assert.expect(9);
+        var done = assert.async();
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="product_id"/></tree>',
+        });
+
+        list.$('td.o_data_cell:first').click();
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "should have a row in edit mode");
+
+        // we now write 'a' and press enter to check that the selection is
+        // working, and prevent the navigation
+        list.$('td.o_data_cell input:first').val('a').trigger('input');
+        concurrency.delay(0).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            var $dropdown = $input.autocomplete('widget');
+            assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
+
+            // we now trigger ENTER to select first choice
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            assert.strictEqual($input[0], document.activeElement,
+                "input should still be focused");
+
+            // we now trigger again ENTER to make sure we can move to next line
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+
+            assert.notOk(document.contains($input[0]),
+                "input should no longer be in dom");
+            assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+                "second row should now be selected");
+
+            // we now write again 'a' in the cell to select xpad. We will now
+            // test with the tab key
+            list.$('td.o_data_cell input:first').val('a').trigger('input');
+            return concurrency.delay(0);
+        }).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            var $dropdown = $input.autocomplete('widget');
+            assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.TAB,
+                keyCode: $.ui.keyCode.TAB,
+            }));
+            assert.strictEqual($input[0], document.activeElement,
+                "input should still be focused");
+
+            // we now trigger again ENTER to make sure we can move to next line
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.TAB,
+                keyCode: $.ui.keyCode.TAB,
+            }));
+
+            assert.notOk(document.contains($input[0]),
+                "input should no longer be in dom");
+            assert.ok(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+                "third row should now be selected");
+            list.destroy();
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+        });
+    });
+
 
     QUnit.module('FieldOne2Many');
 
