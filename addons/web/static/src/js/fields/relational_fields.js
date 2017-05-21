@@ -165,6 +165,13 @@ var FieldMany2One = AbstractField.extend({
             focus: function (event) {
                 event.preventDefault(); // don't automatically select values on focus
             },
+            close: function (event) {
+                // it is necessary to prevent ESC key from propagating to field
+                // root, to prevent unwanted discard operations.
+                if (event.which === $.ui.keyCode.ESCAPE) {
+                    event.stopPropagation();
+                }
+            },
             autoFocus: true,
             html: true,
             minLength: 0,
@@ -547,6 +554,7 @@ var FieldX2Many = AbstractField.extend({
     tagName: 'div',
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
         add_record: '_onAddRecord',
+        discard_changes: '_onDiscardChanges',
         edit_line: '_onEditLine',
         field_changed: '_onFieldChanged',
         kanban_record_delete: '_onDeleteRecord',
@@ -756,7 +764,7 @@ var FieldX2Many = AbstractField.extend({
         this.renderer.commitChanges(recordID).then(function () { // TODO wrong as no mutex protection
             var fieldNames = self.renderer.canBeSaved(recordID);
             if (fieldNames.length) {
-                self.trigger_up('discard_x2m_changes', {
+                self.trigger_up('discard_changes', {
                     recordID: recordID,
                     onSuccess: def.resolve.bind(def),
                     onFailure: def.reject.bind(def),
@@ -797,6 +805,18 @@ var FieldX2Many = AbstractField.extend({
             operation: 'REMOVE',
             ids: [ev.data.id],
         });
+    },
+    /**
+     * When the discard_change event go through this field, we can just decorate
+     * the data with the name of the field.  The origin field ignore this
+     * information (it is a subfield in a o2m), and the controller will need to
+     * know which field needs to be handled.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardChanges: function (ev) {
+        ev.data.fieldName = this.name;
     },
     /**
      * Called when the renderer asks to edit a line, in that case simply tells

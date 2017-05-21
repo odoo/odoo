@@ -113,13 +113,15 @@ ListRenderer.include({
      */
     removeLine: function (state, recordID) {
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        this.state = state;
+        if (rowIndex === -1) {
+            return;
+        }
         if (rowIndex === this.currentRow) {
             this.currentRow = null;
         }
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
         $row.remove();
-
-        this.state = state;
     },
     /**
      * Updates the already rendered row associated to the given recordID so that
@@ -573,6 +575,11 @@ ListRenderer.include({
                 break;
             case 'next_line':
                 this._moveToNextLine();
+                break;
+            case 'cancel':
+                this.trigger_up('discard_changes', {
+                    recordID: ev.target.dataPointID,
+                });
                 break;
         }
     },
