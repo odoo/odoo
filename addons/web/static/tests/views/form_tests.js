@@ -2273,7 +2273,6 @@ QUnit.module('Views', {
             "input should be tagged as invalid");
 
         form.$('input').val("tralala").trigger('input');
-        form.$buttons.find('.o_form_button_save').click();
 
         assert.strictEqual(form.$('.o_field_invalid').length, 0,
             "nothing should be marked as invalid");
