@@ -18,6 +18,7 @@ var _t = core._t;
 
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
+        discard_changes: '_onDiscardChanges',
         reload: '_onReload',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -456,6 +457,31 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Called when a list element asks to discard the changes made to one of
+     * its rows.  It can happen with a x2many (if we are in a form view) or with
+     * a list view.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardChanges: function (ev) {
+        var self = this;
+        ev.stopPropagation();
+        var recordID = ev.data.recordID;
+        this.discardChanges(recordID)
+            .done(function () {
+                if (self.model.isNew(recordID)) {
+                    self._abandonRecord(recordID);
+                }
+                // TODO this will tell the renderer to rerender the widget that
+                // asked for the discard but will unfortunately lose the click
+                // made on another row if any
+                self._confirmChange(self.handle, [ev.data.fieldName], ev)
+                    .always(ev.data.onSuccess);
+            })
+            .fail(ev.data.onFailure);
+    },
     /**
      * Forces to save directly the changes if the controller is in readonly,
      * because in that case the changes come from widgets that are editable even

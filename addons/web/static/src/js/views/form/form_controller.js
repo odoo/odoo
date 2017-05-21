@@ -15,7 +15,6 @@ var FormController = BasicController.extend({
         open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
-        discard_x2m_changes: '_onDiscardX2MChanges',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
     }),
@@ -375,32 +374,6 @@ var FormController = BasicController.extend({
      */
     _onDiscard: function () {
         this.discardChanges();
-    },
-    /**
-     * Called when a x2m asks to discard the changes made to one of its row.
-     *
-     * @todo find a better way to handle this... this could also be used outside
-     * of form views
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onDiscardX2MChanges: function (ev) {
-        var self = this;
-        ev.stopPropagation();
-        var recordID = ev.data.recordID;
-        this.discardChanges(recordID)
-            .done(function () {
-                if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
-                }
-                // TODO this will tell the renderer to rerender the widget that
-                // asked for the discard but will unfortunately lose the click
-                // made on another row if any
-                self._confirmChange(self.handle, [ev.target.name], ev)
-                    .always(ev.data.onSuccess);
-            })
-            .fail(ev.data.onFailure);
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar

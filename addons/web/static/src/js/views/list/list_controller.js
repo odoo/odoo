@@ -64,7 +64,10 @@ var ListController = BasicController.extend({
                 return $.when();
             }
         }
-        return this._super(recordID);
+        var self = this;
+        return this._super(recordID).then(function () {
+            self._updateButtons('readonly');
+        });
     },
     /**
      * Calculate the active domain of the list view. This should be done only
