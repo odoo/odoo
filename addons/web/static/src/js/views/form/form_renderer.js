@@ -84,6 +84,9 @@ var FormRenderer = BasicRenderer.extend({
             _.each(resetWidgets, function (widget) {
                 self._setIDForLabel(widget, self.idsForLabels[widget.name]);
             });
+            if (self.$('.o_field_invalid').length) {
+                self.canBeSaved(self.state.id);
+            }
             return resetWidgets;
         });
     },
