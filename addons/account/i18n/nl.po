@@ -7066,12 +7066,12 @@ msgstr "Openstaande posten"
 #: code:addons/account/models/account_invoice.py:116
 #, python-format
 msgid "Outstanding credits"
-msgstr "Openstaande credits/betalingen"
+msgstr "Openstaande credit bedragen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_outstanding_credits_debits_widget
 msgid "Outstanding credits debits widget"
-msgstr "WIdget voor uitstaande inkomsten en uitgaven"
+msgstr "Widget voor debet/credit"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:119
@@ -10673,6 +10673,12 @@ msgstr ""
 #, python-format
 msgid "You can not delete a payment that is already posted"
 msgstr "U kunt geen betaling verwijderen die reeds geboekt werd"
+
+#. module: account
+#: code:addons/account/models/account_invoice.py:1360
+#, python-format
+msgid "You can only delete an invoice line if the invoice is in draft state."
+msgstr "U kunt alleen een factuur verwijderen als deze in concept fase is."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128

@@ -383,28 +383,28 @@ msgstr "Tipo de Tarjeta No Válido"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
 #, python-format
 msgid "Invalid Cash Back Amount"
-msgstr ""
+msgstr "Cantidad de devolución no valida"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
 #, python-format
 msgid "Invalid Check Digit"
-msgstr ""
+msgstr "Dígito de verificación no válido"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
 #, python-format
 msgid "Invalid Check Type"
-msgstr ""
+msgstr "Tipo de verificación no válido "
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
 #, python-format
 msgid "Invalid Command Format"
-msgstr ""
+msgstr "Formato de comando inválido"
 
 #. module: pos_mercury
 #. openerp-web
@@ -418,7 +418,7 @@ msgstr "Fecha de Nacimiento No Válida"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
 #, python-format
 msgid "Invalid Derived Key Data"
-msgstr ""
+msgstr "Datos de clave derivada no válidos"
 
 #. module: pos_mercury
 #. openerp-web
@@ -453,7 +453,7 @@ msgstr "Tipo de entrada MICR no válida"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
 #, python-format
 msgid "Invalid Magnetic Stripe Data"
-msgstr ""
+msgstr "Datos de banda magnética no válidos"
 
 #. module: pos_mercury
 #. openerp-web
@@ -894,21 +894,21 @@ msgstr "Timeout error"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
 #, python-format
 msgid "Timeout on Response"
-msgstr ""
+msgstr "Timeout en la respuesta"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:152
 #, python-format
 msgid "Transaction approved"
-msgstr ""
+msgstr "Transacción aprobada"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:193
 #, python-format
 msgid "Unable to Parse Response from Global (Indistinguishable)"
-msgstr ""
+msgstr "No se puede analizar la respuesta global (indistinguible)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -922,7 +922,7 @@ msgstr "Error desconocido"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
 #, python-format
 msgid "Unrecognized Request Format"
-msgstr ""
+msgstr "Formato de respuesta irreconocible"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -932,20 +932,24 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"El uso de la integración de Mercury en el TPV es fácil: simplemente presione el\n"
+"método de pago asociado. Después, la cantidad se puede ajustar(ej:  para el reembolso)\n"
+"al igual que en cualquier otra línea de pago. Siempre que se establezca la línea de pago,\n"
+"se puede pasar un tarjeta a través del dispositivo de lectura de tarjetas. "
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:584
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "VoidSale exitoso"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "ESPERANDO PASE DE TARJETA"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -953,27 +957,30 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
+"Actualmente soportamos el dispositivo de lectura de tarjetas MagTek Dynamag."
+" Se puede conectar directamente al dispositivo del TPV o puede conectarse al"
+" POSBox."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
 #, python-format
 msgid "Weak Encryption Request Not Supported"
-msgstr ""
+msgstr "Solicitud con cifrado débil no compatible"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
 #, python-format
 msgid "XML Parse Error"
-msgstr ""
+msgstr "Error de análisis de XML"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:50
 #, python-format
 msgid "X______________________________"
-msgstr ""
+msgstr "X______________________________"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_barcode_rule
@@ -988,9 +995,9 @@ msgstr "ir.autovacuum"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "pos_mercury.configuration"
-msgstr ""
+msgstr "pos_mercury.configuration"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "pos_mercury.mercury_transaction"
-msgstr ""
+msgstr "pos_mercury.mercury_transaction"
