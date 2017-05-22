@@ -2381,6 +2381,45 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many field with context', function (assert) {
+        assert.expect(2);
+
+        var counter = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles" context="{\'turtles\':turtles}">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    var expected = counter === 0 ?
+                        [[4, 2, false]] :
+                        [[4, 2, false], [0, false, {display_name: false, turtle_foo: 'hammer'}]];
+                    assert.deepEqual(args.kwargs.context.turtles, expected,
+                        "should have properly evaluated turtles key in context");
+                    counter++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').val('hammer').trigger('input');
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
         assert.expect(3);
 

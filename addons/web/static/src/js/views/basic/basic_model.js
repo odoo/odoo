@@ -284,8 +284,6 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.env=false] if true, will only  return res_id
      *   (if record) or res_ids (if list)
      * @param {boolean} [options.raw=false] if true, will not follow relations
-     * @param {boolean} [options.noUnsetNumeric=false] if true, will set numeric
-     *   values to 0 if not set
      * @returns {Object}
      */
     get: function (id, options) {
@@ -308,7 +306,6 @@ var BasicModel = AbstractModel.extend({
             return env;
         }
 
-
         if (element.type === 'record') {
 
             var data = _.extend({}, element.data, element._changes);
@@ -320,13 +317,6 @@ var BasicModel = AbstractModel.extend({
                 }
                 if (!field) {
                     continue;
-                }
-                if (options.noUnsetNumeric) {
-                    if (field.type === 'float' ||
-                        field.type === 'integer' ||
-                        field.type === 'monetary') {
-                        data[fieldName] = data[fieldName] || 0;
-                    }
                 }
 
                 // get relational datapoint
@@ -2067,19 +2057,23 @@ var BasicModel = AbstractModel.extend({
      * @returns {Object}
      */
     _getEvalContext: function (element) {
-        var evalContext = this.get(element.id, {raw: true, noUnsetNumeric: true}).data;
-        evalContext.active_model = element.model;
-        evalContext.id = evalContext.id || false;
-        evalContext.active_id = evalContext.id;
-        evalContext.active_ids = evalContext.id ? [evalContext.id] : [];
+        var evalContext = element.type === 'record' ? this._getRecordEvalContext(element) : {};
+
         if (element.parentID) {
-            var parent = this.get(element.parentID, {raw: true});
-            if (parent.type === 'list' && this.localData[element.parentID].parentID) {
-                parent = this.get(this.localData[element.parentID].parentID, {raw: true});
+            var parent = this.localData[element.parentID];
+            if (parent.type === 'list' && parent.parentID) {
+                parent = this.localData[parent.parentID];
             }
-            _.extend(evalContext, {parent: parent.data});
+            if (parent.type === 'record') {
+                evalContext.parent = this._getRecordEvalContext(parent);
+            }
         }
-        return _.extend({}, session.user_context, element.context, evalContext);
+        return _.extend({
+            active_model: element.model,
+            id: evalContext.id || false,
+            active_id: evalContext.id || false,
+            active_ids: evalContext.id ? [evalContext.id] : [],
+        }, session.user_context, element.context, evalContext);
     },
     /**
      * Returns the list of field names of the given element according to its
@@ -2091,6 +2085,55 @@ var BasicModel = AbstractModel.extend({
     _getFieldNames: function (element) {
         var fieldsInfo = element.fieldsInfo;
         return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
+    },
+    /**
+     * Evaluate the record evaluation context.  This method is supposed to be
+     * called by _getEvalContext.  It basically only generates a dictionary of
+     * current values for the record, with commands for x2manys fields.
+     *
+     * @param {Object} record an element of type 'record'
+     * @returns Object
+     */
+    _getRecordEvalContext: function (record) {
+        var self = this;
+        var relDataPoint;
+        var context = _.extend({}, record.data, record._changes);
+        for (var fieldName in context) {
+            var field = record.fields[fieldName];
+            if (context[fieldName] === null) {
+                context[fieldName] = false;
+            }
+            if (!field) {
+                continue;
+            }
+            if (field.type === 'float' ||
+                field.type === 'integer' ||
+                field.type === 'monetary') {
+                context[fieldName] = context[fieldName] || 0;
+                continue;
+            }
+            if (field.type === 'many2one') {
+                relDataPoint = this.localData[context[fieldName]];
+                context[fieldName] = relDataPoint ? relDataPoint.res_id : false;
+                continue;
+            }
+            if (field.type === 'one2many' || field.type === 'many2many') {
+                relDataPoint = this.localData[context[fieldName]];
+                var relData = relDataPoint._changes || relDataPoint.data;
+                var commands = _.map(relData, function (id) {
+                    var resID = self.localData[id].res_id;
+                    if (typeof resID === 'string') {
+                        var changes = self._generateChanges(self.localData[id]);
+                        return x2ManyCommands.create(changes);
+                    } else {
+                        return x2ManyCommands.link_to(resID);
+                    }
+                });
+                context[fieldName] = commands;
+            }
+
+        }
+        return context;
     },
     /**
      * Returns true iff value is considered to be set for the given field's type.
