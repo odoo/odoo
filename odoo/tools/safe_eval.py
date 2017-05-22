@@ -41,8 +41,6 @@ _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']
 _POSSIBLE_OPCODES_P3 = [
-    # comprehensions, actually in P2
-    'MAP_ADD', 'SET_ADD',
     # opcodes for `with` statement cleanup process
     'WITH_CLEANUP_START', 'WITH_CLEANUP_FINISH',
     # f-strings
@@ -59,16 +57,23 @@ _POSSIBLE_OPCODES_P3 = [
     'BINARY_MATRIX_MULTIPLY', 'INPLACE_MATRIX_MULTIPLY',
 ]
 
+# opcodes necessary to build literal values
 _CONST_OPCODES = set(opmap[x] for x in [
+    # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
-    'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
-    'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR', 'STORE_MAP',
-    # maps with constant keys optimisation https://bugs.python.org/issue27140
+    'DUP_TOP_TWO',  # replaces DUP_TOPX in P3
+    'LOAD_CONST',
+    'RETURN_VALUE', # return the result of the literal/expr evaluation
+    # literal collections
+    'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
+    # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
-    'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
-    'DUP_TOP_TWO', # replaces DUP_TOPX in P3
+    # until Python 3.5, literal maps are compiled to creating an empty map
+    # (pre-sized) then filling it key by key
+    'STORE_MAP',
 ] if x in opmap)
 
+# operations on literal values
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT',
     'UNARY_INVERT', 'BINARY_POWER', 'BINARY_MULTIPLY',
@@ -78,24 +83,30 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
-    'INPLACE_XOR','INPLACE_OR'
+    'INPLACE_XOR','INPLACE_OR', 'STORE_SUBSCR',
+    # slice operations (Python 3 only has BUILD_SLICE)
+    'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BUILD_SLICE',
+    # comprehensions
+    'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
+    'COMPARE_OP',
 ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
-    'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
-    'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
-    'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BUILD_SLICE',
-    'BREAK_LOOP', 'CONTINUE_LOOP', 'RAISE_VARARGS', 'YIELD_VALUE',
-    # New in Python 2.7 - http://bugs.python.org/issue4715 :
-    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
-    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
-    'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
-    'LOAD_GLOBAL', # Only allows access to restricted globals
+    'POP_BLOCK', 'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
+    'SETUP_LOOP', 'BREAK_LOOP', 'CONTINUE_LOOP',
+    'MAKE_FUNCTION', 'CALL_FUNCTION',
     # P3: https://bugs.python.org/issue27213
     'CALL_FUNCTION_EX',
     # Already in P2 but apparently the first one is used more aggressively in P3
     'CALL_FUNCTION_KW', 'CALL_FUNCTION_VAR', 'CALL_FUNCTION_VAR_KW',
+    'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
+    'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
+    # New in Python 2.7 - http://bugs.python.org/issue4715 :
+    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
+    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY', 'RAISE_VARARGS',
+    'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
+    'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
+    'LOAD_GLOBAL', # Only allows access to restricted globals
 ] if x in opmap))
 
 _logger = logging.getLogger(__name__)
