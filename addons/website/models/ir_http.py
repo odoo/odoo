@@ -76,7 +76,7 @@ class Http(models.AbstractModel):
         # Try to find a similar lang. Eg: fr_BE and fr_FR
         short = lang.partition('_')[0]
         short_match = False
-        for code, dummy in request.website.get_languages():
+        for code, dummy in cls._get_language_codes():
             if code == lang:
                 return lang
             if not short_match and code.startswith(short):
@@ -167,7 +167,7 @@ class Http(models.AbstractModel):
             request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
             context = dict(request.context)
             context['website_id'] = request.website.id
-            langs = [lg[0] for lg in request.website.get_languages()]
+            langs = [lg[0] for lg in cls._get_language_codes()]
             path = request.httprequest.path.split('/')
             if first_pass:
                 is_a_bot = cls.is_a_bot()
@@ -175,20 +175,20 @@ class Http(models.AbstractModel):
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
                                   or (not is_a_bot and cls.get_nearest_lang(request.lang))
-                                  or request.website.default_lang_code)
+                                  or cls._get_default_lang().code)
 
                 request.lang = context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
                 # or no lang in url, and lang to dispay not the default language --> add lang
                 # and not a POST request
                 # and not a bot or bot but default lang in url
-                if ((url_lang and (url_lang != request.lang or url_lang == request.website.default_lang_code))
-                        or (not url_lang and request.website_multilang and request.lang != request.website.default_lang_code)
+                if ((url_lang and (url_lang != request.lang or url_lang == cls._get_default_lang().code))
+                        or (not url_lang and request.website_multilang and request.lang != cls._get_default_lang().code)
                         and request.httprequest.method != 'POST') \
-                        and (not is_a_bot or (url_lang and url_lang == request.website.default_lang_code)):
+                        and (not is_a_bot or (url_lang and url_lang == cls._get_default_lang().code)):
                     if url_lang:
                         path.pop(1)
-                    if request.lang != request.website.default_lang_code:
+                    if request.lang != cls._get_default_lang().code:
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
                     request.context = context
@@ -200,7 +200,7 @@ class Http(models.AbstractModel):
                     path.pop(1)
                     request.context = context
                     return cls.reroute('/'.join(path) or '/')
-            if request.lang == request.website.default_lang_code:
+            if request.lang == cls._get_default_lang().code:
                 context['edit_translations'] = False
             if not context.get('tz'):
                 context['tz'] = request.session.get('geoip', {}).get('time_zone')
@@ -215,6 +215,24 @@ class Http(models.AbstractModel):
         if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
             resp.set_cookie('website_lang', request.lang)
         return resp
+
+    @classmethod
+    def _get_languages(cls):
+        if request.website:
+            return request.website.language_ids
+        return super(Http, cls)._get_languages()
+
+    @classmethod
+    def _get_language_codes(cls):
+        if request.website:
+            return request.website._get_languages()
+        return super(Http, cls)._get_language_codes()
+
+    @classmethod
+    def _get_default_lang(cls):
+        if request.website:
+            return request.website.default_lang_id
+        return super(Http, cls)._get_default_lang()
 
     @classmethod
     def reroute(cls, path):
@@ -246,7 +264,7 @@ class Http(models.AbstractModel):
             generated_path = werkzeug.url_unquote_plus(path)
             current_path = werkzeug.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
-                if request.lang != request.website.default_lang_code:
+                if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
                     path += '?' + request.httprequest.query_string

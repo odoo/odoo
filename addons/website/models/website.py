@@ -43,7 +43,7 @@ def url_for(path_or_uri, lang=None):
         location = urls.url_join(current_path, location)
 
         lang = lang or request.context.get('lang')
-        langs = [lg[0] for lg in request.website.get_languages()]
+        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
 
         if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
             ps = location.split('/')
@@ -52,10 +52,10 @@ def url_for(path_or_uri, lang=None):
                 if force_lang:
                     ps[1] = lang.encode('utf-8')
                 # Remove the default language unless it's explicitly provided
-                elif ps[1] == request.website.default_lang_code:
+                elif ps[1] == request.env['ir.http']._get_default_lang().code:
                     ps.pop(1)
             # Insert the context language or the provided language
-            elif lang != request.website.default_lang_code or force_lang:
+            elif lang != request.env['ir.http']._get_default_lang().code or force_lang:
                 ps.insert(1, lang.encode('utf-8'))
             location = '/'.join(ps)
 
@@ -64,7 +64,7 @@ def url_for(path_or_uri, lang=None):
 
 def is_multilang_url(local_url, langs=None):
     if not langs:
-        langs = [lg[0] for lg in request.website.get_languages()]
+        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
     spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in langs:
