@@ -37,8 +37,6 @@ class AccountConfigSettings(models.TransientModel):
     account_accountant_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', related='company_id.account_accountant_opening_move_id')
     account_accountant_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_accountant_opening_journal_id')
     account_accountant_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_accountant_opening_date')
-    account_accountant_opening_move_adjustment_amount = fields.Monetary(string='Adjustment difference', related="company_id.account_accountant_opening_move_adjustment_amount")
-    account_accountant_opening_adjustment_account_id = fields.Many2one(string='Adjustment account', comodel_name='account.account', related='company_id.account_accountant_opening_adjustment_account_id')
     account_accountant_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_accountant_setup_opening_move_done')
 
     @api.depends('company_id.account_accountant_opening_move_id.state')

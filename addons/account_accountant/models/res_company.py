@@ -20,15 +20,12 @@ class ResCompany(models.Model):
     account_accountant_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', help="The journal entry containing all the opening journal items of this company's accounting.")
     account_accountant_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='account_accountant_opening_move_id.journal_id', help="Journal when the opening moves of this company's accounting has been posted.")
     account_accountant_opening_date = fields.Date(string='Accounting opening date',default=_default_opening_date, related='account_accountant_opening_move_id.date', help="Date of the opening entries of this company's accounting.")
-    account_accountant_opening_move_adjustment_amount = fields.Monetary(string='Adjustment difference', help="Adjustment difference of this company's opening move.")
-    account_accountant_opening_adjustment_account_id = fields.Many2one(string='Adjustment account', comodel_name='account.account', help="The account into which the opening move adjustment difference will be posted")
-
-    #Fields used to force step completion during setup, in case the user does not want to enter some data:
-    account_accountant_setup_company_data_marked_done = fields.Boolean(string='Company setup marked as done', default=False, help="True iff the user has forced the completion of the company setup step.")
-    account_accountant_setup_bank_data_marked_done = fields.Boolean('Bank setup marked as done', default=False, help="True iff the user has forced the completion of the bank setup step.")
 
     #Fields marking the completion of a setup step
-    account_accountant_setup_chart_of_accounts_done = fields.Boolean(string='Chart of account checked', default=False, help="True iff the wizard has displayed the chart of account once.")
+    account_accountant_setup_company_data_marked_done = fields.Boolean(string='Company setup marked as done', default=False, help="True iff the user has forced the completion of the company setup step.")
+    account_accountant_setup_bank_data_marked_done = fields.Boolean('Bank setup marked as done', default=False, help="True iff the user has forced the completion of the bank setup step.")
+    account_accountant_setup_financial_year_data_marked_done = fields.Boolean('Financial year setup marked as done', default=False, help="True iff the user has forced the completion of the financial year setup step.")
+    account_accountant_setup_chart_of_accounts_marked_done = fields.Boolean(string='Chart of account checked', default=False, help="True iff the wizard has displayed the chart of account once.")
     account_accountant_setup_bar_closed = fields.Boolean(string='Setup bar closed', default=False, help="True iff the setup bar has been closed by the user.")
 
     @api.model
@@ -39,6 +36,7 @@ class ResCompany(models.Model):
         view_id = self.env.ref('account_accountant.init_view_company_form').id
 
         return {'type': 'ir.actions.act_window',
+                'name': _('Company Data'),
                 'res_model': 'res.company',
                 'target': 'new',
                 'view_mode': 'form',
@@ -55,6 +53,7 @@ class ResCompany(models.Model):
 
         rslt_act_dict = {
             'type': 'ir.actions.act_window',
+            'name': _('Bank Account'),
             'view_mode': 'form',
             'res_model': 'account.journal',
             'target': 'new',
@@ -83,6 +82,7 @@ class ResCompany(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
+            'name': 'Fiscal Year',
             'view_mode': 'form',
             'res_model': 'accountant.financial.year.op',
             'target': 'new',
@@ -101,7 +101,7 @@ class ResCompany(models.Model):
             return 'account.action_account_form'
 
         # Otherwise, we open a custom tree view allowing to edit opening balances of the account, to prepare the opening move
-        current_company.account_accountant_setup_chart_of_accounts_done = True
+        current_company.account_accountant_setup_chart_of_accounts_marked_done = True
         self.create_op_move_if_non_existant()
 
         # We return the name of the action to execute (to display the list of all the accounts,
@@ -134,6 +134,7 @@ class ResCompany(models.Model):
 
         return {
             'type': 'ir.actions.act_window',
+            'name': 'Initial Balances',
             'view_mode': 'form',
             'res_model': 'accountant.opening',
             'target': 'new',
@@ -157,10 +158,10 @@ class ResCompany(models.Model):
         """
         current_company = self._company_default_get()
         if not current_company.account_accountant_opening_move_id:
-            default_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', current_company.id)], limit=1)
+            default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', current_company.id)], limit=1)
 
             if not default_journal:
-                raise UserError("No journal of type 'bank' could be found. Please create one before proceeding.")
+                raise UserError("No miscellanous journal could be found. Please create one before proceeding.")
 
             current_company.account_accountant_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening move'),
@@ -173,6 +174,12 @@ class ResCompany(models.Model):
         refreshing the view.
         """
         self.account_accountant_setup_company_data_marked_done = True
+        return self.env.ref('account_accountant.init_wizard_refresh_view').read([])[0]
+
+    def unmark_company_setup_as_done_action(self):
+        """ Returns the 'company' setup step to its 'not done' state.
+        """
+        self.account_accountant_setup_company_data_marked_done = False
         return self.env.ref('account_accountant.init_wizard_refresh_view').read([])[0]
 
     def opening_move_posted(self):

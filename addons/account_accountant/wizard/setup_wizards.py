@@ -14,18 +14,34 @@ class FinancialYearOpeningWizard(models.TransientModel):
 
     company_id = fields.Many2one(comodel_name='res.company')
     opening_move_posted = fields.Boolean(string='Opening move posted', compute='_compute_opening_move_posted')
-    opening_date = fields.Date(string='Opening date', required=True, related='company_id.account_accountant_opening_date')
+    opening_date = fields.Date(string='Opening Date', required=True, related='company_id.account_accountant_opening_date', help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.")
     fiscalyear_last_day = fields.Integer(related="company_id.fiscalyear_last_day", required=True)
     fiscalyear_last_month = fields.Selection(selection=[(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
                                              related="company_id.fiscalyear_last_month",
                                              required=True)
+    account_accountant_setup_financial_year_data_marked_done = fields.Boolean(string='Financial year setup marked as done', compute="_compute_setup_marked_done")
+
+    @api.depends('company_id.account_accountant_setup_financial_year_data_marked_done')
+    def _compute_setup_marked_done(self):
+        for record in self:
+            record.account_accountant_setup_financial_year_data_marked_done = record.company_id.account_accountant_setup_financial_year_data_marked_done
 
     @api.depends('company_id.account_accountant_opening_move_id')
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
 
-    #TODO OCO : "2 lines of explanation that you don’t need to open / close fiscal years" :> C'est-à-dire ?
+    def mark_as_done(self):
+        """ Forces fiscal year setup state to 'done'.
+        """
+        self.company_id.account_accountant_setup_financial_year_data_marked_done = True
+        return self.env.ref('account_accountant.init_wizard_refresh_view').read([])[0]
+
+    def unmark_as_done(self):
+        """ Forces fiscal year setup state to 'undone'.
+        """
+        self.company_id.account_accountant_setup_financial_year_data_marked_done = False
+        return self.env.ref('account_accountant.init_wizard_refresh_view').read([])[0]
 
 class OpeningAccountMoveWizard(models.TransientModel):
     _name = 'accountant.opening'
@@ -35,39 +51,11 @@ class OpeningAccountMoveWizard(models.TransientModel):
     currency_id = fields.Many2one(comodel_name='res.currency', related='opening_move_id.currency_id')
     opening_move_line_ids = fields.One2many(string='Opening move lines', related="opening_move_id.line_ids")
     journal_id = fields.Many2one(string='Journal', comodel_name='account.journal', required=True, related='opening_move_id.journal_id')
-    date = fields.Date(string='Opening date', required=True, related='opening_move_id.date')
-    adjustment_account_id = fields.Many2one(string="Adjustment account", required=True, related='company_id.account_accountant_opening_adjustment_account_id', help="The account into which the adjustment difference for this move will be posted.")
-
-    def get_adjustment_difference(self):
-        for record in self:
-            sum_debit = 0.0
-            sum_credit = 0.0
-
-            for move_line in record.opening_move_line_ids:
-                # each line has either debit or credit set, and the other to 0.0
-                sum_debit += move_line.debit
-                sum_credit += move_line.credit
-
-            smallest = float_compare(sum_debit, sum_credit, precision_rounding=record.currency_id.rounding)==1 and 'credit' or 'debit'
-            value = float_round(abs(sum_debit-sum_credit), precision_rounding=record.currency_id.rounding)
-
-            return (smallest, value)
+    date = fields.Date(string='Opening Date', required=True, related='opening_move_id.date')
 
     def validate(self):
-        """ Called by this wizard's 'save' button.
+        """ Called by this wizard's 'post' button.
         """
-        (method, value) = self.get_adjustment_difference()
-
-        if not float_is_zero(value, precision_rounding=self.currency_id.rounding):
-            self.env['account.move.line'].create({
-                'name': "Opening adjustment difference",
-                method: value,
-                'move_id': self.opening_move_id.id,
-                'account_id': self.adjustment_account_id.id,
-            })
-
-        self.opening_move_id.post()
-
-        self.company_id.account_accountant_opening_move_adjustment_amount = value
+        self.opening_move_id.post() # This will raise an error if we don't have debit = credit
 
         return self.env.ref('account_accountant.init_wizard_refresh_view').read([])[0]
