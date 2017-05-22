@@ -806,6 +806,13 @@ msgid "The payment transaction reference must be unique!"
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:43
+#, python-format
+msgid "This feature is not available for payment acquirers set to the "Authorize" mode.\n"
+"Please use a token from another provider than %s."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
@@ -961,4 +968,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
 msgstr ""
-
