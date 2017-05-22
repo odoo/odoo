@@ -20,21 +20,21 @@
                                 <tbody>
                                     <tr>
                                         <th rowspan="4">
-                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['date:month'],'pivot_column_group_by': ['timesheet_invoice_type'], 'measures': ['unit_amount']}">Hours</a>
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['date:month'],'pivot_column_groupby': ['timesheet_invoice_type'], 'pivot_measures': ['unit_amount']}">Hours</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['hours']['billable_time']"/> h
                                         </td>
                                         <td>Time and material</td>
                                         <th rowspan="4">
-                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['date:month', 'employee_id'], 'pivot_column_group_by': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['date:month', 'employee_id'], 'pivot_column_groupby': ['timesheet_invoice_type'],'pivot_measures': ['unit_amount']}">Rates</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-esc="dashboard['rates']['billable_time']"/> %
                                         </td>
                                         <td>Time and material</td>
                                         <th rowspan="4">
-                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_group_by': ['timesheet_invoice_id'], 'pivot_column_group_by': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
+                                            <a type="action" t-att-domain="json.dumps(domain)" context="{'pivot_row_groupby': ['timesheet_invoice_id'], 'pivot_column_groupby': ['date:month'],'pivot_measures': ['amount', 'timesheet_revenue']}">Profitability</a>
                                         </th>
                                         <td class="o_timesheet_plan_dashboard_cell">
                                             <t t-if="currency.position == 'before'" t-esc="currency.symbol"/>
