@@ -39,7 +39,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'report/report_expense_sheet.xml',
         'views/hr_dashboard.xml',
         'views/hr_expense.xml',
-        'views/tour_views.xml',
         'views/res_config_views.xml',
         'data/web_planner_data.xml',
     ],
