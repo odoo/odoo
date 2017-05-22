@@ -16,8 +16,8 @@
                 <p>Dear <t t-esc="record.partner_id.name"/></p>
                 <p>
                 Here is your repair order <t t-esc="doc_name"/> <strong t-esc="record.name"/>
-                <t t-if="record.origin">
-                (with reference: <t t-esc="record.origin"/> )
+                <t t-if="record.invoice_id.origin">
+                (with reference: <t t-esc="record.invoice_id.origin"/> )
                 </t>
                 <t t-if="record.invoice_method != 'none'">
                 amounting in <strong><t t-esc="record.amount_total"/> <t t-esc="record.pricelist_id.currency_id.name"/>.</strong>
