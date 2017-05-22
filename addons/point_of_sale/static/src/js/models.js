@@ -1272,7 +1272,7 @@ exports.Orderline = Backbone.Model.extend({
     },
     get_quantity_str_with_unit: function(){
         var unit = this.get_unit();
-        if(unit && !unit.is_unit){
+        if(unit && !unit.is_pos_groupable){
             return this.quantityStr + ' ' + unit.name;
         }else{
             return this.quantityStr;
