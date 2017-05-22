@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class SaleOrderLine(models.Model):

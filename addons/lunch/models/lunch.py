@@ -8,7 +8,7 @@ import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 from odoo.tools import pycompat
 

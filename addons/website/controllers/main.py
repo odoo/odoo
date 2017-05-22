@@ -4,7 +4,7 @@
 import datetime
 from itertools import islice
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 import logging
 import re
 

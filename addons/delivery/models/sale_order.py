@@ -3,7 +3,7 @@
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class SaleOrder(models.Model):
