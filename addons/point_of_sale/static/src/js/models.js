@@ -56,7 +56,6 @@ exports.PosModel = Backbone.Model.extend({
         this.user = null;
         this.users = [];
         this.partners = [];
-        this.cashier = null;
         this.cashregisters = [];
         this.taxes = [];
         this.pos_session = null;
@@ -73,6 +72,7 @@ exports.PosModel = Backbone.Model.extend({
             'orders':           new OrderCollection(),
             'selectedOrder':    null,
             'selectedClient':   null,
+            'cashier':          null,
         });
 
         this.get('orders').bind('remove', function(order,_unused_,options){ 
@@ -584,11 +584,11 @@ exports.PosModel = Backbone.Model.extend({
 
     // returns the user who is currently the cashier for this point of sale
     get_cashier: function(){
-        return this.cashier || this.user;
+        return this.get('cashier') || this.user;
     },
     // changes the current cashier
     set_cashier: function(user){
-        this.cashier = user;
+        this.set('cashier', user);
     },
     //creates a new empty order and sets it as the current order
     add_new_order: function(){
@@ -1429,9 +1429,6 @@ exports.Orderline = Backbone.Model.extend({
     },
     // changes the base price of the product for this orderline
     set_unit_price: function(price){
-        if (!this.pos.config.restrict_price_control || this.pos.get_cashier().role == 'manager') {
-            return;
-        }
         this.order.assert_editable();
         this.price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
         this.trigger('change',this);
@@ -1891,7 +1888,7 @@ exports.Order = Backbone.Model.extend({
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
             partner_id: this.get_client() ? this.get_client().id : false,
-            user_id: this.pos.cashier ? this.pos.cashier.id : this.pos.user.id,
+            user_id: this.pos.get_cashier().id,
             uid: this.uid,
             sequence_number: this.sequence_number,
             creation_date: this.validation_date || this.creation_date, // todo: rename creation_date in master
@@ -1911,7 +1908,7 @@ exports.Order = Backbone.Model.extend({
             paymentlines.push(paymentline.export_for_printing());
         });
         var client  = this.get('client');
-        var cashier = this.pos.cashier || this.pos.user;
+        var cashier = this.pos.get_cashier();
         var company = this.pos.company;
         var shop    = this.pos.shop;
         var date    = new Date();
