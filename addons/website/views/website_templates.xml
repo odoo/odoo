@@ -118,7 +118,7 @@
             </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang and website">
+            <t t-if="request and request.is_frontend_multilang and website">
                 <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
                     <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
@@ -278,7 +278,7 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+    <ul class="list-inline js_language_selector mt16" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li t-foreach="languages" t-as="lg">
           <a
             t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"

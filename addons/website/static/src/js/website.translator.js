@@ -33,7 +33,7 @@ website.TopBar.include({
     edit_master: function (ev) {
         ev.preventDefault();
 
-        var lang = '/' + utils.get_cookie('website_lang');
+        var lang = '/' + utils.get_cookie('frontend_lang');
 
         var current = document.createElement('a');
         current.href = window.location.toString();
