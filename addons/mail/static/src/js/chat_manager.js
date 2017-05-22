@@ -703,7 +703,7 @@ var chat_manager = {
         options = options || {};
         var msg = {
             partner_ids: data.partner_ids,
-            body: _.str.trim(data.content),
+            body: this.clean_content(data.content),
             attachment_ids: data.attachment_ids,
         };
         if ('subject' in data) {
@@ -774,6 +774,25 @@ var chat_manager = {
                 return _.map(msgs, add_message);
             });
         }
+    },
+    clean_content: function (content) {
+        content = _.str.trim(content);
+
+        // Since the body of the message is HTML, the server will sanitize it before storing thanks
+        // to method 'html_sanitize'. This process will remove any crappy tags, and a side effect is
+        // that the characters '<' or '>' will be removed if not necessary. For example, '4 < 5'
+        // will be stored as '<p>4</p>'. We define a dumb heuristic which assumes that if the
+        // message contains only '<' or '>' characters, they can be escaped safely.
+        var lt_count = content.split("<").length - 1;
+        var gt_count = content.split(">").length - 1;
+        if (lt_count !== 0 && gt_count === 0) {
+            content = content.replace(/</g, "&lt;");
+        }
+        else if (gt_count !== 0 && lt_count === 0) {
+            content = content.replace(/>/g, "&gt;");
+        }
+
+        return content;
     },
     toggle_star_status: function (message_id) {
         var msg = _.findWhere(messages, { id: message_id });
