@@ -31,7 +31,7 @@ from <t t-esc="record.company_id.name"/>.
 <p>Do not hesitate to contact us, further you have any question.</p>
 <p>Best regards,</p>
 <p style="color:#888888;">
-<t t-if="record.user_id and record.user_id.signature" t-raw="record.user_id.signature"/>
+<t t-if="record.create_uid and record.create_uid.signature" t-raw="record.create_uid.signature"/>
 </p>
 </field>
         </record>
