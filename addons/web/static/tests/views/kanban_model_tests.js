@@ -62,7 +62,7 @@ QUnit.module('Views', {
     QUnit.module('KanbanModel');
 
     QUnit.test('load grouped + add a new group', function (assert) {
-        assert.expect(20);
+        assert.expect(22);
 
         var calledRoutes = {};
         var model = createModel({
@@ -87,7 +87,8 @@ QUnit.module('Views', {
             // various checks on the load result
             var state = model.get(resultID);
             assert.ok(_.isEqual(state.groupedBy, ['product_id']), 'should be grouped by "product_id"');
-            assert.strictEqual(state.count, 2, 'should have found 2 groups');
+            assert.strictEqual(state.data.length, 2, 'should have found 2 groups');
+            assert.strictEqual(state.count, 2, 'both groups contain one record');
             var xphoneGroup = _.findWhere(state.data, {res_id: 37});
             assert.strictEqual(xphoneGroup.model, 'partner', 'group should have correct model');
             assert.ok(xphoneGroup, 'should have a group for res_id 37');
@@ -102,7 +103,8 @@ QUnit.module('Views', {
             // add a new group
             model.createGroup('xpod', resultID);
             state = model.get(resultID);
-            assert.strictEqual(state.count, 3, 'should now have 3 groups');
+            assert.strictEqual(state.data.length, 3, 'should now have 3 groups');
+            assert.strictEqual(state.count, 2, 'there are still 2 records');
             var xpodGroup = _.findWhere(state.data, {value: 'xpod'});
             assert.strictEqual(xpodGroup.model, 'partner', 'new group should have correct model');
             assert.ok(xpodGroup, 'should have an "xpod" group');

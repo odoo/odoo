@@ -131,7 +131,8 @@ var KanbanController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             var data = this.model.get(this.handle, {raw: true});
-            var createMuted = data.count === 0 && this.createColumnEnabled;
+            var grouped = data.groupedBy.length;
+            var createMuted = grouped && data.data.length === 0 && this.createColumnEnabled;
             this.$buttons.find('.o-kanban-button-new')
                 .toggleClass('btn-primary', !createMuted)
                 .toggleClass('btn-default', createMuted);
