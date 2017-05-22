@@ -206,13 +206,18 @@ class IrUiMenu(models.Model):
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon_data']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
-        return {
+
+        menu_root = {
             'id': False,
             'name': 'root',
             'parent_id': [-1, ''],
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
+        menu_roots._set_menuitems_xmlids(menu_root)
+
+        return menu_root
 
     @api.model
     @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
@@ -232,6 +237,7 @@ class IrUiMenu(models.Model):
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
         }
+
         if not menu_roots_data:
             return menu_root
 
@@ -258,4 +264,25 @@ class IrUiMenu(models.Model):
         for menu_item in menu_items:
             menu_item.setdefault('children', []).sort(key=operator.itemgetter('sequence'))
 
+        (menu_roots + menus)._set_menuitems_xmlids(menu_root)
+
         return menu_root
+
+    def _set_menuitems_xmlids(self, menu_root):
+        menuitems = self.env['ir.model.data'].sudo().search([
+                ('res_id', 'in', self.ids),
+                ('model', '=', 'ir.ui.menu')
+            ])
+
+        xmlids = {
+            menu.res_id: menu.complete_name
+            for menu in menuitems
+        }
+
+        def _set_xmlids(tree, xmlids):
+            tree['xmlid'] = xmlids.get(tree['id'], '')
+            if 'children' in tree:
+                for child in tree['children']:
+                    _set_xmlids(child, xmlids)
+
+        _set_xmlids(menu_root, xmlids)

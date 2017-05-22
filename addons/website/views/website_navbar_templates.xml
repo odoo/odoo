@@ -15,7 +15,7 @@
                         <ul class="dropdown-menu">
                             <li t-as="menu" t-foreach="menu_data['children']">
                                 <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
-                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
+                                <a t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'" t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or None" t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or None" t-att-data-menu="menu['id']" t-att-data-menu-xmlid="menu.get('xmlid')" t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')">
                                     <i t-attf-class="fa #{menu.get('icon')} fa-lg fa-fw" t-if="menu.get('icon')"/>
                                     <span class="oe_menu_text">
                                         <t t-esc="menu['name']"/>

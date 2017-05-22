@@ -17,7 +17,6 @@ It assigns manager and user access rights to the Administrator for the accountin
     'depends': ['account', 'web_tour'],
     'data': [
         'data/account_accountant_data.xml',
-        'data/account_accountant_tour.xml',
         'security/account_accountant_security.xml',
         'views/account_accountant_templates.xml',
         'views/res_config_view.xml',
