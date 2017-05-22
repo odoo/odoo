@@ -108,7 +108,7 @@ class Website(Home):
     def page(self, page, **opt):
         values = {
             'path': page,
-            'deletable': True,  # used to add 'delete this page' in content menu
+            'deletable': False if page == 'homepage' else True,  # used to add 'delete this page' in content menu
         }
         # /page/website.XXX --> /page/XXX
         if page.startswith('website.'):
