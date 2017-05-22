@@ -78,7 +78,6 @@ var KanbanModel = BasicModel.extend({
 
                 // newGroup.is_open = true;
                 parent.data.push(newGroup.id);
-                parent.count++;
                 return newGroup.id;
             });
     },

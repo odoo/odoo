@@ -682,7 +682,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
             "the last column should be the newly created one");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
         assert.expect(26);
@@ -758,7 +758,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('create a column, delete it and create another one', function (assert) {
         assert.expect(5);
@@ -797,7 +797,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column 2)').length, 1,
             "the last column should be the newly created one");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
         assert.expect(12);
