@@ -35,11 +35,14 @@ class SaleOrderLine(models.Model):
         # have changed, we don't compute the quantities but verify the move state.
         bom = self.env['mrp.bom']._bom_find(product=self.product_id)
         if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.procurement_ids.mapped('move_ids')])
-            if bom_delivered:
-                return self.product_uom_qty
-            else:
-                return 0.0
+            moves = self.procurement_ids.mapped('move_ids')
+            move_product_dict = dict(map(lambda x: (x.id, {'done': 0.0, 'qty': 0.0}), moves.mapped('product_id')))
+            for move in moves:
+                move_product_dict[move.product_id.id]['qty'] += move.product_uom_qty
+                if move.state == 'done':
+                    move_product_dict[move.product_id.id]['done'] += move.product_uom_qty
+            min_transfer = min(move_product_dict[key]['done'] / move_product_dict[key]['qty'] for key in move_product_dict)
+            return min_transfer * self.product_uom_qty
         return super(SaleOrderLine, self)._get_delivered_qty()
 
     @api.multi

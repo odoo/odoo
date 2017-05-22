@@ -365,19 +365,19 @@ class TestSaleMrpFlow(common.TransactionCase):
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 1})
+        pick.pack_operation_product_ids.write({'qty_done': 2})
         wiz_act = pick.do_new_transfer()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
 
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
+        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after partial delivery of a kit')
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
-        self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
+        self.assertEqual(del_qty, 2, 'Sale MRP: delivered quantity should be 2 after partial delivery of a kit')
         # deliver remaining products, check the so's invoice_status and delivered quantities
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]
         pick_2.force_assign()
-        pick_2.pack_operation_product_ids.write({'qty_done': 4})
+        pick_2.pack_operation_product_ids.write({'qty_done': 3})
         pick_2.do_new_transfer()
 
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
