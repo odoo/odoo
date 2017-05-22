@@ -127,113 +127,15 @@
                         </div>
                     </div>
                 </t>
-                <t t-if="payment_request.state == 'paid'">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-lg-6">
-                                <h4><span>Payment processed by <t t-esc="payment_request.payment_acquirer_id.name"/>.
-                                    <img class="media-object" style="width: 60px; display: inline-block;" t-att-title="payment_request.payment_acquirer_id.name"
-                                        t-att-src="'/payment_%s/static/src/img/%s_icon.png' % (payment_request.payment_acquirer_id.provider, payment_request.payment_acquirer_id.provider)"/>
-                                </span></h4>
-                            </div>
-                        </div>
-                    </div>
-                </t>
                 <div class="panel-body">
-                    <div class="mb8">
-                          <strong>Invoice Date:</strong> <span t-field="payment_request.invoice_id.date_invoice" t-options='{"widget": "date"}'/>
+                    <div class="o_invoice_report_html">
+                        <iframe id="print_invoice"/>
                     </div>
-                    <div>
-                        <div>
-                            <strong>Invoicing Address</strong>
-                        </div>
-                        <div>
-                            <address t-field="payment_request.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                          <strong>Product</strong>
-                        </div>
-                        <div class="hidden-sm hidden-xs col-md-2 text-right">
-                          <strong>Unit Price</strong>
-                        </div>
-                        <div class="hidden-sm hidden-xs col-md-2 text-right">
-                          <strong>Quantity</strong>
-                        </div>
-                        <div class="hidden-sm hidden-xs col-md-2 text-right">
-                          <strong>Subtotal</strong>
-                        </div>
-                    </div>
-                    <t t-foreach="payment_request.invoice_id.invoice_line_ids" t-as="invoice_line">
-                        <div class="row orders_vertical_align">
-                            <div class="visible-lg hidden-sm hidden-xs col-md-1 text-center">
-                                <span t-field="invoice_line.product_id.image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}" />
-                            </div>
-                            <div id='product_name' class="col-md-5 col-sm-6 col-xs-4">
-                                <span t-esc="invoice_line.product_id.name"/>
-                            </div>
-                            <div class="col-sm-2 col-xs-3 text-right">
-                                <span t-field="invoice_line.price_unit" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/>
-                            </div>
-                            <div class="col-xs-2 text-right">
-                                <span t-esc="invoice_line.quantity"/>
-                            </div>
-                            <div class="col-sm-2 col-xs-3 text-right">
-                                <span t-field="invoice_line.price_subtotal" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/>
-                            </div>
-                        </div>
-                    </t>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                          <div>
-                            <strong>Contact</strong>
-                          </div>
-                          <div t-field="payment_request.invoice_id.user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
-                          <br/>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="row">
-                            <div class="col-md-9 col-xs-8 text-right">
-                              Untaxed Amount:
-                            </div>
-                            <div class="col-md-3 col-xs-4 text-right">
-                              <span t-field="payment_request.invoice_id.amount_untaxed" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-9 col-xs-8 text-right">
-                              Taxes:
-                            </div>
-                            <div class="col-md-3 col-xs-4 text-right">
-                              <span t-field="payment_request.invoice_id.amount_tax" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/>
-                            </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-9 col-xs-8 text-right">
-                              <strong>Total:</strong>
-                            </div>
-                            <div class="col-md-3 col-xs-4 text-right">
-                              <strong><span t-field="payment_request.invoice_id.amount_total" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/></strong>
-                            </div>
-                          </div>
-                          <hr/>
-                          <div class="row">
-                            <div class="col-md-9 col-xs-8 text-right">
-                              <strong>Amount Due:</strong>
-                            </div>
-                            <div class="col-md-3 col-xs-4 text-right">
-                              <strong><span t-field="payment_request.invoice_id.residual" t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/></strong>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                 </div>
             </div>
         </div>
     </template>
+
     <template id="invoice_pay" name="Invoice Pay">
         <span class="o_extend_layout">
             <t t-call="payment.layout">
@@ -248,38 +150,37 @@
                 <div class="oe_structure"/>
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
                             <h2>
                                 Your Invoice<br></br>
                                 <em t-esc="payment_request.reference"/>
                                 <small t-field="payment_request.state"/>
                             </h2>
                         </div>
-                        <div class="col-md-3 text-right">
-                            <h2>
-                                <span t-esc="payment_request.amount_total" t-options="{'widget': 'monetary', 'display_currency': payment_request.currency_id}"/>
-                            </h2>
-                            <t t-if="payment_request.due_date">
-                                Due by <span class="ml16" t-esc="payment_request.due_date" t-options='{"widget": "date"}'/>
-                            </t>
-                        </div>
-                        <div class="col-md-3 hidden-print" id="pay_button" t-ignore="true">
-                            <div class="o_divider"></div>
+                        <div class="col-md-6 col-sm-6 col-xs-10 hidden-print text-right" id="pay_button" t-ignore="true">
                             <div>
-                                <ul class="list-inline">
+                                <ul class="list-inline pull-right">
+                                    <li class="o_divider">
+                                         <h2>
+                                            <span t-esc="payment_request.amount_total" t-options="{'widget': 'monetary', 'display_currency': payment_request.currency_id}"/>
+                                        </h2>
+                                        <t t-if="payment_request.due_date">
+                                            <h4>Due by<span class="ml4" t-esc="payment_request.due_date" t-options='{"widget": "date"}'/></h4>
+                                        </t>
+                                    </li>
                                     <li>
                                         <a target="_blank" t-att-href="'/payment/%s' % payment_request.access_token+'?pdf=True'" t-att-title="payment_request.reference">
                                             <i class="fa fa-download fa-2x" aria-hidden="true"/>
-                                        </a>
+                                        </a><br></br>
                                     </li>
                                     <li>
-                                        <a class="hidden-sm hidden-xs" t-att-title="payment_request.reference" onclick="javascript:window.print();">
+                                        <a id="print_iframe" t-att-title="payment_request.reference">
                                             <i class="fa fa-print fa-2x" aria-hidden="true"/>
                                         </a>
                                     </li>
-                                    <li>
+                                    <li t-if="payment_request.state != 'paid'">
                                         <h3>
-                                            <a t-att-class="payment_request.state != 'paid' and 'btn btn-primary btn-lg o_paynow_button' or 'btn btn-primary btn-lg o_paynow_button disabled'"  data-toggle="modal" data-target="#modalpayment">
+                                            <a class="btn btn-primary btn-lg o_paynow_button"  data-toggle="modal" data-target="#modalpayment">
                                                 <i class="fa fa-arrow fa-5x" aria-hidden="true"/>Pay Now
                                             </a>
                                         </h3>
@@ -288,8 +189,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                    <div class="row mb16">
+                        <div class="col-md-12 hidden-sm hidden-xs">
                             <t t-call="payment.invoice_payment_detail"/>
                         </div>
                     </div>

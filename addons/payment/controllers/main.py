@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-
 from odoo import http, _
-from odoo.exceptions import AccessError
 from odoo.http import request
-
-
-_logger = logging.getLogger(__name__)
+from odoo.exceptions import AccessError
 
 
 class Payment(http.Controller):
@@ -19,7 +14,7 @@ class Payment(http.Controller):
         if token:
             return env['account.payment.request'].sudo().search([('access_token', '=', token)], limit=1)
         else:
-            return env['account.payment.request'].search([('id', '=', payment_request_id)], limit=1)
+            return env['account.payment.request'].browse(int(payment_request_id))
 
     def _print_invoice_pdf(self, id, xml_id):
         # print report as sudo, since it require access to taxes, payment term, ... and portal
@@ -32,6 +27,7 @@ class Payment(http.Controller):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     def _update_payment_status(self, transaction, payment_request, token=None):
+        # show payment status on the payment page
         if transaction.state == 'pending':
             payment_request_status = 'pending'
             status = 'warning'
@@ -48,6 +44,13 @@ class Payment(http.Controller):
             payment_request.write({'state': payment_request_status})
         return {'message': message, 'status': status}
 
+    @http.route("/invoice/report/html", type='json', auth="public", website=True)
+    def html_report(self, payment_request_id=None, token=None, **kwargs):
+        # the real invoice report (displayed in HTML format)
+        access_token = token if token != payment_request_id else None
+        payment_request = self._get_invoice_payment_request(payment_request_id, access_token, **kwargs)
+        return request.env.ref('account.account_invoices').sudo().render_qweb_html([payment_request.invoice_id.id])[0]
+
     @http.route(['/payment/<int:payment_request_id>'], type='http', auth="user", website=True)
     def pay_user(self, *args, **kwargs):
         return self.pay(*args, **kwargs)
@@ -55,6 +58,7 @@ class Payment(http.Controller):
     @http.route(['/payment/<token>'], type='http', auth='public', website=True)
     def pay(self, payment_request_id=None, token=None, pdf=None, **kwargs):
         payment_request = self._get_invoice_payment_request(payment_request_id, token, **kwargs)
+        # check document is accessible or not
         if not token:
             try:
                 payment_request.invoice_id.check_access_rights('read')
@@ -66,11 +70,12 @@ class Payment(http.Controller):
             return request.render("payment.403")
 
         if pdf:
+            # download invoice report in pdf version
             return self._print_invoice_pdf(payment_request.invoice_id.id, 'account.account_invoices')
 
         values = {
             'payment_request': payment_request,
-            'invoice_pay': True,
+            'invoice_pay': True,  # invoice_pay, using xpath for view expand
         }
         transaction = payment_request.payment_tx_id if payment_request.payment_tx_id else None
         if transaction:
@@ -82,6 +87,7 @@ class Payment(http.Controller):
             'partner_id': payment_request.partner_id.id,
             'billing_partner_id': payment_request.partner_id.id,
         }
+        # render all payment method for payment page
         values.update(payment_request.with_context(submit_class="btn btn-primary", submit_txt=_('Pay'))._prepare_payment_acquirer(values=render_values))
 
         return request.render('payment.invoice_pay', values)
