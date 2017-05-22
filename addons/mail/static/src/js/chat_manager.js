@@ -153,6 +153,7 @@ function add_message (data, options) {
         msg = chat_manager.make_message(data);
         // Keep the array ordered by id when inserting the new message
         messages.splice(_.sortedIndex(messages, msg, 'id'), 0, msg);
+        msg.channel_ids = options;
         _.each(msg.channel_ids, function (channel_id) {
             var channel = chat_manager.get_channel(channel_id);
             if (channel) {
