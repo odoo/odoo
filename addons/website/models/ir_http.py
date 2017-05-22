@@ -18,20 +18,13 @@ from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.http_routing.models.ir_http import ModelConverter
-from odoo.addons.website.models.website import url_for
 
 
 logger = logging.getLogger(__name__)
 
-# global resolver (GeoIP API is thread-safe, for multithreaded workers)
-# This avoids blowing up open files limit
-odoo._geoip_resolver = None
-
 
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
-
-    rerouting_limit = 10
 
     @classmethod
     def _get_converters(cls):
@@ -59,166 +52,39 @@ class Http(models.AbstractModel):
         if not request.uid:
             super(Http, cls)._auth_method_public()
 
-    bots = "bot|crawl|slurp|spider|curl|wget|facebookexternalhit".split("|")
-
-    @classmethod
-    def is_a_bot(cls):
-        # We don't use regexp and ustr voluntarily
-        # timeit has been done to check the optimum method
-        user_agent = request.httprequest.environ.get('HTTP_USER_AGENT', '').lower()
-        try:
-            return any(bot in user_agent for bot in cls.bots)
-        except UnicodeDecodeError:
-            return any(bot in user_agent.encode('ascii', 'ignore') for bot in cls.bots)
-
-    @classmethod
-    def get_nearest_lang(cls, lang):
-        # Try to find a similar lang. Eg: fr_BE and fr_FR
-        short = lang.partition('_')[0]
-        short_match = False
-        for code, dummy in cls._get_language_codes():
-            if code == lang:
-                return lang
-            if not short_match and code.startswith(short):
-                short_match = code
-        return short_match
-
-    @classmethod
-    def _geoip_setup_resolver(cls):
-        # Lazy init of GeoIP resolver
-        if odoo._geoip_resolver is not None:
-            return
-        try:
-            import GeoIP
-            # updated database can be downloaded on MaxMind website
-            # http://dev.maxmind.com/geoip/legacy/install/city/
-            geofile = config.get('geoip_database')
-            if os.path.exists(geofile):
-                odoo._geoip_resolver = GeoIP.open(geofile, GeoIP.GEOIP_STANDARD)
-            else:
-                odoo._geoip_resolver = False
-                logger.warning('GeoIP database file %r does not exists, apt-get install geoip-database-contrib or download it from http://dev.maxmind.com/geoip/legacy/install/city/', geofile)
-        except ImportError:
-            odoo._geoip_resolver = False
-
-    @classmethod
-    def _geoip_resolve(cls):
-        if 'geoip' not in request.session:
-            record = {}
-            if odoo._geoip_resolver and request.httprequest.remote_addr:
-                record = odoo._geoip_resolver.record_by_addr(request.httprequest.remote_addr) or {}
-            request.session['geoip'] = record
-
     @classmethod
     def get_page_key(cls):
         return (cls._name, "cache", request.uid, request.lang, request.httprequest.full_path)
 
     @classmethod
-    def _dispatch(cls):
-        """ Before executing the endpoint method, add website params on request, such as
-                - current website (record)
-                - multilang support (set on cookies)
-                - geoip dict data are added in the session
-            Then follow the parent dispatching.
-            Reminder :  Do not use `request.env` before authentication phase, otherwise the env
-                        set on request will be created with uid=None (and it is a lazy property)
-        """
-        first_pass = not hasattr(request, 'website')
-        request.website = None
-        func = None
+    def _add_dispatch_parameters(cls, func):
+        if request.is_frontend:
+            context = dict(request.context)
+            if not context.get('tz'):
+                context['tz'] = request.session.get('geoip', {}).get('time_zone')
 
+            request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
+            context['website_id'] = request.website.id
+
+        super(Http, cls)._add_dispatch_parameters(func)
+
+        if request.is_frontend and request.routing_iteration == 1:
+            request.website = request.website.with_context(request.context)
+
+    @classmethod
+    def _dispatch(cls):
         # add signup token or login to the session if given
         if 'auth_signup_token' in request.params:
             request.session['auth_signup_token'] = request.params['auth_signup_token']
         if 'auth_login' in request.params:
             request.session['auth_login'] = request.params['auth_login']
 
-        try:
-            if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
-                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
-                return werkzeug.utils.redirect(new_url, 301)
-            func, arguments = cls._find_handler()
-            request.website_enabled = func.routing.get('website', False)
-        except werkzeug.exceptions.NotFound:
-            # either we have a language prefixed route, either a real 404
-            # in all cases, website processes them
-            request.website_enabled = True
-
-        request.website_multilang = (
-            request.website_enabled and
-            func and func.routing.get('multilang', func.routing['type'] == 'http')
-        )
-
-        cls._geoip_setup_resolver()
-        cls._geoip_resolve()
-
-        # For website routes (only), add website params on `request`
-        cook_lang = request.httprequest.cookies.get('website_lang')
-        if request.website_enabled:
-            try:
-                if func:
-                    cls._authenticate(func.routing['auth'])
-                elif request.uid is None:
-                    cls._auth_method_public()
-            except Exception as e:
-                return cls._handle_exception(e)
-
-            request.redirect = lambda url, code=302: werkzeug.utils.redirect(url_for(url), code)
-            request.website = request.env['website'].get_current_website()  # can use `request.env` since auth methods are called
-            context = dict(request.context)
-            context['website_id'] = request.website.id
-            langs = [lg[0] for lg in cls._get_language_codes()]
-            path = request.httprequest.path.split('/')
-            if first_pass:
-                is_a_bot = cls.is_a_bot()
-                nearest_lang = not func and cls.get_nearest_lang(path[1])
-                url_lang = nearest_lang and path[1]
-                preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or (not is_a_bot and cls.get_nearest_lang(request.lang))
-                                  or cls._get_default_lang().code)
-
-                request.lang = context['lang'] = nearest_lang or preferred_lang
-                # if lang in url but not the displayed or default language --> change or remove
-                # or no lang in url, and lang to dispay not the default language --> add lang
-                # and not a POST request
-                # and not a bot or bot but default lang in url
-                if ((url_lang and (url_lang != request.lang or url_lang == cls._get_default_lang().code))
-                        or (not url_lang and request.website_multilang and request.lang != cls._get_default_lang().code)
-                        and request.httprequest.method != 'POST') \
-                        and (not is_a_bot or (url_lang and url_lang == cls._get_default_lang().code)):
-                    if url_lang:
-                        path.pop(1)
-                    if request.lang != cls._get_default_lang().code:
-                        path.insert(1, request.lang)
-                    path = '/'.join(path) or '/'
-                    request.context = context
-                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
-                    redirect.set_cookie('website_lang', request.lang)
-                    return redirect
-                elif url_lang:
-                    request.uid = None
-                    path.pop(1)
-                    request.context = context
-                    return cls.reroute('/'.join(path) or '/')
-            if request.lang == cls._get_default_lang().code:
-                context['edit_translations'] = False
-            if not context.get('tz'):
-                context['tz'] = request.session.get('geoip', {}).get('time_zone')
-            # bind modified context
-            request.context = context
-            request.website = request.website.with_context(context)
-
-        # removed cache for auth public
-        request.cache_save = False
         resp = super(Http, cls)._dispatch()
-
-        if request.website_enabled and cook_lang != request.lang and hasattr(resp, 'set_cookie'):
-            resp.set_cookie('website_lang', request.lang)
         return resp
 
     @classmethod
     def _get_languages(cls):
-        if request.website:
+        if getattr(request, 'website', False):
             return request.website.language_ids
         return super(Http, cls)._get_languages()
 
@@ -230,49 +96,13 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _get_default_lang(cls):
-        if request.website:
+        if getattr(request, 'website', False):
             return request.website.default_lang_id
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def reroute(cls, path):
-        if not hasattr(request, 'rerouting'):
-            request.rerouting = [request.httprequest.path]
-        if path in request.rerouting:
-            raise Exception("Rerouting loop is forbidden")
-        request.rerouting.append(path)
-        if len(request.rerouting) > cls.rerouting_limit:
-            raise Exception("Rerouting limit exceeded")
-        request.httprequest.environ['PATH_INFO'] = path
-        # void werkzeug cached_property. TODO: find a proper way to do this
-        for key in ('path', 'full_path', 'url', 'base_url'):
-            request.httprequest.__dict__.pop(key, None)
-
-        return cls._dispatch()
-
-    @classmethod
-    def _postprocess_args(cls, arguments, rule):
-        super(Http, cls)._postprocess_args(arguments, rule)
-
-        try:
-            _, path = rule.build(arguments)
-            assert path is not None
-        except Exception as e:
-            return cls._handle_exception(e, code=404)
-
-        if getattr(request, 'website_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
-            if generated_path != current_path:
-                if request.lang != cls._get_default_lang().code:
-                    path = '/' + request.lang + path
-                if request.httprequest.query_string:
-                    path += '?' + request.httprequest.query_string
-                return werkzeug.utils.redirect(path, code=301)
-
-    @classmethod
     def _handle_exception(cls, exception, code=500):
-        is_website_request = bool(getattr(request, 'website_enabled', False) and request.website)
+        is_website_request = bool(getattr(request, 'is_frontend', False) and getattr(request, 'website', False))
         if not is_website_request:
             # Don't touch non website requests exception handling
             return super(Http, cls)._handle_exception(exception)

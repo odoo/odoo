@@ -29,61 +29,6 @@ DEFAULT_CDN_FILTERS = [
 ]
 
 
-def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
-    location = path_or_uri.strip()
-    force_lang = lang is not None
-    url = urls.url_parse(location)
-
-    if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urls.url_join(current_path, location)
-
-        lang = lang or request.context.get('lang')
-        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
-
-        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
-            ps = location.split('/')
-            if ps[1] in langs:
-                # Replace the language only if we explicitly provide a language to url_for
-                if force_lang:
-                    ps[1] = lang.encode('utf-8')
-                # Remove the default language unless it's explicitly provided
-                elif ps[1] == request.env['ir.http']._get_default_lang().code:
-                    ps.pop(1)
-            # Insert the context language or the provided language
-            elif lang != request.env['ir.http']._get_default_lang().code or force_lang:
-                ps.insert(1, lang.encode('utf-8'))
-            location = '/'.join(ps)
-
-    return location.decode('utf-8')
-
-
-def is_multilang_url(local_url, langs=None):
-    if not langs:
-        langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
-    spath = local_url.split('/')
-    # if a language is already in the path, remove it
-    if spath[1] in langs:
-        spath.pop(1)
-        local_url = '/'.join(spath)
-    try:
-        # Try to match an endpoint in werkzeug's routing table
-        url = local_url.split('?')
-        path = url[0]
-        query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return (func.routing.get('website', False) and
-                func.routing.get('multilang', func.routing['type'] == 'http'))
-    except Exception:
-        return False
-
-
 class Website(models.Model):
 
     _name = "website"  # Avoid website.website convention for conciseness (for new api). Got a special authorization from xmo and rco
