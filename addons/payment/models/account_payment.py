@@ -40,7 +40,7 @@ class AccountPayment(models.Model):
     def _do_payment(self):
         if self.payment_token_id.acquirer_id.auto_confirm == 'authorize':
             raise ValidationError(_('This feature is not available for payment acquirers set to the "Authorize" mode.\n'
-                                  'Please use a token from another provider than %s.' % self.payment_token_id.acquirer_id.name))
+                                  'Please use a token from another provider than %s.') % self.payment_token_id.acquirer_id.name)
         reference = "P-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].create({
             'amount': self.amount,
