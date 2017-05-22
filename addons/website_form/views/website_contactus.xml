@@ -3,12 +3,12 @@
     <template id="contactus_form" name="Contactus Form" inherit_id="website.contactus" customize_show="True">
         <xpath expr="//div[@name='mail_button']" position="replace">
             <div name="website_form_contactus">
-                <t t-call="website_form.website_contact_form"></t>
+                <t t-call="website_form.default_contactus_form"></t>
             </div>
         </xpath>
     </template>
 
-    <template id="website_contact_form">
+    <template id="default_contactus_form">
         <form name="contactus_form" action="/website_form/" method="post" data-success_page="" data-model_name="mail.mail" class="s_website_form form-horizontal container-fluid mt32" enctype="multipart/form-data" data-editable-form="false">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="form-group form-field o_website_form_required_custom">

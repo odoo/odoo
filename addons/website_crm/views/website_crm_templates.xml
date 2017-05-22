@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="website_crm_contactus" name="CRM Contactus Form" inherit_id="website_form.website_contact_form" customize_show="True">
+    <template id="default_crm_contactus_form" name="CRM Contactus Form" inherit_id="website_form.default_contactus_form" customize_show="True">
         <xpath expr="//form[@name='contactus_form']" position="attributes">
             <attribute name="data-success_page">/page/website_crm.contactus_thanks</attribute>
             <attribute name="data-model_name">crm.lead</attribute>
