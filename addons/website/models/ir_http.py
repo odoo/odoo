@@ -283,7 +283,7 @@ class Http(models.AbstractModel):
 
             values = dict(
                 exception=exception,
-                traceback=traceback.format_exc(exception),
+                traceback=traceback.format_exc(),
             )
 
             if isinstance(exception, werkzeug.exceptions.HTTPException):

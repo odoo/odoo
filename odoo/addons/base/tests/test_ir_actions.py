@@ -6,7 +6,7 @@ from psycopg2 import IntegrityError
 import odoo
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import mute_logger
-import odoo.tests.common as common
+from odoo.tests import common
 
 
 class TestServerActionsBase(common.TransactionCase):

@@ -6,7 +6,7 @@ from psycopg2 import OperationalError
 from odoo import api, fields, models, registry, _
 from odoo.exceptions import UserError
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
 

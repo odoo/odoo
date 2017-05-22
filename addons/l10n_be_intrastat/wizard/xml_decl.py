@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
 from collections import namedtuple
 
 from odoo import api, exceptions, fields, models, _

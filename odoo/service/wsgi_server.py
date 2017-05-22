@@ -22,7 +22,7 @@ import werkzeug.serving
 import werkzeug.contrib.fixers
 
 import odoo
-import odoo.tools.config as config
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 

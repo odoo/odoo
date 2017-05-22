@@ -6,7 +6,7 @@ from itertools import chain
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 from odoo.tools import pycompat
 

@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.tools.translate import html_translate
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 
 class SaleQuoteTemplate(models.Model):
