@@ -6,7 +6,7 @@ from itertools import groupby
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons.website.models import website
+from odoo.addons.web_routing.models.ir_http import url_for
 from odoo.http import request
 from odoo.tools import pycompat
 
@@ -119,7 +119,7 @@ class View(models.Model):
             qcontext.update(dict(
                 self._context.copy(),
                 website=request.website,
-                url_for=website.url_for,
+                url_for=url_for,
                 res_company=request.website.company_id.sudo(),
                 default_lang_code=request.env['ir.http']._get_default_lang().code,
                 languages=request.env['ir.http']._get_language_codes(),

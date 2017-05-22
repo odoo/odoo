@@ -187,7 +187,7 @@ class IrHttp(models.AbstractModel):
 
         # check authentication level
         try:
-            auth_method = cls._authenticate(func.routing["auth"])
+            cls._authenticate(func.routing['auth'])
         except Exception as e:
             return cls._handle_exception(e)
 
@@ -197,7 +197,7 @@ class IrHttp(models.AbstractModel):
 
         # set and execute handler
         try:
-            request.set_handler(func, arguments, auth_method)
+            request.set_handler(func, arguments, func.routing["auth"])
             result = request.dispatch()
             if isinstance(result, Exception):
                 raise result
