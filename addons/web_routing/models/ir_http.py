@@ -102,3 +102,23 @@ class ModelConverter(ModelConverter):
             if not env[self.model].browse(record_id).exists():
                 record_id = abs(record_id)
         return env[self.model].browse(record_id)
+
+
+class IrHttp(models.AbstractModel):
+    _inherit = ['ir.http']
+
+    @classmethod
+    def _get_languages(cls):
+        return request.env['res.lang'].search([])
+
+    @classmethod
+    def _get_language_codes(cls):
+        languages = cls._get_languages()
+        return [(lang.code, lang.name) for lang in languages]
+
+    @classmethod
+    def _get_default_lang(cls):
+        lang_code = request.env['ir.values'].sudo().get_default('res.partner', 'lang')
+        if lang_code:
+            return request.env['res.lang'].search([('code', '=', lang_code)], limit=1)
+        return request.env['res.lang'].search([], limit=1)
