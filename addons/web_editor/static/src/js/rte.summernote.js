@@ -511,7 +511,12 @@ function prettify_html(html) {
             level--;
         }
 
-        result += token.trim().replace(/\s+/, ' ');
+        // don't trim inline content (which could change appearance)
+        if (!inline) {
+            token = token.trim();
+        }
+
+        result += token.replace(/\s+/, ' ');
 
         if (inline_level > level) {
             result += '\n';
