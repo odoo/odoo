@@ -52,7 +52,7 @@ var SplitbillScreenWidget = screens.ScreenWidget.extend({
             }
         }else{
             if( split.quantity < line.get_quantity()){
-                split.quantity += line.get_unit().is_unit ? 1 : line.get_unit().rounding;
+                split.quantity += line.get_unit().is_pos_groupable ? 1 : line.get_unit().rounding;
                 if(split.quantity > line.get_quantity()){
                     split.quantity = line.get_quantity();
                 }
