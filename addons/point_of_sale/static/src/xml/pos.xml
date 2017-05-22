@@ -1422,7 +1422,7 @@
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             Phone: <t t-esc="widget.pos.company.phone || ''"/><br />
-            User: <t t-esc="widget.pos.cashier ? widget.pos.cashier.name : widget.pos.user.name"/><br />
+            User: <t t-esc="widget.pos.get_cashier().name"/><br />
             <br />
             <t t-if="receipt.header">
                 <div style='text-align:center'>
