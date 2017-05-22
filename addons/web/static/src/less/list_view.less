@@ -91,17 +91,16 @@
     }
 
     // Values styling
-    .o_data_cell {
-        &.o_list_number {
-            text-align: right;
-            white-space: nowrap;
-        }
-        &.o_list_text {
-            white-space: pre-wrap;
-        }
-        &.o_invisible_modifier {
-            display: initial!important;  // Override invisible to keep the cells aligned
-        }
+    .o_list_number {
+        text-align: right;
+        white-space: nowrap;
+    }
+    .o_list_text {
+        white-space: pre-wrap;
+    }
+
+    .o_data_cell.o_invisible_modifier {
+        display: initial!important;  // Override invisible to keep the cells aligned
     }
 
     //--------------------------------------------------------------------------
