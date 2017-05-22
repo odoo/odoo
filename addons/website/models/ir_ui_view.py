@@ -110,7 +110,7 @@ class View(models.Model):
 
         if request and getattr(request, 'website_enabled', False):
             editable = request.website.is_publisher()
-            translatable = editable and self._context.get('lang') != request.website.default_lang_code
+            translatable = editable and self._context.get('lang') != request.env['ir.http']._get_default_lang().code
             editable = not translatable and editable
 
             if 'main_object' not in qcontext:
@@ -121,8 +121,8 @@ class View(models.Model):
                 website=request.website,
                 url_for=website.url_for,
                 res_company=request.website.company_id.sudo(),
-                default_lang_code=request.website.default_lang_code,
-                languages=request.website.get_languages(),
+                default_lang_code=request.env['ir.http']._get_default_lang().code,
+                languages=request.env['ir.http']._get_language_codes(),
                 translatable=translatable,
                 editable=editable,
                 menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,

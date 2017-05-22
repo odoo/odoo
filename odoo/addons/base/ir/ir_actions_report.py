@@ -467,7 +467,7 @@ class IrActionsReport(models.Model):
         if request and hasattr(request, 'website'):
             if request.website is not None:
                 website = request.website
-                context = dict(context, translatable=context.get('lang') != request.website.default_lang_code)
+                context = dict(context, translatable=context.get('lang') != request.env['ir.http']._get_default_lang().code)
 
         view_obj = self.env['ir.ui.view'].with_context(context)
         values.update(
