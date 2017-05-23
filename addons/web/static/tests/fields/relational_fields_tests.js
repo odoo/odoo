@@ -3492,6 +3492,96 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list editable: \'required\' modifiers is properly working', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_foo" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should start with value 10");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should still be 10 (no onchange, because line is not valid)");
+
+        // fill turtle_foo field
+        form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
+            "int_field should be 1 (onchange triggered, because line is now valid)");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable: \'required\' modifiers is properly working, part 2', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="turtle_foo" attrs=\'{"required": [["turtle_int", "=", 0]]}\'/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should start with value 10");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should still be 10 (no onchange, because line is not valid)");
+
+        // fill turtle_int field
+        form.$('.o_field_widget[name="turtle_int"]').val("1").trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
+            "int_field should be 1 (onchange triggered, because line is now valid)");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
