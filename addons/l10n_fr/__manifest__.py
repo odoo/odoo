@@ -45,6 +45,6 @@ configuration of their taxes and fiscal positions manually.
         'data/account_chart_template_data.yml',
     ],
     'qweb': [
-        "static/src/xml/account_dashboard.xml",
+        "static/src/xml/account_dashboard_setup_bar.xml",
     ],
 }

@@ -1,4 +1,4 @@
-odoo.define('account_accountant.dashboard_tests', function (require) {
+odoo.define('account.setup_bar_tests', function (require) {
 "use strict";
 
 var testUtils = require('web.test_utils');
@@ -8,7 +8,7 @@ var createView = testUtils.createView;
 
 QUnit.module('Views', {}, function () {
 
-QUnit.module('account_accountant Dashboard', {
+QUnit.module('Account Dashboard Setup Bar', {
     beforeEach: function() {
         this.data = {
             partner: {
@@ -39,7 +39,7 @@ QUnit.test('setup bar basic rendering', function(assert) {
 
     var dashboard_data = this.dashboard_data;
     var kanban = createView({
-        View: view_registry.get('account_accountant_dashboard'),
+        View: view_registry.get('account_setup_bar'),
         model: 'partner',
         data: this.data,
         arch: '<kanban class="o_kanban_test">' +
@@ -48,8 +48,8 @@ QUnit.test('setup bar basic rendering', function(assert) {
                 '</t></templates>' +
               '</kanban>',
         mockRPC: function(route, args) {
-            if (args.method === 'retrieve_account_dashboard') {
-                assert.ok(true, "should call /retrieve_account_dashboard");
+            if (args.method === 'retrieve_account_dashboard_setup_bar') {
+                assert.ok(true, "should call /retrieve_account_dashboard_setup_bar");
                 return $.when(dashboard_data);
             }
             return this._super(route, args);

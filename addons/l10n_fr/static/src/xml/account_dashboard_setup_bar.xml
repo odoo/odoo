@@ -4,9 +4,9 @@
 
     <!--Appends a step to account module's setup bar, redirecting to the
     website where to download certification.-->
-    <t t-extend="account_accountant.AccountDashboard">
+    <t t-extend="account.AccountDashboardSetupBar">
         <t t-jquery="div[class='o_statusbar_status']" t-operation="prepend">
-            <button name="setting_certification_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_accountant_dashboard_action #{values['certification'] and 'o_action_done' or ''}">
+            <button name="setting_certification_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['certification'] and 'o_action_done' or ''}">
                 <i class="fa fa-check" t-if="values['certification']"/>
                 Get certification
             </button>

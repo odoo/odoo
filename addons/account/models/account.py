@@ -80,6 +80,59 @@ class AccountAccount(models.Model):
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
     ]
 
+    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
+    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+
+    def _compute_opening_debit_credit(self):
+        for record in self:
+            opening_move = record.company_id.account_opening_move_id
+            opening_move_lines = record.env['account.move.line'].search([('account_id','=',record.id), ('move_id','=',opening_move and opening_move.id or False)])
+            record.opening_debit = 0.0
+            record.opening_credit = 0.0
+            for line in opening_move_lines: #should execute at most twice: once for credit, once for debit
+                if line.debit:
+                    record.opening_debit = line.debit
+                elif line.credit:
+                    record.opening_credit = line.credit
+
+    def _set_opening_debit(self):
+        self._set_opening_debit_credit(self.opening_debit, 'debit')
+
+    def _set_opening_credit(self):
+        self._set_opening_debit_credit(self.opening_credit, 'credit')
+
+    def _set_opening_debit_credit(self, amount, field):
+        """ Generic function called by both opening_debit and opening_credit's
+        inverse function. 'Amount' parameter is the value to be set, and field
+        either 'debit' or 'credit', depending on wich one of these two fields
+        got assigned.
+        """
+        opening_move = self.company_id.account_opening_move_id
+
+        if not opening_move:
+            raise UserError("No opening move defined !")
+
+        if opening_move.state == 'draft':
+            # We first check whether we should create a new move line of modify an existing one
+            opening_move_line = self.env['account.move.line'].search([('account_id','=',self.id), ('move_id','=',opening_move and opening_move.id or False), (field,'!=',0.0)])
+
+            if opening_move_line:
+                if amount:
+                    # Then, we modify the line
+                    setattr(opening_move_line.with_context({'check_move_validity': False}), field, amount)
+                else:
+                    # Then, we delete the line (no need to keep a line with value = 0)
+                    opening_move_line.with_context({'check_move_validity': False}).unlink()
+            elif amount:
+                # Then, we create a new line, as none existed before
+                self.env['account.move.line'].with_context({'check_move_validity': False}).create({
+                        'name': _('Opening writing'),
+                        field: amount,
+                        'move_id': opening_move.id,
+                        'account_id': self.id,
+                })
+            # Else, if opening_debit is zero, then nothing is to be done
+
     @api.model
     def default_get(self, default_fields):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
@@ -307,6 +360,9 @@ class AccountJournal(models.Model):
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
 
+    #Computed field for use in views' domains
+    account_setup_bank_data_marked_done = fields.Boolean(string='Bank setup marked as done', compute="_compute_setup_marked_done")
+
     @api.multi
     # do not depend on 'sequence_id.date_range_ids', because
     # sequence_id._get_current_sequence() may invalidate it!
@@ -345,6 +401,11 @@ class AccountJournal(models.Model):
                 journal.refund_sequence_number_next = sequence.number_next_actual
             else:
                 journal.refund_sequence_number_next = 1
+
+    @api.depends('company_id.account_setup_bank_data_marked_done')
+    def _compute_setup_marked_done(self):
+        for record in self:
+            record.account_setup_bank_data_marked_done = record.company_id.account_setup_bank_data_marked_done
 
     @api.multi
     def _inverse_refund_seq_number_next(self):
@@ -550,6 +611,39 @@ class AccountJournal(models.Model):
             journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
         return journal
+
+    @api.model
+    def retrieve_account_dashboard_setup_bar(self):
+        """ Returns the data used by the setup bar on account's dashboard.
+        """
+        company = self.env['res.company']._company_default_get()
+
+        if company.account_setup_bar_closed:
+            return {'show_setup_bar': False}
+
+        data = {'show_setup_bar': True}
+
+        data['company'] = company.account_setup_company_data_marked_done
+        data['bank'] = company.account_setup_bank_data_marked_done
+        data['fiscal_year'] = company.account_setup_financial_year_data_marked_done
+        data['chart_of_accounts'] = company.account_setup_chart_of_accounts_marked_done
+        data['initial_balance'] = company.opening_move_posted()
+
+        return data
+
+    def mark_bank_setup_as_done_action(self):
+        """ Forces the 'bank setup' step of setup to mark it as done. It will hence
+        be marked as such in the setup bar.
+        """
+        self.company_id.account_setup_bank_data_marked_done = True
+        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
+
+    def unmark_bank_setup_as_done_action(self):
+        """ Forces the 'bank setup' step of setup to mark it as undone. It will hence
+        be marked as such in the setup bar.
+        """
+        self.company_id.account_setup_bank_data_marked_done = False
+        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank and set it as value of the  field bank_account_id """

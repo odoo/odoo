@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
-import datetime
+from odoo import fields, models
 
 
 class AccountConfigSettings(models.TransientModel):
@@ -34,16 +33,3 @@ class AccountConfigSettings(models.TransientModel):
         'account.journal',
         related='company_id.tax_cash_basis_journal_id',
         string="Tax Cash Basis Journal",)
-    account_accountant_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', related='company_id.account_accountant_opening_move_id')
-    account_accountant_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_accountant_opening_journal_id')
-    account_accountant_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_accountant_opening_date')
-    account_accountant_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_accountant_setup_opening_move_done')
-
-    @api.depends('company_id.account_accountant_opening_move_id.state')
-    def _compute_account_accountant_setup_opening_move_done(self):
-        for record in self:
-            record.account_accountant_setup_opening_move_done = record.company_id.opening_move_posted()
-
-    def define_opening_move_action(self):
-        action = self.env.ref(self.company_id.setting_chart_of_accounts_action())
-        return action.read([])[0] # Element at position 0 always exists, as it is defined in XML

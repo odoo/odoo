@@ -62,6 +62,10 @@ class AccountConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
+    account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', related='company_id.account_opening_move_id')
+    account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_opening_journal_id')
+    account_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_opening_date')
+    account_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_setup_opening_move_done')
 
     @api.model
     def get_values(self):
@@ -72,6 +76,18 @@ class AccountConfigSettings(models.TransientModel):
             default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
         )
         return res
+
+    @api.depends('company_id')
+    def _compute_has_chart_of_accounts(self):
+        self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
+
+    @api.depends('company_id.account_opening_move_id.state')
+    def _compute_account_setup_opening_move_done(self):
+        for record in self:
+            record.account_setup_opening_move_done = record.company_id.opening_move_posted()
+
+    def define_opening_move_action(self):
+        return self.company_id.setting_opening_move_action()
 
     @api.multi
     def set_values(self):
@@ -142,7 +158,7 @@ class AccountConfigSettings(models.TransientModel):
     def create(self, values):
         # Optimisation purpose, saving a res_config even without changing any values will trigger the write of all
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
-        # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
+        # of account_move_line related field company_currency_id which can be slow depending on the number of entries
         # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
         # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
         # code the missing characters to complete the desired number of digit, leading to a sql_constraint.

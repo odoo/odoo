@@ -1,4 +1,4 @@
-odoo.define('account_accountant.dashboard', function (require) {
+odoo.define('account.dashboard_setup_bar', function (require) {
 "use strict";
 
 var core = require('web.core');
@@ -16,9 +16,9 @@ var _lt = core._lt;
 
 const COMPANY_METHOD_TYPE = "company_object";
 
-var AccountDashboardRenderer = KanbanRenderer.extend({
+var AccountSetupBarRenderer = KanbanRenderer.extend({
     events: _.extend({}, KanbanRenderer.prototype.events, {
-        'click .account_accountant_dashboard_action': 'onDashboardActionClicked',
+        'click .account_setup_dashboard_action': 'onActionClicked',
     }),
 
     //--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ var AccountDashboardRenderer = KanbanRenderer.extend({
 
         return this._super.apply(this, arguments).then(function () {
             var values = self.state.dashboardValues;
-            var account_dashboard = QWeb.render('account_accountant.AccountDashboard', {
+            var account_dashboard = QWeb.render('account.AccountDashboardSetupBar', {
                 widget: self,
                 values: values,
             });
@@ -64,7 +64,7 @@ var AccountDashboardRenderer = KanbanRenderer.extend({
      * @private
      * @param {MouseEvent}
      */
-    onDashboardActionClicked: function(e) {
+    onActionClicked: function(e) {
         /* This functions allows the buttons of the setup bar to trigger Python
         * code defined in api.model functions, in res.company, and then to execute
         * the action returned by those.
@@ -151,7 +151,7 @@ var AccountDashboardModel = KanbanModel.extend({
     _fetchDashboardData: function () {
         return $.when(this._rpc({
                     model: 'account.journal',
-                    method: 'retrieve_account_dashboard',
+                    method: 'retrieve_account_dashboard_setup_bar',
                     args: [],
                 }));
     },
@@ -195,7 +195,7 @@ var AccountDashboardController = KanbanController.extend({
 var AccountDashboardView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
         Model: AccountDashboardModel,
-        Renderer: AccountDashboardRenderer,
+        Renderer: AccountSetupBarRenderer,
         Controller: AccountDashboardController,
     }),
     display_name: _lt('Dashboard'),
@@ -203,11 +203,11 @@ var AccountDashboardView = KanbanView.extend({
     searchview_hidden: true,
 });
 
-view_registry.add('account_accountant_dashboard', AccountDashboardView);
+view_registry.add('account_setup_bar', AccountDashboardView);
 
 return {
     Model: AccountDashboardModel,
-    Renderer: AccountDashboardRenderer,
+    Renderer: AccountSetupBarRenderer,
     Controller: AccountDashboardController,
 };
 
