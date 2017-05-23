@@ -27,7 +27,6 @@ odoo.define('web.BasicModel', function (require) {
  *      fieldsInfo: {Object},
  *      getContext: {function},
  *      getDomain: {function},
- *      getEvalContext: {function},
  *      getFieldNames: {function},
  *      groupedBy: {string[]},
  *      id: {integer},
@@ -346,11 +345,11 @@ var BasicModel = AbstractModel.extend({
                 count: element.count,
                 data: data,
                 domain: element.domain.slice(0),
+                evalModifiers: element.evalModifiers,
                 fields: element.fields,
                 fieldsInfo: element.fieldsInfo,
                 getContext: element.getContext,
                 getDomain: element.getDomain,
-                getEvalContext: element.getEvalContext,
                 getFieldNames: element.getFieldNames,
                 id: element.id,
                 limit: element.limit,
@@ -400,7 +399,6 @@ var BasicModel = AbstractModel.extend({
             fields: element.fields,
             getContext: element.getContext,
             getDomain: element.getDomain,
-            getEvalContext: element.getEvalContext,
             getFieldNames: element.getFieldNames,
             groupedBy: element.groupedBy,
             id: element.id,
@@ -1270,6 +1268,37 @@ var BasicModel = AbstractModel.extend({
             });
         });
         return hasOnchange ? specs : false;
+    },
+    /**
+     * Evaluate modifiers
+     *
+     * @private
+     * @param {Object} element a valid element object, which will serve as eval
+     *   context.
+     * @param {Object} modifiers
+     * @returns {Object}
+     */
+    _evalModifiers: function (element, modifiers) {
+        var result = {};
+        var self = this;
+        var evalContext;
+        function evalModifier (mod) {
+            if (mod === undefined || mod === false || mod === true) {
+                return !!mod;
+            }
+            evalContext = evalContext || self._getEvalContext(element);
+            return new Domain(mod, evalContext).compute(evalContext);
+        }
+        if ('invisible' in modifiers) {
+            result.invisible = evalModifier(modifiers.invisible);
+        }
+        if ('readonly' in modifiers) {
+            result.readonly = evalModifier(modifiers.readonly);
+        }
+        if ('required' in modifiers) {
+            result.required = evalModifier(modifiers.required);
+        }
+        return result;
     },
     /**
      * Fetch all name_gets for the many2ones in a group
@@ -2168,11 +2197,17 @@ var BasicModel = AbstractModel.extend({
     _isX2ManyValid: function (id) {
         var self = this;
         var isValid = true;
-        var element = this.get(id, {raw: true});
-        _.each(element.getFieldNames(), function (fieldName) {
-            var field = element.fields[fieldName];
-            _.each(element.data, function (rec) {
-                if (field.required && !self._isFieldSet(rec.data[fieldName], field.type)) {
+        var element = this.localData[id];
+        _.each(element._changes || element.data, function (recordID) {
+            var recordData = self.get(recordID, {raw: true}).data;
+            var record = self.localData[recordID];
+            _.each(element.getFieldNames(), function (fieldName) {
+                var field = element.fields[fieldName];
+                var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
+                var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+                var modifiers = self._evalModifiers(record, rawModifiers);
+                var required = 'required' in modifiers ? modifiers.required : field.required;
+                if (required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
                 }
             });
@@ -2260,9 +2295,9 @@ var BasicModel = AbstractModel.extend({
             viewType: params.viewType,
         };
 
+        dataPoint.evalModifiers = this._evalModifiers.bind(this, dataPoint);
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
         dataPoint.getDomain = this._getDomain.bind(this, dataPoint);
-        dataPoint.getEvalContext = this._getEvalContext.bind(this, dataPoint);
         dataPoint.getFieldNames = this._getFieldNames.bind(this, dataPoint);
 
         this.localData[dataPoint.id] = dataPoint;
