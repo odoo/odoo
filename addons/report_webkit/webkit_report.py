@@ -48,6 +48,7 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.osv.osv import except_osv
 from urllib import urlencode, quote as quote
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
