@@ -80,10 +80,12 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).write(vals)
         # write the hash and the secure_sequence_number when posting an account.move
         if has_been_posted:
-            for move in self.filtered(lambda m: m.company_id.country_id.code == 'FR'):
+            for move in self.filtered(lambda m: m.company_id.country_id.code == 'FR' and
+                                      not (m.l10n_fr_secure_sequence_number or m.l10n_fr_hash)):
                 new_number = move.company_id.l10n_fr_secure_sequence_id.next_by_id()
-                move.l10n_fr_secure_sequence_number = new_number
-                move.l10n_fr_hash = move._get_new_hash(new_number)
+                vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
+                                'l10n_fr_hash': move._get_new_hash(new_number)}
+                res |= super(AccountMove, move).write(vals_hashing)
         return res
 
     def button_cancel(self):
