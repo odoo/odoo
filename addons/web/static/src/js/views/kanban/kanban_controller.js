@@ -329,6 +329,7 @@ var KanbanController = BasicController.extend({
             return self.model
                 .addRecordToGroup(columnState.id, records[0])
                 .then(function (db_id) {
+                    self._updateEnv();
                     column.addRecord(self.model.get(db_id), {position: 'before'});
                 });
         }

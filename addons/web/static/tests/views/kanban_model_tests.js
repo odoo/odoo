@@ -248,7 +248,48 @@ QUnit.module('Views', {
                 model.destroy();
                 done();
             });
+    });
 
+    QUnit.test('add record to group', function (assert) {
+        assert.expect(8);
+
+        var self = this;
+        var model = createModel({
+            Model: KanbanModel,
+            data: this.data,
+        });
+        var params = _.extend(this.params, {
+            groupedBy: ['product_id'],
+            fieldNames: ['foo'],
+        });
+
+        model.load(params).then(function (stateID) {
+            self.data.partner.records.push({id: 3, foo: 'new record', product_id: 37});
+
+            var state = model.get(stateID);
+            assert.deepEqual(state.res_ids, [1, 2],
+                "state should have the correct res_ids");
+            assert.strictEqual(state.count, 2,
+                "state should have the correct count");
+            assert.strictEqual(state.data[0].count, 1,
+                "first group should contain one record");
+
+            return model.addRecordToGroup(state.data[0].id, 3).then(function () {
+                var state = model.get(stateID);
+                assert.deepEqual(state.res_ids, [3, 1, 2],
+                    "state should have the correct res_ids");
+                assert.strictEqual(state.count, 3,
+                    "state should have the correct count");
+                assert.deepEqual(state.data[0].res_ids, [3, 1],
+                    "new record's id should have been added to the res_ids");
+                assert.strictEqual(state.data[0].count, 2,
+                    "first group should now contain two records");
+                assert.strictEqual(state.data[0].data[0].data.foo, 'new record',
+                    "new record should have been fetched");
+            });
+        });
+
+        model.destroy();
     });
 });
 
