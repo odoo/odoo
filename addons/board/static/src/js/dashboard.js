@@ -279,25 +279,26 @@ FormRenderer.include({
                 children: []
             });
         }
+
+        // register actions, alongside a generated unique ID
+        _.each(node.children, function (column, column_index) {
+            _.each(column.children, function (action, action_index) {
+                action.attrs.id = 'action_' + column_index + '_' + action_index;
+                self.actionsDescr[action.attrs.id] = action.attrs;
+            });
+        });
+
         var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node})));
 
         // render each view
-        _.each(node.children, function (column, column_index) {
-            _.each(column.children, function (action, action_index) {
-                var attrs = action.attrs;
-                var domain = Domain.prototype.stringToArray(attrs.domain, {});
-                var context = new Context(attrs.context);
-                var actionID = _.str.toNumber(attrs.name);
-                self.actionsDescr[actionID] = attrs;
-                var $node = $html.find('.oe_action[data-id=' + actionID + '] .oe_content');
-                self.defs.push(self._createController({
-                    $node: $node,
-                    actionID: actionID,
-                    context: context,
-                    domain: domain,
-                    viewType: attrs.view_mode,
-                }));
-            });
+        _.each(this.actionsDescr, function (action) {
+            self.defs.push(self._createController({
+                $node: $html.find('.oe_action[data-id=' + action.id + '] .oe_content'),
+                actionID: _.str.toNumber(action.name),
+                context: new Context(action.context),
+                domain: Domain.prototype.stringToArray(action.domain, {}),
+                viewType: action.view_mode,
+            }));
         });
         $html.find('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
@@ -341,7 +342,7 @@ FormRenderer.include({
      */
     _onFoldClick: function (event) {
         var $e = $(event.currentTarget);
-        var $action = $e.parents('.oe_action:first');
+        var $action = $e.closest('.oe_action');
         var id = $action.data('id');
         var actionAttrs = this.actionsDescr[id];
 
