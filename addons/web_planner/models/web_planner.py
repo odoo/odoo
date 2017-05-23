@@ -24,13 +24,13 @@ class Planner(models.Model):
         return []
 
     name = fields.Char(string='Name', required=True)
-    menu_id = fields.Many2one('ir.ui.menu', string='Menu', required=True)
-    view_id = fields.Many2one('ir.ui.view', string='Template', required=True)
+    menu_id = fields.Many2one('ir.ui.menu', string='Menu')
+    view_id = fields.Many2one('ir.ui.view', string='Template')
     progress = fields.Integer(string="Progress Percentage", company_dependent=True)
     # data field is used to store the data filled by user in planner(JSON Data)
     data = fields.Text(string="Data", company_dependent=True)
     tooltip_planner = fields.Html(string='Planner Tooltips', translate=True)
-    planner_application = fields.Selection('_get_planner_application', string='Planner Application', required=True)
+    planner_application = fields.Selection('_get_planner_application', string='Planner Application')
     active = fields.Boolean(string="Active", default=True, help="If the active field is set to False, it will allow you to hide the planner. This change requires a refresh of your page.")
 
     @api.model

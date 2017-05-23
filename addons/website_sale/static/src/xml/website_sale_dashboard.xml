@@ -125,4 +125,21 @@
             </div>
         </div>
     </t>
+
+    <t t-extend="WebsiteConfigStep">
+        <t t-jquery="button[data-step='website_feature']" t-operation="before">
+            <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.delivery_methods ? 'btn-primary disabled' : 'btn-default'}" data-step="delivery_methods">
+                <span t-if="steps.delivery_methods"><i class="fa fa-check"/></span>
+                <span class="ml4">Delivery Methods</span>
+            </button>
+            <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.payment_methods ? 'btn-primary disabled' : 'btn-default'}" data-step="payment_methods">
+                <span t-if="steps.payment_methods"><i class="fa fa-check"/></span>
+                <span class="ml4">Payment Methods</span>
+            </button>
+            <button t-attf-class="btn btn-sm o_arrow_button o_dashboard_step #{steps.products ? 'btn-primary disabled' : 'btn-default'}" data-step="products">
+                <span t-if="steps.products"><i class="fa fa-check"/></span>
+                <span class="ml4">Products</span>
+            </button>
+        </t>
+    </t>
 </templates>
