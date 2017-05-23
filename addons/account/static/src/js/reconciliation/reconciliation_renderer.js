@@ -303,8 +303,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-
-            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
+            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length >= 1 &&
                     (
                         (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
                         (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
@@ -317,10 +316,11 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }
-
-                $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
-                    .prependTo($cell)
-                    .attr("data-content", text);
+                if (line.amount === props[0].amount) {
+                    $('<span class="do_partial_reconcile_'+(!line.partial_reconcile)+' line_info_button fa fa-exclamation-triangle"/>')
+                        .prependTo($cell)
+                        .attr("data-content", text);
+                }
             }
             $props.append($line);
         });
