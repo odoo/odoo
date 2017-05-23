@@ -347,7 +347,7 @@ function parseDate(value, field, options) {
         }
         if (date.year() >= 1900) {
             date.toJSON = function () {
-                return this.format('YYYY-MM-DD');
+                return this.clone().locale('en').format('YYYY-MM-DD');
             };
             return date;
         }
@@ -394,7 +394,7 @@ function parseDateTime(value, field, options) {
         }
         if (datetime.year() >= 1900) {
             datetime.toJSON = function () {
-                return this.format('YYYY-MM-DD HH:mm:ss');
+                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
             };
             return datetime;
         }
