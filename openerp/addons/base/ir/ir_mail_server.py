@@ -366,6 +366,65 @@ class ir_mail_server(osv.osv):
         if postmaster and domain:
             return '%s@%s' % (postmaster, domain)
 
+    def _send_smtp(self, message, smtp_server, smtp_user, smtp_password, smtp_port, smtp_encryption, smtp_debug, smtp_from, smtp_to_list):
+        """ Default implementation of SMTP interface. If you want to implement your own interfaces, make sure that the 
+        return value is always the message id. See ``_send_mail`` for how to hook in.
+        """
+        try:
+            message_id = message['Message-Id']
+
+            # Add email in Maildir if smtp_server contains maildir.
+            if smtp_server.startswith('maildir:/'):
+                from mailbox import Maildir
+                maildir_path = smtp_server[8:]
+                mdir = Maildir(maildir_path, factory=None, create = True)
+                mdir.add(message.as_string(True))
+                return message_id
+
+            smtp = None
+            try:
+                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
+                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
+            finally:
+                if smtp is not None:
+                    smtp.quit()
+        except Exception, e:
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
+                                                                             e.__class__.__name__,
+                                                                             tools.ustr(e))
+            _logger.info(msg)
+            raise MailDeliveryException(_("Mail Delivery Failed"), msg)
+        return message_id
+
+    def _send_email(self, cr, uid, msg, server, **kwargs):
+        """You should inherit this method when you want to extend the connectivity options for your server.
+
+        You would implement a check on some custom ``server`` attribute and implement your own ``_send_xyz`` method.
+
+        The signature is the same as ``sent_mail``. Also, the return signature is transparent.
+        """
+        if server:
+            smtp_server = server.smtp_host
+            smtp_user = server.smtp_user
+            smtp_password = server.smtp_pass
+            smtp_port = server.smtp_port
+            smtp_encryption = server.smtp_encryption
+            smtp_debug = kwargs['smtp_debug'] or server.smtp_debug
+        else:
+            # we were passed an explicit smtp_server or nothing at all
+            smtp_server = kwargs['smtp_server'] or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if kwargs['smtp_port'] is None else kwargs['smtp_port']
+            smtp_user = kwargs['smtp_user'] or tools.config.get('smtp_user')
+            smtp_password = kwargs['smtp_password'] or tools.config.get('smtp_password')
+            if kwargs['smtp_encryption'] is None and tools.config.get('smtp_ssl'):
+                smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
+
+        if not smtp_server:
+            raise UserError(_("Missing SMTP Server")+ "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
+
+        return self._send_smtp(msg, smtp_server, smtp_user, smtp_password, smtp_port, smtp_encryption, smtp_debug, kwargs['email_from'], kwargs['email_to_list'])
+
+
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
                    smtp_user=None, smtp_password=None, smtp_encryption=None, smtp_debug=False,
                    context=None):
@@ -397,25 +456,25 @@ class ir_mail_server(osv.osv):
         # Use the default bounce address **only if** no Return-Path was
         # provided by caller.  Caller may be using Variable Envelope Return
         # Path (VERP) to detect no-longer valid email addresses.
-        smtp_from = message['Return-Path']
-        if not smtp_from:
-            smtp_from = self._get_default_bounce_address(cr, uid, context=context)
-        if not smtp_from:
-            smtp_from = message['From']
-        assert smtp_from, "The Return-Path or From header is required for any outbound email"
+        email_from = message['Return-Path']
+        if not email_from:
+            email_from = self._get_default_bounce_address(cr, uid, context=context)
+        if not email_from:
+            email_from = message['From']
+        assert email_from, "The Return-Path or From header is required for any outbound email"
 
         # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
-        from_rfc2822 = extract_rfc2822_addresses(smtp_from)
+        from_rfc2822 = extract_rfc2822_addresses(email_from)
         assert from_rfc2822, ("Malformed 'Return-Path' or 'From' address: %r - "
-                              "It should contain one valid plain ASCII email") % smtp_from
+                              "It should contain one valid plain ASCII email") % email_from
         # use last extracted email, to support rarities like 'Support@MyComp <support@mycompany.com>'
-        smtp_from = from_rfc2822[-1]
+        email_from = from_rfc2822[-1]
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
         
-        smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
-        assert smtp_to_list, self.NO_VALID_RECIPIENT
+        email_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
+        assert email_to_list, self.NO_VALID_RECIPIENT
 
         x_forge_to = message['X-Forge-To']
         if x_forge_to:
@@ -438,50 +497,17 @@ class ir_mail_server(osv.osv):
             if mail_server_ids:
                 mail_server = self.browse(cr, SUPERUSER_ID, mail_server_ids[0])
 
-        if mail_server:
-            smtp_server = mail_server.smtp_host
-            smtp_user = mail_server.smtp_user
-            smtp_password = mail_server.smtp_pass
-            smtp_port = mail_server.smtp_port
-            smtp_encryption = mail_server.smtp_encryption
-            smtp_debug = smtp_debug or mail_server.smtp_debug
-        else:
-            # we were passed an explicit smtp_server or nothing at all
-            smtp_server = smtp_server or tools.config.get('smtp_server')
-            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
-            smtp_user = smtp_user or tools.config.get('smtp_user')
-            smtp_password = smtp_password or tools.config.get('smtp_password')
-            if smtp_encryption is None and tools.config.get('smtp_ssl'):
-                smtp_encryption = 'starttls' # STARTTLS is the new meaning of the smtp_ssl flag as of v7.0
-
-        if not smtp_server:
-            raise UserError(_("Missing SMTP Server")+ "\n" + _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
-
-        try:
-            message_id = message['Message-Id']
-
-            # Add email in Maildir if smtp_server contains maildir.
-            if smtp_server.startswith('maildir:/'):
-                from mailbox import Maildir
-                maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path, factory=None, create = True)
-                mdir.add(message.as_string(True))
-                return message_id
-
-            smtp = None
-            try:
-                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption or False, smtp_debug)
-                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
-            finally:
-                if smtp is not None:
-                    smtp.quit()
-        except Exception, e:
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
-                                                                             e.__class__.__name__,
-                                                                             tools.ustr(e))
-            _logger.info(msg)
-            raise MailDeliveryException(_("Mail Delivery Failed"), msg)
-        return message_id
+        return self._send_email(cr, uid, message, mail_server,  
+                **{'smtp_from': email_from,
+                   'smtp_to_list': email_to_list,
+                   'smtp_server': smtp_server,
+                   'smtp_port': smtp_port,
+                   'smtp_port': smtp_port,
+                   'smtp_user': smtp_user,
+                   'smtp_password': smtp_password,
+                   'smtp_encryption': smtp_encryption,
+                   'smtp_debug': smtp_debug})
+        
 
     def on_change_encryption(self, cr, uid, ids, smtp_encryption):
         if smtp_encryption == 'ssl':
