@@ -707,7 +707,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('internal state of groups remains when reloading', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         this.params.fieldNames = ['foo'];
         this.params.domain = [];
@@ -739,6 +739,9 @@ QUnit.module('Views', {
             var record = model.get(resultID);
             assert.strictEqual(record.data.length, 2, "should have 2 groups");
             var groupID = record.data[0].id;
+            assert.strictEqual(model.localData[groupID].parentID, resultID,
+                "parentID should be correctly set on groups");
+
             model.toggleGroup(groupID);
 
             record = model.get(resultID);

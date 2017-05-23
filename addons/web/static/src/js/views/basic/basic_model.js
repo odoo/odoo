@@ -2654,6 +2654,7 @@ var BasicModel = AbstractModel.extend({
                         orderedBy: list.orderedBy,
                         limit: list.limit,
                         openGroupByDefault: list.openGroupByDefault,
+                        parentID: list.id,
                         type: 'list',
                         viewType: list.viewType,
                     });
