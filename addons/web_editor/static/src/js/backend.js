@@ -24,6 +24,7 @@ var QWeb = core.qweb;
  */
 var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
     className: 'oe_form_field oe_form_field_html_text',
+    supportedFieldTypes: ['html'],
 
     //--------------------------------------------------------------------------
     // Public
