@@ -21,29 +21,10 @@ class ResConfigSettings(models.TransientModel):
     google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id')
     google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret')
 
-    social_twitter = fields.Char("Twitter", related='website_id.social_twitter')
-    social_facebook = fields.Char("Facebook", related='website_id.social_facebook')
-    social_github = fields.Char("GitHub", related='website_id.social_github')
-    social_linkedin = fields.Char("LinkedIn", related='website_id.social_linkedin')
-    social_youtube = fields.Char("Youtube", related='website_id.social_youtube')
-    social_googleplus = fields.Char("Google+", related='website_id.social_googleplus')
-
     cdn_activated = fields.Boolean('Use a Content Delivery Network (CDN)', related='website_id.cdn_activated')
     cdn_url = fields.Char(related='website_id.cdn_url')
     cdn_filters = fields.Text(related='website_id.cdn_filters')
-
-    module_website_form_editor = fields.Boolean("Custom Forms")
     module_website_version = fields.Boolean("A/B Testing")
-    module_website_twitter = fields.Boolean("Twitter Roller")
-    module_website_blog = fields.Boolean("Blogs")
-    module_website_livechat = fields.Boolean("Live Chat")
-    module_website_forum = fields.Boolean("Forum")
-    module_website_crm = fields.Boolean("Contact Form")
-    module_website_slides = fields.Boolean("Slides")
-    module_website_hr_recruitment = fields.Boolean("Jobs")
-    module_website_sale = fields.Boolean("eCommerce")
-    module_sale_subscription = fields.Boolean("Subscriptions")
-    module_website_event_sale = fields.Boolean("Event Tickets")
 
     favicon = fields.Binary('Favicon', related='website_id.favicon')
     # Set as global config parameter since methods using it are not website-aware. To be changed

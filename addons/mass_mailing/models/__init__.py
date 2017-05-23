@@ -8,3 +8,4 @@ from . import mail_thread
 from . import res_config_settings
 from . import mass_mailing_report
 from . import link_tracker
+from . import res_company
