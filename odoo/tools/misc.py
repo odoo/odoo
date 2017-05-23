@@ -1104,10 +1104,12 @@ def _consteq(str1, str2):
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
+# forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
+class Unpickler(pickle_.Unpickler, object):
+    find_global = None # Python 2
+    find_class = None # Python 3
 def _pickle_load(stream, errors=False):
-    unpickler = pickle_.Unpickler(stream)
-    # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
-    unpickler.find_global = None
+    unpickler = Unpickler(stream)
     try:
         return unpickler.load()
     except Exception:
