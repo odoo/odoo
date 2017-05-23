@@ -220,8 +220,8 @@
                                     <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" groups="purchase.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="product_qty"/>
-                                    <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
-                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
+                                    <field name="qty_received" invisible="not context.get('show_purchase', True)"/>
+                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', True)"/>
                                     <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
@@ -400,7 +400,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state"/>
-                    <field name="invoice_status" invisible="not context.get('show_purchase', False)"/>
+                    <field name="invoice_status" invisible="not context.get('show_purchase', True)"/>
                 </tree>
             </field>
         </record>
@@ -417,7 +417,7 @@
             <field name="name">Requests for Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'search_default_todo':1}</field>
+            <field name="context">{'search_default_todo':1, 'show_purchase': False}</field>
             <field name="domain">[('state','in',('draft','sent','bid','cancel', 'confirmed'))]</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
