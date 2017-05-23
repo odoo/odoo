@@ -169,8 +169,9 @@ class MetaModel(api.Meta):
 
 class NewId(object):
     """ Pseudo-ids for new records. """
-    def __nonzero__(self):
+    def __bool__(self):
         return False
+    __nonzero__ = __bool__
 
 IdType = pycompat.integer_types + (str, unicode, NewId)
 
@@ -4501,9 +4502,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     # "Dunder" methods
     #
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ Test whether ``self`` is nonempty. """
         return bool(getattr(self, '_ids', True))
+    __nonzero__ = __bool__
 
     def __len__(self):
         """ Return the size of ``self``. """
