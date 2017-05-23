@@ -44,4 +44,7 @@ configuration of their taxes and fiscal positions manually.
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.yml',
     ],
+    'qweb': [
+        "static/src/xml/account_dashboard.xml",
+    ],
 }
