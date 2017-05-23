@@ -6,8 +6,12 @@
         <menuitem name="Invoicing"
             id="menu_finance"
             groups="group_account_user,group_account_manager,group_account_invoice"
-            web_icon="account,static/description/icon.png"
+            web_icon="account_invoicing,static/description/icon.png"
             sequence="40"/>
+
+        <record id="menu_finance" model="ir.ui.menu">
+            <field name="active" eval="False"/>
+        </record>
 
         <menuitem id="menu_finance_receivables" name="Sales" parent="menu_finance" sequence="2"/>
         <menuitem id="menu_finance_payables" name="Purchases" parent="menu_finance" sequence="3"/>
