@@ -1432,7 +1432,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edition: create new line, then discard', function (assert) {
-        assert.expect(2);
+        assert.expect(8);
 
         var list = createView({
             View: ListView,
@@ -1443,10 +1443,22 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden");
         list.$buttons.find('.o_list_button_add').click();
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 0,
+            "create button should be hidden");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 1,
+            "discard button should be visible");
         list.$buttons.find('.o_list_button_discard').click();
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should still have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible again");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden again");
         list.destroy();
     });
 
