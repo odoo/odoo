@@ -886,7 +886,10 @@ var FieldPhone = FieldEmail.extend({
         this._super();
         if (this._canCall()) {
             var text = this.$el.text();
-            this.$el.html(text.substr(0, text.length/2) + "&shy;" + text.substr(text.length/2)); // To prevent Skype app to find the phone number
+            // Split phone number into two to prevent Skype app from finding it
+            var part1 = _.escape(text.substr(0, text.length/2));
+            var part2 = _.escape(text.substr(text.length/2));
+            this.$el.html(part1 + "&shy;" + part2);
         } else {
             this.$el.removeClass('o_form_uri');
         }
