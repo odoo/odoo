@@ -648,6 +648,13 @@ var StatementModel = BasicModel.extend({
                 'account_code': self.accounts[line.st_line.open_balance_account_id],
             };
             line.balance.type = line.balance.amount ? (line.balance.amount !== 0 && line.st_line.partner_id ? 0 : -1) : 1;
+
+            var props = _.filter(reconciliation_proposition, function (r) {
+                return r.base_amount > 0 || !r.base_amount;
+            });
+            if (props.length > 1) {
+                line.balance.type = -1;
+            }
         });
     },
     /**
