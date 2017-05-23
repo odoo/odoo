@@ -39,6 +39,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_website_sale_wishlist = fields.Boolean("Wishlists ", help='Installs *e-Commerce Wishlist*')
     module_website_sale_comparison = fields.Boolean("Product Comparator", help='Installs *e-Commerce Comparator*')
 
+    module_account_invoicing = fields.Boolean("Invoicing")
     module_sale_stock = fields.Boolean("Delivery Orders")
 
     # the next 2 fields represent sale_pricelist_setting from sale.config.settings, they are split here for the form view, to improve usability
@@ -69,8 +70,8 @@ class WebsiteConfigSettings(models.TransientModel):
         group='base.group_portal,base.group_user,base.group_public')
 
     default_invoice_policy = fields.Selection([
-        ('order', 'Ordered quantities'),
-        ('delivery', 'Delivered quantities or service hours')
+        ('order', 'Invoice what is ordered (automatic)'),
+        ('delivery', 'Invoice what is delivered (manual)')
         ], 'Invoicing Policy', default='order')
 
     group_multi_currency = fields.Boolean(string='Multi-Currencies', implied_group='base.group_multi_currency')

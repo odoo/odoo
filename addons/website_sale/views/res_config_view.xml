@@ -220,12 +220,14 @@
                 </div>
                 <h2>Invoicing</h2>
                 <div class="row mt16 o_settings_container" id="sale_invoicing_settings">
-                    <div class="col-xs-12 col-md-6 o_setting_box" id="invoicing_policy_setting" title="This default value is applied to any new product created. This can be changed in the product detail form.">
-                        <div class="o_setting_left_pane"/>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="invoicing_policy_setting" title="Choose the automatic mode if you use to issue an invoice whenever an order is placed. The manual mode allows you to invoice based on what is really delivered. That way you can invoice in several steps, etc. The mode selected here applies to any new product created but not to products already existing. If you want to invoice delivered quantities, you must update the invoicing policy of those products.">
+                        <div class="o_setting_left_pane">
+                            <field name="module_account_invoicing" nolabel="1"/>
+                        </div>
                         <div class="o_setting_right_pane">
-                            <label for="default_invoice_policy"/>
+                            <label for="module_account_invoicing"/>
                             <div class="text-muted">
-                                Quantities to invoice from sales orders
+                                Send invoices to customers
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
