@@ -8,16 +8,6 @@
             id='root_payment_menu'
             parent='account.menu_finance_configuration'/>
 
-        <!-- Payment acquirers -->
-        <record id="payment_transaction_action_child" model="ir.actions.act_window">
-            <field name="name">Payment Transactions</field>
-            <field name="res_model">payment.transaction</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('acquirer_id','=',active_id)]</field>
-            <field name="context">{'default_acquirer_id': active_id}</field>
-        </record>
-
         <record id="acquirer_form" model="ir.ui.view">
             <field name="name">payment.acquirer.form</field>
             <field name="model">payment.acquirer</field>
@@ -55,9 +45,6 @@
                                     <span class="o_warning_text">Test</span>
                                     <span class="o_stat_text">Environment</span>
                                 </div>
-                            </button>
-                            <button class="oe_stat_button" name="%(payment_transaction_action_child)d"
-                                type="action" icon="fa-money" string="Payments">
                             </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
