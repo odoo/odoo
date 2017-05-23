@@ -22,25 +22,24 @@ class ResConfigSettings(models.TransientModel):
         ('website', "Delivery methods are selectable on the website: the customer pays for shipping costs"),
         ], string="Shipping Management")
 
-    module_sale_ebay = fields.Boolean("eBay connector")
-
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
     group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
 
-    module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
+    module_website_sale_options = fields.Boolean("Optional Products")
     module_website_sale_digital = fields.Boolean("Digital Content")
-    module_website_sale_wishlist = fields.Boolean("Wishlists", help='Installs *e-Commerce Wishlist*')
-    module_website_sale_comparison = fields.Boolean("Product Comparator", help='Installs *e-Commerce Comparator*')
+    module_website_sale_wishlist = fields.Boolean("Wishlists")
+    module_website_sale_comparison = fields.Boolean("Product Comparator")
     module_website_sale_stock = fields.Boolean("Inventory", help='Installs *e-Commerce Inventory*')
 
     module_account_invoicing = fields.Boolean("Invoicing")
-    module_sale_stock = fields.Boolean("Delivery Orders")
 
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
         help="Email sent to customer at the end of the checkout process")
 
     automatic_invoice = fields.Boolean("Automatic Invoice")
+
+    module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 
     @api.model
     def get_values(self):

@@ -14,7 +14,6 @@
                             <h2>Website</h2>
                             <div class="row mt16 o_settings_container" id="webmaster_settings">
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="domain_setting">
-                                    <div class="o_setting_left_pane" />
                                     <div class="o_setting_right_pane">
                                         <label string="Website Title"/>
                                         <div class="text-muted">
@@ -22,7 +21,7 @@
                                         </div>
                                         <div class="content-group">
                                             <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" for="website_name"/>
+                                                <label class="col-md-3 o_light_label" string="Name"/>
                                                 <field name="website_name"/>
                                             </div>
                                             <div class="row">
@@ -32,22 +31,19 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="languages_setting">
-                                    <div class="o_setting_left_pane"/>
                                     <div class="o_setting_right_pane">
                                         <label for="language_ids"/>
                                         <div class="text-muted">
                                             Languages available on your website
                                         </div>
                                         <div class="content-group">
-                                            <div class="row mt16">
-                                                <label class="col-md-3 o_light_label" for="language_ids"/>
+                                            <div class="mt16">
                                                 <field name="language_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
                                             </div>
                                             <field name="language_count" invisible="1"/>
-                                            <div class="row" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
-                                                <label class="col-md-3 o_light_label" string="Default" for="default_lang_id"/>
+                                            <div class="mt8" attrs="{'invisible':[('language_count', '&lt;', 2)]}">
+                                                <label class="o_light_label mr8" string="Default" for="default_lang_id"/>
                                                 <field name="default_lang_id" widget="selection"/>
                                             </div>
                                         </div>
@@ -56,7 +52,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_setting">
                                     <div class="o_setting_left_pane">
                                         <field name="has_google_analytics"/>
@@ -81,12 +76,11 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_dashboard_setting">
-                                    <div class="o_setting_left_pane" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="google_analytics_dashboard_setting" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                    <div class="o_setting_left_pane">
                                         <field name="has_google_analytics_dashboard"/>
                                     </div>
-                                    <div class="o_setting_right_pane" attrs="{'invisible': [('has_google_analytics', '=', False)]}">
+                                    <div class="o_setting_right_pane">
                                         <label for="has_google_analytics_dashboard"/>
                                         <div class="text-muted">
                                             See Google Analytics data on your Website Dashboard
@@ -109,7 +103,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="google_maps_setting">
                                     <div class="o_setting_left_pane">
                                         <field name="has_google_maps"/>
@@ -117,7 +110,7 @@
                                     <div class="o_setting_right_pane">
                                         <label for="has_google_maps"/>
                                         <div class="text-muted">
-                                            Show a map in the <a href="/page/contactus">Contact Us</a> page
+                                            Show your address on a map in the <a href="/page/contactus">Contact Us</a> page
                                         </div>
                                         <div class="content-group" attrs="{'invisible': [('has_google_maps', '=', False)]}">
                                             <div class="row mt16">
@@ -157,199 +150,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <h2>Social Media</h2>
-                            <div class="row mt16 o_settings_container" id="social_media_settings">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="social_media_links_setting">
-                                    <div class="o_setting_left_pane" />
-                                    <div class="o_setting_right_pane">
-                                        <label string="Social Media Links"/>
-                                        <div class="text-muted">
-                                            Social media links in your website footer
-                                        </div>
-                                        <div class="content-group">
-                                            <div name="social_facebook" class="row mt16">
-                                                <label class="col-md-3 o_light_label" for="social_facebook"/>
-                                                <field name="social_facebook" placeholder="https://www.facebook.com/Odoo"/>
-                                            </div>
-                                            <div name="social_twitter" class="row">
-                                                <label class="col-md-3 o_light_label" for="social_twitter"/>
-                                                <field name="social_twitter" placeholder="https://twitter.com/Odoo" />
-                                            </div>
-                                            <div name="social_youtube" class="row">
-                                                <label class="col-md-3 o_light_label" for="social_youtube"/>
-                                                <field name="social_youtube" placeholder="https://www.youtube.com/user/OpenERPonline"/>
-                                            </div>
-                                            <div name="social_googleplus" class="row">
-                                                <label class="col-md-3 o_light_label" for="social_googleplus"/>
-                                                <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
-                                            </div>
-                                            <div name="social_linkedin" class="row">
-                                                <label class="col-md-3 o_light_label" for="social_linkedin"/>
-                                                <field name="social_linkedin" placeholder="https://www.linkedin.com/company/odoo"/>
-                                            </div>
-                                            <div name="social_github" class="row">
-                                                <label class="col-md-3 o_light_label" for="social_github"/>
-                                                <field name="social_github" placeholder="https://youraccount.github.io"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="twitter_roller_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_twitter"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_twitter"/>
-                                        <div class="text-muted">
-                                            Display a Twitter wall on your website
-                                        </div>
-                                        <div class="content-group" id="msg_twitter_roller_install_setting" attrs="{'invisible': [('module_website_twitter', '=', False)]}">
-                                            <div class="text-warning mt16">Save this page and come back here to set up the feature.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h2>Features</h2>
-                            <div class="row mt16 o_settings_container" id="features_settings">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="ecommerce_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_sale"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_sale"/>
-                                        <div class="text-muted">
-                                            Boost your online sales with sleek product pages
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="jobs_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_hr_recruitment"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_hr_recruitment"/>
-                                        <div class="text-muted">
-                                            Promote your job announces and attract new talents
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="blog_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_blog"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_blog"/>
-                                        <div class="text-muted">
-                                            Build up a community with an efficient content strategy
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="slides_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_slides"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_slides"/>
-                                        <div class="text-muted">
-                                            Share videos, presentations and documents
-                                        </div>
-                                        <div class="content-group" id="msg_slides_install_setting" groups="base.group_no_one" attrs="{'invisible': [('module_website_slides', '=', False)]}">
-                                            <div class="text-warning mt16">Save this page and come back here to set up the feature.</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="subscriptions_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_sale_subscription" widget="upgrade_boolean"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_sale_subscription"/>
-                                        <div class="text-muted">
-                                            Sell recurring services with automated billing and payments
-                                        </div>
-                                        <div class="content-group"></div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="event_ticket_install_setting">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_event_sale"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_event_sale"/>
-                                        <div class="text-muted">
-                                            Organize events and sell tickets online
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h2>Communication</h2>
-
-                            <div class="row mt16 o_settings_container" id="communication_settings">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="contact_form_install_setting" title="New incoming messages are managed as leads or opportunities in your CRM app.">
-                                    <div class="o_setting_left_pane">
-                                        <field name="module_website_crm"/>
-                                    </div>
-                                    <div class="o_setting_right_pane">
-                                        <label for="module_website_crm"/>
-                                        <div class="text-muted" id="msg_contact_form_install_setting">
-                                            Add a contact form in the <a href="/page/website.contactus">Contact Us</a> page
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="live_chat_install_setting">
-                                    <div>
-                                        <div class="o_setting_left_pane">
-                                            <field name="module_website_livechat"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="module_website_livechat"/>
-                                            <div class="text-muted">
-                                                Chat with your visitors in real time
-                                            </div>
-                                            <div class="content-group" id="msg_module_website_livechat" attrs="{'invisible': [('module_website_livechat', '=', False)]}">
-                                                <div class="text-warning mt16">Save this page and come back here to set up the feature.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="forum_install_setting">
-                                    <div>
-                                        <div class="o_setting_left_pane">
-                                            <field name="module_website_forum"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label for="module_website_forum"/>
-                                            <div class="text-muted">
-                                                Reduce resources spent on support with a website forum
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="custom_forms_install_setting" groups="base.group_no_one">
-                                    <div title="Build up your own forms and get requests as emails, leads or issues.
-You can also edit the fields of the Extra Step page in eCommerce checkout.">
-                                        <div class="o_setting_left_pane">
-                                            <field name="module_website_form_editor" widget="upgrade_boolean"/>
-                                        </div>
-                                        <div class="o_setting_right_pane">
-                                            <label string="Custom Forms" for="module_website_form_editor"/>
-                                            <div class="text-muted">
-                                                Build up customized forms on your website
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <h2 groups="base.group_no_one">Performance Optimization</h2>
-
-                            <div class="row mt16 o_settings_container" id="performance_settings" groups="base.group_no_one">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located.">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
                                     <div class="o_setting_left_pane">
                                         <field name="cdn_activated"/>
                                     </div>

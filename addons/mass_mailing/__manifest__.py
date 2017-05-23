@@ -32,6 +32,7 @@
         'views/themes_templates.xml',
         'views/snippets_themes.xml',
         'views/snippets_themes_options.xml',
+        'views/res_company_views.xml',
     ],
     'demo': [
         'data/mass_mailing_demo.xml',
