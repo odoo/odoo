@@ -805,9 +805,9 @@ class WebsiteSale(http.Controller):
 
         # In case the route is called directly from the JS (as done in Stripe payment method)
         so_id = kwargs.get('so_id')
-        so_token = kwargs.get('so_token')
-        if so_id and so_token:
-            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', so_token)])
+        access_token = kwargs.get('access_token')
+        if so_id and access_token:
+            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', access_token)])
         elif so_id:
             order = request.env['sale.order'].search([('id', '=', so_id)])
         else:
