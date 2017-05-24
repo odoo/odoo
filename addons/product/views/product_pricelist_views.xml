@@ -7,7 +7,6 @@
             <field name="model">product.pricelist.item</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Items">
-                    <field name="sequence" widget="handle"/>
                     <field colspan="4" name="name"/>
                     <field name="product_id" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id"/>
@@ -162,7 +161,6 @@
                                     <field name="date_end"/>
                                     <field name="price" string="Price"/>
                                     <field name="base" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
                                     <field name="price_discount" invisible="1"/>
                                     <field name="applied_on" invisible="1"/>
                                     <field name="compute_price" invisible="1"/>

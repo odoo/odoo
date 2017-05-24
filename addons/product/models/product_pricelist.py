@@ -368,9 +368,6 @@ class PricelistItem(models.Model):
         ('0_product_variant', 'Product Variant')], "Apply On",
         default='3_global', required=True,
         help='Pricelist Item applicable on selected option')
-    sequence = fields.Integer(
-        'Sequence', default=5, required=True,
-        help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found.")
     base = fields.Selection([
         ('list_price', 'Public Price'),
         ('standard_price', 'Cost'),
