@@ -16,6 +16,7 @@ Adrien Peiffer adrien.peiffer@acsone.eu https://github.com/adrienpeiffer
 Anthony Muschang anthony.muschang@acsone.eu https://github.com/anthony-muschang
 Cédric Pigeon cedric.pigeon@acsone.eu https://github.com/Cedric-Pigeon
 Christelle De Coninck christelle.deconinck@acsone.eu https://github.com/chrisdec
+Denis Roussel denis.roussel@acsone.eu https://github.com/rousseldenis
 Jonathan Nemry jonathan.nemry@acsone.eu https://github.com/JonathanNEMRY
 Denis Roussel denis.roussel@acsone.eu https://github.com/rousseldenis
 Laetia Gangloff laetitia.gangloff@acsone.eu https://github.com/laetitia-gangloff
