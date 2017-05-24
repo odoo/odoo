@@ -203,7 +203,6 @@ class sale_quote(http.Controller):
 
             # update quotation
             Order.write({
-                'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': Transaction.id
             })
 

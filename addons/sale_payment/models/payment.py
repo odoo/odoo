@@ -14,34 +14,9 @@ class PaymentTransaction(models.Model):
     # YTI FIXME: The auto_join seems useless
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', auto_join=True)
 
-    def _generate_and_pay_invoice(self, tx, acquirer_name):
-        tx.sale_order_id._force_lines_to_invoice_policy_order()
-
-        # force company to ensure journals/accounts etc. are correct
-        # company_id needed for default_get on account.journal
-        # force_company needed for company_dependent fields
-        ctx_company = {'company_id': tx.sale_order_id.company_id.id,
-                       'force_company': tx.sale_order_id.company_id.id}
-        created_invoice = tx.sale_order_id.with_context(**ctx_company).action_invoice_create()
-        created_invoice = self.env['account.invoice'].browse(created_invoice).with_context(**ctx_company)
-
-        if created_invoice:
-            _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',
-                         acquirer_name, created_invoice.name, created_invoice.id, tx.sale_order_id.name, tx.sale_order_id.id)
-
-            created_invoice.action_invoice_open()
-            if not tx.acquirer_id.journal_id:
-                default_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-                if not default_journal:
-                    _logger.warning('<%s> transaction completed, could not auto-generate payment for %s (ID %s) (no journal set on acquirer)',
-                                    acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
-                tx.acquirer_id.journal_id = default_journal
-                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
-                if created_invoice.payment_ids:
-                    created_invoice.payment_ids[0].payment_transaction_id = tx
-        else:
-            _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
-                            acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
+    # --------------------------------------------------
+    # Sale management
+    # --------------------------------------------------
 
     @api.model
     def form_feedback(self, data, acquirer_name):
@@ -87,3 +62,32 @@ class PaymentTransaction(models.Model):
 
             except Exception:
                 _logger.exception('Fail to confirm the order or send the confirmation email%s', tx and ' for the transaction %s' % tx.reference or '')
+
+    def _generate_and_pay_invoice(self, tx, acquirer_name):
+        tx.sale_order_id._force_lines_to_invoice_policy_order()
+
+        # force company to ensure journals/accounts etc. are correct
+        # company_id needed for default_get on account.journal
+        # force_company needed for company_dependent fields
+        ctx_company = {'company_id': tx.sale_order_id.company_id.id,
+                       'force_company': tx.sale_order_id.company_id.id}
+        created_invoice = tx.sale_order_id.with_context(**ctx_company).action_invoice_create()
+        created_invoice = self.env['account.invoice'].browse(created_invoice).with_context(**ctx_company)
+
+        if created_invoice:
+            _logger.info('<%s> transaction completed, auto-generated invoice %s (ID %s) for %s (ID %s)',
+                         acquirer_name, created_invoice.name, created_invoice.id, tx.sale_order_id.name, tx.sale_order_id.id)
+
+            created_invoice.action_invoice_open()
+            if not tx.acquirer_id.journal_id:
+                default_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+                if not default_journal:
+                    _logger.warning('<%s> transaction completed, could not auto-generate payment for %s (ID %s) (no journal set on acquirer)',
+                                    acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
+                tx.acquirer_id.journal_id = default_journal
+                created_invoice.pay_and_reconcile(tx.acquirer_id.journal_id, pay_amount=created_invoice.amount_total)
+                if created_invoice.payment_ids:
+                    created_invoice.payment_ids[0].payment_transaction_id = tx
+        else:
+            _logger.warning('<%s> transaction completed, could not auto-generate invoice for %s (ID %s)',
+                            acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
