@@ -768,7 +768,7 @@ class WebsiteSale(http.Controller):
                 tx.partner_id == tx.sale_order_id.partner_id):
             try:
                 s2s_result = tx.s2s_do_transaction()
-                valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
+                valid_state = 'authorized' if tx.acquirer_id.capture_manually else 'done'
                 if not s2s_result or tx.state != valid_state:
                     return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
                 else:

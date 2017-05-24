@@ -23,6 +23,16 @@ class SaleOrder(models.Model):
     payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
     payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
+    can_directly_mark_as_paid = fields.Boolean(compute='_compute_can_directly_mark_as_paid',
+        string="Can be directly marked as paid", store=True,
+        help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
+                is sent or confirmed and if the payment acquire is of the type transfer or manual""")
+
+    @api.depends('state', 'payment_tx_id', 'payment_tx_id.state',
+                 'payment_acquirer_id', 'payment_acquirer_id.provider')
+    def _compute_can_directly_mark_as_paid(self):
+        for order in self:
+            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and order.payment_tx_id.state != 'done' and order.payment_acquirer_id.provider in ['transfer', 'manual']
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
@@ -165,6 +175,22 @@ class SaleOrder(models.Model):
             accessory_products = order.website_order_line.mapped('product_id.accessory_product_ids').filtered(lambda product: product.website_published)
             accessory_products -= order.website_order_line.mapped('product_id')
             return random.sample(accessory_products, len(accessory_products))
+
+    def action_mark_as_paid(self):
+        """ Mark directly a sales order as paid if:
+                - State: Quotation Sent, or sales order
+                - Provider: wire transfer or manual config
+            The transaction is marked as done
+            The invoice may be generated and marked as paid if configured in the website settings
+            """
+        self.ensure_one()
+        if self.can_directly_mark_as_paid:
+            self.action_confirm()
+            if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False):
+                self.payment_tx_id._generate_and_pay_invoice(self.payment_tx_id, self.payment_acquirer_id.provider)
+            self.payment_tx_id.state = 'done'
+        else:
+            raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
 
 
 class ResCountry(models.Model):
