@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_tree_tipo_identificacion" model="ir.ui.view">
+            <field name="name">Identificacion Tree</field>
+            <field name="model">tipo.identificacion</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="type" string="Tipo de Transacción"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tree_tipo_sustento" model="ir.ui.view">
+            <field name="name">Sustento Tree</field>
+            <field name="model">tipo.sustento</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tree_tipo_comprobante" model="ir.ui.view">
+            <field name="name">Comprobante Tree</field>
+            <field name="model">tipo.comprobante</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tree_tipo_transaccion" model="ir.ui.view">
+            <field name="name">Transaccion Tree</field>
+            <field name="model">tipo.transaccion</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tree_identificacion_referencial" model="ir.ui.view">
+            <field name="name">Identificacion Tree</field>
+            <field name="model">identificacion.referencial</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_tree_codigo_retencion" model="ir.ui.view">
+            <field name="name">Retencion Tree</field>
+            <field name="model">codigo.retencion</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action to open menu list -->
+        <act_window id="action_tipo_identificacion"
+                    name="Tipo de Identificación"
+                    res_model="tipo.identificacion"
+                    view_mode="tree,form" />
+
+        <act_window id="action_tipo_sustento"
+                    name="Códigos de Sustento"
+                    res_model="tipo.sustento"
+                    view_mode="tree,form" />
+
+        <act_window id="action_tipo_comprobante"
+                    name="Tipos de Comprobantes"
+                    res_model="tipo.comprobante"
+                    view_mode="tree,form" />
+
+        <act_window id="action_tipo_transaccion"
+                    name="Tipos de Transacción"
+                    res_model="tipo.transaccion"
+                    view_mode="tree,form" />
+
+        <act_window id="action_tipo_referencia"
+                    name="Códigos Referenciales"
+                    res_model="identificacion.referencial"
+                    view_mode="tree,form" />
+
+        <act_window id="action_codigo_retencion"
+                    name="Códigos de Retenciones"
+                    res_model="codigo.retencion"
+                    view_mode="tree,form" />
+
+        <!-- Menu item to open action list -->
+        <menuitem id="menu_finance_ats"
+                  name="ATS Ficha Tec"
+                  parent="account.menu_finance"
+                  sequence="30"/>
+
+        <menuitem id="menu_codigos"
+                  name="Parametros ATS"
+                  parent="menu_finance_ats"
+                  sequence="5"/>
+
+        <menuitem id="menu_tipo_identificacion"
+                  name="Identificaciones"
+                  parent="menu_codigos"
+                  sequence="10"
+                  action="action_tipo_identificacion" />
+
+        <menuitem id="menu_tipo_sustento"
+                  name="Sustento"
+                  parent="menu_codigos"
+                  sequence="20"
+                  action="action_tipo_sustento" />
+
+        <menuitem id="menu_tipo_comprobante"
+                  name="Comprobantes"
+                  parent="menu_codigos"
+                  sequence="30"
+                  action="action_tipo_comprobante" />
+
+        <menuitem id="menu_tipo_transaccion"
+                  name="Transacciones"
+                  parent="menu_codigos"
+                  sequence="40"
+                  action="action_tipo_transaccion" />
+
+        <menuitem id="menu_tipo_referencia"
+                  name="Informante"
+                  parent="menu_codigos"
+                  sequence="60"
+                  action="action_tipo_referencia" />
+
+        <menuitem id="menu_codigo_retencion"
+                  name="Retenciones"
+                  parent="menu_codigos"
+                  sequence="50"
+                  action="action_codigo_retencion" />
+
+    </data>
+</openerp>

@@ -1,0 +1,14 @@
+<openerp>
+    <data>
+        <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">view.res.partner.filter.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="x_identificacion"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
