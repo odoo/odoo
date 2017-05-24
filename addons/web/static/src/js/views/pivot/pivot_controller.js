@@ -74,8 +74,9 @@ var PivotController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * We save the current measure and group bys, so we can restore the view
-     * when we save the current state in the search view.
+     * Returns the current measures and groupbys, so we can restore the view
+     * when we save the current state in the search view, or when we add it to
+     * the dashboard.
      *
      * @override method from AbstractController
      * @returns {Object}
@@ -84,8 +85,8 @@ var PivotController = AbstractController.extend({
         var state = this.model.get();
         return {
             pivot_measures: state.measures,
-            pivot_column_groupby: state.data.main_col.groupbys,
-            pivot_row_groupby: state.data.main_row.groupbys,
+            pivot_column_groupby: state.colGroupBys,
+            pivot_row_groupby: state.rowGroupBys,
         };
     },
     /**
