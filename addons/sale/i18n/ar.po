@@ -8,10 +8,10 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2016
 # Ahmed AL-Haddad <ahmed@utech-sa.com>, 2016
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2016
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2016
 # Mohammed Albasha <m.albasha.ma@gmail.com>, 2016
-# Fatma Reda <alex.fatma@gmail.com>, 2016
 # amrnegm <amrnegm.01@gmail.com>, 2016
-# hoxhe aits <hoxhe0@gmail.com>, 2016
+# hoxhe Aits <hoxhe0@gmail.com>, 2016
 # Akram Alfusayal <akram_ma@hotmail.com>, 2016
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2016
 # Ali zuaby <ali@zuaby.net>, 2016
@@ -19,14 +19,13 @@
 # Hossam Esam <hossamesam17@gmail.com>, 2016
 # Khalid Aljahil <khalid@tarkeeb.sa>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
-# khalil qandil <khalilqandil@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-14 15:53+0000\n"
 "PO-Revision-Date: 2016-11-14 15:53+0000\n"
-"Last-Translator: khalil qandil <khalilqandil@gmail.com>, 2017\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +91,7 @@ msgstr "عدد الفواتير"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
 msgid "# of Lines"
-msgstr "عدد السطور"
+msgstr "عدد البنود"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
@@ -102,12 +101,12 @@ msgstr "عدد الطلبيات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "# of Qty"
-msgstr "# للكمية"
+msgstr "عدد الكميات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 msgid "# of Sales Order"
-msgstr "عدد طلبات البيع"
+msgstr "عدد أوامر المبيعات"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -243,12 +242,14 @@ msgstr ""
 msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
-msgstr "المجموع الفرعي"
+msgstr ""
+"<span>(*) هذه الإعدادات خاصة بالشركة المتصل بها الآن و ليس كل "
+"الشركات.</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>ملاحظة الوضع المالي:</strong>"
+msgstr "<strong>ملاحظة الوضع الضريبي:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -258,7 +259,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "<strong>مندوب المبيعات:</strong>"
+msgstr "<strong>موظف المبيعات:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
@@ -285,7 +286,7 @@ msgstr "<strong>الإجمالي</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>مرجعك:</strong>"
+msgstr "<strong>المرجع الخاص بك:</strong>"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -300,33 +301,33 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr "استخدام حساب للودائع"
+msgstr "حساب يستخدم للأموال المدفوعة مقدما."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
 msgid "Add pagebreak"
-msgstr "إضافة فاصل صفحات "
+msgstr "إضافة فاصل صفحة"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
 msgid "Add subtotal"
-msgstr "إضافة المجموع الفرعي "
+msgstr "إضافة مجموع فرعي "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
 msgid "Addresses"
-msgstr "عناوين"
+msgstr "العناوين"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "عناوين فى أوامر البيع"
+msgstr "العناوين في أوامر المبيعات"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:153
 #, python-format
 msgid "Advance: %s"
-msgstr "المقدم: %s"
+msgstr "مقدما: %s"
 
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
@@ -341,7 +342,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "Allow discounts on sales order lines"
-msgstr "السماح بالخصم على مستوى تفصيل المبيعات"
+msgstr "السماح بالخصم أو التخفيض في بنود أمر المبيعات"
 
 #. module: sale
 #: selection:sale.config.settings,auto_done_setting:0
@@ -361,12 +362,12 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
 msgid ""
 "Allows you to select and maintain different units of measure for products."
-msgstr "يسمح لك باختيار والحفاظ على وحدات قياس متعددة للمنتجات"
+msgstr "يسمح لك بتحديد و استخدام وحدات قياس مختلفة للمنتجات."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_config_settings_group_analytic_account_for_sales
 msgid "Allows you to specify an analytic account on sales orders."
-msgstr "يسمح لك بتحديد الحساب التحليلي على أوامر البيع."
+msgstr "يسمح لك بتحديد حساب تحليلي لأوامر المبيعات."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
@@ -389,17 +390,17 @@ msgstr "الحساب التحليلي"
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
-msgstr "الحسابات التحليلية للمبيعات"
+msgstr "المحاسبة التحليلية للمبيعات"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "البند التحليلي"
+msgstr "البنود التحليلية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "العلامات التحليلية"
+msgstr "الوسوم التحليلية"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
@@ -419,12 +420,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
 msgid "Attribute Values"
-msgstr "صفة القيم"
+msgstr "قيم الصفة"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
 msgid "Attributes"
-msgstr "صفات"
+msgstr "الصفات"
 
 #. module: sale
 #: selection:product.template,sale_line_warn:0
@@ -440,12 +441,12 @@ msgstr ""
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
 msgid "By Product"
-msgstr "بالمنتج"
+msgstr "حسب المنتج"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr "برجل البيع"
+msgstr "حسب موظف المبيعات"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
@@ -455,7 +456,7 @@ msgstr "حسب فريق المبيعات"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "السماح بتعديل الموصل"
+msgstr "السماح بتحرير ما تم تسليمه"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -476,7 +477,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
-msgstr "حدد هذا الاختيار لإدارة عروض السعر في فريق المبيعات هذا."
+msgstr "حدد هذا الاختيار لإدارة عروض الأسعار في فريق المبيعات هذا."
 
 #. module: sale
 #. openerp-web
@@ -488,7 +489,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a team target"
-msgstr "انقر لتحديد هدف الفريق"
+msgstr "انقر لتحديد هدف للفريق"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -498,7 +499,7 @@ msgstr "الكيان التجارى"
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
 msgid "Companies"
-msgstr "المؤسسات"
+msgstr "الشركات"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_company_id
@@ -507,7 +508,7 @@ msgstr "المؤسسات"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "المؤسسة"
+msgstr "الشركة"
 
 #. module: sale
 #. openerp-web

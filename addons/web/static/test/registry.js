@@ -1,8 +1,8 @@
 odoo.define_section('web.registry', ['web.Registry'], {
     beforeEach: function () {
-        this.Foo = {};
-        this.Bar = {};
-        this.Foo2 = {};
+        this.Foo = {bar: 1};
+        this.Bar = {foo: 0};
+        this.Foo2 = {fred: -1};
     },
 }, function (test) {
 
@@ -14,6 +14,8 @@ odoo.define_section('web.registry', ['web.Registry'], {
             .add('bar', this.Bar);
 
         assert.strictEqual(registry.get('foo'), this.Foo);
+        // make sure we're comparing actual objects instead of just undefineds
+        assert.deepEqual(registry.get('foo'), {bar: 1});
     });
 
     test('extension', function (assert, Registry) {

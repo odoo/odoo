@@ -152,7 +152,7 @@ class HrTimesheetSheet(models.Model):
 
         analytic_timesheet_toremove = self.env['account.analytic.line']
         for sheet in self:
-            analytic_timesheet_toremove += sheet.timesheet_ids
+            analytic_timesheet_toremove += sheet.timesheet_ids.filtered(lambda t: not t.task_id)
         analytic_timesheet_toremove.unlink()
 
         return super(HrTimesheetSheet, self).unlink()

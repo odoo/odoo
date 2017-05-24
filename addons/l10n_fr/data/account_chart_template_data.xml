@@ -239,7 +239,7 @@
     <record id="pcg_120" model="account.account.template">
       <field name="name">Résultat de l'exercice (bénéfice)</field>
       <field name="code">120</field>
-      <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+      <field name="user_type_id" ref="account.data_unaffected_earnings"/>
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>
 
@@ -4028,6 +4028,13 @@
     <record id="pcg_648" model="account.account.template">
       <field name="name">Autres charges de personnel</field>
       <field name="code">648</field>
+      <field name="user_type_id" ref="account.data_account_type_expenses"/>
+      <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
+    </record>
+
+    <record id="pcg_649" model="account.account.template">
+      <field name="name">Crédit d’Impôt Compétitivité Emploi (CICE)</field>
+      <field name="code">649</field>
       <field name="user_type_id" ref="account.data_account_type_expenses"/>
       <field name="chart_template_id" ref="l10n_fr_pcg_chart_template"/>
     </record>

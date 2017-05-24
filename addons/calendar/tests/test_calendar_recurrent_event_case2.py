@@ -96,3 +96,52 @@ class TestRecurrentEvent(common.TransactionCase):
         # I update the description of two meetings, and check that both have been updated
         self.calendar_event_sprint_review.write({'description': "Some description"})
         self.assertEqual(self.calendar_event_sprint_review.description, "Some description", "Event %d has not been updated" % self.calendar_event_sprint_review.id)
+
+    def test_recurrent_meeting4(self):
+        # I create a weekly meeting till a particular end date.
+        self.CalendarEvent.create({
+            'start': '2017-01-22 11:47:00',
+            'stop': '2017-01-22 12:47:00',
+            'day': 0.0,
+            'duration': 1.0,
+            'final_date': '2017-06-30',
+            'end_type': 'end_date',
+            'fr': True,
+            'mo': True,
+            'th': True,
+            'tu': True,
+            'we': True,
+            'name': 'Review code with programmer',
+            'recurrency': True,
+            'rrule_type': 'weekly'
+        })
+
+        # I search for a recurrent weekly meetings that take place at a given date.
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '<=', '2017-01-24'), ('stop', '>=', '2017-01-24'), ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 1, 'Recurrent weekly meetings are not found using date filter !')
+
+        # I search for a recurrent weekly meetings that take place at a given date and time.
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '<=', '2017-01-24 11:55:00'), ('stop', '>=', '2017-01-24 11:55:00'), ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 1, 'Recurrent weekly meetings are not found using time filter !')
+
+        # I search using the filter 'start date is set'
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '!=', False), ('stop', '>=', '2017-06-30 11:55:00'), ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 1, "Last recurrent weekly meetings are not found using 'is set' filter !")
+
+        # I search for a recurrent weekly meetings that take place at a given date and time.
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '<=', '2017-01-24 11:55:00'), ('stop', '>=', '2017-01-24 15:55:00')
+        ])
+        self.assertEqual(meetings_count, 0, 'Too late recurrent meetings are found using time filter !')
+
+        # I search using a start filter but no stop
+        meetings_count = self.CalendarEvent.with_context({'virtual_id': True}).search_count([
+            ('start', '>=', '2017-06-30 08:00:00'), ('name', '=', 'Review code with programmer')
+        ])
+        self.assertEqual(meetings_count, 1, "Last recurrent weekly meetings are not found without stop filter !")

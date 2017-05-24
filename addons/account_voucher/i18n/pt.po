@@ -30,9 +30,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
-" * O estado 'Rascunho' é usado quando um utilizador está a criar um novo e não confirmado Pagamento. \n"
-"* O estado 'Publicado' é usado quando o utilizador cria Pagamentos, um número do pagamento é gerado e pagamentos são criadas em contas.\n"
-"* O estado \"Cancelado\" é usado quando o utilizador cacela o pagamento."
+"* O estado 'Rascunho' é utilizado quando um utilizador está a processar um pagamento novo e não confirmado. \n"
+"* O estado 'Pró-forma' é utilizado quando o pagamento não tem um número de pagamento.\n"
+"* O estado 'Lançado' é utilizado quando o utilizador cria um pagamento, é gerado um número de pagamento e os movimentos de pagamento são criados na conta.\n"
+"* O estado \"Cancelado\" é utilizado quando o utilizador cancela o pagamento."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -129,7 +130,7 @@ msgstr "Empresa"
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_company_id
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_company_id
 msgid "Company related to this journal"
-msgstr "Diário relacionado com a Empresa"
+msgstr "Empresa relacionada com este diário"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_create_uid
@@ -195,7 +196,7 @@ msgstr "Data da Dívida"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
-msgstr "Data efectiva para lançamentos contáveis"
+msgstr "Data efetiva para movimentos contabilísticos"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
@@ -521,7 +522,7 @@ msgstr "Voucher"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Voucher Entries"
-msgstr "Movimentos Voucher"
+msgstr "Movimentos de Pagamento"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_line
@@ -541,7 +542,7 @@ msgstr "Estatísticas do voucher"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Entradas de Vouchers"
+msgstr "Movimentos de Pagamento"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt

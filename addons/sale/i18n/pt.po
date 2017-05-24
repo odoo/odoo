@@ -104,6 +104,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -233,6 +235,8 @@ msgid ""
 "<span>(*) This configuration is related to the company you're logged "
 "into.</span>"
 msgstr ""
+"<span>(*) Esta configuração está relacionada com a empresa onde iniciou a "
+"sessão.</span>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -242,7 +246,7 @@ msgstr "<strong>Comentário Posição Fiscal</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr ""
+msgstr "<strong>Termos de pagamento:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1438,7 +1442,8 @@ msgstr ""
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr "Por favor defina um diário de venda para esta empresa."
+msgstr ""
+"Por favor, defina um diário de venda contabilístico para esta empresa."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
