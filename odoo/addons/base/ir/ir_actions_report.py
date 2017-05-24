@@ -668,14 +668,21 @@ class IrActionsReport(models.Model):
             return None
         return render_func(res_ids, data=data)
 
-    @api.noguess
+    @api.multi
     def report_action(self, docids, data=None, config=True):
         """Return an action of type ir.actions.report.
 
         :param docids: id/ids/browserecord of the records to print (if not used, pass an empty list)
         :param report_name: Name of the template to generate an action for
         """
-        if (self.env.uid == SUPERUSER_ID) and ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)) and config:
+        bypass_choose_template = docids if len(docids) == 1 and self.attachment else None
+        if bypass_choose_template:
+            attachment_id = self.retrieve_attachment(docids)
+            bypass_choose_template = attachment_id
+        if not bypass_choose_template\
+            and self.env.uid == SUPERUSER_ID\
+            and (not self.env.user.company_id.external_report_layout or not self.env.user.company_id.logo)\
+            and config:
             template = self.env.ref('base.view_company_report_form')
             return {
                 'name': _('Choose Your Document Layout'),
