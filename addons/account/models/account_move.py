@@ -174,11 +174,6 @@ class AccountMove(models.Model):
             #check the lock date + check if some entries are reconciled
             move.line_ids._update_check()
             move.line_ids.unlink()
-
-            # remove reference set at statement reconciliation
-            if move.statement_line_id.move_name:
-                move.statement_line_id.move_name = False
-
         return super(AccountMove, self).unlink()
 
     @api.multi
