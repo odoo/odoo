@@ -615,4 +615,44 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('getContext correctly returns measures and groupbys', function (assert) {
+        assert.expect(3);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="day" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: [],
+        }, "context should be correct");
+
+        // expand header on field customer
+        pivot.$('thead .o_pivot_header_cell_closed:nth(1)').click();
+        pivot.$('ul.o_pivot_field_menu > li[data-field="customer"] a').click();
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day', 'customer'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: [],
+        }, "context should be correct");
+
+        // expand row on field product_id
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day', 'customer'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: ['product_id'],
+        }, "context should be correct");
+
+        pivot.destroy();
+    });
+
 });});
