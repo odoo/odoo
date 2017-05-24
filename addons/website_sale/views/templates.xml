@@ -1424,7 +1424,9 @@
                                 </div>
                                 <div class="col-lg-5 col-sm-4 text-right">
                                     <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
-                                        <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
+                                        <div class="o_payment_acquirer_button hidden pull-right"
+                                                t-att-data-id="acquirer.id"
+                                                t-att-data-call-url="'/shop/payment/transaction/%s' % (acquirer.id)">
                                             <div t-raw="acquirer.button" />
                                             <div class="token_hide">
                                                 <div t-if="acquirer.save_token == 'ask'">
