@@ -13,20 +13,20 @@ $(document).ready(function () {
             var payment_id = $(ev.currentTarget).val() || $(this).data('acquirer');
             var token = $(ev.currentTarget).data('token') || '';
 
-            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
+            $("div.o_payment_acquirer_button[data-id='"+payment_id+"']", $payment).attr('data-token', token);
             $("div.js_payment a.list-group-item").removeClass("list-group-item-info");
             $('span.js_radio').switchClass(ico_on, ico_off, 0);
             if (token) {
-              $("div.oe_sale_acquirer_button div.token_hide").hide();
+              $("div.o_payment_acquirer_button div.token_hide").hide();
               $(ev.currentTarget).find('span.js_radio').switchClass(ico_off, ico_on, 0);
               $(ev.currentTarget).parents('li').find('input').prop("checked", true);
               $(ev.currentTarget).addClass("list-group-item-info");
             }
             else{
-              $("div.oe_sale_acquirer_button div.token_hide").show();
+              $("div.o_payment_acquirer_button div.token_hide").show();
             }
-            $("div.oe_sale_acquirer_button[data-id]", $payment).addClass("hidden");
-            $("div.oe_sale_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
+            $("div.o_payment_acquirer_button[data-id]", $payment).addClass("hidden");
+            $("div.o_payment_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
 
     })
     .find("input[name='acquirer']:checked").click();
@@ -36,18 +36,22 @@ $(document).ready(function () {
       ev.preventDefault();
       ev.stopPropagation();
       var $form = $(ev.currentTarget).parents('form');
-      var acquirer = $(ev.currentTarget).parents('div.oe_sale_acquirer_button').first();
-      var acquirer_id = acquirer.data('id');
-      var acquirer_token = acquirer.attr('data-token'); // !=data
-      var params = {'tx_type': acquirer.find('input[name="odoo_save_token"]').is(':checked')?'form_save':'form'};
-      if (! acquirer_id) {
+      var acquirer = $(ev.currentTarget).parents('div.o_payment_acquirer_button').first();
+      var tx_data = acquirer.data();
+      if (! tx_data.id || ! tx_data.callUrl) {
         return false;
       }
+
+      var params = {"tx_type": tx_data.txType || acquirer.find('input[name="odoo_save_token"]').is(':checked') ? 'form_save': 'form'};
+      var acquirer_token = acquirer.attr('data-token'); // !=data
       if (acquirer_token) {
         params.token = acquirer_token;
       }
+      if (tx_data.access_token) {
+        params.access_token = tx_data.access_token;
+      }
       $form.off('submit');
-      ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', params).then(function (data) {
+      ajax.jsonRpc(tx_data.callUrl, 'call', params).then(function (data) {
           $(data).appendTo('body').submit();
       });
       return false;

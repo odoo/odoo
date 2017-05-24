@@ -36,7 +36,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             $(this).attr('disabled','disabled');
 
         var $form = $(e.currentTarget).parents('form');
-        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
+        var acquirer_id = $(e.currentTarget).closest('div.o_payment_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
         acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
         if (! acquirer_id) {
             return false;
