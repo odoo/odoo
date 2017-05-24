@@ -86,13 +86,10 @@ class AccountInvoice(models.Model):
     def _get_products_set(self):
         """ Returns a recordset of the products contained in this invoice's lines
         """
-        rslt = self.env['product.product']
-        for inv_line in self.invoice_line_ids:
-            rslt += inv_line.product_id
-        return rslt
+        return self.mapped('invoice_line_ids.product_id')
 
-    def _get_anglosaxon_interim_account(self, product): #
-        """ To be overriddent for customer invoices and vendor bills in order to
+    def _get_anglosaxon_interim_account(self, product):
+        """ To be overridden for customer invoices and vendor bills in order to
         return the interim account used in anglosaxon accounting for this invoice"""
         return None
 
@@ -106,7 +103,7 @@ class AccountInvoice(models.Model):
         """
         for invoice in self:
             if invoice.company_id.anglo_saxon_accounting:
-                invoice_stock_moves_id_list = [move.id for move in self._get_related_stock_moves()]
+                invoice_stock_moves_id_list = self._get_related_stock_moves().ids
                 for product in self._get_products_set():
                     if product.valuation == 'real_time' and product.cost_method == 'real':
                         # We first get the invoice's move lines ...
@@ -115,11 +112,10 @@ class AccountInvoice(models.Model):
 
                         # And then the stock valuation ones.
                         product_stock_moves = self.env['stock.move'].search([('id','in',invoice_stock_moves_id_list), ('product_id','=',product.id)])
-                        for stock_move in product_stock_moves:
-                            for valuation_move in stock_move.stock_account_valuation_account_move_ids:
-                                for valuation_line in valuation_move.line_ids:
-                                    if valuation_line.account_id == product_interim_account and not valuation_line.reconciled:
-                                        to_reconcile += valuation_line
+
+                        for valuation_line in product_stock_moves.mapped('stock_account_valuation_account_move_ids.line_ids'):
+                            if valuation_line.account_id == product_interim_account and not valuation_line.reconciled:
+                                to_reconcile += valuation_line
 
                         if to_reconcile:
                             to_reconcile.reconcile()

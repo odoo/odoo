@@ -15,10 +15,7 @@ class AccountInvoice(models.Model):
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
         if self.type == 'out_invoice':
-            for inv_line in self.invoice_line_ids:
-                for so_line in inv_line.sale_line_ids:
-                    for picking in so_line.order_id.picking_ids:
-                        rslt += picking.move_lines
+            rslt += self.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines')
 
         return rslt
 
