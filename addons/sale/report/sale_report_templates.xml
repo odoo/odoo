@@ -11,12 +11,12 @@
                     <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
                     <div t-field="doc.partner_invoice_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                    <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
+                    <p t-if="doc.partner_invoice_id.vat">VAT: <span t-field="doc.partner_invoice_id.vat"/></p>
                     <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
                         <strong>Shipping address:</strong>
                         <div t-field="doc.partner_shipping_id"
                             t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
-                        <p t-if="doc.partner_id.vat">VAT: <span t-field="doc.partner_id.vat"/></p>
+                        <p t-if="doc.partner_shipping_id.vat">VAT: <span t-field="doc.partner_shipping_id.vat"/></p>
                     </div>
                 </div>
                 <div class="col-xs-5 col-xs-offset-1">
