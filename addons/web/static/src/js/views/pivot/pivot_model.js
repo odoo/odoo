@@ -221,17 +221,14 @@ var PivotModel = AbstractModel.extend({
     load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.rowGroupBys;
-        this.initialColGroupBys = params.colGroupBys;
-        this.initialMeasures = params.measures;
         this.fields = params.fields;
         this.modelName = params.modelName;
-        var groupedBy = params.groupedBy.length ? params.groupedBy : this.initialRowGroupBys;
         this.data = {
             domain: params.domain,
             context: params.context,
-            groupedBy: groupedBy,
-            colGroupBys: params.colGroupBys || this.initialColGroupBys,
-            measures: this.initialMeasures,
+            groupedBy: params.rowGroupBys,
+            colGroupBys: params.colGroupBys,
+            measures: params.measures,
             sorted_column: {},
         };
         return this._loadData();
@@ -514,7 +511,7 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
         var groupBys = [];
-        var rowGroupBys = this.data.groupedBy;
+        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
 
@@ -591,7 +588,7 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = this.data.groupedBy;
+        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var datapt, row, col, attrs, cell_value;
         var main_row_header, main_col_header;
