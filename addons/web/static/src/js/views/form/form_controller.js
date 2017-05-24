@@ -334,9 +334,9 @@ var FormController = BasicController.extend({
                 d.resolve();
             });
             def = d.promise();
-        } else if (attrs.special) {
+        } else if (attrs.special === 'cancel') {
             def = this._callButtonAction(attrs, event.data.record);
-        } else {
+        } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
             def = this.saveRecord(this.handle, {
                 stayInEdit: true,

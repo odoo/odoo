@@ -547,7 +547,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      *
      * @param {Object} action_data the action descriptor data
      * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
-     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
+     * @param {String} [action_data.special=null] special action handlers, closes the dialog if set
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
      * @param {DataSet} dataset a dataset object used to communicate with the server
@@ -589,7 +589,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
             }
         };
 
-        if (action_data.special === 'cancel') {
+        if (action_data.special) {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type === "object") {
             var args = record_id ? [[record_id]] : [this.env.ids];
