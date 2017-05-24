@@ -267,7 +267,8 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('company_id', '=', parent.company_id)]"/>
+                                        domain="[('company_id', '=', parent.company_id)]"
+                                        context="{'default_partner_id': parent.partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
@@ -403,7 +404,8 @@
                                     <field name="account_id" groups="account.group_account_user"
                                         domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                                        domain="[('company_id', '=', parent.company_id)]"/>
+                                        domain="[('company_id', '=', parent.company_id)]"
+                                        context="{'default_partner_id': parent.partner_id}"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
                                     <field name="quantity"/>
                                     <field name="uom_id" groups="product.group_uom"/>
