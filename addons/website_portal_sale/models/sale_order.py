@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, fields, models
+from odoo import api, exceptions, fields, models, _
+
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -9,10 +11,17 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     website_url = fields.Char('Website URL', compute='_website_url', help='The full URL to access the document through the website.')
+    payment_transaction_count = fields.Integer(compute='_compute_payment_transaction_count', string="Number of payment transactions")
 
     def _website_url(self):
         for so in self:
             so.website_url = '/my/orders/%s' % (so.id)
+
+    def _compute_payment_transaction_count(self):
+        transaction_data = self.env['payment.transaction'].read_group([('sale_order_id', 'in', self.ids)], ['sale_order_id'], ['sale_order_id'])
+        mapped_data = dict([(m['sale_order_id'][0], m['sale_order_id_count']) for m in transaction_data])
+        for order in self:
+            order.payment_transaction_count = mapped_data.get(order.id, 0)
 
     @api.multi
     def get_access_action(self):
@@ -61,6 +70,24 @@ class SaleOrder(models.Model):
             action='/mail/view',
             model=self._name,
             res_id=self.id)[self.partner_id.id]
+
+    def action_view_transaction(self):
+        action = {
+            'type': 'ir.actions.act_window',
+            'name': 'Payment Transactions',
+            'res_model': 'payment.transaction',
+        }
+        if self.payment_transaction_count == 1:
+            action.update({
+                'res_id': self.env['payment.transaction'].search([('sale_order_id', '=', self.id)]).id,
+                'view_mode': 'form',
+            })
+        else:
+            action.update({
+                'view_mode': 'tree,form',
+                'domain': [('sale_order_id', '=', self.id)],
+            })
+        return action
 
 
 class SaleOrderLine(models.Model):

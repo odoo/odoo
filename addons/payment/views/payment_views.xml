@@ -16,16 +16,11 @@
                     <field name="environment" invisible='1'/>
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
+                    <field name="authorize_implemented" invisible="1"/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
                         <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <button name="toggle_website_published"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-globe">
-                                <field name="website_published" widget="boolean_button"
-                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
-                            </button>
                             <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
                             <button name="toggle_environment_value"
                                     attrs="{'invisible': ['|', ('environment', '=', 'test'), ('provider', '=', 'transfer')]}"
@@ -45,6 +40,12 @@
                                     <span class="o_warning_text">Test</span>
                                     <span class="o_stat_text">Environment</span>
                                 </div>
+                            </button>
+                            <button name="toggle_website_published"
+                                    class="oe_stat_button"
+                                    type="object" icon="fa-globe">
+                                <field name="website_published" widget="boolean_button"
+                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
                             </button>
                         </div>
                         <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
@@ -80,10 +81,16 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
-                                    <field name="auto_confirm" widget="radio"/>
+                                    <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
-                                    <field name="journal_id" attrs="{'required': [('auto_confirm', '=', 'generate_and_pay_invoice')], 'invisible': [('auto_confirm', '!=', 'generate_and_pay_invoice')]}"/>
-                                    <field name="country_ids" widget="many2many_tags"/>
+                                    <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
+                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                    <field name="journal_id" context="{'default_type': 'bank'}" required="1"/>
+                                    <field name="specific_countries"/>
+                                    <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
                                     <div groups="base.group_no_one">
                                         <field name="view_template_id" nolabel="1"/>
@@ -105,13 +112,6 @@
                                         </div>
                                     </div>
                                     <field name="registration_view_template_id" groups="base.group_no_one"/>
-                                </group>
-                                <group name="fees_config" attrs="{'invisible': [('fees_implemented', '=', False)]}">
-                                    <field name="fees_active"/>
-                                    <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                 </group>
                             </page>
                         </notebook>

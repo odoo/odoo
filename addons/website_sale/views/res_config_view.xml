@@ -227,12 +227,23 @@
                         <div class="o_setting_right_pane">
                             <label for="module_account_invoicing"/>
                             <div class="text-muted">
-                                Send invoices to customers
+                                Issue invoices to customers
                             </div>
-                            <div class="content-group">
+                            <div class="content-group" attrs="{'invisible': [('module_account_invoicing', '=', False)]}">
                                 <div class="mt16">
                                     <field name="default_invoice_policy" class="o_light_label" widget="radio"/>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': ['|', ('default_invoice_policy', '=', 'delivery'), ('module_account_invoicing', '=', False)]}">
+                        <div class="o_setting_left_pane">
+                            <field name="automatic_invoice" nolabel="1"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="automatic_invoice"/>
+                            <div class="text-muted">
+                                Issue the invoice automatically at the order confirmation
                             </div>
                         </div>
                     </div>
