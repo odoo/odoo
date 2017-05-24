@@ -158,11 +158,7 @@ class sale_quote(http.Controller):
 
     # note dbo: website_sale code
     @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>'], type='json', auth="public", website=True)
-    def payment_transaction(self, acquirer_id, order_id):
-        return self.payment_transaction_token(acquirer_id, order_id, None)
-
-    @http.route(['/quote/<int:order_id>/transaction/<int:acquirer_id>/<token>'], type='json', auth="public", website=True)
-    def payment_transaction_token(self, acquirer_id, order_id, token):
+    def payment_transaction_token(self, acquirer_id, order_id, access_token=None, tx_type=None):
         """ Json method that creates a payment.transaction, used to create a
         transaction when the user clicks on 'pay now' button. After having
         created the transaction, the event continues and the user is redirected
@@ -171,51 +167,24 @@ class sale_quote(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        PaymentTransaction = request.env['payment.transaction'].sudo()
-
-        Order = request.env['sale.order'].sudo().browse(order_id)
-        if not Order or not Order.order_line or acquirer_id is None:
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order or not order.order_line or acquirer_id is None:
             return request.redirect("/quote/%s" % order_id)
 
         # find an already existing transaction
-        Transaction = PaymentTransaction.search([('reference', '=', Order.name)])
-        if Transaction:
-            if Transaction.sale_order_id != Order or Transaction.state in ['error', 'cancel'] or Transaction.acquirer_id.id != acquirer_id:
-                Transaction = False
-            elif Transaction.state == 'draft':
-                Transaction.write({
-                    'amount': Order.amount_total,
-                })
-        if not Transaction:
-            Transaction = PaymentTransaction.create({
-                'acquirer_id': acquirer_id,
-                'type': Order._get_payment_type(),
-                'amount': Order.amount_total,
-                'currency_id': Order.pricelist_id.currency_id.id,
-                'partner_id': Order.partner_id.id,
-                'reference': PaymentTransaction.get_next_reference(Order.name),
-                'sale_order_id': Order.id,
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', Order._name)], limit=1).id,
-                'callback_res_id': Order.id,
-                'callback_method': '_confirm_online_quote',
-            })
-            request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
+        acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+        token = request.env['payment.token'].sudo()  # currently no support of payment tokens
+        tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
+        tx_type = order._get_payment_type()
+        tx = tx.check_or_create_sale_tx(order, acquirer, payment_token=token, tx_type=tx_type, add_tx_values={
+            'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
+            'callback_res_id': order.id,
+            'callback_method': '_confirm_online_quote',
+        })
+        request.session['quote_%s_transaction_id' % order.id] = tx.id
 
-            # update quotation
-            Order.write({
-                'payment_tx_id': Transaction.id
-            })
-
-        return Transaction.acquirer_id.with_context(
-            submit_class='btn btn-primary',
-            submit_txt=_('Pay & Confirm')).render(
-            Transaction.reference,
-            Order.amount_total,
-            Order.pricelist_id.currency_id.id,
-            values={
-                'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                'type': Order._get_payment_type(),
-                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                'partner_id': Order.partner_shipping_id.id or Order.partner_invoice_id.id,
-                'billing_partner_id': Order.partner_invoice_id.id,
-            })
+        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                                     submit_txt=_('Pay & Confirm'), render_values={
+                                         'type': order._get_payment_type(),
+                                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                                         })

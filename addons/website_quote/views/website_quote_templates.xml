@@ -366,9 +366,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <t t-foreach="acquirers or []" t-as="acquirer">
-                                        <div t-att-data-id="acquirer.id" class="oe_quote_acquirer_button hidden pull-right">
-                                          <div t-raw="buttons.get(acquirer.id)"/>
-                                          <div t-field="acquirer.pre_msg"/>
+                                        <div class="o_payment_acquirer_button hidden pull-right"
+                                                t-att-data-id="acquirer.id"
+                                                t-att-data-access-token="token or ''"
+                                                t-att-data-tx-type="form"
+                                                t-att-data-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
+                                            <div t-raw="buttons.get(acquirer.id)"/>
+                                            <div t-field="acquirer.pre_msg"/>
                                         </div>
                                     </t>
                                     <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
