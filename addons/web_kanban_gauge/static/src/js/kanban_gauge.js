@@ -35,6 +35,7 @@ var GaugeWidget = AbstractField.extend({
         var parent = this.getParent();
         // parameters
         var max_value = this.options.max_value || 100;
+        var inverse_color = !!this.options.inverse_color;
         if (this.options.max_field) {
             max_value = this.getParent().record[this.options.max_field].raw_value;
         }
@@ -114,6 +115,9 @@ var GaugeWidget = AbstractField.extend({
 
         var ratio = max_value ? value/max_value : 0;
         var hue = Math.round(ratio*120);
+        if (inverse_color) {
+            hue = Math.abs(hue - 120);
+        }
 
         foreground.transition()
             .style("fill", "hsl(" + hue + ",80%,50%)")
