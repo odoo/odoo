@@ -846,7 +846,6 @@ class WebsiteSale(http.Controller):
 
         # update quotation
         order.write({
-            'payment_acquirer_id': acquirer_id,
             'payment_tx_id': request.session['sale_transaction_id']
         })
         if token:
