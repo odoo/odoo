@@ -1453,6 +1453,40 @@ QUnit.module('Views', {
         form.$('button').eq(1).click();
         assert.strictEqual(writeCount, 1, "should not have triggered a write");
         assert.strictEqual(executeActionCount, 2, "should have triggered a execute action");
+
+        form.destroy();
+    });
+
+    QUnit.test('buttons with attr "special=save" save', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                        '<button string="Save" class="btn-primary" special="save"/>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function () {
+                    assert.step('execute_action');
+                },
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val("tralala").trigger('input'); // make the record dirty
+        form.$('button').click(); // click on Save
+        assert.verifySteps(['read', 'write', 'execute_action']);
+
         form.destroy();
     });
 

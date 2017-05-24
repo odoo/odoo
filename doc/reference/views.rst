@@ -350,7 +350,13 @@ system. Available semantic components are:
 
 ``button``
   call into the Odoo system, similar to :ref:`list view buttons
-  <reference/views/list/button>`
+  <reference/views/list/button>`. In addition, the following attribute can be
+  specified:
+
+  ``special``
+    for form views opened in dialogs: ``save`` to save the record and close the
+    dialog, ``cancel`` to close the dialog without saving.
+
 ``field``
   renders (and allow edition of, possibly) a single field of the current
   record. Possible attributes are:
