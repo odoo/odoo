@@ -143,7 +143,7 @@ class StockMoveLine(models.Model):
                 new_account_move.message_post_with_view('mail.message_origin_link',
                         values={'self': new_account_move, 'origin': move.picking_id},
                         subtype_id=self.env.ref('mail.mt_note').id)
-                move.write({'stock_account_valuation_account_move_ids': [(4, new_account_move.id, None)]})
+                move.write({'stock_account_valuation_account_move_id': new_account_move.id})
 
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
@@ -190,10 +190,10 @@ class StockMove(models.Model):
     last_done_move_id = fields.Many2one('stock.move')
     last_done_remaining_qty = fields.Float()
     last_done_qty = fields.Float()
-
     # TODO: add constraints remaining_qty > 0
     # TODO: add constrain price_unit = 0 on done move?
-    stock_account_valuation_account_move_ids = fields.Many2many(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
+
+    stock_account_valuation_account_move_id = fields.Many2one(comodel_name='account.move', string='Accounting entries', help="Accounting entries used for perpetual valuation of this move.")
 
     def _set_default_price_moves(self):
         # When the cost method is in real or average price, the price can be set to 0.0 on the PO
@@ -511,6 +511,7 @@ class StockMove(models.Model):
         return self.env['account.invoice']
 
     def reconcile_valuation_with_invoices(self):
+        self.ensure_one()
         self._get_related_invoices().anglo_saxon_reconcile_valuation()
 
 

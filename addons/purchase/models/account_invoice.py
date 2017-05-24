@@ -244,12 +244,6 @@ class AccountInvoice(models.Model):
 
         return rslt
 
-    def _get_anglosaxon_interim_account(self, product):
-        """ Overridden from stock_account.
-        Returns the interim account to use in anglosaxon accounting for this invoice."""
-        if self.type == 'in_invoice':
-            return product.product_tmpl_id.get_product_accounts()['stock_input']
-        return super(AccountInvoice, self)._get_anglosaxon_interim_account(product)
 
 class AccountInvoiceLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""

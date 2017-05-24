@@ -89,8 +89,13 @@ class AccountInvoice(models.Model):
         return self.mapped('invoice_line_ids.product_id')
 
     def _get_anglosaxon_interim_account(self, product):
-        """ To be overridden for customer invoices and vendor bills in order to
-        return the interim account used in anglosaxon accounting for this invoice"""
+        """ Return the interim account used in anglosaxon accounting for
+        this invoice"""
+        if self.type == 'out_invoice':
+            return product.product_tmpl_id._get_product_accounts()['stock_output']
+        elif self.type == 'in_invoice':
+            return product.product_tmpl_id.get_product_accounts()['stock_input']
+
         return None
 
     def invoice_validate(self):
@@ -113,7 +118,7 @@ class AccountInvoice(models.Model):
                         # And then the stock valuation ones.
                         product_stock_moves = self.env['stock.move'].search([('id','in',invoice_stock_moves_id_list), ('product_id','=',product.id)])
 
-                        for valuation_line in product_stock_moves.mapped('stock_account_valuation_account_move_ids.line_ids'):
+                        for valuation_line in product_stock_moves.mapped('stock_account_valuation_account_move_id.line_ids'):
                             if valuation_line.account_id == product_interim_account and not valuation_line.reconciled:
                                 to_reconcile += valuation_line
 

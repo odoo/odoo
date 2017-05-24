@@ -19,10 +19,6 @@ class AccountInvoice(models.Model):
 
         return rslt
 
-    def _get_anglosaxon_interim_account(self, product): # overridden from stock_account
-        if self.type == 'out_invoice':
-            return product.product_tmpl_id._get_product_accounts()['stock_output']
-        return super(AccountInvoice, self)._get_anglosaxon_interim_account(product)
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
