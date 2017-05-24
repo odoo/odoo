@@ -546,7 +546,6 @@ Weight: 31 grams</field>
             <field name="product_tmpl_id" ref="product.product_product_4_product_template"/>
             <field name="price_discount">20</field>
             <field name="compute_price">formula</field>
-            <field name="sequence">1</field>
         </record>
 
     <!-- product.public.category -->
@@ -738,7 +737,6 @@ Weight: 31 grams</field>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
             <field name="price_discount">20</field>
-            <field name="sequence">10</field>
         </record>
 
         <record id="list_benelux" model="product.pricelist">
@@ -753,7 +751,6 @@ Weight: 31 grams</field>
             <field name="compute_price">percentage</field>
             <field name="base">list_price</field>
             <field name="percent_price">10</field>
-            <field name="sequence">10</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
@@ -770,14 +767,12 @@ Weight: 31 grams</field>
             <field name="pricelist_id" ref="list_europe"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
-            <field name="sequence">10</field>
         </record>
 
         <record id="item_us" model="product.pricelist.item">
             <field name="pricelist_id" ref="product.list0"/>
             <field name="compute_price">formula</field>
             <field name="base">list_price</field>
-            <field name="sequence">10</field>
         </record>
 
         <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
