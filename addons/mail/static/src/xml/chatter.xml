@@ -61,6 +61,23 @@
         </button>
     </t>
 
+<!-- Chat filter-->
+    <t t-name="mail.Filters">
+        <div class="btn-group o_search_options pull-right mt4">
+            <div class="btn-group o_dropdown">
+                <button class="o_dropdown_toggler_btn btn btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <span class="fa fa-filter"/> Filters <span class="caret"/>
+                </button>
+                <ul class="dropdown-menu o_filters_menu o_chatter_filter_menu" role="menu">
+                    <li t-if="schedule_activity_filter"><a data-filter="activities">Activities</a></li>
+                    <li t-if="log_note_filter"><a data-filter="is_note">Notes</a></li>
+                    <li><a data-filter="comment">Messages</a></li>
+                    <li><a data-filter="notification">System Notification</a></li>
+                </ul>
+            </div>
+        </div>
+    </t>
+
     <!--
         Chatter main div
     -->

@@ -136,6 +136,11 @@ var Activity = AbstractActivityField.extend({
                     nbTodayActivities: nbActivities.today,
                     nbOverdueActivities: nbActivities.overdue,
                 }));
+                if (self.filter && self.filter.length) {
+                    self.activities = _.filter(self.activities, function(activity) {
+                        return _.contains(self.filter, 'activities') ? true : false;
+                    });
+                }
             } else {
                 self.$el.empty();
             }
