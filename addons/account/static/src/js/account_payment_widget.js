@@ -5,7 +5,7 @@ var core = require('web.core');
 var form_common = require('web.form_common');
 var formats = require('web.formats');
 var Model = require('web.Model');
-
+var _t = core._t;
 var QWeb = core.qweb;
 
 var ShowPaymentLineWidget = form_common.AbstractField.extend({
@@ -49,7 +49,7 @@ var ShowPaymentLineWidget = form_common.AbstractField.extend({
                             }),
                     'html': true,
                     'placement': 'left',
-                    'title': 'Payment Information',
+                    'title': _t('Payment Information'),
                     'trigger': 'focus',
                     'delay': { "show": 0, "hide": 100 },
                 };
