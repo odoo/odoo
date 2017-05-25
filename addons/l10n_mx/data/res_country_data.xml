@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- mx partner address -->
+    <record id="mx_partner_address_form" model="ir.ui.view">
+        <field name="name">mx.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Street..." class="o_address_street"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="country_enforce_cities" invisible="1"/>
+                    <field name="city" placeholder="City..." class="o_address_street" attrs="{'invisible': [('country_enforce_cities', '=', True)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}"/>
+                    <field name='city_id' attrs="{'invisible': [('country_enforce_cities', '=', False)], 'readonly': [('type', '=', 'contact'), ('parent_id', '!=', False)]}" context="{'default_country_id': country_id}" domain="[('country_id', '=', country_id)]"/>
+                    <div class="o_row">
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="state_id" placeholder="State" options='{"no_open": True}'/>
+                    </div>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <data noupdate="1">
+        <record id="base.mx" model="res.country">
+            <field name="enforce_cities" eval="1" />
+            <field name="address_view_id" ref="l10n_mx.mx_partner_address_form" />
+        </record>
+    </data>
+</odoo>

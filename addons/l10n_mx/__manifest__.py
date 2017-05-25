@@ -33,6 +33,7 @@ With this module you will have:
     "depends": [
         "account",
         "base_vat",
+        "base_address_city",
     ],
     "data": [
         "data/account_tag_data.xml",
@@ -41,6 +42,7 @@ With this module you will have:
         "data/account_tax_data.xml",
         "data/fiscal_position_data.xml",
         "data/account_chart_template_data.yml",
+        "data/res_country_data.xml",
         "views/res_config_view.xml",
     ],
 }
