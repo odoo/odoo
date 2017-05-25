@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="track_lines">
+        <div>
+            <ul>
+                <li>
+                    <t t-esc="line.product_id.display_name"/>:
+                </li>
+                <t t-if="check_product_uom_qty">
+                    <t t-if="product_uom_qty_val &lt; line.product_uom_qty">
+                        <div><strong>The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.</strong></div>
+                    </t>
+                    <div>Ordered Quantity: <t t-esc="line.product_uom_qty"/> -&gt;<t t-esc="float(product_uom_qty_val)"/></div>
+                    <t t-if="line.product_id.type in ('consu', 'product')">
+                        <div>Delivered Quantity: <t t-esc="line.qty_delivered"/>,</div>
+                    </t>
+                    <div>Invoiced Quantity: <t t-esc="line.qty_invoiced"/></div>
+                </t>
+                <t t-if="check_price_unit">
+                    <div>Unit Price: <t t-esc="line.price_unit"/> -&gt;<t t-esc="float(price_unit_val)"/></div>
+                </t>
+            </ul>
+        </div>
+    </template>
+</odoo>
