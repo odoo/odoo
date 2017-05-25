@@ -3806,6 +3806,20 @@ class BaseModel(object):
 
         return True
 
+    def log_access_write(self, cr, user, ids, vals, context=None):
+        log_access_vals = {}
+        self._check_concurrency(cr, ids, context=context)
+        self.check_access_rights(cr, user, 'write')
+        for field in LOG_ACCESS_COLUMNS:
+            if vals.get(field, None) is not None:
+                log_access_vals[field] = vals[field]
+        if not log_access_vals:
+            return True
+        self._log_access = False
+        self._write(cr, user, ids, log_access_vals, context=context)
+        self._log_access = True
+        return True
+
     def _write(self, cr, user, ids, vals, context=None):
         # low-level implementation of write()
         if not context:
