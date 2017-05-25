@@ -92,6 +92,15 @@ class TestFloatPrecision(TransactionCase):
         try_round(1.8, '2', 0, method='UP')
         try_round(-1.8, '-2', 0, method='UP')
 
+        # Try some rounding value with rounding method DOWN
+        try_round(8.175, '8.175', method='DOWN')
+        try_round(8.1751, '8.175', method='DOWN')
+        try_round(-8.175, '-8.175', method='DOWN')
+        try_round(-8.1751, '-8.175', method='DOWN')
+        try_round(-6.000, '-6.000', method='DOWN')
+        try_round(1.8, '1', 0, method='DOWN')
+        try_round(-1.8, '-1', 0, method='DOWN')
+
         # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
         fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
         expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']

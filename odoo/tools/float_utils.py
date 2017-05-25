@@ -28,9 +28,10 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
        :param float precision_rounding: decimal number representing the minimum
            non-zero value at the desired precision (for example, 0.01 for a 
            2-digit precision).
-       :param rounding_method: the rounding method used: 'HALF-UP' or 'UP', the first
-           one rounding up to the closest number with the rule that number>=0.5 is 
-           rounded up to 1, and the latest one always rounding up.
+       :param rounding_method: the rounding method used: 'HALF-UP', 'UP' or
+           'DOWN', the first one rounding up to the closest number with the
+           rule that number>=0.5 is rounded up to 1, the second one
+           always rounding up and the last one always rounding floor.
        :return: rounded float
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
@@ -72,6 +73,18 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
         sign = math.copysign(1.0, normalized_value)
         normalized_value -= sign*epsilon
         rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+
+    # TIE-BREAKING: DOWN (for floor operations)
+    # When rounding the value down, we add the epsilon value
+    # as the the approximation of the real value may be slightly *below* the
+    # tie limit, this would result in incorrectly rounding down to the next number
+    # The math.ceil operation is applied on the absolute value in order to
+    # round "away from zero" and not "towards infinity", then the sign is
+    # restored.
+    elif rounding_method == 'DOWN':
+        sign = math.copysign(1.0, normalized_value)
+        normalized_value += sign * epsilon
+        rounded_value = math.floor(abs(normalized_value)) * sign  # floor to integer
 
     result = rounded_value * rounding_factor # de-normalize
     return result
