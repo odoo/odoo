@@ -268,7 +268,7 @@ class Website(models.Model):
         :param int pl_id: The pricelist id to check
         :returns: Boolean, True if valid / available
         """
-        return pl_id in self.get_pricelist_available(show_visible=False).ids
+        return pl_id in self.get_pricelist_available(show_visible=True).ids
 
     def get_current_pricelist(self):
         """
