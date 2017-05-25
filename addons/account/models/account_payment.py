@@ -402,8 +402,16 @@ class account_payment(models.Model):
                 amount_wo = total_payment_company_signed - total_residual_company_signed
             else:
                 amount_wo = total_residual_company_signed - total_payment_company_signed
-            debit_wo = amount_wo > 0 and amount_wo or 0.0
-            credit_wo = amount_wo < 0 and -amount_wo or 0.0
+            # Align the sign of the secondary currency writeoff amount with the sign of the writeoff
+            # amount in the company currency
+            if amount_wo > 0:
+                debit_wo = amount_wo
+                credit_wo = 0.0
+                amount_currency_wo = abs(amount_currency_wo)
+            else:
+                debit_wo = 0.0
+                credit_wo = -amount_wo
+                amount_currency_wo = -abs(amount_currency_wo)
             writeoff_line['name'] = _('Counterpart')
             writeoff_line['account_id'] = self.writeoff_account_id.id
             writeoff_line['debit'] = debit_wo
