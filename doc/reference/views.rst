@@ -823,6 +823,12 @@ attributes:
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``group_create``
+  whether the "Add a new column" bar is visible or not. Default: true.
+``group_delete``
+  whether groups can be deleted via the context menu. Default: true.
+``group_edit``
+  whether groups can be edited via the context menu. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
