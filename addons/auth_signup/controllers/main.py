@@ -44,8 +44,9 @@ class AuthSignupHome(openerp.addons.web.controllers.main.Home):
 
         return request.render('auth_signup.signup', qcontext)
 
-    @http.route('/web/reset_password', type='http', auth='public', website=True)
+    @http.route('/web/reset_password', type='http', auth='none', website=True)
     def web_auth_reset_password(self, *args, **kw):
+        ensure_db()
         qcontext = self.get_auth_signup_qcontext()
 
         if not qcontext.get('token') and not qcontext.get('reset_password_enabled'):
