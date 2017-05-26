@@ -436,7 +436,7 @@ var ViewEditor = Widget.extend({
         this.edit_xml_dialog.$el.find("img[id^='parentimg-']").click(function() {
             self.do_parent_img_hide_show(this);
         });
-        this.edit_xml_dialog.$el.find("img[id^='side-']").click(function() {
+        this.edit_xml_dialog.$el.find("img[class^='side-']").click(function() {
             self.on_select_img(this);
         });
     },
@@ -478,7 +478,7 @@ var ViewEditor = Widget.extend({
         var clone = this.create_clone(selected_row.clone(),obj);
         if (selected_row.find("img[id^='parentimg-']").length === 0) {
             ($(selected_row.find('a').parent()).siblings('td'))
-            .append($('<img width="16" height="16"></img>').attr('src', '/web/static/src/img/collapse.gif').
+            .append($('<img width="16" height="16"/>').attr('src', '/web/static/src/img/collapse.gif').
              attr('id','parentimg-'+ row_id).click(function(){
                 self.do_parent_img_hide_show(this);
             }));
@@ -517,7 +517,7 @@ var ViewEditor = Widget.extend({
             }
         }
         this.one_object.clicked_tr_view = [view_id, view_xml_id];
-        switch (element_img.id) {
+        switch ($(element_img).attr('class')) {
             case "side-add":
                 self.do_node_add(side);
                 break;
@@ -695,7 +695,7 @@ var ViewEditor = Widget.extend({
         clone.bind("click",function(){
             self.do_select_row(this.id.split('-')[1]);
         });
-        clone.find("img[id^='side-']").click(function() {
+        clone.find("img[class^='side-']").click(function() {
             self.on_select_img(this);
         });
         return clone;
@@ -760,7 +760,7 @@ var ViewEditor = Widget.extend({
                         case "Inside":
                             if (tr_click.find("img[id^='parentimg-']").length === 0) {
                                 ($(tr_click.find('a').parent()).siblings('td'))
-                                    .append($('<img width="16" height="16"></img>').attr('src', '/web/static/src/img/collapse.gif').
+                                    .append($('<img width="16" height="16"/>').attr('src', '/web/static/src/img/collapse.gif').
                                     attr('id','parentimg-'+ self.one_object.clicked_tr_id).click(function(){
                                         self.do_parent_img_hide_show(this);
                                 }));
@@ -811,7 +811,7 @@ var ViewEditor = Widget.extend({
                 }
                 if(move_direct === "add_node"){
                     self.add_node_dialog.close();
-                    self.on_select_img(clone.find("img[id='side-edit']")[0]);
+                    self.on_select_img(clone.find("img[class='side-edit']")[0]);
                     self.one_object.parent_child_id = self.parent_child_list(self.one_object.main_object,[]);
                 }
             }
@@ -953,7 +953,7 @@ var ViewEditor = Widget.extend({
         var group_ids = [], group_names = {}, groups = [];
         var res_groups = new data.DataSetSearch(this,'res.groups', null, null),
             model_data = new data.DataSetSearch(self,'ir.model.data', null, null);
-            res_groups.read_slice([], {}).done(function (res_grp) {
+            res_groups.read_slice(['full_name'], {}).done(function (res_grp) {
                 _.each(res_grp, function (res) {
                     var key = res.id;
                     group_names[key]=res.full_name;
