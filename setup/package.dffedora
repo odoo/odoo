@@ -40,7 +40,7 @@ RUN dnf update -d 0 -e 0 -y && \
 		postgresql-devel -y && \
 	dnf clean all
 
-RUN easy_install pyPdf vatnumber pydot psycogreen suds ofxparse XlsxWriter
+RUN easy_install pyPdf2 vatnumber pydot psycogreen suds ofxparse XlsxWriter
 
 # Postgres configuration
 RUN mkdir -p /var/lib/postgres/data

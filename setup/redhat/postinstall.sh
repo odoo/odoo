@@ -58,4 +58,4 @@ ExecStart=/usr/bin/odoo --config $ODOO_CONFIGURATION_FILE --logfile $ODOO_LOG_FI
 [Install]
 WantedBy=multi-user.target
 EOF
-easy_install pyPdf vatnumber pydot psycogreen suds ofxparse XlsxWriter
+easy_install pyPdf2 vatnumber pydot psycogreen suds ofxparse XlsxWriter
