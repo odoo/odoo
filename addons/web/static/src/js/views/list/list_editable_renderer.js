@@ -84,6 +84,26 @@ ListRenderer.include({
         return this._super(recordID);
     },
     /**
+     * We need to override the confirmChange method from BasicRenderer to
+     * reevaluate the row decorations.  Since they depends on the current value
+     * of the row, they might have changed between each edit.
+     *
+     * @override
+     */
+    confirmChange: function (state, id) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (widgets) {
+            if (widgets.length) {
+                var rowIndex = _.findIndex(state.data, function (r) {
+                    return r.id === id;
+                });
+                var $row = self.$('.o_data_row:nth(' + rowIndex + ')');
+                self._setDecorationClasses(state.data[rowIndex], $row);
+            }
+            return widgets;
+        });
+    },
+    /**
      * Edit a given record in the list
      *
      * @param {string} recordID

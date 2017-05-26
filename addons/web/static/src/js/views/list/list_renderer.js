@@ -6,7 +6,6 @@ var config = require('web.config');
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
-var session = require('web.session');
 var utils = require('web.utils');
 
 var _t = core._t;
@@ -145,32 +144,6 @@ var ListRenderer = BasicRenderer.extend({
                 value: aggregateValue,
             };
         }
-    },
-    /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
-     *
-     * @private
-     * @param {Object} record a basic model record
-     * @returns {string[]} a list of css classes
-     */
-    _computeDecorationClassNames: function (record) {
-        var data = JSON.parse(JSON.stringify(record.data));
-        var context = _.extend({}, data, {
-            uid: session.uid,
-            current_date: moment().format('YYYY-MM-DD')
-            // TODO: time, datetime, relativedelta
-        });
-        return _.chain(this.rowDecorations)
-            .pick(function (expr) {
-                return py.PY_isTrue(py.evaluate(expr, context));
-            }).map(function (expr, decoration) {
-                return decoration.replace('decoration', 'text');
-            }).value();
     },
     /**
      * return the number of visible columns.  Note that this number depends on
@@ -544,17 +517,14 @@ var ListRenderer = BasicRenderer.extend({
             return self._renderBodyCell(record, node, index, {mode: 'readonly'});
         });
         delete this.defs;
-        var className = 'o_data_row';
-        var decorations = this._computeDecorationClassNames(record);
-        if (decorations.length) {
-            className += (' ' + decorations.join(' '));
-        }
-        var $tr = $('<tr/>', {class: className})
+
+        var $tr = $('<tr/>', {class: 'o_data_row'})
                     .data('id', record.id)
                     .append($cells);
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td'));
         }
+        this._setDecorationClasses(record, $tr);
         return $tr;
     },
     /**
@@ -624,6 +594,24 @@ var ListRenderer = BasicRenderer.extend({
             $checked_rows.find('.o_list_record_selector input').prop('checked', true);
         }
         return this._super();
+    },
+    /**
+     * Each line can be decorated according to a few simple rules. The arch
+     * description of the list may have one of the decoration-X attribute with
+     * a domain as value.  Then, for each record, we check if the domain matches
+     * the record, and add the text-X css class to the element.  This method is
+     * concerned with the computation of the list of css classes for a given
+     * record.
+     *
+     * @private
+     * @param {Object} record a basic model record
+     * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
+     */
+    _setDecorationClasses: function (record, $tr) {
+        _.each(this.rowDecorations, function (expr, decoration) {
+            var cssClass = decoration.replace('decoration', 'text');
+            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+        });
     },
     /**
      * Whenever we change the state of the selected rows, we need to call this
