@@ -1,5 +1,6 @@
 # coding: utf-8
 import time
+from odoo.tools import float_round
 from odoo.addons.account.tests.test_reconciliation import TestReconciliation
 
 
@@ -29,6 +30,7 @@ class TestAccountTaxCashBasis(TestReconciliation):
         self.account_move_line_model = self.env['account.move.line']
         self.journal_model = self.env['account.journal']
         self.payment_model = self.env['account.payment']
+        self.precision = self.env.user.company_id.currency_id.decimal_places
         self.pay_method = self.env.ref(
             'account.account_payment_method_manual_out')
         self.account_tax_receivable = self.account_model.search(
@@ -120,7 +122,8 @@ class TestAccountTaxCashBasis(TestReconciliation):
             [('account_id', '=', self.account_tax_cash_basis.id)])
         ter_balance = (
             sum(move_ter.mapped('credit')) - sum(move_ter.mapped('debit')))
-        self.assertEquals(round(ter_balance, 2), 10.47)
+        self.assertEquals(
+            float_round(ter_balance, precision_digits=self.precision), 10.47)
 
     def test_cash_basis_tax_rate_invioce_less_than_payment(self):
         """Test to validate tax effectively receivable
@@ -136,7 +139,8 @@ class TestAccountTaxCashBasis(TestReconciliation):
             [('account_id', '=', self.account_tax_cash_basis.id)])
         ter_balance = (
             sum(move_ter.mapped('credit')) - sum(move_ter.mapped('debit')))
-        self.assertEquals(round(ter_balance, 2), 12.47)
+        self.assertEquals(
+            float_round(ter_balance, precision_digits=self.precision), 12.47)
 
     def test_cash_basis_tax_rate_invioce_same_payment(self):
         """Test to validate tax effectively receivable
@@ -152,4 +156,5 @@ class TestAccountTaxCashBasis(TestReconciliation):
             [('account_id', '=', self.account_tax_cash_basis.id)])
         ter_balance = (
             sum(move_ter.mapped('credit')) - sum(move_ter.mapped('debit')))
-        self.assertEquals(round(ter_balance, 2), 12.47)
+        self.assertEquals(
+            float_round(ter_balance, precision_digits=self.precision), 12.47)
