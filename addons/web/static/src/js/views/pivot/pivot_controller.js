@@ -221,7 +221,7 @@ var PivotController = AbstractController.extend({
         }
         if ($target.hasClass('o_pivot_expand_button')) {
             this.model.expandAll();
-            this.update({reload: false});
+            this.update({}, {reload: false});
         }
         if ($target.parents('.o_pivot_measures_list').length) {
             var parent = $target.parent();
