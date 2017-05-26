@@ -551,9 +551,6 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can expand all rows', function (assert) {
-        // FIXME: This test depends on an incomplete behavior of the mock server
-        //        and will need to be updated when read_group can group on
-        //        multiple field levels.
         assert.expect(4);
 
         var pivot = createView({
@@ -567,26 +564,26 @@ QUnit.module('Views', {
         });
 
         assert.strictEqual(pivot.$('td.o_pivot_cell_value').text(), "321220",
-            "should have proper values in cells (total, result 1, result 2");
+            "should have proper values in cells (total, result 1, result 2)");
 
         // expand on date:days, product
-        pivot.update({groupBy: ['date:days', 'product']});
+        pivot.update({groupBy: ['date:days', 'product_id']});
 
-        assert.strictEqual(pivot.$('tbody tr').length, 7,
-            "should have 7 rows (total + 2 for each category)");
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 7 rows (total + 3 for December and 2 for October and April)");
 
         // collapse the last two rows
         pivot.$('.o_pivot_header_cell_opened').last().click();
         pivot.$('.o_pivot_header_cell_opened').last().click();
 
-        assert.strictEqual(pivot.$('tbody tr').length, 5,
-            "should have 5 rows now");
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows now");
 
         // expand all
         $('.o_pivot_expand_button').click();
 
-        assert.strictEqual(pivot.$('tbody tr').length, 7,
-            "should have 7 rows again");
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 8 rows again");
 
         pivot.destroy();
     });

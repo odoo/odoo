@@ -598,8 +598,11 @@ var MockServer = Class.extend({
         var self = this;
         var fields = this.data[model].fields;
         var aggregatedFields = _.clone(kwargs.fields);
-        var groupByField = kwargs.groupby[0];
-        var result = [];
+        var groupBy = [];
+        if (kwargs.groupby.length) {
+            groupBy = kwargs.lazy ? [kwargs.groupby[0]] : kwargs.groupby;
+        }
+        var records = this._getRecords(model, kwargs.domain);
 
         // if no fields have been given, the server picks all stored fields
         if (aggregatedFields.length === 0) {
@@ -610,7 +613,6 @@ var MockServer = Class.extend({
         aggregatedFields = _.filter(aggregatedFields, function (name) {
             return name in self.data[model].fields;
         });
-
 
         function aggregateFields(group, records) {
             var type;
@@ -624,77 +626,80 @@ var MockServer = Class.extend({
                 }
             }
         }
-
-        var records = this._getRecords(model, kwargs.domain);
-        if (groupByField) {
-            var originalGroupByField = groupByField;
-            var groupByFieldDescr = fields[groupByField.split(':')[0]];
-            var groupByFunction, formatValue;
-            if (groupByFieldDescr.type === 'date') {
-
-                var aggregateFunction = groupByField.split(':')[1] || 'month';
-
-                groupByField = groupByField.split(':')[0];
-                groupByFunction = function (obj) {
-                    if (aggregateFunction === 'day') {
-                        return moment(obj[groupByField]).format('YYYY-MM-DD');
-                    } else {
-                        return moment(obj[groupByField]).format('MMMM YYYY');
-                    }
-                };
-                formatValue = function (val) {
-                    if (aggregateFunction === 'day') {
-                        return moment(val).format('YYYY-MM-DD');
-                    } else {
-                        return moment(val).format('MMMM YYYY');
-                    }
-                };
+        function formatValue(groupByField, val) {
+            var fieldName = groupByField.split(':')[0];
+            var aggregateFunction = groupByField.split(':')[1] || 'month';
+            if (fields[fieldName].type === 'date') {
+                if (aggregateFunction === 'day') {
+                    return moment(val).format('YYYY-MM-DD');
+                } else {
+                    return moment(val).format('MMMM YYYY');
+                }
             } else {
-                groupByFunction = function (obj) {
-                    return obj[groupByField];
-                };
-                formatValue = function (val) {
-                    return val instanceof Array ? val[0] : (val || false);
-                };
+                return val instanceof Array ? val[0] : (val || false);
             }
-            _.each(_.groupBy(records, groupByFunction), function (g, val) {
-                val = formatValue(g[0][groupByField]);
-                var group = {
-                    __domain: [[
-                        groupByField, "=",
-                        val instanceof Array ? val[0] : (val || false)
-                    ]].concat(kwargs.domain || []),
-                };
-                var field = self.data[model].fields[groupByField];
+        }
+        function groupByFunction(record) {
+            var value = '';
+            _.each(groupBy, function (groupByField) {
+                value = (value ? value + ',' : value) + groupByField + '#';
+                var fieldName = groupByField.split(':')[0];
+                if (fields[fieldName].type === 'date') {
+                    var aggregateFunction = groupByField.split(':')[1] || 'month';
+                    if (aggregateFunction === 'day') {
+                        value += moment(record[fieldName]).format('YYYY-MM-DD');
+                    } else {
+                        value += moment(record[fieldName]).format('MMMM YYYY');
+                    }
+                } else {
+                    value += record[groupByField];
+                }
+            });
+            return value;
+        }
+
+        if (!groupBy.length) {
+            var group = { __count: records.length };
+            aggregateFields(group, records);
+            return [group];
+        }
+
+        var groups = _.groupBy(records, groupByFunction);
+        var result = _.map(groups, function (group) {
+            var res = {
+                __domain: kwargs.domain || [],
+            };
+            _.each(groupBy, function (groupByField) {
+                var fieldName = groupByField.split(':')[0];
+                var val = formatValue(groupByField, group[0][fieldName]);
+                var field = self.data[model].fields[fieldName];
                 if (field.type === 'many2one' && !_.isArray(val)) {
                     var related_record = _.findWhere(self.data[field.relation].records, {
                         id: val
                     });
                     if (related_record) {
-                        group[originalGroupByField] = [val, related_record.display_name];
+                        res[groupByField] = [val, related_record.display_name];
                     } else {
-                        group[originalGroupByField] = false;
+                        res[groupByField] = false;
                     }
                 } else {
-                    group[originalGroupByField] = val;
+                    res[groupByField] = val;
                 }
-
-                // compute count key to match dumb server logic...
-                var countKey;
-                if (kwargs.lazy) {
-                    countKey = groupByField + "_count";
-                } else {
-                    countKey = "__count";
-                }
-                group[countKey] = g.length;
-                aggregateFields(group, g);
-                result.push($.extend(true, {}, group));
+                res.__domain = [[fieldName, "=", val]].concat(res.__domain);
             });
-        } else {
-            var group = { __count: records.length };
-            aggregateFields(group, records);
-            result.push(group);
-        }
+
+            // compute count key to match dumb server logic...
+            var countKey;
+            if (kwargs.lazy) {
+                countKey = groupBy[0].split(':')[0] + "_count";
+            } else {
+                countKey = "__count";
+            }
+            res[countKey] = group.length;
+            aggregateFields(res, group);
+
+            return res;
+        });
         return result;
     },
     /**
