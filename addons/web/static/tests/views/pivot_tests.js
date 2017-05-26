@@ -591,9 +591,54 @@ QUnit.module('Views', {
 
         // expand all
         nbReadGroups = 0;
-        $('.o_pivot_expand_button').click();
+        pivot.$buttons.find('.o_pivot_expand_button').click();
 
         assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 8 rows again");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('expand all with a delay', function (assert) {
+        assert.expect(3);
+
+        var def;
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // expand on date:days, product
+        pivot.update({groupBy: ['date:days', 'product_id']});
+
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 7 rows (total + 3 for December and 2 for October and April)");
+
+        // collapse the last two rows
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows now");
+
+        // expand all
+        def = $.Deferred();
+        pivot.$buttons.find('.o_pivot_expand_button').click();
+        def.resolve();
+
         assert.strictEqual(pivot.$('tbody tr').length, 8,
             "should have 8 rows again");
 
