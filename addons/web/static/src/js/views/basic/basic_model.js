@@ -2098,10 +2098,11 @@ var BasicModel = AbstractModel.extend({
             }
         }
         return _.extend({
-            active_model: element.model,
-            id: evalContext.id || false,
             active_id: evalContext.id || false,
             active_ids: evalContext.id ? [evalContext.id] : [],
+            active_model: element.model,
+            current_date: moment().format('YYYY-MM-DD'),
+            id: evalContext.id || false,
         }, session.user_context, element.context, evalContext);
     },
     /**
@@ -2141,6 +2142,12 @@ var BasicModel = AbstractModel.extend({
                 context[fieldName] = context[fieldName] || 0;
                 continue;
             }
+            if (field.type === 'date' || field.type === 'datetime') {
+                if (context[fieldName]) {
+                    context[fieldName] = JSON.parse(JSON.stringify(context[fieldName]));
+                }
+                continue;
+            }
             if (field.type === 'many2one') {
                 relDataPoint = this.localData[context[fieldName]];
                 context[fieldName] = relDataPoint ? relDataPoint.res_id : false;
@@ -2149,16 +2156,22 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'one2many' || field.type === 'many2many') {
                 relDataPoint = this.localData[context[fieldName]];
                 var relData = relDataPoint._changes || relDataPoint.data;
-                var commands = _.map(relData, function (id) {
-                    var resID = self.localData[id].res_id;
-                    if (typeof resID === 'string') {
-                        var changes = self._generateChanges(self.localData[id]);
-                        return x2ManyCommands.create(changes);
-                    } else {
-                        return x2ManyCommands.link_to(resID);
-                    }
+                var ids = _.map(relData, function (id) {
+                    return self.localData[id].res_id;
                 });
-                context[fieldName] = commands;
+
+                ids.toJSON = function () {
+                    return _.map(relData, function (id) {
+                        var resID = self.localData[id].res_id;
+                        if (typeof resID === 'string') {
+                            var changes = self._generateChanges(self.localData[id]);
+                            return x2ManyCommands.create(changes);
+                        } else {
+                            return x2ManyCommands.link_to(resID);
+                        }
+                    });
+                };
+                context[fieldName] = ids;
             }
 
         }
