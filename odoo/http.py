@@ -162,8 +162,12 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    # FIXME: decide whether urls should be bytes or text, apparently
+    # addons/website/controllers/main.py:91 calls this with a bytes url
+    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
+    url = pycompat.to_text(url)
     if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
-        url = 'http://' + url
+        url = u'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
