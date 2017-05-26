@@ -27,5 +27,19 @@
             <field name="name">Newsletter</field>
         </record>
 
+        <!-- Cron that process the mass mailing queue -->
+         <record id="ir_cron_mass_mailing_queue" model="ir.cron">
+            <field name="name">Process Mass Mailing Queue</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">60</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="model">mail.mass_mailing</field>
+            <field name="function">_process_mass_mailing_queue</field>
+            <field name="args">()</field>
+        </record>
+
     </data>
 </openerp>
