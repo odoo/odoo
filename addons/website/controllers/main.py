@@ -20,7 +20,7 @@ from odoo.http import request
 from odoo.addons.website.models.website import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 
-from odoo.tools import pycompat
+from odoo.tools import pycompat, OrderedSet
 
 logger = logging.getLogger(__name__)
 
@@ -34,27 +34,29 @@ class QueryURL(object):
     def __init__(self, path='', path_args=None, **args):
         self.path = path
         self.args = args
-        self.path_args = set(path_args or [])
+        self.path_args = OrderedSet(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
         for key, value in pycompat.items(self.args):
             kw.setdefault(key, value)
-        path_args = set(path_args or []).union(self.path_args)
-        paths, fragments = [], []
+        path_args = OrderedSet(path_args or []) | self.path_args
+        paths, fragments = {}, []
         for key, value in pycompat.items(kw):
             if value and key in path_args:
                 if isinstance(value, models.BaseModel):
-                    paths.append((key, slug(value)))
+                    paths[key] = slug(value)
                 else:
-                    paths.append((key, value))
+                    paths[key] = u"%s" % value
             elif value:
                 if isinstance(value, list) or isinstance(value, set):
                     fragments.append(werkzeug.url_encode([(key, item) for item in value]))
                 else:
                     fragments.append(werkzeug.url_encode([(key, value)]))
-        for key, value in paths:
-            path += '/' + key + '/%s' % value
+        for key in path_args:
+            value = paths.get(key)
+            if value is not None:
+                path += '/' + key + '/' + value
         if fragments:
             path += '?' + '&'.join(fragments)
         return path
