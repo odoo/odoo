@@ -548,7 +548,7 @@ class PreforkServer(CommonServer):
             if e[0] not in [errno.EINTR]:
                 raise
 
-    def start(self):
+    def start(self, stop=False):
         # wakeup pipe, python doesnt throw EINTR when a syscall is interrupted
         # by a signal simulating a pseudo SA_RESTART. We write to a pipe in the
         # signal handler to overcome this behaviour
@@ -563,7 +563,7 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
-        if self.address:
+        if self.address and not stop:
             # listen to socket
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -597,7 +597,7 @@ class PreforkServer(CommonServer):
             self.socket.close()
 
     def run(self, preload, stop):
-        self.start()
+        self.start(stop=stop)
 
         rc = preload_registries(preload)
 
