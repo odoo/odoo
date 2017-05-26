@@ -76,7 +76,7 @@ def initialize(cr):
 
     # Install recursively all auto-installing modules
     while True:
-        cr.execute("""SELECT m.name FROM ir_module_module m WHERE m.auto_install AND state != 'to install'
+        cr.execute("""SELECT m.name FROM ir_module_module m WHERE m.auto_install AND state not in ('to install', 'uninstallable')
                       AND NOT EXISTS (
                           SELECT 1 FROM ir_module_module_dependency d JOIN ir_module_module mdep ON (d.name = mdep.name)
                                    WHERE d.module_id = m.id AND mdep.state != 'to install'
