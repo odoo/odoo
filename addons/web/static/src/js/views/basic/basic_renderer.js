@@ -91,7 +91,7 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var record = state.id === id ? state : _.findWhere(state.data, {id: id});
         if (!record) {
-            return this._render();
+            return this._render().then(_.constant([]));
         }
 
         var defs = [];

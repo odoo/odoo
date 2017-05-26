@@ -843,6 +843,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('support row decoration (with unset numeric values)', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [];
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom" decoration-danger="int_field &lt; 0">' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 0,
+            "the data row should not have .text-danger decoration (int_field is unset)");
+        list.$('input[name="int_field"]').val('-3').trigger('input');
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 1,
+            "the data row should have .text-danger decoration (int_field is negative)");
+        list.destroy();
+    });
+
     QUnit.test('support row decoration with date', function (assert) {
         assert.expect(3);
 
