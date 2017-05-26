@@ -34,4 +34,6 @@ Importing them from here is deprecated.
 
 """
 
+__import__('pkg_resources').declare_namespace(__name__)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

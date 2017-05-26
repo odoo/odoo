@@ -21,6 +21,8 @@
 
 """ OpenERP core library."""
 
+__import__('pkg_resources').declare_namespace(__name__)
+
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
 #----------------------------------------------------------
@@ -70,7 +72,6 @@ def registry(database_name=None):
 #----------------------------------------------------------
 # Imports
 #----------------------------------------------------------
-import addons
 import conf
 import loglevels
 import modules

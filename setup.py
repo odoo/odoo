@@ -127,6 +127,7 @@ setup(
     scripts=['openerp-server', 'openerp-gevent', 'odoo.py'],
     packages=find_packages(),
     package_dir={'%s' % lib_name: 'openerp'},
+    namespace_packages=['openerp', 'openerp.addons'],
     include_package_data=True,
     install_requires=[
         'babel >= 1.0',
