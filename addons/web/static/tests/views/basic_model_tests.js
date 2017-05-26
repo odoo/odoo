@@ -1444,4 +1444,38 @@ QUnit.module('Views', {
 
         model.destroy();
     });
+
+    QUnit.test('has a proper evaluation context', function (assert) {
+        assert.expect(1);
+
+        this.params.fieldNames = Object.keys(this.data.partner.fields);
+        this.params.res_id = 1;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.deepEqual(record.evalContext, {
+                active_id: 1,
+                active_ids: [1],
+                active_model: "partner",
+                bar: 1,
+                category: [12],
+                current_date: moment().format('YYYY-MM-DD'),
+                date: "2017-01-25",
+                display_name: "first partner",
+                foo: "blip",
+                id: 1,
+                product_id: 37,
+                product_ids: [],
+                qux: false,
+                total: 0
+            }, "should use the proper eval context");
+        });
+        model.destroy();
+    });
+
 });});
