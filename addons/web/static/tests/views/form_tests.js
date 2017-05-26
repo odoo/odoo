@@ -4575,5 +4575,48 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('form view is not broken if save operation fails', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'write' && args.args[1].foo === 'incorrect value') {
+                    return $.Deferred().reject();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="foo"]').val("incorrect value").trigger("input");
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.$('input[name="foo"]').val("correct value").trigger("input");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps([
+            'read', // initial read to render the view
+            'write', // write on save (it fails, does not trigger a read)
+            'write', // write on save (it works)
+            'read' // read on reload
+        ]);
+
+        form.destroy();
+    });
+
 });
 });

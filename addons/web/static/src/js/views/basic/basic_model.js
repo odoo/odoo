@@ -778,7 +778,7 @@ var BasicModel = AbstractModel.extend({
                             _.extend(record.data, _changes);
                             def.resolve(changedFields);
                         }
-                    });
+                    }).fail(def.reject.bind(def));
             } else {
                 def.resolve(changedFields);
             }
