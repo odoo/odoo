@@ -551,8 +551,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can expand all rows', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
+        var nbReadGroups = 0;
         var pivot = createView({
             View: PivotView,
             model: "partner",
@@ -561,14 +562,23 @@ QUnit.module('Views', {
                         '<field name="foo" type="measure"/>' +
                         '<field name="product_id" type="row"/>' +
                 '</pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    nbReadGroups++;
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
+        assert.strictEqual(nbReadGroups, 2, "should have done 2 read_group RPCS");
         assert.strictEqual(pivot.$('td.o_pivot_cell_value').text(), "321220",
             "should have proper values in cells (total, result 1, result 2)");
 
         // expand on date:days, product
+        nbReadGroups = 0;
         pivot.update({groupBy: ['date:days', 'product_id']});
 
+        assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.strictEqual(pivot.$('tbody tr').length, 8,
             "should have 7 rows (total + 3 for December and 2 for October and April)");
 
@@ -580,8 +590,10 @@ QUnit.module('Views', {
             "should have 6 rows now");
 
         // expand all
+        nbReadGroups = 0;
         $('.o_pivot_expand_button').click();
 
+        assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
         assert.strictEqual(pivot.$('tbody tr').length, 8,
             "should have 8 rows again");
 
