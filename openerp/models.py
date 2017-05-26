@@ -4892,7 +4892,8 @@ class BaseModel(object):
                                      if f not in default
                                      if f not in blacklist)
 
-        data = self.read(cr, uid, [id], fields_to_copy.keys(), context=context)
+        # Pass load=_classic_write to avoid useless name_get() calls
+        data = self.read(cr, uid, [id], fields_to_copy.keys(), load='_classic_write', context=context)
         if data:
             data = data[0]
         else:
@@ -4900,9 +4901,7 @@ class BaseModel(object):
 
         res = dict(default)
         for f, field in fields_to_copy.iteritems():
-            if field.type == 'many2one':
-                res[f] = data[f] and data[f][0]
-            elif field.type == 'one2many':
+            if field.type == 'one2many':
                 other = self.pool[field.comodel_name]
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
