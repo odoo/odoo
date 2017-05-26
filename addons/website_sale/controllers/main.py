@@ -235,7 +235,8 @@ class WebsiteSale(http.Controller):
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', products.ids)])
+            selected_products = Product.search(domain)
+            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', selected_products.ids)])
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
