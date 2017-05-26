@@ -33,15 +33,30 @@ class Rating(models.Model):
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
     res_id = fields.Integer(string='Document ID', required=True, help="Identifier of the rated object", index=True)
+    parent_res_name = fields.Char(compute='_compute_parent_res_name', String='Parent Document Name', store=True)
+    parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True)
+    parent_res_model = fields.Char(string='Parent Document Model', store=True, related='parent_res_model_id.model', index=True)
+    parent_res_id = fields.Integer(string='Parent Document ID', index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
-    rating_text = fields.Char(string='Rating', compute='_compute_rating_text')
+    rating_text = fields.Selection([
+        ('satisfied', 'Satisfied'),
+        ('not_satisfied', 'Not satisfied'),
+        ('highly_dissatisfied', 'Highly dissatisfied'),
+        ('no_rating', 'No Rating yet')], string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one('mail.message', string="Linked message", help="Associated message when posting a review. Mainly used in website addons.", index=True)
     access_token = fields.Char('Security Token', default=new_access_token, help="Access token to set the rating of the value")
     consumed = fields.Boolean(string="Filled Rating", help="Enabled if the rating has been filled.")
+
+    @api.depends('parent_res_model', 'parent_res_id')
+    def _compute_parent_res_name(self):
+        for rating in self:
+            if rating.parent_res_model:
+                name = self.env[rating.parent_res_model].sudo().browse(rating.parent_res_id).name_get()
+                rating.parent_res_name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
 
     @api.multi
     @api.depends('rating')
@@ -53,12 +68,28 @@ class Rating(models.Model):
             except (IOError, OSError):
                 rating.rating_image = False
 
-    @api.multi
     @api.depends('rating')
     def _compute_rating_text(self):
-        text = {10: _('Satisfied'), 5: _('Not satisfied'), 1: _('Highly dissatisfied')}
         for rating in self:
-            rating.rating_text = text[rating.rating] or _('No rating yet')
+            if rating.rating >= 7:
+                rating.rating_text = 'satisfied'
+            elif rating.rating > 3:
+                rating.rating_text = 'not_satisfied'
+            elif rating.rating >= 1:
+                rating.rating_text = 'highly_dissatisfied'
+            else:
+                rating.rating_text = 'no_rating'
+
+    @api.model
+    def create(self, vals):
+        if vals.get('res_model_id') and vals.get('res_id'):
+            model_name = self.env['ir.model'].sudo().browse(vals['res_model_id']).model
+            res = self.env[model_name].browse(vals['res_id'])
+            parent_model_name = res.rating_get_parent_model_name(vals)
+            parent_model = self.env['ir.model']._get(parent_model_name)
+            vals['parent_res_model_id'] = parent_model.id
+            vals['parent_res_id'] = res.rating_get_parent_id()
+        return super(Rating, self).create(vals)
 
     @api.multi
     def reset(self):
@@ -122,6 +153,16 @@ class RatingMixin(models.AbstractModel):
         result = super(RatingMixin, self).unlink()
         self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
         return result
+
+    def rating_get_parent_model_name(self, vals):
+        """ Return the parent resource model name. The dict of values passed to
+            ``create`` when a record of this model is created."""
+        return None
+
+    def rating_get_parent_id(self):
+        """ Return value of Parent Resource Id, or to write on the Parent Resource Id after its
+            creation."""
+        return None
 
     def rating_get_partner_id(self):
         if hasattr(self, 'partner_id') and self.partner_id:

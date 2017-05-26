@@ -22,6 +22,10 @@
             <field name="arch" type="xml">
                 <form string="Rating" create="false" edit="false">
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_rated_object" type="object" class="oe_stat_button" icon="fa-tasks" string="Resource">
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="res_name"/>
@@ -31,7 +35,7 @@
                                 <field name="create_date" string="Submitted on"/>
                             </group>
                             <group>
-                                <div colspan="2" class="text-center">
+                                <div class="pull-right">
                                     <field name="rating_image" widget='image'/>
                                     <div class="mt4">
                                         <strong><field name="rating_text"/></strong>
@@ -51,6 +55,7 @@
             <field name="arch" type="xml">
                 <kanban create="false">
                     <field name="rating"/>
+                    <field name="rating_text"/>
                     <field name="res_name"/>
                     <field name="feedback"/>
                     <field name="partner_id"/>
@@ -133,10 +138,10 @@
                     <separator/>
                     <filter string="My Ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Rated User" name="Responsible" context="{'group_by':'rated_partner_id'}"/>
+                        <filter string="Rated User" name="responsible" context="{'group_by':'rated_partner_id'}"/>
                         <filter string="Customer" name="customer" context="{'group_by':'partner_id'}"/>
-                        <filter string="Rating" name="rating" context="{'group_by':'rating'}"/>
-                        <filter string="Resource" name="resource" context="{'group_by':'res_name'}"/>
+                        <filter string="Rating" name="rating" context="{'group_by':'rating_text'}"/>
+                        <filter string="Resource Name" name="resource" context="{'group_by':'res_name'}"/>
                         <filter string="Day" context="{'group_by':'create_date:day'}"/>
                         <filter string="Month" context="{'group_by':'create_date:month'}"/>
                         <filter string="Year" context="{'group_by':'create_date:year'}"/>

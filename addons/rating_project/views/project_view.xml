@@ -2,27 +2,31 @@
 <odoo>
     <data>
 
-        <record id="rating_rating_action_task" model="ir.actions.act_window">
-            <field name="name">Customer Ratings</field>
-            <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,tree,pivot,graph,form</field>
-            <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
-            <field name="help" type="html">
-                <p>
-                    Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
-                </p>
-            </field>
-        </record>
-
-        <record id="rating_rating_view_search" model="ir.ui.view">
+        <record id="rating_rating_view_search_inherit_rating_project" model="ir.ui.view">
             <field name="name">rating.rating.search.inherit</field>
             <field name="model">rating.rating</field>
+            <field name="mode">primary</field>
             <field name="inherit_id" ref="rating.rating_rating_view_search" />
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='rating_unhappy']" position="after">
                     <separator />
                     <filter string="Rating for tasks" name="rating_tasks" domain="[('res_model', '=', 'project.task')]" />
                 </xpath>
+                <xpath expr="//filter[@name='responsible']" position="before">
+                    <filter string="Project" name="Project" context="{'group_by':'parent_res_name'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="rating_rating_view_form_inherit_rating_project" model="ir.ui.view">
+            <field name="name">rating.rating.inherit.form</field>
+            <field name="model">rating.rating</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="rating.rating_rating_view_form"/>
+            <field name="arch" type="xml">
+                <button name="action_open_rated_object" position="attributes">
+                    <attribute name="string">Task/Issue</attribute>
+                </button>
             </field>
         </record>
 
@@ -32,7 +36,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='toggle_active']" position="before">
-                    <button name="%(rating_rating_action_task)d" type="action"
+                    <button name="action_open_rating_view" type="object"
                             attrs="{'invisible': [('rating_count', '=', 0)]}"
                             class="oe_stat_button" icon="fa-smile-o">
                         <field name="rating_count" string="Rating" widget="statinfo"/>
@@ -152,7 +156,10 @@
         <record id="rating_rating_action_project" model="ir.actions.act_window">
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
-            <field name="view_mode">kanban,tree,pivot,graph,form</field>
+            <field name="view_mode">kanban,tree,form,graph,pivot</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+            <field name="search_view_id" ref="rating_rating_view_search_inherit_rating_project" />
             <field name="domain">[('res_model','in',['project.task', 'project.issue']), ('consumed', '=', True)]</field>
             <field name="help" type="html">
                 <p>
@@ -160,6 +167,29 @@
                 </p>
             </field>
         </record>
+
+
+        <record id="rating_rating_action_project_kanban" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+            <field name="act_window_id" ref="rating_rating_action_project"/>
+        </record>
+
+        <record id="rating_rating_action_project_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="rating.rating_rating_view_tree"/>
+            <field name="act_window_id" ref="rating_rating_action_project"/>
+        </record>
+
+        <record id="rating_rating_action_project_form" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="rating_project.rating_rating_view_form_inherit_rating_project"/>
+            <field name="act_window_id" ref="rating_rating_action_project"/>
+        </record>
+
         <menuitem id="rating_rating_menu_project" action="rating_rating_action_project" parent="project.menu_project_report" sequence="40"/>
 
     </data>
