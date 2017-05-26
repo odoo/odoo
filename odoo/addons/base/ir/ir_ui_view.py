@@ -777,7 +777,13 @@ actual arch.
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter', 'separator')):
-                fields.update(self.postprocess(model, f, view_id, in_tree_view, model_fields))
+                postprocess_fields = self.postprocess(model, f, view_id, in_tree_view, model_fields)
+                union = list(set(fields) & set(postprocess_fields))
+                if union:
+                    # This will give the name of the view (record) in the database. It is better than just an ID. 
+                    view_name = self.env['ir.ui.view'].search([('id', '=', view_id)]).name
+                    _logger.warning("The fields %s are already present in the view definition (view name: %s, view id: %s, model: %s, tag in the view: %s).", union, view_name, view_id, model, f.tag)
+                fields.update(postprocess_fields)
 
         orm.transfer_modifiers_to_node(modifiers, node)
         return fields
