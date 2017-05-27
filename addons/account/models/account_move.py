@@ -211,6 +211,10 @@ class AccountMove(models.Model):
 
     @api.multi
     def reverse_moves(self, date=None, journal_id=None):
+        exchange_rate_entries = self.env['account.partial.reconcile'].search_count([('debit_move_id.move_id', 'in', self.ids)])
+        if exchange_rate_entries:
+            raise UserError(_('You cannot reverse a move that has been automatically generated to unreconcile a currency exchange rate difference.'))
+
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
