@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="customize">
+        <center><b>Your Custom Color</b></center>
+        <div class='input-group colorinput'>
+            <input type='text' class='form-control' />
+            <span class='input-group-addon'><i></i></span>
+        </div><br/>
+        <center><b>Standard Colors</b></center>
+        <div class='row'>
+            <div class='col-md-12'>
+                <t t-foreach="colors" t-as="color"><span class='odoo-tw-view-live-option-color' t-att-data-color-code='color' t-attf-style='background-color:#{color}'></span></t>
+            </div>
+        </div>
+        <center><b>Card Theme</b></center>
+        <center>
+            <div class='btn-group'>
+                <button class='btn btn-default theme active' data-operation='light' title='Light'><i class='fa fa-sun-o' /></button>
+                <button class='btn btn-default theme' data-operation='dark' title='Dark'><i class='fa fa-moon-o' /></button>
+            </div>
+        </center>
+    </t>
+</template>

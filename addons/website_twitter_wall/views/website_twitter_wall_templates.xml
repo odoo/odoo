@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add twitter wall link under connect with us -->
+    <template id="twitter_wall_footer_custom" inherit_id="website.footer_default" name="Footer Twitter Wall Link">
+        <xpath expr="//div[@id='info']/ul" position="inside">
+            <li><a href="/twitter_walls">Twitter Wall</a></li>
+        </xpath>
+    </template>
+
+    <!-- Add new twitter wall menuitem under content menu -->
+    <template id="content_create_twitter_wall" inherit_id="website.user_navbar" name="New Twitter Wall Menuitem">
+        <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+             <li><a href="#" data-action="create_twitter_wall">New Twitter Wall</a></li>
+        </xpath>
+    </template>
+
+    <!-- Assets for create new wall -->
+    <template id="assets_editor" inherit_id="website.assets_editor" name="Twitter Wall Creator">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_twitter_wall/static/src/js/website_twitter_wall_creator.js" />
+        </xpath>
+    </template>
+
+    <!-- Assets for twitter wall -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Twitter Wall Assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/website_twitter_wall/static/src/js/website_twitter_wall.js" />
+            <script type="text/javascript" src="/website_twitter_wall/static/src/js/website_twitter_wall_editor.js" />
+            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker-color.js" />
+            <script type="text/javascript" src="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/js/colorpicker.js" />
+            <link type="text/less" href="/website_twitter_wall/static/src/less/website_twitter_wall.less" rel="stylesheet" t-ignore="true" />
+            <link type="text/less" href="/website_twitter_wall/static/lib/bootstrap-colorpicker/src/less/colorpicker.less" rel="stylesheet" t-ignore="true" />
+        </xpath>
+    </template>
+
+    <!-- Display walls -->
+    <template id="twitter_walls" name="Twitter Walls">
+        <t t-call="website.layout">
+            <div class="container odoo-tw-walls">
+                <div class="row">
+                    <span t-if="not walls" groups="base.group_user" class="col-sm-12 text-center">
+                        <h1>Hey! No twitter wall found</h1>
+                        <h3>Goto Content menu -> New Twitter Wall</h3>
+                    </span>
+                    <div class="col-sm-6 col-md-4 mt16" t-foreach="walls" t-as="wall">
+                        <div class="well well-sm odoo-tw-wall">
+                            <a t-attf-href="/twitter_wall/view/#{wall.id}">
+                                <img t-att-title="wall.name" t-attf-src="/website/image/twitter.agent/#{wall.id}/image/400x400" class="img-responsive img-thumbnail odoo-tw-wall-image" />
+                            </a>
+                            <button t-if="wall.auth_user and wall.state!='archive'" groups="base.group_user" class="btn btn-default btn-sm odoo-tw-wall-archive" title="Archive wall" t-att-data-wall-id="wall.id"><i class="fa fa-archive" /></button>
+                            <label t-att-style="wall.state=='archive' and 'display:block;' or 'display:none;'" class="label label-primary odoo-tw-wall-archive">Archived</label>
+                            <label t-att-style="wall.auth_user and 'display:none;' or 'display:block;'" class="label label-danger odoo-tw-wall-auth"><i class="fa fa-twitter" /> Not Authorized</label>
+                            <div class="odoo-tw-wall-padding">
+                                <h4 class="mt4 mb8 odoo-tw-wall-ellipsis">
+                                    <a t-att-title="wall.name" t-attf-href="/twitter_wall/view/#{wall.id}" t-field="wall.name" />
+                                </h4>
+                                <h5 t-if="wall.description" t-att-title="wall.description" t-field="wall.description" class="odoo-tw-wall-ellipsis" />
+                                <t t-if="wall.tweetus_ids" t-foreach="wall.tweetus_ids" t-as="tag">
+                                    <span t-attf-class="label label-default" t-field="tag.name" />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Storify and Live view -->
+    <template id="twitter_wall_view" name="View">
+        <t t-set="head">
+            <script src="//platform.twitter.com/widgets.js" charset="utf-8" />
+        </t>
+        <t t-call="website.layout">
+            <div t-attf-style="background-image: url(/website/image/twitter.agent/#{wall.id}/image);background-size: cover;" class="odoo-tw-hide-onlive odoo-tw-view-cover">
+                <div class="odoo-tw-view-cover-info">
+                    <div class="odoo-tw-view-cover-info-nav">
+                        <div class="container">
+                            <ul class="nav navbar-nav">
+                                <li class="navbar-text"><i class="fa fa-clock-o"/> <timeago data-timeago="true" t-att-datetime="wall.create_date" /></li>
+                                <li class="navbar-text mb0" title="Total Views" ><i class="fa fa-eye"/> <t t-esc="str(wall.total_views) + ' Views'" /></li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <button t-if="wall.state!='archive'" class="btn btn-default mt8 button-inverted" data-screen="true" title="Live tweet"><i class="fa fa-arrows-alt" /></button>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="container">
+                      <div class="container text-right mt16">
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="wall" />
+                            <t t-set="publish_edit" t-value="True" />
+                            <li><a t-attf-href="/twitter_wall/delete/#{wall.id}">Delete</a></li>
+                        </t>
+                      </div>
+                    </div>
+                    <div class="odoo-tw-view-cover-info-title container mt32">
+                        <h1><b t-field="wall.name" /></h1>
+                        <h3 t-field="wall.description" />
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row odoo-tw-walls mt16" t-att-wall_id="wall.id">
+                    <t t-if="tweets" t-foreach="tweets" t-as="tw">
+                        <center class="col-sm-12 odoo-tw-tweet" t-att-data-tweet-id="tw.id">
+                            <span t-field="tw.comment" />
+                            <div>
+                                <button class="btn odoo-tw-view-tweet-delete hidden-xs" groups="base.group_user" title="Delete this tweet"><i class="fa fa-trash text-primary" /></button>
+                                <span t-raw="tw.tweet" />
+                            </div>
+                        </center>
+                    </t>
+                    <span t-if="not tweets" class="col-sm-12 text-center odoo-tw-hide-onlive">
+                        <h1>Hey! No tweet found</h1>
+                    </span>
+                </div>
+                <div class="row text-center odoo-tw-hide-onlive">
+                    <t t-call="website.pager" />
+                </div>
+            </div>
+            <nav class="navbar navbar-fixed-bottom odoo-tw-view-live-nav odoo-tw-hide-onlive" style="display: none;">
+                <div class="container">
+                    <div class="row mt8 text-center">
+                        <div class="col-sm-4 col-md-4 col-xs-12">
+                            <b t-if="wall.tweetus_ids">
+                                Tweet us:
+                                <t t-foreach="wall.tweetus_ids" t-as="id">
+                                    <label class="label label-danger" t-esc="id.name" />
+                                </t>
+                            </b>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-xs-12">
+                            <div class="odoo-tw-view-live-options">
+                                <div class="btn-group">
+                                    <button class="btn btn-default odoo-tw-view-live-option-btn active" data-operation="list" title="List view"><i class="fa fa-reorder" /></button>
+                                    <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="grid" title="Grid view"><i class="fa fa-th" /></button>
+                                    <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="single" title="Single view"><i class="fa fa-stop" /></button>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="repeat" title="Repeat"><i class="fa fa-repeat" /></button>
+                                    <button class="btn btn-default odoo-tw-view-live-option-btn" data-operation="shuffle" title="Shuffle"><i class="fa fa-random" /></button>
+                                </div>
+                                <button data-placement="top" class="btn btn-default" title="Customize"><i class="fa fa-paint-brush" /></button>
+                                <button class="btn btn-default" data-screen="true" title="Exit full screen"><i class="fa fa-compress" /></button>
+                            </div>
+                        </div>
+                        <b class="col-sm-4 col-md-4 col-xs-12">
+                            Powered by <span class="odoo-color">Odoo</span>
+                        </b>
+                    </div>
+                </div>
+            </nav>
+        </t>
+    </template>
+
+    <!-- Share storify view on social networks -->
+    <template id='twitter_wall_share' name="Wall Share">
+        <h4 class="form-group mt32">
+            <a target="_Blank" t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{wall.website_url}">
+                <i class="fa fa-facebook-square fa-2x white-color" />
+            </a>
+            <a target="_Blank" t-attf-href="https://twitter.com/intent/tweet?text=#{wall.name}&amp;url=#{wall.website_url}">
+                <i class="fa fa-twitter-square fa-2x white-color" />
+            </a>
+            <a target="_Blank" t-attf-href="http://www.linkedin.com/shareArticle?mini=true&amp;url=#{wall.website_url}&amp;title=#{wall.name}&amp;">
+                <i class="fa fa-linkedin-square fa-2x white-color" />
+            </a>
+            <a target="_Blank" t-attf-href="https://plus.google.com/share?url=#{wall.website_url}">
+                <i class="fa fa-google-plus-square fa-2x white-color" />
+            </a>
+        </h4>
+    </template>
+
+    <!-- Sharing option -->
+    <template id="opt_twitter_wall_share" inherit_id="website_twitter_wall.twitter_wall_view" name="Share" customize_show="True" >
+        <xpath expr="//h3[@t-field='wall.description']" position="after">
+            <t t-call="website_twitter_wall.twitter_wall_share">
+                <t t-set="wall" t-value="wall" />
+            </t>
+        </xpath>
+    </template>
+</odoo>

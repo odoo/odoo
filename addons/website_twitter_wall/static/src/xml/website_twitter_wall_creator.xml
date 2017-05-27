@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template">
+    <t t-name="website_twitter_wall_create">
+        <div class="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">×</button>
+                        <h3 class="modal-title">New Twitter Wall</h3>
+                    </div>
+                    <div class="odoo-tw-create-spinner text-center hidden"><h4><i class='fa fa-spinner fa-spin' /> Creating new wall...</h4></div>
+                    <div class="modal-body">
+                        <div class="odoo-tw-create-error" />
+                        <form class="clearfix form-horizontal">
+                            <div class="form-group control-group">
+                                <img src="/website_twitter_wall/static/src/img/img_preview.png" class="col-sm-4 img-responsive odoo-tw-create-image" title="Preview" />
+                                <ul class="col-sm-8 list-group">
+                                    <li class="list-group-item active">
+                                        <h5 class="list-group-item-heading">
+                                            <label class="control-label">
+                                                Upload Image File
+                                            </label>
+                                        </h5>
+                                        <input type="file" class="odoo-tw-create-image-upload" accept="image/*" />
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h5 class="list-group-item-heading">
+                                            <label class="control-label">
+                                                Image URL
+                                            </label>
+                                        </h5>
+                                        <input type="text" class="form-control odoo-tw-create-image-url" placeholder="http://www.odoo.com/logo.png" />
+                                        <p class="url-error hidden">Wrong input. please enter valid image URL</p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="form-group control-group">
+                                <label class="col-sm-2 control-label">
+                                    Name:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control odoo-tw-create-name" placeholder="Wall Name" />
+                                </div>
+                            </div>
+                            <div class="form-group control-group">
+                                <label class="col-sm-2 control-label">
+                                    Description:
+                                </label>
+                                <div class="col-sm-10">
+                                    <textarea rows="3" placeholder="Description" class="form-control odoo-tw-create-description" maxlength="3000" />
+                                </div>
+                            </div>
+                            <div class="form-group control-group">
+                                <label class="col-sm-2 control-label">
+                                    Tweet Us:
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="tweetus_hashtag" placeholder="Hashtag" class="form-control"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary">Create as Draft</button>
+                        <button class="btn btn-primary" data-published="true">Create and Publish</button>
+                        <button class="btn" data-dismiss="modal" data-action="discard">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="base.marketing_menu" name="Marketing" sequence="85" groups="base.group_user" />
+    <menuitem id="twitter_wall_menu" name="Twitter Wall" parent="base.marketing_menu" />
+
+    <!-- TWITTER.AGENT Views -->
+    <record id="twitter_agent_view_tree" model="ir.ui.view">
+        <field name="name">twitter.agent.tree</field>
+        <field name="model">twitter.agent</field>
+        <field name="arch" type="xml">
+            <tree string="Walls">
+                <field name="name" />
+                <field name="description" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="twitter_agent_view_form" model="ir.ui.view">
+        <field name="name">twitter.agent.form</field>
+        <field name="model">twitter.agent</field>
+        <field name="arch" type="xml">
+            <form string="Walls">
+                <header>
+                    <field name="state" widget="statusbar" clickable="True" />
+                </header>
+                <sheet>
+                    <field name="image" class="oe_left oe_avatar" widget="image" />
+                    <div name="buttons" class="oe_right oe_button_box">
+                        <button name="open_website_url" class="oe_inline oe_stat_button" type="object" icon="fa-globe">
+                            <field name="website_published" widget="website_button" />
+                        </button>
+                    </div>
+                    <div class="oe_title oe_left">
+                        <div class="oe_edit_only">
+                            <label for="name" string="Name" />
+                        </div>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" />
+                        </h1>
+                        <field name="tweetus_ids" widget="many2many_tags" placeholder="Tweet Us Hashtag" />
+                    </div>
+                    <group>
+                        <field name="total_views" readonly="1" />
+                        <field name="website_url" />
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="twitter_agent_action" model="ir.actions.act_window">
+        <field name="name">Walls</field>
+        <field name="res_model">twitter.agent</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="twitter_agent_menu" action="twitter_agent_action" parent="twitter_wall_menu" sequence="1" />
+
+    <!-- TWITTER.TWEET Views -->
+    <record id="twitter_tweet_view_tree" model="ir.ui.view">
+        <field name="name">twitter.tweet.tree</field>
+        <field name="model">twitter.tweet</field>
+        <field name="arch" type="xml">
+            <tree string="Tweets" create="false" edit="false">
+                <field name="tweet_id" />
+                <field name="agent_id" string="Wall" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="twitter_tweet_view_form" model="ir.ui.view">
+        <field name="name">twitter.tweet.form</field>
+        <field name="model">twitter.tweet</field>
+        <field name="arch" type="xml">
+            <form string="Tweets" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="tweet_id" />
+                        <field name="agent_id" string="Wall" />
+                        <field name="tweet" />
+                        <field name="comment" string="Comment" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="twitter_tweet_action" model="ir.actions.act_window">
+        <field name="name">Tweets</field>
+        <field name="res_model">twitter.tweet</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="twitter_tweet_menu" action="twitter_tweet_action" parent="twitter_wall_menu" sequence="2" />
+
+    <!-- TWITTER.HASHTAG Views -->
+    <record id="twitter_hashtag_view_tree" model="ir.ui.view">
+        <field name="name">twitter.hashtag.tree</field>
+        <field name="model">twitter.hashtag</field>
+        <field name="arch" type="xml">
+            <tree string="Hashtags">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="twitter_hashtag_view_form" model="ir.ui.view">
+        <field name="name">twitter.hashtag.form</field>
+        <field name="model">twitter.hashtag</field>
+        <field name="arch" type="xml">
+            <form string="Hashtags">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="twitter_hashtag_action" model="ir.actions.act_window">
+        <field name="name">Hashtags</field>
+        <field name="res_model">twitter.hashtag</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="twitter_hashtag_menu" action="twitter_hashtag_action" parent="twitter_wall_menu" sequence="3" />
+</odoo>
