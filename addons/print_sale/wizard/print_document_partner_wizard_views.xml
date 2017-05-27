@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- print_document_partner_wizard views -->
+        <record id="print_document_partner_wizard_view_form" model="ir.ui.view">
+            <field name="name">print.document.partner.wizard.form</field>
+            <field name="model">print.document.partner.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Send documents to partner Wizard">
+                    <sheet>
+                        <div class="alert alert-danger" attrs="{'invisible':['|',('provider_balance','&gt;', 0),('provider_environment','in', ['test', False])]}">
+                            <b> Credit error :</b> Your Provider Credit account is negative. Please refill your provider account to send documents.
+                        </div>
+                        <group string="Printing details">
+                            <group>
+                                <field name="provider_id"/>
+                                <field name="provider_balance" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="paper_weight"/>
+                                <field name="ink"/>
+                            </group>
+                            <field name="is_sendable" invisible="1"/>
+                            <field name="provider_environment" invisible="1"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="ir_attachment_ids" nolabel="1" />
+                        </group>
+                        <group string="Recipients">
+                            <field name="print_document_partner_line_wizard_ids" nolabel="1" create="0"/>
+                        </group>
+                        <div class="alert alert-danger" attrs="{'invisible':[('is_sendable','==', True)]}">
+                            <span class="oe_form_field oe_inline"><b>Bad Postal Address :</b> At least one of the document you want to send has not a correct postal address.</span>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <group>
+                            <span>
+                                <span attrs="{'invisible':['|', ('is_sendable','=', False), ('ir_attachment_ids', '=', None)]}">
+                                    <button string="Send" type="object" class="oe_highlight" name="action_apply"/>
+                                    or
+                                </span>
+                                <button string="Cancel" class="oe_link" special="cancel" />
+                            </span>
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="print_document_partner_line_wizard_view_tree" model="ir.ui.view">
+            <field name="name">print.document.partner.line.wizard.tree</field>
+            <field name="model">print.document.partner.line.wizard</field>
+            <field name="arch" type="xml">
+                <tree string="Lines" create="0" colors="red:(is_sendable == False)">
+                    <field name="partner_id"/>
+                    <field name="is_sendable" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

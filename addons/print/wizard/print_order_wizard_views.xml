@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- print.order.wizard views -->
+        <record id="print_order_wizard_view_form" model="ir.ui.view">
+            <field name="name">print.order.wizard.form</field>
+            <field name="model">print.order.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Postal Wizard Order">
+                    <sheet>
+                        <div class="alert alert-danger" attrs="{'invisible':['|',('provider_balance','&gt;', 0),('provider_environment','in', ['test', False])]}">
+                            <b> Credit error :</b> Your Provider Credit account is negative. Please refill your provider account to send documents.
+                        </div>
+                        <group>
+                            <group>
+                                <field name="provider_id"/>
+                                <field name="provider_balance" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="paper_weight"/>
+                                <field name="ink"/>
+                            </group>
+                            <field name="provider_environment" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+
+                        <div class="alert alert-danger" attrs="{'invisible':[('error_message','=', False)]}">
+                            <b>Error</b> : <field name="error_message" class="oe_form_field oe_inline"/>
+                        </div>
+
+                        <group>
+                            <field name="print_order_line_wizard_ids" nolabel="1" create="0"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <group>
+                            <span>
+                                <span attrs="{'invisible':[('error_message','!=', False)]}">
+
+                                    <button string="Send" type="object" class="oe_highlight" name="action_apply"/>
+                                    or
+                                </span>
+                                <button string="Cancel" class="oe_link" special="cancel" />
+                            </span>
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- print.order.line.wizard views -->
+        <record id="print_order_line_wizard_view_tree" model="ir.ui.view">
+            <field name="name">print.order.line.wizard.list</field>
+            <field name="model">print.order.line.wizard</field>
+            <field name="arch" type="xml">
+                <tree string="Print Order Lines" create="false" editable="bottom" colors="red:(state != 'ok')">
+                    <field name="partner_id" readonly="1" />
+                    <field name="last_send_date" readonly="1" />
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- print.order.sendnow.wizard views -->
+        <record id="print_order_sendnow_wizard_view_form" model="ir.ui.view">
+            <field name="name">print.order.sendnow.wizard.form</field>
+            <field name="model">print.order.sendnow.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Send Now Postal Wizard Order">
+                    <sheet>
+                        <group>
+                            <field name="print_order_ids" nolabel="1">
+                                <tree string="Orders" create="0">
+                                    <field name="state"/>
+                                    <field name="ink"/>
+                                    <field name="partner_id"/>
+                                    <field name="provider_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <group>
+                            <span>
+                                <button string="Send Now" type="object" class="oe_highlight" name="action_apply"/>
+                                or
+                                <button string="Cancel" class="oe_link" special="cancel" />
+                            </span>
+                        </group>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

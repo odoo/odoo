@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="base_config_settings_view_form_inherit_print" model="ir.ui.view">
+            <field name="name">base.config.settings.inherit</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@string='Authentication']/.." position="after">
+                    <group>
+                        <field name="default_print_provider" class="oe_inline"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
