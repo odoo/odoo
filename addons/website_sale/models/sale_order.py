@@ -342,6 +342,9 @@ class website(orm.Model):
                     self.pool['res.partner'].write(cr, SUPERUSER_ID, partner.id, {'last_website_so_id': sale_order_id})
 
         if sale_order_id:
+            # case when user emptied the cart
+            if not request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = sale_order_id
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
