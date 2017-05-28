@@ -27,7 +27,7 @@ msgstr "Дансны бичилт"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Мөнгөн суурьтай татварын бичилтийг үүсгэхэд хэрэглэх Данс"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -48,7 +48,7 @@ msgstr "Хэсэгчлэн Тулгах"
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:39
 #, python-format
 msgid "Please configure a Tax Received Account for tax %s"
-msgstr ""
+msgstr "%s татварын Хүлээн авсан Татвар дансыг тохируулна уу"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
@@ -56,6 +56,8 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Татвар нь хэрэн мөнгө суурьтай байхаар бол үүнийг сонгоно, энэ нь өгсөн данс"
+" дээр тулгалт хийхэд татварын бичилтийг үүсгэнэ."
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -65,18 +67,18 @@ msgstr "Татвар"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "Мөнгөн Суурьтай Татварын бичилт дараахтай холбогдсон"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr ""
+msgstr "Мөнгөн Суурьтай Татварын Журналь"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Tax Received Account"
-msgstr ""
+msgstr "Хүлээн авсан татварын данс"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
@@ -85,6 +87,9 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Мөнгөн суурьтай татварын тулгалтыг хөтлөхөд хэрэглэгддэг техникийн талбар. "
+"Энэ нь эхийг цуцлахад хэрэгтэй: энэ нь тэр хэсгийг цуцлахын тулд урвуу "
+"журналийн бичилтийг илгээнэ."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
@@ -93,11 +98,13 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Энэ компанид мөнгөн суурьтай татвар тодорхойлогдоогүй: \"%s\" \n"
+"Санхүү/Тохиргоо/Тохиргоо хэсэгт тохируулна уу"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "Мөнгөн Суурийг Хэрэглэх"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_config_settings
