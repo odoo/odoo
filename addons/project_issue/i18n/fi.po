@@ -92,6 +92,10 @@ msgid ""
 "\n"
 "                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
+"Tapauksen kanban-tila kertoo tapausta koskevista erikoistilanteista:\n"
+" * \"Normaali\" on oletustilanne\n"
+" * \"Estetty\" tarkoittaa, että jokin estää tapauksen käsittelyä\n"
+" * \"Valmis seuraavaan vaiheeseen\" tarkoittaa, että tapaus on nykyisessä vaiheessaan käsitelty ja valmis siirrettäväksi seuraavaan vaiheeseen"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -151,7 +155,7 @@ msgstr "Estetty"
 #: model:project.issue,legend_done:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_done:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Merkkaa valmiiksi"
 
 #. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
@@ -463,12 +467,12 @@ msgstr "Tapausten analyysit"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Kanbanin Estetty-tilan selitysteksti"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Kanbanin Käynnissä-tilan selitysteksti"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -478,7 +482,7 @@ msgstr "Kanban tila"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Kanbanin Valmis-tilan selitysteksti"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -533,7 +537,7 @@ msgstr "Omat tapahtumat"
 #: model:project.issue,legend_blocked:project_issue.crm_case_patcheserrorinprogram0
 #: model:project.issue,legend_blocked:project_issue.crm_case_programnotgivingproperoutput0
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Toiminnallista tai teknistä tukea tarvitaan"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -592,6 +596,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Ylikirjoita oletusteksti, joka näytetään estettynä olevan tehtävän tai "
+"tapauksen kanban-tilan yhteydessä."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
@@ -599,6 +605,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Ylikirjoita oletusteksti, joka näytetään valmiina olevan tehtävän tai "
+"tapauksen kanban-tilan yhteydessä."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
@@ -606,6 +614,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Ylikirjoita oletusteksti, joka näytetään normaalitilassa olevan tehtävän tai"
+" tapauksen kanban-tilan yhteydessä."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
@@ -619,6 +629,8 @@ msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
 msgstr ""
+"Poista olemassaolevat tapaukset projektilta, joka liittyy poistettavaan "
+"kustannuspaikkaan."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -730,6 +742,9 @@ msgid ""
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"Odoon tapauksilla voit tehokkaasti hallita muun muassa sisäisiä pyyntöjä, "
+"vikailmoituksia, asiakkaiden valituksia, projektien ongelmatilanteita, "
+"materiaalisia vahinkoja, jne."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -737,6 +752,9 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Nämä osoitteet syötetään sähköpostiviestin kopiokenttään kaikissa tietueen "
+"sisääntulevissa ja uloslähtevissä sähköposteissa ennen lähettämistä. Erota "
+"useampi sähköpostiosoite toisistaan pilkulla."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -746,7 +764,7 @@ msgstr "Nämä henkilöt vastaanottavat sähköpostin."
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "Tämä sallii asiakkaiden antaa arvosanoja tapauksille."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -799,7 +817,7 @@ msgstr "Käytä tapauksia"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "Kutsu tapauksia nimellä"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
