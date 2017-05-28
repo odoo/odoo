@@ -309,16 +309,92 @@ class HrPayslip(models.Model):
         @return: returns a list of dict containing the input that should be applied for the given contract between date_from and date_to
         """
 
-        def was_on_leave_interval(employee_id, date_from, date_to):
-            date_from = fields.Datetime.to_string(date_from)
-            date_to = fields.Datetime.to_string(date_to)
-            return self.env['hr.holidays'].search([
+        def work_and_leave_in_interval(contract, date_from, date_to):
+            """
+            Prepare the working time WORK100 and leaves in the given period
+            
+            @param contract: Contract for which the calcuation is performed
+            @param date_from: date/time of the start of the period
+            @param date_to: date/time of the end of the priod
+            @return: a list of dictionaries with structure {"name":xxx, "number_of_days":xxx, "number_of_hours": xxx} 
+                     each of the holidays in the period. The structure contains the WORK100 record which represents
+                     the real working time/days in the period
+            """
+            # Find all leaves in the interval. We will accumulate them per leave type.
+            leave_intervals = self.env['hr.holidays'].search([
                 ('state', '=', 'validate'),
-                ('employee_id', '=', employee_id),
+                ('employee_id', '=', contract.employee_id.id),
                 ('type', '=', 'remove'),
-                ('date_from', '<=', date_from),
-                ('date_to', '>=', date_to)
-            ], limit=1)
+                '|',
+                '|',
+                # Range inside the interval
+                '&',
+                ('date_from', '>=', fields.Datetime.to_string(date_from)),
+                ('date_to', '<=', fields.Datetime.to_string(date_to)),
+                # Range overlap at beginning
+                '&',
+                ('date_from', '<=', fields.Datetime.to_string(date_to)),
+                ('date_to', '>=', fields.Datetime.to_string(date_to)),
+                # Range overlap at end
+                '&',
+                ('date_from', '<=', fields.Datetime.to_string(date_from)),
+                ('date_to', '>=', fields.Datetime.to_string(date_from)),
+            ])
+            # Get the total working hours in the day, regardless of the period for which we are calculating
+            total_hours_in_day = calculate_working_hours_in_day(date_from)
+            # Calculate the hours in the interval
+            hours_in_interval = (date_to - date_from).total_seconds() / 3600.0
+            # Assume that the whole interval is working time and later we will deduct if there are leaves in the period
+            working_time = {
+                    'name': 'WORK100',
+                    'number_of_days': hours_in_interval / total_hours_in_day,
+                    'number_of_hours': hours_in_interval
+                }
+            res = {
+                'WORK100': working_time
+            }
+
+            # For the leaves in the period, prepare the leave record (for each leave type) and adjust the working time
+            for leave in leave_intervals:
+                leave_date_to = fields.Datetime.from_string(leave.date_to)
+                leave_date_from = fields.Datetime.from_string(leave.date_from)
+
+                # Adjust 'from' and 'to' dates to the limits of the period
+                if leave_date_from < date_from:
+                    # leave starts before period start
+                    leave_date_from = date_from
+
+                if leave_date_to > date_to:
+                    # leave end before the period ends
+                    leave_date_to = date_to
+
+                hours_leave = (leave_date_to - leave_date_from).total_seconds() / 3600.0
+                days_leave = hours_leave / total_hours_in_day
+
+                # Crate/Update the holiday record
+                if leave.holiday_status_id.name in res:
+                    res[leave.holiday_status_id.name]['number_of_days'] += days_leave
+                    res[leave.holiday_status_id.name]['number_of_hours'] += hours_leave
+                else:
+                    res[leave.holiday_status_id.name] = {
+                        'name': leave.holiday_status_id.name,
+                        'number_of_days': days_leave,
+                        'number_of_hours': hours_leave
+                    }
+
+                # Deduct the leave from the working time
+                working_time['number_of_days'] -= days_leave
+                working_time['number_of_hours'] -= hours_leave
+
+            return res.values()
+
+        def calculate_working_hours_in_day(date_from):
+            truncated_date = fields.Datetime.from_string(fields.Datetime.to_string(date_from.date()))
+            working_intervals_for_the_day = contract.working_hours.get_working_intervals_of_day(start_dt=truncated_date)
+            hours = 0
+            for working_interval in working_intervals_for_the_day:
+                hours += (working_interval[1] - working_interval[0]).total_seconds() / 3600.0
+            return hours
 
         res = []
         #fill only if the contract as a working schedule linked
@@ -326,7 +402,6 @@ class HrPayslip(models.Model):
         for contract in self.env['hr.contract'].browse(contract_ids).filtered(lambda contract: contract.working_hours):
             uom_hour = contract.employee_id.resource_id.calendar_id.uom_id or self.env.ref('product.product_uom_hour', raise_if_not_found=False)
             interval_data = []
-            holidays = self.env['hr.holidays']
             attendances = {
                  'name': _("Normal Working Days paid at 100%"),
                  'sequence': 1,
@@ -344,38 +419,42 @@ class HrPayslip(models.Model):
             for day in range(0, nb_of_days):
                 working_intervals_on_day = contract.working_hours.get_working_intervals_of_day(start_dt=day_from + timedelta(days=day))
                 for interval in working_intervals_on_day:
-                    interval_data.append((interval, was_on_leave_interval(contract.employee_id.id, interval[0], interval[1])))
+                    interval_data.append(
+                        (
+                            interval,
+                            work_and_leave_in_interval(contract, interval[0], interval[1])
+                         )
+                    )
 
             # Extract information from previous data. A working interval is considered:
             # - as a leave if a hr.holiday completely covers the period
             # - as a working period instead
-            for interval, holiday in interval_data:
-                holidays |= holiday
-                hours = (interval[1] - interval[0]).total_seconds() / 3600.0
-                if holiday:
-                    #if he was on leave, fill the leaves dict
-                    if holiday.holiday_status_id.name in leaves:
-                        leaves[holiday.holiday_status_id.name]['number_of_hours'] += hours
+            # - as both in case the hr.holiday covers only part of the period
+            for interval, holidays in interval_data:
+                #if he was on leave, fill the leaves dict
+                working_hours = {}
+                for holiday in holidays:
+                    if not holiday['name'] == 'WORK100':
+                        if holiday['name'] in leaves:
+                            leaves[holiday['name']]['number_of_hours'] += holiday['number_of_hours']
+                            leaves[holiday['name']]['number_of_days'] += holiday['number_of_days']
+                        else:
+                            leaves[holiday['name']] = {
+                                'name': holiday['name'],
+                                'sequence': 5,
+                                'code': holiday['name'],
+                                'number_of_days': holiday['number_of_days'],
+                                'number_of_hours': holiday['number_of_hours'],
+                                'contract_id': contract.id,
+                            }
                     else:
-                        leaves[holiday.holiday_status_id.name] = {
-                            'name': holiday.holiday_status_id.name,
-                            'sequence': 5,
-                            'code': holiday.holiday_status_id.name,
-                            'number_of_days': 0.0,
-                            'number_of_hours': hours,
-                            'contract_id': contract.id,
-                        }
-                else:
-                    #add the input vals to tmp (increment if existing)
-                    attendances['number_of_hours'] += hours
+                        working_hours = holiday
+                #add the input vals to tmp (increment if existing)
+                attendances['number_of_hours'] += working_hours['number_of_hours']
+                attendances['number_of_days'] += working_hours['number_of_days']
 
-            # Clean-up the results
             leaves = [value for key, value in leaves.items()]
-            for data in [attendances] + leaves:
-                data['number_of_days'] = uom_hour._compute_quantity(data['number_of_hours'], uom_day)\
-                    if uom_day and uom_hour\
-                    else data['number_of_hours'] / 8.0
-                res.append(data)
+            res += [attendances] + leaves
         return res
 
     # YTI TODO contract_ids should be a browse record
