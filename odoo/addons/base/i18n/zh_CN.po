@@ -38,14 +38,15 @@
 # 厦门-许舟 <windedge99@gmail.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # 朱仁杰 <johnson19960308@gmail.com>, 2017
-# 毅 施 <mynameisshiy@gmail.com>, 2017
+# 木头 <mynameisshiy@gmail.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-28 13:36+0000\n"
 "PO-Revision-Date: 2017-04-28 13:36+0000\n"
-"Last-Translator: 毅 施 <mynameisshiy@gmail.com>, 2017\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1594,6 +1595,16 @@ msgid ""
 "    - Regional State listings\n"
 "    "
 msgstr ""
+"\n"
+"埃塞俄比亚本地化的基础模块\n"
+"======================================\n"
+"\n"
+"This is the latest Ethiopian Odoo localization and consists of:\n"
+"    - Chart of Accounts\n"
+"    - VAT tax structure\n"
+"    - Withholding tax structure\n"
+"    - Regional State listings\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -1635,6 +1646,42 @@ msgid ""
 "2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
 "come with any additional paid permission for online use of 'private modules'.\n"
 msgstr ""
+"\n"
+"巴西本地化的基础模块\n"
+"==========================================\n"
+"\n"
+"This module consists in:\n"
+"\n"
+" - Generic Brazilian chart of accounts\n"
+" - Brazilian taxes such as:\n"
+"\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"\n"
+"The field tax_discount has also been added in the account.tax.template and \n"
+"account.tax objects to allow the proper computation of some Brazilian VATs \n"
+"such as ICMS. The chart of account creation wizard has been extended to \n"
+"propagate those new data properly.\n"
+"\n"
+"It's important to note however that this module lack many implementations to \n"
+"use Odoo properly in Brazil. Those implementations (such as the electronic \n"
+"fiscal Invoicing which is already operational) are brought by more than 15 \n"
+"additional modules of the Brazilian Launchpad localization project \n"
+"https://launchpad.net/openerp.pt-br-localiz and their dependencies in the \n"
+"extra addons branch. Those modules aim at not breaking with the remarkable \n"
+"Odoo modularity, this is why they are numerous but small. One of the \n"
+"reasons for maintaining those modules apart is that Brazilian Localization \n"
+"leaders need commit rights agility to complete the localization as companies \n"
+"fund the remaining legal requirements (such as soon fiscal ledgers, \n"
+"accounting SPED, fiscal SPED and PAF ECF that are still missing as September \n"
+"2011). Those modules are also strictly licensed under AGPL V3 and today don't \n"
+"come with any additional paid permission for online use of 'private modules'.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_deposit
@@ -1806,6 +1853,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed, \n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"委内瑞拉的会计科目表\n"
+"===============================\n"
+"\n"
+"Venezuela doesn't have any chart of account by law, but the default\n"
+"proposed in Odoo should comply with some Accepted best practices in Venezuela, \n"
+"this plan comply with this practices.\n"
+"\n"
+"This module has been tested as base for more of 1000 companies, because \n"
+"it is based in a mixtures of most common software in the Venezuelan \n"
+"market what will allow for sure to accountants feel them first steps with \n"
+"Odoo more confortable.\n"
+"\n"
+"This module doesn't pretend be the total localization for Venezuela, \n"
+"but it will help you to start really quickly with Odoo in this country.\n"
+"\n"
+"This module give you.\n"
+"---------------------\n"
+"\n"
+"- Basic taxes for Venezuela.\n"
+"- Have basic data to run tests with community localization.\n"
+"- Start a company from 0 if your needs are basic from an accounting PoV.\n"
+"\n"
+"We recomend use of account_anglo_saxon if you want valued your \n"
+"stocks as Venezuela does with out invoices.\n"
+"\n"
+"If you install this module, and select Custom chart a basic chart will be proposed, \n"
+"but you will need set manually account defaults for taxes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -1841,6 +1916,19 @@ msgid ""
 "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
 "    "
 msgstr ""
+"\n"
+"哥斯达黎加的会计科目表\n"
+"=================================\n"
+"\n"
+"Includes:\n"
+"---------\n"
+"    * account.account.template\n"
+"    * account.tax.template\n"
+"    * account.chart.template\n"
+"\n"
+"Everything is in English with Spanish translation. Further translations are welcome,\n"
+"please go to http://translations.launchpad.net/openerp-costa-rica.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -1965,6 +2053,33 @@ msgid ""
 " https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
 "\n"
 msgstr ""
+"\n"
+"克罗地亚本地化\n"
+"======================\n"
+"\n"
+"Author: Goran Kliska, Slobodni programi d.o.o., Zagreb\n"
+"        https://www.slobodni-programi.hr\n"
+"\n"
+"Contributions:\n"
+"  Tomislav Bošnjaković, Storm Computers: tipovi konta\n"
+"  Ivan Vađić, Slobodni programi: tipovi konta\n"
+"\n"
+"Description:\n"
+"\n"
+"Croatian Chart of Accounts (RRIF ver.2012)\n"
+"\n"
+"RRIF-ov računski plan za poduzetnike za 2012.\n"
+"Vrste konta\n"
+"Kontni plan prema RRIF-u, dorađen u smislu kraćenja naziva i dodavanja analitika\n"
+"Porezne grupe prema poreznoj prijavi\n"
+"Porezi PDV obrasca\n"
+"Ostali porezi\n"
+"Osnovne fiskalne pozicije\n"
+"\n"
+"Izvori podataka:\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2011.rar\n"
+" https://www.rrif.hr/dok/preuzimanje/rrif-rp2012.rar\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -2614,6 +2729,18 @@ msgid ""
 "Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
 "  "
 msgstr ""
+"\n"
+"印度会计科目表\n"
+"====================================\n"
+"\n"
+"Indian accounting chart and localization.\n"
+"\n"
+"Odoo allows to manage Indian Accounting by providing Two Formats Of Chart of Accounts i.e Indian Chart Of Accounts - Standard and Indian Chart Of Accounts - Schedule VI.\n"
+"\n"
+"Note: The Schedule VI has been revised by MCA and is applicable for all Balance Sheet made after\n"
+"31st March, 2011. The Format has done away with earlier two options of format of Balance\n"
+"Sheet, now only Vertical format has been permitted Which is Supported By Odoo.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_schedule6
@@ -3512,6 +3639,12 @@ msgid ""
 "This module provides the core of the Odoo Web Client.\n"
 "        "
 msgstr ""
+"\n"
+"核心模块。\n"
+"========================\n"
+"\n"
+"该模块提供网页客户端的核心功能\n"
+"                "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_kanban
@@ -3521,6 +3654,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"看板视图。\n"
+"========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -3530,6 +3667,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"系统的web教程\n"
+"========================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website
@@ -3540,6 +3681,11 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"系统的网站CMS\n"
+"===================\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_google_map
@@ -3550,6 +3696,11 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"网站地图\n"
+"==========================\n"
+"\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_livechat
@@ -3738,6 +3889,10 @@ msgid ""
 "========================\n"
 "    "
 msgstr ""
+"\n"
+"合作伙伴地理定位\n"
+"========================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal
@@ -6544,6 +6699,26 @@ msgid ""
 "\n"
 "Note: total digits configured by default are 6.\n"
 msgstr ""
+"荷兰会计科目表\n"
+"================================\n"
+"\n"
+"This module is specially made to manage the accounting functionality\n"
+"according to the Dutch best practice.\n"
+"\n"
+"This module contains the Dutch Chart of Accounts and the VAT schema.\n"
+"This schema is made for the most common Companies and therefore suitable\n"
+"to be used for almost every Company.\n"
+"\n"
+"The VAT accounts are linked promptly to generate the required reports. Examples\n"
+"of this reports intercommunitaire transactions.\n"
+"\n"
+"After installation of this module the configuration will be activated.\n"
+"Select the Chart of Accounts named \"Netherlands - Accounting\".\n"
+"\n"
+"Hereafter entering the name of the Company, total digits of Chart of Accounts,\n"
+"Bank Account Number and the default Currency.\n"
+"\n"
+"Note: total digits configured by default are 6.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_window_view_act_window_id
@@ -7138,7 +7313,7 @@ msgstr "应用："
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_arch_fs
@@ -7332,7 +7507,7 @@ msgstr "自动安装"
 #: code:addons/base/module/module.py:649
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
-msgstr ""
+msgstr "自动安装下载的APP，当前不可用"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -7893,7 +8068,7 @@ msgstr "不能复制配置信息！"
 #: code:addons/base/ir/ir_model.py:560
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
-msgstr ""
+msgstr "无法重命名/删除还在视图中使用的字段："
 
 #. module: base
 #: code:addons/base/res/res_lang.py:221
@@ -8313,7 +8488,7 @@ msgstr "商业实体"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_data_drinks
 msgid "Common Drinks data for points of sale"
-msgstr ""
+msgstr "POS中常见的饮料数据"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
@@ -8988,7 +9163,7 @@ msgstr "克罗地亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (RRIF 2012)"
-msgstr ""
+msgstr "克罗地亚-会计"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
@@ -10437,13 +10612,13 @@ msgstr "字段`%(field_name)s`不存在"
 #, python-format
 msgid ""
 "Field names can only contain characters, digits and underscores (up to 63)."
-msgstr ""
+msgstr "字段名称只能包含字符、数字和下划线（最多63字符）"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:372
 #, python-format
 msgid "Field names must be unique per model."
-msgstr ""
+msgstr "每个模型的字段名必须唯一"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -10687,7 +10862,7 @@ msgstr "表单"
 #: model:ir.model.fields,help:base.field_res_partner_email_formatted
 #: model:ir.model.fields,help:base.field_res_users_email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr ""
+msgstr "邮箱格式“名称<email@domain>”"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_email_formatted
@@ -10734,7 +10909,7 @@ msgstr "法国-会计报表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC"
-msgstr ""
+msgstr "法国-FEC"
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -12065,7 +12240,7 @@ msgstr "指定了无效的“顺序”。一个有效的“顺序”是用逗号
 #: code:addons/base/res/res_users.py:315
 #, python-format
 msgid "Invalid 'group by' parameter"
-msgstr ""
+msgstr "无效的“分组”参数"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:324
@@ -12320,7 +12495,7 @@ msgstr "哈萨克斯坦"
 #: model:ir.model.fields,help:base.field_res_users_password
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
-msgstr ""
+msgstr "如果不希望用户连接到系统，则不勾选"
 
 #. module: base
 #: model:res.country,name:base.ke
@@ -13789,7 +13964,7 @@ msgstr "新西兰"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
-msgstr ""
+msgstr "新西兰-会计"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_blog
@@ -13863,7 +14038,7 @@ msgstr "无间隔"
 #: code:addons/fields.py:2229
 #, python-format
 msgid "No inverse field %r found for %r"
-msgstr ""
+msgstr "未找到%r对应的字段%r"
 
 #. module: base
 #: code:addons/base/module/wizard/base_update_translations.py:33
@@ -13888,7 +14063,7 @@ msgstr "不可更新"
 #: code:addons/base/ir/ir_model.py:431
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr ""
+msgstr "依赖%r中无相关的字段%r"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:388
@@ -14028,7 +14203,7 @@ msgstr ""
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Odoo Proprietary License v1.0"
-msgstr ""
+msgstr "专业版授权协议 v1.0"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_settings_dashboard
@@ -14043,7 +14218,7 @@ msgstr "Odoo VOIP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
 msgid "Odoo Web Diagram"
-msgstr ""
+msgstr "图表"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_customer_form
@@ -14283,6 +14458,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                                <code>self.env</code>, etc."
 msgstr ""
+"其他功能可以通过<code>self</code>访问, 例如\n"
+"                                                <code>self.env</code>, 等。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -14290,6 +14467,8 @@ msgid ""
 "Other features are accessible through <code>self</code>, like\n"
 "                                    <code>self.env</code>, etc."
 msgstr ""
+"其他功能可以通过<code>self</code>访问, 例如\n"
+"                                                <code>self.env</code>, 等。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -14544,12 +14723,12 @@ msgstr "付款收单方：Paypal实现"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr ""
+msgstr "付款收单方：PayuMoney 实现"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_stripe
 msgid "Payment Acquirer: Stripe Implementation"
-msgstr ""
+msgstr "付款收单方：Stripe 实现"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_transfer
@@ -14587,7 +14766,7 @@ msgstr "工资表会计"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr ""
+msgstr "PayuMoney 付款收单方"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
@@ -14690,7 +14869,7 @@ msgstr "POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_data_drinks
 msgid "Point of Sale Common Data Drinks"
-msgstr ""
+msgstr "POS中常见的饮料数据"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
@@ -14967,7 +15146,7 @@ msgstr "基本字段的属性不能这样修改，请通过 Python 代码来修�
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
-msgstr ""
+msgstr "建议安装一个网站主题"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_link_field_id
@@ -16088,7 +16267,7 @@ msgstr "共享用户组"
 #: model:ir.model.fields,field_description:base.field_res_partner_partner_share
 #: model:ir.model.fields,field_description:base.field_res_users_partner_share
 msgid "Share Partner"
-msgstr ""
+msgstr "共享合作伙伴"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_share
@@ -16496,7 +16675,7 @@ msgstr "街道 2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr ""
+msgstr "Stripe付款收单方"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio
@@ -16835,7 +17014,7 @@ msgstr "测试"
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
 msgid "Tests for read_group"
-msgstr ""
+msgstr "测试-只读组"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_converter
@@ -17356,7 +17535,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_project_timesheet
 msgid "Timesheet in Website Portal"
-msgstr ""
+msgstr "网站门户工时表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_issue_sheet
@@ -17587,6 +17766,8 @@ msgid ""
 "Translation is not valid:\n"
 "%s"
 msgstr ""
+"翻译无效：\n"
+"%s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -17969,7 +18150,7 @@ msgstr "使用 '1' 为是 ，'0' 为否"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_use_date_range
 msgid "Use subsequences per date_range"
-msgstr ""
+msgstr "每个日期范围使用不同序号"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_gamification
@@ -18557,7 +18738,7 @@ msgstr "网站数字化的销售 - 销售数码产品"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Website Sale Stock - Website Delivery Information"
-msgstr ""
+msgstr "网站销售库存-网站配送信息"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
@@ -18604,7 +18785,7 @@ msgstr "周"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_scale
 msgid "Weighing Scale Hardware Driver"
-msgstr ""
+msgstr "电子称的硬件驱动"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -18674,7 +18855,7 @@ msgstr "工单，规划，仓库报告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_sips
 msgid "Worldline SIPS"
-msgstr ""
+msgstr "Worldline SIPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access_perm_write
@@ -18742,6 +18923,11 @@ msgid ""
 "Please uninstall your current theme before installing another one.\n"
 "Warning: switching themes may significantly alter the look of your current website pages!"
 msgstr ""
+"你正在试图安装一个不兼容的主题：\n"
+"%s\n"
+"\n"
+"请在安装这个主题之前卸载当前使用的主题。\n"
+"警告：更换主题可能会影响你当前网站页面。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_type
@@ -18915,7 +19101,7 @@ msgstr "邮政编码"
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "[('blue', 'Blue'),('yellow', 'Yellow')]"
-msgstr ""
+msgstr "[('blue', 'Blue'),('yellow', 'Yellow')]"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_import_language
@@ -19128,7 +19314,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:253
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
-msgstr ""
+msgstr "格式()必须是严格的 %char格式。"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -19532,7 +19718,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mimetypes
 msgid "test mimetypes-guessing"
-msgstr ""
+msgstr "测试mimetypes-guessing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_access_rights
@@ -19542,17 +19728,17 @@ msgstr "访问权限和规则的测试 "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_read_group
 msgid "test read_group"
-msgstr ""
+msgstr "测试-只读组"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_assetsbundle
 msgid "test-assetsbundle"
-msgstr ""
+msgstr "测试-assetsbundle"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_pylint
 msgid "test-eval"
-msgstr ""
+msgstr "测试-eval"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_exceptions
