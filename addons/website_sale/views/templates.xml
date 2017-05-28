@@ -839,11 +839,11 @@
             <li t-att-class="(step==30 and 'text-primary') or 'text-muted'" id="step30">
                 <t t-if="step&gt;30 and step&lt;50">
                     <a href="/shop/extra_info" class="text-success">
-                        Extra Info<span class="chevron"></span>
+                        <p style="margin: 0;">Extra Info</p><span class="chevron"></span>
                     </a>
                 </t>
                 <t t-if="not (step&gt;30 and step&lt;50)">
-                    Extra Info<span class="chevron"></span>
+                    <p>Extra Info</p><span class="chevron"></span>
                 </t>
             </li>
         </xpath>
