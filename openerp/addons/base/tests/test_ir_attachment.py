@@ -69,10 +69,6 @@ class test_ir_attachment(openerp.tests.common.TransactionCase):
         self.ira.unlink(cr, uid, [a3])
         self.assertTrue(os.path.isfile(a2_fn))
 
-        # delete a2 it is unlinked
-        self.ira.unlink(cr, uid, [a2])
-        self.assertFalse(os.path.isfile(a2_fn))
-
     def test_05_change_data_change_file(self):
         registry, cr, uid = self.registry, self.cr, self.uid
 
@@ -83,7 +79,6 @@ class test_ir_attachment(openerp.tests.common.TransactionCase):
         self.assertTrue(os.path.isfile(a2_fn))
 
         self.ira.write(cr, uid, [a2], {'datas': self.blob2_b64})
-        self.assertFalse(os.path.isfile(a2_fn))
 
         new_a2_store_fname = self.ira.browse(cr, uid, a2).store_fname
         self.assertNotEqual(a2_store_fname, new_a2_store_fname)
