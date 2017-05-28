@@ -17,7 +17,6 @@ $payment.on("click", 'button[type="submit"],button[name="submit"]', function (ev
   $(ev.currentTarget).prepend('<i class="fa fa-refresh fa-spin"></i> ');
   var $form = $(ev.currentTarget).parents('form');
   var data =$("div[class~='o_website_payment_new_payment']").data();
-  console.log(data);
   ajax.jsonRpc('/website_payment/transaction/', 'call', data).then(function (result) {
     $form.submit();
   });
@@ -33,6 +32,4 @@ $payment.on("click", 'button[type="submit"],button[name="submit"]', function (ev
       return indexed_array;
   }
 });
-
-
 });
