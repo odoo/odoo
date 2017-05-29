@@ -39,7 +39,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
      */
     commitChanges: function () {
         // switch to WYSIWYG mode if currently in code mode to get all changes
-        if (config.debug) {
+        if (config.debug && this.mode === 'edit') {
             var layoutInfo = this.$textarea.data('layoutInfo');
             $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
         }
