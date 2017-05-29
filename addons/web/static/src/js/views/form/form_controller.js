@@ -50,9 +50,11 @@ var FormController = BasicController.extend({
      * This method switches the form view in edit mode, with a new record.
      *
      * @todo make record creation a basic controller feature
+     * @param {string} [parentID] if given, the parentID will be used as parent
+     *                            for the new record.
      * @returns {Deferred}
      */
-    createRecord: function () {
+    createRecord: function (parentID) {
         var self = this;
         var record = this.model.get(this.handle, {raw: true});
         return this.model.load({
@@ -60,6 +62,7 @@ var FormController = BasicController.extend({
             fields: record.fields,
             fieldsInfo: record.fieldsInfo,
             modelName: this.modelName,
+            parentID: parentID,
             res_ids: record.res_ids,
             type: 'record',
             viewType: 'form',
