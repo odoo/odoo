@@ -4282,6 +4282,10 @@ QUnit.module('relational_fields', {
 
         $('.modal-body input[type="checkbox"]').click();
         $('.modal .modal-footer .btn-primary').first().click();
+
+        // there is nothing left to save -> should not do a 'write' RPC
+        form.$buttons.find('.o_form_button_save').click();
+
         assert.verifySteps([
             'read', // read initial record (on partner)
             'read', // read many2many turtles
@@ -4289,7 +4293,7 @@ QUnit.module('relational_fields', {
             'write', // when saving the modal
             'onchange', // onchange should be triggered on partner
             'read', // reload many2many
-            ]);
+        ]);
 
         form.destroy();
     });

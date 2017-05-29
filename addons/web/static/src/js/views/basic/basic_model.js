@@ -1117,6 +1117,14 @@ var BasicModel = AbstractModel.extend({
      * @returns {Deferred}
      */
     _applyX2ManyChange: function (record, fieldName, command, viewType) {
+        if (command.operation === 'TRIGGER_ONCHANGE') {
+            // the purpose of this operation is to trigger an onchange RPC, so
+            // there is no need to apply any change on the record (the changes
+            // have probably been already applied and saved, usecase: many2many
+            // edition in a dialog)
+            return $.when();
+        }
+
         var self = this;
         var list = this.localData[record._changes[fieldName] || record.data[fieldName]];
         var field = record.fields[fieldName];
