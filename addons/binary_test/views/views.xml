@@ -1,0 +1,46 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="binary_test.list">
+      <field name="name">binary_test list</field>
+      <field name="model">binary_test.binary_test</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="binary_test.action_window">
+      <field name="name">binary_test window</field>
+      <field name="res_model">binary_test.binary_test</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="binary_test.action_server">
+      <field name="name">binary_test server</field>
+      <field name="model_id" ref="model_binary_test_binary_test"/>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <menuitem name="binary_test" id="binary_test.menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Menu 1" id="binary_test.menu_1" parent="binary_test.menu_root"/>
+    <menuitem name="Menu 2" id="binary_test.menu_2" parent="binary_test.menu_root"/>
+    <!-- actions -->
+    <menuitem name="List" id="binary_test.menu_1_list" parent="binary_test.menu_1"
+              action="binary_test.action_window"/>
+  </data>
+</odoo>
