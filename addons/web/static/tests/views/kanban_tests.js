@@ -82,6 +82,26 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('basic ungrouped rendering when there is an attribute min_ghost_records', function (assert) {
+        assert.expect(1);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" min_ghost_records="5"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<t t-esc="record.foo.value"/>' +
+                    '<field name="foo"/>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+        });
+
+        //when the attribute min_ghost_records is added and its value is greater or equal to the kanban records the ghost divs should not render.
+        assert.strictEqual(kanban.$('.o_kanban_ghost').length, 0, "should have 0 ghosts");
+        kanban.destroy();
+    });
+
     QUnit.test('basic grouped rendering', function (assert) {
         assert.expect(13);
 

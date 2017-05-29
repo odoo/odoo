@@ -262,7 +262,12 @@ var KanbanRenderer = BasicRenderer.extend({
         });
 
         // append ghost divs to ensure that all kanban records are left aligned
-        this._renderGhostDivs(fragment, 6);
+        // added the min_ghost_records attribute through which we can decide upto how many kanban records we dont want to render ghost divs
+        if (!this.arch.attrs.min_ghost_records || (this.arch.attrs.min_ghost_records && this.state.count >= this.arch.attrs.min_ghost_records) ) {
+            this._renderGhostDivs(fragment, 6);
+        } else {
+            this.$el.css('height', '100%');
+        }
     },
     /**
      * @override
