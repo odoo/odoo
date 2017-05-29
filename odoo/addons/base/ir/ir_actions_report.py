@@ -179,7 +179,7 @@ class IrActionsReport(models.Model):
     #--------------------------------------------------------------------------
     # Main report methods
     #--------------------------------------------------------------------------
-    @api.model
+    @api.multi
     def retrieve_attachment(self, record_id, attachment_name=None):
         '''Retrieve an attachment for a specific record.
 
