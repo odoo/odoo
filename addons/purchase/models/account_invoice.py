@@ -178,10 +178,13 @@ class AccountInvoice(models.Model):
                             interim_account_price = valuation_price_unit * i_line.quantity
 
                     if inv.currency_id.id != company_currency.id:
+                            # We express everything in the invoice currency.
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
                             interim_account_price = company_currency.with_context(date=inv.date_invoice).compute(interim_account_price, inv.currency_id, round=False)
 
-                    if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=account_prec) != 0 and line['price_unit'] == i_line.price_unit and acc:
+                    invoice_cur_prec = inv.currency_id.decimal_places
+
+                    if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0 and acc:
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
@@ -199,9 +202,9 @@ class AccountInvoice(models.Model):
                         diff_res.append({
                             'type': 'src',
                             'name': i_line.name[:64],
-                            'price_unit': company_currency.round(price_unit - valuation_price_unit),
+                            'price_unit': inv.currency_id.round(price_unit - valuation_price_unit),
                             'quantity': line['quantity'],
-                            'price': company_currency.round(price_before - line.get('price', 0.0)),
+                            'price': inv.currency_id.round(price_before - line.get('price', 0.0)),
                             'account_id': acc,
                             'product_id': line['product_id'],
                             'uom_id': line['uom_id'],
