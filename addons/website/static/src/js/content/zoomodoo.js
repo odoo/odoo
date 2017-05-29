@@ -73,8 +73,14 @@ function ZoomOdoo(target, options) {
  */
 ZoomOdoo.prototype._init = function () {
     if (window.outerWidth > 467 || !this.opts.disabledOnMobile) {
+        this.$image = this.$target.find('img').length && this.$target.find('img') || this.$target;
+        // If image actual size is equal or lower than displayed size then prevent zoom
+        // otherwise it's just look like zoom image is duplicate of actual image
+        if (this.$image.prop('naturalWidth') <= this.$image.width() * 1.5 && this.$image.prop('naturalHeight') <= this.$image.height() * 1.5) {
+            this.$target.removeAttr('data-zoom data-zoom-image');
+            return;
+        }
         this.$link  = this.$target.find(this.opts.linkTag).length && this.$target.find(this.opts.linkTag) || this.$target;
-        this.$image  = this.$target.find('img').length && this.$target.find('img') || this.$target;
         this.$flyout = $('<div class="zoomodoo-flyout" />');
 
         var $attach = this.$target;

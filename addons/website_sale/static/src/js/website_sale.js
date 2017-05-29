@@ -485,5 +485,10 @@ odoo.define('website_sale.website_sale', function (require) {
     // Deactivate image zoom for mobile devices, since it might prevent users to scroll
     if (!config.device.isMobile) {
         $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
+        // In carousel, On page load zoomOdoo unable to get variant image height/width because images are not displayed at that time
+        // So, reintialize zoomOdoo for active image when carousel image change
+        $('#o-carousel-product').on('slid.bs.carousel', function (ev) {
+            $(ev.relatedTarget).find('img').zoomOdoo();
+        });
     }
 });
