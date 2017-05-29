@@ -150,7 +150,7 @@ var BuildingBlock = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : $(selector);
+                    return $from ? cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -173,14 +173,30 @@ var BuildingBlock = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return ($from || self.$editable).find(selector);
+                    return cssFind($from || self.$editable, selector);
                 } : function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    $from = $from || self.$editable;
+                    return $from.filter(selector).add(cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
+        }
+
+        /**
+         * jQuery find function behavior is:
+         *      $('A').find('A B') <=> $('A A B')
+         * The searches behavior to find options' DOM needs to be
+         *      $('A').find('A B') <=> $('A B')
+         * This is what this function does.
+         *
+         * @param {jQuery} $from - the jQuery element(s) from which to search
+         * @param {string} selector - the CSS selector to match
+         * @returns {jQuery}
+         */
+        function cssFind($from, selector) {
+            return $from.find('*').filter(selector);
         }
     },
 
