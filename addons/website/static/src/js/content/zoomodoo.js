@@ -27,7 +27,7 @@ var defaults = {
     linkAttribute: 'data-zoom-image',
 
     // event to trigger zoom
-    event: 'click', //or mousenter
+    event: 'click', //or mouseenter
 
     // Prevent clicks on the zoom image link.
     preventClicks: true,
@@ -83,7 +83,7 @@ ZoomOdoo.prototype._init = function () {
         }
         $attach.parent().on('mousemove.zoomodoo touchmove.zoomodoo', $.proxy(this._onMove, this));
         $attach.parent().on('mouseleave.zoomodoo touchend.zoomodoo', $.proxy(this._onLeave, this));
-        this.$target.parent().on(this.opts.event + '.zoomodoo touchstart.zoomodoo', $.proxy(this._onEnter, this));
+        this.$target.on(this.opts.event + '.zoomodoo touchstart.zoomodoo', $.proxy(this._onEnter, this));
 
         if (this.opts.preventClicks) {
             this.$target.on('click.zoomodoo', function (e) { e.preventDefault(); });
