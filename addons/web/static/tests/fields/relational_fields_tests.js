@@ -3103,6 +3103,63 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many with x2many in form view (but not in list view)', function (assert) {
+        assert.expect(1);
+
+        // avoid error when saving the edited related record (because the
+        // related x2m field is unknown in the inline list view)
+        // also ensure that the changes are correctly saved
+
+        this.data.turtle.fields.o2m = {string: "o2m", type: "one2many", relation: 'user'};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="Turtles">' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
+                    '</form>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles, [[1, 2, {
+                        partner_ids: [[6, false, [2, 4, 1]]],
+                    }]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_data_row:first').click(); // edit first record
+
+        var $input = $('.modal .o_field_many2manytags input');
+        $input.click(); // opens the dropdown
+        $input.autocomplete('widget').find('li').click(); // add 'first record'
+
+        // add a many2many tag and save
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_widget[name=name]').val('test').trigger('input');
+        $('.modal .modal-footer .btn-primary').click(); // save
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('one2many (who contains display_name) with tree view and without form view', function (assert) {
         assert.expect(1);
 

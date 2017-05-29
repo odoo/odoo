@@ -908,7 +908,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName]));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], viewType));
             } else if (field.type === 'many2one') {
                 defs.push(this._applyMany2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -1112,13 +1112,15 @@ var BasicModel = AbstractModel.extend({
      * @param {string} fieldName
      * @param {Object} command A command object.  It should have a 'operation'
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyX2ManyChange: function (record, fieldName, command) {
+    _applyX2ManyChange: function (record, fieldName, command, viewType) {
         var self = this;
         var list = this.localData[record._changes[fieldName] || record.data[fieldName]];
         var field = record.fields[fieldName];
-        var fieldInfo = record.fieldsInfo[record.viewType][fieldName];
+        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var rec;
         var defs = [];
@@ -1939,8 +1941,8 @@ var BasicModel = AbstractModel.extend({
                     // generate update commands for records that have been
                     // updated (it may happen with editable lists)
                     _.each(relData, function (relRecord) {
-                        if (!_.isEmpty(relRecord._changes)) {
-                            var changes = self._generateChanges(relRecord);
+                        var changes = self._generateChanges(relRecord);
+                        if (!_.isEmpty(changes)) {
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -1958,8 +1960,8 @@ var BasicModel = AbstractModel.extend({
                         if (_.contains(keptIds, relIds[i])) {
                             // this is an id that already existed
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
-                            if (!_.isEmpty(relRecord._changes)) {
-                                changes = this._generateChanges(relRecord);
+                            changes = this._generateChanges(relRecord);
+                            if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
