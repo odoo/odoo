@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from openerp import api, fields, models
-from openerp.tools.float_utils import float_compare
+from openerp.tools.float_utils import float_compare, float_round
 
 
 class AccountInvoice(models.Model):
@@ -138,11 +138,12 @@ class AccountInvoice(models.Model):
                 reference_account_id = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)['stock_input'].id
                 diff_res = []
                 account_prec = inv.company_id.currency_id.decimal_places
-                product_prec = self.env['decimal.precision'].precision_get('Product Price')
                 # calculate and write down the possible price difference between invoice price and product price
                 for line in res:
                     if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                         valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, i_line.product_id.standard_price, i_line.uom_id.id)
+                        interim_account_price = float_round(valuation_price_unit * line['quantity'], precision_digits=account_prec)
+
                         if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                             #for average/fifo/lifo costing method, fetch real cost price from incomming moves
                             stock_move_obj = self.env['stock.move']
@@ -155,11 +156,22 @@ class AccountInvoice(models.Model):
                                     valuation_total_qty += val_stock_move.product_qty
                                 valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                                 valuation_price_unit = self.env['product.uom']._compute_price(i_line.product_id.uom_id.id, valuation_price_unit, i_line.uom_id.id)
+
+                                # We compute the amount to be written into the interim account
+                                interim_account_price = valuation_price_unit_total + (i_line.quantity - valuation_total_qty) * valuation_price_unit
+                                # The second part of this addition can hence decrease the value, it is important in case more products were received than the quantity on the invoice
+
+                            elif i_line.product_id.cost_method == 'real': # In this condition, we have a real price-valuated product which has not yet been received
+                                valuation_price_unit = i_line.purchase_line_id.price_unit
+                                interim_account_price = valuation_price_unit * i_line.quantity
+
                         if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
-                        if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=product_prec) != 0\
-                                and float_compare(line['price_unit'], i_line.price_unit, precision_digits=product_prec) == 0\
-                                and acc:
+                            interim_account_price = company_currency.with_context(date=inv.date_invoice).compute(interim_account_price, inv.currency_id, round=False)
+
+                        invoice_cur_prec = inv.currency_id.decimal_places
+
+                        if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0 and acc:
                             # price with discount and without tax included
                             price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                             tax_ids = []
@@ -173,13 +185,13 @@ class AccountInvoice(models.Model):
                                         if child.type_tax_use != 'none':
                                             tax_ids.append((4, child.id, None))
                             price_before = line.get('price', 0.0)
-                            line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
+                            line.update({'price': interim_account_price})
                             diff_res.append({
                                 'type': 'src',
                                 'name': i_line.name[:64],
-                                'price_unit': round(price_unit - valuation_price_unit, product_prec),
+                                'price_unit': float_round(price_unit - valuation_price_unit, precision_digits=invoice_cur_prec),
                                 'quantity': line['quantity'],
-                                'price': round(price_before - line.get('price', 0.0), account_prec),
+                                'price': float_round(price_before - line.get('price', 0.0), precision_digits=invoice_cur_prec),
                                 'account_id': acc,
                                 'product_id': line['product_id'],
                                 'uom_id': line['uom_id'],
