@@ -555,8 +555,9 @@ var Configurator = Dialog.extend({
 
 website.TopBar.include({
     start: function () {
+        var self = this;
         this.$el.on('click', 'a[data-action=promote-current-page]', function () {
-            new Configurator(this).open();
+            new Configurator(self).open();
         });
         return this._super();
     }
