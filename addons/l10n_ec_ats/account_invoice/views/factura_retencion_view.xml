@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_tree_forma_pago_line" model="ir.ui.view">
+            <field name="name">Forma Pago Line Tree</field>
+            <field name="model">forma.pago.line</field>
+            <field name="arch" type="xml">
+                <tree string="Especifique las Formas de Pago utilizadas" editable="bottom">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="invoice_supplier_form_inherited" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page" position="after">
+                    <page name="inf_tributaria_fac" string="Comp. de Venta">
+                        <group>
+                            <group>
+                                <field name="x_tipo_sustento" required="True"/>
+                                <field name="x_tipo_comprobante" required="True"/>
+                                <field name="x_fac_clave_acceso"/>
+                                <field name="x_fac_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_partner_establecimiento" required="False"/>
+                                <field name="x_partner_punto_emision" required="False"/>
+                                <field name="x_partner_secuencial" required="False"/>
+                                <field name="x_partner_autorizacion" required="False"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="inf_tributaria_ret" string="Comp. de Retención">
+                        <group>
+                            <group>
+                                <field name="x_ret_clave_acceso"/>
+                                <field name="x_ret_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_ret_fecha_emision" required="True"/>
+                                <field name="x_company_establecimiento" required="False"/>
+                                <field name="x_company_emision" required="False"/>
+                                <field name="x_company_secuencial" required="False"/>
+                                <field name="x_company_autorizacion" required="False"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Forma de Cobro">
+                        <field name="x_forma_pago_id"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="invoice_form_inherited" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherited</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page" position="after">
+                    <page name="inf_tributaria_fac" string="Comp. de Venta">
+                        <group>
+                            <group>
+                                <field name="x_tipo_comprobante" required="True"/>
+                                <field name="x_fac_clave_acceso"/>
+                                <field name="x_fac_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_company_establecimiento" required="False" readonly="1"/>
+                                <field name="x_company_emision" required="False" readonly="1"/>
+                                <field name="x_company_secuencial" required="False" readonly="1"/>
+                                <field name="x_company_autorizacion" required="False"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="inf_tributaria_ret" string="Comp. de Retención">
+                        <group>
+                            <group>
+                                <field name="x_ret_clave_acceso"/>
+                                <field name="x_ret_codigo_documento"/>
+                            </group>
+                            <group>
+                                <field name="x_ret_fecha_emision"/>
+                                <field name="x_partner_establecimiento"/>
+                                <field name="x_partner_punto_emision"/>
+                                <field name="x_partner_secuencial"/>
+                                <field name="x_partner_autorizacion"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Forma de Pago">
+                        <field name="x_forma_pago_id"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>
