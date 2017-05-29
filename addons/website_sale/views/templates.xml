@@ -420,7 +420,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-7">
+                        <div class="col-sm-6">
                             <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image'}" groups="!website_sale.group_website_multi_image"/>
                             <t groups="website_sale.group_website_multi_image">
                                 <t t-set="variant_img" t-value="any(product.mapped('product_variant_ids.image_variant'))"/>
@@ -463,7 +463,7 @@
                                 </div>
                             </t>
                         </div>
-                        <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
+                        <div class="col-sm-6 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'%sshop/product/%s' % (request.httprequest.url_root, slug(product))"/>
                             <form action="/shop/cart/update" method="POST">
@@ -513,7 +513,13 @@
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
-            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-hover" />
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+        </xpath>
+    </template>
+
+    <template inherit_id='website_sale.product_picture_magnify' id="product_picture_magnify_auto" active="False" customize_show="True" name="Auto Zoom">
+        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
         </xpath>
     </template>
 

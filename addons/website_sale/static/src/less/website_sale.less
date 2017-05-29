@@ -782,12 +782,11 @@ a.no-decoration {
 }
 
 #o-carousel-product {
-    .carousel-inner div.item {
+    .carousel-inner div.item, .carousel-control {
         height: 400px;
-
-        img {
-            max-height: 100%;
-        }
+    }
+    .carousel-inner div.item img {
+        max-height: 100%;
     }
 
     .carousel-control {
@@ -829,8 +828,15 @@ a.no-decoration {
 }
 
 .ecom-zoomable {
-    img[data-zoom] {
-        cursor: zoom-in;
+    &:not(.ecom-autozoom) {
+        img[data-zoom] {
+            cursor: zoom-in;
+        }
+    }
+    &.ecom-autozoom {
+        img[data-zoom] {
+            cursor: crosshair;
+        }
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
