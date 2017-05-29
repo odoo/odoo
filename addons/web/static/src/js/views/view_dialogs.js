@@ -133,7 +133,7 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view));
+                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
                         },
                     });
                 }

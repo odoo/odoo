@@ -4709,5 +4709,56 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('context is correctly passed after save & new in FormViewDialog', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            res_id: 4,
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_ids"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form':
+                    '<form string="Products">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="partner_type_id" ' +
+                                    'context="{\'color\': parent.id}"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+                'product,false,list': '<tree><field name="display_name"/></tree>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.strictEqual(args.kwargs.context.color, 4,
+                        "should use the correct context");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 1,
+            "One FormViewDialog should be opened");
+        // set a value on the m2o
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $('.modal .o_field_many2one input').click();
+        $dropdown.find('li:first()').click();
+
+        $('.modal .modal-footer button:eq(1)').click(); // Save & new
+        $('.modal .o_field_many2one input').click();
+        $('.modal .modal-footer button:first').click(); // Save & close
+        form.destroy();
+    });
+
 });
 });
