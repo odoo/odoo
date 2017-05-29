@@ -4618,5 +4618,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('support password attribute', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo" password="True"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('span[name="foo"]').text(), '***',
+            "password should be displayed with stars");
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input[name="foo"]').val(), '***',
+            "password should be displayed with stars");
+        assert.strictEqual(form.$('input[name="foo"]').prop('type'), 'password',
+            "input should be of type password");
+        form.destroy();
+    });
+
 });
 });
