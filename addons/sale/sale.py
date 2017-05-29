@@ -807,6 +807,7 @@ class sale_order(osv.osv):
                 prod = None
                 if line[2].get('product_id'):
                     prod = product_obj.browse(cr, uid, line[2]['product_id'], context=context)
+                    line[2]['state'] = 'draft'
                 elif line[1]:
                     prod =  line_obj.browse(cr, uid, line[1], context=context).product_id
                 if prod and prod.taxes_id:
