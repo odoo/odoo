@@ -34,3 +34,4 @@ Osval Reyes osval@vauxoo.com https://github.com/osvalr
 Luis González lgonzalez@vauxoo.com https://github.com/luisg123v
 Oriana Maita oriana@vauxoo.com https://github.com/maitaoriana
 Gabriela Mogollon gmogollon@vauxoo.com https://github.com/GavyMG
+Jesus Zapata jesus@vauxoo.com https://github.com/JesusZapata
