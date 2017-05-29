@@ -10,5 +10,6 @@ Management and Accouting online llc info@maao.com.ua https://github.com/manageme
 
 List of contributors:
 
+
 Ostap Yakovenko ostap.yakovenko@maao.com.ua https://github.com/OstapYakovenko 
 Dmytro Katyukha dmytro.katyukha@maao.com.ua https://github.com/katyukha
