@@ -91,7 +91,7 @@ class Partner(models.Model):
         for partner in self:
             if not partner.street:
                 for field in street_fields:
-                    partner[field] = ''
+                    partner[field] = None
                 continue
 
             street_format = (partner.country_id.street_format or
