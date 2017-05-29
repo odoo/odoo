@@ -316,10 +316,10 @@
     <t t-name="mail.ChatThread.Attachments">
         <div t-if="message.attachment_ids.length &gt; 0" class="o_message_attachments">
             <t t-foreach="message.attachment_ids" t-as="attachment">
-                <t t-set="type" t-value="attachment.mimetype.split('/').shift()"/>
+                <t t-set="previewImage" t-value="attachment.mimetype.split('/').shift() == 'image' and attachment.mimetype.indexOf('svg') == -1"/>
                 <div class="o_attachment o_message_attachment">
-                    <a t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/80x60" class="o_image">
-                        <img t-if="type == 'image'" t-attf-src="/web/image/#{attachment.id}/80x60" class="o_image_view"/>
+                    <a t-att-href='attachment.url' target="_blank" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/80x60" t-att-class="!previewImage ? 'o_image' : ''">
+                        <img t-if="previewImage" t-attf-src="/web/image/#{attachment.id}/80x60" class="o_image_view"/>
                         <span class="download_icon"><span class="fa fa-cloud-download"/></span>
                     </a>
                 </div>
