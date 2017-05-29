@@ -718,7 +718,10 @@ var ActionManager = Widget.extend({
                     // only be called when the last dialog is truly
                     // closing, and *should* trigger a reload of the
                     // underlying form view (see comments above)
+                    options.on_close.apply(null, arguments);
                     pre_dialog.on_close();
+                } else {
+                    options.on_close();
                 }
                 if (!pre_dialog) {
                     self.dialog = null;
