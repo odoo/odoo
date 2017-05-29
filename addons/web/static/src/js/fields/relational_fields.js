@@ -998,7 +998,7 @@ var FieldOne2Many = FieldX2Many.extend({
 
         this._openFormDialog({
             id: ev.data.id,
-            on_saved: this._setValue.bind(this, { operation: 'NOOP' }),
+            on_saved: this._setValue.bind(this, { operation: 'NOOP' }, {}),
             readonly: this.mode === 'readonly',
         });
     },
@@ -1068,7 +1068,7 @@ var FieldMany2Many = FieldX2Many.extend({
             domain: this.record.getDomain(this.recordParams),
             fields_view: this.attrs.views && this.attrs.views.form,
             on_saved: function () {
-                self._setValue(ev.data, {forceChange: true});
+                self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
                 self.trigger_up('reload', {db_id: ev.data.id});
             },
             readonly: this.mode === 'readonly',
