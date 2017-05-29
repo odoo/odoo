@@ -32,7 +32,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
     @api.constrains('amount')
     def _check_amount(self):
         if not self.amount > 0.0:
-            raise ValidationError('The payment amount must be strictly positive.')
+            raise ValidationError(_('The payment amount must be strictly positive.'))
 
     @api.one
     @api.depends('journal_id')
