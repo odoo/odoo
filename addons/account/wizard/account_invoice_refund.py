@@ -76,13 +76,7 @@ class AccountInvoiceRefund(models.TransientModel):
                             to_reconcile_lines += tmpline
                             to_reconcile_lines.filtered(lambda l: l.reconciled == False).reconcile()
                     if mode == 'modify':
-                        invoice = inv.read(
-                                    ['name', 'type', 'number', 'reference',
-                                    'comment', 'date_due', 'partner_id',
-                                    'partner_insite', 'partner_contact',
-                                    'partner_ref', 'payment_term_id', 'account_id',
-                                    'currency_id', 'invoice_line_ids', 'tax_line_ids',
-                                    'journal_id', 'date'])
+                        invoice = inv.read(inv_obj._get_refund_modify_read_fields())
                         invoice = invoice[0]
                         del invoice['id']
                         invoice_lines = inv_line_obj.browse(invoice['invoice_line_ids'])
@@ -100,9 +94,8 @@ class AccountInvoiceRefund(models.TransientModel):
                             'origin': inv.origin,
                             'fiscal_position_id': inv.fiscal_position_id.id,
                         })
-                        for field in ('partner_id', 'account_id', 'currency_id',
-                                         'payment_term_id', 'journal_id'):
-                                invoice[field] = invoice[field] and invoice[field][0]
+                        for field in inv_obj._get_refund_common_fields():
+                            invoice[field] = invoice[field] and invoice[field][0]
                         inv_refund = inv_obj.create(invoice)
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()
