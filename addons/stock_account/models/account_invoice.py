@@ -91,9 +91,9 @@ class AccountInvoice(models.Model):
     def _get_anglosaxon_interim_account(self, product):
         """ Return the interim account used in anglosaxon accounting for
         this invoice"""
-        if self.type == 'out_invoice':
+        if self.type in ('out_invoice', 'out_refund'):
             return product.product_tmpl_id._get_product_accounts()['stock_output']
-        elif self.type == 'in_invoice':
+        elif self.type in ('in_invoice', 'in_refund'):
             return product.product_tmpl_id.get_product_accounts()['stock_input']
 
         return None

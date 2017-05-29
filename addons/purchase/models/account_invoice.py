@@ -242,7 +242,7 @@ class AccountInvoice(models.Model):
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
-        if self.type == 'in_invoice':
+        if self.type in ('in_invoice', 'in_refund'):
             rslt += self.mapped('invoice_line_ids.purchase_line_id.move_ids')
 
         return rslt
