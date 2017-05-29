@@ -603,7 +603,7 @@
     <div t-if="!widget.readonly" class="o_domain_leaf_edition">
         <!-- field selector will be instantiated here -->
         <div> <!-- used for flex stretching -->
-            <select class="o_domain_leaf_operator_select">
+            <select class="o_domain_leaf_operator_select o_input">
                 <option t-foreach="widget.operators" t-as="key"
                         t-att-value="key"
                         t-att-selected="widget.displayOperator === key ? 'selected' : None">
@@ -613,7 +613,7 @@
         </div>
         <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' hidden' : ''}">
             <t t-if="widget.selectionChoices !== null">
-                <select class="o_domain_leaf_value_input">
+                <select class="o_domain_leaf_value_input o_input">
                     <option t-foreach="widget.selectionChoices" t-as="val"
                             t-att-value="val[0]"
                             t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
@@ -629,12 +629,12 @@
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
-                        <input placeholder="Add new value" type="text"/>
+                        <input placeholder="Add new value" type="text" class="o_input"/>
                         <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"/>
                     </div>
                 </t>
                 <t t-else="">
-                    <input class="o_domain_leaf_value_input" type="text" t-att-value="widget.displayValue"/>
+                    <input class="o_domain_leaf_value_input o_input" type="text" t-att-value="widget.displayValue"/>
                 </t>
             </t>
         </div>
