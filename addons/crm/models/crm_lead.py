@@ -922,7 +922,7 @@ class Lead(FormatAddress, models.Model):
                     result['closing']['today'] += 1
                 if date.today() <= date_deadline <= date.today() + timedelta(days=7):
                     result['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
+                if date_deadline < date.today() and not opp.date_closed:
                     result['closing']['overdue'] += 1
             # Next activities
             if opp.next_activity_id and opp.date_action:

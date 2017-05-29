@@ -254,11 +254,11 @@ class Product(models.Model):
         # TDE FIXME: should probably clean the search methods
         # to prevent sql injections
         if field not in ('qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'):
-            raise UserError('Invalid domain left operand')
+            raise UserError(_('Invalid domain left operand %s') % field)
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
-            raise UserError('Invalid domain operator')
+            raise UserError(_('Invalid domain operator %s') % operator)
         if not isinstance(value, (float, int)):
-            raise UserError('Invalid domain right operand')
+            raise UserError(_('Invalid domain right operand %s') % value)
 
         # TODO: Still optimization possible when searching virtual quantities
         ids = []
