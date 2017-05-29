@@ -460,7 +460,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         _.each(this.fields, function(field, name) {
             self._onchange_fields.push(name);
             self._onchange_specs[name] = find(name, field.node);
-            _.each(field.field.views, function(view) {
+            // ignore the don't needs view types
+            var vis_views = _.filter(field.field.views, function(view){
+                var modes = field.node.attrs.mode;
+                modes = !!modes ? modes.split(",") : ["tree"];
+                return $.inArray(view.arch.tag, modes) > -1;
+            });
+            _.each(vis_views, function(view) {
                 _.each(view.fields, function(_, subname) {
                     self._onchange_specs[name + '.' + subname] = find(subname, view.arch);
                 });
