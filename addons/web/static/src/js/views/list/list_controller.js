@@ -92,7 +92,8 @@ var ListController = BasicController.extend({
                 contexts: [userContext].concat(searchData.contexts),
                 group_by_seq: searchData.groupbys || []
             });
-            return $.when(self.dataset.domain.concat(results.domain || []));
+            var record = self.model.get(self.handle, {raw: true});
+            return $.when(record.getDomain().concat(results.domain || []));
         } else {
             return $.Deferred().resolve();
         }
