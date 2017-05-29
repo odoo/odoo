@@ -2243,6 +2243,25 @@ QUnit.module('Views', {
             "should not have a visible save button");
         list.destroy();
     });
+
+    QUnit.test('field with password attribute', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" password="True"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td.o_data_cell:eq(0)').text(), '***',
+            "should display string as password");
+        assert.strictEqual(list.$('td.o_data_cell:eq(1)').text(), '****',
+            "should display string as password");
+
+        list.destroy();
+    });
+
 });
 
 });

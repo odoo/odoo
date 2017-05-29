@@ -254,6 +254,7 @@ var ListRenderer = BasicRenderer.extend({
         var formattedValue = field_utils.format[field.type](value, field, {
             data: record.data,
             escape: true,
+            isPassword: 'password' in node.attrs,
         });
         return $td.html(formattedValue);
     },

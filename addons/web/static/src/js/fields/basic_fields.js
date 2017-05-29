@@ -165,6 +165,7 @@ var InputField = DebouncedField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.nodeOptions.isPassword = 'password' in this.attrs;
         if (this.mode === 'edit') {
             this.tagName = 'input';
         }
@@ -222,7 +223,7 @@ var InputField = DebouncedField.extend({
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
         this.$input.attr({
-            type: 'text',
+            type: this.nodeOptions.isPassword ? 'password' : 'text',
             placeholder: this.attrs.placeholder || "",
         });
         this.$input.val(this._formatValue(this.value));

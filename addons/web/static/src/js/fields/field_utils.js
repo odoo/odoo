@@ -56,10 +56,15 @@ function formatBoolean(value) {
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
+ *   instead of the formatted value
  * @returns {string}
  */
 function formatChar(value, field, options) {
     value = typeof value === 'string' ? value : '';
+    if (options && options.isPassword) {
+        return _.str.repeat('*', value ? value.length : 0);
+    }
     if (options && options.escape) {
         value = _.escape(value);
     }
@@ -177,9 +182,16 @@ function formatFloatTime(value) {
  * return an empty string.
  *
  * @param {integer|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
  * @returns {string}
  */
-function formatInteger(value) {
+function formatInteger(value, field, options) {
+    if (options && options.isPassword) {
+        return _.str.repeat('*', String(value).length);
+    }
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
         // view, I want to display the concept of 'no value' with an empty
