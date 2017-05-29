@@ -41,6 +41,42 @@
             </field>
         </record>
 
+        <record id="account_analytic_category_form_view" model="ir.ui.view">
+            <field name="name">account.analytic.category.form</field>
+            <field name="model">account.analytic.category</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Accounts Categories">
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_analytic_category_tree_view" model="ir.ui.view">
+            <field name="name">account.analytic.category.tree</field>
+            <field name="model">account.analytic.category</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Accounts Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_category_action" model="ir.actions.act_window">
+            <field name="name">Analytic Accounts Categories</field>
+            <field name="res_model">account.analytic.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new category.
+              </p>
+            </field>
+        </record>
+
+
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
@@ -112,6 +148,7 @@
                             </group>
                             <group>
                                 <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="category_id"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
