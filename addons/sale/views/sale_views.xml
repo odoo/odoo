@@ -278,9 +278,9 @@
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days
                                             </div>
-                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+                                            <label for="analytic_tag_ids" groups="analytic.group_analytic_tags"/>
                                             <div>
-                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_accounting" options="{'color_field': 'color'}"/>
+                                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" options="{'color_field': 'color'}"/>
                                             </div>
                                         </group>
                                     </group>
@@ -316,7 +316,7 @@
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
                                         groups="product.group_uom" options='{"no_open": True}'/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                     <field name="tax_id" widget="many2many_tags" options="{'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"

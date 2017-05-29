@@ -359,8 +359,24 @@
                                         <div class="mt16" id="analytic_account_link">
                                             <button name="%(analytic.action_analytic_account_form)d" icon="fa-arrow-right" type="action" string="Analytic Accounts" class="btn-link"/>
                                         </div>
-                                        <div>
-                                            <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Tags for Multidimensional Analytics" class="btn-link"/>
+                                        <div class="mt16" id="analytic_account_groups_link">
+                                            <button name="%(analytic.account_analytic_group_action)d" icon="fa-arrow-right" type="action" string="Analytic Account Groups" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 o_setting_box" groups="account.group_account_user">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_analytic_tags"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_analytic_tags"/>
+                                    <div class="text-muted">
+                                        Allows to tag analytic entries and to manage analytic distributions
+                                    </div>
+                                    <div class="content-group" attrs="{'invisible': [('group_analytic_tags', '=', False)]}">
+                                        <div class="mt16">
+                                            <button name="%(analytic.account_analytic_tag_action)d" icon="fa-arrow-right" type="action" string="Analytic Tags" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>

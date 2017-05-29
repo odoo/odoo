@@ -1185,9 +1185,9 @@
                                     <group string="States">
                                         <field name="blocked"/>
                                     </group>
-                                    <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id"/>
-                                        <field name="analytic_tag_ids" widget="many2many_tags"/>
+                                    <group string="Analytic" groups="analytic.group_analytic_accounting,analytic.group_analytic_tags">
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1473,7 +1473,7 @@
                                         domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
                                     <field name="name"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="amount_currency" groups="base.group_multi_currency"/>
                                     <field name="company_currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>

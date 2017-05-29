@@ -4,7 +4,7 @@
             <field name="name">account.analytic.tag.tree</field>
             <field name="model">account.analytic.tag</field>
             <field name="arch" type="xml">
-                <tree string="Analytic Accounts Tags">
+                <tree string="Analytic Tags">
                     <field name="name"/>
                 </tree>
             </field>
@@ -14,7 +14,7 @@
             <field name="name">account.analytic.tag.form</field>
             <field name="model">account.analytic.tag</field>
             <field name="arch" type="xml">
-                <form string="Analytic Accounts Tags">
+                <form string="Analytic Tags">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
@@ -23,14 +23,22 @@
                         </div>
                         <group>
                             <field name="name"/>
+                            <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                         </group>
+                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
+                            attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
+                            <tree string="Analytic Distribution" editable="bottom">
+                                <field name="account_id"/>
+                                <field name="percentage"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
         </record>
 
         <record id="account_analytic_tag_action" model="ir.actions.act_window">
-            <field name="name">Analytic Accounts Tags</field>
+            <field name="name">Analytic Tags</field>
             <field name="res_model">account.analytic.tag</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -40,6 +48,50 @@
               </p>
             </field>
         </record>
+
+        <record id="account_analytic_group_form_view" model="ir.ui.view">
+            <field name="name">account.analytic.group.form</field>
+            <field name="model">account.analytic.group</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Account Groups">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_analytic_group_tree_view" model="ir.ui.view">
+            <field name="name">account.analytic.group.tree</field>
+            <field name="model">account.analytic.group</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Account Groups">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_group_action" model="ir.actions.act_window">
+            <field name="name">Analytic Account Groups</field>
+            <field name="res_model">account.analytic.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                  Click to add a new analytic account group.
+              </p>
+              <p>
+                  This allows to classify your analytic accounts.
+              </p>
+            </field>
+        </record>
+
 
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
@@ -56,7 +108,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="account_analytic_line_action">
             <field name="context">{'search_default_group_date': 1, 'default_account_id': active_id}</field>
             <field name="domain">[('account_id','=', active_id)]</field>
@@ -111,7 +163,8 @@
                                 <field name="partner_id"/>
                             </group>
                             <group>
-                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                                <field name="group_id"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                             </group>
