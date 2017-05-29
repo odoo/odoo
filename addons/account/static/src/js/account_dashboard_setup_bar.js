@@ -14,7 +14,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 var _lt = core._lt;
 
-const COMPANY_METHOD_TYPE = "company_object";
+var COMPANY_METHOD_TYPE = "company_object";
 
 var AccountSetupBarRenderer = KanbanRenderer.extend({
     events: _.extend({}, KanbanRenderer.prototype.events, {
