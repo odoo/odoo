@@ -10,24 +10,30 @@
                         them before validation.
                     </p>
                     <group>
-                        <field name="count" invisible="[('count','=',1)]" readonly="True"/>
-                        <field name="advance_payment_method" class="oe_inline" widget="radio"
-                            attrs="{'invisible': [('count','&gt;',1)]}"/>
-                        <field name="product_id"
-                            context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline"
-                            invisible="1"/>
-                        <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
-                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}">
-                            <field name="amount"
-                                attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
-                            <label string="%%"
-                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
-                        </div>
-                        <field name="deposit_account_id" class="oe_inline"
-                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
-                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
-                            domain="[('type_tax_use','=','sale')]"
-                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
+                        <group colspan="4" class="mb0">
+                            <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                            <field name="product_id" context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline" invisible="1"/>
+                            <field name="advance_payment_method" widget="radio" options="{'horizontal':true}"
+                            attrs="{'invisible': [('count','&gt;',1)]}"/> 
+                        </group>
+                        <group>
+                            <div class="text-center ml8 " attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('total_down_payment', '==', 0), ('count','&gt;',1)]}" colspan="2">
+                                <field name="deduct_down_payment" class="ml92"/>
+                                <label for="deduct_down_payment"/>
+                                <field name="currency_id" invisible="1"/>
+                                ( <field name="total_down_payment" widget="monetary"/> )
+                            </div>
+                            <label for="down_payment_method" attrs="{'invisible': [('advance_payment_method', '!=', 'down_payment')]}"/>
+                            <div attrs="{'invisible': [('advance_payment_method', '!=', 'down_payment')]}">
+                                <field name="down_payment_method" class="oe_inline"/>
+                                <field name="amount" attrs="{'required': [('advance_payment_method', '=', 'down_payment')]}" class="ml16 oe_inline"/>
+                                <label string="%" attrs="{'invisible': [('down_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': ['|', ('advance_payment_method', '!=', 'down_payment'), ('product_id', '!=', False)]}">
+                            <field name="deposit_account_id" class="oe_inline" groups="account.group_account_manager"/>
+                            <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                        </group>
                     </group>
                     <footer>
                         <button name="create_invoices" string="Create and View Invoices" type="object"

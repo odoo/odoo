@@ -62,7 +62,8 @@ class TestSale(TestMail):
         order.with_context(context).action_confirm()
         # Now I create invoice.
         payment = self.env['sale.advance.payment.inv'].create({
-            'advance_payment_method': 'fixed',
+            'advance_payment_method': 'down_payment',
+            'down_payment_method': 'fixed',
             'amount': 5,
             'product_id': self.env.ref('sale.advance_product_0').id,
         })

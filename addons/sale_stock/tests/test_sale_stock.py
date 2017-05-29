@@ -85,7 +85,8 @@ class TestSaleStock(TestSale):
         self.assertTrue(self.so.picking_ids, 'Sale Stock: no picking created for "invoice on order" stockable products')
         # let's do an invoice for a deposit of 5%
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
-            'advance_payment_method': 'percentage',
+            'advance_payment_method': 'down_payment',
+            'down_payment_method': 'percentage',
             'amount': 5.0,
             'product_id': self.env.ref('sale.advance_product_0').id,
         })
@@ -176,7 +177,8 @@ class TestSaleStock(TestSale):
         self.assertEqual(self.so.order_line[0].qty_delivered, 3.0, 'Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
         # let's do an invoice with refunds
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
-            'advance_payment_method': 'all',
+            'advance_payment_method': 'invoiceable',
+            'deduct_down_payment': True,
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
