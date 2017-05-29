@@ -147,6 +147,13 @@ class sale_order_line(osv.osv):
 class sale_order(osv.osv):
     _inherit = 'sale.order'
 
+    @api.multi
+    def copy(self, default={}):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default['validity_date'] = (datetime.datetime.now() + datetime.timedelta(self.template_id.number_of_days)).strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return super(sale_order, self).copy(default=default)
+
+
     def _get_total(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for order in self.browse(cr, uid, ids, context=context):
