@@ -128,7 +128,7 @@
 <t t-name="SwitchCompanyMenu">
     <li class="o_switch_company_menu">
         <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
-            <span class="oe_topbar_name"/> <span class="caret"></span>
+            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/> <span class="caret"/>
         </a>
         <ul class="dropdown-menu" role="menu"/>
     </li>

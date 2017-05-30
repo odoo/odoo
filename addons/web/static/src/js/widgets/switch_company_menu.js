@@ -1,13 +1,18 @@
 odoo.define('web.SwitchCompanyMenu', function(require) {
 "use strict";
 
+var config = require('web.config');
+var core = require('web.core');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
 
+var _t = core._t;
+
 var SwitchCompanyMenu = Widget.extend({
     template: 'SwitchCompanyMenu',
     willStart: function() {
+        this.isMobile = config.isMobile;
         if (!session.user_companies) {
             return $.Deferred().reject();
         }
@@ -28,9 +33,13 @@ var SwitchCompanyMenu = Widget.extend({
                 });
         }, 1500, true));
 
-        self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
-
         var companies_list = '';
+        if (this.isMobile) {
+            companies_list = '<li class="bg-info">' + _t('Tap on the list to change company') + '</li>';
+        }
+        else {
+            self.$('.oe_topbar_name').text(session.user_companies.current_company[1]);
+        }
         _.each(session.user_companies.allowed_companies, function(company) {
             var a = '';
             if (company[0] === session.user_companies.current_company[0]) {
