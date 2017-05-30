@@ -111,7 +111,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             })],
             'currency_id': order.pricelist_id.currency_id.id,
             'payment_term_id': order.payment_term_id.id,
-            'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
+            'fiscal_position_id': order.fiscal_position_id.id,
             'team_id': order.team_id.id,
             'comment': order.note,
         })
