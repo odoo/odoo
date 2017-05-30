@@ -4271,6 +4271,9 @@ class BaseModel(object):
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
+                # lock the table to prevent other transactions from using the
+                # same (parent_left, parent_right) pair
+                cr.execute("LOCK TABLE %s IN SHARE MODE" % self._table)
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%s', (pleft,))
                 cr.execute('update '+self._table+' set parent_left=%s,parent_right=%s where id=%s', (pleft+1, pleft+2, id_new))
