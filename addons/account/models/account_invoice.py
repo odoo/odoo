@@ -804,11 +804,12 @@ class AccountInvoice(models.Model):
                         'invoice_id': inv.id
                     })
             else:
+                account_id = self.get_invoice_id(iml[0]['product_id'], inv)
                 iml.append({
                     'type': 'dest',
                     'name': name,
                     'price': total,
-                    'account_id': inv.account_id.id,
+                    'account_id': account_id,
                     'date_maturity': inv.date_due,
                     'amount_currency': diff_currency and total_currency,
                     'currency_id': diff_currency and inv.currency_id.id,
@@ -846,6 +847,10 @@ class AccountInvoice(models.Model):
             }
             inv.with_context(ctx).write(vals)
         return True
+
+    def get_invoice_id(self, product_id, invoice):
+        return invoice.account_id.id
+
 
     @api.multi
     def invoice_validate(self):

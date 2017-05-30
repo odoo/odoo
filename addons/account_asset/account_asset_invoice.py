@@ -23,6 +23,13 @@ class AccountInvoice(models.Model):
             inv.invoice_line_ids.asset_create()
         return result
 
+    def get_invoice_id(self, product_id, invoice):
+        res = super(AccountInvoice, self).get_invoice_id(product_id, invoice)
+        product = self.env['product.product'].browse(product_id)
+        deffered = product.product_tmpl_id.deferred_revenue_category_id
+        account_id = deffered.account_asset_id.id or res
+        return account_id
+
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
