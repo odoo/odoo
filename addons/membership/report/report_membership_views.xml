@@ -6,7 +6,7 @@
             <field name="model">report.membership</field>
             <field name="arch" type="xml">
                 <search string="Membership">
-                    <filter string="Forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                    <filter string="Forecast" name="forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
                     <filter string="Revenue Done" name="Revenue" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                     <field name="partner_id"/>
                     <field name="membership_id"/>
@@ -18,9 +18,9 @@
                             context="{'group_by':'associate_member_id'}"/>
                         <filter string="Membership Product" name="product"
                             context="{'group_by':'membership_id'}"/>
-                        <filter string="Current Membership State"
+                        <filter string="Current Membership State" name="membership_state"
                             context="{'group_by':'membership_state'}"/>
-                        <filter string="Company"
+                        <filter string="Company" name="company"
                             context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Month" name="start_date"
                             context="{'group_by':'start_date:month'}"/>

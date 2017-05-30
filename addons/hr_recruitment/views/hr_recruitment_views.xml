@@ -193,7 +193,7 @@
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                 <filter string="My Applications" domain="[('user_id', '=', uid)]"/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <field name="job_id"/>
@@ -216,12 +216,12 @@
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Creation Date" context="{'group_by':'create_date'}"/>
-                    <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Degree" name="degree" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Stage" name="stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Creation Date" name="creation_date" context="{'group_by':'create_date'}"/>
+                    <filter string="Last Stage Update" name="last_stage_update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
         </field>

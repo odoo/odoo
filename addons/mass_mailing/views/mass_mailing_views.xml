@@ -310,10 +310,10 @@
                     <group expand="0" string="Group By">
                         <filter string="Status" name="group_state"
                             context="{'group_by': 'state'}"/>
-                        <filter string="Sent By" domain="[]"
+                        <filter string="Sent By" name="sent_by" domain="[]"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Sent Month"
+                        <filter string="Sent Month" name="sent_month"
                             domain="[]" context="{'group_by':'sent_date:month'}"/>
                     </group>
                 </search>
