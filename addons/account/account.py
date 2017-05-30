@@ -642,7 +642,6 @@ class account_account(osv.osv):
             done_list = []
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
-        default.setdefault('code', _("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
         if account.id in done_list:
@@ -656,6 +655,7 @@ class account_account(osv.osv):
             default['child_parent_ids'] = [(6, 0, new_child_ids)]
         else:
             default['child_parent_ids'] = False
+        default.setdefault('code', _("%s (copy)") % (account['code'] or ''))
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
     def _check_moves(self, cr, uid, ids, method, context=None):
