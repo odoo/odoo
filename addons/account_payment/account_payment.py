@@ -329,7 +329,7 @@ class payment_line(osv.osv):
         'date': _get_date,
     }
     _sql_constraints = [
-        ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
+        ('name_uniq', 'UNIQUE(name, company_id)', 'The payment line name must be unique per company!'),
     ]
 
     def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_scheduled, currency=False, company_currency=False, context=None):
