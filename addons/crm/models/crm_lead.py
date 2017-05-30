@@ -354,39 +354,37 @@ class Lead(models.Model):
             lead.write({'stage_id': stage_id.id, 'probability': 100})
             image = '/web/image/%s/%s/image' % (lead.user_id._name, lead.user_id.id)
             rainbow_man = lead.probability
-            planned_revenue = lead.planned_revenue
-            rainbow_message = _('')
-            result = {
-                'first': 0,
-                '30_days_for_sales_team': planned_revenue,
-                '7_days_for_sales_team': planned_revenue,
-                'biggest_from_30_days': planned_revenue,
-            }
+            rainbow_message = ''
 
-            opportunities = lead.search([('probability', '=', 100)])
+            query = """WITH currentYear AS (
+                        SELECT team_id, user_id, planned_revenue, date(date_closed),
+                       (CASE WHEN user_id = %(user_id)s THEN user_id END) AS current_year_opp_user
+                        FROM crm_lead
+                        WHERE probability = 100 AND DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+                        GROUP BY team_id, user_id, planned_revenue, date(date_closed)
+                    ), last30Days AS (
+                        SELECT date, current_year_opp_user,
+                        (CASE WHEN user_id = %(user_id)s THEN planned_revenue END) AS user_opp_for_30_days,
+                        (CASE WHEN team_id = %(sales_team)s THEN planned_revenue END) AS team_opp_for_30_days
+                        from currentYear WHERE date >= CURRENT_DATE - INTERVAL '30 days'
+                    )
+                    SELECT count(current_year_opp_user) AS count_current_year_opp_user,
+                        max(user_opp_for_30_days) AS max_user_opp_for_30_days,
+                        max(team_opp_for_30_days) AS max_team_opp_for_30_days,
+                        (SELECT max(team_opp_for_30_days) FROM last30Days WHERE date >= CURRENT_DATE - INTERVAL '7 days') AS max_team_opp_for_7_days
+                     FROM last30Days
+                 """
+            lead.env.cr.execute(query, {'user_id': lead.user_id.id,
+                                        'sales_team': lead.team_id.id})
+            query_result = self.env.cr.dictfetchall()[0]
 
-            for opportunity in opportunities:
-                date_closed = fields.Date.from_string(opportunity.date_closed)
-                if date.today() + relativedelta(month=1, day=1) <= date_closed and lead.user_id == opportunity.user_id:
-                    result['first'] += 1
-
-                if lead.team_id == opportunity.team_id:
-                    if date.today() + timedelta(days=-30) <= date_closed and result['30_days_for_sales_team'] < opportunity.planned_revenue:
-                        result['30_days_for_sales_team'] = opportunity.planned_revenue
-
-                    if date.today() + timedelta(days=-7) <= date_closed and result['7_days_for_sales_team'] < opportunity.planned_revenue:
-                        result['7_days_for_sales_team'] = opportunity.planned_revenue
-
-                if date.today() + timedelta(days=-30) <= date_closed and lead.user_id == opportunity.user_id and result['biggest_from_30_days'] < opportunity.planned_revenue:
-                    result['biggest_from_30_days'] = opportunity.planned_revenue
-
-            if result['first'] == 1:
+            if query_result['count_current_year_opp_user'] == 1:
                 rainbow_message = _('Go, go, go! Congrats for your first deal.')
-            elif result['30_days_for_sales_team'] == planned_revenue:
+            elif query_result['max_team_opp_for_30_days'] == lead.planned_revenue:
                 rainbow_message = _('Boum! Team record for the past 30 days.')
-            elif result['7_days_for_sales_team'] == planned_revenue:
+            elif query_result['max_team_opp_for_7_days'] == lead.planned_revenue:
                 rainbow_message = _('Yeah! Deal of the last 7 days for the team.')
-            elif result['biggest_from_30_days'] == planned_revenue:
+            elif query_result['max_user_opp_for_30_days'] == lead.planned_revenue:
                 rainbow_message = _('You just beat your personal record for the past 30 days.')
             else:
                 rainbow_man = 10
