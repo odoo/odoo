@@ -246,15 +246,27 @@ openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p 
                                                                      context=context)
                                 pop_server.dele(num)
                             except Exception:
-                                _logger.exception('Failed to process mail from %s server %s.', server.type, server.name)
+                                _logger.warning(
+                                    'Failed to process mail from %s server '
+                                    '%s. Skipping.',
+                                    server.type,
+                                    server.name,
+                                    exc_info=True)
                                 failed += 1
                             if res_id and server.action_id:
                                 action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids': [res_id], 'active_model': context.get("thread_model", server.object_id.model)})
                             cr.commit()
+                        _logger.info(
+                            "Fetched %d email(s) on %s server %s; "
+                            "%d succeeded, %d failed.",
+                            numMsgs,
+                            server.type,
+                            server.name,
+                            numMsgs - failed,
+                            failed)
                         if numMsgs < MAX_POP_MESSAGES:
                             break
                         pop_server.quit()
-                        _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", numMsgs, server.type, server.name, (numMsgs - failed), failed)
                 except Exception:
                     _logger.exception("General failure when trying to fetch mail from %s server %s.", server.type, server.name)
                 finally:
