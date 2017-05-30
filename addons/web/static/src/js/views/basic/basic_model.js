@@ -1151,6 +1151,7 @@ var BasicModel = AbstractModel.extend({
                 newRecord.fieldsInfo = list.fieldsInfo;
                 newRecord.viewType = list.viewType;
                 list._changes.push(newRecord.id);
+                this._sortList(list);
                 break;
             case 'ADD_M2M':
                 // force to use link command instead of create command
@@ -1170,6 +1171,7 @@ var BasicModel = AbstractModel.extend({
                     });
                     list_records[d.id] = rec;
                     list._changes.push(rec.id);
+                    self._sortList(list);
                 });
                 // read list's records as we only have their ids and optionally their display_name
                 // (we can't use function readUngroupedList because those records are only in the
@@ -2905,9 +2907,12 @@ var BasicModel = AbstractModel.extend({
         if (list.orderedBy.length) {
             // sort records according to ordered_by[0]
             var order = list.orderedBy[0];
-            list.data.sort(function (r1, r2) {
-                var data1 = self.localData[r1].data;
-                var data2 = self.localData[r2].data;
+            var data = list._changes ||  list.data;
+            data.sort(function (id1, id2) {
+                var r1 = self.localData[id1];
+                var r2 = self.localData[id2];
+                var data1 = r1._changes || r1.data;
+                var data2 = r2._changes || r2.data;
                 if (data1[order.name] < data2[order.name]) {
                     return order.asc ? -1 : 1;
                 }
