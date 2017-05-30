@@ -1,11 +1,11 @@
 odoo.define('web.SwitchCompanyMenu', function(require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
-var config = require('web.config');
 
 var _t = core._t;
 
