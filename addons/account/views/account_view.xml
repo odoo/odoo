@@ -1523,34 +1523,31 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Terms">
+                    <h2>Term Type</h2>
                     <group>
-                        <group string="Term Type">
+                        <group>
                             <field name="value" widget="radio"/>
-                            <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
-                            <div attrs="{'invisible':[('value','=', 'balance')]}">
+                        </group>
+
+                        <group>
+                            <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
+                                <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
                                 <field name="value_amount" class="oe_inline"/>
                                 <label string="%" class="oe_inline" attrs="{'invisible':[('value','!=','percent')]}"/>
                             </div>
-                            <field name="sequence" invisible="1"/>
-                        </group>
-                        <group string="Due Date Computation">
-                            <label for="days"/>
-                            <div>
-                                <field name="option" widget="radio"/>
-                                <div attrs="{'invisible': [('option', 'in', ['last_day_following_month', 'last_day_current_month'])]}">
-                                    <div class="o_row">
-                                        <field name="days"/>
-                                        days
-                                    </div>
-
-                                    <div class="o_row">
-                                        <label for="day_of_the_month"/>
-                                        <field name="day_of_the_month"/>
-                                    </div>
-                                </div>
-                            </div>
                         </group>
                     </group>
+
+                    <field name="sequence" invisible="1"/>
+
+                    <h2>Due Date Computation</h2>
+                    <div class="o_row">
+                        <label for="days" string="Due"/>
+                        <field name="days" class="oe_inline"/>
+                        <field name="option" class="oe_inline"/>
+                        <label for="day_of_the_month" string="the" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                        <field name="day_of_the_month" class="oe_inline" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -2038,6 +2035,10 @@
             <field name="context">{'search_default_filter_to_sell': 1}</field>
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
+
+        <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
+
+        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="product_configuration_menu" sequence="1"/>
 
         <record id="product_product_action_purchasable" model="ir.actions.act_window">
             <field name="name">Purchasable Products</field>
