@@ -79,7 +79,7 @@ class WebsitePayment(http.Controller):
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
             status = (tx.state == 'done' and 'success') or 'danger'
-            message = (tx.state == 'done' and 'Your payment was successful! It may take some time to be validated on our end.') or 'OOps! There was a problem with your payment.'
+            message = (tx.state == 'done' and _('Your payment was successful! It may take some time to be validated on our end.')) or _('Oops! There was a problem with your payment.')
             return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
