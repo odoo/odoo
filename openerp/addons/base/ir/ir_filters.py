@@ -167,7 +167,6 @@ class ir_filters(osv.osv):
     _defaults = {
         'domain': '[]',
         'context':'{}',
-        'user_id': lambda self,cr,uid,context=None: uid,
         'is_default': False
     }
     _order = 'model_id, name, id desc'
