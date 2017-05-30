@@ -74,7 +74,9 @@ var FormController = BasicController.extend({
      *
      */
     disableButtons: function () {
-        this.$buttons.find('button').attr('disabled', true);
+        if (this.$buttons) {
+            this.$buttons.find('button').attr('disabled', true);
+        }
         this.renderer.disableButtons();
     },
     /**
@@ -82,7 +84,9 @@ var FormController = BasicController.extend({
      *
      */
     enableButtons: function () {
-        this.$buttons.find('button').removeAttr('disabled');
+        if (this.$buttons) {
+            this.$buttons.find('button').removeAttr('disabled');
+        }
         this.renderer.enableButtons();
     },
     /**

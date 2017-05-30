@@ -4511,7 +4511,7 @@ QUnit.module('Views', {
                 execute_action: function (event) {
                     return def.then(function() {
                         event.data.on_success();
-                    })
+                    });
                 }
             },
         });
@@ -4528,6 +4528,71 @@ QUnit.module('Views', {
         def.resolve();
 
         assert.notOk(form.$('.oe_button_box button').attr('disabled'),
+            "stat buttons should be enabled");
+
+        form.destroy();
+    });
+
+    QUnit.test('buttons are disabled until action is resolved (in dialogs)', function (assert) {
+        assert.expect(3);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form>' +
+                        '<sheet>' +
+                            '<div name="button_box" class="oe_button_box">' +
+                                '<button class="oe_stat_button">' +
+                                    '<field name="bar"/>' +
+                                '</button>' +
+                            '</div>' +
+                            '<group>' +
+                                '<field name="foo"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    return def.then(function() {
+                        event.data.on_success();
+                    });
+                }
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_external_button').click();
+
+        assert.notOk($('.modal .oe_button_box button').attr('disabled'),
+            "stat buttons should be enabled");
+
+        $('.modal .oe_button_box button').click();
+
+        assert.ok($('.modal .oe_button_box button').attr('disabled'),
+            "stat buttons should be disabled");
+
+        def.resolve();
+
+        assert.notOk($('.modal .oe_button_box button').attr('disabled'),
             "stat buttons should be enabled");
 
         form.destroy();
