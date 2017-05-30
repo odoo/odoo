@@ -38,6 +38,7 @@ Dashboard for CRM will include:
         'utm',
         'web_planner',
         'web_tour',
+        'contacts'
     ],
     'data': [
         'security/crm_security.xml',
