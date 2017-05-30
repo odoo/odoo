@@ -878,13 +878,30 @@ class Field(object):
         """ Invoke the compute method on ``records``. """
         # initialize the fields to their corresponding null value in cache
         computed = records._field_computed[self]
+        computed_sudo_fields = [f for f in computed if f.compute_sudo and records.env.user.id != SUPERUSER_ID]
         for field in computed:
             records._cache[field] = field.null(records.env)
             records.env.computed[field].update(records._ids)
-        if isinstance(self.compute, basestring):
-            getattr(records, self.compute)()
-        else:
-            self.compute(records)
+        if len(computed) != len(computed_sudo_fields):
+            # case where the same method is used for different fields but in
+            # some cases with compute_sudo and not in other cases
+            if isinstance(self.compute, basestring):
+                getattr(records, self.compute)()
+            else:
+                self.compute(records)
+        if computed_sudo_fields:
+            targets = records.sudo()
+            for record, target in zip(records, targets):
+                if not record.id and record.env != target.env:
+                    # draft records: copy record's cache to target's cache first
+                    copy_cache(record, target.env)
+            if isinstance(self.compute, basestring):
+                getattr(targets, self.compute)()
+            else:
+                self.compute(targets)
+            for record, target in zip(records, targets):
+                for field in computed_sudo_fields:
+                    record[field.name] = target[field.name]
         for field in computed:
             records.env.computed[field].difference_update(records._ids)
 
