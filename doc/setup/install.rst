@@ -1,49 +1,380 @@
 :banner: banners/installing_odoo.jpg
 
+.. A note of TODOs:
+   - Add to new layout
+   - Add introduction describing intention of DOC.
+   - Remove contractions for ease of translation: you're to you are; m'appelle to me apelle
+   - Remove idioms and colloquialisms, if present
+   - Separate the overviews, describing the various offerings, from the
+     actual installation procedures.
+   - Provide note on dependencies so that they can be gotten out of the way
+     and not repeated repetitively.
+   - Separate the installation procedures from configuration procedures.
+
+.. A note on headings within reST:
+   ============
+   A Title <h1>
+   ============
+        ###########
+        A Part <h2>
+        ###########
+            ***************
+            A Chapter <h3>
+            ***************
+                 A Section <h4>
+                 ==============
+                     A Sub-section <h5>
+                     -------------------
+                         A sub-section's sub-section <h6>
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                             A Paragraph
+                             """""""""""
+
 .. _setup/install:
 
 ===============
 Installing Odoo
 ===============
 
-There are mutliple ways to install Odoo, or not install it at all, depending
-on the intended use case.
+###############
+Welcome to Odoo
+###############
 
-This documents attempts to describe most of the installation options.
+There are several ways to install Odoo, or not install it at all, depending
+on the way in which you intend to use Odoo and your level of expertise.
+
+This documentation will aim to provide an overview of those installation options,
+beginning with two options that do not require any installation, before launching
+into detailed installation instructions for each of the respective options.
 
 :ref:`setup/install/demo`
-    The simplest "installation", only suitable for getting a quick feel for
-    Odoo or trying something out
+*****
+Demo
+*****
+
+Odoo doesn't hide itself behind a "Schedule a Demo" button and a sales pitch.
+It speaks for itself and it works around you: wherever you are, whenever you are.
+If you are interested in trying Odoo, but are not ready for an installation
+process, this is the option for you.
+
+**No Registration. No Sales Pitch. Instant Access.**
+
+`Click here to start the demo <https://demo.odoo.com/>`_.
+
 :ref:`setup/install/saas`
-    Trivial to start with and fully managed and migrated by Odoo S.A., can be
-    used to both test Odoo and use it for your business, prevents complex
-    customization (i.e. incompatible with custom modules or the Odoo Apps Store).
+****************************
+Software as a Service (SaaS)
+****************************
 
-    Can be used for both testing Odoo and long-term production use.
+So you tried the demo, fell in love with the drag-and-drop website maker, but are not
+quite sure that you are ready to take it home. No worries, Odoo S.A. has you covered!
+With Odoo's SaaS offering you're free to continue testing Odoo, using your own data,
+and your own private instance. While limited to non-code customization,
+it starts out absolutely free, and requires no installation.
+
+`Click here to start your SaaS instance <https://www.odoo.com/page/start>`_.
+
 :ref:`setup/install/packaged`
-    Simple to get started, allows more flexibility in hosting and deploying
-    the system and greater control over where data is stored. The maintenance
-    burden is shifted to the user.
+**********************
+Packaged Installations
+**********************
 
-    Suitable for testing Odoo, developing modules and can be used for
-    long-term production use with additional deployment and maintenance work.
+If you prefer a little more flexibility in hosting and deployment,
+Odoo provides packaged installers for both Windows and Linux based operating
+systems. In the case of Linux, derivatives of both Debian (e.g. Ubuntu, Wheezy)
+and Red Hat Enterprise Linux (e.g. CentOS, Fedora) are supported.
+
+.. note::  While packaged installers offer the benefit of an easy installation
+           (i.e. dependencies are setup automatically), they are not managed,
+           which means they may be harder to keep up-to-date. That being said,
+           the packaged installers are suitable for both developing modules and
+           long-term production use, given additional deployment and
+           maintenance work.
+
+`Click here to download an Official package <https://nightly.odoo.com>`_
+
 :ref:`setup/install/source`
-    Harder to get started than :ref:`setup/install/packaged`, provides
-    even greater flexibility: packaged installers don't generally allow
-    multiple running Odoo versions on the same system, and don't provide easy
-    source access to Odoo itself.
+*****************************
+Installation from Source Code
+*****************************
 
-    Good for developing modules, can be used as base for production
-    deployment.
+Geared primarily towards developers, the source option is best suited for those
+who are comfortable working with—or around—technologies used within
+Odoo's development stack: programmers, database administrators, web designers,
+systems administrators, et cetera. While it is the hardest option to get started
+with, what the source option takes in convenience, it gives back in flexibility
+For example, packaged installers don't generally give users the latitude needed
+to run multiple versions of a given piece of software on a system; nor do they
+provide easy access to source code. For instance, if a developer were to use
+Odoo's Windows installer, they might be surprised to find the .py files are
+"missing"; but that byte code (.pyc extensions) had been "left" in their place.
 
-    The source code can be obtained by downloading a tarball or using git.
-    Using git is strongly advised, as it makes it easier to update, switch
-    between multiple versions (including the current development version)
-    or contribute.
-`docker image <https://registry.hub.docker.com/_/odoo/>`_
-    If you usually use docker_ for development or deployment, an official
-    docker_ base image is available, see the image's help document for more
-    information.
+With that being said, the source code *can* be used as a base for both production
+and long-term deployment.
+
+.. note:: Docker users:
+          An official `docker image <https://registry.hub.docker.com/_/odoo/>`_ is available.
+          *See the image's help document for more information*
+
+
+########
+Editions
+########
+
+.. TODO: Add notes
+
+
+#######################
+Installation Procedures
+#######################
+
+**********************
+A Note on Dependencies
+**********************
+
+.. TODO: Intro explaining when to follow.
+
+Python
+======
+
+The Odoo Project relies upon Python 2.7.9, which is an important distinction,
+as there are several versions of Python 2.7 (e.g. 2.7.10, 2.7.11, ...).
+We would therefore like to caution users to check for existing Python
+installations before continuing with *any* of the procedures outlined below.
+
+.. note:: The following command is not platform specific.
+
+**From a command prompt:**
+
+.. code-block:: console
+
+    > python --version
+    Python 3.4.3
+    > python2 --version
+    Python 2.7.11
+
+If you should see something like the above output (e.g. anything besides
+Python 2.7.9), and are not sure what a "virtual environment" is,
+you are in danger of overwriting one of your platform's dependencies:
+please see Python's documentation concerning the use of multiple Python
+installations, or follow along below.
+
+.. note:: Windows users:
+          In this instance, "'python' is not recognized as an internal
+          or external command..." is a perfectly healthy response: Python
+          is not installed and so you are not in danger of overwriting
+          anything.
+
+.. note:: Linux users:
+          The situation above is easily remedied by downloading and compiling
+          Python from source, using "make altinstall". See below for details.
+
+
+Windows Users
+-------------
+
+Windows users may use `the official Python 2.7.9 installer <https://www.python.org/downloads/windows/>`_ to obtain
+the appropriate Python installation, prior to installing Odoo.
+
+.. warning:: Windows users:
+             Select "add python.exe to Path" during installation, and
+             reboot afterwards to ensure the :envvar:`PATH` is updated.
+
+Linux Users
+-----------
+
+For linux users using a distribution, such as Fedora 23, where Python 2.7.11
+is the default Python installation:
+
+.. TODO: Install Guide
+
+.. TODO: [NOTE ON PREFIX and DIRS]
+
+.. code-block:: console
+
+      $ ./configure --prefix
+      $ make
+      $ sudo make altinstall
+
+Wkhtmltopdf
+===========
+
+.. TODO:
+   - Explain usage
+   - Warn Deb and RHEL users
+   - Provide install guide.
+
+Installation on Windows
+-----------------------
+
+.. TODO: Friendly "do nothing"
+
+Installation on Linux
+---------------------
+
+.. TODO: Install guide
+
+PostgreSQL
+==========
+
+.. TODO:
+   - Explain usage, as an excuse to explain to Windows users/make comfortable
+   - Explain Odoo's use of 9.3
+   - Caution Fedora (wtf, was I talking about?)
+   - Provide install guide.
+
+Installation on Windows
+-----------------------
+
+.. TODO: Install guide
+
+Installation on Linux
+---------------------
+
+.. TODO: Install guide
+
+
+Node
+====
+
+.. TODO:
+   - Explain usage.
+   - Warn Deb and RHEL users
+   - Provide install guide.
+   - Point them back here with a warning in the installation guide.
+
+Installation on Windows
+-----------------------
+
+.. TODO: Friendly "do nothing"
+
+Installation on Linux
+---------------------
+
+.. TODO: Install guide
+
+
+GIT
+====
+
+.. Comment:
+   In my opinion, this section should be included because there may be potential
+   contributors out there who may be very skilled at design, translation, HTML,
+   etc., but who have no VCS experience. By including it, Odoo would be
+   encouraging more contributions.
+
+
+Installation on Windows
+-----------------------
+
+.. TODO: Install guide
+
+Installation on Linux
+---------------------
+
+.. TODO: Install guide
+
+
+*******************************
+Installing Odoo using a Package
+*******************************
+
+Packaged Installation on Windows
+================================
+
+.. TODO: Install guide
+
+
+Packaged Installation on Linux
+==============================
+
+.. TODO: Intro?
+
+Packaged Installation on Debian
+-------------------------------
+
+.. TODO: Install guide
+
+Packaged Installation on RHEL
+-----------------------------
+
+.. TODO: Install guide
+
+***************************
+Installing Odoo from Source
+***************************
+
+.. TODO: Install Guide
+
+
+
+################
+Configuring Odoo
+################
+
+.. TODO: Intro...
+
+**********************************
+Configuring Packaged Installations
+**********************************
+
+.. TODO: Guide
+
+Odoo on Windows
+===============
+
+.. TODO: Guide
+
+
+Odoo on Debian
+==============
+
+.. TODO: Guide
+
+Odoo on RHEL
+============
+
+.. TODO: Guide
+
+
+********************************
+Configuring Source Installations
+********************************
+
+.. TODO: Guide
+
+Odoo on Windows
+===============
+
+.. TODO: Guide
+
+
+Odoo on Debian
+==============
+
+.. TODO: Guide
+
+Odoo on RHEL
+============
+
+.. TODO: Guide
+
+
+############
+Running Odoo
+############
+
+***********************
+Running Odoo on Windows
+***********************
+
+.. TODO: Run guide
+
+*********************
+Running Odoo on Linux
+*********************
+
+.. TODO: Run guide
 
 .. _setup/install/editions:
 
@@ -107,7 +438,7 @@ These packages automatically set up all dependencies (for the Community version)
 but may be difficult to keep up-to-date.
 
 Official Community packages with all relevant dependency requirements are
-available on our nightly_ server. Both Communtiy and Enterprise packages can
+available on our nightly_ server. Both Community and Enterprise packages can
 be downloaded from our Download_ page (you must to be logged in as a paying
 customer or partner to download the Enterprise packages).
 
@@ -133,7 +464,7 @@ Configuration
 The :ref:`configuration file <reference/cmdline/config>` can be found at
 :file:`{%PROGRAMFILES%}\\Odoo 10.0-{id}\\server\\odoo.conf`.
 
-The configuration file can be edited to connect to a remote Postgresql, edit
+The configuration file can be edited to connect to a remote PostgreSQL, edit
 file locations or set a dbfilter.
 
 To reload the configuration file, restart the Odoo service via
@@ -337,7 +668,7 @@ For example:
 .. warning:: The Enterprise git repository **does not contain the full Odoo
     source code**. You need to clone both the Community and Enterprise repository to
     have a working Odoo installation. The Download_ page contains the entire
-    source code but is not updateable as easily.
+    source code, but it is less convenient in terms of keeping things up-to-date.
 
 
 Installing dependencies
@@ -383,7 +714,7 @@ Source installation requires manually installing dependencies:
     - create a postgres user with a password using the pg admin gui: open
       pgAdminIII, double-click the server to create a connection, select
       :menuselection:`Edit --> New Object --> New Login Role`, enter the
-      usename in the :guilabel:`Role Name` field (e.g. ``odoo``), then open
+      username in the :guilabel:`Role Name` field (e.g. ``odoo``), then open
       the :guilabel:`Definition` tab and enter the password (e.g. ``odoo``),
       then click :guilabel:`OK`.
 
@@ -401,7 +732,7 @@ Source installation requires manually installing dependencies:
     dependencies before pip is able to install the dependencies themselves.
     These are available in ``-dev`` or ``-devel`` packages for Python,
     Postgres, libxml2, libxslt, libevent, libsasl2 and libldap2. Then the Python
-    dependecies can themselves be installed:
+    dependencies can themselves be installed:
 
     .. code-block:: console
 
@@ -417,7 +748,7 @@ Source installation requires manually installing dependencies:
         $ pip install -r requirements.txt
 
   - on Windows you need to install some of the dependencies manually, tweak the
-    requirements.txt file, then run pip to install the remaning ones.
+    requirements.txt file, then run pip to install the remaining ones.
 
     Install ``psycopg`` using the installer here
     http://www.stickpeople.com/projects/python/win-psycopg/
@@ -515,7 +846,7 @@ Under Windows a typical way to execute odoo would be:
 
     C:\YourOdooPath> python odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 
-Where ``odoo``, ``odoo`` are the postgresql login and password,
+Where ``odoo``, ``odoo`` are the PostgreSQL login and password,
 ``../mymodules`` a directory with additional addons and ``mydb`` the default
 db to serve on localhost:8069
 
