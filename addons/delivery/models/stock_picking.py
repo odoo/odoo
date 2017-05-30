@@ -107,6 +107,8 @@ class StockPicking(models.Model):
         self.ensure_one()
         sale_order = self.sale_id
         if sale_order.invoice_shipping_on_delivery:
+            if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
+                self.carrier_price = self.carrier_id.price
             sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
 
     @api.multi
