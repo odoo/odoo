@@ -1282,6 +1282,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <field name="id" invisible="1"/>
                         <div class="oe_button_box">
                             <button name="open_reconcile_view"
                                 class="oe_stat_button"
@@ -1300,7 +1301,7 @@
                             <field name="date"/>
                         </group>
                         <group>
-                            <field name="ref" required="1"/>
+                            <field name="ref" attrs="{'required': [('id', '==', False)]}"/>
                             <field name="company_id" required="1" groups="base.group_multi_company"/>
                             <field name="amount" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
