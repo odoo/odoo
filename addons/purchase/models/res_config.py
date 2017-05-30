@@ -55,3 +55,9 @@ class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
     group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
         implied_group='purchase.group_analytic_accounting')
+
+    @api.onchange('group_analytic_accounting')
+    def onchange_analytic_accounting(self):
+        super(AccountConfigSettings, self).onchange_analytic_accounting()
+        if not self.group_analytic_accounting:
+            self.group_analytic_account_for_purchases = False
