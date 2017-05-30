@@ -1,9 +1,38 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-    <!--
-    Case Teams
-    -->
-
+    <!-- STATUS-related subtypes for messaging / Chatter -->
+        <record id="mt_helpd_draft" model="mail.message.subtype">
+            <field name="name">New</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="default" eval="True"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">State change to New</field>
+        </record>
+        <record id="mt_helpd_open" model="mail.message.subtype">
+            <field name="name">In Progress</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="default" eval="True"/>
+            <field name="description">State change to In Progress</field>
+        </record>
+        <record id="mt_helpd_pending" model="mail.message.subtype">
+            <field name="name">Pending</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="default" eval="True"/>
+            <field name="description">State change to Pending</field>
+        </record>
+        <record id="mt_helpd_done" model="mail.message.subtype">
+            <field name="name">Closed</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="default" eval="True"/>
+            <field name="description">State change to Closed</field>
+        </record>
+        <record id="mt_helpd_cancel" model="mail.message.subtype">
+            <field name="name">Cancelled</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">State change to Cancelled</field>
+        </record>
 </data>
 </openerp>
