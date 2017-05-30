@@ -225,6 +225,7 @@
                                 <field name="name"/>
                                 <field name="field_description"/>
                                 <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                                <field name="model" invisible="1"/>
                             </group>
                             <group>
                                 <field name="ttype"/>
@@ -278,7 +279,7 @@
                                     </group>
                                 </group>
                                 <group string="Advanced Properties" groups="base.group_no_one">
-                                    <field name="related"/>
+                                    <field name="related" widget="field" options="{'model': 'model'}"/>
                                     <field name="depends" attrs="{'required': [('compute', '!=', False)] }"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
@@ -539,7 +540,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
-                   </sheet> 
+                   </sheet>
                 </form>
             </field>
         </record>

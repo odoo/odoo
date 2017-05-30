@@ -17,6 +17,7 @@ var Domain = require('web.Domain');
 var DomainSelector = require('web.DomainSelector');
 var DomainSelectorDialog = require('web.DomainSelectorDialog');
 var framework = require('web.framework');
+var ModelFieldSelector = require('web.ModelFieldSelector');
 var session = require('web.session');
 var utils = require('web.utils');
 var view_dialogs = require('web.view_dialogs');
@@ -2340,6 +2341,129 @@ var FieldDomain = AbstractField.extend({
 });
 
 /**
+ * The "Field" field allows the user to construct a field chain for a specific
+ * model (e.g. user_id.partner_id.name).
+ */
+var FieldModelField = AbstractField.extend({
+    resetOnAnyFieldChange: true,
+    supportedFieldTypes: ['char'],
+    custom_events: {
+        field_chain_changed: '_onFieldChainChange',
+    },
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        this.fsFilters = this.nodeOptions.fs_filters || {};
+        this._setModel();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * The field selector internal widget can check if the chain can be used
+     * with the associated model.
+     *
+     * @override
+     * @returns {boolean}
+     */
+    isValid: function () {
+        return this._super.apply(this, arguments)
+            && this.fieldSelector
+            && this.fieldSelector.isValid();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Creates the internal field selector widget if not already created (or if
+     * it was destroyed). Simply changes its value otherwise.
+     *
+     * @private
+     * @override
+     * @returns {Deferred}
+     */
+    _render: function () {
+        if (!this._modelName) {
+            return;
+        }
+
+        var chain = this.value ? this.value.split('.') : [];
+
+        if (!this.fieldSelector) {
+            this.fieldSelector = new ModelFieldSelector(this, this._modelName, chain, {
+                readonly: this.mode === 'readonly',
+                fs_filters: this.fsFilters,
+                debugMode: session.debug,
+            });
+            return this.fieldSelector.appendTo(this.$el);
+        }
+
+        return this.fieldSelector.setChain(chain);
+    },
+    /**
+     * Checks if the model has changed. The field is set as a
+     * 'resetOnAnyFieldChange' field so that it can detect if the model field
+     * it is associated to changes.
+     *
+     * @private
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setModel();
+    },
+    /**
+     * Checks the model the field must use. It is given by the 'model' node
+     * options. It is either the name of a model or the name of a field in the
+     * view which has the model name as value.
+     *
+     * Note that if the model name changes, the internal field selector is
+     * destroyed by this function. So a rerender might be needed after this
+     * function is called.
+     *
+     * @private
+     */
+    _setModel: function () {
+        var oldModelName = this._modelName;
+
+        // Set model name (either the value of another field or an option)
+        this._modelName = this.nodeOptions.model;
+        if (this._modelName in this.recordData) {
+            this._modelName = this.recordData[this._modelName];
+        }
+
+        // Destroy the field selector if the model name has changed
+        if (this.fieldSelector && this._modelName !== oldModelName) {
+            this.fieldSelector.destroy();
+            delete this.fieldSelector;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the internal field selector widget notifies its changes.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onFieldChainChange: function (ev) {
+        ev.stopPropagation();
+        this._setValue(ev.data.chain.join('.'));
+    },
+});
+
+/**
  * This widget is intended to be used on Text fields. It will provide Ace Editor
  * for editing XML and Python.
  */
@@ -2502,6 +2626,7 @@ return {
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDomain: FieldDomain,
+    FieldModelField: FieldModelField,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
     FieldInteger: FieldInteger,

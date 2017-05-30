@@ -6,7 +6,7 @@ var Registry = require('web.Registry');
 return new Registry();
 });
 
-odoo.define('web._field_registry', function(require) {
+odoo.define('web._field_registry', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
@@ -26,6 +26,7 @@ registry
     .add('datetime', basic_fields.FieldDateTime)
     .add('domain', basic_fields.FieldDomain)
     .add('text', basic_fields.FieldText)
+    .add('field', basic_fields.FieldModelField)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
     .add('link_button', basic_fields.LinkButton)
