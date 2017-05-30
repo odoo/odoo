@@ -165,6 +165,8 @@ class PackOperation(models.Model):
                 cpy = operation.copy(default={'qty_done': 0.0, 'product_qty': operation.product_qty - operation.qty_done})
                 operation.write({'product_qty': operation.qty_done})
                 operation._copy_remaining_pack_lot_ids(cpy)
+                if operation.picking_id:
+                    operation.picking_id.recompute_remaining_qty()
             else:
                 raise UserError(_('The quantity to split should be smaller than the quantity To Do.  '))
         return True
