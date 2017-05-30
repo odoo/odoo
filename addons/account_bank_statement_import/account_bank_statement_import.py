@@ -222,6 +222,9 @@ class AccountBankStatementImport(models.TransientModel):
                         filtered_st_lines.append(line_vals)
                 else:
                     ignored_statement_lines_import_ids.append(line_vals['unique_import_id'])
+                    if 'balance_start' in st_vals:
+                        st_vals['balance_start'] += line_vals['amount']
+
             if len(filtered_st_lines) > 0:
                 # Remove values that won't be used to create records
                 st_vals.pop('transactions', None)
