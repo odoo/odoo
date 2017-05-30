@@ -65,6 +65,8 @@ class MailComposer(models.TransientModel):
         result['model'] = result.get('model', self._context.get('active_model'))
         result['res_id'] = result.get('res_id', self._context.get('active_id'))
         result['parent_id'] = result.get('parent_id', self._context.get('message_id'))
+        condition = ('mail_compose_act_btn=' + (self.env.context.get('mail_compose_act_btn') or '') + '&' + 'model=' + (result['model'] or ''))
+        result['template_id'] = self.env['ir.default'].sudo().get('mail.compose.message', 'template_id', condition=condition) or result.get('template_id')
         if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
             result['no_auto_thread'] = True
 
@@ -124,6 +126,16 @@ class MailComposer(models.TransientModel):
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
     subtype_id = fields.Many2one(default=lambda self: self.sudo().env.ref('mail.mt_comment', raise_if_not_found=False).id)
+
+    is_default_template = fields.Boolean(compute='_compute_is_default_template')
+
+    @api.depends('template_id')
+    def _compute_is_default_template(self):
+        for compose in self:
+            condition = 'mail_compose_act_btn=' + (self.env.context.get('mail_compose_act_btn') or '') + '&' + 'model=' + (compose.model or '')
+            template_id = self.env['ir.default'].sudo().get('mail.compose.message', 'template_id', condition=condition)
+            if template_id == compose.template_id.id or (not template_id and self.env.context.get('default_template_id') == compose.template_id.id) or not self.env.context.get('mail_compose_act_btn'):
+                compose.is_default_template = True
 
     @api.multi
     def check_access_rule(self, operation):
@@ -336,6 +348,13 @@ class MailComposer(models.TransientModel):
             results[res_id] = mail_values
         return results
 
+    @api.multi
+    def mark_template_as_default(self):
+        self.ensure_one()
+        if self.template_id and self.env.context.get('mail_compose_act_btn'):
+            condition = "mail_compose_act_btn=" + (self.env.context.get('mail_compose_act_btn')) + '&' + 'model=' + (self.model or '')
+            self.env['ir.default'].sudo().set('mail.compose.message', "template_id", self.template_id.id, condition=condition)
+        return _reopen(self, self.id, self.model, context=self.env.context)
     #------------------------------------------------------
     # Template methods
     #------------------------------------------------------
@@ -399,10 +418,13 @@ class MailComposer(models.TransientModel):
     def save_as_template(self):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
+        Template = self.env['mail.template']
         for record in self:
             model = self.env['ir.model']._get(record.model or 'mail.message')
-            model_name = model.name or ''
-            template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
+            template_name = record.subject or ''
+            if record.template_id:
+                tmpl_count = Template.search_count([('model', '=', record.model), ('name', 'like', record.template_id.name)])
+                template_name = record.template_id.name + ' (' + str(tmpl_count) + ')'
             values = {
                 'name': template_name,
                 'subject': record.subject or False,
