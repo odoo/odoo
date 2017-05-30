@@ -4184,8 +4184,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('default_order on x2many embedded view', function (assert) {
-        assert.expect(1);
+        assert.expect(8);
 
+        this.data.partner.fields.display_name.sortable = true;
         this.data.partner.records[0].p = [1, 4];
 
         var form = createView({
@@ -4202,11 +4203,46 @@ QUnit.module('Views', {
                         '</field>' +
                     '</sheet>' +
                 '</form>',
+            archs: {
+                'partner,false,form':
+                    '<form string="Partner">' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="foo"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
             res_id: 1,
         });
 
         assert.ok(form.$('.o_field_one2many tbody tr:first td:contains(yop)').length,
             "record 1 should be first");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 1,
+            "FormViewDialog should be opened");
+        $('.modal input[name="foo"]').val('xop').trigger("input");
+        $('.modal .modal-footer button:eq(1)').click(); // Save & new
+        $('.modal input[name="foo"]').val('zop').trigger("input");
+        $('.modal .modal-footer button:first').click(); // Save & close
+
+        // client-side sort
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(0) td:contains(zop)').length,
+            "record zop should be first");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').length,
+            "record yop should be second");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
+            "record xop should be third");
+
+        // server-side sort
+        form.$buttons.find('.o_form_button_save').click();
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(0) td:contains(zop)').length,
+            "record zop should be first");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').length,
+            "record yop should be second");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
+            "record xop should be third");
 
         form.destroy();
     });
