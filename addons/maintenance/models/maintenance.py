@@ -142,7 +142,7 @@ class MaintenanceEquipment(models.Model):
     period = fields.Integer('Days between each preventive maintenance')
     next_action_date = fields.Date(compute='_compute_next_maintenance', string='Date of the next preventive maintenance', store=True)
     maintenance_team_id = fields.Many2one('maintenance.team', string='Maintenance Team')
-    maintenance_duration = fields.Float(help="Maintenance Duration in minutes and seconds.")
+    maintenance_duration = fields.Float(help="Maintenance Duration in hours.")
 
     @api.depends('period', 'maintenance_ids.request_date', 'maintenance_ids.close_date')
     def _compute_next_maintenance(self):
@@ -291,7 +291,7 @@ class MaintenanceRequest(models.Model):
     maintenance_type = fields.Selection([('corrective', 'Corrective'), ('preventive', 'Preventive')], string='Maintenance Type', default="corrective")
     schedule_date = fields.Datetime('Scheduled Date', help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ")
     maintenance_team_id = fields.Many2one('maintenance.team', string='Team', required=True, default=_get_default_team_id)
-    duration = fields.Float(help="Duration in minutes and seconds.")
+    duration = fields.Float(help="Duration in hours.")
 
     @api.multi
     def archive_equipment_request(self):
