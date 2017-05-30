@@ -225,6 +225,9 @@ var InputField = DebouncedField.extend({
         this.$input.attr({
             type: this.nodeOptions.isPassword ? 'password' : 'text',
             placeholder: this.attrs.placeholder || "",
+            autocomplete: this.nodeOptions.isPassword ?
+                'new-password' :
+                this.attrs.autocomplete,
         });
         this.$input.val(this._formatValue(this.value));
         return this.$input;

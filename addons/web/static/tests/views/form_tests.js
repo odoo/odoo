@@ -4709,6 +4709,30 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('support autocomplete attribute', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="display_name" autocomplete="coucou"/>' +
+                        '<field name="foo" password="True"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input[name="foo"]').val(), '***',
+            "password should be displayed with stars");
+        assert.strictEqual(form.$('input[name="display_name"]').prop('autocomplete'), 'coucou',
+            "attribute autocomplete should be set");
+        assert.strictEqual(form.$('input[name="foo"]').prop('autocomplete'), 'new-password',
+            "attribute autocomplete should be set to 'new-password' on password input");
+        form.destroy();
+    });
+
     QUnit.test('context is correctly passed after save & new in FormViewDialog', function (assert) {
         assert.expect(3);
 
