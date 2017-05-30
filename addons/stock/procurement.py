@@ -54,7 +54,7 @@ class procurement_rule(osv.osv):
             help="Source location is action=move"),
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the rule is global"),
-        'procure_method': fields.selection([('make_to_stock', 'Take From Stock'), ('make_to_order', 'Create Procurement')], 'Move Supply Method', required=True, 
+        'procure_method': fields.selection([('make_to_stock', 'Take From Stock'), ('make_to_order', 'Create Procurement')], 'Move Supply Method', required=True,
                                            help="""Determines the procurement method of the stock move that will be generated: whether it will need to 'take from the available stock' in its source location or needs to ignore its stock and create a procurement over there."""),
         'route_sequence': fields.related('route_id', 'sequence', string='Route Sequence',
             store={
@@ -321,7 +321,7 @@ class procurement_order(osv.osv):
             'group_id': orderpoint.group_id.id,
         }
 
-    def _product_virtual_get(self, cr, uid, order_point):
+    def _product_virtual_get(self, cr, uid, order_point, context=None):
         product_obj = self.pool.get('product.product')
         return product_obj._product_available(cr, uid,
                 [order_point.product_id.id],
@@ -350,7 +350,7 @@ class procurement_order(osv.osv):
                 cr = openerp.registry(cr.dbname).cursor()
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 try:
-                    prods = self._product_virtual_get(cr, uid, op)
+                    prods = self._product_virtual_get(cr, uid, op, context=context)
                     if prods is None:
                         continue
                     if float_compare(prods, op.product_min_qty, precision_rounding=op.product_uom.rounding) < 0:
