@@ -1216,6 +1216,10 @@ class stock_picking(models.Model):
             else:
                 location = self.pool.get('stock.location').get_putaway_strategy(cr, uid, picking.location_dest_id, product, context=context)
                 product_putaway_strats[product.id] = location
+            # Search transparent push rules
+            push_ids = product.route_ids.mapped('push_ids').filtered(lambda r: r.auto == 'transparent' and r.location_from_id == picking.location_dest_id)
+            if not location and push_ids:
+                location = push_ids[0].location_dest_id.id
             return location or picking.location_dest_id.id
 
         # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
