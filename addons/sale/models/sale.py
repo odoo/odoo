@@ -511,7 +511,6 @@ class SaleOrder(models.Model):
     def _get_tax_amount_by_group(self):
         self.ensure_one()
         res = {}
-        currency = self.currency_id or self.company_id.currency_id
         for line in self.order_line:
             base_tax = 0
             for tax in line.tax_id:
