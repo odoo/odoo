@@ -1094,6 +1094,7 @@ class product_product(osv.osv):
         # check access and use superuser
         self.check_access_rights(cr, user, "read")
         self.check_access_rule(cr, user, ids, "read", context=context)
+        user_mod = self.pool.get('res.users').browse(cr, user, user, context)
 
         result = []
         for product in self.browse(cr, SUPERUSER_ID, ids, context=context):
@@ -1101,7 +1102,7 @@ class product_product(osv.osv):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = filter(lambda x: x.name.id in partner_ids, product.seller_ids)
+                sellers = filter(lambda x: x.name.id in partner_ids and x.company_id.id == user_mod.company_id.id or x.company_id.id == False, product.seller_ids)
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
