@@ -14,8 +14,8 @@
 
         > .o_field_selector_chain_part {
             padding: 0px 1px;
-            border: 1px solid darken(@odoo-brand-lightsecondary, 10%);
-            background: @odoo-brand-lightsecondary;
+            border: 1px solid @gray-lighter-darker;
+            background: @gray-lighter-dark;
             margin-bottom: 1px;
         }
         > i {
@@ -94,25 +94,35 @@
                     padding: 0;
 
                     > .o_field_selector_item {
+                        @mfs-next-page-padding: 15px;
+
                         list-style: none;
                         position: relative;
                         padding: 5px 0 5px 0.4em;
                         cursor: pointer;
-                        font-family: Arial;
-                        font-size: 13px;
-                        color: #444;
-                        border-bottom: 1px solid #eee;
+                        border-bottom: 1px solid @gray-lighter-dark;
+
+                        &.o_has_relation {
+                            padding-right: @mfs-next-page-padding * 3;
+                        }
                         &.active {
-                            background: #f5f5f5;
+                            background: @gray-lighter-darker;
                         }
-                        .o_field_selector_item_title {
-                            font-size: 12px;
+
+                        > .o_field_selector_item_title {
+                            font-size: 0.85em;
                         }
-                        .o_field_selector_relation_icon {
+                        > .o_field_selector_next_page {
                             .o-position-absolute(@top: 0, @right: 0, @bottom: 0);
                             .o-flex-display();
                             .o-align-items(center);
-                            padding: 10px;
+                            border-left: 1px solid @gray-lighter-darker;
+                            padding: 0 @mfs-next-page-padding;
+                            background: white;
+
+                            &:hover {
+                                background: darken(@gray-lighter-darker, 10%);
+                            }
                         }
                     }
                 }

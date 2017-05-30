@@ -37,7 +37,7 @@ var ModelFieldSelector = Widget.extend({
         // Handle popover field navigation
         "click .o_field_selector_prev_page": "_onPrevPageClick",
         "click .o_field_selector_next_page": "_onNextPageClick",
-        "click li.o_field_selector_select_button": "_onLastFieldClick",
+        "click li.o_field_selector_item": "_onLastFieldClick",
 
         // Handle a direct change in the debug input
         "change input": "_onInputChange",
@@ -434,7 +434,8 @@ var ModelFieldSelector = Widget.extend({
      */
     _onNextPageClick: function (e) {
         e.stopPropagation();
-        this._goToNextPage(this._getLastPageField($(e.currentTarget).data("name")));
+        var $fieldItem = $(e.currentTarget).closest('.o_field_selector_item');
+        this._goToNextPage(this._getLastPageField($fieldItem.data("name")));
     },
     /**
      * Called when a popover non-relation field button is clicked -> adds it to

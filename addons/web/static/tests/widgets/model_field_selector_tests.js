@@ -108,9 +108,10 @@ QUnit.module('ModelFieldSelector', {
         assert.strictEqual($productLi.length, 1,
             "field selector popover should contain the 'Product' field");
 
-        // Clicking on the "Product" field should update the popover to show
-        // the product fields (so only "Product Name" should be there)
-        $productLi.click();
+        // Clicking on the "Product" field next page button should update the
+        // popover to show the product fields (so only "Product Name" should be
+        // there)
+        $productLi.find('.o_field_selector_next_page').click();
         $lis = $fieldSelectorPopover.find("li");
         assert.strictEqual($lis.length, 1,
             "there should be only one field proposition for 'product' model");
