@@ -342,6 +342,13 @@ class product_product(osv.osv):
             }}
         return {}
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        products = self.pool['product.product'].browse(cr, uid, ids, context=context)
+        if 'active' in vals and not vals['active'] and products.mapped('orderpoint_ids').filtered(lambda r: r.active):
+            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        return res
+
 
 class product_template(osv.osv):
     _name = 'product.template'
