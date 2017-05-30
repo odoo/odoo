@@ -225,6 +225,8 @@ class AccountConfigSettings(models.TransientModel):
     @api.multi
     def set_product_taxes(self):
         """ Set the product taxes if they have changed """
+        if not self.has_chart_of_accounts:
+            return
         ir_values_obj = self.env['ir.values']
         if self.default_sale_tax_id:
             ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
