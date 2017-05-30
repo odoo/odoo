@@ -23,6 +23,7 @@
                         </div>
                         <group>
                             <field name="name"/>
+                            <field name="analytic_distribution"/>
                         </group>
                     </sheet>
                 </form>
@@ -46,10 +47,20 @@
             <field name="model">account.analytic.category</field>
             <field name="arch" type="xml">
                 <form string="Analytic Accounts Categories">
-                    <group>
-                        <field name="name"/>
-                        <field name="description"/>
-                    </group>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                        <notebook>
+                            <page string="Childrens">
+                                <field name="children_ids" widget="one2many_list"/>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -147,7 +158,7 @@
                                 <field name="partner_id"/>
                             </group>
                             <group>
-                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                 <field name="category_id"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>

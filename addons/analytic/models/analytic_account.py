@@ -10,12 +10,15 @@ class AccountAnalyticTag(models.Model):
     name = fields.Char(string='Analytic Tag', index=True, required=True)
     color = fields.Integer('Color Index')
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
+    analytic_distribution = fields.Boolean(string="Analytic Distribution")
 
 class AccountAnalyticCategory(models.Model):
     _name = 'account.analytic.category'
     _description = 'Analytic Categories'
     name = fields.Char(string='Category', required=True)
     description = fields.Text(string='Description')
+    parent_id = fields.Many2one('account.analytic.category', string="Parent")
+    children_ids = fields.One2many('account.analytic.category', 'parent_id', string="Childrens")
 
 class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
