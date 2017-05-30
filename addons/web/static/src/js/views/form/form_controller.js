@@ -366,9 +366,6 @@ var FormController = BasicController.extend({
                 return self._callButtonAction(attrs, record);
             });
         }
-        def = def.then(function () {
-            self.reload();
-        });
 
         if (event.data.show_wow) {
             def.then(function () {

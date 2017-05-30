@@ -878,6 +878,7 @@ QUnit.module('Views', {
                 "should trigger execute_action with correct method name");
             assert.deepEqual(event.data.res_ids, [2], "should have correct id in event data");
             event.data.on_success();
+            event.data.on_closed();
         });
         rpcCount = 0;
         form.$('.o_form_statusbar button.p').click();
@@ -931,6 +932,7 @@ QUnit.module('Views', {
             assert.deepEqual(event.data.res_ids, [resID],
                 "execute action should be done on correct record id");
             event.data.on_success();
+            event.data.on_closed();
         });
         form.$('.o_form_statusbar button.p').click();
 
@@ -980,6 +982,7 @@ QUnit.module('Views', {
             assert.deepEqual(event.data.res_ids, [resID],
                 "execute action should be done on correct record id");
             event.data.on_success();
+            event.data.on_closed();
         });
         form.$('.o_form_statusbar button.p').click();
 
