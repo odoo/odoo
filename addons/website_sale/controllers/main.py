@@ -463,8 +463,9 @@ class WebsiteSale(http.Controller):
         # Required fields from mandatory field function
         required_fields += mode[1] == 'shipping' and self._get_mandatory_shipping_fields() or self._get_mandatory_billing_fields()
         # Check if state required
+        country = request.env['res.country']
         if data.get('country_id'):
-            country = request.env['res.country'].browse(int(data.get('country_id')))
+            country = country.browse(int(data.get('country_id')))
             if 'state_code' in country.get_address_fields() and country.state_ids:
                 required_fields += ['state_id']
 
@@ -484,7 +485,10 @@ class WebsiteSale(http.Controller):
             check_func = request.website.company_id.vat_check_vies and Partner.vies_vat_check or Partner.simple_vat_check
             vat_country, vat_number = Partner._split_vat(data.get("vat"))
             if not check_func(vat_country, vat_number):
-                error["vat"] = 'error'
+                if country.code and check_func(country.code, data["vat"]):
+                    data["vat"] = country.code + data["vat"]
+                else:
+                    error["vat"] = 'error'
 
         if [err for err in pycompat.items(error) if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
