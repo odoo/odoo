@@ -114,15 +114,15 @@
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user">
                                 <div class="o_setting_left_pane">
-                                    <field name="use_cash_basis"/>
+                                    <field name="tax_exigibility"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="use_cash_basis"/>
+                                    <label for="tax_exigibility"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Allow to configure taxes using cash basis
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('use_cash_basis', '=', False)]}">
+                                    <div class="content-group" attrs="{'invisible': [('tax_exigibility', '=', False)]}">
                                         <div class="row mt16">
                                             <label for="tax_cash_basis_journal_id" class="col-md-3 o_light_label"/>
                                             <field name="tax_cash_basis_journal_id"/>

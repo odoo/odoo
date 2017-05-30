@@ -26,7 +26,7 @@
         <field name="refund_account_id" ref="cuenta209_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta208_01"/>
     </record>
 
@@ -41,7 +41,7 @@
         <field name="refund_account_id" ref="cuenta209_01"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_iva')])]"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta208_01"/>
     </record>
 
@@ -55,7 +55,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta216_10_20"/>
     </record>
 
@@ -69,7 +69,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta216_10_20"/>
     </record>
 
@@ -107,7 +107,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta216_10_20"/>
     </record>
 
@@ -121,7 +121,7 @@
         <field name="account_id" ref="cuenta216_10"/>
         <field name="refund_account_id" ref="cuenta216_10"/>
         <field name="tax_group_id" ref="tax_group_iva_ret"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta216_10_20"/>
     </record>
 
@@ -135,7 +135,7 @@
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta118_01"/>
     </record>
 
@@ -149,7 +149,7 @@
         <field name="account_id" ref="cuenta119_01"/>
         <field name="refund_account_id" ref="cuenta119_01"/>
         <field name="tax_group_id" ref="tax_group_iva"/>
-        <field name="use_cash_basis" eval="True"/>
+        <field name="tax_exigibility">on_payment</field>
         <field name="cash_basis_account" ref="cuenta118_01"/>
     </record>
   </data>
