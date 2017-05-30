@@ -36,9 +36,10 @@ class TestWebsitePriceList(TransactionCase):
             'country_group_ids': [(6, 0, [ca_group.id])],
             'sequence': 10
         })
-
-        self.patcher = patch('odoo.addons.website_sale.models.sale_order.Website.get_pricelist_available', wraps=self._get_pricelist_available)
-        self.mock_get_pricelist_available = self.patcher.start()
+        import odoo.addons.website_sale.models.sale_order
+        patcher = patch('odoo.addons.website_sale.models.sale_order.Website.get_pricelist_available', wraps=self._get_pricelist_available)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def get_pl(self, show, current_pl, country):
         pls = self.website._get_pl(
@@ -124,7 +125,3 @@ class TestWebsitePriceList(TransactionCase):
             pls = self.get_pl(show, current_pl, country)
             self.assertEquals(len(set(pls.mapped('name')) & set(result)), len(pls), 'Test failed for %s (%s %s vs %s %s)'
                               % (country, len(pls), pls.mapped('name'), len(result), result))
-
-    def tearDown(self):
-        self.patcher.stop()
-        super(TestWebsitePriceList, self).tearDown()
