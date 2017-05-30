@@ -215,8 +215,9 @@ var InputField = DebouncedField.extend({
     _prepareInput: function ($input) {
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
+        var input_type = this.attrs.hasOwnProperty('password') ? 'password' : 'text' ;
         this.$input.attr({
-            type: 'text',
+            type: input_type,
             placeholder: this.attrs.placeholder || "",
         });
         this.$input.val(this._formatValue(this.value));
@@ -240,7 +241,11 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
+        var show_value = this._formatValue(this.value);
+        if (this.attrs.hasOwnProperty('password')) {
+            show_value = new Array(show_value.length + 1).join('*');
+        }
+        this.$el.html(show_value);
     },
 
     //--------------------------------------------------------------------------
