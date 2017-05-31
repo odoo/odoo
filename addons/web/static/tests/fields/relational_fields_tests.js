@@ -3699,6 +3699,51 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable list: multiple clicks on Add an item do not create invalid rows', function (assert) {
+        assert.expect(3);
+
+        this.data.turtle.onchanges = {
+            turtle_trululu: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // click twice to add a new line
+        def = $.Deferred();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "no row should have been created yet (waiting for the onchange)");
+
+        // resolve the onchange def
+        def.resolve();
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "only one row should have been created");
+        assert.ok(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            "the created row should be in edition");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

@@ -2262,6 +2262,43 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('multiple clicks on Add do not create invalid rows', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.onchanges = {
+            m2o: function () {},
+        };
+
+        var def = $.Deferred();
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_row').length, 4,
+            "should contain 4 records");
+
+        // click on Add twice, and delay the onchange
+        list.$buttons.find('.o_list_button_add').click();
+        list.$buttons.find('.o_list_button_add').click();
+
+        def.resolve();
+
+        assert.strictEqual(list.$('.o_data_row').length, 5,
+            "only one record should have been created");
+
+        list.destroy();
+    });
+
 });
 
 });

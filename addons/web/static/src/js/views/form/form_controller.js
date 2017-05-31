@@ -73,26 +73,6 @@ var FormController = BasicController.extend({
         });
     },
     /**
-     * Disable buttons so that they can't be clicked anymore
-     *
-     */
-    disableButtons: function () {
-        if (this.$buttons) {
-            this.$buttons.find('button').attr('disabled', true);
-        }
-        this.renderer.disableButtons();
-    },
-    /**
-     * Enable buttons so they can be clicked again
-     *
-     */
-    enableButtons: function () {
-        if (this.$buttons) {
-            this.$buttons.find('button').removeAttr('disabled');
-        }
-        this.renderer.enableButtons();
-    },
-    /**
      * Returns the current res_id, wrapped in a list. This is only used by the
      * sidebar (and the debugmanager)
      *
@@ -253,6 +233,26 @@ var FormController = BasicController.extend({
         }
     },
     /**
+     * Override to disable buttons in the renderer.
+     *
+     * @override
+     * @private
+     */
+    _disableButtons: function () {
+        this._super.apply(this, arguments);
+        this.renderer.disableButtons();
+    },
+    /**
+     * Override to enable buttons in the renderer.
+     *
+     * @override
+     * @private
+     */
+    _enableButtons: function () {
+        this._super.apply(this, arguments);
+        this.renderer.enableButtons();
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @override
@@ -347,7 +347,7 @@ var FormController = BasicController.extend({
         var self = this;
         var def;
 
-        this.disableButtons();
+        this._disableButtons();
 
         var attrs = event.data.attrs;
         if (attrs.confirm) {
@@ -380,9 +380,7 @@ var FormController = BasicController.extend({
             });
         }
 
-        def.always(function() {
-            self.enableButtons();
-        });
+        def.always(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord
