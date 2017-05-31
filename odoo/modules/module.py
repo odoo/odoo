@@ -78,7 +78,11 @@ class AddonsHook(object):
 
         # execute source in context of module *after* putting everything in
         # sys.modules, so recursive import works
-        execfile(modfile, new_mod.__dict__)
+        try:
+            execfile(modfile, new_mod.__dict__)
+        except:
+            _logger.error('Execution failed for %s with %s', modfile, sys.exc_info())
+            _logger.error('Make sure you have cleaned up your addons folder from moved or removed modules and their __init__ files')
 
         # people import openerp.addons and expect openerp.addons.<module> to work
         setattr(odoo.addons, addon_name, new_mod)
