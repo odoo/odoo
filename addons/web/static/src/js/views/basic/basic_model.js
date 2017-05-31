@@ -1168,6 +1168,7 @@ var BasicModel = AbstractModel.extend({
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         res_id: d.id,
                         viewType: view ? view.type : fieldInfo.viewType,
+                        parentID: list.id,
                     });
                     list_records[d.id] = rec;
                     list._changes.push(rec.id);
