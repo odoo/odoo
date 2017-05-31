@@ -63,6 +63,7 @@ def _message_post_helper(res_model='', res_id=None, message='', token='', token_
             record = record.sudo()
         else:
             raise NotFound()
+    kw.pop('csrf_token', None)
     return record.with_context(mail_create_nosubscribe=nosubscribe).message_post(body=message,
                                                                                    message_type=kw.pop('message_type', "comment"),
                                                                                    subtype=kw.pop('subtype', "mt_comment"),
