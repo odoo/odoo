@@ -202,6 +202,7 @@ More parameters can be passed as a query string
 
 Useful Remarks
 --------------
+
 * Twitter Bootstrap and FontAwesome classes can be used in your report
   template
 * Local CSS can be put directly in the template
@@ -221,6 +222,8 @@ Useful Remarks
   :ref:`these instructions <reference/backend/reporting/printed-reports/pdf-without-styles>`.
 
 .. _reference/reports/paper_formats:
+
+.. note:: Take care about the fact that there is a known design issue which is being solved for `v9.0 and probably for v8.0 here <https://github.com/odoo/odoo/issues/4359>`_.
 
 Paper Format
 ============
