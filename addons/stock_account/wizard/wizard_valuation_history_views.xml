@@ -25,6 +25,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_wizard_valuation_history"/>
         <field name="target">new</field>
+        <field name="context">{'default_compute_at_date': 0}</field>
     </record>
     <menuitem id="stock.menu_quants" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="120" action="action_wizard_stock_valuation_history"/>
 </odoo>

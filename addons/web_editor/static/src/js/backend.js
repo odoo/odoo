@@ -3,6 +3,7 @@ odoo.define('web_editor.backend', function (require) {
 
 var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
+var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var field_registry = require('web.field_registry');
@@ -23,11 +24,27 @@ var QWeb = core.qweb;
  */
 var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
     className: 'oe_form_field oe_form_field_html_text',
+    supportedFieldTypes: ['html'],
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * Summernote doesn't notify for changes done in code mode. We override
+     * commitChanges to manually switch back to normal mode before committing
+     * changes, so that the widget is aware of the changes done in code mode.
+     *
+     * @override
+     */
+    commitChanges: function () {
+        // switch to WYSIWYG mode if currently in code mode to get all changes
+        if (config.debug && this.mode === 'edit') {
+            var layoutInfo = this.$textarea.data('layoutInfo');
+            $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
+        }
+        this._super.apply(this, arguments);
+    },
     /**
      * @override
      */
@@ -60,7 +77,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
      * @returns {Object} the summernote configuration
      */
     _getSummernoteConfig: function () {
-        var config = {
+        var summernoteConfig = {
             focus: false,
             height: 180,
             toolbar: [
@@ -79,10 +96,10 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
             lang: "odoo",
             onChange: this._doDebouncedAction.bind(this),
         };
-        if (this.getSession().debug) {
-            config.toolbar.splice(7, 0, ['view', ['codeview']]);
+        if (config.debug) {
+            summernoteConfig.toolbar.splice(7, 0, ['view', ['codeview']]);
         }
-        return config;
+        return summernoteConfig;
     },
     /**
      * @override

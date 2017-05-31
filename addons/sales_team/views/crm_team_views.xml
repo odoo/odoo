@@ -17,7 +17,9 @@
         <menuitem id="menu_config_address_book" parent="menu_sale_config" name="Contacts" sequence="4" groups="base.group_system"/>
             <menuitem action="base.action_partner_category_form" id="menu_partner_category_form" name="Contact Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>
             <menuitem action="base.action_partner_title_contact" id="menu_partner_title_contact" name="Contact Titles" parent="menu_config_address_book" sequence="3" groups="base.group_no_one"/>
+            <menuitem id="res_partner_industry_menu" name="Sectors of Activity" action="base.res_partner_industry_action" parent="sales_team.menu_config_address_book" sequence="4" groups="base.group_no_one"/> 
             <menuitem id="menu_localisation" name="Localization" parent="menu_config_address_book" sequence="5" groups="base.group_no_one"/>
+
                 <menuitem action="base.action_country" id="menu_country_partner" parent="menu_localisation" sequence="1" groups="base.group_no_one"/>
                 <menuitem action="base.action_country_group" id="menu_country_group" name="Country Group" parent="menu_localisation" sequence="3" groups="base.group_no_one"/>
                 <menuitem action="base.action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="2" groups="base.group_no_one"/>

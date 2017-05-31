@@ -76,6 +76,10 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 if (event.data.on_success) {
                     event.data.on_success(result);
                 }
+            }).fail(function (result) {
+                if (event.data.on_fail) {
+                    event.data.on_fail(result);
+                }
             });
         },
     },

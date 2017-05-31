@@ -64,7 +64,10 @@ var ListController = BasicController.extend({
                 return $.when();
             }
         }
-        return this._super(recordID);
+        var self = this;
+        return this._super(recordID).then(function () {
+            self._updateButtons('readonly');
+        });
     },
     /**
      * Calculate the active domain of the list view. This should be done only
@@ -89,7 +92,8 @@ var ListController = BasicController.extend({
                 contexts: [userContext].concat(searchData.contexts),
                 group_by_seq: searchData.groupbys || []
             });
-            return $.when(self.dataset.domain.concat(results.domain || []));
+            var record = self.model.get(self.handle, {raw: true});
+            return $.when(record.getDomain().concat(results.domain || []));
         } else {
             return $.Deferred().resolve();
         }
@@ -190,19 +194,25 @@ var ListController = BasicController.extend({
         }
     },
     /**
-     * Add a record to the list
+     * Adds a record to the list.
+     * Disables the buttons to prevent concurrent record creation or edition.
      *
      * @todo make record creation a basic controller feature
      * @private
      */
     _addRecord: function () {
         var self = this;
-        this.model.addDefaultRecord(this.handle, {position: this.editable}).then(function (recordID) {
+        this._disableButtons();
+        return this.renderer.unselectRow().then(function () {
+            return self.model.addDefaultRecord(self.handle, {
+                position: self.editable,
+            });
+        }).then(function (recordID) {
             self._toggleNoContentHelper(false);
             var state = self.model.get(self.handle);
             self.renderer.updateState(state, {});
             self.renderer.editRecord(recordID);
-        });
+        }).always(this._enableButtons.bind(this));
     },
     /**
      * Archive the current selection

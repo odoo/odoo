@@ -348,7 +348,7 @@ PaymentScreenWidget.include({
 
         if (! decodedMagtek) {
             this.gui.show_popup('error',{
-                'title': 'Could not read card',
+                'title': _t('Could not read card'),
                 'body':  _t('This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International).'),
             });
             return;
@@ -638,7 +638,7 @@ PaymentScreenWidget.include({
 
             if (already_swipe_pending) {
                 this.gui.show_popup('error',{
-                    'title': 'Error',
+                    'title': _t('Error'),
                     'body':  _t('One credit card swipe already pending.'),
                 });
             } else {

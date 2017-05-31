@@ -843,6 +843,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('support row decoration (with unset numeric values)', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [];
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom" decoration-danger="int_field &lt; 0">' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 0,
+            "the data row should not have .text-danger decoration (int_field is unset)");
+        list.$('input[name="int_field"]').val('-3').trigger('input');
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 1,
+            "the data row should have .text-danger decoration (int_field is negative)");
+        list.destroy();
+    });
+
     QUnit.test('support row decoration with date', function (assert) {
         assert.expect(3);
 
@@ -1087,7 +1111,7 @@ QUnit.module('Views', {
             },
             intercepts: {
                 execute_action: function (event) {
-                    assert.strictEqual(event.data.record_id, 1,
+                    assert.deepEqual(event.data.res_ids, [1],
                         'should call with correct id');
                     assert.strictEqual(event.data.model, 'foo',
                         'should call with correct model');
@@ -1432,7 +1456,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edition: create new line, then discard', function (assert) {
-        assert.expect(2);
+        assert.expect(8);
 
         var list = createView({
             View: ListView,
@@ -1443,10 +1467,22 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden");
         list.$buttons.find('.o_list_button_add').click();
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 0,
+            "create button should be hidden");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 1,
+            "discard button should be visible");
         list.$buttons.find('.o_list_button_discard').click();
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should still have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible again");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden again");
         list.destroy();
     });
 
@@ -2166,6 +2202,103 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('field values are escaped', function (assert) {
+        assert.expect(1);
+        var value = '<script>throw Error();</script>';
+
+        this.data.foo.records[0].foo = value;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), value,
+            "value should have been escaped");
+
+        list.destroy();
+    });
+
+    QUnit.test('pressing ESC discard the current line changes', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        list.$('input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should have 4 data row in list");
+        assert.strictEqual(list.$('tr.o_data_row.o_selected_row').length, 0,
+            "no rows should be selected");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        list.destroy();
+    });
+
+    QUnit.test('field with password attribute', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" password="True"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td.o_data_cell:eq(0)').text(), '***',
+            "should display string as password");
+        assert.strictEqual(list.$('td.o_data_cell:eq(1)').text(), '****',
+            "should display string as password");
+
+        list.destroy();
+    });
+
+    QUnit.test('multiple clicks on Add do not create invalid rows', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.onchanges = {
+            m2o: function () {},
+        };
+
+        var def = $.Deferred();
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_row').length, 4,
+            "should contain 4 records");
+
+        // click on Add twice, and delay the onchange
+        list.$buttons.find('.o_list_button_add').click();
+        list.$buttons.find('.o_list_button_add').click();
+
+        def.resolve();
+
+        assert.strictEqual(list.$('.o_data_row').length, 5,
+            "only one record should have been created");
+
+        list.destroy();
+    });
+
 });
 
 });

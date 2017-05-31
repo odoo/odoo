@@ -442,7 +442,7 @@ class MarketingCampaignWorkitem(models.Model):
         for workitem in self:
             proxy = self.env[workitem.object_id.model]
             record = proxy.browse(workitem.res_id)
-            if not workitem.res_id or not record:
+            if not workitem.res_id or not record.exists():
                 workitem.res_name = '/'
                 continue
             workitem.res_name = record.name_get()[0][1]

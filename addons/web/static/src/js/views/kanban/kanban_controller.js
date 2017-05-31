@@ -131,7 +131,8 @@ var KanbanController = BasicController.extend({
     _updateButtons: function () {
         if (this.$buttons) {
             var data = this.model.get(this.handle, {raw: true});
-            var createMuted = data.count === 0 && this.createColumnEnabled;
+            var grouped = data.groupedBy.length;
+            var createMuted = grouped && data.data.length === 0 && this.createColumnEnabled;
             this.$buttons.find('.o-kanban-button-new')
                 .toggleClass('btn-primary', !createMuted)
                 .toggleClass('btn-default', createMuted);
@@ -260,7 +261,7 @@ var KanbanController = BasicController.extend({
         this.trigger_up('execute_action', {
             action_data: attrs,
             model: record.model,
-            record_id: record.res_id,
+            res_ids: [record.res_id],
             on_closed: function () {
                 self.model.reload(record.id).then(function (db_id) {
                     var data = self.model.get(db_id);
@@ -328,6 +329,7 @@ var KanbanController = BasicController.extend({
             return self.model
                 .addRecordToGroup(columnState.id, records[0])
                 .then(function (db_id) {
+                    self._updateEnv();
                     column.addRecord(self.model.get(db_id), {position: 'before'});
                 });
         }

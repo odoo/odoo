@@ -459,7 +459,8 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            views = self.search(conditions + [('model_ids.module', 'in', tuple(self.pool._init_modules))])
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
             views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)])
         else:
             views = self.search(conditions)

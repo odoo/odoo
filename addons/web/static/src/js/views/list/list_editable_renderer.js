@@ -84,6 +84,26 @@ ListRenderer.include({
         return this._super(recordID);
     },
     /**
+     * We need to override the confirmChange method from BasicRenderer to
+     * reevaluate the row decorations.  Since they depends on the current value
+     * of the row, they might have changed between each edit.
+     *
+     * @override
+     */
+    confirmChange: function (state, id) {
+        var self = this;
+        return this._super.apply(this, arguments).then(function (widgets) {
+            if (widgets.length) {
+                var rowIndex = _.findIndex(state.data, function (r) {
+                    return r.id === id;
+                });
+                var $row = self.$('.o_data_row:nth(' + rowIndex + ')');
+                self._setDecorationClasses(state.data[rowIndex], $row);
+            }
+            return widgets;
+        });
+    },
+    /**
      * Edit a given record in the list
      *
      * @param {string} recordID
@@ -113,13 +133,15 @@ ListRenderer.include({
      */
     removeLine: function (state, recordID) {
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
+        this.state = state;
+        if (rowIndex === -1) {
+            return;
+        }
         if (rowIndex === this.currentRow) {
             this.currentRow = null;
         }
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');
         $row.remove();
-
-        this.state = state;
     },
     /**
      * Updates the already rendered row associated to the given recordID so that
@@ -202,6 +224,44 @@ ListRenderer.include({
 
         return $.when.apply($, defs);
     },
+    /**
+     * This method is called whenever we click/move outside of a row that was
+     * in edit mode. This is the moment we save all accumulated changes on that
+     * row, if needed (@see BasicController.saveRecord).
+     *
+     * Note that we have to disable the focusable elements (inputs, ...) to
+     * prevent subsequent editions. These edits would be lost, because the list
+     * view only saves records when unselecting a row.
+     *
+     * @returns {Deferred} The deferred resolves if the row was unselected (and
+     *   possibly removed). If may be rejected, when the row is dirty and the
+     *   user refuses to discard its changes.
+     */
+    unselectRow: function () {
+        // Protect against calling this method when no row is selected
+        if (this.currentRow === null) {
+            return $.when();
+        }
+
+        var record = this.state.data[this.currentRow];
+        var recordWidgets = this.allFieldWidgets[record.id];
+        toggleWidgets(true);
+
+        var def = $.Deferred();
+        this.trigger_up('save_line', {
+            recordID: record.id,
+            onSuccess: def.resolve.bind(def),
+            onFailure: def.reject.bind(def),
+        });
+        return def.fail(toggleWidgets.bind(null, false));
+
+        function toggleWidgets(disabled) {
+            _.each(recordWidgets, function (widget) {
+                var $el = widget.getFocusableElement();
+                $el.prop('disabled', disabled);
+            });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -241,7 +301,7 @@ ListRenderer.include({
         if (this.currentRow > 0) {
             this._selectCell(this.currentRow - 1, this.columns.length - 1);
         } else {
-            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+            this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
     },
     /**
@@ -251,10 +311,16 @@ ListRenderer.include({
      * @private
      */
     _moveToNextLine: function () {
+        var record = this.state.data[this.currentRow];
+        var fieldNames = this.canBeSaved(record.id);
+        if (fieldNames.length) {
+            return;
+        }
+
         if (this.currentRow < this.state.data.length - 1) {
             this._selectCell(this.currentRow + 1, 0);
         } else {
-            this._unselectRow().then(this.trigger_up.bind(this, 'add_record'));
+            this.unselectRow().then(this.trigger_up.bind(this, 'add_record'));
         }
     },
     /**
@@ -399,7 +465,7 @@ ListRenderer.include({
 
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this._unselectRow().then(function () {
+        return this.unselectRow().then(function () {
             // Notify the controller we want to make a record editable
             var record = self.state.data[rowIndex];
             var def = $.Deferred();
@@ -409,44 +475,6 @@ ListRenderer.include({
             });
             return def;
         });
-    },
-    /**
-     * This method is called whenever we click/move outside of a row that was
-     * in edit mode. This is the moment we save all accumulated changes on that
-     * row, if needed (@see BasicController.saveRecord).
-     *
-     * Note that we have to disable the focusable elements (inputs, ...) to
-     * prevent subsequent editions. These edits would be lost, because the list
-     * view only saves records when unselecting a row.
-     *
-     * @returns {Deferred} The deferred resolves if the row was unselected (and
-     *   possibly removed). If may be rejected, when the row is dirty and the
-     *   user refuses to discard its changes.
-     */
-    _unselectRow: function () {
-        // Protect against calling this method when no row is selected
-        if (this.currentRow === null) {
-            return $.when();
-        }
-
-        var record = this.state.data[this.currentRow];
-        var recordWidgets = this.allFieldWidgets[record.id];
-        toggleWidgets(true);
-
-        var def = $.Deferred();
-        this.trigger_up('save_line', {
-            recordID: record.id,
-            onSuccess: def.resolve.bind(def),
-            onFailure: def.reject.bind(def),
-        });
-        return def.fail(toggleWidgets.bind(null, false));
-
-        function toggleWidgets(disabled) {
-            _.each(recordWidgets, function (widget) {
-                var $el = widget.getFocusableElement();
-                $el.prop('disabled', disabled);
-            });
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -469,7 +497,7 @@ ListRenderer.include({
 
         // but we do want to unselect current row
         var self = this;
-        this._unselectRow().then(function () {
+        this.unselectRow().then(function () {
             self.trigger_up('add_record'); // TODO write a test, the deferred was not considered
         });
     },
@@ -495,7 +523,7 @@ ListRenderer.include({
      * We need to manually unselect row, because noone else would do it
      */
     _onEmptyRowClick: function () {
-        this._unselectRow();
+        this.unselectRow();
     },
     /**
      * Clicking on a footer should unselect (and save) the currently selected
@@ -503,7 +531,7 @@ ListRenderer.include({
      * and _onWindowClicked ignore those clicks.
      */
     _onFooterClick: function () {
-        this._unselectRow();
+        this.unselectRow();
     },
     /**
      * Handles the keyboard navigation according to events triggered by field
@@ -567,6 +595,11 @@ ListRenderer.include({
                 break;
             case 'next_line':
                 this._moveToNextLine();
+                break;
+            case 'cancel':
+                this.trigger_up('discard_changes', {
+                    recordID: ev.target.dataPointID,
+                });
                 break;
         }
     },
@@ -644,7 +677,7 @@ ListRenderer.include({
             return;
         }
 
-        this._unselectRow();
+        this.unselectRow();
     },
 });
 

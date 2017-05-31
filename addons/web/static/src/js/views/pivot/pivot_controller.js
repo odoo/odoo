@@ -74,8 +74,9 @@ var PivotController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * We save the current measure and group bys, so we can restore the view
-     * when we save the current state in the search view.
+     * Returns the current measures and groupbys, so we can restore the view
+     * when we save the current state in the search view, or when we add it to
+     * the dashboard.
      *
      * @override method from AbstractController
      * @returns {Object}
@@ -84,8 +85,8 @@ var PivotController = AbstractController.extend({
         var state = this.model.get();
         return {
             pivot_measures: state.measures,
-            pivot_column_groupby: state.data.main_col.groupbys,
-            pivot_row_groupby: state.data.main_row.groupbys,
+            pivot_column_groupby: state.colGroupBys,
+            pivot_row_groupby: state.rowGroupBys,
         };
     },
     /**
@@ -126,6 +127,7 @@ var PivotController = AbstractController.extend({
             return;
         }
         framework.blockUI();
+        table.title = this.title;
         session.get_file({
             url: '/web/pivot/export_xls',
             data: {data: JSON.stringify(table)},
@@ -218,8 +220,9 @@ var PivotController = AbstractController.extend({
             this.update({}, {reload: false});
         }
         if ($target.hasClass('o_pivot_expand_button')) {
-            this.model.expandAll();
-            this.update({reload: false});
+            this.model
+                    .expandAll()
+                    .then(this.update.bind(this, {}, {reload: false}));
         }
         if ($target.parents('.o_pivot_measures_list').length) {
             var parent = $target.parent();

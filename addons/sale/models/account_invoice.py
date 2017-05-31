@@ -90,6 +90,9 @@ class AccountInvoice(models.Model):
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountInvoice, self).get_delivery_partner_id()
 
+    def _get_refund_common_fields(self):
+        return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
+
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _order = 'invoice_id, layout_category_id, sequence, id'

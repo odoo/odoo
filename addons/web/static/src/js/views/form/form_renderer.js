@@ -84,8 +84,25 @@ var FormRenderer = BasicRenderer.extend({
             _.each(resetWidgets, function (widget) {
                 self._setIDForLabel(widget, self.idsForLabels[widget.name]);
             });
+            if (self.$('.o_field_invalid').length) {
+                self.canBeSaved(self.state.id);
+            }
             return resetWidgets;
         });
+    },
+    /**
+     * Disable stat buttons so that they can't be clicked anymore
+     *
+     */
+    disableButtons: function() {
+        this.$('.oe_button_box button').attr('disabled', true);
+    },
+    /**
+     * Enable stat buttons so they can be clicked again
+     *
+     */
+    enableButtons: function() {
+        this.$('.oe_button_box button').removeAttr('disabled');
     },
     /**
      * returns the active tab pages for each notebook
@@ -679,10 +696,12 @@ var FormRenderer = BasicRenderer.extend({
                 },
             });
         });
-        return $('<div class="o_notebook">')
+        var $notebook = $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
-                .append($headers)
-                .append($pages);
+                .append($headers, $pages);
+        this._registerModifiers(node, this.state, $notebook);
+        this._handleAttributes($notebook, node);
+        return $notebook;
     },
     /**
      * @private

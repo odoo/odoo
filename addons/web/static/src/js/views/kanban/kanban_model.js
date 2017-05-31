@@ -31,12 +31,20 @@ var KanbanModel = BasicModel.extend({
             viewType: group.viewType,
         });
         group.data.unshift(new_record.id);
+        group.res_ids.unshift(resId);
         group.count++;
-        return this._fetchRecord(new_record)
-            // .then(this._fetch_relational_data.bind(this))
-            .then(function (result) {
-                return result.id;
-            });
+
+        // update the res_ids and count of the parent
+        var self = this;
+        var parent = this.localData[group.parentID];
+        parent.res_ids =  _.flatten(_.map(parent.data, function (dataPointID) {
+            return self.localData[dataPointID].res_ids;
+        }));
+        parent.count++;
+
+        return this._fetchRecord(new_record).then(function (result) {
+            return result.id;
+        });
     },
     /**
      * Creates a new group from a name (performs a name_create).
@@ -78,7 +86,6 @@ var KanbanModel = BasicModel.extend({
 
                 // newGroup.is_open = true;
                 parent.data.push(newGroup.id);
-                parent.count++;
                 return newGroup.id;
             });
     },

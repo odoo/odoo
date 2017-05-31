@@ -133,7 +133,7 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view));
+                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
                         },
                     });
                 }
@@ -375,11 +375,9 @@ var SelectCreateDialog = ViewDialog.extend({
         });
     },
     _process_search_data: function (domains, contexts, groupbys) {
-        var user_context = this.getSession().user_context;
-        contexts = [user_context].concat(contexts);
         var results = pyeval.eval_domains_and_contexts({
-            domains: domains || [],
-            contexts: contexts || [],
+            domains: [this.domain].concat(domains),
+            contexts: [this.context].concat(contexts),
             group_by_seq: groupbys || []
         });
         return {

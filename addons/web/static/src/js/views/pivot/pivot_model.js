@@ -127,20 +127,21 @@ var PivotModel = AbstractModel.extend({
         });
     },
     /**
+     * Export the current pivot view in a simple JS object.
+     *
      * @returns {Object}
      */
     exportData: function () {
-        var record = this.data;
-        var measureNbr = record.measures.length;
-        var headers = this.renderer._computeHeaders();
+        var measureNbr = this.data.measures.length;
+        var headers = this._computeHeaders();
         var measureRow = measureNbr > 1 ? _.last(headers) : [];
-        var rows = this.renderer._computeRows();
+        var rows = this._computeRows();
         var i, j, value;
         headers[0].splice(0,1);
 
         // process measureRow
         for (i = 0; i < measureRow.length; i++) {
-            measureRow[i].measure = this.measures[measureRow[i].measure].string;
+            measureRow[i].measure = this.fields[measureRow[i].measure].string;
         }
         // process all rows
         for (i =0, j, value; i < rows.length; i++) {
@@ -148,7 +149,7 @@ var PivotModel = AbstractModel.extend({
                 value = rows[i].values[j];
                 rows[i].values[j] = {
                     is_bold: (i === 0) ||
-                        ((record.data.main_col.width > 1) &&
+                        ((this.data.main_col.width > 1) &&
                          (j >= rows[i].values.length - measureNbr)),
                     value:  (value === undefined) ? "" : value,
                 };
@@ -159,7 +160,6 @@ var PivotModel = AbstractModel.extend({
             measure_row: measureRow,
             rows: rows,
             nbr_measures: measureNbr,
-            title: this.title,
         };
     },
     /**
@@ -221,17 +221,14 @@ var PivotModel = AbstractModel.extend({
     load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.rowGroupBys;
-        this.initialColGroupBys = params.colGroupBys;
-        this.initialMeasures = params.measures;
         this.fields = params.fields;
         this.modelName = params.modelName;
-        var groupedBy = params.groupedBy.length ? params.groupedBy : this.initialRowGroupBys;
         this.data = {
             domain: params.domain,
             context: params.context,
-            groupedBy: groupedBy,
-            colGroupBys: params.colGroupBys || this.initialColGroupBys,
-            measures: this.initialMeasures,
+            groupedBy: params.rowGroupBys,
+            colGroupBys: params.colGroupBys,
+            measures: params.measures,
             sorted_column: {},
         };
         return this._loadData();
@@ -514,7 +511,7 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
         var groupBys = [];
-        var rowGroupBys = this.data.groupedBy;
+        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
 
@@ -591,7 +588,7 @@ var PivotModel = AbstractModel.extend({
         });
 
         var index = 0;
-        var rowGroupBys = this.data.groupedBy;
+        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
         var colGroupBys = this.data.colGroupBys;
         var datapt, row, col, attrs, cell_value;
         var main_row_header, main_col_header;

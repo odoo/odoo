@@ -91,7 +91,7 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var record = state.id === id ? state : _.findWhere(state.data, {id: id});
         if (!record) {
-            return this._render();
+            return this._render().then(_.constant([]));
         }
 
         var defs = [];
@@ -269,22 +269,6 @@ var BasicRenderer = AbstractRenderer.extend({
         return widget.isValid() && (widget.isSet() || !modifiers.required);
     },
     /**
-     * Updates the modifiers evaluation associated to a given modifiers data and
-     * a given record. This only updates the modifiers values. To see associated
-     * DOM updates: @see _updateAllModifiers @see _applyModifiers.
-     *
-     * @private
-     * @param {Object} modifiersData
-     * @param {Object} record
-     */
-    _computeModifiers: function (modifiersData, record) {
-        var evalContext = record.evalContext;
-        modifiersData.evaluatedModifiers[record.id]
-            = _.mapObject(modifiersData.modifiers, function (modifier) {
-                return new Domain(modifier, evalContext).compute(evalContext);
-            });
-    },
-    /**
      * Destroys a given widget associated to the given record and removes it
      * from internal referencing.
      *
@@ -342,7 +326,6 @@ var BasicRenderer = AbstractRenderer.extend({
      *   record. This allows nodes that will produce an AbstractField instance
      *   to have their modifiers registered before this field creation as we
      *   need the readonly modifier to be able to instantiate the AbstractField.
-     *   (@see _computeModifiers).
      *
      * - On additional registrations, if the node was already registered but the
      *   record is different, we evaluate the modifiers for this record and
@@ -399,7 +382,7 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // Evaluate if necessary
         if (!modifiersData.evaluatedModifiers[record.id]) {
-            this._computeModifiers(modifiersData, record);
+            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
         }
 
         // Element might not be given yet (a second call to the function can
@@ -569,7 +552,6 @@ var BasicRenderer = AbstractRenderer.extend({
      * 2) Updates the rendering of the view elements associated to the given
      *    record to match the new modifiers.
      *
-     * @see _computeModifiers
      * @see _applyModifiers
      *
      * @private
@@ -582,7 +564,7 @@ var BasicRenderer = AbstractRenderer.extend({
         var defs = [];
         this.defs = defs; // Potentially filled by widget rerendering
         _.each(this.allModifiersData, function (modifiersData) {
-            self._computeModifiers(modifiersData, record);
+            modifiersData.evaluatedModifiers[record.id] = record.evalModifiers(modifiersData.modifiers);
             self._applyModifiers(modifiersData, record);
         });
         delete this.defs;

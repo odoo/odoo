@@ -83,10 +83,10 @@ var DebouncedField = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        // _debouncedStarted is used to detect that the user interacted at least
+        // _isDirty is used to detect that the user interacted at least
         // once with the widget, so that we can prevent it from triggering a
         // field_changed in commitChanges if the user didn't change anything
-        this._debouncedStarted = false;
+        this._isDirty = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
                 this._doDebouncedAction = _.debounce(this._doAction, this.DEBOUNCE);
@@ -97,7 +97,7 @@ var DebouncedField = AbstractField.extend({
             var self = this;
             var debouncedFunction = this._doDebouncedAction;
             this._doDebouncedAction = function () {
-                self._debouncedStarted = true;
+                self._isDirty = true;
                 debouncedFunction.apply(self, arguments);
             };
         }
@@ -115,7 +115,7 @@ var DebouncedField = AbstractField.extend({
      * @override
      */
     commitChanges: function () {
-        if (this._debouncedStarted && this.mode === 'edit') {
+        if (this._isDirty && this.mode === 'edit') {
             this._doAction();
         }
     },
@@ -132,7 +132,13 @@ var DebouncedField = AbstractField.extend({
      * @private
      */
     _doAction: function () {
-        this._setValue(this._getValue());
+        // as _doAction may be debounced, it may happen that it is called after
+        // the widget has been destroyed, and in this case, we don't want it to
+        // do anything (commitChanges ensures that if it has local changes, they
+        // are triggered up before the widget is destroyed, if necessary).
+        if (!this.isDestroyed()) {
+            this._setValue(this._getValue());
+        }
     },
     /**
      * Should return the current value of the field, in the DOM (for example,
@@ -159,6 +165,7 @@ var InputField = DebouncedField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.nodeOptions.isPassword = 'password' in this.attrs;
         if (this.mode === 'edit') {
             this.tagName = 'input';
         }
@@ -216,8 +223,11 @@ var InputField = DebouncedField.extend({
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
         this.$input.attr({
-            type: 'text',
+            type: this.nodeOptions.isPassword ? 'password' : 'text',
             placeholder: this.attrs.placeholder || "",
+            autocomplete: this.nodeOptions.isPassword ?
+                'new-password' :
+                this.attrs.autocomplete,
         });
         this.$input.val(this._formatValue(this.value));
         return this.$input;
@@ -240,7 +250,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
+        this.$el.text(this._formatValue(this.value));
     },
 
     //--------------------------------------------------------------------------
@@ -524,6 +534,13 @@ var FieldMonetary = InputField.extend({
         }
     },
     /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.html(this._formatValue(this.value));
+    },
+    /**
      * Re-gets the currency as its value may have changed.
      * @see FieldMonetary.resetOnAnyFieldChange
      *
@@ -541,7 +558,7 @@ var FieldMonetary = InputField.extend({
      * @private
      */
     _setCurrency: function () {
-        var currencyField = this.attrs.currency_field || this.field.currency_field || 'currency_id';
+        var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
     },
@@ -885,8 +902,8 @@ var FieldPhone = FieldEmail.extend({
     _renderReadonly: function () {
         this._super();
         if (this._canCall()) {
-            var text = this.$el.text();
             // Split phone number into two to prevent Skype app from finding it
+            var text = this.$el.text();
             var part1 = _.escape(text.substr(0, text.length/2));
             var part2 = _.escape(text.substr(text.length/2));
             this.$el.html(part1 + "&shy;" + part2);
@@ -1543,7 +1560,7 @@ var FieldPercentPie = AbstractField.extend({
         this.$leftMask.css({transform: leftDeg, msTransform: leftDeg, mozTransform: leftDeg, webkitTransform: leftDeg});
         this.$rightMask.css({transform: rightDeg, msTransform: rightDeg, mozTransform: rightDeg, webkitTransform: rightDeg});
 
-        this.$pieValue.html(Math.round(value) + '%');
+        this.$pieValue.text(Math.round(value) + '%');
     },
 });
 
@@ -1684,9 +1701,9 @@ var FieldProgressBar = AbstractField.extend({
 
         if (!this.write_mode) {
             if (max_value !== 100) {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + " / " + utils.human_number(max_value));
+                this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
             } else {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + "%");
+                this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
             }
         } else if (isNaN(v)) {
             this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);
