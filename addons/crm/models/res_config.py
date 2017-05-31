@@ -59,7 +59,10 @@ class CRMSettings(models.TransientModel):
 
     @api.onchange('default_generate_lead_from_alias')
     def _onchange_default_generate_lead_from_alias(self):
-        self.alias_prefix = 'info' if self.default_generate_lead_from_alias else False
+        if self.default_generate_lead_from_alias:
+            self.alias_prefix = self.alias_prefix or 'info'
+        else:
+            self.alias_prefix = False
 
     @api.model
     def get_default_alias_prefix(self, fields):

@@ -29,13 +29,7 @@ class AccountRegisterPayments(models.TransientModel):
     def _onchange_amount(self):
         if hasattr(super(AccountRegisterPayments, self), '_onchange_amount'):
             super(AccountRegisterPayments, self)._onchange_amount()
-        # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
-        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
-        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = self.amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
-        self.check_amount_in_words = check_amount_in_words
+        self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
 
     def get_payment_vals(self):
         res = super(AccountRegisterPayments, self).get_payment_vals()
@@ -56,6 +50,15 @@ class AccountPayment(models.Model):
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
              "or if the current numbering is wrong, you can change it in the journal configuration page.")
 
+    def _get_check_amount_in_words(self, amount):
+        # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
+        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(amount), lang='en', currency='')
+        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
+        decimals = amount % 1
+        if decimals >= 10**-2:
+            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
+        return check_amount_in_words
+
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
         if hasattr(super(AccountPayment, self), '_onchange_journal_id'):
@@ -67,12 +70,7 @@ class AccountPayment(models.Model):
     def _onchange_amount(self):
         if hasattr(super(AccountPayment, self), '_onchange_amount'):
             super(AccountPayment, self)._onchange_amount()
-        check_amount_in_words = amount_to_text_en.amount_to_text(math.floor(self.amount), lang='en', currency='')
-        check_amount_in_words = check_amount_in_words.replace(' and Zero Cent', '') # Ugh
-        decimals = self.amount % 1
-        if decimals >= 10**-2:
-            check_amount_in_words += _(' and %s/100') % str(int(round(float_round(decimals*100, precision_rounding=1))))
-        self.check_amount_in_words = check_amount_in_words
+        self.check_amount_in_words = self._get_check_amount_in_words(self.amount)
 
     def _check_communication(self, payment_method_id, communication):
         super(AccountPayment, self)._check_communication(payment_method_id, communication)
