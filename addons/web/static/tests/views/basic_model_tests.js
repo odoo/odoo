@@ -407,6 +407,40 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('many2many with ADD_M2M command and context with parent key', function (assert) {
+        assert.expect(1);
+
+        this.data.partner_type.fields.some_char = {type: "char"};
+        this.params.fieldsInfo = {
+            default: {
+                category: {
+                    fieldsInfo: {default: {some_char: { context: "{'a': parent.foo}"}}},
+                    relatedFields: {some_char: {type: "char"}},
+                    viewType: 'default',
+                },
+                foo: {},
+            },
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var changes = {
+                category: {operation: 'ADD_M2M', ids: [{id: 12}]}
+            };
+            model.notifyChanges(resultID, changes).then(function () {
+                var record = model.get(resultID);
+                var categoryRecord = record.data.category.data[0];
+                assert.deepEqual(categoryRecord.getContext({fieldName: 'some_char'}), {a:'gnap'},
+                    "should properly evaluate context");
+            });
+        });
+        model.destroy();
+    });
+
     QUnit.test('can fetch a list', function (assert) {
         assert.expect(4);
 

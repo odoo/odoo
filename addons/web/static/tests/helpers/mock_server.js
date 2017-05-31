@@ -196,6 +196,9 @@ var MockServer = Class.extend({
                 // 'transfer_field_to_modifiers' simulation
                 var field = fields[node.attrs.name];
 
+                if (!field) {
+                    throw new Error("Field " + node.attrs.name + " does not exist");
+                }
                 var defaultValues = {};
                 var stateExceptions = {};
                 _.each(modifiersNames, function (attr) {
