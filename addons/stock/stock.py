@@ -289,7 +289,12 @@ class stock_quant(osv.osv):
         return res
 
     def _get_inventory_value(self, cr, uid, quant, context=None):
-        return quant.product_id.standard_price * quant.qty
+        product = quant.product_id
+        template = product.product_tmpl_id
+        price = product.standard_price
+        if template.uom_id != template.uom_po_id:
+            price = price / self.pool.get('product.uom')._compute_qty(cr, uid, template.uom_po_id.id, 1, template.uom_id.id)
+        return price * quant.qty
 
     _columns = {
         'name': fields.function(_get_quant_name, type='char', string='Identifier'),
