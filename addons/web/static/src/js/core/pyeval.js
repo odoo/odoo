@@ -858,6 +858,13 @@ function eval_domains(domains, evaluation_context) {
     );
     _(domains).each(function (domain) {
         if (_.isString(domain)) {
+            if(domain in evaluation_context) {
+                // domain provided by an other field into the evaluation
+                // context
+                result_domain.push.apply(
+                    result_domain, $.parseJSON(evaluation_context[domain]));
+                return;
+            }
             // wrap raw strings in domain
             domain = { __ref: 'domain', __debug: domain };
         }
