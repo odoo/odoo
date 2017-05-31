@@ -838,6 +838,10 @@ class IrActionsServer(models.Model):
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
         if action.use_write == 'current':
+            # in onchange update record subjected to the onchange
+            if self.env.in_onchange:
+                self.env.context['onchange_self'].update(res)
+                return
             model = action.model_id.model
             ref_id = self._context.get('active_id')
         elif action.use_write == 'other':
@@ -974,8 +978,11 @@ class IrActionsServer(models.Model):
                 res = func(action, eval_context=eval_context)
 
             elif hasattr(self, 'run_action_%s' % action.state):
-                active_id = self._context.get('active_id')
-                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                if self.env.in_onchange:
+                    active_ids = [self._context.get('onchange_self').id]
+                else:
+                    active_id = self._context.get('active_id')
+                    active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
