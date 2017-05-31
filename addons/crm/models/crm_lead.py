@@ -97,7 +97,7 @@ class Lead(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     referred = fields.Char('Referred By')
 
-    date_open = fields.Datetime('Assigned', readonly=True)
+    date_open = fields.Datetime('Assigned', readonly=True, default=fields.Datetime.now)
     day_open = fields.Float(compute='_compute_day_open', string='Days to Assign', store=True)
     day_close = fields.Float(compute='_compute_day_close', string='Days to Close', store=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
@@ -688,7 +688,7 @@ class Lead(models.Model):
         email_split = tools.email_split(self.email_from)
         values = {
             'name': name,
-            'user_id': self.user_id.id,
+            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
             'team_id': self.team_id.id,
             'parent_id': parent_id,
@@ -894,29 +894,30 @@ class Lead(models.Model):
             'nb_opportunities': 0,
         }
 
-        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid), ('activity_date_deadline', '!=', False)])
+        opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
 
         for opp in opportunities:
             # Expected closing
-            if opp.date_deadline:
-                date_deadline = fields.Date.from_string(opp.date_deadline)
-                if date_deadline == date.today():
-                    result['closing']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
-                    result['closing']['overdue'] += 1
-            # Next activities
-            for activity in opp.activity_ids:
-                date_deadline = fields.Date.from_string(activity.date_deadline)
-                if date_deadline == date.today():
-                    result['activity']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['activity']['next_7_days'] += 1
-                if date_deadline < date.today():
-                    result['activity']['overdue'] += 1
+            if opp.activity_date_deadline:
+                if opp.date_deadline:
+                    date_deadline = fields.Date.from_string(opp.date_deadline)
+                    if date_deadline == date.today():
+                        result['closing']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['closing']['next_7_days'] += 1
+                    if date_deadline < date.today() and not opp.date_closed:
+                        result['closing']['overdue'] += 1
+                # Next activities
+                for activity in opp.activity_ids:
+                    date_deadline = fields.Date.from_string(activity.date_deadline)
+                    if date_deadline == date.today():
+                        result['activity']['today'] += 1
+                    if date.today() <= date_deadline <= date.today() + timedelta(days=7):
+                        result['activity']['next_7_days'] += 1
+                    if date_deadline < date.today():
+                        result['activity']['overdue'] += 1
             # Won in Opportunities
-            if opp.date_closed:
+            if opp.date_closed and opp.stage_id.probability == 100:
                 date_closed = fields.Date.from_string(opp.date_closed)
                 if date.today().replace(day=1) <= date_closed <= date.today():
                     if opp.planned_revenue:

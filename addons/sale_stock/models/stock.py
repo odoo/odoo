@@ -29,7 +29,7 @@ class StockMove(models.Model):
         for move in self:
             if move.picking_id and move.picking_id.group_id:
                 picking = move.picking_id
-                order = self.env['sale.order'].search([('procurement_group_id', '=', picking.group_id.id)])
+                order = self.env['sale.order'].sudo().search([('procurement_group_id', '=', picking.group_id.id)])
                 picking.message_post_with_view(
                     'mail.message_origin_link',
                     values={'self': picking, 'origin': order},

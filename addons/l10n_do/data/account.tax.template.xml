@@ -183,7 +183,7 @@
             <field eval="0" name="amount"/>
             <field name="amount_type">group</field>
             <field name="type_tax_use">purchase</field>
-            <field eval="[(6, 0, [ref('tax_10_telco'), ref('tax_2_telco')])]" name="children_tax_ids"/>
+            <field eval="[(6, 0, [ref('tax_18_purch_serv'), ref('tax_10_telco'), ref('tax_2_telco')])]" name="children_tax_ids"/>
         </record>
         <record id="ret_100_tax_nonprofit" model="account.tax.template">
             <field name="chart_template_id" ref="do_chart_template"/>

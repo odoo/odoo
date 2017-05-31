@@ -410,8 +410,6 @@ class AccountBankStatementLine(models.Model):
         for line in self:
             if line.journal_entry_ids.ids:
                 raise UserError(_('In order to delete a bank statement line, you must first cancel it to delete related journal items.'))
-            if line.move_name:
-                raise UserError(_('It is not allowed to delete a bank statement line that already created a journal entry since it would create a gap in the numbering. You should create the journal entry again and cancel it thanks to a regular revert.'))
         return super(AccountBankStatementLine, self).unlink()
 
     @api.multi
