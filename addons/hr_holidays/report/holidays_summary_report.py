@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import calendar
+
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
@@ -21,7 +23,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
         res = []
         start_date = fields.Date.from_string(start_date)
         for x in range(0, 60):
-            color = '#ababab' if start_date.weekday() in (5,6,) else '' # (5,6) = (Saturday, Sunday)
+            color = '#ababab' if start_date.weekday() in (calendar.SATURDAY, calendar.SUNDAY,) else ''
             res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
@@ -48,7 +50,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
         for index in range(0, 60):
             current = start_date + timedelta(index)
             res.append({'day': current.day, 'color': ''})
-            if current.weekday() in (5,6,) : # (5,6) = (Saturday, Sunday)
+            if current.weekday() in (calendar.SATURDAY, calendar.SUNDAY,) :
                 res[index]['color'] = '#ababab'
         # count and get leave summary details.
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
