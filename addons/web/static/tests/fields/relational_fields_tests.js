@@ -3638,6 +3638,66 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list editable: add new line before onchange returns', function (assert) {
+        // If the user adds a new row (with a required field with onchange), selects
+        // a value for that field, then adds another row before the onchange returns,
+        // the editable list must wait for the onchange to return before trying to
+        // unselect the first row, otherwise it will be detected as invalid.
+        assert.expect(7);
+
+        this.data.turtle.onchanges = {
+            turtle_trululu: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // add a first line but hold the onchange back
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have created the first row immediately");
+        def = $.Deferred();
+        form.$('.o_field_many2one input').click();
+        form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+
+        // try to add a second line and check that it is correctly waiting
+        // for the onchange to return
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 0, "no modal should be displayed");
+        assert.strictEqual($('.o_field_invalid').length, 0,
+            "no field should be marked as invalid");
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should wait for the onchange to create the second row");
+        assert.ok(form.$('.o_data_row').hasClass('o_selected_row'),
+            "first row should still be in edition");
+
+        // resolve the onchange def
+        def.resolve();
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "second row should now have been created");
+        assert.notOk(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should no more be in edition");
+
+        form.destroy();
+    });
 
     QUnit.module('FieldMany2Many');
 

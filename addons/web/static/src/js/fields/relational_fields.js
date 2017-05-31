@@ -873,15 +873,30 @@ var FieldX2Many = AbstractField.extend({
      * changes; if the row could be saved, we make the row readonly. Otherwise,
      * we trigger a new event for the view to tell it to discard the changes
      * made to that row.
+     * Note that we do that in the controller mutex to ensure that the check on
+     * the row (whether or not it can be saved) is done once all potential
+     * onchange RPCs are done (those RPCs being executed in the same mutex).
+     * This particular handling is done in this handler, instead of in the
+     * _saveLine function directly, because _saveLine is also called from
+     * the controller (via commitChanges), and in this case, it is already
+     * executed in the mutex.
      *
      * @private
      * @param {OdooEvent} ev
+     * @param {string} ev.recordID
+     * @param {function} ev.onSuccess success callback (see '_saveLine')
+     * @param {function} ev.onFailure fail callback (see '_saveLine')
      */
     _onSaveLine: function (ev) {
+        var self = this;
         ev.stopPropagation();
-        this._saveLine(ev.data.recordID)
-            .done(ev.data.onSuccess)
-            .fail(ev.data.onFailure);
+        this.trigger_up('mutexify', {
+            action: function () {
+                return self._saveLine(ev.data.recordID)
+                    .done(ev.data.onSuccess)
+                    .fail(ev.data.onFailure);
+            },
+        });
     },
     /**
      * Adds field name information to the event, so that the view upstream is
