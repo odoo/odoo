@@ -134,15 +134,15 @@
                             <group name="group_lots_and_weight">
                                 <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
                                 <div attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="volume"/>
-                                    <div class="o_row">
-                                        <field name="volume"/>
-                                        <span>m³</span>
-                                    </div>
                                     <label for="weight"/>
-                                    <div class="o_row">
+                                    <div class="o_row" name="weight">
                                         <field name="weight"/>
                                         <span>kg</span>
+                                    </div>
+                                    <label for="volume"/>
+                                    <div class="o_row" name="volume">
+                                        <field name="volume"/>
+                                        <span>m³</span>
                                     </div>
                                 </div>
                             </group>
