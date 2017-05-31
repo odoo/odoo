@@ -409,7 +409,7 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     else:
         res["tag"] = el.tag
     res["attrs"] = {}
-    for k, v in pycompat.items(el):
+    for k, v in el.items():
         res["attrs"][k] = v
     kids = []
     if el.text and (preserve_whitespaces or el.text.strip() != ''):
