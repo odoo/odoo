@@ -20,13 +20,21 @@
 ##############################################################################
 
 import openerp
+from datetime import datetime,date
+from dateutil import relativedelta
+import json
+import time
+import logging
+from openerp import api
+from openerp import SUPERUSER_ID
 from openerp.addons.crm import crm
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 from openerp.exceptions import UserError
 
+_logger = logging.getLogger(__name__)
 
 class crm_helpdesk(osv.osv):
     """ Helpdesk Cases """
@@ -34,7 +42,7 @@ class crm_helpdesk(osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _columns = {
             'id': fields.integer('ID', readonly=True),
@@ -75,7 +83,17 @@ class crm_helpdesk(osv.osv):
                                   \nWhen the case is over, the status is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the status is set to \'Pending\'.'),
     }
-
+    
+    _track = {
+        'state': {
+            'crm_helpdesk.mt_helpd_draft': lambda self, cr, uid, obj, ctx=None: obj.state in ['draft'],
+            'crm_helpdesk.mt_helpd_open': lambda self, cr, uid, obj, ctx=None: obj.state in ['open'],
+            'crm_helpdesk.mt_helpd_pending': lambda self, cr, uid, obj, ctx=None: obj.state in ['pending'],
+            'crm_helpdesk.mt_helpd_done': lambda self, cr, uid, obj, ctx=None: obj.state in ['done'],
+            'crm_helpdesk.mt_helpd_cancel': lambda self, cr, uid, obj, ctx=None: obj.state in ['cancel'],
+        },
+     }
+     
     _defaults = {
         'active': lambda *a: 1,
         'user_id': lambda s, cr, uid, c: uid,
