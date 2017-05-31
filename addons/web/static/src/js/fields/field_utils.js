@@ -415,7 +415,10 @@ function parseDateTime(value, field, options) {
 }
 
 function parseFloat(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    if (core._t.database.parameters.thousands_sep) {
+        var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+        value = value.replace(new RegExp(escapedSep, 'g'), '');
+    }
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
     if (isNaN(parsed)) {
