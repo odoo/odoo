@@ -108,7 +108,7 @@ class TestAccountTaxCashBasis(TestReconciliation):
         invoice.action_invoice_open()
         return invoice
 
-    def test_cash_basis_tax_rate_invioce_greater_than_payment(self):
+    def test_cash_basis_tax_rate_invoice_greater_than_payment(self):
         """Test to validate tax effectively receivable
 
         Case   |   rate | expected tax effectively receivable
@@ -125,7 +125,7 @@ class TestAccountTaxCashBasis(TestReconciliation):
         self.assertEquals(
             float_round(ter_balance, precision_digits=self.precision), 10.47)
 
-    def test_cash_basis_tax_rate_invioce_less_than_payment(self):
+    def test_cash_basis_tax_rate_invoice_less_than_payment(self):
         """Test to validate tax effectively receivable
 
         Case   |   rate | expected tax effectively receivable
@@ -142,7 +142,7 @@ class TestAccountTaxCashBasis(TestReconciliation):
         self.assertEquals(
             float_round(ter_balance, precision_digits=self.precision), 12.47)
 
-    def test_cash_basis_tax_rate_invioce_same_payment(self):
+    def test_cash_basis_tax_rate_invoice_same_payment(self):
         """Test to validate tax effectively receivable
 
         Case   |   rate | expected tax effectively receivable
