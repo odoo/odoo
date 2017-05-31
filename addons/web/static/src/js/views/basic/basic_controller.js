@@ -310,6 +310,26 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Disables buttons so that they can't be clicked anymore.
+     *
+     * @private
+     */
+    _disableButtons: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').attr('disabled', true);
+        }
+    },
+    /**
+     * Enables buttons so they can be clicked again.
+     *
+     * @private
+     */
+    _enableButtons: function () {
+        if (this.$buttons) {
+            this.$buttons.find('button').removeAttr('disabled');
+        }
+    },
+    /**
      * Returns the new sidebar env
      *
      * @private

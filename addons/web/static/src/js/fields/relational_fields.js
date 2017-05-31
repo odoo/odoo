@@ -914,6 +914,16 @@ var FieldOne2Many = FieldX2Many.extend({
     className: 'o_field_one2many',
     supportedFieldTypes: ['one2many'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // boolean used to prevent concurrent record creation
+        this.creatingRecord = false;
+    },
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -931,6 +941,7 @@ var FieldOne2Many = FieldX2Many.extend({
                     var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
+                    self.creatingRecord = false;
                 }
             }
         });
@@ -984,10 +995,13 @@ var FieldOne2Many = FieldX2Many.extend({
         ev.stopPropagation();
 
         if (this.editable) {
-            this._setValue({
-                operation: 'CREATE',
-                position: this.editable,
-            });
+            if (!this.creatingRecord) {
+                this.creatingRecord = true;
+                this._setValue({
+                    operation: 'CREATE',
+                    position: this.editable,
+                });
+            }
         } else {
             var self = this;
             this._openFormDialog({
