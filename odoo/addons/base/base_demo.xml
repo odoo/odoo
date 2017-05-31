@@ -22,7 +22,12 @@
 
         <record id="main_partner" model="res.partner">
             <field name="name">YourCompany</field>
+            <field name="company_name">YourCompany</field>
+            <field name="street">1725 Slough Ave.</field>
+            <field name="city">Scranton</field>
+            <field name="zip">18540</field>
             <field name='country_id' ref='base.us'/>
+            <field name='state_id' ref='state_us_39'/>
             <field name="phone">+1 555 123 8069</field>
             <field name="email">info@yourcompany.example.com</field>
             <field name="website">www.example.com</field>
