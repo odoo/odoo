@@ -121,6 +121,16 @@ var getMatchedCSSRules = function (a) {
         }
     });
 
+    // text-decoration rule is decomposed in -line, -color and -style. This is
+    // however not supported by many browser/mail clients and the editor does
+    // not allow to change -color and -style rule anyway
+    if (style['text-decoration-line']) {
+        style['text-decoration'] = style['text-decoration-line'];
+        delete style['text-decoration-line'];
+        delete style['text-decoration-color'];
+        delete style['text-decoration-style'];
+    }
+
     return style;
 };
 

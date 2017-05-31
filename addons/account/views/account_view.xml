@@ -217,6 +217,7 @@
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
             <field name="model">account.journal</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <tree string="Account Journal">
                     <field name='sequence' widget='handle'/>

@@ -250,6 +250,7 @@ odoo.define('website_sale.website_sale', function (require) {
 
             if ($(".decimal_precision").length) {
                 precision = parseInt($(".decimal_precision").last().data('precision'));
+                if (!precision) { precision = 0; } //todo: remove me in master/saas-17
             }
             var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
             formatted[0] = utils.insert_thousand_seps(formatted[0]);

@@ -16,7 +16,6 @@
             <field name="bank_account_code_prefix">110102</field>
             <field name="transfer_account_id" ref="cash_transfer_account"/>
             <field name="currency_id" ref="base.DOP"/>
-            <field name="spoken_languages" eval="'es_DO'"/>
         </record>
         <record id="cash_transfer_account" model="account.account.template">
             <field name="chart_template_id" ref="do_chart_template"/>

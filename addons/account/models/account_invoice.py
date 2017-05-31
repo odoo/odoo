@@ -466,6 +466,8 @@ class AccountInvoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
+        warning = {}
+        domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
         type = self.type
@@ -500,7 +502,6 @@ class AccountInvoice(models.Model):
                     }
                 if p.invoice_warn == 'block':
                     self.partner_id = False
-                return {'warning': warning}
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
@@ -510,8 +511,14 @@ class AccountInvoice(models.Model):
             bank_ids = p.commercial_partner_id.bank_ids
             bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
-            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
-        return {}
+            domain = {'partner_bank_id': [('id', 'in', bank_ids.ids)]}
+
+        res = {}
+        if warning:
+            res['warning'] = warning
+        if domain:
+            res['domain'] = domain
+        return res
 
     @api.multi
     def get_delivery_partner_id(self):
@@ -1010,6 +1017,20 @@ class AccountInvoice(models.Model):
             result.append((0, 0, values))
         return result
 
+    def _get_refund_common_fields(self):
+        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
+
+    def _get_refund_prepare_fields(self):
+        return ['name', 'reference', 'comment', 'date_due']
+
+    def _get_refund_modify_read_fields(self):
+        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids', 'date']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
+
+    def _get_refund_copy_fields(self):
+        copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
+
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new refund from the invoice.
@@ -1025,8 +1046,7 @@ class AccountInvoice(models.Model):
             :return: dict of value to create() the refund
         """
         values = {}
-        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
-                'account_id', 'currency_id', 'payment_term_id', 'user_id', 'fiscal_position_id']:
+        for field in self._get_refund_copy_fields():
             if invoice._fields[field].type == 'many2one':
                 values[field] = invoice[field].id
             else:
@@ -1359,6 +1379,12 @@ class AccountInvoiceLine(models.Model):
             :rtype line : account.invoice.line record
         """
         pass
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda r: r.invoice_id and r.invoice_id.state != 'draft'):
+            raise UserError(_('You can only delete an invoice line if the invoice is in draft state.'))
+        return super(AccountInvoiceLine, self).unlink()
 
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"

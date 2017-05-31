@@ -90,6 +90,8 @@ class ProductUoM(models.Model):
 
     @api.multi
     def _compute_quantity(self, qty, to_unit, round=True, rounding_method='UP'):
+        if not self:
+            return qty
         self.ensure_one()
         if self.category_id.id != to_unit.category_id.id:
             if self._context.get('raise-exception', True):
