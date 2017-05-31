@@ -707,7 +707,7 @@ class Lead(FormatAddress, models.Model):
         email_split = tools.email_split(self.email_from)
         values = {
             'name': name,
-            'user_id': self.user_id.id,
+            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
             'team_id': self.team_id.id,
             'parent_id': parent_id,

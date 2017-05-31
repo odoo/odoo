@@ -397,6 +397,9 @@ class Website(models.Model):
                 partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
+            # case when user emptied the cart
+            if not request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = sale_order.id
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
