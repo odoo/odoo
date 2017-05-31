@@ -75,6 +75,8 @@ class AccountInvoice(models.Model):
             new_lines += new_line
 
         self.invoice_line_ids += new_lines
+        self.payment_term_id = self.purchase_id.payment_term_id
+        self.env.context = dict(self.env.context, from_purchase_order_change=True)
         self.purchase_id = False
         return {}
 
@@ -92,7 +94,10 @@ class AccountInvoice(models.Model):
 
     @api.onchange('partner_id', 'company_id')
     def _onchange_partner_id(self):
+        payment_term_id = self.env.context.get('from_purchase_order_change') and self.payment_term_id or False
         res = super(AccountInvoice, self)._onchange_partner_id()
+        if payment_term_id:
+            self.payment_term_id = payment_term_id
         if not self.env.context.get('default_journal_id') and self.partner_id and self.currency_id and\
                 self.type in ['in_invoice', 'in_refund'] and\
                 self.currency_id != self.partner_id.property_purchase_currency_id:
