@@ -214,10 +214,10 @@
                                 <field name="currency_id" invisible='1'/>
                             </group>
                             <group name="weight">
-                                <group name="weight" string="Weights">
-                                    <label for="volume"/> 
+                                <group name="weight" string="Weights" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                                    <label for="volume"/>
                                     <div class="o_row">
-                                        <field digits="(14, 3)" name="volume"/>
+                                        <field name="volume"/>
                                         <span>m³</span>
                                     </div>
                                     <label for="weight"/>

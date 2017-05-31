@@ -154,7 +154,7 @@ class StockMove(models.Model):
         lots = self.env['stock.move.lots']
         for move in self:
             unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
-            unlink_move_lots.unlink()
+            unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
             for movelot in move.move_lot_ids:
