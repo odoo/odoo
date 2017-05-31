@@ -9,7 +9,7 @@
 # BT_astauder <andreas.stauder@brain-tec.ch>, 2015
 # Christopher Westburry <cricsus99@gmail.com>, 2015
 # David Lehov <KHottend@gmx.de>, 2016
-# Ermin Trevisan <trevi@twanda.com>, 2015-2016
+# Ermin Trevisan <trevi@twanda.com>, 2015-2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2015
 # Falk Scholze, 2015
 # Henry Mineehen <info@mineehen.de>, 2015
@@ -38,8 +38,8 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-10-15 22:22+0000\n"
-"Last-Translator: Niki Waibel\n"
+"PO-Revision-Date: 2017-05-21 18:02+0000\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +103,7 @@ msgid ""
 "    </div>\n"
 "</div>\n"
 "            "
-msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Hallo ${object.partner_id.name},</p>\n    <p>eine neue Rechnung wurde für Sie erstellt: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>BEZUG</strong><br />\n       &nbsp;&nbsp;Rechnungsnummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Rechnungssumme: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Rechnungsdatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Auftragsnummer: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ihr Ansprechpartner: <a href=\"mailto:${object.user_id.email or ''}?subject=Rechnung%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Sie können auch direkt mit Paypal bezahlen:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Bei Fragen, zögern Sie bitte nicht uns anzusprechen.</p>\n    <p>Vielen Dank, dass Sie ${object.company_id.name or 'uns'} vertrauen!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel. :&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n            "
+msgstr "\n<div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n    <p>Guten Tag ${object.partner_id.name},</p>\n    <p>eine neue Rechnung wurde für Sie erstellt: </p>\n    \n    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n       &nbsp;&nbsp;<strong>REFERENZ</strong><br />\n       &nbsp;&nbsp;Rechnungsnummer: <strong>${object.number}</strong><br />\n       &nbsp;&nbsp;Rechnungssumme: <strong>${object.amount_total} ${object.currency_id.name}</strong><br />\n       &nbsp;&nbsp;Rechnungsdatum: ${object.date_invoice}<br />\n       % if object.origin:\n       &nbsp;&nbsp;Auftragsnummer: ${object.origin}<br />\n       % endif\n       % if object.user_id:\n       &nbsp;&nbsp;Ihr Ansprechpartner: <a href=\"mailto:${object.user_id.email or ''}?subject=Rechnung%20${object.number}\">${object.user_id.name}</a>\n       % endif\n    </p>  \n    \n    % if object.paypal_url:\n    <br/>\n    <p>Sie können auch direkt mit Paypal bezahlen:</p>\n        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n            <img class=\"oe_edi_paypal_button\" src=\"/account/static/src/img/btn_paynowcc_lg.gif\"/>\n        </a>\n    % endif\n    \n    <br/>\n    <p>Bei Fragen, zögern Sie bitte nicht uns anzusprechen.</p>\n    <p>Vielen Dank, dass Sie ${object.company_id.name or 'uns'} vertrauen!</p>\n    <br/>\n    <br/>\n    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;\">\n        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: #DDD;\">\n            <strong style=\"text-transform:uppercase;\">${object.company_id.name}</strong></h3>\n    </div>\n    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;\">\n        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n            ${object.company_id.partner_id.sudo().with_context(show_address=True, html_format=True).name_get()[0][1] | safe}\n        </span>\n        % if object.company_id.phone:\n            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; \">\n                Tel. :&nbsp; ${object.company_id.phone}\n            </div>\n        % endif\n        % if object.company_id.website:\n            <div>\n                Web :&nbsp;<a href=\"${object.company_id.website}\">${object.company_id.website}</a>\n            </div>\n        %endif\n        <p></p>\n    </div>\n</div>\n\n\n            "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_state
@@ -563,7 +563,7 @@ msgstr "<strong>Steuerzuordnung:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>Rechnungsdatum:</strong>"
+msgstr "<strong>Rechn.Datum:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -2221,7 +2221,7 @@ msgstr "Barkassen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Statements"
-msgstr "Kassenbelege"
+msgstr "Kassenberichte"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_bank_account_ids
@@ -3445,7 +3445,7 @@ msgstr "Verwendung auf Rechnungen"
 msgid ""
 "Display this bank account on the footer of printed documents like invoices "
 "and sales orders."
-msgstr "Dieses Bankkonto in der Fusszeile von gedruckten Dokumenten wie Rechnungen und Bestellungen anzeigen."
+msgstr "Dieses Bankkonto in der Fusszeile von gedruckten Dokumenten wie Rechnungen und Verkaufsaufträgen anzeigen."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -5036,7 +5036,7 @@ msgstr "Offen halten"
 #: model:ir.model.fields,field_description:account.field_account_move_line_name
 #, python-format
 msgid "Label"
-msgstr "Etikett"
+msgstr "Buchungstext"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_description
@@ -5279,7 +5279,7 @@ msgstr "Rechtliche Hinweise …"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position_note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr ""
+msgstr "Gesetzliche Vorgaben, die auf den Rechnungen ausgegeben werden müssen."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -5317,7 +5317,7 @@ msgstr "Abzüglich Zahlung"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Let odoo try to reconcile entries for the user"
-msgstr ""
+msgstr "Lassen Sie odoo versuchen, offene Posten des Benutzers auszugleichen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_report_level
@@ -5925,7 +5925,7 @@ msgid ""
 "Once your bank accounts are registered, you will be able \n"
 "                        to access your statements from the Accounting Dashboard. \n"
 "                        The available methods for synchronization are as follows."
-msgstr "Sind Ihre Bankkonten eingetragen, können Sie auf die Kontoauszüge über das Cockpit der Buchhaltung zugreifen.\nDie verfügbaren Verfahren zur Synchronisation sind die Folgenden:"
+msgstr "Sind Ihre Bankkonten eingetragen, können Sie auf die Kontoauszüge über das Buchhaltungsdashboard zugreifen.\nDie verfügbaren Verfahren zur Synchronisation sind die Folgenden:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5986,7 +5986,7 @@ msgstr "Offene Zahlung"
 #. module: account
 #: model:ir.actions.client,name:account.action_client_account_menu
 msgid "Open account dashboard menu"
-msgstr "Account Dashboard Menü öffnen"
+msgstr "Buchhaltungsdashboard-Menü öffnen"
 
 #. module: account
 #. openerp-web
@@ -8209,6 +8209,14 @@ msgid "The sequence of journal %s is deactivated."
 msgstr "Die Nummernfolge im Journal %s ist deaktiviert."
 
 #. module: account
+#: code:addons/account/models/company.py:91
+#, python-format
+msgid ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_bank_statement.py:170
 #, python-format
 msgid ""
@@ -8396,7 +8404,7 @@ msgstr "Dieser Assistent hilft Ihnen beim Einstieg in die Odoo-Buchhaltung.\nNac
 msgid ""
 "This is the accounting dashboard. If you have not yet\n"
 "                installed a chart of account, please install one first."
-msgstr "Dies ist das Buchhaltungs-Cockpit. Wenn Sie noch \nkeinen Kontenplan installiert haben, machen Sie das\nbitte zuerst."
+msgstr "Dies ist das Buchhaltungsdashboard. Wenn Sie noch \nkeinen Kontenplan installiert haben, machen Sie das\nbitte zuerst."
 
 #. module: account
 #: code:addons/account/models/account.py:304

@@ -511,6 +511,7 @@ class website(osv.osv):
                   of the same.
         :rtype: list({name: str, url: str})
         """
+        request.context = dict(request.context, **context)
         router = request.httprequest.app.get_db_router(request.db)
         # Force enumeration to be performed as public user
         url_set = set()

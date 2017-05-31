@@ -3,13 +3,14 @@
 # * auth_signup
 # 
 # Translators:
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-10-22 07:01+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-02-08 12:19+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgid ""
 "<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>, which will remain valid during 24 hours.</p>\n"
 "\n"
 "<p>Note: If you do not expect this, you can safely ignore this email.</p>"
-msgstr ""
+msgstr "\n<p>تم طلب تغيير كلمة المرور لحسابك في أودو المقترن بعنوان البريد هذا.</p>\n\n<p>يمكنك تغيير كلمة مرورك الحالي باتباع <a href=\"${object.signup_url}\">هذا الرابط</a>, والتي سوف تظل سارية المفعول خلال 24 ساعة. </p>\n\n<p>ملاحظة: إذا لم تطلب تغيير كلمة المرور، فيمكنك تجاهل هذه الرسالة بأمان تام.</p>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -68,14 +69,14 @@ msgstr "${object.company_id.name} دعوة للتواصل على أودو"
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
-msgstr ""
+msgstr "<strong>تم طلب إعادة تعيين كلمة المرور لهذا المستخدم. تم إرسال رسالة بريد إلكتروني تحتوي على الرابط التالي:</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
-msgstr ""
+msgstr "<strong>تم إرسال دعوة عبر البريد الإلكتروني تحتوي على رابط الاشتراك التالية:</strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -92,13 +93,13 @@ msgstr "تم إرسالة بريد بالبيانات اللازمة لإعاد�
 #: code:addons/auth_signup/controllers/main.py:40
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "هذا البريد الالكتروني مستخدم بالفعل."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:115
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "فشل المصادقة."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -110,7 +111,7 @@ msgstr "العودة للدخول"
 #: code:addons/auth_signup/res_users.py:277
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "لا يمكن إرسال البريد الإلكتروني: المستخدم %sلا يوجد لديه عنوان البريد الإلكتروني"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -125,13 +126,13 @@ msgstr "أكّد كلمة المرور"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Connected"
-msgstr ""
+msgstr "متصل"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:43
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "لا يمكن انشاء حساب جديد."
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:66
@@ -178,7 +179,7 @@ msgstr "استعادة كلمة المرور"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_private
 msgid "Private Profile"
-msgstr ""
+msgstr "الملف الخاص"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
@@ -250,7 +251,7 @@ msgstr "قالب المستخدم عندما يقوم أحدهم بالتسجي�
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "الرابط الكامل للوصول إلى المستند من خلال الموقع."
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
@@ -265,37 +266,37 @@ msgstr "المستخدمون"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "مرئي في الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "وصف الشريك الكامل بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "وصف موجز للشريك بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "رابط الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "الوصف الدلالي في الموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "الكلمات الدلالية بالموقع"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "العنوان الدلالي بالموقع"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -321,4 +322,4 @@ msgstr "مثل: محمد محمود"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_self
 msgid "unknown"
-msgstr ""
+msgstr "غير معروف"

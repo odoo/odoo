@@ -67,10 +67,7 @@ class AccountInvoice(models.Model):
             self.partner_id = self.purchase_id.partner_id.id
 
         new_lines = self.env['account.invoice.line']
-        for line in self.purchase_id.order_line:
-            # Load a PO line only once
-            if line in self.invoice_line_ids.mapped('purchase_line_id'):
-                continue
+        for line in self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id'):
             data = self._prepare_invoice_line_from_po_line(line)
             new_line = new_lines.new(data)
             new_line._set_additional_fields(self)
@@ -165,10 +162,16 @@ class AccountInvoice(models.Model):
                                 and acc:
                             # price with discount and without tax included
                             price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
+                            tax_ids = []
                             if line['tax_ids']:
                                 #line['tax_ids'] is like [(4, tax_id, None), (4, tax_id2, None)...]
                                 taxes = self.env['account.tax'].browse([x[1] for x in line['tax_ids']])
                                 price_unit = taxes.with_context(round=False).compute_all(price_unit, currency=inv.currency_id, quantity=1.0)['total_excluded']
+                                for tax in taxes:
+                                    tax_ids.append((4, tax.id, None))
+                                    for child in tax.children_tax_ids:
+                                        if child.type_tax_use != 'none':
+                                            tax_ids.append((4, child.id, None))
                             price_before = line.get('price', 0.0)
                             line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
                             diff_res.append({
@@ -181,6 +184,7 @@ class AccountInvoice(models.Model):
                                 'product_id': line['product_id'],
                                 'uom_id': line['uom_id'],
                                 'account_analytic_id': line['account_analytic_id'],
+                                'tax_ids': tax_ids,
                                 })
                 return diff_res
         return []
@@ -191,5 +195,5 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
     purchase_line_id = fields.Many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', index=True, readonly=True)
-    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True,
+    purchase_id = fields.Many2one('purchase.order', related='purchase_line_id.order_id', string='Purchase Order', store=False, readonly=True, related_sudo=False,
         help='Associated Purchase Order. Filled in automatically when a PO is chosen on the vendor bill.')

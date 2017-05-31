@@ -3,6 +3,7 @@
 # * base
 # 
 # Translators:
+# gebri <gebri@inmail.sk>, 2016
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2015
 # Matus Krnac <matus.krnac@gmail.com>, 2015-2016
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2015
@@ -12,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-09-23 09:42+0000\n"
+"PO-Revision-Date: 2017-01-28 08:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
 "MIME-Version: 1.0\n"
@@ -752,7 +753,7 @@ msgid ""
 "\n"
 "Add the concept of full reconciliation back into the accounting.\n"
 "    "
-msgstr ""
+msgstr "\nPridať koncept plného urovania späť do účtovníctva.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_project_issue_sheet
@@ -1513,7 +1514,7 @@ msgid ""
 "* Sale/Purchase Journal report \n"
 "* Partner Ledger\n"
 "    "
-msgstr ""
+msgstr "\nExtra Účtovné výkazy.\n====================================\n\nTento modul pridáva dva nové výkazy:\n* Denný výkaz Predaja/Nákupu\n* Hlavná kniha partnera\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_blackbox_be
@@ -1528,7 +1529,7 @@ msgid ""
 "This module does **not** turn an Odoo Point Of Sale module into a certified\n"
 "Belgian cash register. It allows the communication on with a certified Fiscal\n"
 "Data Module but will not modify the behaviour of the Point of Sale.\n"
-msgstr ""
+msgstr "\nFiškálny dátový modul ovládač zariadenia\n=======================================\n\nTento modul povoluje klientskej pokladni komunikovať\ns pripojeným Belgickým Fiškálnym Modulom.\n\nTento modul **NE** zapína Odoo Pokladňový modul na certifikovanú\nBelgickú fiškálnu pokladňu. Umožnuje komunikáciu s Fiškálnym\nmodulom ale nemení funkčnosť modulo Pokladňa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -2207,7 +2208,7 @@ msgid ""
 "    - activates a number of regional currencies.\n"
 "    - sets up New Zealand taxes.\n"
 "    "
-msgstr ""
+msgstr "\nÚčtovný modul pre Nový Zéland\n==============================\n\nZákladné Novo Zélandské účtovné tabuľky a lokalizácia.\n\nTiež:\n    - aktivuje množstvo regionálnych mien.\n    - nastavuje Novozélandské dane.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import
@@ -4440,7 +4441,7 @@ msgid ""
 "    * Warranty concept\n"
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
-msgstr ""
+msgstr ",\nCieľom je mať kompletný modul na správu všetkých opráv produktov.\n====================================================================\n\nNasledovné vlastnosti by mali byť poskytnuté týmto modulom:\n------------------------------------------------------\n    * Pridať/odobrať produkt na opravu\n    * Vplyv na zásoby\n    * Fakturácia (produkty a/alebo služby)\n    * Koncepcia záruk\n    * Výkaz cenovéj ponuky opravy\n    * Poznámky pre technikova a koncového zákaznika\n"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -4780,7 +4781,7 @@ msgstr "Modul na testovanie odinštalácie."
 #. module: base
 #: model:ir.module.module,description:base.module_test_assetsbundle
 msgid "A module to verify the Assets Bundle mechanism."
-msgstr ""
+msgstr "Modul na overenie mechanizmu balíka aktív."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits
@@ -4969,7 +4970,7 @@ msgstr "Účtovné výkazy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_adjustments
 msgid "Accounting Tax Adjustments"
-msgstr ""
+msgstr "Účtovné daňové nastavenie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant
@@ -5736,6 +5737,12 @@ msgid "Automatic Installation"
 msgstr "Automatická inštalácia"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -6023,7 +6030,7 @@ msgstr "Dátum narodenia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_blackbox_be
 msgid "Blackbox Hardware Driver"
-msgstr ""
+msgstr "Blackbox ovládač zariadenia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
@@ -6159,7 +6166,7 @@ msgstr "Burkina Faso"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Burmese / မြန်မာဘာသာ"
-msgstr ""
+msgstr "Barmský jazyk / မြန်မာဘာသာ"
 
 #. module: base
 #: model:res.country,name:base.bi
@@ -7037,14 +7044,14 @@ msgstr "Názov kontaktu"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_partner_category_form
 msgid "Contact Tag"
-msgstr ""
+msgstr "Kontaktný štítok"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_category_form
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: model:ir.ui.view,arch_db:base.view_partner_category_list
 msgid "Contact Tags"
-msgstr ""
+msgstr "Kontaktné štítky"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
@@ -7279,7 +7286,7 @@ msgstr "Vytvorte prieskumy, zbierajte odpovede a vytlačte štatistiky"
 #. module: base
 #: model:ir.module.module,summary:base.module_board
 msgid "Create your custom dashboard"
-msgstr ""
+msgstr "Vytvor svoju vlastnú nástenku"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_server_crud_model_name
@@ -8388,7 +8395,7 @@ msgstr "Zamestnanci"
 #: code:addons/base/ir/ir_model.py:339
 #, python-format
 msgid "Empty dependency in %r"
-msgstr ""
+msgstr "Prázdna závislosť v %r"
 
 #. module: base
 #: model:res.groups,name:base.group_light_multi_company
@@ -8470,7 +8477,7 @@ msgstr "Podrobnosti chyby:"
 #: code:addons/models.py:1281
 #, python-format
 msgid "Error while validating constraint"
-msgstr ""
+msgstr "Chyba pro overovaní obmedzenia"
 
 #. module: base
 #: constraint:res.company:0
@@ -8687,7 +8694,7 @@ msgstr "Extra"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_extra_reports
 msgid "Extra Accounting Reports"
-msgstr ""
+msgstr "Extra Účtovné Výkazy"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_usability
@@ -8740,7 +8747,7 @@ msgstr "Fedex doprava"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_fr_fec
 msgid "Fichier d'Échange Informatisé (FEC) for France"
-msgstr ""
+msgstr "Elektronická výmena súborov (FEC) pre Francúzsko"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec
@@ -9167,7 +9174,7 @@ msgstr "Francúzka Gyuana"
 #. module: base
 #: model:ir.module.category,name:base.module_category_french_localization
 msgid "French Localization"
-msgstr ""
+msgstr "Francúzska lokalizácia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_hr_payroll
@@ -9207,7 +9214,7 @@ msgstr "Celá cesta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_full_reconcile
 msgid "Full Reconciliation Concept"
-msgstr ""
+msgstr "Koncept Úplného Urovnania"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_func
@@ -9333,7 +9340,7 @@ msgstr "Georgian / ქართული ენა"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "German (CH) / Deutsch (CH)"
-msgstr ""
+msgstr "Nemecky (CH) / Deutsch (CH)"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9603,7 +9610,7 @@ msgstr "Hardvérový ovládač pre skenery čiarových kódov"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_blackbox_be
 msgid "Hardware Driver for Belgian Fiscal Data Modules"
-msgstr ""
+msgstr "Ovládač Zariadenia pre Belgické Fiškálne Moduly"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
@@ -10856,7 +10863,7 @@ msgstr "Balík jazyka"
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "Language code cannot be modified."
-msgstr ""
+msgstr "Kód jazyka nemôže byť zmenený."
 
 #. module: base
 #: sql_constraint:ir.translation:0
@@ -12276,7 +12283,7 @@ msgstr "Nový Zéland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz
 msgid "New Zealand - Accounting"
-msgstr ""
+msgstr "Nový Zéland - Účtovníctvo"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:536
@@ -12376,7 +12383,7 @@ msgstr "Neaktualizovateľný"
 #: code:addons/base/ir/ir_model.py:348
 #, python-format
 msgid "Non-relational field %r in dependency %r"
-msgstr ""
+msgstr "Ne-relačné pole %r v závislosti %r"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:305
@@ -13536,7 +13543,7 @@ msgstr "Vlastnosti základných oblastí nemôžu byť zmenené týmto spôsobom
 #. module: base
 #: model:ir.module.module,description:base.module_website_theme_install
 msgid "Propose to install a theme on website installation"
-msgstr ""
+msgstr "Návrh inštalácie témy do inštalácie webových stránok"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -13920,7 +13927,7 @@ msgstr "Premenovanie rozptýleného poľa \"%s\" nie je povolené"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_repair
 msgid "Repair broken or damaged products"
-msgstr ""
+msgstr "Oprav zničené alebo pokazené produkty"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -15584,7 +15591,7 @@ msgstr "Technické nastavenia"
 #: code:addons/base/ir/ir_translation.py:734
 #, python-format
 msgid "Technical Translation"
-msgstr ""
+msgstr "Technický Preklad"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_company_type
@@ -15597,7 +15604,7 @@ msgid ""
 " new API the code should be simplified. Changing the company_type of a "
 "company contact into a company will not display this contact as a company "
 "contact but as a standalone company."
-msgstr ""
+msgstr "Technické pole, použité len na zobrazenie logickéj hodnoty použitím prepínacieho tlačítka. Nakoľko pre Odoo v9 RadioButton nemôže byť použitý na logické polia, toto slúži ako rozhranie. Kvôli obmedzeniu starého API v rozhraní funkčného poľa, sme to implementovali manuálne namiesto skutočného funkčného poľa. Pri prechode na nové API môže byť kód zjednodušený. Zmena company_type of a company contact na company nezobrazí tento kontakt ako kontakt firmy ale ako samostatnú firmu."
 
 #. module: base
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
@@ -16243,6 +16250,13 @@ msgid "To be upgraded"
 msgstr "Na aktualizáciu"
 
 #. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr "Zostáva"
@@ -16383,7 +16397,7 @@ msgstr "Preklad prebieha"
 msgid ""
 "Translation is not valid:\n"
 "%s"
-msgstr ""
+msgstr "Preklad nie je platný:\n%s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation

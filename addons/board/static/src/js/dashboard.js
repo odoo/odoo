@@ -179,6 +179,8 @@ var DashBoard = form_common.FormWidget.extend({
             action = result,
             view_mode = action_attrs.view_mode;
 
+        if (!action) { return; }
+
         // evaluate action_attrs context and domain
         action_attrs.context_string = action_attrs.context;
         action_attrs.context = pyeval.eval(
@@ -405,7 +407,7 @@ FavoriteMenu.include({
             name = self.$add_dashboard_input.val();
         
         return self.rpc('/board/add_to_dashboard', {
-            action_id: self.action_id,
+            action_id: self.action_id || false,
             context_to_save: c,
             domain: d,
             view_mode: self.view_manager.active_view.type,

@@ -17,14 +17,14 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-12-02 18:32+0000\n"
-"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
+"PO-Revision-Date: 2017-03-29 08:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>=14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -1155,7 +1155,7 @@ msgstr "Tablica księgowości"
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr "Data księgowania"
+msgstr "Data wpływu"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -3431,7 +3431,7 @@ msgstr "Wyświetl ten numer konta bankowego na stopce drukowanych dokumentów ta
 msgid ""
 "Document: Customer account statement<br/>\n"
 "                    Date:"
-msgstr "Dokument: Wykaz działań bankowych klienta<br/>\n                    Data:"
+msgstr "Dokument: Wykaz rozliczeń klienta<br/>\n                    Data:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3531,7 +3531,7 @@ msgstr "Rodzaj płatności"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_date_maturity
 msgid "Due date"
-msgstr "Data zapłaty"
+msgstr "Termin płatności"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:758
@@ -4365,7 +4365,7 @@ msgid ""
 " generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
-msgstr "Jeśli stosujesz warunki płatności, to data zapłaty będzie wyliczana automatycznie przy generowaniu zapisów na koncie. Jeśli pozostawisz puste warunki płatności i datę zapłaty, to będzie oznaczać płatność natychmiastową. Warunki płatności mogą wyliczyć wiele dat zapłaty. Np. 50% teraz i 50% w ciągu miesiąca."
+msgstr "Jeśli stosujesz warunki płatności, to termin płatności będzie wyliczany automatycznie przy generowaniu zapisów na koncie. Jeśli pozostawisz puste warunki płatności i termin płatności, to będzie to oznaczać płatność natychmiastową. Warunki płatności mogą wyliczyć wiele terminów płatności. Np. 50% teraz i 50% w ciągu miesiąca."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_date_due
@@ -5564,7 +5564,7 @@ msgstr "Pozycja zapisu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_move_line_ids
 msgid "Move line ids"
-msgstr "Przenieś liniowe identyfikatory"
+msgstr "Linie zapisów"
 
 #. module: account
 #: code:addons/account/models/account_move.py:1026
@@ -8186,6 +8186,14 @@ msgstr "Pole numeracji jest stosowane do zdefiniowania kolejności, w której st
 #, python-format
 msgid "The sequence of journal %s is deactivated."
 msgstr "Numeracja dziennika %s jest nieaktywna."
+
+#. module: account
+#: code:addons/account/models/company.py:91
+#, python-format
+msgid ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:170

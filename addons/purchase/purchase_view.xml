@@ -252,7 +252,7 @@
                                     <label for="date_planned"/>
                                     <div>
                                         <field name="date_planned" required="1" attrs="{'readonly': [('state', 'not in', ('draft', 'sent'))]}"/>
-                                        <button name="action_set_date_planned" type="object"
+                                        <button name="action_set_date_planned" context="{'date_planned': date_planned}" type="object"
                                             states="draft,sent"
                                             string="Set date to all order lines"
                                             help="This changes the scheduled date of all order lines to the given date"
@@ -295,7 +295,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Not Invoiced" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Invoiced" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that include lines not invoiced."/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
@@ -482,7 +482,10 @@
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
                         <filter string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" />
+                        <!-- Commented out because of the 'state' field's attribute typo "stored=True"
+                             that can't be fixed in 9.0 as it would change the schema. Hence the only
+                             option is to disable this filter. Not to be forward ported to 10.0 !
+                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" /> -->
                     </group>
                 </search>
             </field>

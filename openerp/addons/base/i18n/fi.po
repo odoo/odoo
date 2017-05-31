@@ -11,15 +11,15 @@
 # Melina Mantyla <melina.mantyla@web-veistamo.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
-# Timo Koukkari <timo.koukkari@seamk.fi>, 2015
+# Timo Koukkari <ti.ko@netikka.fi>, 2015
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-11-30 21:50+0000\n"
-"Last-Translator: Melina Mantyla <melina.mantyla@web-veistamo.fi>\n"
+"PO-Revision-Date: 2017-05-26 13:56+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4456,12 +4456,12 @@ msgstr ", tai valitsemasi tekstieditori"
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", readonly"
-msgstr ""
+msgstr ", vain luku"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodulereference
 msgid ", required"
-msgstr ""
+msgstr ", pakollinen"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_values_key
@@ -4473,37 +4473,37 @@ msgstr "- Toiminto: toiminto joka on liitetty yhteen mallin osaan\n- Oletus: ole
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- domain ="
-msgstr ""
+msgstr "- domain ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- field ="
-msgstr ""
+msgstr "- kenttä ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- groups ="
-msgstr ""
+msgstr "- ryhmät ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- ondelete ="
-msgstr ""
+msgstr "- ondelete ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- relation ="
-msgstr ""
+msgstr "- relaatio ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- selection ="
-msgstr ""
+msgstr "- valinta ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "- size ="
-msgstr ""
+msgstr "- koko ="
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.module_form
@@ -5132,7 +5132,7 @@ msgstr "Toiminto"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery
 msgid "Add Delivery Costs to Online Sales"
-msgstr ""
+msgstr "Lisää toimituskulut verkkomyyntiin"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_header
@@ -5740,6 +5740,12 @@ msgstr "Automaattikäännökset kaupallisella Gengo API:lla"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_auto_install
 msgid "Automatic Installation"
 msgstr "Automaattinen asennus"
+
+#. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
@@ -9816,7 +9822,7 @@ msgstr "Kuinka monta kertaa menetelmää kutsutaan,\nnegatiivinen numero tarkoit
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "How to define a computed field"
-msgstr ""
+msgstr "Kuinka määritellä laskettu kenttä"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -12545,7 +12551,7 @@ msgid ""
 "Odoo helps you easily track all activities related to\n"
 "                a customer: discussions, history of business opportunities,\n"
 "                documents, etc."
-msgstr ""
+msgstr "Odoossa asiakastietojen seuraaminen on helppoa: keskustelut, mahdollisuudet, dokumentit, jne."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -12771,7 +12777,7 @@ msgstr ""
 #: code:addons/base/res/res_users.py:771 code:addons/base/res/res_users.py:933
 #, python-format
 msgid "Other"
-msgstr ""
+msgstr "Muu"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -12787,7 +12793,7 @@ msgstr ""
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr ""
+msgstr "Muut kumppanit"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -12797,7 +12803,7 @@ msgstr ""
 #. module: base
 #: selection:res.partner,type:0
 msgid "Other address"
-msgstr ""
+msgstr "Muu osoite"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_form
@@ -13113,7 +13119,7 @@ msgstr "Paypal maksun vastaanottaja"
 #: model:ir.module.category,name:base.module_category_localization_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr ""
+msgstr "Palkkahallinto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -13190,7 +13196,7 @@ msgstr "Placeholder-lauseke"
 #: model:ir.module.category,name:base.module_category_planner
 #: model:ir.module.module,shortdesc:base.module_web_planner
 msgid "Planner"
-msgstr ""
+msgstr "Suunnittelija"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt
@@ -13258,7 +13264,7 @@ msgstr "Kassapäätealennukset"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_reprint
 msgid "Point of Sale Receipt Reprinting"
-msgstr ""
+msgstr "Kassakuittien uudelleentulostus"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -13383,7 +13389,7 @@ msgstr "Esittele tiimisi"
 #: model:ir.actions.report.xml,name:base.preview_rml_report
 #: model:ir.ui.view,arch_db:base.view_company_form
 msgid "Preview RML Report"
-msgstr ""
+msgstr "Esikatsele RML raportti"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_form
@@ -13509,7 +13515,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Forecast"
-msgstr ""
+msgstr "Projektin ennuste"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project
@@ -14330,7 +14336,7 @@ msgstr "Myynnit ja ostot"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Myyntikulut"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale
@@ -14769,7 +14775,7 @@ msgstr ""
 #. module: base
 #: selection:res.partner,type:0
 msgid "Shipping address"
-msgstr ""
+msgstr "Toimitusosoite"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -15153,7 +15159,7 @@ msgstr "Vaiheet"
 #. module: base
 #: selection:ir.sequence,implementation:0
 msgid "Standard"
-msgstr ""
+msgstr "Normaali"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -15252,7 +15258,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr ""
+msgstr "Katuosoite 2..."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_company_form
@@ -16247,6 +16253,13 @@ msgstr "Poistettavat"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
 msgstr "Päivitettävät"
+
+#. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_actions_todo_tree

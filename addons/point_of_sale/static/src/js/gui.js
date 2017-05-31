@@ -114,7 +114,7 @@ var Gui = core.Class.extend({
                 this.current_screen.hide();
             }
             this.current_screen = screen;
-            this.current_screen.show();
+            this.current_screen.show(refresh);
         }
     },
     
@@ -361,7 +361,34 @@ var Gui = core.Class.extend({
     // if 'contents' is not a string, it is converted into
     // a JSON representation of the contents. 
 
+
+    // TODO: remove me in master: deprecated in favor of prepare_download_link
+    // this method is kept for backward compatibility but is likely not going
+    // to work as many browsers do to not accept fake click events on links
     download_file: function(contents, name) {
+        href_params = this.prepare_file_blob(contents,name);
+        var evt  = document.createEvent("HTMLEvents");
+        evt.initEvent("click");
+
+        $("<a>",href_params).get(0).dispatchEvent(evt);
+        
+    },      
+    
+    prepare_download_link: function(contents, filename, src, target) {
+        var href_params = this.prepare_file_blob(contents, filename);
+
+        $(target).parent().attr(href_params);
+        $(src).addClass('oe_hidden');
+        $(target).removeClass('oe_hidden');
+
+        // hide again after click
+        $(target).click(function() {
+            $(src).removeClass('oe_hidden');
+            $(this).addClass('oe_hidden');
+        });
+    },  
+    
+    prepare_file_blob: function(contents, name) {
         var URL = window.URL || window.webkitURL;
         
         if (typeof contents !== 'string') {
@@ -370,13 +397,8 @@ var Gui = core.Class.extend({
 
         var blob = new Blob([contents]);
 
-        var evt  = document.createEvent("HTMLEvents");
-            evt.initEvent("click");
-
-        $("<a>",{
-            download: name || 'document.txt',
-            href: URL.createObjectURL(blob),
-        }).get(0).dispatchEvent(evt);
+        return {download: name || 'document.txt',
+                href: URL.createObjectURL(blob),}
     },
 
     /* ---- Gui: EMAILS ---- */

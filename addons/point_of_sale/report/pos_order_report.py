@@ -44,7 +44,7 @@ class pos_order_report(osv.osv):
                     min(l.id) as id,
                     count(*) as nbr,
                     s.date_order as date,
-                    sum(l.qty * u.factor) as product_qty,
+                    sum(l.qty) as product_qty,
                     sum(l.qty * l.price_unit) as price_sub_total,
                     sum((l.qty * l.price_unit) * (100 - l.discount) / 100) as price_total,
                     sum((l.qty * l.price_unit) * (l.discount / 100)) as total_discount,

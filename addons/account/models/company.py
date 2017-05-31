@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from openerp import fields, models, api, _
+from openerp.exceptions import ValidationError
 from datetime import timedelta
 
 
@@ -79,7 +80,20 @@ Best Regards,''')
             account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
 
     @api.multi
+    def _validate_fiscalyear_lock(self, values):
+        if values.get('fiscalyear_lock_date'):
+            nb_draft_entries = self.env['account.move'].search([
+                ('company_id', 'in', [c.id for c in self]),
+                ('state', '=', 'draft'),
+                ('date', '<=', values['fiscalyear_lock_date'])])
+            if nb_draft_entries:
+                raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+
+    @api.multi
     def write(self, values):
+        #restrict the closing of FY if there are still unposted entries
+        self._validate_fiscalyear_lock(values)
+
         # Reflect the change on accounts
         for company in self:
             digits = values.get('accounts_code_digits') or company.accounts_code_digits

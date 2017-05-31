@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from dateutil import relativedelta
+
 import openerp
 from openerp.osv import fields, osv
 from openerp import api
@@ -33,6 +35,17 @@ class lead_test(osv.Model):
     }
 
     customer = openerp.fields.Boolean(related='partner_id.customer', readonly=True, store=True)
+    priority = openerp.fields.Boolean()
+    deadline = openerp.fields.Boolean(compute='_compute_deadline', store=True)
+    is_assigned_to_admin = openerp.fields.Boolean(string='Assigned to admin user')
+
+    @api.depends('priority')
+    def _compute_deadline(self):
+        for record in self:
+            if not record.priority:
+                record.deadline = False
+            else:
+                record.deadline = openerp.fields.Datetime.from_string(record.create_date) + relativedelta.relativedelta(days=3)
 
     @api.cr_uid_ids_context
     def message_post(self, cr, uid, thread_id, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, context=None, **kwargs):

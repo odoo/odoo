@@ -16,5 +16,6 @@ List of contributors:
 - Stéphane Le Cornec stephane.lecornec@gmail.com https://github.com/coleste
 - Eric Lemire elemire@users.noreply.github.com https://github.com/elemire
 - Martin Malorni mmalorni@gmail.com https://github.com/mmalorni
-- Gregory Savoie gs.microcom@gmail.com https://github.com/gregsavoie
+- Samuel Chamberland sc.microcom@gmail.com https://github.com/sc-microcom
 - Noreddine Ben Jillali nbj.microcom@gmail.com https://github.com/nbj-microcom
+- Rim Ben Dhaou rbd.microcom@gmail.com https://github.com/rbd-microcom

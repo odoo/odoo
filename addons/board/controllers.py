@@ -13,7 +13,7 @@ class Board(Controller):
         # Retrieve the 'My Dashboard' action from its xmlid
         action = request.env['ir.model.data'].get_object('board', 'open_board_my_dash_action')
 
-        if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form':
+        if action and action['res_model'] == 'board.board' and action['views'][0][1] == 'form' and action_id:
             # Maybe should check the content instead of model board.board ?
             view_id = action['views'][0][0]
             board = request.env[action['res_model']].fields_view_get(view_id, 'form')

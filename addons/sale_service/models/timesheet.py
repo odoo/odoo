@@ -68,6 +68,12 @@ class account_analytic_line(models.Model):
 
     @api.multi
     def write(self, values):
+        so_lines = self.mapped('so_line')
         self._update_values(values)
         result = super(account_analytic_line, self).write(values)
+
+        # Update delivered quantity on SO lines which are not linked to the analytic lines anymore
+        so_lines -= self.mapped('so_line')
+        if so_lines:
+            so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
         return result

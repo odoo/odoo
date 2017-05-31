@@ -121,8 +121,9 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_updateable(self):
         for line in self:
             if line.product_id.type not in ('consu', 'product'):
-                return super(SaleOrderLine, self)._compute_qty_delivered_updateable()
-            line.qty_delivered_updateable = False
+                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
+            else:
+                line.qty_delivered_updateable = False
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -196,7 +197,8 @@ class SaleOrderLine(models.Model):
             #Note that we don't decrease quantity for customer returns on purpose: these are exeptions that must be treated manually. Indeed,
             #modifying automatically the delivered quantity may trigger an automatic reinvoicing (refund) of the SO, which is definitively not wanted
             if move.location_dest_id.usage == "customer":
-                qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
+                if not move.origin_returned_move_id:
+                    qty += self.env['product.uom']._compute_qty_obj(move.product_uom, move.product_uom_qty, self.product_uom)
         return qty
 
     @api.multi
@@ -268,8 +270,8 @@ class ProcurementOrder(models.Model):
     @api.model
     def _run_move_create(self, procurement):
         vals = super(ProcurementOrder, self)._run_move_create(procurement)
-        if self.sale_line_id:
-            vals.update({'sequence': self.sale_line_id.sequence})
+        if procurement.sale_line_id:
+            vals.update({'sequence': procurement.sale_line_id.sequence})
         return vals
 
 

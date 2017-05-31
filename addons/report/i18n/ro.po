@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-10-28 19:47+0000\n"
+"POT-Creation-Date: 2016-12-07 10:39+0000\n"
+"PO-Revision-Date: 2017-01-17 06:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,6 @@ msgid "&amp;bull;"
 msgstr "&amp;bull;"
 
 #. module: report
-#: model:ir.ui.view,arch_db:report.layout
 #: model:ir.ui.view,arch_db:report.minimal_layout
 msgid "&lt;!DOCTYPE html&gt;"
 msgstr "&lt;!DOCTYPE html&gt;"
@@ -144,7 +143,7 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "Bad Report Reference"
 msgstr "Referință raport greșită"
@@ -197,6 +196,7 @@ msgid "Default paper format ?"
 msgstr "Format de pagină implicit?"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_display_name
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
@@ -211,17 +211,17 @@ msgstr "Afișează o line de antet"
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Edit external footer"
-msgstr ""
+msgstr "Editare subsol extern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Edit external header"
-msgstr ""
+msgstr "Editare antet extern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Edit internal header"
-msgstr ""
+msgstr "Editare antet intern"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -259,6 +259,7 @@ msgid "Header spacing"
 msgstr "Spațiu antet"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode_id
 #: model:ir.model.fields,field_description:report.field_report_abstract_report_id
 #: model:ir.model.fields,field_description:report.field_report_id
 #: model:ir.model.fields,field_description:report.field_report_paperformat_id
@@ -271,6 +272,7 @@ msgid "Landscape"
 msgstr "Panoramic"
 
 #. module: report
+#: model:ir.model.fields,field_description:report.field_ir_qweb_field_barcode___last_update
 #: model:ir.model.fields,field_description:report.field_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_abstract_report___last_update
 #: model:ir.model.fields,field_description:report.field_report_paperformat___last_update
@@ -380,19 +382,20 @@ msgstr "Portret"
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview External Report"
-msgstr ""
+msgstr "Previzualizare raport extern"
 
 #. module: report
 #: model:ir.actions.report.xml,name:report.action_report_internalpreview
 #: model:ir.ui.view,arch_db:report.reporting_settings_form_inherited
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "Previzualizare raport intern."
 
 #. module: report
 #. openerp-web
 #: code:addons/report/static/src/js/qwebactionmanager.js:76
 #: code:addons/report/static/src/js/qwebactionmanager.js:84
 #: code:addons/report/static/src/js/qwebactionmanager.js:91
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
 #: model:ir.model,name:report.model_report
 #, python-format
 msgid "Report"
@@ -433,18 +436,18 @@ msgstr "Tabloid 29 279.4 x 431.8 mm"
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "Acesta este un exemplu pentru un raport extern."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "Acesta este un exemplu pentru un raport intern."
 
 #. module: report
-#: code:addons/report/models/report.py:257
+#: code:addons/report/models/report.py:274
 #, python-format
 msgid "This report is not loaded into the database: %s."
-msgstr ""
+msgstr "Acest raport nu este încărcat în baza de date: %s."
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_margin_top
@@ -462,15 +465,21 @@ msgid ""
 msgstr "Un a fost găsită apliația Wkhtmltopdf în acest sistem.\nRaportul se va afișa în html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">\nwkhtmltopdf.org</a>"
 
 #. module: report
+#: code:addons/report/models/report.py:164
+#, python-format
+msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
+msgstr "Nu a putut fi găsit Wkhtmltopdf în acest sistem. PDF-ul nu poate fi creat."
+
+#. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
 msgid "Website:"
 msgstr "Pagină web:"
 
 #. module: report
-#: code:addons/report/models/report.py:413
+#: code:addons/report/models/report.py:464
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr ""
+msgstr "Wkhtmltopdf eșuat (cod eroare: %s). Mesaj: %s"
 
 #. module: report
 #. openerp-web
@@ -479,7 +488,7 @@ msgstr ""
 msgid ""
 "You need to start OpenERP with at least two \n"
 "workers to print a pdf version of the reports."
-msgstr ""
+msgstr "Trebuie să lansați Odoo cu cel puțin doi workers pentru a tipări un pdf din acest raport."
 
 #. module: report
 #. openerp-web
@@ -490,14 +499,13 @@ msgid ""
 "Wkhtmltopdf to at least 0.12.0 in order to get a correct display of headers and footers as well as\n"
 "support for table-breaking between pages.<br><br><a href=\"http://wkhtmltopdf.org/\" \n"
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "Trebuie să faceți upgrade la versiunea 0.12.0 a programului Wkhtmltopdf  pentru a fi afișate corect zonele de antet și subsol și deasemenea pentru a afișa corect tabele pe mai multe pagini. <br><br><a href=\"http://wkhtmltopdf.org/\" \ntarget=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
-#: model:ir.model,name:report.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.actions.report.xml"
-
-#. module: report
-#: model:ir.model,name:report.model_report_abstract_report
-msgid "report.abstract_report"
-msgstr "report.abstract_report"
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:96
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The \n"
+"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr "Programul  Wkhtmltopdf instalat nu funcționează. Raportul va fi afișat în format HTML.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"

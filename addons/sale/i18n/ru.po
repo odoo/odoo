@@ -7,13 +7,13 @@
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
 # Stepan Letov <trueswordfish@gmail.com>, 2016
 # Sergey Vilizhanin <sv@grimmette.ru>, 2015
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Viktor Pogrebniak <vp@aifil.ru>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:44+0000\n"
-"PO-Revision-Date: 2016-11-17 18:38+0000\n"
+"PO-Revision-Date: 2017-03-19 17:56+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>\n"
 "Language-Team: Russian (http://www.transifex.com/odoo/odoo-9/language/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -128,7 +128,7 @@ msgstr "${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'd
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -982,7 +982,7 @@ msgstr "Обратите внимание, что когда КП станови
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "Нечего выставить в Счет"
+msgstr "Нет позиций для выставления счёта"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_message_needaction_counter
@@ -1004,12 +1004,12 @@ msgstr "Количество сообщений, требующих реакци
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_message_unread_counter
 msgid "Number of unread messages"
-msgstr "Количество непрочтённых сообщений"
+msgstr "Количество непрочитанных сообщений"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr "Онлайн Предложения цен"
+msgstr "Онлайн предложения цен"
 
 #. module: sale
 #. openerp-web
@@ -1106,12 +1106,12 @@ msgstr "Контрагент"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr "Страна Партнера"
+msgstr "Страна партнера"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr "Страна Партнера"
+msgstr "Страна партнера"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
@@ -1140,7 +1140,7 @@ msgstr "Цена"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
 msgid "Price Reduce"
-msgstr "Уменьшение Цены"
+msgstr "Уменьшение цены"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
@@ -1314,7 +1314,7 @@ msgstr "Предложения цен"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr "Предложения цен и Продажи"
+msgstr "Предложения цен и продажи"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1356,7 +1356,7 @@ msgstr "Позиции заказа продаж"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Изменения Заказа Продаж"
+msgstr "Изменения заказа продаж"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1536,7 +1536,7 @@ msgstr "Установите цель выставления счетов:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Done"
-msgstr "Установите Готово"
+msgstr "Отметить как готовое"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1551,12 +1551,12 @@ msgstr "Установить по умолчанию сроки и услови�
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sale orders and invoices"
-msgstr "Показать Инкотермс в Заказе клиента и связанных с ними счет-фактурах"
+msgstr "Показать инкотермс в заказе клиента и связанных с ними счетах"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr "Показать прайс-листы на Продукты"
+msgstr "Показать прайс-листы на продукты"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
@@ -1676,7 +1676,7 @@ msgstr "Нет счета доходов определенного для да�
 #: code:addons/sale/sale.py:316
 #, python-format
 msgid "There is no invoicable line."
-msgstr "Нет доступных счет-фактуры строк"
+msgstr "Нет доступных позиций для счёта"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1756,7 +1756,7 @@ msgstr "Всего налог"
 #: model:ir.model.fields,field_description:sale.field_product_product_track_service
 #: model:ir.model.fields,field_description:sale.field_product_template_track_service
 msgid "Track Service"
-msgstr "Прослеживать Сервис"
+msgstr "Сервис отслеживания"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
@@ -1806,7 +1806,7 @@ msgstr "До продажи"
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr "Предложение До продажи"
+msgstr "Предложение до продажи"
 
 #. module: sale
 #: model:web.tip,description:sale.sale_tip_2
@@ -1828,7 +1828,7 @@ msgstr "НДС:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_website_message_ids
 msgid "Website Messages"
-msgstr "Сообщения Сайта"
+msgstr "Сообщения с сайта"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_website_message_ids

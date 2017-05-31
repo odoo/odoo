@@ -630,7 +630,8 @@ class Field(object):
 
             if field is self:
                 self.recursive = True
-                continue
+                if not i:
+                    continue            # self directly depends on self, give up
 
             # add trigger on field and its inverses to recompute self
             model._field_triggers.add(field, (self, '.'.join(path[:i] or ['id'])))
@@ -945,7 +946,7 @@ class Field(object):
     def determine_draft_value(self, record):
         """ Determine the value of ``self`` for the given draft ``record``. """
         if self.compute:
-            self._compute_value(record)
+            self.compute_value(record)
         else:
             record._cache[self] = SpecialValue(self.null(record.env))
 
@@ -1157,13 +1158,14 @@ class Monetary(Field):
     _column_currency_field = property(attrgetter('currency_field'))
     _column_group_operator = property(attrgetter('group_operator'))
 
-    def _setup_regular_base(self, model):
-        super(Monetary, self)._setup_regular_base(model)
-        if not self.currency_field:
-            self.currency_field = 'currency_id'
-
     def _setup_regular_full(self, model):
         super(Monetary, self)._setup_regular_full(model)
+        if not self.currency_field:
+            # pick a default, trying in order: 'currency_id', 'x_currency_id'
+            if 'currency_id' in model._fields:
+                self.currency_field = 'currency_id'
+            elif 'x_currency_id' in model._fields:
+                self.currency_field = 'x_currency_id'
         assert self.currency_field in model._fields, \
             "Field %s with unknown currency_field %r" % (self, self.currency_field)
 
@@ -1915,9 +1917,8 @@ class One2many(_RelationalMulti):
     _column_limit = property(attrgetter('limit'))
 
     def convert_to_onchange(self, value, fnames=None):
-        if fnames:
-            # do not serialize self's inverse field
-            fnames = [name for name in fnames if name != self.inverse_name]
+        fnames = set(fnames or ())
+        fnames.discard(self.inverse_name)
         return super(One2many, self).convert_to_onchange(value, fnames)
 
 

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015-2016
-# Anica Milanova, 2016
+# Anica Milanova, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2016-12-02 13:59+0000\n"
-"Last-Translator: Anica Milanova\n"
+"PO-Revision-Date: 2017-03-29 08:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/mk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -144,7 +144,7 @@ msgstr "&amp;bull;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", ако \"Сметководство и финансии\" или \"Управување со набавка\" ви е инсталирано"
+msgstr ", доколку е инсталирано Сметководство или Набавки"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -1148,7 +1148,7 @@ msgstr "Командна табла на сметководство"
 #: model:ir.model.fields,field_description:account.field_account_invoice_date
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date
 msgid "Accounting Date"
-msgstr "Датум на сметководење"
+msgstr "Сметководствен датум"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -3573,7 +3573,7 @@ msgstr "Овозможи споредување"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports_followup
 msgid "Enable payment followup management"
-msgstr "Овозможи менаџирање со 'Следење на плаќање'"
+msgstr "Овозможи управување со следливост на плаќањата"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8179,6 +8179,14 @@ msgstr "Полето за секвенца се кориси за да се од
 #, python-format
 msgid "The sequence of journal %s is deactivated."
 msgstr "Секвенцата од дневникот %s е деактивирана."
+
+#. module: account
+#: code:addons/account/models/company.py:91
+#, python-format
+msgid ""
+"There are still unposted entries in the period you want to lock. You should "
+"either post or delete them."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:170

@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Alejandro Die Sanchis <marketing@domatix.com>, 2015
-# Gelo Joga Rodríguez <gj@landoo.es>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-10-17 09:23+0000\n"
-"Last-Translator: Gelo Joga Rodríguez <gj@landoo.es>\n"
+"PO-Revision-Date: 2017-04-28 18:35+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr "&amp;times;"
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.website_popup_snippet
 msgid "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Newsletter Popup</span>"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe
@@ -115,9 +116,19 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr "No estás suscrito a ninguna de nuestras listas de mailing"
 
 #. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:155
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+#, python-format
 msgid "Your changes have been saved."
 msgstr "Tus cambios han sido guardados"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:158
+#, python-format
+msgid "Your changes have not been saved, try again later."
+msgstr "Sus cambios no han sido guardados, inténtelo de nuevo más tarde"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.mailing_list_subscribe

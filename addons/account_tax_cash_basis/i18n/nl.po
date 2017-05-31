@@ -3,14 +3,15 @@
 # * account_tax_cash_basis
 # 
 # Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:39+0000\n"
-"PO-Revision-Date: 2015-09-19 11:08+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>\n"
+"PO-Revision-Date: 2017-01-19 14:26+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
 "Language-Team: Dutch (http://www.transifex.com/odoo/odoo-9/language/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr "Boeking"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when         creating entry for tax cash basis"
-msgstr "Rekening gebruikt bij het aanmaken van boekingen voor belasting kasbasis"
+msgstr "Rekening gebruikt bij het aanmaken van boekingen voor BTW kasbasis"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -43,7 +44,7 @@ msgstr "Letter (bij  verschil gedeeltelijk) af"
 msgid ""
 "Select this if the tax should use cash basis, which will         create an "
 "entry for this tax on a given account during reconciliation"
-msgstr "Selecteer dit als de belasting kasbasis moet gebruiken wat een mutatie aanmaakt voor deze belasting op een opgegeven rekening tijdens afletting"
+msgstr "Selecteer dit als de BTW kasbasis moet gebruiken. Dit maakt een mutatie aan bij het afletteren."
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -53,18 +54,18 @@ msgstr "BTW"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "Belasting kasbasis mutatie van"
+msgstr "BTW kasbasis mutatie van"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Belasting kasbasis dagboek"
+msgstr "BTW kasbasis dagboek"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Tax Received Account"
-msgstr "Ontvangen belasting rekening"
+msgstr "Ontvangen BTW rekening"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
@@ -72,7 +73,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "Technisch veld gebruikt om de belasting kasbasis aflettering bij te houden. Dit is nodig wanneer de bron wordt geannuleerd: het plaatst de omgekeerde dagboek mutatie om dat gedeelte ook te annuleren."
+msgstr "Technisch veld gebruikt om de BTW kasbasis aflettering bij te houden. Dit is nodig wanneer de bron wordt geannuleerd: het plaatst de omgekeerde dagboek mutatie om dat gedeelte ook te annuleren."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/tax_cash_basis.py:82
@@ -80,7 +81,7 @@ msgstr "Technisch veld gebruikt om de belasting kasbasis aflettering bij te houd
 msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
-msgstr "Er is geen belasting kasbasis dagboek gedefinieerd voor dit bedrijf: \"%s\"\nConfigureer het onder Boekhouding/Configuratie/Instellingen"
+msgstr "Er is geen BTW kasbasis dagboek gedefinieerd voor dit bedrijf: \"%s\"\nConfigureer het onder Boekhouding/Configuratie/Instellingen"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis

@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2016-12-02 08:48+0000\n"
+"PO-Revision-Date: 2017-03-18 19:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -301,7 +301,7 @@ msgstr ""
 msgid ""
 "\n"
 "        Allows to use python code to define taxes"
-msgstr ""
+msgstr "\nVergileri tanımlamak için python kodunu kullanmaya izin verir"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_voip
@@ -469,7 +469,7 @@ msgstr ""
 msgid ""
 "\n"
 "    Display delivery orders (picking) infos on the website\n"
-msgstr ""
+msgstr "\n    Web sitesinde teslimat emirleri (toplama) bilgilerini ekleyin\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -5742,6 +5742,12 @@ msgid "Automatic Installation"
 msgstr "Otomatik Yükleme"
 
 #. module: base
+#: code:addons/base/module/module.py:693
+#, python-format
+msgid "Automatic install of downloaded Apps is currently disabled."
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_translation_state
 msgid ""
 "Automatically set to let administators find new terms that might need to be "
@@ -9047,7 +9053,7 @@ msgstr "Kullanılabilir fontlar"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company_rml_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr ""
+msgstr "Footer metin tüm çıktıların alt kısmında görüntülenir."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_name
@@ -9188,7 +9194,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_from
 msgid "From"
-msgstr ""
+msgstr "Kimden:"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_access_view_search
@@ -9324,7 +9330,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_form
 #: model:ir.module.module,summary:base.module_website_form
 msgid "Generic controller for web forms"
-msgstr ""
+msgstr "Web formları için genel kontrol"
 
 #. module: base
 #: model:res.country,name:base.ge
@@ -9651,7 +9657,7 @@ msgstr "Yardım"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_planner
 msgid "Help to configure application"
-msgstr ""
+msgstr "Uygulama yapılandırmak için yardım"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -9733,7 +9739,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,description:base.module_category_survey
 msgid "Helps you manage your survey for review of different-different users."
-msgstr ""
+msgstr "Farklı farklı kullanıcıların incelenmesi için anketinizi yönetmenize yardımcı olur."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.wizard_lang_export
@@ -9816,7 +9822,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
 #: model:ir.ui.view,arch_db:base.view_model_form
 msgid "How to define a computed field"
-msgstr ""
+msgstr "Hesaplanan bir alan nasıl tanımlanır"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -10111,7 +10117,7 @@ msgstr ""
 msgid ""
 "If you check this, then the second time the user prints with same attachment"
 " name, it returns the previous report."
-msgstr ""
+msgstr "Bunu seçerseniz kullanıcı ikinci defa aynı eklenti adı ile çıktı alırsa, bir önceki çıktı kullanılır."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_import_overwrite
@@ -10202,7 +10208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_modules
 #: model:ir.model.fields,field_description:base.field_ir_model_modules
 msgid "In Apps"
-msgstr ""
+msgstr "Uygulamalarda"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_currency_search
@@ -12106,13 +12112,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_ir_values_id
 #: model:ir.model.fields,field_description:base.field_ir_act_server_menu_ir_values_id
 msgid "More Menu entry"
-msgstr ""
+msgstr "Daha Menü Girişi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_ir_values_id
 #: model:ir.model.fields,help:base.field_ir_act_server_menu_ir_values_id
 msgid "More menu entry."
-msgstr ""
+msgstr "Daha menü girişi."
 
 #. module: base
 #: model:res.country,name:base.ma
@@ -12631,7 +12637,7 @@ msgstr "Değiştirmeye çalıştığınız kayıtlardan biri zaten silinmiş(Dos
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
 msgid "Online Event's Tickets"
-msgstr ""
+msgstr "Online Etkinlik Biletleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
@@ -13611,7 +13617,7 @@ msgstr "Satınalma Yönetimi"
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
 msgid "Purchase Orders, Receipts, Vendor Bills"
-msgstr ""
+msgstr "Satınalma Siparişi, Makbuz, Tedarikçi Faturaları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -13659,7 +13665,7 @@ msgstr "Eleme"
 #: model:ir.module.module,description:base.module_website_event_questions
 #: model:ir.module.module,shortdesc:base.module_website_event_questions
 msgid "Questions on Events"
-msgstr ""
+msgstr "Etkinliklerle ilgili Sorular"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_settings_dashboard
@@ -13703,12 +13709,12 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company_rml_header3
 msgid "RML Internal Header for Landscape Reports"
-msgstr ""
+msgstr "Yatay Çıktılar için RML İç Başlık"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "RML Report"
-msgstr ""
+msgstr "RML Çıktısı"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
@@ -13852,7 +13858,7 @@ msgstr "İlişkili Firma"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
 msgid "Related Field"
-msgstr ""
+msgstr "İlişkili Alan"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_partner_id
@@ -13900,7 +13906,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Remove from the 'More' menu"
-msgstr ""
+msgstr "'Daha' menüsünden kaldır"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
@@ -13981,17 +13987,17 @@ msgstr "Rapor Türü"
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_search_view
 msgid "Report Xml"
-msgstr ""
+msgstr "Çıktı Xml"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view_tree
 msgid "Report xml"
-msgstr ""
+msgstr "Çıktı xml"
 
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Report/Template"
-msgstr ""
+msgstr "Çıktı/Şablon"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_reporting
@@ -14111,7 +14117,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_parent_right
 msgid "Right parent"
-msgstr ""
+msgstr "Sağ üst"
 
 #. module: base
 #: selection:res.lang,direction:0
@@ -14178,7 +14184,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_cron_view
 msgid "Run Manually"
-msgstr ""
+msgstr "Elle Çalıştır"
 
 #. module: base
 #: model:ir.actions.server,name:base.action_run_ir_action_todo
@@ -14310,7 +14316,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_layout
 msgid "Sale Layout, page-break, subtotals, separators, report"
-msgstr ""
+msgstr "Satış Düzeni, Sayfa Sonu, Alt Toplamlar, Ayırıcılar, Çıktı"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales
@@ -14388,7 +14394,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank_sanitized_acc_number
 msgid "Sanitized Account Number"
-msgstr ""
+msgstr "Arındırılmış Hesap Numarası"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -14630,7 +14636,7 @@ msgstr "Sıra Kodu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_padding
 msgid "Sequence Size"
-msgstr ""
+msgstr "Sıra Boyutu"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -14724,7 +14730,7 @@ msgstr ""
 msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
-msgstr ""
+msgstr "Çıktı başlığındaki fontu ayarlayın, firmanın RML raporlarında varsayılan font olarak kullanılacaktır."
 
 #. module: base
 #: code:addons/base/res/res_users.py:519
@@ -14956,7 +14962,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters_sort
 msgid "Sort"
-msgstr ""
+msgstr "Sırala"
 
 #. module: base
 #: code:addons/models.py:4675
@@ -15778,7 +15784,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique!"
-msgstr ""
+msgstr "Para birim kodu benzersiz olmalı!"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_attachment_res_model
@@ -15893,7 +15899,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique within an application!"
-msgstr ""
+msgstr "Grubun adı bir uygulamada benzersiz olmalıdır!"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -16133,7 +16139,7 @@ msgid ""
 "This is the filename of the attachment used to store the printing result. "
 "Keep empty to not save the printed reports. You can use a python expression "
 "with the object and time variables."
-msgstr ""
+msgstr "Bu, yazdırma sonucunda oluşacak ek'in saklanacağı dosyanın adıdır. Basılan çıktıları kaydetmemek için boş bırakıniz. Nesne ve zaman değişkenleri ile bir python ifadesi kullanabilirsiniz."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -16246,6 +16252,13 @@ msgstr ""
 #: selection:ir.module.module,state:0
 #: selection:ir.module.module.dependency,state:0
 msgid "To be upgraded"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:694
+#, python-format
+msgid ""
+"To enable it, make sure this directory exists and is writable on the server:"
 msgstr ""
 
 #. module: base
@@ -16647,7 +16660,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
 msgid "United States - Accounting"
-msgstr ""
+msgstr "USA - Muhasebe Hesapları"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
@@ -16681,7 +16694,7 @@ msgstr ""
 #: code:addons/report_sxw.py:370
 #, python-format
 msgid "Unknown report type: %s"
-msgstr ""
+msgstr "Bilinmeyen Çıktı türü: %s"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:350
@@ -17031,7 +17044,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
 msgid "Vietnam - Accounting"
-msgstr ""
+msgstr "Vietnam Hesap Planı"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn_reports
@@ -17254,7 +17267,7 @@ msgstr "Webkit (desteklenmiyor)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_webkit
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "Webkit Çıktı Motoru"
 
 #. module: base
 #: code:addons/base/res/res_company.py:106
@@ -17492,7 +17505,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Worflow Signal"
-msgstr ""
+msgstr "İş Akış Sinyali"
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -17596,7 +17609,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "XML Report"
-msgstr ""
+msgstr "XML Çıktısı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_report_xml_report_xsl
@@ -17726,7 +17739,7 @@ msgstr ""
 #: code:addons/base/ir/ir_values.py:428
 #, python-format
 msgid "You do not have the permission to perform this operation!!!"
-msgstr ""
+msgstr "Bu işlemi gerçekleştirecek izniniz yok !!!"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -17825,7 +17838,7 @@ msgstr "_İçe Aktar"
 #. module: base
 #: model:ir.model,name:base.model__unknown
 msgid "_unknown"
-msgstr ""
+msgstr "_bilinmeyen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_sync
@@ -18057,7 +18070,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter

@@ -113,7 +113,7 @@ class stock_change_product_qty(osv.osv_memory):
     def onchange_location_id(self, cr, uid, ids, location_id, product_id, context=None):
         if location_id:
             qty_wh = 0.0
-            qty = self.pool.get('product.product')._product_available(cr, uid, [product_id], context=dict(context or {}, location=location_id))
+            qty = self.pool.get('product.product')._product_available(cr, uid, [product_id], context=dict(context or {}, location=location_id, compute_child=False))
             if product_id in qty:
                 qty_wh = qty[product_id]['qty_available']
             return { 'value': { 'new_quantity': qty_wh } }

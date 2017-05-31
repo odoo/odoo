@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from openerp.osv import osv
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -44,6 +44,7 @@ class HrHolidaySummaryReport(osv.AbstractModel):
         res = []
         count = 0
         start_date = datetime.strptime(start_date, DEFAULT_SERVER_DATE_FORMAT)
+        start_date = fields.datetime.context_timestamp(cr, uid, start_date, context=context).date()
         end_date = start_date + relativedelta(days=59)
         for index in range(0, 60):
             current = start_date + timedelta(index)
@@ -55,8 +56,12 @@ class HrHolidaySummaryReport(osv.AbstractModel):
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
         holidays_ids = holidays_obj.search(cr, uid, [('employee_id', '=', empid), ('state', 'in', holiday_type), ('type', '=', 'remove'), ('date_from', '<=', str(end_date)), ('date_to', '>=', str(start_date))], context=context)
         for holiday in holidays_obj.browse(cr, uid, holidays_ids, context=context):
+            # Convert date to user timezone, otherwise the report will not be consistent with the
+            # value displayed in the interface.
             date_from = datetime.strptime(holiday.date_from, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_from = fields.datetime.context_timestamp(cr, uid, date_from, context=context).date()
             date_to = datetime.strptime(holiday.date_to, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_to = fields.datetime.context_timestamp(cr, uid, date_to, context=context).date()
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name

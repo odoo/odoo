@@ -558,6 +558,9 @@ class ir_translation(osv.osv):
                     # (trans.value -> trans.src) gives the original value back
                     value0 = field.translate(lambda term: None, record[fname])
                     value1 = field.translate({trans.src: trans.value}.get, value0)
+                    # don't check the reverse if no translation happened
+                    if value0 == value1:
+                        continue
                     value2 = field.translate({trans.value: trans.src}.get, value1)
                     if value2 != value0:
                         raise ValidationError(_("Translation is not valid:\n%s") % trans.value)

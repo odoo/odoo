@@ -32,6 +32,7 @@ var LivechatButton = Widget.extend({
         this.channel = null;
         this.chat_window = null;
         this.messages = [];
+        this.server_url = server_url;
     },
 
     willStart: function () {
@@ -202,10 +203,11 @@ var LivechatButton = Widget.extend({
                                this.options.default_username;
 
         // Compute the avatar_url
+        msg.avatar_src = this.server_url;
         if (msg.author_id && msg.author_id[0]) {
-            msg.avatar_src = "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
+            msg.avatar_src += "/web/image/res.partner/" + msg.author_id[0] + "/image_small";
         } else {
-            msg.avatar_src = "/mail/static/src/img/smiley/avatar.jpg";
+            msg.avatar_src += "/mail/static/src/img/smiley/avatar.jpg";
         }
 
         if (options && options.prepend) {

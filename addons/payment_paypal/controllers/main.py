@@ -3,10 +3,12 @@
 import json
 import logging
 import pprint
+import urllib
 import urllib2
 import werkzeug
 
 from openerp import http, SUPERUSER_ID
+from openerp.addons.payment.models.payment_acquirer import ValidationError
 from openerp.http import request
 
 _logger = logging.getLogger(__name__)
@@ -26,7 +28,7 @@ class PaypalController(http.Controller):
         return return_url
 
     def _parse_pdt_response(self, response):
-        """ Parse a text reponse for a PDT verification .
+        """ Parse a text response for a PDT verification .
 
             :param response str: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
@@ -37,6 +39,9 @@ class PaypalController(http.Controller):
         lines = filter(None, response.split('\n'))
         status = lines.pop(0)
         pdt_post = dict(line.split('=', 1) for line in lines)
+        # html unescape
+        for post in pdt_post:
+            pdt_post[post] = urllib.unquote_plus(pdt_post[post]).decode('utf8')
         return status, pdt_post
 
     def paypal_validate_data(self, **post):
@@ -85,7 +90,10 @@ class PaypalController(http.Controller):
     def paypal_ipn(self, **post):
         """ Paypal IPN. """
         _logger.info('Beginning Paypal IPN form_feedback with post data %s', pprint.pformat(post))  # debug
-        self.paypal_validate_data(**post)
+        try:
+            self.paypal_validate_data(**post)
+        except ValidationError:
+            _logger.exception('Unable to validate the Paypal payment')
         return ''
 
     @http.route('/payment/paypal/dpn', type='http', auth="none", methods=['POST', 'GET'], csrf=False)

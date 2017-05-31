@@ -14,7 +14,7 @@ class res_partner_grade(osv.osv):
     _columns = {
         'sequence': fields.integer('Sequence'),
         'active': fields.boolean('Active'),
-        'name': fields.char('Level Name'),
+        'name': fields.char('Level Name', translate=True),
         'partner_weight': fields.integer('Level Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }

@@ -407,7 +407,7 @@ class Invoice(osv.osv):
         for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
-                        [l.id for l in invoice.invoice_line])])
+                        [l.id for l in invoice.invoice_line_ids])])
             member_line_obj.write(cr, uid, mlines, {'date_cancel': False}, context=context)
         return super(Invoice, self).action_cancel_draft(cr, uid, ids, context=context)
 
