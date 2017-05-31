@@ -214,11 +214,12 @@ class Partner(models.Model):
                 (not self.pool._init or test_mode):
             email_ids = emails.ids
             dbname = self.env.cr.dbname
+            _context = self._context
 
             def send_notifications():
                 db_registry = registry(dbname)
                 with api.Environment.manage(), db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env = api.Environment(cr, SUPERUSER_ID, _context)
                     env['mail.mail'].browse(email_ids).send()
 
             # unless asked specifically, send emails after the transaction to

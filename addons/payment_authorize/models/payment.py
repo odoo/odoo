@@ -164,7 +164,7 @@ class TxAuthorize(models.Model):
         transaction record. """
         reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
-            error_msg = 'Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)' % (reference, trans_id, fingerprint)
+            error_msg = _('Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)') % (reference, trans_id, fingerprint)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
@@ -343,6 +343,6 @@ class PaymentToken(models.Model):
                     'acquirer_ref': res.get('payment_profile_id'),
                 }
             else:
-                raise ValidationError('The Customer Profile creation in Authorize.NET failed.')
+                raise ValidationError(_('The Customer Profile creation in Authorize.NET failed.'))
         else:
             return values
