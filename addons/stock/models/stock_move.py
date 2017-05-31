@@ -966,7 +966,7 @@ class StockMove(models.Model):
         return new_move.id
 
     @api.multi
-    def action_show_picking(self):
+    def show_picking(self):
         view = self.env.ref('stock.view_picking_form')
         return {
             'name': _('Transfer'),
@@ -978,8 +978,8 @@ class StockMove(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': self.id}
-    show_picking = action_show_picking
 
+    action_show_picking = show_picking
     # Quants management
     # ----------------------------------------------------------------------
 
