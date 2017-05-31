@@ -228,8 +228,8 @@ class AccountMove(models.Model):
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
             'ref': _('reversal of: ') + self.name})
-        for acm_line in reversed_move.line_ids:
-            acm_line.with_context(check_move_validity=False).write({
+        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+            acm_line.write({
                 'debit': acm_line.credit,
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency
