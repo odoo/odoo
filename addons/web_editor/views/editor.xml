@@ -84,6 +84,9 @@
 <template id="assets_editor" name="Full web_editor assets">
     <t t-call="web.less_helpers"/>
     
+    <!-- FIXME remove website dependency -->
+    <link href="/website/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
+
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
 
