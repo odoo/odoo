@@ -12,4 +12,4 @@ Nuria Pastor <n.pastor@grupoesoc.es> https://github.com/grupoesoc/
 
 List of contributors:
 
-Jairo Llopis <j.llopis@grupoesoc.es> https://github.com/Yajo
+Jairo Llopis <j.llopis@grupoesoc.es> https://github.com/Yajo (up to 2016-05-01)
