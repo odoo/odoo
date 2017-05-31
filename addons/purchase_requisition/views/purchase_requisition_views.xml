@@ -319,7 +319,7 @@
     <record model="ir.ui.view" id="product_template_form_view_inherit">
         <field name="name">product.template.form.inherit</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="purchase.product_template_supplier_view_form_inherit_purchase"/>
+        <field name="inherit_id" ref="purchase.view_product_supplier_inherit"/>
         <field name="arch" type="xml">
             <group name="vendors" position="after">
                 <group string="Reordering">

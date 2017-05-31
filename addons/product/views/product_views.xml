@@ -503,10 +503,11 @@
                 <form string="Vendor Information">
                     <group>
                         <group string="Vendor">
+                            <field name="product_variant_count" invisible="1"/>
+                            <field name="product_id" attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
-                            <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/>
                             <label for="delay"/>
                             <div>
                                 <field name="delay" class="oe_inline"/> days
@@ -564,6 +565,18 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="product_supplierinfo_view_tree_inherit" model="ir.ui.view">
+            <field name="name">product.supplierinfo.view.tree.inherit</field>
+            <field name="model">product.supplierinfo</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="product.product_supplierinfo_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="product_id" groups="product.group_product_variant"/>
+                </field>
             </field>
         </record>
 

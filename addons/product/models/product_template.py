@@ -104,6 +104,9 @@ class ProductTemplate(models.Model):
         help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
 
+    # technical field used to adapt the tree view of product.supplierinfo in product_template form view.
+    variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
+
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
 
