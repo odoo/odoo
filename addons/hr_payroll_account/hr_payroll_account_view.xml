@@ -12,6 +12,9 @@
                     <field name="journal_id" required="1"/>
                     <field name="move_id" readonly="1"/>
                 </field>
+                <xpath expr="//tree[@string='Payslip Lines']/field[@name='total']" position="after">
+                    <field name="partner_id" />
+                </xpath>
             </field>
         </record>
 
