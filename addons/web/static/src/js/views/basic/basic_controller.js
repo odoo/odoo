@@ -19,6 +19,7 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
+        mutexify: '_onMutexify',
         reload: '_onReload',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -498,6 +499,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.action the function to execute in the mutex
+     */
+    _onMutexify: function (ev) {
+        this.mutex.exec(ev.data.action);
     },
     /**
      * When a reload event triggers up, we need to reload the full view.
