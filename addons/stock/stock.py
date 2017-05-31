@@ -1659,7 +1659,12 @@ class stock_picking(models.Model):
             for ops in picking.pack_operation_ids:
                 for opslot in ops.pack_lot_ids:
                     if not opslot.lot_id:
-                        lot_id = lot_obj.create(cr, uid, {'name': opslot.lot_name, 'product_id': ops.product_id.id}, context=context)
+                        # Look for an existing lot first and create it if not found
+                        lot_ids = lot_obj.search(cr, uid, [('name', '=', opslot.lot_name), ('product_id', '=', ops.product_id.id)], context=context)
+                        if lot_ids:
+                            lot_id = lot_ids[0]
+                        else:
+                            lot_id = lot_obj.create(cr, uid, {'name': opslot.lot_name, 'product_id': ops.product_id.id}, context=context)
                         opslot_obj.write(cr, uid, [opslot.id], {'lot_id':lot_id}, context=context)
                 #Unlink pack operations where qty = 0
                 to_unlink += [x.id for x in ops.pack_lot_ids if x.qty == 0.0]
