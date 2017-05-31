@@ -294,7 +294,8 @@ class PosOrder(models.Model):
                 taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
                 if not taxes:
                     continue
-                for tax in taxes.compute_all(line.price_unit * (100.0 - line.discount) / 100.0, cur, line.qty)['taxes']:
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                for tax in taxes.compute_all(price, cur, line.qty)['taxes']:
                     insert_data('tax', {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,

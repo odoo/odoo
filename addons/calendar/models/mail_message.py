@@ -25,7 +25,7 @@ class Message(models.Model):
     @api.model
     def _find_allowed_model_wise(self, doc_model, doc_dict):
         if doc_model == 'calendar.event':
-            order = self._context.get('order', self._order)
+            order = self._context.get('order', self.env[doc_model]._order)
             for virtual_id in self.env[doc_model].browse(doc_dict).get_recurrent_ids([], order=order):
                 doc_dict.setdefault(virtual_id, doc_dict[get_real_ids(virtual_id)])
         return super(Message, self)._find_allowed_model_wise(doc_model, doc_dict)

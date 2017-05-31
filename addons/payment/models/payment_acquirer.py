@@ -162,7 +162,7 @@ class PaymentAcquirer(models.Model):
     def _check_authorization_support(self):
         for acquirer in self:
             if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
-                raise ValidationError('You cannot capture payments manually with this payment method. Please choose another Order Confirmation mode (in Configuration tab).')
+                raise ValidationError(_('You cannot capture payments manually with this payment method. Please choose another Order Confirmation mode (in Configuration tab).'))
         return True
 
     _constraints = [
@@ -664,14 +664,14 @@ class PaymentTransaction(models.Model):
     @api.multi
     def action_capture(self):
         if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError('Only transactions in the Authorized status can be captured.')
+            raise ValidationError(_('Only transactions in the Authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     @api.multi
     def action_void(self):
         if any(self.mapped(lambda tx: tx.state != 'authorized')):
-            raise ValidationError('Only transactions in the Authorized status can be voided.')
+            raise ValidationError(_('Only transactions in the Authorized status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()
 

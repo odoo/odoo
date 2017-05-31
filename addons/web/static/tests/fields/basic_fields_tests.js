@@ -1,6 +1,7 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
+var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var FormView = require('web.FormView');
@@ -10,6 +11,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var DebouncedField = basicFields.DebouncedField;
 var _t = core._t;
 
 QUnit.module('fields', {}, function () {
@@ -119,6 +121,66 @@ QUnit.module('basic_fields', {
         };
     }
 }, function () {
+
+    QUnit.module('DebouncedField');
+
+    QUnit.test('debounced fields do not trigger call _setValue once destroyed', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var def = $.Deferred();
+        var _doAction = DebouncedField.prototype._doAction;
+        DebouncedField.prototype._doAction = function () {
+            _doAction.apply(this, arguments);
+            def.resolve();
+        };
+        var _setValue = DebouncedField.prototype._setValue;
+        DebouncedField.prototype._setValue = function () {
+            assert.step('_setValue');
+            _setValue.apply(this, arguments);
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            fieldDebounce: 3,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // change the value
+        form.$('input').val('new value').trigger('input');
+        assert.verifySteps([], "_setValue shouldn't have been called yet");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.verifySteps(['_setValue'], "_setValue should have been called once");
+
+        // destroy the form view
+        def = $.Deferred();
+        form.destroy();
+
+        // wait for the debounced callback to be called
+        def.then(function () {
+            assert.verifySteps(['_setValue'],
+                "_setValue should not have been called after widget destruction");
+
+            DebouncedField.prototype._doAction = _doAction;
+            DebouncedField.prototype._setValue = _setValue;
+            done();
+        });
+
+    });
 
     QUnit.module('FieldBoolean');
 
@@ -710,6 +772,33 @@ QUnit.module('basic_fields', {
         _t.database.multi_lang = multiLang;
     });
 
+    QUnit.test('char field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val('<script>throw Error();</script>').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text(), '<script>throw Error();</script>',
+            'the value should have been properly escaped');
+
+        form.destroy();
+    });
 
     QUnit.module('UrlWidget');
 
@@ -1742,6 +1831,37 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with monetary field given in options', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.company_currency_id = {
+            string: "Company Currency", type: "many2one", relation: "currency",
+        };
+        this.data.partner.records[4].company_currency_id = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" options="{\'currency_field\': \'company_currency_id\'}"/>' +
+                        '<field name="company_currency_id"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_monetary').html(), "9.10&nbsp;€",
+            "field monetary should be formatted with correct currency");
+
+        form.destroy();
+    });
+
     QUnit.test('should keep the focus when being edited in x2many lists', function (assert) {
         assert.expect(6);
 
@@ -2166,6 +2286,42 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('phone field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="phone"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            config: {
+                device: {
+                    size_class: 0,
+                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
+                }
+            },
+        });
+
+        var val = '<script>throw Error();</script><script>throw Error();</script>';
+        form.$('input').val(val).trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text().split('\u00AD').join(''), val,
+            "value should have been correctly escaped");
+
+        form.destroy();
+    });
 
     QUnit.module('PriorityWidget');
 

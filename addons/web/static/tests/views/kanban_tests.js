@@ -323,8 +323,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create in grouped mode', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
+        var nbRecords = 4;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -335,6 +336,12 @@ QUnit.module('Views', {
                         '<div><field name="foo"/></div>' +
                     '</t></templates></kanban>',
             groupBy: ['bar'],
+            intercepts: {
+                env_updated: function (event) {
+                    assert.strictEqual(event.data.ids.length, nbRecords,
+                        "should update the env with the records ids");
+                },
+            }
         });
 
         // click to add an element and cancel the quick creation
@@ -351,6 +358,7 @@ QUnit.module('Views', {
         kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
         $quickCreate = kanban.$('.o_kanban_quick_create');
         $quickCreate.find('input').val('new partner');
+        nbRecords = 5;
         $quickCreate.find('button.o_kanban_add').click();
 
         assert.strictEqual(this.data.partner.records.length, 5,
@@ -682,7 +690,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column)').length, 1,
             "the last column should be the newly created one");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
         assert.expect(26);
@@ -758,7 +766,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.renderer.widgets.length, 2,
             "the old widgets should have been correctly deleted");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('create a column, delete it and create another one', function (assert) {
         assert.expect(5);
@@ -797,7 +805,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:last span:contains(new column 2)').length, 1,
             "the last column should be the newly created one");
         kanban.destroy();
-    }),
+    });
 
     QUnit.test('edit a column in grouped on m2o', function (assert) {
         assert.expect(12);

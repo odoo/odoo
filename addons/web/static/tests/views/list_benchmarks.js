@@ -23,7 +23,7 @@ QUnit.module('List View', {
             },
         };
         this.arch = null;
-        this.run = function (assert, done) {
+        this.run = function (assert, done, cb) {
             var data = this.data;
             var arch = this.arch;
             new Benchmark.Suite({})
@@ -34,6 +34,9 @@ QUnit.module('List View', {
                         data: data,
                         arch: arch,
                     });
+                    if (cb) {
+                        cb(list);
+                    }
                     list.destroy();
                 })
                 .on('cycle', function(event) {
@@ -82,7 +85,7 @@ QUnit.module('List View', {
         this.run(assert, done);
     });
 
-    QUnit.test('simple readonly list with 200 rows 4 fields', function (assert) {
+    QUnit.test('editable list with 200 rows 4 fields', function (assert) {
         var done = assert.async();
         assert.expect(1);
 
@@ -94,8 +97,16 @@ QUnit.module('List View', {
                 bar: i % 2 === 0,
             });
         }
-        this.arch = '<tree><field name="foo"/><field name="int_field"/><field name="bar"/><field name="qux"/></tree>';
-        this.run(assert, done);
+        this.arch = '<tree editable="bottom">' +
+                '<field name="foo" attrs="{\'readonly\': [[\'bar\', \'=\', True]]}"/>' +
+                '<field name="int_field"/>' +
+                '<field name="bar"/>' +
+                '<field name="qux"/>' +
+            '</tree>';
+        this.run(assert, done, function (list) {
+            list.$buttons.find('.o_list_button_add').click();
+            list.$buttons.find('.o_list_button_discard').click();
+        });
     });
 
 });

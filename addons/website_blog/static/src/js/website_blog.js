@@ -58,7 +58,7 @@ function shareArticle(event){
 
 $(document).ready(function() {
     if ($('.website_blog').length) {
-        $(".js_tweet, .js_comment").share({'author_name': $('#blog_author').text()});
+        $(".js_tweet, .js_comment").share({});
         $('.cover_footer').on('click', page_transist);
         $('a[href^="#blog_content"]').on('click', animate);
         $('.o_twitter, .o_facebook, .o_linkedin, .o_google, .o_twitter_complete, .o_facebook_complete, .o_linkedin_complete, .o_google_complete').on('click', shareArticle);

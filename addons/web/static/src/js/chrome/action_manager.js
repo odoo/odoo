@@ -182,19 +182,35 @@ var ViewManagerAction = WidgetAction.extend({
     },
     /**
      * Sets the scroll position of the widgets's active_view
-     * @param {int} [scrollTop] the number of pixels to scroll
+     * @todo: replace this with a generic get/set local state mechanism.
+     * @see getScrollTop
+     *
+     * @override
+     * @param {integer} [scrollTop] the number of pixels to scroll
      */
-    setScrollTop: function(scrollTop) {
-        var viewController = this.widget.active_view.controller;
+    setScrollTop: function (scrollTop) {
+        var activeView = this.widget.active_view;
+        var viewController = activeView && activeView.controller;
         if (viewController) {
             viewController.setScrollTop(scrollTop);
         }
     },
     /**
-     * @return {int} the number of pixels the webclient is scrolled when leaving the action
+     * Returns the current scrolling offset for the current action.  We have to
+     * ask nicely the question to the active view, because the answer depends
+     * on the view.
+     *
+     * @todo: replace this mechanism with a generic getLocalState and
+     * getLocalState.  Scrolling behaviour is only a part of what we might want
+     * to restore.
+     *
+     * @override
+     * @returns {integer} the number of pixels the webclient is currently
+     *  scrolled
      */
-    getScrollTop: function() {
-        var viewController = this.widget.active_view.controller;
+    getScrollTop: function () {
+        var activeView = this.widget.active_view;
+        var viewController = activeView && activeView.controller;
         return viewController ? viewController.getScrollTop() : 0;
     },
     /**

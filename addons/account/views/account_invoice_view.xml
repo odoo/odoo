@@ -322,7 +322,7 @@
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
                                 name="account_id" groups="account.group_account_manager"/>
                                     <field name="name" invisible="1"/>
-                                    <field name="payment_term_id" options="{'no_create': True}" attrs="{'invisible': [('payment_term_id','=',False)]}"/>
+                                    <field name="payment_term_id" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>

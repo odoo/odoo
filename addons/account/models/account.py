@@ -520,6 +520,12 @@ class AccountJournal(models.Model):
             res += [(journal.id, name)]
         return res
 
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        args = args or []
+        recs = self.search(['|', ('code', operator, name), ('name', operator, name)] + args, limit=limit)
+        return recs.name_get()
+
     @api.multi
     @api.depends('company_id')
     def _belong_to_company(self):

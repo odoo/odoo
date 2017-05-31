@@ -604,7 +604,7 @@
     <div t-if="!widget.readonly" class="o_domain_leaf_edition">
         <!-- field selector will be instantiated here -->
         <div> <!-- used for flex stretching -->
-            <select class="o_domain_leaf_operator_select">
+            <select class="o_domain_leaf_operator_select o_input">
                 <option t-foreach="widget.operators" t-as="key"
                         t-att-value="key"
                         t-att-selected="widget.displayOperator === key ? 'selected' : None">
@@ -614,7 +614,7 @@
         </div>
         <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' hidden' : ''}">
             <t t-if="widget.selectionChoices !== null">
-                <select class="o_domain_leaf_value_input">
+                <select class="o_domain_leaf_value_input o_input">
                     <option t-foreach="widget.selectionChoices" t-as="val"
                             t-att-value="val[0]"
                             t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
@@ -630,12 +630,12 @@
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
-                        <input placeholder="Add new value" type="text"/>
+                        <input placeholder="Add new value" type="text" class="o_input"/>
                         <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"/>
                     </div>
                 </t>
                 <t t-else="">
-                    <input class="o_domain_leaf_value_input" type="text" t-att-value="widget.displayValue"/>
+                    <input class="o_domain_leaf_value_input o_input" type="text" t-att-value="widget.displayValue"/>
                 </t>
             </t>
         </div>
@@ -730,7 +730,8 @@
 
     <div t-if="widget.mode !== 'readonly'" t-attf-class="o_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
         <div t-foreach="widget.values" t-as="value" class="o_radio_item">
-            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]" t-att-name="widget.unique_id" t-att-data-value="value[0]"/>
+            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]"
+                   t-att-name="widget.unique_id" t-att-data-value="value[0]" t-att-data-index="value_index"/>
             <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
         </div>
     </div>
@@ -1180,11 +1181,12 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <div>
         <div t-foreach="widget.m2mValues" t-as="m2m_value">
+            <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
             <div class="o_checkbox">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <input type="checkbox" t-att-id="id_for_label" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
                 <span/>
             </div>
-            <label class="o_form_label"><t t-esc="m2m_value[1]"/></label>
+            <label t-att-for="id_for_label" class="o_form_label"><t t-esc="m2m_value[1]"/></label>
         </div>
     </div>
 </t>

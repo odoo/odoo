@@ -121,4 +121,31 @@ QUnit.test('field html_frame widget', function (assert) {
     form.destroy();
 });
 
+QUnit.test('field htmlsimple does not crash when commitChanges is called in mode=readonly', function (assert) {
+    assert.expect(1);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<header>' +
+                    '<button name="some_method" class="s" string="Do it" type="object"/>' +
+                '</header>' +
+                '<sheet>' +
+                    '<field name="body"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        intercepts: {
+            execute_action: function () {
+                assert.step('execute_action');
+            }
+        },
+    });
+
+    form.$('button:contains(Do it)').click();
+    form.destroy();
+});
+
 });

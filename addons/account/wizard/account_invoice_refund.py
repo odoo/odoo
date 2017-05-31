@@ -95,7 +95,10 @@ class AccountInvoiceRefund(models.TransientModel):
                             'fiscal_position_id': inv.fiscal_position_id.id,
                         })
                         for field in inv_obj._get_refund_common_fields():
-                            invoice[field] = invoice[field] and invoice[field][0]
+                            if inv_obj._fields[field].type == 'many2one':
+                                invoice[field] = invoice[field] and invoice[field][0]
+                            else:
+                                invoice[field] = invoice[field] or False
                         inv_refund = inv_obj.create(invoice)
                         if inv_refund.payment_term_id.id:
                             inv_refund._onchange_payment_term_date_invoice()

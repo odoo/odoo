@@ -85,7 +85,7 @@ class HrTimesheetSheet(models.Model):
                         AND id <> %s''',
                     (sheet.date_to, sheet.date_from, new_user_id, sheet.id))
                 if any(self.env.cr.fetchall()):
-                    raise ValidationError('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.')
+                    raise ValidationError(_('You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
 
     @api.onchange('employee_id')
     def onchange_employee_id(self):

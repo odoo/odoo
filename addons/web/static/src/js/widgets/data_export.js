@@ -295,7 +295,10 @@ var DataExport = Dialog.extend({
         }
 
         var self = this;
-        return this.exports.read_slice(['name'], {
+        return this._rpc({
+            model: 'ir.exports',
+            method: 'search_read',
+            fields: ['name'],
             domain: [['resource', '=', this.record.model]]
         }).then(function (export_list) {
             if (!export_list.length) {

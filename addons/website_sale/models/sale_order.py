@@ -61,7 +61,7 @@ class SaleOrder(models.Model):
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line.tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line[0].tax_id)
 
         return {
             'product_id': product_id,
@@ -218,7 +218,7 @@ class Website(models.Model):
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
         else:
-            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.code)
+            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.sudo().code)
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
@@ -387,6 +387,9 @@ class Website(models.Model):
                 partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
+            # case when user emptied the cart
+            if not request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = sale_order.id
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
@@ -425,7 +428,7 @@ class Website(models.Model):
                     update_pricelist = True
 
             if code and code != sale_order.pricelist_id.code:
-                code_pricelist = self.env['product.pricelist'].search([('code', '=', code)], limit=1)
+                code_pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True

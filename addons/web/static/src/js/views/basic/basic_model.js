@@ -27,7 +27,6 @@ odoo.define('web.BasicModel', function (require) {
  *      fieldsInfo: {Object},
  *      getContext: {function},
  *      getDomain: {function},
- *      getEvalContext: {function},
  *      getFieldNames: {function},
  *      groupedBy: {string[]},
  *      id: {integer},
@@ -228,7 +227,7 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         var element = this.localData[id];
         var isNew = this.isNew(id);
-        var rollback = options.rollback || isNew;
+        var rollback = 'rollback' in options ? options.rollback : isNew;
         this._visitChildren(element, function (elem) {
             if (rollback && elem._savePoint) {
                 if (elem._savePoint instanceof Array) {
@@ -284,8 +283,6 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.env=false] if true, will only  return res_id
      *   (if record) or res_ids (if list)
      * @param {boolean} [options.raw=false] if true, will not follow relations
-     * @param {boolean} [options.noUnsetNumeric=false] if true, will set numeric
-     *   values to 0 if not set
      * @returns {Object}
      */
     get: function (id, options) {
@@ -308,7 +305,6 @@ var BasicModel = AbstractModel.extend({
             return env;
         }
 
-
         if (element.type === 'record') {
 
             var data = _.extend({}, element.data, element._changes);
@@ -320,13 +316,6 @@ var BasicModel = AbstractModel.extend({
                 }
                 if (!field) {
                     continue;
-                }
-                if (options.noUnsetNumeric) {
-                    if (field.type === 'float' ||
-                        field.type === 'integer' ||
-                        field.type === 'monetary') {
-                        data[fieldName] = data[fieldName] || 0;
-                    }
                 }
 
                 // get relational datapoint
@@ -356,11 +345,11 @@ var BasicModel = AbstractModel.extend({
                 count: element.count,
                 data: data,
                 domain: element.domain.slice(0),
+                evalModifiers: element.evalModifiers,
                 fields: element.fields,
                 fieldsInfo: element.fieldsInfo,
                 getContext: element.getContext,
                 getDomain: element.getDomain,
-                getEvalContext: element.getEvalContext,
                 getFieldNames: element.getFieldNames,
                 id: element.id,
                 limit: element.limit,
@@ -410,7 +399,6 @@ var BasicModel = AbstractModel.extend({
             fields: element.fields,
             getContext: element.getContext,
             getDomain: element.getDomain,
-            getEvalContext: element.getEvalContext,
             getFieldNames: element.getFieldNames,
             groupedBy: element.groupedBy,
             id: element.id,
@@ -615,10 +603,12 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} record_id
      * @param {Object} changes a map field => new value
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {string[]} list of changed fields
      */
-    notifyChanges: function (record_id, changes) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes));
+    notifyChanges: function (record_id, changes, viewType) {
+        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, viewType));
     },
     /**
      * Reload all data for a given resource
@@ -644,7 +634,7 @@ var BasicModel = AbstractModel.extend({
                 return this._makeDefaultRecord(element.model, params);
             }
             if (!options.keepChanges) {
-                this.discardChanges(id);
+                this.discardChanges(id, {rollback: false});
             }
         }
 
@@ -788,7 +778,7 @@ var BasicModel = AbstractModel.extend({
                             _.extend(record.data, _changes);
                             def.resolve(changedFields);
                         }
-                    });
+                    }).fail(def.reject.bind(def));
             } else {
                 def.resolve(changedFields);
             }
@@ -902,9 +892,11 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} recordID
      * @param {Object} changes
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyChange: function (recordID, changes) {
+    _applyChange: function (recordID, changes, viewType) {
         var self = this;
         var record = this.localData[recordID];
         var field;
@@ -916,7 +908,7 @@ var BasicModel = AbstractModel.extend({
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName]));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], viewType));
             } else if (field.type === 'many2one') {
                 defs.push(this._applyMany2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -937,7 +929,7 @@ var BasicModel = AbstractModel.extend({
             }
             var onchangeDef;
             if (onChangeFields.length) {
-                onchangeDef = self._performOnChange(record, onChangeFields).then(function (result) {
+                onchangeDef = self._performOnChange(record, onChangeFields, viewType).then(function (result) {
                     delete record._warning;
                     return _.keys(changes).concat(Object.keys(result && result.value || {}));
                 });
@@ -974,6 +966,17 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         if (!data) {
             record._changes[fieldName] = false;
+            return $.when();
+        }
+
+        // here, we check that the many2one really changed. If the res_id is the
+        // same, we do not need to do any extra work. It can happen when the
+        // user edited a manyone (with the small form view button) with an
+        // onchange.  In that case, the onchange is triggered, but the actual
+        // value did not change.
+        var relatedID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
+        var relatedRecord = this.localData[relatedID];
+        if (relatedRecord && (data.id === this.localData[relatedID].res_id)) {
             return $.when();
         }
         var rel_data = _.pick(data, 'id', 'display_name');
@@ -1093,14 +1096,8 @@ var BasicModel = AbstractModel.extend({
                     });
                     defs.push(def);
                 }
-            } else if (field.type === 'date') {
-                // process data: convert into a moment instance
-                record._changes[name] = fieldUtils.parse.date(val);
-            } else if (field.type === 'datetime') {
-                // process datetime: convert into a moment instance
-                record._changes[name] = fieldUtils.parse.datetime(val);
             } else {
-                record._changes[name] = val;
+                record._changes[name] = self._parseServerValue(field, val);
             }
         });
         return $.when.apply($, defs);
@@ -1115,13 +1112,23 @@ var BasicModel = AbstractModel.extend({
      * @param {string} fieldName
      * @param {Object} command A command object.  It should have a 'operation'
      *   key.  For example, it looks like {operation: ADD, id: 'partner_1'}
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyX2ManyChange: function (record, fieldName, command) {
+    _applyX2ManyChange: function (record, fieldName, command, viewType) {
+        if (command.operation === 'TRIGGER_ONCHANGE') {
+            // the purpose of this operation is to trigger an onchange RPC, so
+            // there is no need to apply any change on the record (the changes
+            // have probably been already applied and saved, usecase: many2many
+            // edition in a dialog)
+            return $.when();
+        }
+
         var self = this;
         var list = this.localData[record._changes[fieldName] || record.data[fieldName]];
         var field = record.fields[fieldName];
-        var fieldInfo = record.fieldsInfo[record.viewType][fieldName];
+        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
         var rec;
         var defs = [];
@@ -1144,6 +1151,7 @@ var BasicModel = AbstractModel.extend({
                 newRecord.fieldsInfo = list.fieldsInfo;
                 newRecord.viewType = list.viewType;
                 list._changes.push(newRecord.id);
+                this._sortList(list);
                 break;
             case 'ADD_M2M':
                 // force to use link command instead of create command
@@ -1163,6 +1171,7 @@ var BasicModel = AbstractModel.extend({
                     });
                     list_records[d.id] = rec;
                     list._changes.push(rec.id);
+                    self._sortList(list);
                 });
                 // read list's records as we only have their ids and optionally their display_name
                 // (we can't use function readUngroupedList because those records are only in the
@@ -1243,22 +1252,65 @@ var BasicModel = AbstractModel.extend({
      * @see _performOnChange
      *
      * @param {Object} record resource object of type 'record'
-     * @returns {Object} an onchange spec
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
+     * @returns {Object|false} an onchange spec, or false if no onchange should
+     *   be applied
      */
-    _buildOnchangeSpecs: function (record) {
-        // TODO: replace this function by some generic tree function in utils
+    _buildOnchangeSpecs: function (record, viewType) {
+        var hasOnchange = false;
         var specs = {};
-        _.each(record.getFieldNames(), function (name) {
+        var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
+
+        _.each(Object.keys(fieldsInfo), function (name) {
             var field = record.fields[name];
-            var fieldInfo = record.fieldsInfo[record.viewType][name];
+            var fieldInfo = fieldsInfo[name];
             specs[name] = (field.onChange) || "";
+            if (field.onChange) {
+                hasOnchange = true;
+            }
             _.each(fieldInfo.views, function (view) {
                 _.each(view.fieldsInfo[view.type], function (field, subname) {
-                    specs[name + '.' + subname] = (view.fields[subname].onChange) || "";
+                    var onChange = view.fields[subname].onChange;
+                    specs[name + '.' + subname] = onChange || "";
+                    if (onChange) {
+                        hasOnchange = true;
+                    }
                 });
             });
         });
-        return specs;
+        return hasOnchange ? specs : false;
+    },
+    /**
+     * Evaluate modifiers
+     *
+     * @private
+     * @param {Object} element a valid element object, which will serve as eval
+     *   context.
+     * @param {Object} modifiers
+     * @returns {Object}
+     */
+    _evalModifiers: function (element, modifiers) {
+        var result = {};
+        var self = this;
+        var evalContext;
+        function evalModifier (mod) {
+            if (mod === undefined || mod === false || mod === true) {
+                return !!mod;
+            }
+            evalContext = evalContext || self._getEvalContext(element);
+            return new Domain(mod, evalContext).compute(evalContext);
+        }
+        if ('invisible' in modifiers) {
+            result.invisible = evalModifier(modifiers.invisible);
+        }
+        if ('readonly' in modifiers) {
+            result.readonly = evalModifier(modifiers.readonly);
+        }
+        if ('required' in modifiers) {
+            result.required = evalModifier(modifiers.required);
+        }
+        return result;
     },
     /**
      * Fetch all name_gets for the many2ones in a group
@@ -1899,8 +1951,8 @@ var BasicModel = AbstractModel.extend({
                     // generate update commands for records that have been
                     // updated (it may happen with editable lists)
                     _.each(relData, function (relRecord) {
-                        if (!_.isEmpty(relRecord._changes)) {
-                            var changes = self._generateChanges(relRecord);
+                        var changes = self._generateChanges(relRecord);
+                        if (!_.isEmpty(changes)) {
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
                         }
@@ -1918,8 +1970,8 @@ var BasicModel = AbstractModel.extend({
                         if (_.contains(keptIds, relIds[i])) {
                             // this is an id that already existed
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
-                            if (!_.isEmpty(relRecord._changes)) {
-                                changes = this._generateChanges(relRecord);
+                            changes = this._generateChanges(relRecord);
+                            if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
                             } else {
@@ -2046,19 +2098,24 @@ var BasicModel = AbstractModel.extend({
      * @returns {Object}
      */
     _getEvalContext: function (element) {
-        var evalContext = this.get(element.id, {raw: true, noUnsetNumeric: true}).data;
-        evalContext.active_model = element.model;
-        evalContext.id = evalContext.id || false;
-        evalContext.active_id = evalContext.id;
-        evalContext.active_ids = evalContext.id ? [evalContext.id] : [];
+        var evalContext = element.type === 'record' ? this._getRecordEvalContext(element) : {};
+
         if (element.parentID) {
-            var parent = this.get(element.parentID, {raw: true});
-            if (parent.type === 'list' && this.localData[element.parentID].parentID) {
-                parent = this.get(this.localData[element.parentID].parentID, {raw: true});
+            var parent = this.localData[element.parentID];
+            if (parent.type === 'list' && parent.parentID) {
+                parent = this.localData[parent.parentID];
             }
-            _.extend(evalContext, {parent: parent.data});
+            if (parent.type === 'record') {
+                evalContext.parent = this._getRecordEvalContext(parent);
+            }
         }
-        return _.extend({}, session.user_context, element.context, evalContext);
+        return _.extend({
+            active_id: evalContext.id || false,
+            active_ids: evalContext.id ? [evalContext.id] : [],
+            active_model: element.model,
+            current_date: moment().format('YYYY-MM-DD'),
+            id: evalContext.id || false,
+        }, session.user_context, element.context, evalContext);
     },
     /**
      * Returns the list of field names of the given element according to its
@@ -2070,6 +2127,67 @@ var BasicModel = AbstractModel.extend({
     _getFieldNames: function (element) {
         var fieldsInfo = element.fieldsInfo;
         return Object.keys(fieldsInfo && fieldsInfo[element.viewType] || {});
+    },
+    /**
+     * Evaluate the record evaluation context.  This method is supposed to be
+     * called by _getEvalContext.  It basically only generates a dictionary of
+     * current values for the record, with commands for x2manys fields.
+     *
+     * @param {Object} record an element of type 'record'
+     * @returns Object
+     */
+    _getRecordEvalContext: function (record) {
+        var self = this;
+        var relDataPoint;
+        var context = _.extend({}, record.data, record._changes);
+        for (var fieldName in context) {
+            var field = record.fields[fieldName];
+            if (context[fieldName] === null) {
+                context[fieldName] = false;
+            }
+            if (!field) {
+                continue;
+            }
+            if (field.type === 'float' ||
+                field.type === 'integer' ||
+                field.type === 'monetary') {
+                context[fieldName] = context[fieldName] || 0;
+                continue;
+            }
+            if (field.type === 'date' || field.type === 'datetime') {
+                if (context[fieldName]) {
+                    context[fieldName] = JSON.parse(JSON.stringify(context[fieldName]));
+                }
+                continue;
+            }
+            if (field.type === 'many2one') {
+                relDataPoint = this.localData[context[fieldName]];
+                context[fieldName] = relDataPoint ? relDataPoint.res_id : false;
+                continue;
+            }
+            if (field.type === 'one2many' || field.type === 'many2many') {
+                relDataPoint = this.localData[context[fieldName]];
+                var relData = relDataPoint._changes || relDataPoint.data;
+                var ids = _.map(relData, function (id) {
+                    return self.localData[id].res_id;
+                });
+
+                ids.toJSON = function () {
+                    return _.map(relData, function (id) {
+                        var resID = self.localData[id].res_id;
+                        if (typeof resID === 'string') {
+                            var changes = self._generateChanges(self.localData[id]);
+                            return x2ManyCommands.create(changes);
+                        } else {
+                            return x2ManyCommands.link_to(resID);
+                        }
+                    });
+                };
+                context[fieldName] = ids;
+            }
+
+        }
+        return context;
     },
     /**
      * Returns true iff value is considered to be set for the given field's type.
@@ -2104,11 +2222,17 @@ var BasicModel = AbstractModel.extend({
     _isX2ManyValid: function (id) {
         var self = this;
         var isValid = true;
-        var element = this.get(id, {raw: true});
-        _.each(element.getFieldNames(), function (fieldName) {
-            var field = element.fields[fieldName];
-            _.each(element.data, function (rec) {
-                if (field.required && !self._isFieldSet(rec.data[fieldName], field.type)) {
+        var element = this.localData[id];
+        _.each(element._changes || element.data, function (recordID) {
+            var recordData = self.get(recordID, {raw: true}).data;
+            var record = self.localData[recordID];
+            _.each(element.getFieldNames(), function (fieldName) {
+                var field = element.fields[fieldName];
+                var fieldInfo = element.fieldsInfo[element.viewType][fieldName];
+                var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+                var modifiers = self._evalModifiers(record, rawModifiers);
+                var required = 'required' in modifiers ? modifiers.required : field.required;
+                if (required && !self._isFieldSet(recordData[fieldName], field.type)) {
                     isValid = false;
                 }
             });
@@ -2196,9 +2320,9 @@ var BasicModel = AbstractModel.extend({
             viewType: params.viewType,
         };
 
+        dataPoint.evalModifiers = this._evalModifiers.bind(this, dataPoint);
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
         dataPoint.getDomain = this._getDomain.bind(this, dataPoint);
-        dataPoint.getEvalContext = this._getEvalContext.bind(this, dataPoint);
         dataPoint.getFieldNames = this._getFieldNames.bind(this, dataPoint);
 
         this.localData[dataPoint.id] = dataPoint;
@@ -2300,60 +2424,48 @@ var BasicModel = AbstractModel.extend({
                         record._changes[name] = x2manyList.id;
                         var many2ones = {};
                         var r;
+                        var isCommandList = result[name].length && _.isArray(result[name][0]);
+                        if (!isCommandList) {
+                            result[name] = [[6, false, result[name]]];
+                        }
                         _.each(result[name], function (value) {
-                            if (_.isArray(value)) {
-                                // value is a command
-                                if (value[0] === 0) {
-                                    // CREATE
-                                    r = self._makeDataPoint({
-                                        modelName: x2manyList.model,
-                                        context: x2manyList.context,
-                                        fieldsInfo: fieldsInfo,
-                                        fields: fields,
-                                        viewType: viewType,
-                                    });
-                                    x2manyList._changes = x2manyList._changes || [];
-                                    x2manyList._changes.push(r.id);
-
-                                    // this is necessary so the fields are initialized
-                                    _.each(r.getFieldNames(), function (fieldName) {
-                                        r.data[fieldName] = null;
-                                    });
-
-                                    r._changes = _.defaults(value[2], r.data);
-                                    for (var name in r._changes) {
-                                        var isFieldInView = name in r.fields;
-                                        if (isFieldInView && r.fields[name].type === 'many2one') {
-                                            var rec = self._makeDataPoint({
-                                                context: r.context,
-                                                modelName: r.fields[name].relation,
-                                                data: {id: r._changes[name]}
-                                            });
-                                            r._changes[name] = rec.id;
-                                            many2ones[name] = true;
-                                        }
-                                    }
-                                }
-                                if (value[0] === 6) {
-                                    // REPLACE_WITH
-                                    x2manyList.res_ids = value[2];
-                                    x2manyList.count = x2manyList.res_ids.length;
-                                    defs.push(self._readUngroupedList(x2manyList));
-                                }
-                            } else {
-                                // value is an id
+                            // value is a command
+                            if (value[0] === 0) {
+                                // CREATE
                                 r = self._makeDataPoint({
                                     modelName: x2manyList.model,
                                     context: x2manyList.context,
                                     fieldsInfo: fieldsInfo,
                                     fields: fields,
-                                    res_id: value,
                                     viewType: viewType,
                                 });
-                                if (!x2manyList._changes) {
-                                    x2manyList._changes = [];
-                                }
+                                x2manyList._changes = x2manyList._changes || [];
                                 x2manyList._changes.push(r.id);
+
+                                // this is necessary so the fields are initialized
+                                _.each(r.getFieldNames(), function (fieldName) {
+                                    r.data[fieldName] = null;
+                                });
+
+                                r._changes = _.defaults(value[2], r.data);
+                                for (var name in r._changes) {
+                                    var isFieldInView = name in r.fields;
+                                    if (isFieldInView && r.fields[name].type === 'many2one') {
+                                        var rec = self._makeDataPoint({
+                                            context: r.context,
+                                            modelName: r.fields[name].relation,
+                                            data: {id: r._changes[name]}
+                                        });
+                                        r._changes[name] = rec.id;
+                                        many2ones[name] = true;
+                                    }
+                                }
+                            }
+                            if (value[0] === 6) {
+                                // REPLACE_WITH
+                                x2manyList.res_ids = value[2];
+                                x2manyList.count = x2manyList.res_ids.length;
+                                defs.push(self._readUngroupedList(x2manyList));
                             }
                         });
 
@@ -2361,35 +2473,17 @@ var BasicModel = AbstractModel.extend({
                         _.each(_.keys(many2ones), function (name) {
                             defs.push(self._fetchNameGets(x2manyList, name));
                         });
-                    } else if (field.type === 'date') {
-                        // process date: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.date(result[name], field, {isUTC: true});
-                    } else if (field.type === 'datetime') {
-                        // process datetime: convert into a moment instance
-                        record._changes[name] = fieldUtils.parse.datetime(result[name], field, {isUTC: true});
                     } else {
-                        record._changes[name] = result[name];
+                        record._changes[name] = self._parseServerValue(field, result[name]);
                     }
                 });
                 return $.when.apply($, defs)
                     .then(function () {
-                        var shouldApplyOnchange = false;
-                        var field;
-                        for (var field_name in record.data) {
-                            field = record.fields[field_name];
-                            if (field.onChange) {
-                                shouldApplyOnchange = true;
+                        return self._performOnChange(record, fields_key).then(function () {
+                            if (record._warning) {
+                                return $.Deferred().reject();
                             }
-                        }
-                        if (shouldApplyOnchange) {
-                            return self._performOnChange(record, fields_key).then(function () {
-                                if (record._warning) {
-                                    return $.Deferred().reject();
-                                }
-                            });
-                        } else {
-                            return $.when();
-                        }
+                        });
                     })
                     .then(function () {
                         return self._fetchRelationalData(record);
@@ -2438,14 +2532,34 @@ var BasicModel = AbstractModel.extend({
                     // no value for the many2one
                     record[fieldName] = false;
                 }
-            } else if (field.type === 'date') {
-                // process data: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.date(val, field, {isUTC: true});
-            } else if (field.type === 'datetime') {
-                // process datetime: convert into a moment instance
-                record[fieldName] = fieldUtils.parse.datetime(val, field, {isUTC: true});
+            } else {
+                record[fieldName] = self._parseServerValue(field, val);
             }
         });
+    },
+    /**
+     * Processes date(time) and selection field values sent by the server.
+     * Converts data(time) values to moment instances.
+     * Converts false values of selection fields to 0 if 0 is a valid key,
+     * because the server doesn't make a distinction between false and 0, and
+     * always sends false when value is 0.
+     *
+     * @param {Object} field the field description
+     * @param {*} value
+     * @returns {*} the processed value
+     */
+    _parseServerValue: function (field, value) {
+        if (field.type === 'date' || field.type === 'datetime') {
+            // process date(time): convert into a moment instance
+            value = fieldUtils.parse[field.type](value, field, {isUTC: true});
+        } else if (field.type === 'selection' && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            var hasKey0 = _.find(field.selection, function (option) {
+                return option[0] === 0;
+            });
+            value = hasKey0 ? 0 : value;
+        }
+        return value;
     },
     /**
      * This method is quite important: it is supposed to perform the /onchange
@@ -2453,12 +2567,17 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {Object} record
      * @param {string[]} fields changed fields
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred} The returned deferred can fail, in which case the
      *   fail value will be the warning message received from the server
      */
-    _performOnChange: function (record, fields) {
+    _performOnChange: function (record, fields, viewType) {
         var self = this;
-        var onchange_spec = this._buildOnchangeSpecs(record);
+        var onchangeSpec = this._buildOnchangeSpecs(record, viewType);
+        if (!onchangeSpec) {
+            return $.when();
+        }
         var idList = record.data.id ? [record.data.id] : [];
         var options = {
             full: true,
@@ -2474,7 +2593,7 @@ var BasicModel = AbstractModel.extend({
         return self._rpc({
                 model: record.model,
                 method: 'onchange',
-                args: [idList, currentData, fields, onchange_spec, context],
+                args: [idList, currentData, fields, onchangeSpec, context],
             })
             .then(function (result) {
                 if (!record._changes) {
@@ -2580,7 +2699,7 @@ var BasicModel = AbstractModel.extend({
                         var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
                             return c[0] === value;
                         });
-                        value = choice[1];
+                        value = choice ? choice[1] : false;
                     }
                     var newGroup = self._makeDataPoint({
                         modelName: list.model,
@@ -2595,6 +2714,7 @@ var BasicModel = AbstractModel.extend({
                         orderedBy: list.orderedBy,
                         limit: list.limit,
                         openGroupByDefault: list.openGroupByDefault,
+                        parentID: list.id,
                         type: 'list',
                         viewType: list.viewType,
                     });
@@ -2787,9 +2907,12 @@ var BasicModel = AbstractModel.extend({
         if (list.orderedBy.length) {
             // sort records according to ordered_by[0]
             var order = list.orderedBy[0];
-            list.data.sort(function (r1, r2) {
-                var data1 = self.localData[r1].data;
-                var data2 = self.localData[r2].data;
+            var data = list._changes ||  list.data;
+            data.sort(function (id1, id2) {
+                var r1 = self.localData[id1];
+                var r2 = self.localData[id2];
+                var data1 = r1._changes || r1.data;
+                var data2 = r2._changes || r2.data;
                 if (data1[order.name] < data2[order.name]) {
                     return order.asc ? -1 : 1;
                 }

@@ -16,7 +16,7 @@ var scales = [
 ];
 
 function dateToServer (date) {
-    return date.clone().utc().format('YYYY-MM-DD HH:mm:ss');
+    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
 
 return AbstractModel.extend({
