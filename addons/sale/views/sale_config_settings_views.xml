@@ -146,17 +146,33 @@
                 </div>
                 <h2>Quotations &amp; Orders</h2>
                 <div class="row mt16 o_settings_container">
-                    <div class="col-xs-12 col-md-6 o_setting_box">
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Build &amp; design modern web-based quotation templates that will help you send quotations in seconds. This is very useful if you sell packaged services.">
                         <div class="o_setting_left_pane">
                             <field name="module_website_quote"/>
                         </div>
                         <div class="o_setting_right_pane">
                             <label for="module_website_quote"/>
                             <div class="text-muted">
-                                Let your customers sign &amp; pay online
+                                Design standardized offers
                             </div>
                             <div class="content-group">
                                 <div class="text-warning mt16" id="website_quote" attrs="{'invisible': [('module_website_quote','=',False)]}">
+                                    Save this page and come back here to set up the feature.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" title="Provide your customers with an easy way to confirm their orders.">
+                        <div class="o_setting_left_pane">
+                            <field name="module_sale_quote_pay"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_sale_quote_pay"/>
+                            <div class="text-muted">
+                                 Let your customers sign or pay orders online
+                            </div>
+                            <div class="content-group">
+                                <div class="text-warning mt16" id="sale_quote_pay" attrs="{'invisible': [('module_sale_quote_pay','=',False)]}">
                                     Save this page and come back here to set up the feature.
                                 </div>
                             </div>
