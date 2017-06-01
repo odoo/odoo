@@ -141,14 +141,12 @@ var KanbanColumn = Widget.extend({
             return;
         }
         var self = this;
-        this.quickCreateWidget = new RecordQuickCreate(this, {
-            width: this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8,
-            defaultName: this.data.getContext().default_name,
-        });
+        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
+        this.quickCreateWidget = new RecordQuickCreate(this, width);
         this.quickCreateWidget.insertAfter(this.$header);
         this.quickCreateWidget.$el.focusout(function () {
-            var hasFocus = (self.quickCreateWidget.$(':focus').length > 0);
-            if (! hasFocus && self.quickCreateWidget) {
+            var taskName = self.quickCreateWidget.$('[type=text]')[0].value;
+            if (!taskName && self.quickCreateWidget) {
                 self._cancelQuickCreate();
             }
         });
