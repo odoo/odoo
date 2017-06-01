@@ -35,6 +35,7 @@ class Help(Command):
         print "\nUse '%s <command> --help' for individual command help." % sys.argv[0].split(os.path.sep)[-1]
 
 import server
+import shell
 import deploy
 import scaffold
 import start
