@@ -742,8 +742,8 @@ class AccountTax(models.Model):
 
         return {
             'taxes': sorted(taxes, key=lambda k: k['sequence']),
-            'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
-            'total_included': currency.round(total_included) if round_total else total_included,
+            'total_excluded': total_excluded if round_total else currency.round(total_excluded),
+            'total_included': total_included if round_total else currency.round(total_included),
             'base': base,
         }
 
