@@ -117,7 +117,7 @@
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="invoice_status"/>
+                    <field name="invoice_status" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -349,8 +349,7 @@
                                 <group name="sale_pay" string="Invoicing">
                                     <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                                    <field name="invoice_status"
-                                        attrs="{'invisible': [('state', 'not in', ('sale','done'))]}"/>
+                                    <field name="invoice_status" states="sale,done" invisible="1"/>
                                 </group>
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
