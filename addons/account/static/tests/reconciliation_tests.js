@@ -557,7 +557,7 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation basic data', function (assert) {
-        assert.expect(13);
+        assert.expect(14);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -593,6 +593,21 @@ QUnit.module('account', {
 
         clientAction.widgets[3].$('.accounting_view thead td:first').trigger('click');
         assert.strictEqual(clientAction.widgets[3].$el.data('mode'), 'create', "should switch to 'create' mode instead 'match' mode when 'match' mode is empty");
+
+        // open the first line
+        widget.$('.accounting_view thead td:first').trigger('click');
+        // select propositions
+        widget.$('.match .cell_account_code:first').trigger('click');
+        widget.$('.match .cell_account_code:first').trigger('click');
+
+        testUtils.intercept(clientAction, 'call_service', function (event) {
+            assert.deepEqual(event.data.args[1].args,
+                [[5],[{partner_id: 8, counterpart_aml_dicts: [], payment_aml_ids: [109,112], new_aml_dicts: []}]],
+                "Should call process_reconciliations with ids");
+        });
+
+        // click on reconcile button
+        widget.$('button.o_reconcile:not(:hidden)').trigger('click');
 
         clientAction.destroy();
     });
