@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import distutils
 import functools
 import imp
 import importlib
@@ -140,6 +141,11 @@ def initialize_sys_path():
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
     if base_path not in ad_paths:
         ad_paths.append(base_path)
+
+    # add path for pip installed addons (in the site-packages dir)
+    pylib_path = os.path.join(distutils.sysconfig.get_python_lib(), 'odoo', 'addons')
+    if os.path.isdir(pylib_path) and pylib_path not in ad_paths:
+        ad_paths.append(pylib_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
