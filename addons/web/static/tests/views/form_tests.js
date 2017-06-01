@@ -4820,5 +4820,37 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('render domain field widget without model', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="model_name"/>' +
+                        '<field name="display_name" widget="domain" options="{\'model\': \'model_name\'}"/>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'search_count') {
+                    assert.strictEqual(args.model, 'test',
+                        "should search_count on test");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name="display_name"]').text(), "Select a model to add a filter.",
+            "should contain an error message saying the model is missing");
+        form.$('input[name="model_name"]').val("test").trigger("input");
+        assert.notStrictEqual(form.$('.o_field_widget[name="display_name"]').text(), "Select a model to add a filter.",
+            "should not contain an error message anymore");
+        form.destroy();
+    });
+
 });
 });

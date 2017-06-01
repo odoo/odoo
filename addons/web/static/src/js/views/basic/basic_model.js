@@ -1645,6 +1645,11 @@ var BasicModel = AbstractModel.extend({
         });
         if (!hasChanged) {
             return $.when();
+        } else if (!domainModel) {
+            return $.when({
+                model: domainModel,
+                nbRecords: 0,
+            });
         }
 
         var def = $.Deferred();
