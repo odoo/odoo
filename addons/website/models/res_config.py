@@ -71,6 +71,11 @@ class WebsiteConfigSettings(models.TransientModel):
         for config in self:
             config.language_count = len(self.language_ids)
 
+    @api.onchange('language_ids')
+    def change_language(self):
+        if self.language_ids and self.default_lang_id not in self.language_ids:
+            self.default_lang_id = self.language_ids[0]
+
     def set_has_google_analytics(self):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
