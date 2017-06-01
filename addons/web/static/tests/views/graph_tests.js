@@ -251,6 +251,59 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('getContext correctly returns mode, measure and groupbys', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Gloups">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        return concurrency.delay(0).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'bar',
+                graph_measure: '__count__',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.$buttons.find('li[data-field="foo"] a').click(); // change measure
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'bar',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.$buttons.find('button[data-mode="line"]').click(); // change mode
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'line',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'line',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id', 'color_id'],
+            }, "context should be correct");
+
+            graph.destroy();
+            done();
+        });
+    });
 });
 
 });
