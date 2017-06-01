@@ -1452,19 +1452,23 @@ var ReceiptScreenWidget = ScreenWidget.extend({
             this.$('.next').addClass('highlight');
         }
     },
+    get_receipt_render_env: function() {
+        var order = this.pos.get_order();
+        return {
+            widget: this,
+            pos: this.pos,
+            order: order,
+            receipt: order.export_for_printing(),
+            orderlines: order.get_orderlines(),
+            paymentlines: order.get_paymentlines(),
+        };
+    },
     print_web: function() {
         window.print();
         this.pos.get_order()._printed = true;
     },
     print_xml: function() {
-        var env = {
-            widget:  this,
-            pos: this.pos,
-            order: this.pos.get_order(),
-            receipt: this.pos.get_order().export_for_printing(),
-            paymentlines: this.pos.get_order().get_paymentlines()
-        };
-        var receipt = QWeb.render('XmlReceipt',env);
+        var receipt = QWeb.render('XmlReceipt', this.get_receipt_render_env());
 
         this.pos.proxy.print_receipt(receipt);
         this.pos.get_order()._printed = true;
@@ -1532,14 +1536,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         this.$('.change-value').html(this.format_currency(this.pos.get_order().get_change()));
     },
     render_receipt: function() {
-        var order = this.pos.get_order();
-        this.$('.pos-receipt-container').html(QWeb.render('PosTicket',{
-                widget:this,
-                order: order,
-                receipt: order.export_for_printing(),
-                orderlines: order.get_orderlines(),
-                paymentlines: order.get_paymentlines(),
-            }));
+        this.$('.pos-receipt-container').html(QWeb.render('PosTicket', this.get_receipt_render_env()));
     },
 });
 gui.define_screen({name:'receipt', widget: ReceiptScreenWidget});
