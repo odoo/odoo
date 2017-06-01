@@ -53,9 +53,33 @@ table.table_desc tr td {
 }
 
 // Other snippet styles
+// To prevent paragraph text coming below the feature grid icon / image
+.s_feature_grid p {
+    overflow: auto;
+}
+
 .s_comparisons .panel .list-group-item:not(.active) {
     color: #666;
 }
+.s_comparisons {
+    .panel small {
+        color: inherit;
+    }
+    .text-muted {
+        color: @text-muted;
+    }
+}
+
+.s_faq_collapse .container .panel {
+    background-color: inherit;
+    border : 1px solid rgba(0, 0, 0, 0.15);
+    .panel-body {
+        border-top: none;
+        border-bottom-left-radius: (@panel-border-radius - 1);
+        border-bottom-right-radius: (@panel-border-radius - 1);
+    }
+}
+
 .s_references .img-thumbnail {
     border: none;
 }
