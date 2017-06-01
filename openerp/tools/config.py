@@ -107,7 +107,8 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init'
+            'init', 'save', 'config', 'update', 'stop_after_init',
+            'update_list'
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -133,6 +134,10 @@ class configmanager(object):
         group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
+        group.add_option("-U", "--update-list", dest="update_list",
+                         action="store_true", default=False,
+                         help="update the module list before installing or "
+                              "updating modules. Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
                           my_default=False)
@@ -483,6 +488,7 @@ class configmanager(object):
                     os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
                       for x in self.options['addons_path'].split(','))
 
+        self.options['update_list'] = opt.update_list
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options['demo'] = not opt.without_demo and dict(self.options['init']) or {}
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
