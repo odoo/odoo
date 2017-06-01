@@ -354,7 +354,7 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
             "should have destroyed the quick create element");
 
-        //click to add and element and focus out the blank input, should cancle the quick creation
+        //click to add and element and focus out the blank input, should cancel the quick creation
         kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
         $quickCreate = kanban.$('.o_kanban_quick_create');
         $quickCreate.find('input').blur();
