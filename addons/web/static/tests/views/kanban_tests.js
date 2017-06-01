@@ -323,7 +323,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create in grouped mode', function (assert) {
-        assert.expect(6);
+        assert.expect(8);
 
         var nbRecords = 4;
         var kanban = createView({
@@ -354,10 +354,22 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
             "should have destroyed the quick create element");
 
+        //click to add and element and focus out the blank input, should cancel the quick creation
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').blur();
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "Blur should have destroyed the quick create element");
+
         // click to really add an element
         kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
         $quickCreate = kanban.$('.o_kanban_quick_create');
         $quickCreate.find('input').val('new partner');
+        $quickCreate.find('input').blur();
+
+        // When focus out the input containing value, should not delete the Quick Creation        
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 1,
+            "Blur should not have destroyed the quick create element");
         nbRecords = 5;
         $quickCreate.find('button.o_kanban_add').click();
 
