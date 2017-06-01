@@ -4362,16 +4362,18 @@ class BaseModel(object):
                 # for translatable fields we copy their translations
                 trans_name, source_id, target_id = get_trans(field, old, new)
                 domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
+                new_val = new_wo_lang[name]
+                if old.env.lang:
+                    # the new value *without lang* must be the old value without lang
+                    new_wo_lang[name] = old_wo_lang[name]
                 for vals in Translation.search_read(domain):
                     del vals['id']
                     del vals['source']      # remove source to avoid triggering _set_src
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        # 'source' to force the call to _set_src
-                        # 'value' needed if value is changed in copy(), want to see the new_value
-                        vals['source'] = old_wo_lang[name]
-                        vals['value'] = new_wo_lang[name]
+                        # the value should be the new value (given by copy())
+                        vals['value'] = new_val
                     Translation.create(vals)
 
     @api.multi
