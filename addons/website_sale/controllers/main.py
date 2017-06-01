@@ -478,7 +478,8 @@ class WebsiteSale(http.Controller):
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
             check_func = request.website.company_id.vat_check_vies and Partner.vies_vat_check or Partner.simple_vat_check
-            vat_country, vat_number = Partner._split_vat(data.get("vat"))
+            vat_country = request.env['res.country'].browse(int(data.get('country_id'))).code
+            vat_number = data.get("vat")
             if not check_func(vat_country, vat_number):
                 error["vat"] = 'error'
 
