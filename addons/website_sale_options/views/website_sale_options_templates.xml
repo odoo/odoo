@@ -54,7 +54,7 @@
                   </div>
                 </td>
                 <td>
-                  <span t-attf-class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
+                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ product.lst_price == product.website_price / quantity and 'hidden' }}"
                     t-field="product.lst_price"
                     t-options='{
                       "widget": "monetary",
@@ -63,7 +63,7 @@
                    }'/>
                   <span class="oe_price" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
-                    t-field="product.with_context(quantity=1).website_price"
+                    t-esc="product.website_price / quantity"
                     t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id

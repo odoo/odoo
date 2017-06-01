@@ -54,6 +54,7 @@ class WebsiteSaleOptions(WebsiteSale):
     def modal(self, product_id, **kw):
         pricelist = request.website.get_current_pricelist()
         product_context = dict(request.context)
+        quantity = kw['kwargs']['context']['quantity']
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
         # fetch quantity from custom context
@@ -65,6 +66,7 @@ class WebsiteSaleOptions(WebsiteSale):
         product = request.env['product.product'].with_context(product_context).browse(int(product_id))
         return request.env['ir.ui.view'].render_template("website_sale_options.modal", {
             'product': product,
+            'quantity': quantity,
             'compute_currency': compute_currency,
             'get_attribute_value_ids': self.get_attribute_value_ids,
         })

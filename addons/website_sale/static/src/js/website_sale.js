@@ -295,10 +295,10 @@ odoo.define('website_sale.website_sale', function (require) {
             var $ul = $(ev.target).closest('.js_add_cart_variants');
             var $parent = $ul.closest('.js_product');
             var $product_id = $parent.find('input.product_id').first();
-            var $price = $parent.find(".oe_price:first .oe_currency_value")
-                .add($('#product_confirmation').find(".oe_price"));
-            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value")
-                .add($('#product_confirmation').find(".oe_default_price:first .oe_currency_value"));
+            var $price = $parent.find(".oe_price:first .oe_currency_value");
+            var $price_confirmation = $('#product_confirmation').find(".oe_price");
+            var $default_price = $parent.find(".oe_default_price:first .oe_currency_value");
+            var $default_price_confirmation = $('#product_confirmation').find(".oe_default_price:first .oe_currency_value");
             var $optional_price = $parent.find(".oe_optional:first .oe_currency_value");
             var variant_ids = $ul.data("attribute_value_ids");
             var values = [];
@@ -312,6 +312,10 @@ odoo.define('website_sale.website_sale', function (require) {
             for (var k in variant_ids) {
                 if (_.isEmpty(_.difference(variant_ids[k][1], values))) {
                     $.when(base.ready()).then(function() {
+                        if ($price_confirmation.attr("data-product-id") === variant_ids[k][0]) {
+                            $price_confirmation.html(price_to_str(variant_ids[k][2]));
+                            $default_price_confirmation.html(price_to_str(variant_ids[k][3]));
+                        }
                         $price.html(price_to_str(variant_ids[k][2]));
                         $default_price.html(price_to_str(variant_ids[k][3]));
                     });
