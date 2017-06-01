@@ -4547,7 +4547,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(count, 1, 'once search_read should have been done to fetch the relational values');
         assert.strictEqual(nb_fields_fetched, 1, 'search_read should only fetch field id');
         assert.strictEqual(form.$('.o_statusbar_status button:not(.dropdown-toggle)').length, 2, "should have 2 status");
-        assert.strictEqual(form.$('.o_statusbar_status button:disabled').length, 2,
+        assert.strictEqual(form.$('.o_statusbar_status button.disabled').length, 2,
             "all status should be disabled");
         assert.ok(form.$('.o_statusbar_status button[data-value="4"]').hasClass('btn-primary'),
             "selected status should be btn-primary");
@@ -4651,7 +4651,7 @@ QUnit.module('relational_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_statusbar_status button:disabled').length, 2, "should have 2 status");
+        assert.strictEqual(form.$('.o_statusbar_status button.disabled').length, 2, "should have 2 status");
 
         form.destroy();
     });

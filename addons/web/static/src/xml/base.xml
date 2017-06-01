@@ -807,7 +807,7 @@
 </t>
 <t t-name="FieldStatus.content.button">
     <t t-set="disabled" t-value="!clickable || i.selected"/>
-    <button type="button" t-att-data-value="i.id" t-att-disabled="disabled ? 'disabled' : undefined"
+    <button type="button" t-att-data-value="i.id"
         t-attf-class="btn btn-sm o_arrow_button btn-#{i.selected ? 'primary' : 'default'}#{disabled ? ' disabled' : ''}">
         <t t-esc="i.display_name"/>
     </button>
