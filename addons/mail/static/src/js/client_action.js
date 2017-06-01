@@ -463,29 +463,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             }
 
             // Update control panel
-            self.set("title", '#' + channel.name);
-            // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
-            self.$buttons
-                .find('.o_mail_chat_button_unsubscribe')
-                .toggle(channel.type !== "dm" && channel.type !== 'static' && ! channel.group_based_subscription);
-            // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
-            self.$buttons
-                .find('.o_mail_chat_button_invite, .o_mail_chat_button_settings')
-                .toggle(channel.type !== "dm" && channel.type !== 'static');
-            self.$buttons
-                .find('.o_mail_chat_button_mark_read')
-                .toggle(channel.id === "channel_inbox")
-                .removeClass("o_hidden");
-            self.$buttons
-                .find('.o_mail_chat_button_unstar_all')
-                .toggle(channel.id === "channel_starred")
-                .removeClass("o_hidden");
-
-            self.$('.o_mail_chat_channel_item')
-                .removeClass('o_active')
-                .filter('[data-channel-id=' + channel.id + ']')
-                .removeClass('o_unread_message')
-                .addClass('o_active');
+            self._updateControlPanelButtons(channel);
 
             var $new_messages_separator = self.$('.o_thread_new_messages_separator');
             if ($new_messages_separator.length) {
@@ -733,6 +711,38 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Updating control panel buttons visibility based on channel type
+     *
+     * @private
+     * @param {Object} channel
+     */
+    _updateControlPanelButtons: function (channel) {
+        this.set("title", '#' + channel.name);
+        // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
+        this.$buttons
+            .find('.o_mail_chat_button_unsubscribe')
+            .toggle(channel.type !== "dm" && channel.type !== 'static' && ! channel.group_based_subscription);
+        // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
+        this.$buttons
+            .find('.o_mail_chat_button_invite, .o_mail_chat_button_settings')
+            .toggle(channel.type !== "dm" && channel.type !== 'static');
+        this.$buttons
+            .find('.o_mail_chat_button_mark_read')
+            .toggle(channel.id === "channel_inbox")
+            .removeClass("o_hidden");
+        this.$buttons
+            .find('.o_mail_chat_button_unstar_all')
+            .toggle(channel.id === "channel_starred")
+            .removeClass("o_hidden");
+
+        this.$('.o_mail_chat_channel_item')
+            .removeClass('o_active')
+            .filter('[data-channel-id=' + channel.id + ']')
+            .removeClass('o_unread_message')
+            .addClass('o_active');
+    },
+
      /**
       * Initialize control panel, tabs and panel of tab for mobile
       *
@@ -772,6 +782,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         }));
         this.$(".o_mail_chat_tab_pane").remove();
         $tabPanes.insertAfter(this.$(".o_mail_chat_content"));
+
         if (this.activeMobileTab == 'channel_inbox' || this.activeMobileTab == 'channel_starred') {
             this._switchMobileTab(chat_manager.get_channel(this.activeMobileTab));
         } else {
@@ -792,6 +803,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$(".o_mail_chat_tab_pane").hide();
         this.$(".o_mail_chat_content").hide();
         this.$(".o_mail_chat_buttons").find("button").addClass("o_hidden");
+        // Updating control panel buttons
+        this._updateControlPanelButtons(channel);
         if (!type && channel) {
             type = channel.id == 'channel_starred' ? 'channel_inbox' : channel.id;
             title = "#" + channel.name;
@@ -863,7 +876,8 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$(".o_channel_inbox_item").toggleClass("btn-primary btn-default");
         var btn = this.$(event.currentTarget);
         btn.addClass("btn-primary");
-        var channel = chat_manager.get_channel(btn.data('type'));
+        this.activeMobileTab = btn.data('type');
+        var channel = chat_manager.get_channel(this.activeMobileTab);
         this._switchMobileTab(channel);
         this.set_channel(channel);
     },

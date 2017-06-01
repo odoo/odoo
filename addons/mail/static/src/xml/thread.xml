@@ -198,7 +198,8 @@
                            class="fa fa-reply o_thread_icon o_thread_message_reply"
                            t-att-data-message-id="message.id" title="Reply"/>
                         <i t-if="message.is_needaction &amp;&amp; options.display_needactions"
-                           class="fa fa-check o_thread_icon o_thread_message_needaction"/>
+                           class="fa fa-check o_thread_icon o_thread_message_needaction"
+                           t-att-data-message-id="message.id" title="Mark as Read"/>
                     </span>
                 </p>
                 <div class="o_thread_message_content">
