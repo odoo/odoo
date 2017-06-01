@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.safe_eval import safe_eval
 
@@ -40,7 +40,7 @@ class base_config_settings(osv.TransientModel):
         return {
             'auth_signup_reset_password': safe_eval(icp.get_param(cr, uid, 'auth_signup.reset_password', 'False')),
             'auth_signup_uninvited': safe_eval(icp.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')),
-            'auth_signup_template_user_id': safe_eval(icp.get_param(cr, uid, 'auth_signup.template_user_id', 'False')),
+            'auth_signup_template_user_id': safe_eval(icp.get_param(cr, SUPERUSER_ID, 'auth_signup.template_user_id', 'False')),
         }
 
     def set_auth_signup_template_user_id(self, cr, uid, ids, context=None):
@@ -49,4 +49,4 @@ class base_config_settings(osv.TransientModel):
         # we store the repr of the values, since the value of the parameter is a required string
         icp.set_param(cr, uid, 'auth_signup.reset_password', repr(config.auth_signup_reset_password))
         icp.set_param(cr, uid, 'auth_signup.allow_uninvited', repr(config.auth_signup_uninvited))
-        icp.set_param(cr, uid, 'auth_signup.template_user_id', repr(config.auth_signup_template_user_id.id))
+        icp.set_param(cr, uid, 'auth_signup.template_user_id', repr(config.auth_signup_template_user_id.id), groups=['base.group_system'])

@@ -476,7 +476,7 @@ class calendar_alarm_manager(osv.AbstractModel):
                 last_found = self.do_check_alarm_for_one_date(cr, uid, in_date_format, curEvent, max_delta, 0, after=last_notif_mail, notif=False, missing=True, context=context)
                 for alert in last_found:
                     self.do_mail_reminder(cr, uid, alert, context=context)
-        icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now)
+        icp.set_param(cr, SUPERUSER_ID, 'calendar.last_notif_mail', now, groups=['base.group_system'])
 
     def get_next_notif(self, cr, uid, context=None):
         ajax_check_every_seconds = 300

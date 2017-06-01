@@ -61,6 +61,7 @@
         <record id="icp_mail_catchall_alias" model="ir.config_parameter">
             <field name="key">mail.catchall.alias</field>
             <field name="value">catchall</field>
+            <field name="group_ids" eval="[(4, ref('base.group_system'))]" />
         </record>
 
         <!-- Discussion subtype for messaging / Chatter -->

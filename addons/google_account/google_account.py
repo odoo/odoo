@@ -43,11 +43,10 @@ class google_service(osv.osv_memory):
     def _get_google_token_uri(self, cr, uid, service, scope, context=None):
         ir_config = self.pool['ir.config_parameter']
         params = {
-            'scope': scope,
+            'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
             'redirect_uri': ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri'),
-            'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
             'response_type': 'code',
-            'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
+            'scope': scope,
         }
         uri = 'https://accounts.google.com/o/oauth2/auth?%s' % werkzeug.url_encode(params)
         return uri
