@@ -942,7 +942,7 @@ var MockServer = Class.extend({
                 continue;
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
-                var ids = [];
+                var ids = _.clone(record[field_changed]) || [];
                 // convert commands
                 _.each(value, function (command) {
                     if (command[0] === 0) { // CREATE
@@ -951,8 +951,11 @@ var MockServer = Class.extend({
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
+                        ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
-                        ids.push(command[1]);
+                        if (!_.contains(ids, command[1])) {
+                            ids.push(command[1]);
+                        }
                     } else if (command[0] === 5) { // DELETE ALL
                         ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH

@@ -2052,7 +2052,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many and onchange (with date)', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.onchanges = {
             date: function (obj) {}
@@ -2088,7 +2088,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read']);
+        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
         form.destroy();
     });
 
