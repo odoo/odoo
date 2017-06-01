@@ -113,6 +113,32 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('notify change on many2one: unset and reset same value', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[1].qux = 1;
+
+        this.params.fieldNames = ['qux'];
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.qux.data.id, 1, "qux value should be 1");
+
+            model.notifyChanges(resultID, {qux: false});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.qux, false, "qux should be unset");
+
+            model.notifyChanges(resultID, {qux: {id: 1, display_name: 'second_partner'}});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.qux.data.id, 1, "qux value should be 1 again");
+        });
+        model.destroy();
+    });
+
     QUnit.test('write on a many2one', function (assert) {
         assert.expect(4);
         var self = this;
