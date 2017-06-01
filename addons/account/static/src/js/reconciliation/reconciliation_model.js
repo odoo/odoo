@@ -488,7 +488,7 @@ var StatementModel = BasicModel.extend({
             values.push({
                 "partner_id": line.st_line.partner_id,
                 "counterpart_aml_dicts": _.map(_.filter(props, function (prop) {
-                    return !isNaN(prop.id) || prop.partial_reconcile;
+                    return !isNaN(prop.id) && prop.partial_reconcile;
                 }), self._formatToProcessReconciliation.bind(self, line)),
                 "payment_aml_ids": _.pluck(_.filter(props, function (prop) {
                     return !isNaN(prop.id) && !prop.partial_reconcile;
