@@ -117,7 +117,7 @@ class stock_history(osv.osv):
         tools.drop_view_if_exists(cr, 'stock_history')
         cr.execute("""
             CREATE OR REPLACE VIEW stock_history AS (
-              SELECT MIN(id) as id,
+              SELECT ROW_NUMBER() OVER()::Integer as id,
                 move_id,
                 location_id,
                 company_id,
@@ -129,7 +129,6 @@ class stock_history(osv.osv):
                 source
                 FROM
                 ((SELECT
-                    stock_move.id AS id,
                     stock_move.id AS move_id,
                     dest_location.id AS location_id,
                     dest_location.company_id AS company_id,
@@ -160,7 +159,6 @@ class stock_history(osv.osv):
                     source_location.usage not in ('internal', 'transit'))
                 ) UNION ALL
                 (SELECT
-                    (-1) * stock_move.id AS id,
                     stock_move.id AS move_id,
                     source_location.id AS location_id,
                     source_location.company_id AS company_id,
