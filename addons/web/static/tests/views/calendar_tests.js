@@ -770,6 +770,81 @@ QUnit.module('Views', {
 
         assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
     });
+
+    QUnit.test('readonly date_start field', function (assert) {
+        assert.expect(4);
+
+        this.data.event.fields.start.readonly = true;
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-resizer').length, 0, "should not have resize button");
+
+        // click on an existing event to open the form view
+
+        testUtils.intercept(calendar, 'do_action', function (event) {
+            assert.deepEqual(event.data.action,
+                {
+                    type: "ir.actions.act_window",
+                    res_id: 4,
+                    res_model: "event",
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {}
+                },
+                "should open the form view");
+        });
+        calendar.$('.fc-event:contains(event 4) .fc-content').trigger('click');
+
+        // create a new event and edit it
+
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(4) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+        $('.modal-body input:first').val('coucou').trigger('input');
+
+        testUtils.intercept(calendar, 'do_action', function (event) {
+            assert.deepEqual(event.data.action,
+                {
+                    type: "ir.actions.act_window",
+                    res_model: "event",
+                    views: [[false, "form"]],
+                    target: "current",
+                    context: {
+                        "default_name": "coucou",
+                        "default_start": "2016-12-27 00:00:00",
+                        "default_stop": "2016-12-27 00:00:00",
+                        "default_allday": true
+                    }
+                },
+                "should open the form view with the context default values");
+        });
+
+        $('.modal button.btn:contains(Edit)').trigger('click');
+
+        calendar.destroy();
+
+        assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
+    });
+
 });
 
 });
