@@ -363,6 +363,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one searches with correct value', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.step('search: ' + args.kwargs.name);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'aaa',
+            "should be initially set to 'aaa'");
+
+        form.$('.o_field_many2one input').click(); // should search with ''
+        // unset the many2one -> should search again with ''
+        form.$('.o_field_many2one input').val('').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            // write 'p' -> should search with 'p'
+            form.$('.o_field_many2one input').val('p').trigger('keydown').trigger('keyup');
+
+            return concurrency.delay(0);
+        }).then(function () {
+            // close and re-open the dropdown -> should search with 'p' again
+            form.$('.o_field_many2one input').click();
+            form.$('.o_field_many2one input').click();
+
+            assert.verifySteps(['search: ', 'search: ', 'search: p', 'search: p']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('many2one field with option always_reload', function (assert) {
         assert.expect(4);
         var count = 0;

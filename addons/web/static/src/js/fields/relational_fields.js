@@ -105,7 +105,9 @@ var FieldMany2One = AbstractField.extend({
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
     },
     start: function () {
-        // what is 'this.floating' for? add a comment!
+        // booleean indicating that the content of the input isn't synchronized
+        // with the current m2o value (for instance, the user is currently
+        // typing something in the input, and hasn't selected a value yet).
         this.floating = false;
 
         this.$input = this.$('input');
@@ -453,8 +455,10 @@ var FieldMany2One = AbstractField.extend({
     _onInputClick: function () {
         if (this.$input.autocomplete("widget").is(":visible")) {
             this.$input.autocomplete("close");
+        } else if (this.floating) {
+            this.$input.autocomplete("search"); // search with the input's content
         } else {
-            this.$input.autocomplete("search", "");
+            this.$input.autocomplete("search", ''); // search with the empty string
         }
     },
     /**
