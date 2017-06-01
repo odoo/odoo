@@ -46,30 +46,23 @@ return AbstractModel.extend({
      * should be done by the graphView I think.
      *
      * @param {Object} params
-     * @param {string[]} params.groupedBy
-     * @param {string} params.initialMode one of 'pie', 'bar', 'line
-     * @param {string} params.initialMeasure a valid field name
-     * @param {string[]} params.initialGroupBys a list of valid field names
+     * @param {string} params.mode one of 'pie', 'bar', 'line
+     * @param {string} params.measure a valid field name
+     * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
      * @param {string[]} params.domain
      * @returns {Deferred} The deferred does not return a handle, we don't need
      *   to keep track of various entities.
      */
     load: function (params) {
-        this.initialGroupBys = params.initialGroupBys;
+        this.initialGroupBys = params.groupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
-        if (!params.groupedBy.length) {
-            var groupedBy = params.context.graph_groupbys ||
-                             (params.groupedBy.length && params.groupedBy) ||
-                             this.initialGroupBys;
-            params.groupedBy = groupedBy.slice(0);
-        }
         this.chart = {
             data: [],
-            groupedBy: params.groupedBy,
-            measure: params.initialMeasure,
-            mode: params.initialMode,
+            groupedBy: params.groupBys,
+            measure: params.measure,
+            mode: params.mode,
             domain: params.domain,
             context: params.context,
         };
@@ -130,13 +123,14 @@ return AbstractModel.extend({
         if (this.chart.measure !== '__count__') {
             fields = fields.concat(this.chart.measure);
         }
+        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
         return this._rpc({
                 model: this.modelName,
                 method: 'read_group',
                 context: this.chart.context,
                 domain: this.chart.domain,
                 fields: fields,
-                groupBy: this.chart.groupedBy,
+                groupBy: groupedBy,
                 lazy: false,
             })
             .then(this._processData.bind(this));
