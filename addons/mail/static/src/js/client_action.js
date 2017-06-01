@@ -753,6 +753,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.mailMobileInboxButtons = $(QWeb.render("mail.chat.MobileInboxStarredButtons", {}));
         var mailMobileTabs = $(QWeb.render("mail.chat.MobileTabs",{}));
 
+        this.$(".o_mail_chat_mobile_control_panel").remove();
         this.mailMobileControlPanel.insertAfter(this.$(".o_mail_chat_content"));
         this.mailMobileInboxButtons.insertAfter(this.mailMobileControlPanel);
         mailMobileTabs.insertAfter(this.$('.o_mail_chat_content'));
@@ -777,7 +778,6 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             channels: paneChannels,
             moment: moment,
             widget: this,
-            partner_id: odoo.session_info.partner_id,
             get_message_body_preview: chat_manager.get_message_body_preview
         }));
         this.$(".o_mail_chat_tab_pane").remove();
