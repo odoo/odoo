@@ -5,6 +5,7 @@ import random
 from urlparse import urljoin
 import werkzeug
 
+from openerp import SUPERUSER_ID
 from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT, ustr
@@ -221,7 +222,7 @@ class res_users(osv.Model):
     def _signup_create_user(self, cr, uid, values, context=None):
         """ create a new user from the template user """
         ir_config_parameter = self.pool.get('ir.config_parameter')
-        template_user_id = literal_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
+        template_user_id = literal_eval(ir_config_parameter.get_param(cr, SUPERUSER_ID, 'auth_signup.template_user_id', 'False'))
         assert template_user_id and self.exists(cr, uid, template_user_id, context=context), 'Signup: invalid template user'
 
         # check that uninvited users may sign up

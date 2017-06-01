@@ -37,11 +37,7 @@ class SaleConfiguration(models.TransientModel):
 
     @api.multi
     def set_sale_defaults(self):
-        self.ensure_one()
-        if not self.env.user._is_admin():
-            raise AccessError(_("Only administrators can change the settings"))
-
         default_picking_policy = 'one' if self.default_picking_policy else 'direct'
-        self.env['ir.values'].sudo().set_default('sale.order', 'picking_policy', default_picking_policy)
+        self.env['ir.values'].set_default('sale.order', 'picking_policy', default_picking_policy)
         res = super(SaleConfiguration, self).set_sale_defaults()
         return res

@@ -31,9 +31,10 @@ class HrEquipmentConfigSettings(models.TransientModel):
 
     @api.multi
     def get_default_alias_domain(self):
-        alias_domain = self.env['ir.config_parameter'].get_param("mail.catchall.domain")
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        alias_domain = IrConfigParameter.get_param("mail.catchall.domain")
         if not alias_domain:
-            domain = self.env["ir.config_parameter"].get_param("web.base.url")
+            domain = IrConfigParameter.get_param("web.base.url")
             try:
                 alias_domain = urlsplit(domain).netloc.split(':')[0]
             except Exception:
