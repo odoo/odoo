@@ -33,8 +33,14 @@ import time
 import unittest
 import threading
 from os.path import join as opj
+import glob
 
 import unittest2
+try:
+    from behave.__main__ import main as behave_main
+    has_behave = True
+except ImportError:
+    has_behave = False
 
 import openerp
 import openerp.tools as tools
@@ -453,6 +459,29 @@ def run_unit_tests(module_name, dbname, position=runs_at_install):
                 r = False
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
 
+    current_test = None
+    threading.currentThread().testing = False
+    return r
+
+def get_features_from_module(module_name):
+    modpath = get_module_path(module_name)
+    feature_files_glob = opj(modpath, 'features', '*.feature')
+    feature_files = glob.glob(feature_files_glob)
+    return feature_files
+
+def run_integration_tests(module_name, dbname):
+    if not has_behave:
+        _logger.warn('Behave not installed, skipping integration tests.')
+        return True
+    global current_test
+    current_test = module_name
+    threading.currentThread().testing = True
+    r = True
+    feature_files = get_features_from_module(module_name)
+    if feature_files:
+        result = behave_main(feature_files)
+        if result == 1:
+            r = False
     current_test = None
     threading.currentThread().testing = False
     return r
