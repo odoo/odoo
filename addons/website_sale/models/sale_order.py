@@ -32,7 +32,7 @@ class SaleOrder(models.Model):
                  'payment_acquirer_id', 'payment_acquirer_id.provider')
     def _compute_can_directly_mark_as_paid(self):
         for order in self:
-            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and order.payment_tx_id.state != 'done' and order.payment_acquirer_id.provider in ['transfer', 'manual']
+            order.can_directly_mark_as_paid = order.state in ['sent', 'sale'] and order.payment_tx_id and order.payment_acquirer_id.provider in ['transfer', 'manual']
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
