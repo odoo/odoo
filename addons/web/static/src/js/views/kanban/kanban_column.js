@@ -145,8 +145,8 @@ var KanbanColumn = Widget.extend({
         this.quickCreateWidget = new RecordQuickCreate(this, width);
         this.quickCreateWidget.insertAfter(this.$header);
         this.quickCreateWidget.$el.focusout(function () {
-            var task_name = self.quickCreateWidget.$el.find('[type=text]')[0].value;
-            if (!task_name && self.quickCreateWidget) {
+            var taskName = self.quickCreateWidget.$el.find('[type=text]')[0].value;
+            if (!taskName && self.quickCreateWidget) {
                 self._cancelQuickCreate();
             }
         });
