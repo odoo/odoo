@@ -386,6 +386,10 @@ class Report(models.Model):
 
         # Wkhtmltopdf arguments
         command_args.extend(['--quiet'])  # Less verbose error messages
+        # Add zoom level
+        zoom = self.env['ir.config_parameter'].sudo().get_param('report.zoom')
+        if zoom:
+            command_args.extend(['--zoom', zoom])
         if paperformat:
             # Convert the paperformat record into arguments
             command_args.extend(self._build_wkhtmltopdf_args(paperformat, spec_paperformat_args))
