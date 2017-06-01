@@ -27,9 +27,7 @@ class ResPartner(models.Model):
         """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
         res = dict(((status['id'], (status['status'], status['last_seen'])) for status in self.env.cr.dictfetchall()))
         for partner in self:
-            status = res.get(partner.id)
-            partner.im_status = status[0] if status else 'offline'
-            partner.last_seen = status[1] if status else False
+            partner.im_status, partner.last_seen = res.get(partner.id, ('offline', False))
 
     @api.model
     def im_search(self, name, limit=20):

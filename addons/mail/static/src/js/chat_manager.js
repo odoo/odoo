@@ -303,12 +303,12 @@ function make_channel (data, options) {
         channel.type = data.public !== "private" ? "public" : "private";
     }
     if (_.size(data.direct_partner) > 0) {
-        var last_seen_on = data.direct_partner[0].last_seen;
+        var lastSeenOn = data.direct_partner[0].last_seen;
         channel.type = "dm";
         channel.name = data.direct_partner[0].name;
         channel.direct_partner_id = data.direct_partner[0].id;
         channel.status = data.direct_partner[0].im_status;
-        channel.last_seen_on = last_seen_on ?  moment(time.str_to_datetime(last_seen_on)).fromNow() : false;
+        channel.last_seen_on = lastSeenOn ?  moment(time.str_to_datetime(lastSeenOn)).fromNow() : false;
         pinned_dm_partners.push(channel.direct_partner_id);
         bus.update_option('bus_presence_partner_ids', pinned_dm_partners);
     } else if ('anonymous_name' in data) {

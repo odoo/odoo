@@ -8,7 +8,7 @@
                     <t t-set="status" t-value="widget.status"/>
                     <t t-set="title" t-value="widget.title"/>
                     <t t-set="unread_counter" t-value="widget.unread_msgs"/>
-                    <t t-set="last_seen_on" t-value="widget.last_seen_on"/>
+                    <t t-set="lastSeenOn" t-value="widget.lastSeenOn"/>
                 </t>
             </div>
             <div class="o_chat_content">
@@ -34,7 +34,7 @@
                             <t t-set="status" t-value="session.window.status"/>
                             <t t-set="title" t-value="session.window.title"/>
                             <t t-set="unread_counter" t-value="session.window.unread_msgs"/>
-                            <t t-set="last_seen_on" t-value="false"/>
+                            <t t-set="lastSeenOn" t-value="false"/>
                         </t>
                     </li>
                 </t>
@@ -52,7 +52,7 @@
             <span t-if="unread_counter"> (<t t-esc="unread_counter"/>)</span>
             <t t-if="status">
                 <small class="o_last_seen_on">
-                    <t t-if="status != 'online' &amp;&amp; last_seen_on"> - <t t-esc="last_seen_on"/></t>
+                    <t t-if="status != 'online' &amp;&amp; lastSeenOn"> - <t t-esc="lastSeenOn"/></t>
                 </small>
             </t>
         </span>

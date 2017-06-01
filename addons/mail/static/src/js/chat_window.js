@@ -44,7 +44,7 @@ return Widget.extend({
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
         this.isMobile = config.isMobile;
-        this.last_seen_on = this.options.last_seen_on;
+        this.lastSeenOn = this.options.last_seen_on;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -75,15 +75,23 @@ return Widget.extend({
         this.unread_msgs = counter;
         this.render_header();
     },
+
+    /**
+     * When user status (online/offline/away) changed, this method update
+     * user status with last seen and render header again.
+     *
+     * @param {string} status
+     * @param {string} last_seen_on
+     */
     update_status: function (status, last_seen_on) {
         this.status = status;
-        this.last_seen_on = last_seen_on;
+        this.lastSeenOn = last_seen_on;
         this.render_header();
     },
     render_header: function () {
         this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
             status: this.status,
-            last_seen_on: this.last_seen_on,
+            lastSeenOn: this.lastSeenOn,
             title: this.title,
             isMobile: this.isMobile,
             unread_counter: this.unread_msgs,

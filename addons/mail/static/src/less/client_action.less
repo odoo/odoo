@@ -537,7 +537,9 @@
 .o_mail_user_status {
     font-size: 1em;
     position: relative;
-    bottom: 3px;
+    @media (max-width: @screen-xs-max) {
+        bottom: 3px;
+    }
     &.o_user_online {
         color: @brand-success;
     }
