@@ -41,6 +41,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
         });
+        this.sending_message = false;
     },
 
     willStart: function () {
@@ -54,10 +55,22 @@ var ChatterComposer = composer.BasicComposer.extend({
         return false;
     },
 
+    send_message: function() {
+        if (this.sending_message) {
+            return;
+        }
+        this.sending_message = true;
+        return this._super.apply(this, arguments);
+    },
+
     preprocess_message: function () {
         var self = this;
         var def = $.Deferred();
         this._super().then(function (message) {
+            message.handled.always(function () {
+                self.sending_message = false;
+            });
+
             message = _.extend(message, {
                 subtype: 'mail.mt_comment',
                 message_type: 'comment',
@@ -88,13 +101,6 @@ var ChatterComposer = composer.BasicComposer.extend({
         });
 
         return def;
-    },
-
-    /**
-    * Send the message on SHIFT+ENTER, but go to new line on ENTER
-    */
-    prevent_send: function (event) {
-        return !event.shiftKey;
     },
 
     message_get_suggested_recipients: function () {
@@ -370,13 +376,15 @@ var Chatter = form_common.AbstractField.extend({
         chat_manager
             .post_message(message, options)
             .then(function () {
+                message.handled.resolve();
                 self.close_composer();
                 if (message.partner_ids.length) {
                     self.refresh_followers(); // refresh followers' list
                 }
             })
             .fail(function () {
-                // todo: display notification
+                message.handled.reject();
+                self.do_notify(_t('Sending Error'), _t('Your message has not been sent.'));
             });
     },
 

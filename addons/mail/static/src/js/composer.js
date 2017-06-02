@@ -482,6 +482,8 @@ var BasicComposer = Widget.extend({
             attachment_ids: _.pluck(this.get('attachment_ids'), 'id'),
             partner_ids: _.uniq(_.pluck(this.mention_manager.get_listener_selection('@'), 'id')),
             command: commands.length > 0 ? commands[0].name : undefined,
+            // if rejected the message has not been handled and must be kept
+            handled: $.Deferred(),
         });
     },
 
@@ -492,13 +494,13 @@ var BasicComposer = Widget.extend({
 
         var self = this;
         this.preprocess_message().then(function (message) {
+            message.handled.done(function(){
+                // Empty input, selected partners and attachments
+                self.$input.val('');
+                self.mention_manager.reset_selections();
+                self.set('attachment_ids', []);
+            });
             self.trigger('post_message', message);
-
-            // Empty input, selected partners and attachments
-            self.$input.val('');
-            self.mention_manager.reset_selections();
-            self.set('attachment_ids', []);
-
             self.$input.focus();
         });
     },
