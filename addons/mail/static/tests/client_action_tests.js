@@ -3,11 +3,10 @@ odoo.define('mail.client_action_test', function (require) {
 
 var ActionManager = require('web.ActionManager');
 var core = require('web.core');
-var config = require('web.config');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
-var ChatAction = core.action_registry.get('mail.chat.instant_messaging');
+var ChatAction = require("mail.chat_client_action");
 
 QUnit.module('mail', {}, function () {
 
@@ -30,9 +29,6 @@ QUnit.module('ChatAction', {
 QUnit.test('mobile basic rendering', function (assert) {
     assert.expect(11);
 
-    // Chaning mobile state
-    config.isMobile = true;
-
     function createParent (params) {
         var actionManager = new ActionManager();
         testUtils.addMockEnvironment(actionManager, params);
@@ -49,15 +45,19 @@ QUnit.test('mobile basic rendering', function (assert) {
         data: {},
     });
 
-    var chatAction = new ChatAction(parent, action, {});
-    chatAction.set_cp_bus(new Widget());
-
-    testUtils.addMockEnvironment(chatAction, {
+    testUtils.addMockEnvironment(parent, {
         data: this.data,
+        config: {
+            isMobile: true
+        },
         archs: {
             'mail.message,false,search': '<search/>',
         }
     });
+
+    var chatAction = new ChatAction(parent, action, {});
+    chatAction.set_cp_bus(new Widget());
+
     chatAction.appendTo($('#qunit-fixture'));
 
     // test for basic view rendering for mobile
@@ -81,9 +81,6 @@ QUnit.test('mobile basic rendering', function (assert) {
 
     assert.ok(!chatAction.$(".o_mail_chat_content").is(":visible"), "none", "'Main' content pane is invisible");
     assert.ok(chatAction.$(".o_mail_chat_tab_pane:nth(0)").is(":visible"), "'Conversation' pane is visible");
-
-    // Restoring mobile state
-    config.isMobile = false;
 
     chatAction.destroy();
 });

@@ -91,6 +91,7 @@
                 border-bottom: 1px solid #ebebeb;
                 overflow: hidden;
                 max-height: 100px;
+                position: relative;
 
                 &:last-child {
                     border: none;
@@ -98,7 +99,10 @@
 
                 .item_avatar_status {
                     display: inline-block;
-                    position: relative;
+                    position: absolute;
+                    top: 15px;
+                    left: 10px;
+                    width: 55px;
                     vertical-align: top;
 
                     img {
@@ -124,10 +128,10 @@
 
                 .chat_user_detail {
                     display: inline-block;
-                    width: calc(~"100% - 80px");
+                    width: 100%;
                     vertical-align: middle;
-                    margin-left: 20px;
                     padding-top: 5px;
+                    padding-left: 65px;
 
                     h2 {
                         font-size: 17px;
@@ -177,8 +181,6 @@
         width: 100%;
         padding: 5px;
         min-height: 44px;
-        -moz-box-shadow: 0px 0px 20px #afafaf;
-        -webkit-box-shadow: 0px 0px 20px #afafaf;
         box-shadow: 0px 0px 20px #afafaf;
         border-bottom: 1px solid #ebebeb;
         height: auto;
@@ -225,8 +227,6 @@
     .o_mail_chat_mobile_tabs {
         display: none;
         background: #fff;
-        -moz-box-shadow: 0px 0px 20px #afafaf;
-        -webkit-box-shadow: 0px 0px 20px #afafaf;
         box-shadow: 0px 0px 20px #afafaf;
         position: absolute;
         bottom: 0px;
