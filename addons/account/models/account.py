@@ -204,7 +204,6 @@ class AccountGroup(models.Model):
     name = fields.Char(required=True)
     code_prefix = fields.Char()
 
-    @api.depends('name', 'code_prefix')
     def name_get(self):
         result = []
         for group in self:
