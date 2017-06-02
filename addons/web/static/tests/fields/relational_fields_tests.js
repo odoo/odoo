@@ -3852,6 +3852,61 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable list: value reset by an onchange', function (assert) {
+        // this test reproduces a subtle behavior that may occur in a form view:
+        // the user adds a record in a one2many field, and directly clicks on a
+        // datetime field of the form view which has an onchange, which totally
+        // overrides the value of the one2many (commands 5 and 0). The handler
+        // that switches the edited row to readonly is then called after the
+        // new value of the one2many field is applied (the one returned by the
+        // onchange), so the row that must go to readonly doesn't exist anymore.
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            datetime: function (obj) {
+                obj.turtles = [[5], [0, 0, {display_name: 'new'}]];
+            },
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="datetime"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // trigger the two onchanges
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_data_row .o_field_widget').val('a name').trigger('input');
+        def = $.Deferred();
+        form.$('.o_datepicker_input').click(); // focusout o2m and set value to today
+
+        // resolve the onchange def
+        def.resolve();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have one record in the o2m");
+        assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new',
+            "should be the record created by the onchange");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
