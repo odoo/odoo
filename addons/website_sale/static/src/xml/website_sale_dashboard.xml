@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-extend="website.dashboard_header">
-        <t t-jquery="t[t-foreach='apps']" t-operation="before">
+        <t t-jquery="div[class='o_box']" t-operation="append">
             <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="Confirm orders when you get paid.">
                 <a href="#" class="o_dashboard_action" name="website_sale.action_unpaid_orders_ecommerce">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_unpaid_count"/></div>

@@ -64,15 +64,15 @@
                 .gapi-analytics-data-chart svg g path, svg [class*="nv-series-"] {
                     stroke: @odoo-main-color-muted !important;
                 }
+                
 
                 svg {
                     padding-top: 2px;
                     float: left;
-
+                   
                     g.nvd3.nv-wrap.nv-lineChart {
                         .translate(45; 30) !important;
                     }
-
                     g.nv-x.nv-axis .tick > line {
                         opacity: 0 !important;
                     }
@@ -80,10 +80,11 @@
                     [class*="nv-series-"] {
                         stroke-width: 3 !important;
                         fill: @odoo-main-color-muted !important;
+                        
                     }
 
                     .nv-groups .nv-point, g circle {
-                        fill: @odoo-brand-optional;                        
+                        fill: @odoo-brand-optional;                
                     }
 
                     .nv-groups .nv-point {
@@ -100,6 +101,7 @@
                 .nvtooltip {
                     border-radius: 0;
                     border: 1px solid @gray-lighter;
+                    
                     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
 
                     .legend-color-guide > div {
@@ -107,10 +109,13 @@
                     }
                     tr:first-child .legend-color-guide > div {
                         background-color: @odoo-brand-optional !important;
+                        
                     }
                     tr:last-child .legend-color-guide > div {
                         background-color: darken(@odoo-brand-lightsecondary, 10%) !important;
                     }
+                  
+                    
                 }
             }
         }
