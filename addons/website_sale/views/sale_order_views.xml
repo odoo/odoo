@@ -13,18 +13,6 @@
         </field>
     </record>
 
-    <record id="view_order_form_acquirer" model="ir.ui.view">
-        <field name="name">sale.order.form.acquirer</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='amount_total']" position="after">
-                <field name="payment_acquirer_id" readonly="1" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}" options='{"no_open":True}'/>
-                <field name="payment_tx_id" readonly="1" attrs="{'invisible': [('payment_acquirer_id', '=', False)]}"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="action_orders_ecommerce" model="ir.actions.act_window">
         <field name="name">Orders</field>
         <field name="res_model">sale.order</field>
@@ -125,12 +113,29 @@
     <!-- Configuration sub-menus -->
     <menuitem id="menu_ecommerce_payment_acquirers"
         action="payment.action_payment_acquirer"
-        parent="menu_ecommerce_settings" name="Payment Methods" />
+        parent="menu_ecommerce_settings" name="Payment Acquirers" />
     <menuitem id="menu_product_attribute_action"
         action="product.attribute_action"
         parent="menu_product_settings"  groups="product.group_product_variant" sequence="1"/>
     <menuitem id="menu_catalog_variants_action"
         action="product.variants_action"
         parent="menu_product_settings" groups="product.group_product_variant" sequence="2"/>
+
+    <record id="sale_order_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button name="action_mark_as_paid" type="object" string="Mark as Paid" states="sent,sale" class="btn-primary" attrs="{'invisible': [('can_directly_mark_as_paid', '=', False)]}"/>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="can_directly_mark_as_paid" invisible="1"/>
+            </field>
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="attrs">{'invisible': [('can_directly_mark_as_paid', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

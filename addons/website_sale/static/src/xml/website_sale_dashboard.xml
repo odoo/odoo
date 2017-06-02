@@ -2,17 +2,10 @@
 <templates>
     <t t-extend="website.dashboard_header">
         <t t-jquery="t[t-foreach='apps']" t-operation="before">
-            <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="Confirm orders when you get paid.">
+            <div t-if="widget.dashboards_data.sales.summary.order_unpaid_count" class="o_inner_box o_main o_box_item" title="Confirm orders when you get paid." t-name='unpaid_orders_box'>
                 <a href="#" class="o_dashboard_action" name="website_sale.action_unpaid_orders_ecommerce">
                     <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_unpaid_count"/></div>
                     Unpaid Orders
-                </a>
-                <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
-            </div>
-            <div t-if="widget.dashboards_data.sales.summary.order_to_invoice_count" class="o_inner_box o_main o_box_item" title="Generate an invoice from orders ready for invoicing.">
-                <a href="#" class="o_dashboard_action" name="website_sale.sale_order_action_to_invoice">
-                    <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_to_invoice_count"/></div>
-                    Orders to Invoice
                 </a>
                 <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
             </div>
