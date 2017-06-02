@@ -106,6 +106,8 @@ class configmanager(object):
         group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
         group.add_option("-u", "--update", dest="update",
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
+        group.add_option("--uninstall", dest="uninstall",
+                          help="uninstall one or more modules including their DEPENDENCIES (comma-separated list), requires -d")
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
                           my_default=False)
@@ -388,7 +390,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path',
                 'xmlrpc', 'syslog', 'without_demo',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface', 'uninstall',
         ]
 
         for arg in keys:
