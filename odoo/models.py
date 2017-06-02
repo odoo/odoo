@@ -3423,7 +3423,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                            if not key.startswith('default_')}
 
             # call the 'write' method of fields which are not columns
-            for name in upd_todo:
+            for name in sorted(upd_todo, key=lambda name: self._fields[name]._sequence):
                 field = self._fields[name]
                 field.write(self.with_context(rel_context), vals[name])
 
