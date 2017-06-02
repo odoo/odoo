@@ -915,6 +915,15 @@ class purchase_order(osv.osv):
             self._create_stock_moves(cr, uid, order, order.order_line, picking_id, context=context)
         return picking_id
 
+    def _post_picking_done_message(self, cr, uid, ids, context=None):
+        for purchase_order_id in ids:
+            if self.has_stockable_product(cr, uid, [purchase_order_id]):
+                picking_done_body = _("Products received")
+            else:
+                picking_done_body = _("Purchase confirmed")
+            self.message_post(cr, uid, [purchase_order_id],
+                              body=picking_done_body, context=context)
+
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
         # Do check on related procurements:
@@ -926,7 +935,7 @@ class purchase_order(osv.osv):
             procs = proc_obj.search(cr, uid, [('purchase_line_id', 'in', po_lines)], context=context)
             if procs:
                 proc_obj.check(cr, uid, procs, context=context)
-        self.message_post(cr, uid, ids, body=_("Products received"), context=context)
+        self._post_picking_done_message(cr, uid, ids, context=context)
         return True
 
     def do_merge(self, cr, uid, ids, context=None):
