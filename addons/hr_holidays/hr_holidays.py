@@ -407,24 +407,29 @@ class hr_holidays(osv.osv):
                 leave_ids = []
                 batch_context = dict(context, mail_notify_force_send=False)
                 for emp in obj_emp.browse(cr, uid, emp_ids, context=context):
-                    vals = {
-                        'name': record.name,
-                        'type': record.type,
-                        'holiday_type': 'employee',
-                        'holiday_status_id': record.holiday_status_id.id,
-                        'date_from': record.date_from,
-                        'date_to': record.date_to,
-                        'notes': record.notes,
-                        'number_of_days_temp': record.number_of_days_temp,
-                        'parent_id': record.id,
-                        'employee_id': emp.id
-                    }
+                    vals = self._prepare_create_by_category(
+                        cr, uid, record, emp, context=batch_context)
                     leave_ids.append(self.create(cr, uid, vals, context=batch_context))
                 for leave_id in leave_ids:
                     # TODO is it necessary to interleave the calls?
                     for sig in ('confirm', 'validate', 'second_validate'):
                         self.signal_workflow(cr, uid, [leave_id], sig)
         return True
+
+    def _prepare_create_by_category(self, cr, uid, record, employee,
+                                    context=None):
+        return {
+            'name': record.name,
+            'type': record.type,
+            'holiday_type': 'employee',
+            'holiday_status_id': record.holiday_status_id.id,
+            'date_from': record.date_from,
+            'date_to': record.date_to,
+            'notes': record.notes,
+            'number_of_days_temp': record.number_of_days_temp,
+            'parent_id': record.id,
+            'employee_id': employee.id
+        }
 
     def holidays_confirm(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
