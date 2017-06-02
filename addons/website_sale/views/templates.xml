@@ -1294,7 +1294,7 @@
     </template>
     <template id="payment" name="Payment">
         <t t-call="website.layout">
-            <t t-set="additional_title">Shop - Select Payment Method</t>
+            <t t-set="additional_title">Shop - Select Payment Acquirer</t>
             <t t-set="no_footer">1</t>
 
             <div id="wrap">
@@ -1375,7 +1375,7 @@
                             <div class="oe_structure" />
                             <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-7 col-sm-8">
-                                    <h4>Choose a payment method</h4>
+                                    <h4>Choose a payment acquirer</h4>
                                     <ul class="list-unstyled">
                                         <t t-set="payment_methods_available" t-value="False"/>
                                         <t t-set="partner_country" t-value="website_sale_order and website_sale_order.partner_invoice_id.country_id"/>
@@ -1419,7 +1419,7 @@
                                     <a class="btn btn-default btn-block"
                                             groups="base.group_system"
                                             t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Setup payment methods
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Setup payment acquirers
                                     </a>
                                 </div>
                                 <div class="col-lg-5 col-sm-4 text-right">
