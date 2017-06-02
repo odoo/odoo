@@ -85,7 +85,7 @@ class product_product(osv.osv):
         operator = context.get('compute_child', True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
         locations = location_obj.browse(cr, uid, location_ids, context=context)
-        if operator == "child_of" and locations and locations[0].parent_left != 0:
+        if operator == "child_of" and locations and all(l.parent_left != 0 for l in locations):
             loc_domain = []
             dest_loc_domain = []
             for loc in locations:

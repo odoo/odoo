@@ -10,7 +10,7 @@ Allow users to sign up and reset their password
     'version': '1.0',
     'category': 'Extra Tools',
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'depends': [
         'base_setup',
         'mail',

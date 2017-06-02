@@ -13,6 +13,7 @@ var session = require('web.session');
 var Sidebar = require('web.Sidebar');
 var utils = require('web.utils');
 var View = require('web.View');
+var $ = require('$');
 
 var Class = core.Class;
 var _t = core._t;
@@ -714,6 +715,7 @@ var ListView = View.extend( /** @lends instance.web.ListView# */ {
             return field.name === name;
         });
         if (!action) { return; }
+        action = $.extend(true, {}, action);
         if ('confirm' in action && !window.confirm(action.confirm)) {
             return;
         }

@@ -19,26 +19,28 @@ class account_analytic_account(models.Model):
 
     @api.multi
     def _compute_debit_credit_balance(self):
-        analytic_line_obj = self.env['account.analytic.line']
-        domain = [('account_id', 'in', self.mapped('id'))]
+        domain = [('account_id', 'in', self.ids),
+                  ('company_id', '=', self.env.user.company_id.id)]
         if self._context.get('from_date', False):
-            domain.append(('date', '>=', self._context['from_date']))
+            domain += [('date', '>=', self._context['from_date'])]
         if self._context.get('to_date', False):
-            domain.append(('date', '<=', self._context['to_date']))
-
-        account_amounts = analytic_line_obj.search_read(domain, ['account_id', 'amount'])
-        account_ids = set([line['account_id'][0] for line in account_amounts])
-        data_debit = {account_id: 0.0 for account_id in account_ids}
-        data_credit = {account_id: 0.0 for account_id in account_ids}
-        for account_amount in account_amounts:
-            if account_amount['amount'] < 0.0:
-                data_debit[account_amount['account_id'][0]] += account_amount['amount']
-            else:
-                data_credit[account_amount['account_id'][0]] += account_amount['amount']
+            domain += [('date', '<=', self._context['to_date'])]
+        # compute debits
+        debit_domain = domain + [('amount', '<', 0.0)]
+        debits = self.env['account.analytic.line'].read_group(
+            debit_domain, ['account_id', 'amount'], ['account_id'])
+        debits = {amount['account_id'][0]: amount['amount']
+                  for amount in debits}
+        # compute credits
+        credit_domain = domain + [('amount', '>', 0.0)]
+        credits = self.env['account.analytic.line'].read_group(
+            credit_domain, ['account_id', 'amount'], ['account_id'])
+        credits = {amount['account_id'][0]: amount['amount']
+                   for amount in credits}
 
         for account in self:
-            account.debit = abs(data_debit.get(account.id, 0.0))
-            account.credit = data_credit.get(account.id, 0.0)
+            account.credit = credits.get(account.id, 0.0)
+            account.debit = abs(debits.get(account.id, 0.0))
             account.balance = account.credit - account.debit
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')

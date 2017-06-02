@@ -129,8 +129,9 @@
       {% if error %}
       <div class="alert alert-danger">{{ error }}</div>
       {% endif %}
-      {% if databases %}
+      {% if databases or not list_db %}
         <div class="list-group">
+          {% if list_db %}
           {% for db in databases %}
           <a href="/web?db={{ db }}" class="list-group-item">
             {{ db }}
@@ -143,6 +144,14 @@
             {% endif %}
           </a>
           {% endfor %}
+          {% else %}
+            <form role="form" action="/web" method="get">
+              <div class="text-center">
+                Select database
+                <input type="text" name="db"/>
+              </div>
+            </form>
+          {% endif %}
         </div>
         {% if manage %}
         <div class="text-left">
