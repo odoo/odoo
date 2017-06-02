@@ -35,7 +35,6 @@ class ProductProduct(models.Model):
 
     def _calc_price(self, bom):
         price = 0.0
-        workcenter_cost = 0.0
         result, result2 = bom.explode(self, 1)
         for sbom, sbom_data in result2:
             if not sbom.attribute_value_ids:
@@ -45,8 +44,7 @@ class ProductProduct(models.Model):
             total_cost = 0.0
             for order in bom.routing_id.operation_ids:
                 total_cost += (order.time_cycle_manual/60) * order.workcenter_id.costs_hour
-            workcenter_cost = total_cost / len(bom.routing_id.operation_ids)
-            price += bom.product_uom_id._compute_price(workcenter_cost, bom.product_id.uom_id)
+            price += bom.product_uom_id._compute_price(total_cost, bom.product_id.uom_id)
         # Convert on product UoM quantities
         if price > 0:
             price = bom.product_uom_id._compute_price(price / bom.product_qty, self.uom_id)
