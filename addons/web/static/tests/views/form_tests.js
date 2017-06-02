@@ -4839,6 +4839,13 @@ QUnit.module('Views', {
                 if (args.method === 'search_count') {
                     assert.strictEqual(args.model, 'test',
                         "should search_count on test");
+                    if (!args.kwargs.domain) {
+                        return $.Deferred().reject({
+                            code: 200,
+                            data: {},
+                            message: "MockServer._getRecords: given domain has to be an array.",
+                        }, $.Event());
+                    }
                 }
                 return this._super.apply(this, arguments);
             },

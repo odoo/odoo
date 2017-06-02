@@ -95,19 +95,7 @@ var MockServer = Class.extend({
         if (logLevel === 2) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
         }
-        var def;
-        try {
-            def = this._performRpc(route, args);
-        } catch (e) {
-            var error = {code: 200, data: {}, message: e.message};
-            if (logLevel === 1) {
-                console.warn('Mock: ' + route, error.message);
-            } else if (logLevel === 2) {
-                console.warn('%c[rpc] error response:', 'color: blue; font-weight: bold;', error.message);
-            }
-            return $.Deferred().reject(error, $.Event());
-        }
-        return def.then(function (result) {
+        return this._performRpc(route, args).then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (logLevel === 1) {
                 console.log('Mock: ' + route, JSON.parse(resultString));
