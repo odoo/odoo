@@ -148,7 +148,7 @@ class CompanyLDAP(osv.osv):
             ldap_binddn = conf['ldap_binddn'] or ''
             conn.simple_bind_s(ldap_binddn.encode('utf-8'), ldap_password.encode('utf-8'))
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
-                                     filter, retrieve_attributes, timeout=60)
+                                     filter.encode('utf-8'), retrieve_attributes, timeout=60)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
