@@ -1416,6 +1416,7 @@ exports.Orderline = Backbone.Model.extend({
     compute_all: function(taxes, price_unit, quantity, currency_rounding, no_map_tax) {
         var self = this;
         var list_taxes = [];
+        var taxes_to_recompute = {};
         var currency_rounding_bak = currency_rounding;
         if (this.pos.company.tax_calculation_rounding_method == "round_globally"){
            currency_rounding = currency_rounding * 0.00001;
@@ -1423,6 +1424,7 @@ exports.Orderline = Backbone.Model.extend({
         var total_excluded = round_pr(price_unit * quantity, currency_rounding);
         var total_included = total_excluded;
         var base = total_excluded;
+        var origin_base = base;
         _(taxes).each(function(tax) {
             if (!no_map_tax){
                 tax = self._map_tax_fiscal_position(tax);
@@ -1455,15 +1457,41 @@ exports.Orderline = Backbone.Model.extend({
                         name: tax.name,
                     };
                     list_taxes.push(data);
+
+                    if (tax.price_include && !tax.include_base_amount && tax.amount_type === 'percent') {
+                        taxes_to_recompute[tax.id] = tax.amount;
+                    }
                 }
             }
         });
+
+        if (Object.keys(taxes_to_recompute).length > 1){
+            total_excluded = self._filter_taxes_included_base_not_affected(list_taxes, taxes_to_recompute, origin_base, currency_rounding);
+        }
+
         return {
             taxes: list_taxes,
             total_excluded: round_pr(total_excluded, currency_rounding_bak),
             total_included: round_pr(total_included, currency_rounding_bak)
         };
     },
+
+    _filter_taxes_included_base_not_affected: function(taxes, taxes_to_recompute, origin_base, currency_rounding) {
+        var taxes_cumul_rate = 0;
+        for(var k in taxes_to_recompute) {
+            taxes_cumul_rate += taxes_to_recompute[k];
+        }
+        var total_excluded = (taxes_cumul_rate !== -100) ? origin_base / (1 + (taxes_cumul_rate / 100)) : 0;
+        _(taxes).each(function(tax) {
+            if (tax.id in taxes_to_recompute) {
+                tax.base = total_excluded;
+                var tax_amount = total_excluded * taxes_to_recompute[tax.id] /100;
+                tax.amount = round_pr(tax_amount, currency_rounding);
+            }
+        });
+        return total_excluded;
+    },
+
     get_all_prices: function(){
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
         var taxtotal = 0;
