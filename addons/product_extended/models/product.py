@@ -43,7 +43,7 @@ class ProductProduct(models.Model):
         if bom.routing_id:
             total_cost = 0.0
             for order in bom.routing_id.operation_ids:
-                total_cost += (order.time_cycle_manual/60) * order.workcenter_id.costs_hour
+                total_cost += (order.time_cycle/60) * order.workcenter_id.costs_hour
             price += bom.product_uom_id._compute_price(total_cost, bom.product_id.uom_id)
         # Convert on product UoM quantities
         if price > 0:
