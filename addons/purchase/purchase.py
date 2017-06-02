@@ -48,7 +48,7 @@ class PurchaseOrder(models.Model):
     def _get_invoiced(self):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for order in self:
-            if order.state != 'purchase':
+            if order.state not in ('purchase', 'done'):
                 order.invoice_status = 'no'
                 continue
 
