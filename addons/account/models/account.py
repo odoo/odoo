@@ -737,6 +737,8 @@ class AccountTax(models.Model):
         if not currency:
             currency = company_id.currency_id
         taxes = []
+        taxes_to_recompute = {}
+
         # By default, for each tax, tax amount will first be computed
         # and rounded at the 'Account' decimal precision for each
         # PO/SO/invoice line and then these rounded amounts will be
@@ -768,7 +770,6 @@ class AccountTax(models.Model):
             total_excluded, total_included, base = base_values
 
         origin_base = base
-        taxes_to_recompute = {}
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -794,26 +795,26 @@ class AccountTax(models.Model):
             else:
                 total_included += tax_amount
 
-            # Keep base amount used for the current tax
-            tax_base = base
-
-            if tax.include_base_amount:
-                base += tax_amount
-
-            if tax.price_include and not tax.include_base_amount and tax.amount_type == 'percent':
-                taxes_to_recompute[tax.id] = tax.amount
-
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
-                'base': tax_base,
+                'base': base,
                 'sequence': tax.sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
 
+            if tax.include_base_amount:
+                base += tax_amount
+
+            # Keep track of taxes to recompute
+            if tax.price_include and not tax.include_base_amount and tax.amount_type == 'percent':
+                taxes_to_recompute[tax.id] = tax.amount
+
+        # If several included taxes not included in the base amount apply, the calculated amount is
+        # at the moment incorrect. For example, 126 EUR including a 21 % tax and a 5 % tax.
         if len(taxes_to_recompute) > 1:
             total_excluded = self._filter_taxes_included_base_not_affected(taxes, taxes_to_recompute, origin_base, round_tax, currency, prec)
 
@@ -839,17 +840,15 @@ class AccountTax(models.Model):
         else:
             return currency.round(tax_amount)
 
-    def _filter_taxes_included_base_not_affected(self, list_taxes, taxes_to_recompute, base, round_tax, currency, precision):
+    def _filter_taxes_included_base_not_affected(self, taxes, taxes_to_recompute, origin_base, round_tax, currency, precision):
         taxes_cumul_rate = sum(taxes_to_recompute.values())
-        excluded_amount = 0
-        if taxes_cumul_rate != -100:
-            excluded_amount = base / (1 + (taxes_cumul_rate / 100))
-        for tax in list_taxes:
-            if tax['id'] in taxes_to_recompute.keys():
-                tax['base'] = excluded_amount
-                new_amount = excluded_amount * taxes_to_recompute[tax['id']] / 100
-                tax['amount'] = self._rounding_preference(new_amount, round_tax, currency, precision)
-        return excluded_amount
+        total_excluded = origin_base / (1 + (taxes_cumul_rate / 100)) if taxes_cumul_rate != -100 else 0.0
+        for tax in taxes:
+            if tax['id'] in taxes_to_recompute:
+                tax['base'] = total_excluded
+                tax_amount = total_excluded * taxes_to_recompute[tax['id']] / 100
+                tax['amount'] = self._rounding_preference(tax_amount, round_tax, currency, precision)
+        return total_excluded
 
 
 class AccountReconcileModel(models.Model):
