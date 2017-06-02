@@ -5094,6 +5094,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('wow effect', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        var clickCount = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<button name="test" string="Mark Won" type="object" class="o_wow"/>' +
+                '</form>',
+            intercepts: {
+                execute_action: function (event) {
+                    if (clickCount === 0) {
+                        event.data.on_success();
+                    } else {
+                        event.data.on_fail();
+                    }
+                    clickCount++;
+                },
+                show_wow: function () {
+                    assert.step('wow');
+                },
+            },
+        });
+
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+
+        form.destroy();
+    });
+
     QUnit.test('readonly fields are not sent when saving', function (assert) {
         assert.expect(6);
 
@@ -5235,5 +5271,34 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('display rainbow man on button click', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="action_won" string="Won" type="object" data_rainbow="True" data_rainbow_man="100" data_rainbow_man_url="/web/static/src/img/smile.svg"/>' +
+                    '</header>' +
+                '</form>',
+        });
+        testUtils.intercept(form, 'execute_action', function (event) {
+            assert.ok(_.isEqual(event.data.action_data.data_rainbow, "True"), "should have data_rainbow attribute true");
+            concurrency.delay(0).then(function () {
+                var rainbow = new RainbowMan();
+                rainbow.data = {"rainbowMan": event.data.action_data.data_rainbow_man,
+                                "rainbowManUrl": event.data.action_data.data_rainbow_man_url};
+                rainbow.appendTo($('body'));
+            })
+        });
+
+        form.$('.o_form_statusbar .btn-default').click();
+        form.destroy();
+
+    });
+
 });
 });
