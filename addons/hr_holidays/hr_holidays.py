@@ -448,7 +448,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids, context=context):
             # Delete the meeting
             if record.meeting_id:
-                record.meeting_id.unlink()
+                self.pool['calendar.event'].unlink(cr, uid, [record.meeting_id], context=context)
 
             # If a category that created several holidays, cancel all related
             self.signal_workflow(cr, uid, map(attrgetter('id'), record.linked_request_ids or []), 'refuse')
