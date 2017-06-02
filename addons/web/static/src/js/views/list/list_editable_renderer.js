@@ -155,7 +155,7 @@ ListRenderer.include({
         var self = this;
         var rowIndex = _.findIndex(this.state.data, {id: recordID});
         if (rowIndex < 0) {
-            return;
+            return $.when();
         }
         var editMode = (mode === 'edit');
         var record = this.state.data[rowIndex];
