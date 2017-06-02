@@ -556,7 +556,11 @@ class Message(models.Model):
                     'is_note': True # only if the subtype is internal
                 }
         """
-        message_values = self.read([
+        message_translated = self
+        if 'lang' not in self._context:
+            message_translated = self.with_context(lang=self.env.user.lang)
+
+        message_values = message_translated.read([
             'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
@@ -564,12 +568,12 @@ class Message(models.Model):
             'needaction_partner_ids',  # list of partner ids for whom the message is a needaction
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ])
-        message_tree = dict((m.id, m) for m in self)
-        self._message_read_dict_postprocess(message_values, message_tree)
+        message_tree = dict((m.id, m) for m in message_translated)
+        message_translated._message_read_dict_postprocess(message_values, message_tree)
 
         # add subtype data (is_note flag, subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
-        subtypes = self.env['mail.message.subtype'].sudo().search(
+        subtypes = message_translated.env['mail.message.subtype'].sudo().search(
             [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
