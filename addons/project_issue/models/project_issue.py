@@ -161,7 +161,10 @@ class ProjectIssue(models.Model):
 
         # context: no_log, because subtype already handle this
         context['mail_create_nolog'] = True
-        return super(ProjectIssue, self.with_context(context)).create(vals)
+        issue = super(ProjectIssue, self.with_context(context)).create(vals)
+        if 'kanban_state' in vals:
+            issue._set_custom_state()
+        return issue
 
     @api.multi
     def write(self, vals):
@@ -174,7 +177,31 @@ class ProjectIssue(models.Model):
         # user_id change: update date_open
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.Datetime.now()
-        return super(ProjectIssue, self).write(vals)
+        result = super(ProjectIssue, self).write(vals)
+        if 'kanban_state' in vals:
+            self._set_custom_state()
+        return result
+
+    def _set_custom_state(self):
+        for issue in self:
+            selection_item_mapper = {
+                'Grey': issue.legend_normal or 'Grey',
+                'Red': issue.legend_blocked or 'Red',
+                'Green': issue.legend_done or 'Green',
+            }
+            rec = self.env['mail.message'].search([
+                ('res_id', '=', issue.id),
+                ('model', '=', 'project.issue'),
+                ('subtype_id', '!=', False)
+            ], limit=1)
+            for tracking_value in rec.tracking_value_ids.filtered(lambda x: x.field == 'kanban_state'):
+                old_value = tracking_value.old_value_char
+                new_value = tracking_value.new_value_char
+                tracking_value.write({
+                    'old_value_char': selection_item_mapper.get(old_value, old_value),
+                    'new_value_char': selection_item_mapper.get(new_value, new_value)
+                })
+        return True
 
     @api.model
     def get_empty_list_help(self, help):

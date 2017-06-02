@@ -553,6 +553,8 @@ class Task(models.Model):
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
         task = super(Task, self.with_context(context)).create(vals)
+        if 'kanban_state' in vals:
+            task._set_custom_state()
         return task
 
     @api.multi
@@ -570,7 +572,31 @@ class Task(models.Model):
 
         result = super(Task, self).write(vals)
 
+        if 'kanban_state' in vals:
+            self._set_custom_state()
+
         return result
+
+    def _set_custom_state(self):
+        for task in self:
+            selection_item_mapper = {
+                'Grey': task.legend_normal or 'Grey',
+                'Red': task.legend_blocked or 'Red',
+                'Green': task.legend_done or 'Green',
+            }
+            rec = self.env['mail.message'].search([
+                ('res_id', '=', task.id),
+                ('model', '=', 'project.task'),
+                ('subtype_id', '!=', False)
+            ], limit=1)
+            for tracking_value in rec.tracking_value_ids.filtered(lambda x: x.field == 'kanban_state'):
+                old_value = tracking_value.old_value_char
+                new_value = tracking_value.new_value_char
+                tracking_value.write({
+                    'old_value_char': selection_item_mapper.get(old_value, old_value),
+                    'new_value_char': selection_item_mapper.get(new_value, new_value)
+                })
+        return True
 
     # ---------------------------------------------------
     # Mail gateway
