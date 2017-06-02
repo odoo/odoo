@@ -71,15 +71,22 @@ class PaymentAcquirer(models.Model):
     website_published = fields.Boolean(
         'Visible in Portal / Website', copy=False,
         help="Make this payment acquirer available (Customer invoices, etc.)")
-    auto_confirm = fields.Selection([
-        ('none', 'No automatic confirmation'),
-        ('authorize', 'Authorize the amount and confirm the order on acquirer confirmation (capture manually)'),
-        ('confirm_so', 'Authorize & capture the amount and confirm the order on acquirer confirmation'),
-        ('generate_and_pay_invoice', 'Authorize & capture the amount, confirm the order and auto-validate the invoice on acquirer confirmation')],
-        string='Order Confirmation', default='confirm_so', required=True)
+    # Formerly associated to `authorize` option from auto_confirm
+    capture_manually = fields.Boolean(string="Capture Amount Manually",
+        help="Capture the amount from Odoo, when the delivery is completed.")
+    # Formerly associated to `generate_and_pay_invoice` option from auto_confirm
     journal_id = fields.Many2one(
-        'account.journal', 'Payment Journal',
-        help="Account journal used for automatic payment reconciliation.")
+        'account.journal', 'Payment Journal', domain=[('type', '=', 'bank')],
+        default=lambda self: self.env['account.journal'].search([('type', '=', 'bank')], limit=1),
+        help="""Payments will be registered into this journal. If you get paid straight on your bank account,
+                select your bank account. If you get paid in batch for several transactions, create a specific
+                payment journal for this payment acquirer to easily manage the bank reconciliation. You hold
+                the amount in a temporary transfer account of your books (created automatically when you create
+                the payment journal). Then when you get paid on your bank account by the payment acquirer, you
+                reconcile the bank statement line with this temporary transfer account. Use reconciliation
+                templates to do it in one-click.""")
+    specific_countries = fields.Boolean(string="Specific Countries",
+        help="If you leave it empty, the payment acquirer will be available for all the countries.")
     country_ids = fields.Many2many(
         'res.country', 'payment_country_rel',
         'payment_id', 'country_id', 'Countries',
@@ -116,7 +123,7 @@ class PaymentAcquirer(models.Model):
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
              "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support')
-
+    authorize_implemented = fields.Boolean('Authorize Mechanism Supported', compute='_compute_feature_support')
     fees_implemented = fields.Boolean('Fees Computation Supported', compute='_compute_feature_support')
     fees_active = fields.Boolean('Add Extra Fees')
     fees_dom_fixed = fields.Float('Fixed domestic fees')
@@ -142,11 +149,11 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
-    @api.multi
     def _compute_feature_support(self):
         feature_support = self._get_feature_support()
         for acquirer in self:
             acquirer.fees_implemented = acquirer.provider in feature_support['fees']
+            acquirer.authorize_implemented = acquirer.provider in feature_support['authorize']
             acquirer.token_implemented = acquirer.provider in feature_support['tokenize']
 
     @api.multi
@@ -156,13 +163,6 @@ class PaymentAcquirer(models.Model):
         for acquirer in self:
             if any(getattr(f, 'required_if_provider', None) == acquirer.provider and not acquirer[k] for k, f in pycompat.items(self._fields)):
                 return False
-        return True
-
-    @api.constrains('auto_confirm')
-    def _check_authorization_support(self):
-        for acquirer in self:
-            if acquirer.auto_confirm == 'authorize' and acquirer.provider not in self._get_feature_support()['authorize']:
-                raise ValidationError(_('You cannot capture payments manually with this payment method. Please choose another Order Confirmation mode (in Configuration tab).'))
         return True
 
     _constraints = [
@@ -185,12 +185,21 @@ class PaymentAcquirer(models.Model):
     @api.model
     def create(self, vals):
         image_resize_images(vals)
+        vals = self._check_journal_id(vals)
         return super(PaymentAcquirer, self).create(vals)
 
     @api.multi
     def write(self, vals):
         image_resize_images(vals)
+        vals = self._check_journal_id(vals)
         return super(PaymentAcquirer, self).write(vals)
+
+    def _check_journal_id(self, vals):
+        if not vals.get('journal_id', False):
+            default_journal = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+            if default_journal:
+                vals.update({'journal_id': default_journal.id})
+        return vals
 
     @api.multi
     def toggle_website_published(self):

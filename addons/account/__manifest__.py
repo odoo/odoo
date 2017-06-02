@@ -6,11 +6,7 @@
     'summary': 'Send Invoices and Track Payments',
     'sequence': 30,
     'description': """
-Invoicing & Payments
-====================
-The specific and easy-to-use Invoicing system in Odoo allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your vendors and customers.
-
-You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. This module also offers you an easy method of registering payments, without having to encode complete abstracts of account.
+Core mechanisms for the accounting modules. To display the menuitems, install the module account_invoicing.
     """,
     'category': 'Accounting',
     'website': 'https://www.odoo.com/page/billing',
@@ -75,7 +71,7 @@ You could use this simplified accounting in case you work with an (external) acc
         "static/src/xml/account_report_backend.xml",
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'post_init_hook': '_auto_install_l10n',
 }

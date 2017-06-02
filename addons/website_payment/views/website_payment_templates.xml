@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
+        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Acquirers">
             <xpath expr="//div[@id='info']" position="inside">
-                <h4 class="payment_method_title">Payment Method</h4>
+                <h4 class="payment_method_title">Payment Acquirer</h4>
                 <ul class="payment_method_list list-inline">
                     <t t-foreach="request.website.payment_acquirers()" t-as="acquirer">
                         <li>
@@ -24,21 +24,21 @@
       </xpath>
     </template>
 
-    <template id="pay_methods" name="Payment Methods">
+    <template id="pay_methods" name="Payment Acquirers">
         <t t-call="website.layout">
-            <t t-set="additional_title">Payment Methods</t>
+            <t t-set="additional_title">Payment Acquirers</t>
             <div class="wrap">
                 <div class="container">
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
                                 <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                                <li>Payment Methods</li>
+                                <li>Payment Acquirers</li>
                             </ol>
                         </div>
                     </div>
-                    <h1>Payment Methods</h1>
-                    <h4 t-if="acquirers">Add a new payment method:</h4>
+                    <h1>Payment Acquirers</h1>
+                    <h4 t-if="acquirers">Add a new payment acquirer:</h4>
                     <div t-if="acquirers" class="row">
                         <div class="col-md-6">
                             <div t-if="error_message" class="alert alert-danger">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <h4>Delete a payment method:</h4>
+                    <h4>Delete a payment acquirer:</h4>
                     <div class="row">
                         <div class="col-md-6">
                             <form method="post" action="/website_payment/delete/">
@@ -83,7 +83,7 @@
     <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
         <xpath expr="//div[@class='o_my_details']" position="inside">
             <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
-                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment acquirers</a></div>
             </t>
         </xpath>
     </template>

@@ -25,7 +25,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # get the authorize account
         self.authorize = self.env.ref('payment.payment_acquirer_authorize')
         # Be sure to be in 'capture' mode
-        self.authorize.auto_confirm = 'confirm_so'
+        # self.authorize.auto_confirm = 'confirm_so'
 
 
 @odoo.tests.common.at_install(True)
@@ -219,7 +219,7 @@ class AuthorizeForm(AuthorizeCommon):
 
         # switch to 'authorize only'
         # create authorize only s2s transaction & capture it
-        self.authorize.auto_confirm = 'authorize'
+        self.authorize.capture_manually = True
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,
@@ -236,7 +236,7 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(transaction.state, 'done')
 
         # create authorize only s2s transaction & void it
-        self.authorize.auto_confirm = 'authorize'
+        self.authorize.capture_manually = True
         transaction = self.env['payment.transaction'].create({
             'amount': 500,
             'acquirer_id': authorize.id,

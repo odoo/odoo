@@ -8,31 +8,29 @@
         -->
         <menuitem name="Sales"
             id="sales_team.menu_base_partner"
-            web_icon="sale,static/description/icon.png"/>
-
-        <record id="sales_team.menu_base_partner" model="ir.ui.menu">
-            <field name="active" eval="False"/>
-        </record>
+            web_icon="sale,static/description/icon.png"
+            active="False"/>
 
         <menuitem
             id= "menu_sales_config"
             parent= "sales_team.menu_sale_config"
             sequence= "3"
             name= "Sales"
-            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
+            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"
+            active="False"/>
 
-        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sales_team.menu_base_partner" sequence="7"/>
-        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant"/>
+        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sales_team.menu_base_partner" sequence="7" active="False"/>
+        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant" active="False"/>
         <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="4"/>
-        <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" />
-        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="5"/>
-        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="1" groups="product.group_product_variant"/>
-        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant"/>
-        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2"/>
-        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom"/>
-        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom"/>
-        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3"/>
+        <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
+        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="5" active="False"/>
+        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
+        <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant" active="False"/>
+        <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
+        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom" active="False"/>
+        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom" active="False"/>
+        <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3" active="False"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -119,7 +117,7 @@
                     <field name="user_id"/>
                     <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
                     <field name="currency_id" invisible="1"/>
-                    <field name="invoice_status"/>
+                    <field name="invoice_status" invisible="1"/>
                     <field name="state" invisible="1"/>
                 </tree>
             </field>
@@ -159,7 +157,7 @@
                     <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="btn-primary"/>
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA" groups="sale.group_proforma_sales" class="btn-primary" attrs="{'invisible': ['|', ('state', 'in', ['sent', 'sale']), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="btn-primary o_sale_print"/>
-                    <button name="action_confirm" states="sent" string="Confirm Sale" class="btn-primary" type="object" />
+                    <button name="action_confirm" id="action_confirm" states="sent" string="Confirm Sale" class="btn-primary" type="object" />
                     <button name="action_confirm" states="draft" string="Confirm Sale" type="object" />
                     <button name="action_quotation_send" type="object" string="Send PRO-FORMA" groups="sale.group_proforma_sales" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('invoice_count','&gt;=',1)]}" context="{'proforma': True}"/>
                     <button name="print_quotation" string="Print" type="object" states="sent,sale" class="o_sale_print"/>
@@ -351,8 +349,7 @@
                                 <group name="sale_pay" string="Invoicing">
                                     <field name="date_order" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
-                                    <field name="invoice_status"
-                                        attrs="{'invisible': [('state', 'not in', ('sale','done'))]}"/>
+                                    <field name="invoice_status" states="sale,done" invisible="1"/>
                                 </group>
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
@@ -473,7 +470,7 @@
 
         <menuitem action="action_orders"
             id="menu_sale_order" parent="sales_team.menu_sales"
-            sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
+            sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager" active="False"/>
 
         <record id="action_orders_to_invoice" model="ir.actions.act_window">
             <field name="name">Orders to Invoice</field>
@@ -495,10 +492,10 @@
         </record>
         <menuitem name="Invoicing"
             id="menu_sale_invoicing" parent="sales_team.menu_base_partner"
-            sequence="5"/>
+            sequence="5" active="False"/>
         <menuitem action="action_orders_to_invoice"
             id="menu_sale_order_invoice" parent="sale.menu_sale_invoicing"
-            sequence="2"/>
+            sequence="2" active="False"/>
 
         <record id="action_orders_upselling" model="ir.actions.act_window">
             <field name="name">Orders to Upsell</field>
@@ -523,7 +520,7 @@
         </record>
         <menuitem action="action_orders_upselling"
             id="menu_sale_order_upselling" parent="sale.menu_sale_invoicing"
-            sequence="5"/>
+            sequence="5" active="False"/>
 
 
         <record id="action_quotations" model="ir.actions.act_window">
@@ -550,7 +547,7 @@
 
         <menuitem id="menu_sale_quotations"
                 action="action_quotations" parent="sales_team.menu_sales"
-                sequence="11"/>
+                sequence="11" active="False"/>
 
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>

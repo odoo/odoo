@@ -516,6 +516,8 @@ form: module.record_id""" % (xml_id,)
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
 
+        values['active'] = self.nodeattr2bool(rec, 'active', default=True)
+
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
             groups_value = []
