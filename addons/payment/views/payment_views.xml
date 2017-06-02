@@ -88,7 +88,7 @@
                                     <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="journal_id" context="{'default_type': 'bank'}" required="1"/>
+                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="specific_countries"/>
                                     <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
