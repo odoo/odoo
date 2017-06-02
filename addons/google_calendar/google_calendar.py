@@ -525,7 +525,7 @@ class google_calendar(osv.AbstractModel):
         if type == "write":
             res = calendar_event.write(cr, uid, event['id'], result, context=context)
         elif type == "copy":
-            result['recurrence'] = True
+            result['recurrency'] = True
             res = calendar_event.write(cr, uid, [event['id']], result, context=context)
         elif type == "create":
             res = calendar_event.create(cr, uid, result, context=context)
