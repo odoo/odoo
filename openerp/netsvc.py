@@ -121,8 +121,8 @@ def init_logger():
 
     # create a format for log messages and dates
     format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
-    # Normal Handler on stderr
-    handler = logging.StreamHandler()
+    # Normal Handler on stdout
+    handler = logging.StreamHandler(sys.stdout)
 
     if tools.config['syslog']:
         # SysLog Handler
