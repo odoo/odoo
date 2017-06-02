@@ -76,8 +76,10 @@ Best Regards,''')
     def reflect_code_digits_change(self, digits):
         accounts = self.env['account.account'].search([('company_id', '=', self.id)], order='code asc')
         for account in accounts:
-            account.write({'code': account.code.rstrip('0').ljust(digits, '0')})
-
+            new_code = account.code.rstrip('0').ljust(digits, '0')
+            exist = self.env['account.account'].search([('company_id', '=', self.id), ('code', '=', new_code)], order='code asc')
+            if account.id != exist.id:
+                account.write({'code': new_code})
     @api.multi
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
