@@ -13,7 +13,7 @@
                    <tbody class="sale_tbody">
                         <tr>
                             <td>
-                                <strong>Payment Method:</strong> <t t-esc="doc.payment_acquirer_id.name"/><br />
+                                <strong>Payment Acquirer:</strong> <t t-esc="doc.payment_acquirer_id.name"/><br />
                                 <strong>Payment Status:</strong>
                                 <t t-if="doc.payment_acquirer_id.journal_id">
                                     <t t-if="doc.payment_tx_id.state == 'pending'">

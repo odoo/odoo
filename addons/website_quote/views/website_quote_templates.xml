@@ -342,7 +342,7 @@
                               <!-- begin website_sale code -->
                               <div t-if="acquirers" id="payment_method" class="row text-left">
                                 <div class="col-md-6">
-                                  <h4>Payment Method:</h4>
+                                  <h4>Payment Acquirer:</h4>
                                   <ul class="list-unstyled">
                                     <t t-set="payment_methods_available" t-value="False"/>
                                     <li t-foreach="acquirers or []" t-as="acquirer">
