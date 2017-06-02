@@ -351,12 +351,13 @@ var AbstractField = Widget.extend({
      * @param {Object} [options]
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
+     * @returns {Deferred}
      */
     _setValue: function (value, options) {
         // we try to avoid doing useless work, if the value given has not
         // changed.  Note that we compare the unparsed values.
         if (this.lastSetValue === value || (this.value === false && value === '')) {
-            return;
+            return $.when();
         }
         this.lastSetValue = value;
         try {
@@ -364,18 +365,22 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
-            return;
+            return $.Deferred().reject();
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
-            return;
+            return $.when();
         }
+        var def = $.Deferred();
         var changes = {};
         changes[this.name] = value;
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: changes,
             viewType: this.viewType,
+            onSuccess: def.resolve.bind(def),
+            onFailure: def.reject.bind(def),
         });
+        return def;
     },
 
     //--------------------------------------------------------------------------

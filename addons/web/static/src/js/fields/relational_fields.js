@@ -964,7 +964,6 @@ var FieldOne2Many = FieldX2Many.extend({
                     var index = self.editable === 'top' ? 0 : self.value.data.length - 1;
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
-                    self.creatingRecord = false;
                 }
             }
         });
@@ -1014,6 +1013,7 @@ var FieldOne2Many = FieldX2Many.extend({
      *   in the kanban view
      */
     _onAddRecord: function (ev) {
+        var self = this;
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
@@ -1023,10 +1023,11 @@ var FieldOne2Many = FieldX2Many.extend({
                 this._setValue({
                     operation: 'CREATE',
                     position: this.editable,
+                }).always(function () {
+                    self.creatingRecord = false;
                 });
             }
         } else {
-            var self = this;
             this._openFormDialog({
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });

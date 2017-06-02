@@ -99,7 +99,9 @@ var FieldManagerMixin = {
         // subrecord's form view), otherwise it bubbles up to the main form view
         // but its model doesn't have any data related to the given dataPointID
         event.stopPropagation();
-        this._applyChanges(event.data.dataPointID, event.data.changes, event);
+        this._applyChanges(event.data.dataPointID, event.data.changes, event)
+            .done(event.data.onSuccess || function () {})
+            .fail(event.data.onFailure || function () {});
     },
     /**
      * Some widgets need to trigger a reload of their data.  For example, a

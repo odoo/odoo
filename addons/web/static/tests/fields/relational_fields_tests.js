@@ -3907,6 +3907,60 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable list: onchange that returns a warning', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.onchanges = {
+            display_name: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step(args.method);
+                    return $.when({
+                        value: {},
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner"
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step('warning');
+                },
+            },
+        });
+
+        // add a line (this should trigger an onchange and a warning)
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        // check if 'Add an item' still works (this should trigger an onchange
+        // and a warning again)
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.verifySteps(['onchange', 'warning', 'onchange', 'warning']);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
