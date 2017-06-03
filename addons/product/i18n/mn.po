@@ -26,30 +26,30 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid " Product Category"
-msgstr ""
+msgstr "Барааны ангилал"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "Барааны хувилбар #"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category_product_count
 msgid "# Products"
-msgstr ""
+msgstr "Бараанууд #"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:438
 #, python-format
 msgid "%s %% discount"
-msgstr ""
+msgstr "%s %% хөнгөлөлт"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:440
 #, python-format
 msgid "%s %% discount and %s surcharge"
-msgstr ""
+msgstr "%s %% хөнгөлөлт ба %s нэмэлт төлбөр"
 
 #. module: product
 #: code:addons/product/models/product_template.py:302
@@ -60,7 +60,7 @@ msgstr "%s (хуулбар)"
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
 msgid "16 GB"
-msgstr ""
+msgstr "16 GB"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_3
@@ -93,7 +93,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
 msgid "2.4 GHz"
-msgstr ""
+msgstr "2.4 GHz"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_8
@@ -106,11 +106,17 @@ msgid ""
 "                Intel Iris Pro graphics\n"
 "            "
 msgstr ""
+"2.7GHz quad-core Intel Core i5\n"
+"                Turbo Boost up to 3.2GHz\n"
+"                8GB (хоёр 4GB) санах ой\n"
+"                1TB hard drive\n"
+"                Intel Iris Pro graphics\n"
+"            "
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
 msgid "32 GB"
-msgstr ""
+msgstr "32 GB"
 
 #. module: product
 #: model:product.product,description_sale:product.product_product_4
@@ -126,12 +132,15 @@ msgid ""
 "Dual-core A5 with quad-core graphics\n"
 "FaceTime HD Camera, 1.2 MP Photos"
 msgstr ""
+"7.9‑inch (диагональ) LED-backlit, 128Gb\n"
+"Dual-core A5 with quad-core graphics\n"
+"FaceTime HD Camera, 1.2 MP Photos"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
 #: model:product.template,website_description:product.product_product_8_product_template
 msgid "75 percent less reflection."
-msgstr ""
+msgstr "75 хувийн бага ойлттой."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -140,21 +149,24 @@ msgid ""
 "                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Нийтийн Үнэ  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Өртөг  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Бусад үнийн хүснэгт  -  </span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Бараа</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>кг</span>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Currency</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Валют</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
@@ -164,12 +176,12 @@ msgstr "<strong>Тайлбар</strong>"
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Price List Name</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Үнийн Хүснэгтийн Нэр</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.report_pricelist
 msgid "<strong>Print date</strong>:<br/>"
-msgstr ""
+msgstr "<strong>Хэвлэсэн огноо</strong>:<br/>"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -178,12 +190,15 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>Анхааруулга</strong>: шинж чанар нэмэх болон устгах нь байгаа "
+"хувилбарыг устгах болон үүсгэхэд хүргэдэг бөгөөд энэ нь өөриймшүүлэх "
+"боломжийг гээхэд хүргэдэг."
 
 #. module: product
 #: code:addons/product/models/product.py:167 sql_constraint:product.product:0
 #, python-format
 msgid "A barcode can only be assigned to one product !"
-msgstr ""
+msgstr "Зураасан код нь зөвхөн нэг бараанд л оноогдох ёстой !"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category_type
@@ -214,12 +229,15 @@ msgid ""
 "This description will be copied to every Purchase Order, Receipt and Vendor "
 "Bill/Refund."
 msgstr ""
+"Нийлүүлэгчтэй харилцах гэж байгаа барааны тодорхойлолт. Энэ тодорхойлолт нь "
+"худалдан авах захиалга, хүлээн авах баримт, нийлүүлэгчийн тооцоо, төлбөрийн "
+"буцаалт бүрд хуулагдана."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_9
 #: model:product.template,website_description:product.product_product_9_product_template
 msgid "A great Keyboard. Cordless."
-msgstr ""
+msgstr "Утасгүй Гар"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description
@@ -235,12 +253,14 @@ msgid ""
 "A price list contains rules to be evaluated in order to compute\n"
 "                the sales price of the products."
 msgstr ""
+"Үнийн хүснэгт нь барааны борлуулах үнийг тооцоолоход\n"
+"                дүрмүүдийг агуулдаг."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_6
 #: model:product.template,website_description:product.product_product_6_product_template
 msgid "A screen worthy of iPad."
-msgstr ""
+msgstr "iPad-н үнэтэй дэлгэц."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_type
@@ -251,6 +271,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Хадгалах бараа нь нөөцийг нь удирддаг бараа юм. \"Бараа материал\" аппликэшн суулгагдсан байх ёстой.\n"
+"Хангамжийн бараа нь нөгөө талаас нөөцийг удирдадгүй бараа юм.\n"
+"Үйлчилгээ нь материаллаг биш бараа юм.\n"
+"Дижитал агуулга бол жишээ нь материаллаг биш онлайн зардаг бараа юм. Бараанд хавсрагдсан файл нь e-commerce ашиглан зарж болох юм. Жишээ нь: цахим ном, дуу, зураг, ...\"Дижитал Бараа\" модуль суусан байх ёстой."
 
 #. module: product
 #: model:product.product,website_description:product.product_product_11
@@ -262,6 +286,9 @@ msgid ""
 "                                    The 2.5-inch Multi-Touch display is nearly twice as big as the display on the previous iPod nano,\n"
 "                                    so you can see more of the music, photos, and videos you love."
 msgstr ""
+"Кредит картын хэмжээтэй — 5.4 мм нимгэн — iPod нано нь хамгийн нимгэн iPod юм.\n"
+"                                    2.5-инч Multi-Touch дэлгэц нь өмнөх iPod нано дэлгэцээс бараг хоёр дахин том,\n"
+"                                    тиймээс илүү олон дуу, зураг, видео харах боломжтой."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -281,12 +308,12 @@ msgstr "Бүх"
 #: code:addons/product/models/product_pricelist.py:433
 #, python-format
 msgid "All Products"
-msgstr ""
+msgstr "Бүх бараа"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "All general settings about this product are managed on"
-msgstr ""
+msgstr "Барааны ерөнхий мдээллийг удирдахдаа дараах руу ор"
 
 #. module: product
 #: model:product.product,website_description:product.product_product_8
@@ -1683,7 +1710,7 @@ msgstr "Баглаа"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_name
 msgid "Packaging Type"
-msgstr ""
+msgstr "Баглааны төрөл"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_packaging_view
@@ -1872,7 +1899,7 @@ msgstr "Дараах дээр үнийн хүснэгт нь менежмент 
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "Үнэ тооцоолол"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.view_product_price_list
@@ -2066,7 +2093,7 @@ msgstr "Худалдан авалтын нэгж"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging_qty
 msgid "Quantity per Package"
-msgstr ""
+msgstr "Баглаан дахь тоо хэмжээ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_list_qty1

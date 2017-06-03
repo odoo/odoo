@@ -70,6 +70,13 @@ class SaleOrder(models.Model):
         (2, 'Immediate after website order validation and save a token'),
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
 
+    @api.multi
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
+
     @api.one
     def _compute_amount_undiscounted(self):
         total = 0.0
