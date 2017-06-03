@@ -178,13 +178,7 @@ class website_sale(http.Controller):
 
         return domain
 
-    @http.route([
-        '/shop',
-        '/shop/page/<int:page>',
-        '/shop/category/<model("product.public.category"):category>',
-        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
-    ], type='http', auth="public", website=True)
-    def shop(self, page=0, category=None, search='', **post):
+    def _get_shop_values(self, page=0, category=None, search='', **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
 
         attrib_list = request.httprequest.args.getlist('attrib')
@@ -250,10 +244,20 @@ class website_sale(http.Controller):
             'style_in_product': lambda style, product: style.id in [s.id for s in product.website_style_ids],
             'attrib_encode': lambda attribs: werkzeug.url_encode([('attrib',i) for i in attribs]),
         }
+        return values
+
+    @http.route([
+        '/shop',
+        '/shop/page/<int:page>',
+        '/shop/category/<model("product.public.category"):category>',
+        '/shop/category/<model("product.public.category"):category>/page/<int:page>'
+    ], type='http', auth="public", website=True)
+    def shop(self, page=0, category=None, search='', **post):
+        values = self._get_shop_values(page=page, category=category,
+                                       search=search, **post)
         return request.website.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
-    def product(self, product, category='', search='', **kwargs):
+    def _get_product_values(self, product, category='', search='', **kwargs):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         category_obj = pool['product.public.category']
         template_obj = pool['product.template']
@@ -297,6 +301,13 @@ class website_sale(http.Controller):
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids
         }
+        return values
+
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
+    def product(self, product, category='', search='', **kwargs):
+        values = self._get_product_values(product=product,
+                                       category=category,
+                                       search=search, **kwargs)
         return request.website.render("website_sale.product", values)
 
     @http.route(['/shop/product/comment/<int:product_template_id>'], type='http', auth="public", website=True)
