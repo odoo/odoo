@@ -8,7 +8,7 @@ Add your sales document in the frontend portal. Your customers will be able to c
         """,
     'website': 'https://www.odoo.com/',
     'depends': [
-        'sale',
+        'portal_sale',
         'website_portal',
         'website_payment',
     ],
