@@ -390,7 +390,8 @@ class Controller(openerp.addons.bus.bus.Controller):
             ## since there is not enought cursors for everyone. Now, when a user open his list of users, an RPC call is made to update his user status list.
             ##channels.append((request.db,'im_chat.presence'))
             # channel to receive message
-            channels.append((request.db,'im_chat.session', request.uid))
+            # NOTICE: Don't modify the provided channels to avoid errors on request retries.
+            channels = channels + [(request.db,'im_chat.session', request.uid)]
         return super(Controller, self)._poll(dbname, channels, last, options)
 
     @openerp.http.route('/im_chat/init', type="json", auth="none")
