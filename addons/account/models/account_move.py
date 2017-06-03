@@ -174,11 +174,6 @@ class AccountMove(models.Model):
             #check the lock date + check if some entries are reconciled
             move.line_ids._update_check()
             move.line_ids.unlink()
-
-            # remove reference set at statement reconciliation
-            if move.statement_line_id.move_name:
-                move.statement_line_id.move_name = False
-
         return super(AccountMove, self).unlink()
 
     @api.multi
@@ -228,8 +223,8 @@ class AccountMove(models.Model):
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
             'ref': _('reversal of: ') + self.name})
-        for acm_line in reversed_move.line_ids:
-            acm_line.with_context(check_move_validity=False).write({
+        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+            acm_line.write({
                 'debit': acm_line.credit,
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency

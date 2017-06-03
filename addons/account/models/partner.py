@@ -444,5 +444,5 @@ class ResPartner(models.Model):
         '''
         action = self.env.ref('account.action_invoice_refund_out_tree')
         result = action.read()[0]
-        result['domain'] = [('partner_id', 'in', self.ids)]
+        result['domain'] = [('partner_id', 'child_of', self.ids)]
         return result
