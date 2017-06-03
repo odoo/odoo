@@ -21,3 +21,4 @@ import ir_fields
 import ir_qweb
 import ir_http
 import ir_logging
+import ir_token

@@ -83,7 +83,7 @@ class MailGroup(http.Controller):
             :param channel_id : the channel id to join/quit
             :param subscription : 'on' to unsubscribe the user, 'off' to subscribe
         """
-        subscribe = subscription == 'on'
+        unsubscribe = subscription == 'on'
         channel = request.env['mail.channel'].browse(int(channel_id))
         partner_ids = []
 
@@ -91,23 +91,29 @@ class MailGroup(http.Controller):
         current_user_id = request.uid
         public_id = request.website.user_id.id
         if current_user_id != public_id:
+            # connected users are directly (un)subscribed
             partner_ids = [request.env['res.users'].browse(current_user_id).partner_id.id]
-        else:  # mail_thread method
+            # add or remove channel members
+            if unsubscribe:
+                channel.check_access_rule('read')
+                channel.sudo().write({'channel_partner_ids': [(3, partner_id) for partner_id in partner_ids]})
+                return "off"
+            else:  # add partner to the channel
+                request.session['partner_id'] = partner_ids[0]
+                channel.check_access_rule('read')
+                channel.sudo().write({'channel_partner_ids': [(4, partner_id) for partner_id in partner_ids]})
+            return "on"
+
+        else:
+            # public users will recieve confirmation email
             partner_ids = channel.sudo()._find_partner_from_emails([email], check_followers=True)
             if not partner_ids or not partner_ids[0]:
                 name = email.split('@')[0]
                 partner_ids = [request.env['res.partner'].sudo().create({'name': name, 'email': email}).id]
 
-        # add or remove channel members
-        if subscribe:
-            channel.check_access_rule('read')
-            channel.sudo().write({'channel_partner_ids': [(3, partner_id) for partner_id in partner_ids]})
-            return False
-        else:  # add partner to the channel
-            request.session['partner_id'] = partner_ids[0]
-            channel.check_access_rule('read')
-            channel.sudo().write({'channel_partner_ids': [(4, partner_id) for partner_id in partner_ids]})
-        return True
+            channel.sudo()._send_confirmation_email(partner_ids, unsubscribe)
+            return "email"
+
 
     @http.route([
         "/groups/<model('mail.channel'):group>",
@@ -202,3 +208,33 @@ class MailGroup(http.Controller):
         return {
             'alias_name': group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain and '%s@%s' % (group.alias_id.alias_name, group.alias_id.alias_domain) or False
         }
+
+    @http.route("/groups/subscribe/<string:token>", type='http', auth='public', website=True)
+    def confirm_subscribe(self, token, **kw):
+        token = request.env['ir.token']._find_valid_token(token, 'mail.channel')
+        if not token or not token.partner_id:
+            return request.render('website_mail_channel.invalid_token_subscription')
+
+        channel = request.env['mail.channel'].browse(token.res_id)
+        if not channel.exists():
+            return request.render('website_mail_channel.invalid_token_subscription')
+
+        channel.sudo().write({'channel_partner_ids': [(4, token.partner_id.id)]})
+        token.unlink()
+
+        return request.website.render("website_mail_channel.confirmation_subscription", {'subscribing': True})
+
+    @http.route("/groups/unsubscribe/<string:token>", type='http', auth='public', website=True)
+    def confirm_unsubscribe(self, token, **kw):
+        token = request.env['ir.token']._find_valid_token(token, 'mail.channel')
+        if not token or not token.partner_id:
+            return request.render('website_mail_channel.invalid_token_subscription')
+
+        channel = request.env['mail.channel'].browse(token.res_id)
+        if not channel.exists():
+            return request.render('website_mail_channel.invalid_token_subscription')
+
+        channel.sudo().write({'channel_partner_ids': [(3, token.partner_id.id)]})
+        token.unlink()
+
+        return request.website.render("website_mail_channel.confirmation_subscription", {'subscribing': False})

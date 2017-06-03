@@ -519,7 +519,7 @@ class MailTemplate(models.Model):
         return multi_mode and results or results[res_ids[0]]
 
     @api.multi
-    def send_mail(self, res_id, force_send=False, raise_exception=False):
+    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.
 
@@ -528,6 +528,8 @@ class MailTemplate(models.Model):
            :param bool force_send: if True, the generated mail.message is
                 immediately sent after being created, as if the scheduler
                 was executed for this message only.
+           :param dict email_values: if set, the generated mail.message is
+                updated with given values dict
            :returns: id of the mail.message that was created
         """
         self.ensure_one()
@@ -537,6 +539,7 @@ class MailTemplate(models.Model):
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id)
         values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
+        values.update(email_values or {})
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         # add a protection against void email_from
