@@ -3,13 +3,14 @@
 # * portal
 # 
 # Translators:
+# Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-12-05 08:58+0000\n"
-"Last-Translator: Martin Trigaux\n"
+"PO-Revision-Date: 2017-06-01 07:22+0000\n"
+"Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,17 +55,17 @@ msgid ""
 "                </p>\n"
 "            \n"
 "            "
-msgstr ""
+msgstr "\n<p style=\"margin:0px 0px 10px 0px;\">\n            \t</p><p style=\"margin:0px 0px 10px 0px;\">\n                    Laba diena ${object.user_id.name or ''},\n                </p>\n                <p style=\"margin:0px 0px 10px 0px;\">\n                    Jums suteiktas pakvietimas  ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n                </p>\n                <p style=\"margin:0px 0px 10px 0px;\">\n                    Prisijungimo informacija:\n                </p>\n                <ul style=\"margin:0px 0 10px 0;\">\n                    <li>Vartotojo vardas: ${object.user_id.login or ''}</li>\n                </ul>\n                <ul style=\"margin:0px 0 10px 0;\">\n                    <li>Nuoroda: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\" style=\"text-decoration:none;color:rgb(51, 122, 183);background-color:transparent;\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n                </ul>\n                <ul style=\"margin:0px 0 10px 0;\">\n                \t<li>Duomenų bazė: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n                </ul>\n                <p style=\"margin:0px 0px 10px 0px;\">\n                \tSusikurti arba pasikeisti slaptažodį galite paspaudę ant šios nuorodos:\n                </p>\n                <ul style=\"margin:0px 0 10px 0;\">\n                    <li><a href=\"${object.user_id.signup_url}\" style=\"text-decoration:none;color:rgb(51, 122, 183);background-color:transparent;\">${object.user_id.signup_url}</a></li>\n                </ul>\n                <p style=\"margin:0px 0px 10px 0px;\">\n                \t${object.wizard_id.welcome_message or ''}\n                </p>\n                <p style=\"margin:0px 0px 10px 0px;\">---<br></p><p style=\"margin:0px 0px 10px 0px;\">\n                    GeoNovus CRM<br></p><p style=\"margin:0px 0px 10px 0px;\">\n                    http://www.geonovus.lt<br></p><p style=\"margin:0px 0px 10px 0px;\">\n                </p>\n            \n            <p style=\"margin:0px 0px 10px 0px;\"></p>"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Prieigos grupės"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_after_sales
 msgid "After Sale Services"
-msgstr ""
+msgstr "Popardaviminės paslaugos"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -123,17 +124,17 @@ msgstr "ID"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Jei pažymėta, grupė bus naudojama kaip portalas."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "Portale"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "Pakvietimas"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
@@ -156,36 +157,36 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Prisijungimo vardas"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Ne portalo grupės"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
 #: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
-msgstr ""
+msgstr "Portalas"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.model,name:portal.model_portal_wizard
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Portal Access Management"
-msgstr ""
+msgstr "Portalo teisių valdymas"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Portalo grupės"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
+msgstr "Portalo vartotojo nustatymai"
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
@@ -198,40 +199,40 @@ msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
-msgstr ""
+msgstr "Pažymėti kontaktus iš sąrašo, kuriems priklauso portalo teisės.\n                        El. pašto adresas privalo būti veikiantis ir unikalus.\n                        Kontaktų el. pašto adresus galima tiesiogiai koreguoti sąrašo vaizde."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:114
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Keliems kontaktams priskirtas toks pat el. pašto adresas: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:111
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Kaikurie kontaktai neturi veikiančio el. pašto adreso: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:117
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Kaikurie kontaktai turi pasikartojančius el. pašto adresus kaip portalo vartotojai:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portalas iš kur vartotojai gali būti tiek pridėti tiek pašalinti."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
-msgstr ""
+msgstr "Šis tekstas įtrauktas į žinutes sinčiamas naujiems portalo vartotojams."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
 msgid "This text is included in the email sent to new users of the portal."
-msgstr ""
+msgstr "Šis tekstas įtrauktas į žinutes sinčiamas naujiems portalo vartotojams."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:120
@@ -240,7 +241,7 @@ msgid ""
 "To resolve this error, you can: \n"
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
-msgstr ""
+msgstr "Šiai problemai spręsti jųs galite: \n- Ištaisyti susijusių kontaktų el. pašto adresus\n- Duoti prieigą tik kontaktams su unikaliais el. pašto adresais"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -250,16 +251,16 @@ msgstr "Naudotojai"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_wizard_id
 msgid "Wizard"
-msgstr "Vedlys"
+msgstr "Funkcija"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:179
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
-msgstr ""
+msgstr "Jūs privalote turėti sau priskirtą el. pašto adresą vartotojo nustatymuosem, kad galėtumėte siųsti el. laiškus."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
 msgid "Your Odoo account at ${user.company_id.name|safe}"
-msgstr ""
+msgstr "Jūsų Odoo paskyra ${user.company_id.name|safe}"
