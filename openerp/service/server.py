@@ -963,6 +963,8 @@ def start(preload=None, stop=False):
     if openerp.evented:
         server = GeventServer(openerp.service.wsgi_server.application)
     elif config['workers']:
+        if config['test_enable'] or config['test_file']:
+            _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
         server = PreforkServer(openerp.service.wsgi_server.application)
     else:
         server = ThreadedServer(openerp.service.wsgi_server.application)
