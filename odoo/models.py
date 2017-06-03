@@ -368,6 +368,15 @@ class BaseModel(object):
                 field_id = cr.fetchone()[0]
                 self._context['todo'].append((20, Fields.browse(field_id).modified, [names]))
 
+        if not self.pool._init:
+            # remove ir.model.fields that are not in self._fields
+            fields = Fields.browse([col['id']
+                                    for name, col in cols.iteritems()
+                                    if name not in self._fields])
+            # add key '_force_unlink' in context to (1) force the removal of the
+            # fields and (2) not reload the registry
+            fields.with_context(_force_unlink=True).unlink()
+
         self.invalidate_cache()
 
     @api.model
@@ -389,7 +398,7 @@ class BaseModel(object):
             This method should only be used for manual fields.
         """
         cls = type(self)
-        field = cls._fields.pop(name)
+        field = cls._fields.pop(name, None)
         if hasattr(cls, name):
             delattr(cls, name)
         return field
@@ -2759,7 +2768,7 @@ class BaseModel(object):
         cls = type(self)
         cls._setup_done = False
         # a model's base structure depends on its mro (without registry classes)
-        cls._model_cache_key = tuple(c for c in cls.mro() if not getattr(c, 'pool', None))
+        cls._model_cache_key = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
 
     @api.model
     def _setup_base(self, partial):
@@ -2805,7 +2814,7 @@ class BaseModel(object):
             self._add_magic_fields()
             cls._proper_fields = set(cls._fields)
 
-            cls.pool.model_cache[cls._model_cache_key] = cls
+        cls.pool.model_cache[cls._model_cache_key] = cls
 
         # 2. add custom fields
         self._add_manual_fields(partial)
@@ -4358,7 +4367,7 @@ class BaseModel(object):
                     del vals['source']      # remove source to avoid triggering _set_src
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
-                    if vals['lang'] == old.env.lang:
+                    if vals['lang'] == old.env.lang and field.translate is True:
                         # 'source' to force the call to _set_src
                         # 'value' needed if value is changed in copy(), want to see the new_value
                         vals['source'] = old_wo_lang[name]

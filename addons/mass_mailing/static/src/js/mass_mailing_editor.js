@@ -273,9 +273,13 @@ snippets_editor.Class.include({
         function editable_area_is_empty($layout) {
             $layout = $layout || $editable_area.find(".o_layout");
             var $mail_wrapper = $layout.children(".o_mail_wrapper");
+            var $mail_wrapper_content = $mail_wrapper.find('.o_mail_wrapper_td');
+            if (!$mail_wrapper_content.length) { // compatibility
+                $mail_wrapper_content = $mail_wrapper;
+            }
             return (
                 $editable_area.html().trim() === ""
-                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper.length > 0 && $mail_wrapper.html().trim() === ""))
+                || ($layout.length > 0 && ($layout.html().trim() === "" || $mail_wrapper_content.length > 0 && $mail_wrapper_content.html().trim() === ""))
             );
         }
 
@@ -325,7 +329,15 @@ snippets_editor.Class.include({
             switch_images(theme_params, $editable_area);
 
             var $old_layout = $editable_area.find(".o_layout");
-            var $new_wrapper = $("<div/>", {"class": "o_mail_wrapper oe_structure"});
+            // This wrapper structure is the only way to have a responsive and
+            // centered fixed-width content column on all mail clients
+            var $new_wrapper = $('<table/>', {class: 'o_mail_wrapper'});
+            var $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_wrapper_td oe_structure'});
+            $new_wrapper.append($('<tr/>').append(
+                $("<td/>", {class: 'o_mail_no_resize'}),
+                $new_wrapper_content,
+                $("<td/>", {class: 'o_mail_no_resize'})
+            ));
             var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
 
             var $contents;
@@ -338,11 +350,11 @@ snippets_editor.Class.include({
             }
 
             $editable_area.empty().append($new_layout);
-            $new_wrapper.append($contents);
+            $new_wrapper_content.append($contents);
             $old_layout.remove();
 
             if (first_choice) {
-                self.add_default_snippet_text_classes($new_wrapper);
+                self.add_default_snippet_text_classes($new_wrapper_content);
             }
             self.show_blocks();
         }

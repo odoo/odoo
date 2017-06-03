@@ -235,7 +235,9 @@ class WebsiteSale(http.Controller):
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', products.ids)])
+            # get all products without limit
+            selected_products = Product.search(domain, limit=False)
+            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', selected_products.ids)])
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
@@ -315,7 +317,8 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
-        if request.website.is_pricelist_available(pl_id.id):
+        if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
+                and request.website.is_pricelist_available(pl_id.id):
             request.session['website_sale_current_pl'] = pl_id.id
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')

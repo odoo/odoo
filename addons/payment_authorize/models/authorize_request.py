@@ -63,7 +63,7 @@ class AuthorizeAPI():
         response = strip_ns(response, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
             messages = map(lambda m: m.text, response.findall('messages/message/text'))
-            raise ValidationError('Authorize.net Error Message(s):\n %s' % '\n'.join(messages))
+            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
         return response
 
     def _base_tree(self, requestType):

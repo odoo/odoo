@@ -279,6 +279,11 @@ class ProcurementOrder(models.Model):
     def _procurement_from_orderpoint_post_process(self, orderpoint_ids):
         return True
 
+    def _get_orderpoint_domain(self, company_id=False):
+        domain = [('company_id', '=', company_id)] if company_id else []
+        domain += [('product_id.active', '=', True)]
+        return domain
+
     @api.model
     def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=False):
         """ Create procurements based on orderpoints.
@@ -288,9 +293,7 @@ class ProcurementOrder(models.Model):
         """
 
         OrderPoint = self.env['stock.warehouse.orderpoint']
-
-        domain = [('company_id', '=', company_id)] if company_id else []
-        domain += [('product_id.active', '=', True)]
+        domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints_noprefetch = OrderPoint.with_context(prefetch_fields=False).search(domain,
             order=self._procurement_from_orderpoint_get_order()).ids
         while orderpoints_noprefetch:
@@ -319,6 +322,8 @@ class ProcurementOrder(models.Model):
                 substract_quantity = location_orderpoints.subtract_procurements_from_orderpoints()
 
                 for group in location_data['groups']:
+                    if group.get('from_date'):
+                        product_context['from_date'] = group['from_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if group['to_date']:
                         product_context['to_date'] = group['to_date'].strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     product_quantity = location_data['products'].with_context(product_context)._product_available()

@@ -4,15 +4,14 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
-# Nasan-Ochir L <nasaaskii@gmail.com>, 2017
-# odmunkh enkh-ochir <odmunkh0609@gmail.com>, 2017
+# nasaaskii <nasaaskii@gmail.com>, 2017
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 14:29+0000\n"
-"PO-Revision-Date: 2017-02-03 14:29+0000\n"
+"POT-Creation-Date: 2017-05-22 08:30+0000\n"
+"PO-Revision-Date: 2017-05-22 08:30+0000\n"
 "Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -130,17 +129,17 @@ msgstr "Хүлээн авагч"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Хүлээн авагчийн данс"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Хүлээн авагчийн код."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Хүлээн авагчийн Код"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -246,7 +245,7 @@ msgstr "Код"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
-msgstr "Байгууллага"
+msgstr "Компани"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -657,7 +656,7 @@ msgstr "Худалдаг авагчийн төлөлт"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Төлбөрийн Журналь"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
@@ -846,6 +845,14 @@ msgstr "Талархлын Зурвас"
 #, python-format
 msgid "The payment transaction reference must be unique!"
 msgstr "Төлбөрийн гүйлгээний лавлахыг заавал бөглөнө!"
+
+#. module: payment
+#: code:addons/payment/models/account_payment.py:42
+#, python-format
+msgid ""
+"This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"Please use a token from another provider than %s."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image

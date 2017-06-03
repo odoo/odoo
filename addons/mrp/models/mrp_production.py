@@ -307,6 +307,7 @@ class MrpProduction(models.Model):
             'production_id': self.id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
+            'propagate': self.propagate,
         })
         move.action_confirm()
         return move
@@ -410,7 +411,7 @@ class MrpProduction(models.Model):
             quantity = order.product_uom_id._compute_quantity(order.product_qty, order.bom_id.product_uom_id) / order.bom_id.product_qty
             boms, lines = order.bom_id.explode(order.product_id, quantity, picking_type=order.bom_id.picking_type_id)
             order._generate_workorders(boms)
-        orders_to_plan.write({'state': 'planned'})
+        return orders_to_plan.write({'state': 'planned'})
 
     @api.multi
     def _generate_workorders(self, exploded_boms):
@@ -498,11 +499,14 @@ class MrpProduction(models.Model):
     @api.multi
     def post_inventory(self):
         for order in self:
+            moves_not_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done')
             moves_to_do = order.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_do.action_done()
+            moves_to_do = order.move_raw_ids.filtered(lambda x: x.state == 'done') - moves_not_to_do
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish.action_done()
+            
             for move in moves_to_finish:
                 #Group quants by lots
                 lot_quants = {}
@@ -539,17 +543,19 @@ class MrpProduction(models.Model):
         moves_to_cancel.action_cancel()
         self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
         self.env["procurement.order"].search([('production_id', 'in', self.ids)]).check()
-        self.write({'state': 'done'})
+        return self.write({'state': 'done'})
 
     @api.multi
     def do_unreserve(self):
         for production in self:
             production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).do_unreserve()
+        return True
 
     @api.multi
     def button_unreserve(self):
         self.ensure_one()
         self.do_unreserve()
+        return True
 
     @api.multi
     def button_scrap(self):
