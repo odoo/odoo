@@ -24,7 +24,7 @@ from openerp import SUPERUSER_ID
 from openerp.exceptions import AccessError
 from openerp.osv import osv, fields
 from openerp.tools import config
-from openerp.tools.misc import find_in_path
+from openerp.tools.misc import find_in_path, file_open
 from openerp.tools.translate import _
 from openerp.addons.web.http import request
 from openerp.tools.safe_eval import safe_eval as eval
@@ -224,6 +224,19 @@ class Report(osv.Model):
 
             for node in root.xpath("//html/head/style"):
                 css += node.text
+
+            for xmlelt in [
+                lxml.html.fromstring(
+                    render_minimal(dict(css='', subst=True, body='', base_url=''))
+                ),
+                root,
+            ]:
+                for node in xmlelt.xpath("//link[@rel='stylesheet']"):
+                    css_path = node.get('href')
+                    if css_path.startswith("/"):
+                        css_path = css_path[1:]
+                    css += file_open(css_path).read()
+                    node.getparent().remove(node)
 
             for node in root.xpath(match_klass.format('header')):
                 body = lxml.html.tostring(node)
