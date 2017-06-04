@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
 msgid ""
 msgstr ""
@@ -32,13 +31,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:217
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s 已保留)"
+msgstr " (%s 已预留)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:220
 #, python-format
 msgid " (reserved)"
-msgstr " (已保留)"
+msgstr " (已预留)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
@@ -1042,18 +1041,38 @@ msgid ""
 msgstr "通过取消勾选有效字段，你能隐藏不再使用的INCOTERM。"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "日历视图"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "找不到任何客户或供应商位置。"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "找不到任何按订单生产路线。"
@@ -1084,7 +1103,7 @@ msgstr "已取消"
 #: code:addons/stock/models/stock_move.py:357
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr "不能取消保留一个已完成的移动"
+msgstr "不能取消预留一个已完成的移动"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -1137,7 +1156,7 @@ msgstr "点检的数量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partially_available
 msgid "Checks if the move has some stock reserved"
-msgstr "检查移动是否有库存保留"
+msgstr "检查移动是否有库存预留"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -1338,7 +1357,7 @@ msgstr "通道(X)"
 msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
-msgstr "不能保留所需要的产品。请使用‘标记为待做’按钮手工的处理保留"
+msgstr "不能预留全部需要的产品。请使用‘标记为待做’按钮手工的处理保留"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
@@ -1597,6 +1616,41 @@ msgstr "客户位置"
 #: selection:stock.picking.type,code:0
 msgid "Customers"
 msgstr "客户"
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -2048,6 +2102,11 @@ msgid "Dropshipping"
 msgstr "直运"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr "编辑详细信息或者添加新的"
@@ -2120,6 +2179,21 @@ msgstr "额外移动： "
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2316,7 +2390,7 @@ msgstr "有报废移动"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
 msgid "Has quants already reserved"
-msgstr "有早已保留的份"
+msgstr "有早已预留的份"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
@@ -2786,6 +2860,24 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr "内部参考号码，它不同于制造商的批次/序列号码"
+
+#. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -4840,7 +4932,7 @@ msgstr "在手数量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_availability
 msgid "Quantity Reserved"
-msgstr "已保留的数量"
+msgstr "已预留数量"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:78
@@ -4851,7 +4943,7 @@ msgstr "数量不能为负数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "仓库里仍然为这次移动保留的数量"
+msgstr "仓库里仍然为这次移动预留的数量"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
@@ -4907,7 +4999,7 @@ msgstr "在谈到此打包作业对移动(以及反向)剩余数量的贡献时�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr "已为这次移动保留的数量"
+msgstr "已为这次移动预留的数量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.lot_open_quants
@@ -5130,42 +5222,42 @@ msgstr "Res Model"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserve"
-msgstr "保留"
+msgstr "预留"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr "销售订单确认后立即保留产品"
+msgstr "销售订单确认后立即预留产品"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
 msgid "Reserve products manually or based on automatic scheduler"
-msgstr "手动保留产品，还是基于自动调度保留产品"
+msgstr "手动预留产品，还是基于自动调度预留产品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "Reserved"
-msgstr "已保留"
+msgstr "已预留"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_reserved_quant_id
 msgid "Reserved Quant"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Reserved Quants"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reservation_id
 msgid "Reserved for Move"
-msgstr "保留给移动"
+msgstr "预留给移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_quant_ids
 msgid "Reserved quants"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5961,7 +6053,7 @@ msgstr "考虑到其上级类别，下面的路线将应用到这个类别的产
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reservation_id
 msgid "The move the quant is reserved for"
-msgstr "此移动此份是保留给"
+msgstr "此移动此份是预留给"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6207,7 +6299,7 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品保留，应该慎之又慎。"
+"这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品预留，应该慎之又慎。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -6447,7 +6539,7 @@ msgstr "中转位置"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr "如果保留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
+msgstr "如果预留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_code
@@ -6570,7 +6662,7 @@ msgstr "未计划数量"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr "取消保留"
+msgstr "取消预留"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6992,7 +7084,7 @@ msgstr "已经完成的拣货不能被删除"
 #: code:addons/stock/models/stock_quant.py:143
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr "你不能保留负数数量，或者负数份。"
+msgstr "你不能预留负数数量，或者负数份。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:901
@@ -7064,7 +7156,7 @@ msgstr "你无法拆分一个已完成的移动"
 msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
-msgstr "你没有为这个拣货保留任何产品，你需要点击‘保留'按钮检查产品是否可用"
+msgstr "你没有为这个拣货预留任何产品，你需要点击‘预留'按钮检查产品是否可用"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:800

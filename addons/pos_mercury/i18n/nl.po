@@ -152,6 +152,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Kon reactie- aanvraag aanbieder niet encrypteren"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr "Kan kaart niet lezen"
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -202,6 +209,13 @@ msgstr "Electronische betaling"
 #, python-format
 msgid "Empty Command String"
 msgstr "Lege commando string"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
+msgstr "Fout"
 
 #. module: pos_mercury
 #. openerp-web
@@ -608,6 +622,18 @@ msgstr "Naam"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
 msgstr "Naam van deze Mercury configuratie"
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr "Geen mercury configuratie geassocieerd met het dagboek."
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr "Geen geopende kassa sessie gevonden voor gebruiker %s"
 
 #. module: pos_mercury
 #. openerp-web
