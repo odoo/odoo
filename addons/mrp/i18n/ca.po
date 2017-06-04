@@ -3222,6 +3222,8 @@ msgid ""
 "Will determine if the next work order will be planned after the previous one"
 " or after the first Quantity To Process of the previous one."
 msgstr ""
+"Determinarà si la següent ordre de treball es planificarà a continuació de "
+"l'anterior o després de la primera quantitat processada de l'anterior."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3250,7 +3252,7 @@ msgstr "Càrregues centre de producció"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
-msgstr ""
+msgstr "Nom del centre de treball"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -3276,7 +3278,7 @@ msgstr "Centres de producció"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Dashboard"
-msgstr ""
+msgstr "Taulers del centre de treball"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -3288,11 +3290,13 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"Els centres de treball li permeten crear i gestionar unitats de fabricació.\n"
+"Es componen de treballadors i o maquines, que són considerades com unitats per l'assignació de tasques, així com la capacitat i previsió de la planificació."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Work Instruction"
-msgstr ""
+msgstr "Instruccions de treball"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder
@@ -3311,11 +3315,15 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"Les operacions d'una ordre de treball li permeten crear i gestionar les "
+"operacions de fabricació que poden seguir-se en els seus centres de treball "
+"amb la fi de fabricar un producte. S'associen a la llista de materials que "
+"definiran les matèries primeres necessàries."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
 msgid "Work Order To Consume"
-msgstr ""
+msgstr "Ordre de treball per consumir"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -3461,12 +3469,13 @@ msgstr ""
 msgid ""
 "You can not cancel production order, a work order is still in progress."
 msgstr ""
+"No pot cancel·lar l'ordre de fabricació, hi ha una ordre de treball en curs."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:231
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "No pot modificar l'ordre de treball acabada."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:91
@@ -3482,25 +3491,27 @@ msgstr ""
 #: code:addons/mrp/models/stock_move.py:40
 #, python-format
 msgid "You can only produce 1.0 %s for products with unique serial number."
-msgstr ""
+msgstr "Només pot produir 1.0 %s per productes amb un número de sèrie únic."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
-msgstr ""
+msgstr "No pot cancel·lar un moviment que ja ha consumit material"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:40
 #, python-format
 msgid "You cannot use the same serial number in two different lines."
-msgstr ""
+msgstr "No pot utilitzar el mateix número de sèries en dos línies diferents."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
 msgstr ""
+"Ja ha processat %d.\n"
+"Introdueixi una quantitat major que %d"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:353
@@ -3510,6 +3521,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"Ha de definir almenys una pèrdua de productivitat per la categoria "
+"\"Rendiment\". Creï una des de l'aplicació Fabricació/Configuració/Pèrdues "
+"de productivitat."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:349
@@ -3519,6 +3533,9 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"Ha de definir almenys una pèrdua de productivitat per la categoria "
+"\"Productivitat\". Creï una des de l'aplicació "
+"Fabricació/Configuració/Pèrdues de productivitat."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:401

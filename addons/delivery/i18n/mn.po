@@ -201,7 +201,7 @@ msgstr "Дундаж. Захиалагчийн нэхэмжлэл дахь үн�
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr ""
+msgstr "Нийлүүлэгчийн тооцоон дахь Дундаж Үнэ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_avg_price
@@ -355,6 +355,9 @@ msgid ""
 " and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
+"Барааны стандарт үнэлгээнд зориулагдсан барааны үлгэрийн өртөг энэ нь "
+"худалдан авах захиалгын суурь үнэ болж ашиглагдана. Барааны үндсэн хэмжих "
+"нэгжээр илэрхийлэгдсэн."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_cost_method
@@ -412,7 +415,7 @@ msgstr "Захиалагчийн урьтал хугацаа"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Захиалагчийн Код"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -1109,7 +1112,7 @@ msgstr "Баглаа"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Баглааны код"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
@@ -1174,12 +1177,12 @@ msgstr "Үнийн хүснэгт"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Үнийн хүснэгтийн мөр"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "Үнийн хүснэгтийн мөрийн ids"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1529,6 +1532,7 @@ msgstr "Нөөцийн тоо бүртгэлийн ids"
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
 msgstr ""
+"Өртөг үнэ ба нийлүүлэгчийн тооцоон дахь тоо хэмжээний үржвэрийн нийлбэр"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_turnover
@@ -1542,6 +1546,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
 msgstr ""
+"Нэхэмжилсэн үнэ ба нийлүүлэгчийн тооцоон дахь тоо хэмжээний үржвэрийн "
+"нийлбэр"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_expected
@@ -1560,13 +1566,15 @@ msgstr "Захиалагчийн Нэхэмжлэл дахь тоо хэмжээ
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Нийлүүлэгчийн Тооцоон дахь тоо хэмжээний нийлбэр"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Техникийн талбар. Өгөгдлийн баазад хадгалагддаггүй, үнийн хүснэгд дээр хайлт"
+" хийхэд хэрэглэгддэг."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
@@ -1603,6 +1611,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Худалдан үнэ нь барааны үлгэрээс удирдагдана. 'Хувилбарын Үнэнүүд' даруул "
+"дээр дарж шинжүүдийн нэмэлт үнүүдийг тааруулна."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1812,7 +1822,7 @@ msgstr "Хувилбарын зураг"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Хувилбарын Нэмэлт Үнэ"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
@@ -1938,6 +1948,9 @@ msgid ""
 "this template. The customer will receive an email for each product linked to"
 " an email template."
 msgstr ""
+"Нэхэмжлэлийг батлахад энэ үлгэр дээр суурилсан эмэйл захиалагчид руу "
+"илгээгддэг. Захиалагч нь эмэйл үлгэртэй холбогдсон бараа бүрийн хувь эмэйл "
+"хүлээж авдаг."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_width

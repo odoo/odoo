@@ -7,6 +7,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
@@ -55,13 +56,13 @@ msgstr "İptal"
 #: code:addons/base_import/models/base_import.py:599
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr ""
+msgstr "Sütun%s yanlış değerler içeriyor (değer:%s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:619
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Sütun %s yanlış değerler içeriyor. %d satırındaki hata: %s"
 
 #. module: base_import
 #. openerp-web
@@ -128,7 +129,7 @@ msgstr "Tarih Biçimi:"
 #: code:addons/base_import/static/src/js/base_import.js:126
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Tarih Saat Biçimi:"
 
 #. module: base_import
 #. openerp-web
@@ -160,7 +161,7 @@ msgstr "Adı Göster"
 #: code:addons/base_import/static/src/js/base_import.js:419
 #, python-format
 msgid "Don't import"
-msgstr " İçeri Aktarma"
+msgstr " İçeri Aktarma İptal"
 
 #. module: base_import
 #. openerp-web
@@ -168,7 +169,7 @@ msgstr " İçeri Aktarma"
 #: code:addons/base_import/static/src/js/base_import.js:282
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "Nokta"
 
 #. module: base_import
 #. openerp-web
@@ -181,7 +182,7 @@ msgstr "Kodlama:"
 #: code:addons/base_import/models/base_import.py:621
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "Tarihi ayrıştırma hatası [%s: L %d]: %s"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:234
@@ -257,7 +258,7 @@ msgstr "Olası değerler:"
 #: code:addons/base_import/static/src/xml/base_import.xml:116
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "İçeaktaramadığımız dosyanın başı:"
+msgstr "İçe aktaramadığımız dosyanın başlangıcı:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_id
@@ -324,7 +325,7 @@ msgstr "Bir Dosya İçe Aktar"
 #: code:addons/base_import/static/src/xml/base_import.xml:114
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "İçeaktarma hatasının nedeni<:"
+msgstr "İçe aktarma hatasının nedeni:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import___last_update
@@ -342,7 +343,7 @@ msgstr "İçeaktarma hatasının nedeni<:"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child___last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview___last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son Değiştirme"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_write_uid
@@ -440,7 +441,7 @@ msgstr "Üst id"
 #: code:addons/base_import/static/src/js/base_import.js:486
 #, python-format
 msgid "Relation Fields"
-msgstr "İlişki Alanları"
+msgstr "İlişkili Alanlar"
 
 #. module: base_import
 #. openerp-web
@@ -475,7 +476,7 @@ msgstr "Ayraç:"
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
 msgid "Show all fields for completion (advanced)"
-msgstr ""
+msgstr "Alanların ilişkili olduğu alanları göster (gelişmiş)"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_somevalue
@@ -501,7 +502,7 @@ msgstr "Sekme"
 #: code:addons/base_import/static/src/js/base_import.js:122
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "Metin Sınırlayıcı:"
 
 #. module: base_import
 #. openerp-web
@@ -510,14 +511,14 @@ msgstr ""
 msgid ""
 "The first row\n"
 "                 contains the label of the column"
-msgstr ""
+msgstr "Dosyanın ilk satırı sütunun adını içerir"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/base_import.js:127
 #, python-format
 msgid "Thousands Separator:"
-msgstr ""
+msgstr "Binlik Ayracı:"
 
 #. module: base_import
 #. openerp-web
@@ -531,6 +532,8 @@ msgstr "İçeaktarma sırasında geçmişi izle"
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"\"{extension}\" dosyası yüklenemiyor: \"{modname}\" Python modülü "
+"gerektiriyor"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:200
@@ -568,7 +571,7 @@ msgstr "Değer"
 #: code:addons/base_import/models/base_import.py:537
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "İçeaktarma yapabilmek için enaz bir alanı yapılandırmalısınız"
+msgstr "İçeri aktarım yapabilmek için en az bir alanı yapılandırmalısınız."
 
 #. module: base_import
 #. openerp-web

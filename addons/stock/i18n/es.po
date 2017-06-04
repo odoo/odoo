@@ -417,8 +417,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Activate <i>Track lots or serial numbers</i></strong> in your"
 msgstr ""
-"<strong>Activate <i>Seguimiento de lotes o números de serie</i></strong> in "
-"your"
+"<strong>Active <i>Seguimiento de lotes o números de serie</i></strong> en su"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -458,7 +457,7 @@ msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
 msgstr ""
-"<strong>Comprar:</strong> el producto es comprado de un proveedor, a travez "
+"<strong>Comprar:</strong> el producto es comprado de un proveedor, a través "
 "de un Pedido de Compra"
 
 #. module: stock
@@ -1178,18 +1177,38 @@ msgid ""
 msgstr "Desmarcando el campo activo, podrá ocultar un INCOTERM que no use."
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "Vista calendario"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "No se puede encontrar ninguna ubicación de cliente o proveedor"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "No se puede encontrar una ruta genérica para Bajo pedido"
@@ -1742,6 +1761,41 @@ msgid "Customers"
 msgstr "Clientes"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
 msgid "DHL integration"
 msgstr "Integración con DHL"
@@ -2221,6 +2275,11 @@ msgid "Dropshipping"
 msgstr "Dropshipping"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr "Edite sus detalles o añada otros nuevos"
@@ -2299,6 +2358,21 @@ msgstr "Movimiento extra: "
 #: model:ir.model.fields,help:stock.field_product_removal_method
 msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -3033,6 +3107,24 @@ msgstr ""
 " del fabricante"
 
 #. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr "Dominio invalido para el operante izquierdo %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr "Dominio invalido para el operante %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
+msgstr "Dominio invalido para el operante derecho %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
 msgid "Inventoried Category"
 msgstr "Categoría inventariada"
@@ -3415,8 +3507,8 @@ msgid ""
 "Like with the sales flow, Odoo inventory management is\n"
 "                        fully integrated with the purchase app."
 msgstr ""
-"Al igual que con el flujo de ventas, Odoo la gestión de inventario\n"
-"                        está completamente integrada con la aplicación de compras."
+"Al igual que con el flujo de ventas, la gestión de inventario de Odoo está "
+"completamente integrada con la aplicación de compras."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_linked_move_operation_ids
@@ -4149,8 +4241,9 @@ msgid ""
 "Odoo is able to run advanced traceability by using Product Lots and Serial\n"
 "                        Numbers, usually identified by bar codes stuck on the products."
 msgstr ""
-"Odoo es capaz de ejecutar la trazabilidad avanzada mediante el uso de Lotes/Series de productos\n"
-"                        Números, generalmente identificados por códigos de barras pegados en los productos"
+"Odoo es capaz de ejecutar la trazabilidad avanzada mediante el uso de "
+"Números de Lotes/Series de productos, generalmente identificados por códigos"
+" de barras pegados en los productos"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -4674,7 +4767,7 @@ msgstr "Albaranes"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Operaciones de picking"
+msgstr "Operaciones de albarán"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -5041,7 +5134,7 @@ msgid ""
 "scrap location, for reporting purposes."
 msgstr ""
 "Los productos desechados se eliminarán del stock y se trasladarán a una "
-"ubicación de chatarra específica con fines de reporting"
+"ubicación de chatarra específica con el fin de reportar"
 
 #. module: stock
 #: code:addons/stock/models/product.py:326
@@ -5332,8 +5425,7 @@ msgstr "¿Recalcular operación de empaquetado?"
 #. module: stock
 #: selection:stock.config.settings,group_stock_tracking_lot:0
 msgid "Record packages used on packing: pallets, boxes, ..."
-msgstr ""
-"Registra los paquetes utilizados en el empaquetado: paletas, cajas, ..."
+msgstr "Registra los paquetes utilizados en el empaquetado: palés, cajas, ..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_name
@@ -5752,7 +5844,7 @@ msgstr "Secuencia"
 #: code:addons/stock/models/stock_warehouse.py:658
 #, python-format
 msgid "Sequence in"
-msgstr "Secuencia en"
+msgstr " Secuencia recepciones"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:662
@@ -5764,7 +5856,7 @@ msgstr "Secuencia interna"
 #: code:addons/stock/models/stock_warehouse.py:659
 #, python-format
 msgid "Sequence out"
-msgstr "Secuencia out"
+msgstr " Secuencia entregas"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:660
@@ -7676,7 +7768,7 @@ msgstr "Sólo puede devolver albaranes ya procesados"
 #: code:addons/stock/models/stock_inventory.py:21
 #, python-format
 msgid "You must define a warehouse for the company: %s."
-msgstr ""
+msgstr "Debe definir un almacén para la empresa: %s."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:553
