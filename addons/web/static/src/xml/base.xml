@@ -971,7 +971,7 @@
         </button>
         <ul class="oe-measure-list dropdown-menu">
             <li t-foreach="measures" t-as="measure" t-att-data-field="measure[0]">
-                <a><t t-esc="measure[1].string"/></a>
+                <a><t t-esc="measure[1] &amp;&amp; measure[1].string || measure[0]"/></a>
             </li>
             <li class="divider"></li>
             <li data-field="__count__"><a>Quantity</a></li>
