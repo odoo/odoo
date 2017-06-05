@@ -22,6 +22,12 @@ class SaleOrder(models.Model):
     payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
     payment_tx_id = fields.Many2one('payment.transaction', string='Transaction', copy=False)
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
+    is_public_user = fields.Boolean(string="Is Public User", compute='_compute_is_public_user', store=True)
+
+    @api.depends('partner_id')
+    def _compute_is_public_user(self):
+        for sale in self:
+            sale.is_public_user = (sale.partner_id == self.env.ref('base.public_partner'))
 
     @api.multi
     @api.depends('website_order_line.product_uom_qty', 'website_order_line.product_id')
