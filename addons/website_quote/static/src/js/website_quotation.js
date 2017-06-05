@@ -113,7 +113,7 @@ if(!$('.o_website_quote').length) {
     });
 
     var accept_modal = new AcceptModal();
-    accept_modal.setElement($('#modalaccept'));
+    accept_modal.setElement($('#modalpayment'));
     accept_modal.start();
 
     // Nav Menu ScrollSpy
@@ -206,38 +206,28 @@ odoo.define('website_quote.payment_method', function (require) {
 
     require('website.website');
     var ajax = require('web.ajax');
+    var WebsiteQuotePayment = require('payment.payment_method');
 
-    if(!$('#payment_method').length) {
-        return $.Deferred().reject("DOM doesn't contain '#payment_method'");
-    }
+    WebsiteQuotePayment.include({
+        payment_transaction_action: function(acquirer_id, params){
+            // override this function as per controllers(route) of module wise
+            if($("#website_quote_payment").length){
+                var href = $(location).attr("href");
+                var order_id = href.match(/quote\/([0-9]+)/)[1];
+                var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
+                token = token ? token[1] : '';
+                ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
+                    $(data).appendTo('body').submit();
+                });
+            }
+            this._super(acquirer_id, params)
+        },
+    });
 
-    // dbo note: website_sale code for payment
-    // if we standardize payment somehow, this should disappear
-    // When choosing an acquirer, display its Pay Now button
-    var $payment = $("#payment_method");
-    $payment.on("click", "input[name='acquirer']", function (ev) {
-            var payment_id = $(ev.currentTarget).val();
-            $("div.oe_quote_acquirer_button[data-id]", $payment).addClass("hidden");
-            $("div.oe_quote_acquirer_button[data-id='"+payment_id+"']", $payment).removeClass("hidden");
-        })
-        .find("input[name='acquirer']:checked").click();
-
-    // When clicking on payment button: create the tx using json then continue to the acquirer
-    $('.oe_quote_acquirer_button').on("click", 'button[type="submit"],button[name="submit"]', function (ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      var $form = $(ev.currentTarget).parents('form');
-      var acquirer_id = $(ev.currentTarget).parents('.oe_quote_acquirer_button').first().data('id');
-      if (! acquirer_id) {
-        return false;
-      }
-      var href = $(location).attr("href");
-      var order_id = href.match(/quote\/([0-9]+)/)[1];
-      var token = href.match(/quote\/[0-9]+\/([^\/?]*)/);
-      token = token ? token[1] : '';
-      ajax.jsonRpc('/quote/' + order_id +'/transaction/' + acquirer_id + (token ? '/' + token : ''), 'call', {}).then(function (data) {
-          $form.html(data);
-          $form.submit();
-      });
-   });
+     $(document).ready(function () {
+        if($("#website_quote_payment").length){
+            var website_quote_payment = new WebsiteQuotePayment();
+            website_quote_payment.attachTo($("#website_quote_payment"));
+        }
+    });
 });

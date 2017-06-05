@@ -81,12 +81,12 @@ tour.register('event_buy_tickets', {
         },
         {
             content: "Select `Wire Transfer` payment method",
-            trigger: '#payment_method label:contains(Wire Transfer) input',
+            trigger: '#website_sale_payment label:contains(Wire Transfer) input',
         },
         {
             content: "Pay",
-            extra_trigger: '#payment_method label:contains(Wire Transfer) input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            extra_trigger: '#website_sale_payment label:contains(Wire Transfer) input:checked',
+            trigger: '.o_acquirer_button .btn[type="submit"]:visible',
         },
         {
             content: "Last step",

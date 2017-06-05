@@ -3,7 +3,26 @@
 
 from odoo import http, _
 from odoo.http import request
+from odoo.exceptions import AccessError
 
+from odoo.addons.payment.controllers.main import Payment
+
+
+class Payment(Payment):
+
+    @http.route()
+    def pay(self, payment_request_id=None, token=None, pdf=None, **kwargs):
+        payment_request = self._get_invoice_payment_request(payment_request_id, token, **kwargs)
+        if not token:
+            try:
+                payment_request.invoice_id.check_access_rights('read')
+                payment_request.invoice_id.check_access_rule('read')
+            except AccessError:
+                return request.render("website.403")
+
+        if not payment_request:
+            return request.render("website.403")
+        return super(Payment, self).pay(payment_request_id=payment_request_id, token=token, pdf=pdf, **kwargs)
 
 class WebsitePayment(http.Controller):
     @http.route(['/my/payment_method'], type='http', auth="user", website=True)
@@ -90,3 +109,19 @@ class WebsitePayment(http.Controller):
             return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
+
+    @http.route(['/payment/transaction_token/confirm'], type='json', auth="public", website=True)
+    def payment_transaction_token_confirm(self, tx_id, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
+        if (tx and tx.payment_token_id and
+                tx.partner_id == tx.payment_request_id.partner_id):
+                return tx.validate_transaction_token('/payment/%s' % tx.payment_request_id.id)
+        return dict(success=False, error='Tx missmatch')
+
+    @http.route(['/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
+    def payment_transaction_token(self, tx_id, **kwargs):
+        tx = request.env['payment.transaction'].sudo().browse(int(tx_id))
+        if (tx and tx.payment_token_id and tx.partner_id == tx.payment_request_id.partner_id):
+            return request.render("website_payment.payment_token_form_confirm", dict(tx=tx, payment_request=tx.payment_request_id))
+        else:
+            return request.redirect("/payment/%s" % tx.payment_request_id.id, "?error=no_token_or_missmatch_tx")

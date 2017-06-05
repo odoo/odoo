@@ -22,7 +22,7 @@
     </template>
 
     <template id="payment_delivery" name="Delivery Costs" inherit_id="website_sale.payment">
-        <xpath expr="//div[@id='payment_method']" position="before">
+        <xpath expr="//div[@id='website_sale_payment']" position="before">
             <div t-if="deliveries" class="col-md-12 row" id="delivery_carrier">
                 <div class="col-lg-7 col-sm-8">
                 <h4>Choose a delivery method</h4>

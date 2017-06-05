@@ -60,26 +60,20 @@ class sale_quote(http.Controller):
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
+            'show_button_modal_cancel': True,
         }
 
         if order_sudo.require_payment or values['need_payment']:
-            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)]))
-            extra_context = {
-                'submit_class': 'btn btn-primary',
-                'submit_txt': _('Pay & Confirm')
+            render_values = {
+                'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                'type': 'form',
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                'partner_id': order_sudo.partner_id.id,
             }
-            values['buttons'] = {}
-            for acquirer in values['acquirers']:
-                values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
-                    '/',
-                    order_sudo.amount_total,
-                    order_sudo.pricelist_id.currency_id.id,
-                    values={
-                        'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                        'type': 'form',
-                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                        'partner_id': order_sudo.partner_id.id,
-                    })
+
+            values.update(order_sudo.with_context(submit_class="btn btn-primary", submit_txt=_('Pay & Confirm'))._prepare_payment_acquirer(values=render_values))
+            values['save_option'] = False
+
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
@@ -171,45 +165,22 @@ class sale_quote(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        PaymentTransaction = request.env['payment.transaction'].sudo()
-
         Order = request.env['sale.order'].sudo().browse(order_id)
         if not Order or not Order.order_line or acquirer_id is None:
             return request.redirect("/quote/%s" % order_id)
 
         # find an already existing transaction
-        Transaction = PaymentTransaction.search([('reference', '=', Order.name)])
-        if Transaction:
-            if Transaction.sale_order_id != Order or Transaction.state in ['error', 'cancel'] or Transaction.acquirer_id.id != acquirer_id:
-                Transaction = False
-            elif Transaction.state == 'draft':
-                Transaction.write({
-                    'amount': Order.amount_total,
-                })
-        if not Transaction:
-            Transaction = PaymentTransaction.create({
-                'acquirer_id': acquirer_id,
-                'type': Order._get_payment_type(),
-                'amount': Order.amount_total,
-                'currency_id': Order.pricelist_id.currency_id.id,
-                'partner_id': Order.partner_id.id,
-                'reference': PaymentTransaction.get_next_reference(Order.name),
-                'sale_order_id': Order.id,
+        Transaction = request.env['payment.transaction'].sudo().search([('reference', '=', Order.name)])
+        Transaction = Order._prepare_payment_transaction(acquirer_id, transaction=Transaction, token=token)
+
+        if not Transaction.callback_model_id:
+            Transaction.write({
                 'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', Order._name)], limit=1).id,
                 'callback_res_id': Order.id,
                 'callback_method': '_confirm_online_quote',
             })
-            request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
-
-            # update quotation
-            Order.write({
-                'payment_acquirer_id': acquirer_id,
-                'payment_tx_id': Transaction.id
-            })
-
-        return Transaction.acquirer_id.with_context(
-            submit_class='btn btn-primary',
-            submit_txt=_('Pay & Confirm')).render(
+        request.session['quote_%s_transaction_id' % Order.id] = Transaction.id
+        return Transaction.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=_('Pay & Confirm')).render(
             Transaction.reference,
             Order.amount_total,
             Order.pricelist_id.currency_id.id,
@@ -219,4 +190,5 @@ class sale_quote(http.Controller):
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
                 'partner_id': Order.partner_shipping_id.id or Order.partner_invoice_id.id,
                 'billing_partner_id': Order.partner_invoice_id.id,
-            })
+            },
+        )

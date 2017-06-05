@@ -712,26 +712,17 @@ class WebsiteSale(http.Controller):
             partner=order.partner_id.id,
             order=order,
             payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
+            show_button_modal_cancel=False,
+            save_option=True,
         )
 
-        acquirers = request.env['payment.acquirer'].search(
-            [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
-        )
-        values['acquirers'] = []
-        for acquirer in acquirers:
-            acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                '/',
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                values={
-                    'return_url': '/shop/payment/validate',
-                    'partner_id': shipping_partner_id,
-                    'billing_partner_id': order.partner_invoice_id.id,
-                }
-            )
-            acquirer.button = acquirer_button
-            values['acquirers'].append(acquirer)
-        values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
+        render_values = {
+            'return_url': '/shop/payment/validate',
+            'partner_id': shipping_partner_id,
+            'billing_partner_id': order.partner_invoice_id.id,
+        }
+        payment = order.with_context(submit_class="btn btn-primary", submit_txt=_("Pay Now"))._prepare_payment_acquirer(values=render_values)
+        values.update(payment)
 
         return values
 
@@ -766,18 +757,7 @@ class WebsiteSale(http.Controller):
                 tx.id == request.website.sale_get_transaction().id and
                 tx.payment_token_id and
                 tx.partner_id == tx.sale_order_id.partner_id):
-            try:
-                s2s_result = tx.s2s_do_transaction()
-                valid_state = 'authorized' if tx.acquirer_id.capture_manually else 'done'
-                if not s2s_result or tx.state != valid_state:
-                    return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
-                else:
-                    # Auto-confirm SO if necessary
-                    tx._confirm_so()
-                    return dict(success=True, url='/shop/payment/validate')
-            except Exception as e:
-                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
-                return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
+            return tx.with_context(auto_confirm=True).validate_transaction_token('/shop/payment/validate')
         return dict(success=False, error='Tx missmatch')
 
     @http.route(['/shop/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
@@ -801,7 +781,6 @@ class WebsiteSale(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        Transaction = request.env['payment.transaction'].sudo()
 
         # In case the route is called directly from the JS (as done in Stripe payment method)
         so_id = kwargs.get('so_id')
@@ -819,36 +798,9 @@ class WebsiteSale(http.Controller):
 
         # find an already existing transaction
         tx = request.website.sale_get_transaction()
-        if tx:
-            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
-                tx = False
-            elif token and tx.payment_token_id and token != tx.payment_token_id.id:
-                # new or distinct token
-                tx = False
-            elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total, type=tx_type))
-        if not tx:
-            tx_values = {
-                'acquirer_id': acquirer_id,
-                'type': tx_type,
-                'amount': order.amount_total,
-                'currency_id': order.pricelist_id.currency_id.id,
-                'partner_id': order.partner_id.id,
-                'partner_country_id': order.partner_id.country_id.id,
-                'reference': Transaction.get_next_reference(order.name),
-                'sale_order_id': order.id,
-            }
-            if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
-                tx_values['payment_token_id'] = token
+        tx = order._prepare_payment_transaction(acquirer_id, tx_type=tx_type, transaction=tx, token=token)
+        request.session['sale_transaction_id'] = tx.id
 
-            tx = Transaction.create(tx_values)
-            request.session['sale_transaction_id'] = tx.id
-
-        # update quotation
-        order.write({
-            'payment_acquirer_id': acquirer_id,
-            'payment_tx_id': request.session['sale_transaction_id']
-        })
         if token:
             return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 

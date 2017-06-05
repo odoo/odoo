@@ -201,7 +201,7 @@
                             </t>
                         </td>
                         <td>
-                          <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.residual}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span></a>
+                          <a t-if="invoice.state == 'open'" t-attf-href="/payment/#{invoice.payment_request_id.id}" alt="Pay Now" class="btn btn-xs btn-primary"><i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span></a>
                         </td>
                         <td><span t-field="invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                     </tr>
