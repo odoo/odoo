@@ -179,7 +179,7 @@ class event_event(models.Model):
         default=lambda self: self.env.user.company_id.partner_id)
 
     is_subscribed = fields.Boolean(string='Subscribed',
-        compute='_compute_subscribe')
+        compute='_compute_subscribe', store=True)
 
     @api.one
     @api.depends('registration_ids')
