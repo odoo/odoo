@@ -164,7 +164,7 @@ class WebsiteSurvey(http.Controller):
                                                                'token': token,
                                                                'user_input': user_input})
         elif user_input.state == 'skip':
-            flag = (True if prev and prev == 'prev' else False)
+            flag = (True if prev and prev == 'prev' else user_input.reverse) 
             page, page_nr, last = survey_obj.next_page(cr, uid, user_input, user_input.last_displayed_page_id.id, go_back=flag, context=context)
 
             #special case if you click "previous" from the last page, then leave the survey, then reopen it from the URL, avoid crash
@@ -279,7 +279,7 @@ class WebsiteSurvey(http.Controller):
 
             go_back = post['button_submit'] == 'previous'
             next_page, _, last = survey_obj.next_page(cr, uid, user_input, page_id, go_back=go_back, context=context)
-            vals = {'last_displayed_page_id': page_id}
+            vals = {'last_displayed_page_id': page_id, 'reverse': go_back}
             if next_page is None and not go_back:
                 vals.update({'state': 'done'})
             else:
