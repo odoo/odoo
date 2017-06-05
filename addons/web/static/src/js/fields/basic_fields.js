@@ -1771,7 +1771,7 @@ var FieldToggleBoolean = AbstractField.extend({
 });
 
 var JournalDashboardGraph = AbstractField.extend({
-    className: "o_dashboard_graph",
+    template: "KanbanGraph",
     init: function () {
         this._super.apply(this, arguments);
         this.graph_type = this.attrs.graph_type;
@@ -1815,10 +1815,9 @@ var JournalDashboardGraph = AbstractField.extend({
         this.$el.empty();
         this.chart = null;
         nv.addGraph(function () {
-            self.$svg = self.$el.append('<svg>');
             switch (self.graph_type) {
                 case "line":
-                    self.$svg.addClass('o_graph_linechart');
+                    self.$el.addClass('o_graph_linechart');
 
                     self.chart = nv.models.lineChart();
                     self.chart.forceY([0]);
@@ -1849,7 +1848,7 @@ var JournalDashboardGraph = AbstractField.extend({
                     break;
 
                 case "bar":
-                    self.$svg.addClass('o_graph_barchart');
+                    self.$el.addClass('o_graph_barchart');
 
                     self.chart = nv.models.discreteBarChart()
                         .x(function (d) { return d.label; })
