@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_partner_form_inherit_l10n_co">
+        <field name="name">res.partner.l10n_co.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="before">
+                <field name="l10n_co_document_type"/>
+            </field>
+            <field name="vat" position="after">
+                <field name="l10n_co_verification_code"/>
+            </field>
+        </field>
+    </record>
+</odoo>
