@@ -773,12 +773,14 @@ class one2many(_column):
         domain = self._domain(obj) if callable(self._domain) else self._domain
         domain = domain + [(inverse, 'in', ids)]
         records = comodel.search(domain, limit=self._limit)
+        records = records.with_context(prefetch_fields=False)\
+            .read([inverse], load='_classic_write')
 
         result = {id: [] for id in ids}
         # read the inverse of records without prefetching other fields on them
-        for record in records.with_context(prefetch_fields=False):
+        for record in records:
             # record[inverse] may be a record or an integer
-            result[int(record[inverse])].append(record.id)
+            result[int(record[inverse])].append(record['id'])
 
         return result
 
