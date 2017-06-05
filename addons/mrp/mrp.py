@@ -384,7 +384,7 @@ class mrp_bom(osv.osv):
 
 class mrp_bom_line(osv.osv):
     _name = 'mrp.bom.line'
-    _order = "sequence"
+    _order = "sequence,id"
     _rec_name = "product_id"
 
     def _get_child_bom_lines(self, cr, uid, ids, field_name, arg, context=None):
