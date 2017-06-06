@@ -3736,7 +3736,7 @@ QUnit.module('Views', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
         assert.strictEqual(form.$('input[name="foo"]')[0].selectionStart, 3,
             "cursor should be at the end");
@@ -3758,7 +3758,25 @@ QUnit.module('Views', {
             res_id: 1,
         });
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
+
+        form.destroy();
+    });
+
+    QUnit.test('in create mode, autofocus fields are focused', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="foo" default_focus="1"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
 
         form.destroy();
@@ -3783,6 +3801,24 @@ QUnit.module('Views', {
         });
 
         form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus first visible field', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field" invisible="1"/>' +
+                        '<field name="foo"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
 
         form.destroy();
     });

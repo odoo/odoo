@@ -176,8 +176,8 @@ var AbstractField = Widget.extend({
      *                    focusable element was not found or invisible
      */
     activate: function (options) {
-        var $focusable = this.getFocusableElement();
-        if ($focusable.length && $focusable.is(':visible')) {
+        if (this.isFocusable()) {
+            var $focusable = this.getFocusableElement();
             $focusable.focus();
             if ($focusable.is('input[type="text"], textarea')) {
                 $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
@@ -210,6 +210,15 @@ var AbstractField = Widget.extend({
      */
     getFocusableElement: function () {
         return $();
+    },
+    /**
+     * Returns true iff the widget has a visible element that can take the focus
+     *
+     * @returns {boolean}
+     */
+    isFocusable: function () {
+        var $focusable = this.getFocusableElement();
+        return $focusable.length && $focusable.is(':visible');
     },
     /**
      * this method is used to determine if the field value is set to a meaningful

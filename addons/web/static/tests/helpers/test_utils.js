@@ -13,6 +13,7 @@ odoo.define('web.test_utils', function (require) {
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
@@ -172,7 +173,14 @@ function createAsyncView(params) {
             widget.destroy();
             $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
-        return view.appendTo($view_manager).then(function () {
+        // render the view in a fragment as they must be able to render correctly
+        // without being in the DOM
+        var fragment = document.createDocumentFragment();
+        return view.appendTo(fragment).then(function () {
+            dom.append($view_manager, fragment, {
+                callbacks: [{widget: view}],
+                in_DOM: true,
+            });
             view.$el.on('click', 'a', function (ev) {
                 ev.preventDefault();
             });
