@@ -77,11 +77,11 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                             'invoice_id': line.invoice.id})
 
             statement_line_obj.create(cr, uid, {
-                'name': line.name or '?',
+                'name': line.ref or line.invoice.number or line.name or '?',
                 'amount': amount,
                 'partner_id': line.partner_id.id,
                 'statement_id': statement_id,
-                'ref': line.ref,
+                'ref': line.invoice.number if line.ref else '',
                 'date': statement.date,
                 'amount_currency': line.amount_currency,
                 'currency_id': line.currency_id.id,
