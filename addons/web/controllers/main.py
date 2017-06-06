@@ -706,7 +706,7 @@ class Database(http.Controller):
             dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
-            error = "Database restore error: %s" % repr(e)
+            error = "Database restore error: %r" % e
             return self._render_template(error=error)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
