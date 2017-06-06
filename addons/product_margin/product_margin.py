@@ -73,7 +73,7 @@ class product_product(osv.osv):
 
             #Cost price is calculated afterwards as it is a property
             sqlstr="""select
-                    sum(l.price_unit * l.quantity)/sum(nullif(l.quantity,0)) as avg_unit_price,
+                    sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
                     sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
                     sum(l.quantity * pt.list_price) as sale_expected

@@ -4,6 +4,7 @@
 from openerp import http
 from openerp.tools import config
 from openerp.addons.web.controllers import main as web
+from openerp.addons.hw_posbox_homepage.controllers import main as homepage
 
 import logging
 import netifaces as ni
@@ -16,6 +17,14 @@ self_port = str(config['xmlrpc_port'] or 8069)
 
 _logger = logging.getLogger(__name__)
 
+class Homepage(homepage.PosboxHomepage):
+
+    def get_hw_screen_message(self):
+        return """
+<p>
+If you need to display the current customer basket on another device, you can do it <a href='/point_of_sale/display'>here</a>.
+</p>
+"""
 
 class HardwareScreen(web.Home):
 
