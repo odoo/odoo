@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="mrp_workorder_assets_backend" name="mrp_workorder assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/mrp_workorder/static/src/js/mrp_workorder.js"></script>
+            <script type="text/javascript" src="/mrp_workorder/static/src/js/stock_traceability_report_backend.js"></script>
+            <script type="text/javascript" src="/mrp_workorder/static/src/js/stock_traceability_report_widgets.js"></script>
+            <link rel="stylesheet" href="/mrp_workorder/static/src/less/stock_traceability_report.less" />
+        </xpath>
+   </template>
+
+</odoo>
