@@ -233,6 +233,9 @@ options.registry.carousel = options.registry.slider.extend({
                 s_option.$target = self.$target.find(".item.active");
                 s_option.set_active();
                 s_option.$target.trigger("snippet-option-change", [s_option]);
+                if (opt_name === 'background') {
+                    s_option.bind_bg_events();
+                }
             });
         });
         this.$target.trigger('slid.bs.carousel');
@@ -347,7 +350,6 @@ options.registry.parallax = options.Class.extend({
     _refresh: function () {
         _.defer((function () {
             this.$target.data("snippet-view")._rebuild();
-            this._update_target_to_bg();
         }).bind(this));
     },
     _toggle_refresh_callback: function (on) {
