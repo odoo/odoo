@@ -2172,8 +2172,8 @@ class MailThread(models.AbstractModel):
         :param new_res_id : the new res_id of the mail.message
         :param new_model : the name of the new model of the mail.message
 
-        Example :   my_lead.message_change_thread(my_project_issue)
-                    will transfer the context of the thread of my_lead to my_project_issue
+        Example :   my_lead.message_change_thread(my_project_task)
+                    will transfer the context of the thread of my_lead to my_project_task
         """
         self.ensure_one()
         # get the subtype of the comment Message
