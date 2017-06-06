@@ -1273,6 +1273,7 @@
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <field name="id" invisible="1"/>
                         <div class="oe_button_box">
                             <button name="open_reconcile_view"
                                 class="oe_stat_button"
@@ -1287,7 +1288,7 @@
                     <group>
                         <group>
                             <field name="date"/>
-                            <field name="ref"/>
+                            <field name="ref" attrs="{'required': [('id', '==', False)]}"/>
                         </group>
                         <group>
                             <field name="journal_id" options="{'no_open': True, 'no_create': True}"/>
