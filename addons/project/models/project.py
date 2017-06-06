@@ -418,6 +418,35 @@ class Task(models.Model):
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
+    # Computed field about working time elapsed between record creation and assignation/closing.
+    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign the task', store=True, group_operator="avg")
+    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close the task', store=True, group_operator="avg")
+    working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign the task', store=True, group_operator="avg")
+    working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close the task', store=True, group_operator="avg")
+
+    @api.multi
+    @api.depends('create_date', 'date_end', 'date_assign')
+    def _compute_elapsed(self):
+        task_linked_to_calendar = self.filtered(
+            lambda task: task.project_id.resource_calendar_id and task.create_date
+        )
+        for task in task_linked_to_calendar:
+            dt_create_date = fields.Datetime.from_string(task.create_date)
+
+            if task.date_assign:
+                dt_date_assign = fields.Datetime.from_string(task.date_assign)
+                task.working_hours_open = task.project_id.resource_calendar_id.get_work_hours_count(
+                        dt_create_date, dt_date_assign, False, compute_leaves=True)
+                task.working_days_open = task.working_hours_open / 24.0
+
+            if task.date_end:
+                dt_date_end = fields.Datetime.from_string(task.date_end)
+                task.working_hours_close = task.project_id.resource_calendar_id.get_work_hours_count(
+                    dt_create_date, dt_date_end, False, compute_leaves=True)
+                task.working_days_close = task.working_hours_close / 24.0
+
+        (self - task_linked_to_calendar).update(dict.fromkeys(
+            ['working_hours_open', 'working_hours_close', 'working_days_open', 'working_days_close'], 0.0))
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
