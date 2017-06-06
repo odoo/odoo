@@ -54,19 +54,6 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="workflow">
-        <rng:element name="workflow">
-            <rng:attribute name="model" />
-            <rng:attribute name="action"/>
-            <rng:optional><rng:attribute name="uid"/></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:choice>
-                <rng:attribute name="ref" />
-                <rng:ref name="value"/>
-            </rng:choice>
-        </rng:element>
-    </rng:define>
-
     <rng:define name="report">
         <rng:element name="report">
             <rng:optional><rng:attribute name="id"/></rng:optional>
@@ -334,7 +321,6 @@
                     <rng:ref name="url" />
                     <rng:ref name="assert" />
                     <rng:ref name="report" />
-                    <rng:ref name="workflow" />
                     <rng:ref name="function" />
                     <rng:ref name="ir_set" />
                 </rng:choice>
