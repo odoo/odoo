@@ -117,6 +117,8 @@ class AccountChartTemplate(models.Model):
     property_stock_account_input_categ_id = fields.Many2one('account.account.template', string="Input Account for Stock Valuation", oldname="property_stock_account_input_categ")
     property_stock_account_output_categ_id = fields.Many2one('account.account.template', string="Output Account for Stock Valuation", oldname="property_stock_account_output_categ")
     property_stock_valuation_account_id = fields.Many2one('account.account.template', string="Account Template for Stock Valuation")
+    add_trailing_zeros = fields.Boolean('Do accounts need trailing zeros ?', default=True)
+
 
     @api.one
     def try_loading_for_current_company(self):
@@ -388,7 +390,7 @@ class AccountChartTemplate(models.Model):
             code_main = account_template.code and len(account_template.code) or 0
             code_acc = account_template.code or ''
             if code_main > 0 and code_main <= code_digits:
-                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+                code_acc = str(code_acc) + (str('0' * (code_digits - code_main))) if self.add_trailing_zeros else code_acc
             vals = self._get_account_vals(company, account_template, code_acc, tax_template_ref)
             new_account = self.create_record_with_xmlid(company, account_template, 'account.account', vals)
             acc_template_ref[account_template.id] = new_account
