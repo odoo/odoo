@@ -769,6 +769,19 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
+    def _message_post_after_hook(self, message):
+        if self.email_from and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email_from', '=', new_partner.email),
+                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+        return super(Task, self)._message_post_after_hook(message)
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
