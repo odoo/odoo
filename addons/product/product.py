@@ -1163,7 +1163,10 @@ class product_product(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
-            context={}
+            context = {}
+
+        if default is None:
+            default = {}
 
         if default is None:
             default = {}
