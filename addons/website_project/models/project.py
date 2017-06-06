@@ -47,6 +47,15 @@ class Task(models.Model):
 
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
+    attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
+                                     help="Attachment that don't come from message.")
+
+    def _compute_attachment_ids(self):
+        for task in self:
+            attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
+            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
+
     def _compute_website_url(self):
         for task in self:
             task.website_url = '/my/task/%s' % task.id
