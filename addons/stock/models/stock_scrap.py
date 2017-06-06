@@ -66,6 +66,12 @@ class StockScrap(models.Model):
         scrap.do_scrap()
         return scrap
 
+    @api.multi
+    def unlink(self):
+        if 'done' in self.mapped('state'):
+            raise UserError(_('You cannot delete a scrap which is done.'))
+        return super(StockScrap, self).unlink()
+
     def _get_origin_moves(self):
         return self.picking_id and self.picking_id.move_lines.filtered(lambda x: x.product_id == self.product_id)
 
