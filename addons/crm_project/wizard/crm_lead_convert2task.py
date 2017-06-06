@@ -2,32 +2,32 @@
 from odoo import api, fields, models
 
 
-class CrmLeadToProjectIssueWizard(models.TransientModel):
-    """ wizard to convert a Lead into a Project Issue and move the Mail Thread """
+class CrmLeadConvert2Task(models.TransientModel):
+    """ wizard to convert a Lead into a Project task and move the Mail Thread """
 
-    _name = "crm.lead2projectissue.wizard"
+    _name = "crm.lead.convert2task"
     _inherit = 'crm.partner.binding'
 
     @api.model
     def default_get(self, fields):
-        result = super(CrmLeadToProjectIssueWizard, self).default_get(fields)
+        result = super(CrmLeadConvert2Task, self).default_get(fields)
         lead_id = self.env.context.get('active_id')
         if lead_id:
             result['lead_id'] = lead_id
         return result
 
     lead_id = fields.Many2one('crm.lead', string='Lead', domain=[('type', '=', 'lead')])
-    project_id = fields.Many2one('project.project', string='Project', domain=[('use_issues', '=', True)])
+    project_id = fields.Many2one('project.project', string='Project', domain=[('use_tasks', '=', True)])
 
     @api.multi
-    def action_lead_to_project_issue(self):
+    def action_lead_to_project_task(self):
         self.ensure_one()
         # get the lead to transform
         lead = self.lead_id
         partner_id = self._find_matching_partner()
         if not partner_id and (lead.partner_name or lead.contact_name):
             partner_id = lead.handle_partner_assignation()[lead.id]
-        # create new project.issue
+        # create new project.task
         vals = {
             "name": lead.name,
             "description": lead.description,
@@ -36,23 +36,23 @@ class CrmLeadToProjectIssueWizard(models.TransientModel):
             "partner_id": partner_id,
             "user_id": None
         }
-        issue = self.env['project.issue'].create(vals)
+        task = self.env['project.task'].create(vals)
         # move the mail thread
-        lead.message_change_thread(issue)
+        lead.message_change_thread(task)
         # move attachments
         attachments = self.env['ir.attachment'].search([('res_model', '=', 'crm.lead'), ('res_id', '=', lead.id)])
-        attachments.write({'res_model': 'project.issue', 'res_id': issue.id})
+        attachments.write({'res_model': 'project.task', 'res_id': task.id})
         # archive the lead
         lead.write({'active': False})
-        # return the action to go to the form view of the new Issue
-        view = self.env.ref('project_issue.project_issue_form_view')
+        # return the action to go to the form view of the new Task
+        view = self.env.ref('project.view_task_form2')
         return {
-            'name': 'Issue created',
+            'name': 'Task created',
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': view.id,
-            'res_model': 'project.issue',
+            'res_model': 'project.task',
             'type': 'ir.actions.act_window',
-            'res_id': issue.id,
+            'res_id': task.id,
             'context': self.env.context
         }
