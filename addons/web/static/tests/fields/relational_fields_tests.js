@@ -363,6 +363,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one searches with correct value', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.step('search: ' + args.kwargs.name);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'aaa',
+            "should be initially set to 'aaa'");
+
+        form.$('.o_field_many2one input').click(); // should search with ''
+        // unset the many2one -> should search again with ''
+        form.$('.o_field_many2one input').val('').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            // write 'p' -> should search with 'p'
+            form.$('.o_field_many2one input').val('p').trigger('keydown').trigger('keyup');
+
+            return concurrency.delay(0);
+        }).then(function () {
+            // close and re-open the dropdown -> should search with 'p' again
+            form.$('.o_field_many2one input').click();
+            form.$('.o_field_many2one input').click();
+
+            assert.verifySteps(['search: ', 'search: ', 'search: p', 'search: p']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('many2one field with option always_reload', function (assert) {
         assert.expect(4);
         var count = 0;
@@ -955,6 +1007,62 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(form.$('span.o_row_handle').length, 1, "should have 1 handles");
+        form.destroy();
+    });
+
+    QUnit.test('embedded one2many with handle widget', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="p">' +
+                                    '<tree default_order="int_field">' +
+                                        '<field name="int_field" widget="handle"/>' +
+                                        '<field name="foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        testUtils.intercept(form, "field_changed", function (event) {
+            assert.step(event.data.changes.p.data.int_field.toString());
+        }, true);
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should have the 3 rows in the correct order")
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should still have the 3 rows in the correct order")
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.verifySteps(["0", "1", "2"],
+            "sequences values should be incremental starting from the previous minimum one");
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should have the 3 rows in the new order")
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should still have the 3 rows in the new order")
+
         form.destroy();
     });
 
@@ -2000,7 +2108,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many and onchange (with date)', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.onchanges = {
             date: function (obj) {}
@@ -2036,7 +2144,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read']);
+        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
         form.destroy();
     });
 

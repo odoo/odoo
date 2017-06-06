@@ -342,12 +342,13 @@ ListRenderer.include({
      */
     _renderBody: function () {
         var $body = this._super();
-        if (this.mode === 'edit' && this.hasHandle) {
+        if (this.hasHandle) {
             $body.sortable({
                 axis: 'y',
                 items: '> tr.o_data_row',
                 helper: 'clone',
                 handle: '.o_row_handle',
+                stop: this._resequence.bind(this),
             });
         }
         return $body;
@@ -398,6 +399,28 @@ ListRenderer.include({
     _renderView: function () {
         this.currentRow = null;
         return this._super.apply(this, arguments);
+    },
+    /**
+     * Force the resequencing of the items in the list.
+     *
+     * @private
+     * @param {jQuery.Event} event
+     * @param {Object} ui jqueryui sortable widget
+     */
+    _resequence: function (event, ui) {
+        var self = this;
+        var movedRecordID = ui.item.data('id');
+        var rowIDs = _.pluck(this.state.data, 'id');
+        rowIDs = _.without(rowIDs, movedRecordID)
+        rowIDs.splice(ui.item.index(), 0, movedRecordID);
+        var sequences = _.map(this.state.data, function(record) {
+            return record.data[self.handleField];
+        })
+        this.trigger_up('resequence', {
+            rowIDs: rowIDs,
+            offset: _.min(sequences),
+            handleField: this.handleField,
+        });
     },
     /**
      * This is one of the trickiest method in the editable renderer.  It has to

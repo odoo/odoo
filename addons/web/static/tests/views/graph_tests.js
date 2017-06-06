@@ -251,6 +251,99 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('getContext correctly returns mode, measure and groupbys', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph string="Gloups">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+        return concurrency.delay(0).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'bar',
+                graph_measure: '__count__',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.$buttons.find('li[data-field="foo"] a').click(); // change measure
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'bar',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.$buttons.find('button[data-mode="line"]').click(); // change mode
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'line',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id'],
+            }, "context should be correct");
+
+            graph.update({groupBy: ['product_id', 'color_id']}); // change groupbys
+
+            return concurrency.delay(0);
+        }).then(function () {
+            assert.deepEqual(graph.getContext(), {
+                graph_mode: 'line',
+                graph_measure: 'foo',
+                graph_groupbys: ['product_id', 'color_id'],
+            }, "context should be correct");
+
+            graph.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('correctly uses graph_ keys from the context', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        var graph = createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph><field name="product_id"/></graph>',
+            viewOptions: {
+                context: {
+                    graph_measure: 'foo',
+                    graph_mode: 'line',
+                    graph_groupbys: ['color_id'],
+                },
+            },
+        });
+        return concurrency.delay(0).then(function () {
+            // check measure
+            assert.strictEqual(graph.$('text.nv-legend-text:contains(Foo)').length, 1,
+                "should now use the 'foo' measure");
+
+            // check mode
+            assert.strictEqual(graph.renderer.state.mode, "line", "should be in line chart mode");
+            assert.notOk(graph.$buttons.find('button[data-mode="bar"]').hasClass('active'),
+                'bar chart button should not be active');
+            assert.ok(graph.$buttons.find('button[data-mode="line"]').hasClass('active'),
+                'line chart button should be active');
+
+            // check groupbys
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 0,
+                        "should not contain a text element with product in legend");
+            assert.strictEqual(graph.$('text:contains(red)').length, 1,
+                        "should contain a text element with color in legend");
+
+            graph.destroy();
+            done();
+        });
+    });
 });
 
 });

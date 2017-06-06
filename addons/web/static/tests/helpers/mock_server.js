@@ -95,19 +95,7 @@ var MockServer = Class.extend({
         if (logLevel === 2) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
         }
-        var def;
-        try {
-            def = this._performRpc(route, args);
-        } catch (e) {
-            var error = {code: 200, data: {}, message: e.message};
-            if (logLevel === 1) {
-                console.warn('Mock: ' + route, error.message);
-            } else if (logLevel === 2) {
-                console.warn('%c[rpc] error response:', 'color: blue; font-weight: bold;', error.message);
-            }
-            return $.Deferred().reject(error, $.Event());
-        }
-        return def.then(function (result) {
+        return this._performRpc(route, args).then(function (result) {
             var resultString = JSON.stringify(result || false);
             if (logLevel === 1) {
                 console.log('Mock: ' + route, JSON.parse(resultString));
@@ -196,6 +184,9 @@ var MockServer = Class.extend({
                 // 'transfer_field_to_modifiers' simulation
                 var field = fields[node.attrs.name];
 
+                if (!field) {
+                    throw new Error("Field " + node.attrs.name + " does not exist");
+                }
                 var defaultValues = {};
                 var stateExceptions = {};
                 _.each(modifiersNames, function (attr) {
@@ -951,7 +942,7 @@ var MockServer = Class.extend({
                 continue;
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
-                var ids = [];
+                var ids = _.clone(record[field_changed]) || [];
                 // convert commands
                 _.each(value, function (command) {
                     if (command[0] === 0) { // CREATE
@@ -960,8 +951,11 @@ var MockServer = Class.extend({
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
+                        ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
-                        ids.push(command[1]);
+                        if (!_.contains(ids, command[1])) {
+                            ids.push(command[1]);
+                        }
                     } else if (command[0] === 5) { // DELETE ALL
                         ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH

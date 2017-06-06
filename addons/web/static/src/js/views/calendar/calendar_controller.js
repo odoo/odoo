@@ -170,12 +170,12 @@ var CalendarController = AbstractController.extend({
 
         var context = _.extend({}, this.context, event.options && event.options.context);
         context.default_name = data.name || null;
-        context['default_' + this.mapping.date_start] = data.start || null;
+        context['default_' + this.mapping.date_start] = data[this.mapping.date_start] || null;
         if (this.mapping.date_stop) {
-            context['default_' + this.mapping.date_stop] = data.stop || null;
+            context['default_' + this.mapping.date_stop] = data[this.mapping.date_stop] || null;
         }
         if (this.mapping.date_delay) {
-            context['default_' + this.mapping.date_delay] = data.duration || null;
+            context['default_' + this.mapping.date_delay] = data[this.mapping.date_delay] || null;
         }
         if (this.mapping.all_day) {
             context['default_' + this.mapping.all_day] = data[this.mapping.all_day] || null;

@@ -126,7 +126,7 @@ class Track(models.Model):
             vals['kanban_state'] = 'normal'
         res = super(Track, self).write(vals)
         if vals.get('partner_id'):
-            self.message_subscribe(vals['partner_id'])
+            self.message_subscribe([vals['partner_id']])
         return res
 
     @api.model
