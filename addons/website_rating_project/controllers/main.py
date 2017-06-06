@@ -15,7 +15,7 @@ class WebsiteRatingProject(http.Controller):
     def index(self, **kw):
         projects = request.env['project.project'].sudo().search([('rating_status', '!=', 'no'), ('website_published', '=', True)])
         values = {'projects': projects}
-        return request.render('website_rating_project_issue.index', values)
+        return request.render('website_rating_project.index', values)
 
     @http.route(['/project/rating/<int:project_id>'], type='http', auth="public", website=True)
     def page(self, project_id=None, **kw):
@@ -28,12 +28,11 @@ class WebsiteRatingProject(http.Controller):
         values = {
             'project': project,
             'task_data': self._calculate_rating(project.id, "project.task"),
-            'issue_data': self._calculate_rating(project.id, "project.issue"),
         }
-        return request.render('website_rating_project_issue.project_rating_page', values)
+        return request.render('website_rating_project.project_rating_page', values)
 
     def _calculate_rating(self, project_id, model_name):
-        # Calculate rating for Tasks and Issues
+        # Calculate rating for Tasks
         records = request.env[model_name].sudo().search([('project_id', '=', project_id)])
         domain = [('res_model', '=', model_name), ('res_id', 'in', records.ids), ('consumed', '=', True)]
         ratings = request.env['rating.rating'].search(domain, order="id desc", limit=100)
