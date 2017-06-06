@@ -353,7 +353,7 @@ class Channel(models.Model):
                                           .with_context(active_test=False)
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
-                                          .read(['id', 'name', 'im_status', 'last_seen']))
+                                          .read(['id', 'name', 'im_status']))
 
             last_message = channel.channel_fetch_preview()
             if last_message:

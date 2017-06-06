@@ -44,7 +44,6 @@ return Widget.extend({
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
         this.isMobile = config.isMobile;
-        this.lastSeenOn = this.options.last_seen_on;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -81,17 +80,14 @@ return Widget.extend({
      * user status with last seen and render header again.
      *
      * @param {string} status
-     * @param {string} last_seen_on
      */
-    update_status: function (status, last_seen_on) {
+    update_status: function (status) {
         this.status = status;
-        this.lastSeenOn = last_seen_on;
         this.render_header();
     },
     render_header: function () {
         this.$header.html(QWeb.render('mail.ChatWindowHeaderContent', {
             status: this.status,
-            lastSeenOn: this.lastSeenOn,
             title: this.title,
             isMobile: this.isMobile,
             unread_counter: this.unread_msgs,
