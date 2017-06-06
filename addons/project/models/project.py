@@ -688,7 +688,16 @@ class Task(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Override to updates the document according to the email. """
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        create_context = dict(self.env.context or {})
+        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
@@ -700,7 +709,7 @@ class Task(models.Model):
         }
         defaults.update(custom_values)
 
-        task = super(Task, self).message_new(msg, custom_values=defaults)
+        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
         task.message_subscribe(partner_ids)
