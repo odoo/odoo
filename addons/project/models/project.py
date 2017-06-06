@@ -692,7 +692,7 @@ class Task(models.Model):
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name': msg.get('subject'),
+            'name': msg.get('subject') or _("No Subject"),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'planned_hours': 0.0,
