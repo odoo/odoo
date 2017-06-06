@@ -327,8 +327,12 @@ class MrpProduction(models.Model):
             return self.env['stock.move']
         if bom_line.product_id.type not in ['product', 'consu']:
             return self.env['stock.move']
-        if self.bom_id.routing_id and self.bom_id.routing_id.location_id:
-            source_location = self.bom_id.routing_id.location_id
+        if self.routing_id:
+            routing = self.routing_id
+        else:
+            routing = self.bom_id.routing_id
+        if routing and routing.location_id:
+            source_location = routing.location_id
         else:
             source_location = self.location_src_id
         original_quantity = self.product_qty - self.qty_produced

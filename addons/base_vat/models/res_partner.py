@@ -114,7 +114,7 @@ class ResPartner(models.Model):
                 country_code = partner.commercial_partner_id.country_id.code
                 if country_code:
                     if not check_func(country_code.lower(), partner.vat):
-                        msg = self._construct_constraint_msg(country_code.lower())
+                        msg = partner._construct_constraint_msg(country_code.lower())
                         raise ValidationError(msg)
 
     def _construct_constraint_msg(self, country_code):
