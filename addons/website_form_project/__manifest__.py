@@ -2,18 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Issues Form',
+    'name': 'Website Form - Project',
     'category': 'Project',
-    'summary': 'Create Issues From Contact Form',
+    'summary': 'Create Tasks From Contact Form',
     'version': '1.0',
     'description': """
 Odoo Contact Form
-====================
+=================
 
         """,
-    'depends': ['website_form', 'project_issue'],
+    'depends': ['website_form', 'project'],
     'data': [
-        'data/website_issue_data.xml',
+        'data/website_form_project_data.xml',
     ],
     'installable': True,
     'auto_install': True,
