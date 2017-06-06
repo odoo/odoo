@@ -1,11 +1,11 @@
-odoo.define('mrp_workorder.stock_report_generic', function (require) {
+odoo.define('stock.stock_report_generic', function (require) {
 'use strict';
 
 var core = require('web.core');
 var Widget = require('web.Widget');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
-var ReportWidget = require('mrp_workorder.ReportWidget');
+var ReportWidget = require('stock.ReportWidget');
 var framework = require('web.framework');
 var crash_manager = require('web.crash_manager');
 
