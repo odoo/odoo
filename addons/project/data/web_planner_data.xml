@@ -117,10 +117,10 @@
                 <t t-call="web_planner.page">
                     <t t-set="page_title">Your Projects</t>
                     <t t-set="page_menutitle" t-value="'Projects'"/>
-                    <p class="text-muted">Depending on what you need and how you want to operate, there are several ways to work with Odoo. First, decide if you want to think in terms of tasks or issues. Then, activate the Timesheets app if you need it.</p>
-                    <h4>1. Learn about Tasks, Issues and Timesheets.</h4>
+                    <p class="text-muted">Depending on what you need and how you want to operate, there are several ways to work with Odoo. First, decide if you want to think in terms of tasks. Then, activate the Timesheets app if you need it.</p>
+                    <h4>1. Learn about Tasks and Timesheets.</h4>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
@@ -138,24 +138,7 @@
                                     <p>Tasks are the main mechanism in Odoo and are activated by default.</p>
                                 </div>
                             </div>
-                        </div><div class="col-md-4">
-                            <div class="panel panel-success">
-                                <div class="panel-heading">
-                                    <span class="panel-title">
-                                        <span class="fa fa-exclamation-circle"></span>
-                                        <strong> Issues</strong>
-                                    </span>
-                                </div>
-                                <div class="panel-body">
-                                    <p>
-                                    <strong>A problem or request from a customer</strong> that needs to be identified, solved and followed up asap.</p>
-                                    <p><strong>Example: </strong></p>
-                                    <p>A customer sends a complaint to support@yourcompany.com: an Issue is automatically created into a 'Support level 1' project based on the original email from the customer.</p><br/>
-                                    <p>To use Issues, install the <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'project_issue')">Issue Tracking app.</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div><div class="col-md-4">
+                        </div><div class="col-md-6">
                             <div class="panel panel-success">
                                 <div class="panel-heading">
                                     <span class="panel-title">
@@ -171,9 +154,7 @@
                                     <li> <strong>Getting statistics</strong> on how much time a task takes to be completed</li>
                                     <li> <strong>Invoicing your customers</strong> on Time &amp; Material projects</li></p>
                                     <p>To use Timesheets, go to your <a t-att-href="prepare_backend_url(
-                                    'project.action_config_settings')">Project Settings</a> and activate:</p>
-                                    <p><li>for Tasks: 'Log work activities on tasks'</li>
-                                    <li>for Issues: 'Activate timesheets on issues'</li></p>
+                                    'project.action_config_settings')">Project Settings</a> and activate 'Log work activities on tasks'</p>
                                     <p>You can learn more about Timesheets in the 'Use Timesheets' section of this planner.</p>
                                 </div>
                             </div>
@@ -189,36 +170,26 @@
                             <li><span>#1</span>
                             <div class="small">
                                 <input id="input_element_prj1" value="" line="1" type="text"/>
-                                <input type="radio" id="input_element_rowtask1" name="row1" checked="checked"/>Tasks
-                                <input type="radio" id="input_element_rowissue1" name="row1"/>Issues
                                 <input type="checkbox" id="input_element_rowtime1" name="rowtime1"/>with Timesheet
                             </div></li>
                             <li><span>#2</span>
                             <div class="small">
                                 <input id="input_element_prj2" value="" line="1" type="text"/>
-                                <input type="radio" id="input_element_rowtask2" name="row2" checked="checked"/>Tasks
-                                <input type="radio" id="input_element_rowissue2" name="row2"/>Issues
                                 <input type="checkbox" id="input_element_rowtime2" name="rowtime2"/>with Timesheet
                             </div></li>
                             <li><span>#3</span>
                             <div class="small">
                                 <input id="input_element_prj3" value="" line="1" type="text"/>
-                                <input type="radio" id="input_element_rowtask3" name="row3" checked="checked"/>Tasks
-                                <input type="radio" id="input_element_rowissue3" name="row3"/>Issues
                                 <input type="checkbox" id="input_element_rowtime3" name="rowtime3"/>with Timesheet
                             </div></li>
                             <li><span>#4</span>
                             <div class="small">
                                 <input id="input_element_prj4" value="" line="1" type="text"/>
-                                <input type="radio" id="input_element_rowtask4" name="row4" checked="checked"/>Tasks
-                                <input type="radio" id="input_element_rowissue4" name="row4"/>Issues
                                 <input type="checkbox" id="input_element_rowtime4" name="rowtime4"/>with Timesheet
                             </div></li>
                             <li><span>#5</span>
                             <div class="small">
                                 <input id="input_element_prj5" value="" line="1" type="text"/>
-                                <input type="radio" id="input_element_rowtask5" name="row5" checked="checked"/>Tasks
-                                <input type="radio" id="input_element_rowissue5" name="row5"/>Issues
                                 <input type="checkbox" id="input_element_rowtime5" name="rowtime5"/>with Timesheet
                             </div></li>
                         </ul>
@@ -255,7 +226,7 @@
                     <t t-set="page_title">Kanban Stages</t>
                     <p class="text-muted">
                         It is time to think about how you will transform your activities into real projects in Odoo.<br/>
-                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects.
+                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects.
                     </p>
                     <div class="row">
                         <div class="o_planner_notebook_container col-md-12">
@@ -371,9 +342,9 @@
                 <t t-set="menu_categorytitle">Implement</t>
                 <t t-set="menu_categoryclasses" t-value="'fa-cogs'"/>
                 <t t-call="web_planner.page">
-                    <t t-set="page_title">Tasks &amp; Issues</t>
+                    <t t-set="page_title">Tasks</t>
                     <p class="text-muted">
-                        Creating Tasks and/or Issues is the next step in managing your Projects.<br/>
+                        Creating Tasks is the next step in managing your Projects.<br/>
                         In Odoo, it is pretty straightforward, but here are some explanations you may find useful.
                     </p>
                     <section>
@@ -390,7 +361,7 @@
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe075;"></span></div>
                                 <div class="col-sm-11 col-md-10">
                                     <p><strong>Add a Deadline</strong><br/>
-                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update.
+                                    The deadline will help you determine if a task is progressing as expected  and to anticipate its next update.
                                     </p>
                                 </div>
                             </div>
@@ -398,7 +369,7 @@
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe055;"></span></div>
                                 <div class="col-sm-11 col-md-10">
                                     <p><strong>Use Tags</strong><br/>
-                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks or Issues to manage. Also, it becomes very easy to find Tasks or Issues by typing  the Tag into the main Search bar.
+                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks to manage. Also, it becomes very easy to find Tasks by typing  the Tag into the main Search bar.
                                     </p>
                                 </div>
                             </div>
@@ -406,7 +377,7 @@
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe007;"></span></div>
                                 <div class="col-sm-11 col-md-10">
                                     <p><strong>Use Status Indicator</strong><br/>
-                                    The Status indicator helps you manage Tasks and Issues by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:
+                                    The Status indicator helps you manage Tasks by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:
                                     <li>Grey: the Task is in progress (someone is working on it)</li>
                                     <li>Green: the Task is ready for next stage (the job for this stage is complete)</li>
                                     <li>Red: the Task is blocked (there's a problem)</li></p>
@@ -417,7 +388,7 @@
                                 <div class="col-sm-1 col-md-2 icon"><span data-icon="&#xe017;"></span></div>
                                 <div class="col-sm-11 col-md-10">
                                     <p><strong>Set Priorities</strong><br/>
-                                    The <i class="fa fa-star"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab.
+                                    The <i class="fa fa-star"/> is used to indicate priority: in Kanban views, high priority Tasks will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab.
                                     </p>
                                 </div>
                             </div>
@@ -434,7 +405,7 @@
                         <div class="alert alert-info info_icon" role="alert">
                             <span class="fa fa-lightbulb-o fa-lg"/>
                             <p><strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>
-                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases.</p><br/>
+                            It replaces the standard Description area in Tasks and is extremely useful for several cases.</p><br/>
                             <p><li><strong>You have different users writing Tasks descriptions</strong><br/>
                             It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone.</li></p><br/>
                             <p><li><strong>You organize distant meetings</strong><br/>
@@ -480,7 +451,6 @@
                                             <a t-if="not is_module_installed('hr_timesheet')" t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'hr_timesheet')">Current Timesheet</a>
                                             view of the HR module is the main tool to check, modify and confirm Timesheets.</li><br/>
                                         <li>Alternatively, Timesheets can be added directly from Tasks by activating <strong>'Log work activities on tasks'</strong> in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li><br/>
-                                        <li>Or, if you are using Issues, by activating 'Activate timesheets on issues', also in the <a t-att-href="prepare_backend_url('project.action_config_settings')">Project Settings</a>.</li>
                                     </div>
                                 </div>
                             </div>
@@ -528,7 +498,7 @@
                         </div>
                         <h3><strong>Invoice your customers</strong> (every month)</h3>
                         <p>
-                        If you work on a Time &amp; Material project, you'll probably want to extract a Timesheet of the tasks and issues to invoice directly to the customer. To do that:
+                        If you work on a Time &amp; Material project, you'll probably want to extract a Timesheet of the tasks to invoice directly to the customer. To do that:
                         </p>
                         <ul>
                             <li> Activate 'Allow invoicing based on timesheets' from the <i>Human Resources Settings</i>.
@@ -536,21 +506,18 @@
                             <li> This will add an Invoice Tasks menu in the Project module, that can be used to select the Timesheet to invoice.</li>
                         </ul>
                         <h3><strong>Analyze reports</strong> (every a year)</h3>
-                        <p>It's usually a good idea to take time to analyze your tasks and issues once a year. Here are some KPIs you should take a look at. Ask yourself 'How can they be improved?'</p>
+                        <p>It's usually a good idea to take time to analyze your tasks once a year. Here are some KPIs you should take a look at. Ask yourself 'How can they be improved?'</p>
                         <p><strong>For tasks:</strong></p>
                         <ul>
                             <li>What is the number of missed deadlines?</li>
                             <li>What is the difference between initial time estimation and final time spent?</li>
-                        </ul>
-                        <p><strong>For issues:</strong></p>
-                        <ul>
-                            <li>What is the average time before an issue is assigned / closed?</li>
-                            <li>What is the average number of working hours necessary to close an issue?</li>
+                            <li>What is the average time before a task is assigned / closed?</li>
+                            <li>What is the average number of working hours necessary to close a task?</li>
                         </ul>
                         <p><strong>About Employees:</strong></p>
                         <ul>
                             <li>What is their average number of working hours over the year?</li>
-                            <li>What is their average number of tasks or issues worked on / closed?</li>
+                            <li>What is their average number of tasks worked on / closed?</li>
                         </ul>
                         <div class="well well-lg">
                             <strong>Need help with Timesheets management? Contact us now:</strong><br/>
@@ -601,7 +568,7 @@
                                             We can automate steps in your workflow, for example:
                                         </p>
                                         <li> Send an alert when a task is stuck in red for more than a few days</li>
-                                        <li> Send an automatic confirmation to all issue emails sent to your customer support</li>
+                                        <li> Send an automatic confirmation to all emails sent to your customer support</li>
                                     </div>
                                 </div>
                             </div>
@@ -823,12 +790,12 @@
                             <div class="col-md-7">
                                 <p>
                                     <strong>Follow only what you need</strong><br/>
-                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project.
+                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks of a project.
                                 </p>
                                 <p>
                                     Don't hesitate to select only the events you are interested in!
                                 </p>
-                                <p>Another good way to limit the number of notifications you receive is to only follow your Project's 'Task Assigned' events.  Then you'll be notified when a Task or Issue is created, and can  manually decide if you want to be notified for its other events too.</p>
+                                <p>Another good way to limit the number of notifications you receive is to only follow your Project's 'Task Assigned' events.  Then you'll be notified when a Task is created, and can  manually decide if you want to be notified for its other events too.</p>
                             </div>
                             <div class="col-md-3">
                                 <img class="signature" src="/project/static/src/img/web_planner_subtype.png" />
@@ -839,10 +806,10 @@
                             <div class="col-md-10">
                                 <p>
                                     <strong>Rely on the chatter</strong><br/>
-                                    Below every Task and Issue (or more generally, below every Document in Odoo) is an area called Chatter.
+                                    Below every Task (or more generally, below every Document in Odoo) is an area called Chatter.
                                 </p>
                                 <p>It's for logging every change, event or message related to the Document.</p>
-                                <p>So if you're looking for the history of a Task, or the latest message on an Issue, simply go to the corresponding Document and you'll find it!</p>
+                                <p>So if you're looking for the history of a Task, or the latest message on a Task, simply go to the corresponding Document and you'll find it!</p>
                             </div>
                         </div>
                         <div class="row">
@@ -864,10 +831,10 @@
                             <div class="col-md-2 icon"><span data-icon="&#xe01f;"></span></div>
                             <div class="col-md-10">
                                 <p>
-                                    <strong>Create tasks and issues by email</strong><br/>
-                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers.</p>
+                                    <strong>Create tasks by email</strong><br/>
+                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task in the first stage of the project, with all the email recipients as its default followers.</p>
                                 <p>
-                                    This is particularly useful to manage help and support: all incoming email  from customers will be transformed into an issue that you'll be able to track easily!
+                                    This is particularly useful to manage help and support: all incoming email  from customers will be transformed into a task that you'll be able to track easily!
                                 </p>
                             </div>
                             <p class="col-md-8 col-md-push-2">
@@ -902,7 +869,7 @@
                                     <strong>Ask participants to prepare</strong><br/>
                                 To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute.</p>
                                 <p>
-                                    For example, risk and issue owners should come prepared to share the status of their item and, ideally, a path to resolution.
+                                    For example, risk and task owners should come prepared to share the status of their item and, ideally, a path to resolution.
                                 </p>
                             </div>
                         </div>
@@ -924,7 +891,7 @@
                                     <strong>Start with an answer.</strong><br/>
                                 The worst question to ask is, "What did you do this week?" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week.</p>
                                 <p>
-                                    For example, risk and issue owners should come prepared to share the status of their item and, ideally, a path to resolution.
+                                    For example, risk and task owners should come prepared to share the status of their item and, ideally, a path to resolution.
                                 </p>
                                 <p>It is better to start with a "project answer", such as: "We are two weeks late", "We are at planned budget" or "We are 50% complete with the process model". Also if you can, start the meeting on a positive note, such as milestones that have been met or are ahead of schedule. This will make participants feel motivated to engage in the conversation.</p>
                             </div>
@@ -934,17 +901,17 @@
                             <div class="col-xs-12 col-md-10">
                                 <strong> Prepare an agenda (and keep to it)</strong>
                                 <p>Be aware of the team’s productivity and time: try to keep meetings to one hour or less.</p>
-                                <p>Use separate meetings to solve big issues or issues that aren’t important for the entire team.</p>
+                                <p>Use separate meetings to solve big tasks or tasks that aren’t important for the entire team.</p>
                                 <p><li><strong> Roll call (5 min)</strong>
                                 Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later.</li>
-                                <li><strong> New business issues (5 min)</strong>
-                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum.</li>
+                                <li><strong> New business tasks (5 min)</strong>
+                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  task as you walk through the project status session. Not every task warrants spending time here, so keep discussions to a minimum.</li>
                                 <li><strong> Project plan status review (20 min) </strong>
                                 Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager.</li>
                                 <li><strong> Critical items (10 min)</strong>
                                 Upon completing the project status review session, summarize the critical items. </li>
                                 <li><strong> Q&amp;A and discussion time (10 min)</strong>
-                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting.</li>
+                                Always give your team time to ask questions on tasks that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting.</li>
                                 <li><strong> Summary and follow-up items (5 min)</strong>
                                 Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along.</li>
                                 <li><strong> Adjourn (5 min)</strong>
@@ -956,7 +923,7 @@
                             <div class="col-xs-12 col-md-10">
                                 <p>
                                     <strong>Follow every meeting with a recap email</strong>
-                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously.
+                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, task/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously.
                                 </p>
                             </div>
                         </div>
@@ -1002,15 +969,15 @@
                                         <span class="panel-title">
                                             <span class="fa fa-thumb-tack"></span>
                                             <strong> Exercise 2</strong><br/>
-                                            <span class="small">Delay to close an Issue</span>
+                                            <span class="small">Delay to close an Task</span>
                                         </span>
                                     </div>
                                     <div class="panel-body">
                                         <p>
-                                            <strong>Exercise:</strong> Try to create a graph with the monthly evolution of the 'Average delay to close'  of Issues.
+                                            <strong>Exercise:</strong> Try to create a graph with the monthly evolution of the 'Average delay to close'  of Tasks.
                                         </p>
                                         <li>
-                                            <a t-att-href="prepare_backend_url('project_issue.project_issue_action_analysis', 'graph', 'project_issue')">Issues analysis</a>
+                                            <a t-att-href="prepare_backend_url('project.action_project_task_user_tree', 'graph', 'project_task')">Tasks analysis</a>
                                         </li>
                                     </div>
                                 </div>
@@ -1064,7 +1031,7 @@
         <field name="menu_id" ref="menu_main_pm"/>
         <field name="planner_application">planner_project</field>
         <field name="tooltip_planner"><![CDATA[
-            Learn how to better organize your company using Projects, Tasks, Issues and Timesheets.
+            Learn how to better organize your company using Projects, Tasks and Timesheets.
             ]]>
         </field>
     </record>
