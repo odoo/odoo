@@ -39,12 +39,10 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is supposed to focus the first active control, I think. It
-     * is currently only called by the FormViewDialog.
-     *
-     * @todo To be implemented
+     * Calls autofocus on the renderer
      */
     autofocus: function () {
+        this.renderer.autofocus();
     },
     /**
      * This method switches the form view in edit mode, with a new record.
@@ -91,6 +89,14 @@ var FormController = BasicController.extend({
     getTitle: function () {
         var dataPoint = this.model.get(this.handle, {raw: true});
         return dataPoint.data.display_name || _t('New');
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     *
+     * @todo convert to new style
+     */
+    on_attach_callback: function () {
+        this.autofocus();
     },
     /**
      * Render buttons for the control panel.  The form view can be rendered in
