@@ -47,22 +47,20 @@ class PaymentTransaction(models.Model):
             if not float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0:
                 _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
                 continue
-            try:
-                if tx.state == 'authorized' and tx.acquirer_id.capture_manually:
-                    _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                    tx.sale_order_id.with_context(send_email=True).action_confirm()
 
-                if tx.state == 'done':
-                    _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                    tx.sale_order_id.with_context(send_email=True).action_confirm()
-                    tx._generate_and_pay_invoice()
-                elif tx.state not in ['cancel', 'error'] and tx.sale_order_id.state == 'draft':
-                    _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-                    tx.sale_order_id.force_quotation_send()
-                else:
-                    _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
-            except Exception:
-                _logger.exception('Fail to confirm the order or send the confirmation email%s', tx and ' for the transaction %s' % tx.reference or '')
+            if tx.state == 'authorized' and tx.acquirer_id.capture_manually:
+                _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
+                tx.sale_order_id.with_context(send_email=True).action_confirm()
+
+            if tx.state == 'done':
+                _logger.info('<%s> transaction completed, auto-confirming order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
+                tx.sale_order_id.with_context(send_email=True).action_confirm()
+                tx._generate_and_pay_invoice()
+            elif tx.state not in ['cancel', 'error'] and tx.sale_order_id.state == 'draft':
+                _logger.info('<%s> transaction pending/to confirm manually, sending quote email for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
+                tx.sale_order_id.force_quotation_send()
+            else:
+                _logger.warning('<%s> transaction MISMATCH for order %s (ID %s)', tx.acquirer_id.provider, tx.sale_order_id.name, tx.sale_order_id.id)
 
     def _generate_and_pay_invoice(self):
         self.sale_order_id._force_lines_to_invoice_policy_order()

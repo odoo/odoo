@@ -105,7 +105,9 @@ var FieldMany2One = AbstractField.extend({
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
     },
     start: function () {
-        // what is 'this.floating' for? add a comment!
+        // booleean indicating that the content of the input isn't synchronized
+        // with the current m2o value (for instance, the user is currently
+        // typing something in the input, and hasn't selected a value yet).
         this.floating = false;
 
         this.$input = this.$('input');
@@ -453,8 +455,10 @@ var FieldMany2One = AbstractField.extend({
     _onInputClick: function () {
         if (this.$input.autocomplete("widget").is(":visible")) {
             this.$input.autocomplete("close");
+        } else if (this.floating) {
+            this.$input.autocomplete("search"); // search with the input's content
         } else {
-            this.$input.autocomplete("search", "");
+            this.$input.autocomplete("search", ''); // search with the empty string
         }
     },
     /**
@@ -561,6 +565,7 @@ var FieldX2Many = AbstractField.extend({
         list_record_delete: '_onDeleteRecord',
         open_record: '_onOpenRecord',
         save_line: '_onSaveLine',
+        resequence: '_onResequence',
         toggle_column_order: '_onToggleColumnOrder',
     }),
 
@@ -633,7 +638,7 @@ var FieldX2Many = AbstractField.extend({
      * @returns {Deferred}
      */
     reset: function (record, ev) {
-        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree' && this.editable) {
+        if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
             if (command.operation === 'UPDATE') {
                 var state = record.data[this.name];
@@ -897,6 +902,24 @@ var FieldX2Many = AbstractField.extend({
                     .fail(ev.data.onFailure);
             },
         });
+    },
+    /**
+     * Forces a resequencing of the records.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onResequence: function (event) {
+        var self = this;
+        _.each(event.data.rowIDs, function (rowID, index) {
+            var data = {};
+            data[event.data.handleField] = event.data.offset + index;
+            self._setValue({
+                operation: 'UPDATE',
+                id: rowID,
+                data: data,
+            });
+        })
     },
     /**
      * Adds field name information to the event, so that the view upstream is

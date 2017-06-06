@@ -358,15 +358,22 @@ function createModel(params) {
  *
  * @param {jqueryElement} $el
  * @param {jqueryElement} $to
+ * @param {Object} [options]
+ * @param {string} [options.position=center] target position
  */
-function dragAndDrop($el, $to) {
+function dragAndDrop($el, $to, options) {
+    var position = (options && options.position) || 'center';
     var elementCenter = $el.offset();
     elementCenter.left += $el.outerWidth()/2;
     elementCenter.top += $el.outerHeight()/2;
 
-    var toCenter = $to.offset();
-    toCenter.left += $to.outerWidth()/2;
-    toCenter.top += $to.outerHeight()/2;
+    var toOffset = $to.offset();
+    toOffset.left += $to.outerWidth()/2;
+    if (position === 'center') {
+        toOffset.top += $to.outerHeight()/2;
+    } else if (position === 'bottom') {
+        toOffset.top += $to.outerHeight();
+    }
 
     $el.trigger($.Event("mousedown", {
         which: 1,
@@ -376,14 +383,14 @@ function dragAndDrop($el, $to) {
 
     $el.trigger($.Event("mousemove", {
         which: 1,
-        pageX: toCenter.left,
-        pageY: toCenter.top
+        pageX: toOffset.left,
+        pageY: toOffset.top
     }));
 
     $el.trigger($.Event("mouseup", {
         which: 1,
-        pageX: toCenter.left,
-        pageY: toCenter.top
+        pageX: toOffset.left,
+        pageY: toOffset.top
     }));
 }
 

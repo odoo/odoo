@@ -8,6 +8,13 @@ class TestSaleTimesheet(TestSale):
 
     def setUp(self):
         super(TestSaleTimesheet, self).setUp()
+
+        # NOTE JEM
+        # The tests below are based on the `base.rateUSD` currency rate. It
+        # is required to remove the `base.rateUSDbis` to avoid rounding error
+        # after the 6 june of current year.
+        self.env.ref('base.rateUSDbis').unlink()
+
         # create project
         self.project = self.env['project.project'].create({
             'name': 'Project for my timesheets',

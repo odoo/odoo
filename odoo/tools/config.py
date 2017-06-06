@@ -3,8 +3,11 @@
 
 try:
     import configparser as ConfigParser
+    CP_kw = dict(interpolation=None)
 except ImportError:
     import ConfigParser
+    CP_kw = dict()
+
 import optparse
 import os
 import sys
@@ -501,7 +504,7 @@ class configmanager(object):
         setattr(parser.values, option.dest, ",".join(ad_paths))
 
     def load(self):
-        p = ConfigParser.ConfigParser()
+        p = ConfigParser.ConfigParser(**CP_kw)
         try:
             p.read([self.rcfile])
             for (name,value) in p.items('options'):
@@ -527,7 +530,7 @@ class configmanager(object):
             pass
 
     def save(self):
-        p = ConfigParser.ConfigParser()
+        p = ConfigParser.ConfigParser(**CP_kw)
         loglevelnames = dict(pycompat.izip(pycompat.values(self._LOGLEVELS), pycompat.keys(self._LOGLEVELS)))
         p.add_section('options')
         for opt in sorted(pycompat.keys(self.options)):

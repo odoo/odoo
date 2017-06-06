@@ -974,7 +974,12 @@ var BasicModel = AbstractModel.extend({
         // user edited a manyone (with the small form view button) with an
         // onchange.  In that case, the onchange is triggered, but the actual
         // value did not change.
-        var relatedID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
+        var relatedID;
+        if (record._changes && fieldName in record._changes) {
+            relatedID = record._changes[fieldName];
+        } else {
+            relatedID = record.data[fieldName];
+        }
         var relatedRecord = this.localData[relatedID];
         if (relatedRecord && (data.id === this.localData[relatedID].res_id)) {
             return $.when();
@@ -1168,6 +1173,7 @@ var BasicModel = AbstractModel.extend({
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         res_id: d.id,
                         viewType: view ? view.type : fieldInfo.viewType,
+                        parentID: list.id,
                     });
                     list_records[d.id] = rec;
                     list._changes.push(rec.id);
@@ -1644,6 +1650,11 @@ var BasicModel = AbstractModel.extend({
         });
         if (!hasChanged) {
             return $.when();
+        } else if (!domainModel) {
+            return $.when({
+                model: domainModel,
+                nbRecords: 0,
+            });
         }
 
         var def = $.Deferred();

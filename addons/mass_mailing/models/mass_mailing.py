@@ -77,7 +77,7 @@ class MassMailingContact(models.Model):
         'contact_id', 'list_id', string='Mailing Lists')
     opt_out = fields.Boolean(string='Opt Out', help='The contact has chosen not to receive mails anymore from this list')
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.')
+    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
 

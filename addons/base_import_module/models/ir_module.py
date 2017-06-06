@@ -22,7 +22,7 @@ class IrModule(models.Model):
     imported = fields.Boolean(string="Imported Module")
 
     @api.multi
-    def import_module(self, module, path, force=False):
+    def _import_module(self, module, path, force=False):
         known_mods = self.search([])
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
@@ -107,7 +107,7 @@ class IrModule(models.Model):
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        self.import_module(mod_name, path, force=force)
+                        self._import_module(mod_name, path, force=force)
                         success.append(mod_name)
                     except Exception as e:
                         _logger.exception('Error while importing module')

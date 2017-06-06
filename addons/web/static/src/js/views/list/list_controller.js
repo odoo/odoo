@@ -22,6 +22,7 @@ var ListController = BasicController.extend({
         button_clicked: '_onButtonClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
+        resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
@@ -393,6 +394,32 @@ var ListController = BasicController.extend({
         this.saveRecord(recordID)
             .done(ev.data.onSuccess)
             .fail(ev.data.onFailure);
+    },
+    /**
+     * Force a resequence of the records curently on this page.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onResequence: function (event) {
+        var data = this.model.get(this.handle);
+        var resIDs = _.map(event.data.rowIDs, function(rowID) {
+            return _.findWhere(data.data, {id: rowID}).res_id;
+        })
+        return this._rpc({
+            route: '/web/dataset/resequence',
+            params: {
+                model: this.modelName,
+                ids: resIDs,
+                offset: event.data.offset,
+                field: event.data.handleField,
+            },
+        }).then(function () {
+            data.data = _.sortBy(data.data, function (d) {
+                return _.indexOf(resIDs, d.res_id);
+            });
+            return this.handle;
+        });
     },
     /**
      * When the current selection changes (by clicking on the checkboxes on the

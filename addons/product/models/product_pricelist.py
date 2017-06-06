@@ -345,7 +345,7 @@ class ResCountryGroup(models.Model):
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc"
+    _order = "applied_on, min_quantity desc, categ_id desc, id"
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',

@@ -40,6 +40,22 @@ var GraphController = AbstractController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the current mode, measure and groupbys, so we can restore the
+     * view when we save the current state in the search view, or when we add it
+     * to the dashboard.
+     *
+     * @override
+     * @returns {Object}
+     */
+    getContext: function () {
+        var state = this.model.get();
+        return {
+            graph_measure: state.measure,
+            graph_mode: state.mode,
+            graph_groupbys: state.groupedBy,
+        };
+    },
+    /**
      * Render the buttons according to the GraphView.buttons and
      * add listeners on it.
      * Set this.$buttons with the produced jQuery element

@@ -403,7 +403,11 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
             mockRPC: function (route, args) {
                 if (args.method === 'name_create') {
-                    throw new Error("Odoo server error");
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: "Odoo server error",
+                    }, $.Event());
                 }
                 return this._super.apply(this, arguments);
             },

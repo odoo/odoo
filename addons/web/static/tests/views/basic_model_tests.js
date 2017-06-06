@@ -113,6 +113,32 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('notify change on many2one: unset and reset same value', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[1].qux = 1;
+
+        this.params.fieldNames = ['qux'];
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.qux.data.id, 1, "qux value should be 1");
+
+            model.notifyChanges(resultID, {qux: false});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.qux, false, "qux should be unset");
+
+            model.notifyChanges(resultID, {qux: {id: 1, display_name: 'second_partner'}});
+            record = model.get(resultID);
+            assert.strictEqual(record.data.qux.data.id, 1, "qux value should be 1 again");
+        });
+        model.destroy();
+    });
+
     QUnit.test('write on a many2one', function (assert) {
         assert.expect(4);
         var self = this;
@@ -402,6 +428,40 @@ QUnit.module('Views', {
                 assert.strictEqual(record.data.category.data.length, 1, "should have added one category");
                 assert.strictEqual(record.data.category.data[0].data.date instanceof moment,
                     true, "should have a date parsed in a moment object");
+            });
+        });
+        model.destroy();
+    });
+
+    QUnit.test('many2many with ADD_M2M command and context with parent key', function (assert) {
+        assert.expect(1);
+
+        this.data.partner_type.fields.some_char = {type: "char"};
+        this.params.fieldsInfo = {
+            default: {
+                category: {
+                    fieldsInfo: {default: {some_char: { context: "{'a': parent.foo}"}}},
+                    relatedFields: {some_char: {type: "char"}},
+                    viewType: 'default',
+                },
+                foo: {},
+            },
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var changes = {
+                category: {operation: 'ADD_M2M', ids: [{id: 12}]}
+            };
+            model.notifyChanges(resultID, changes).then(function () {
+                var record = model.get(resultID);
+                var categoryRecord = record.data.category.data[0];
+                assert.deepEqual(categoryRecord.getContext({fieldName: 'some_char'}), {a:'gnap'},
+                    "should properly evaluate context");
             });
         });
         model.destroy();
