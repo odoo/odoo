@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+
 from itertools import groupby
 from datetime import datetime, timedelta
 
@@ -88,6 +90,9 @@ class SaleOrder(models.Model):
             return '<p class=''oe_view_nocontent_create''">%s</p>' % (help)
         return super(SaleOrder, self).get_empty_list_help(help)
 
+    def _get_default_access_token(self):
+        return str(uuid.uuid4())
+
     @api.model
     def _default_note(self):
         return self.env.user.company_id.sale_note
@@ -110,6 +115,9 @@ class SaleOrder(models.Model):
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
+    access_token = fields.Char(
+        'Security Token', copy=False,
+        default=_get_default_access_token)
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -278,6 +286,20 @@ class SaleOrder(models.Model):
         if 'order_line' not in default:
             default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
         return super(SaleOrder, self).copy_data(default)
+
+    @api.model_cr_context
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+            Overridden here because we skip generating unique access tokens
+            for potentially tons of existing sale orders, should they be needed,
+            they will be generated on the fly.
+        """
+        if column_name != 'access_token':
+            super(SaleOrder, self)._init_column(column_name)
+
+    def _generate_access_token(self):
+        for order in self:
+            order.access_token = self._get_default_access_token()
 
     @api.multi
     def _prepare_invoice(self):
