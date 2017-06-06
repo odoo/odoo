@@ -202,7 +202,7 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'account.tax',
-        fields: ['name','amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
+        fields: ['name', 'description', 'amount', 'price_include', 'include_base_amount', 'amount_type', 'children_tax_ids'],
         domain: null,
         loaded: function(self, taxes){
             self.taxes = taxes;
@@ -1988,7 +1988,7 @@ exports.Order = Backbone.Model.extend({
         
         for(var id in details){
             if(details.hasOwnProperty(id)){
-                fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name});
+                fulldetails.push({amount: details[id], tax: this.pos.taxes_by_id[id], name: this.pos.taxes_by_id[id].name}, description: this.pos.taxes_by_id[id].description});
             }
         }
 
