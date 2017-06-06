@@ -20,8 +20,6 @@ class SaleOrder(models.Model):
         help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
     )
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
-    payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
-    payment_tx_id = fields.Many2one('payment.transaction', string='Last Transaction', copy=False)
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
     can_directly_mark_as_paid = fields.Boolean(compute='_compute_can_directly_mark_as_paid',
         string="Can be directly marked as paid", store=True,

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import uuid
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
@@ -52,9 +51,6 @@ class SaleOrder(models.Model):
             if so.state not in ['sale', 'done']:
                 so.website_url = '/quote/%s' % (so.id)
 
-    access_token = fields.Char(
-        'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
-        required=True)
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,

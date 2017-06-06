@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_transaction_action_pending" model="ir.actions.act_window">
-        <field name="name">Pending Payment Transactions</field>
-        <field name="res_model">payment.transaction</field>
-        <field name='view_type'>form</field>
-        <field name='view_mode'>tree,form</field>
-        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('state', '=', 'pending')]</field>
-    </record>
-
-    <record id="payment_transaction_action_authorized" model="ir.actions.act_window">
-        <field name="name">Authorized Payment Transactions</field>
-        <field name="res_model">payment.transaction</field>
-        <field name='view_type'>form</field>
-        <field name='view_mode'>tree,form</field>
-        <field name='domain'>[('sale_order_id.team_id', '=', active_id), ('state', '=', 'authorized')]</field>
-    </record>
-
     <record id="crm_team_salesteams_view_kanban_inherit_website_portal_sale" model="ir.ui.view"> 
         <field name="name">crm.team.kanban</field>
         <field name="model">crm.team</field>
@@ -27,7 +11,7 @@
                     <div class="row" t-if="record.pending_payment_transactions_count.raw_value">
                         <div class="col-xs-8">
                             <div>
-                                <a name="%(payment_transaction_action_pending)d" type="action">
+                                <a name="%(sale_payment.payment_transaction_action_pending)d" type="action">
                                     <field name="pending_payment_transactions_count"/> Awaiting Payment<t t-if="record.pending_payment_transactions_count.raw_value != 1">s</t>
                                 </a>
                             </div>
@@ -38,7 +22,7 @@
                     </div>
                     <div class="row" t-if="record.authorized_payment_transactions_count.raw_value">
                         <div class="col-xs-8">
-                            <a name="%(payment_transaction_action_authorized)d" type="action">
+                            <a name="%(sale_payment.payment_transaction_action_authorized)d" type="action">
                                 <field name="authorized_payment_transactions_count"/> Payment<t t-if="record.authorized_payment_transactions_count.raw_value != 1">s</t> to Capture
                             </a>
                         </div>

@@ -36,13 +36,13 @@ odoo.define('payment_stripe.stripe', function(require) {
             $(this).attr('disabled','disabled');
 
         var $form = $(e.currentTarget).parents('form');
-        var acquirer_id = $(e.currentTarget).closest('div.oe_sale_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
+        var acquirer_id = $(e.currentTarget).closest('div.o_payment_acquirer_button,div.oe_quote_acquirer_button,div.o_website_payment_new_payment');
         acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
         if (! acquirer_id) {
             return false;
         }
 
-        var so_token = $("input[name='token']").val();
+        var access_token = $("input[name='token']").val();
         var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
         if (so_id) {
             so_id = parseInt(so_id[1]);
@@ -65,7 +65,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         } else {
             ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
                     so_id: so_id,
-                    so_token: so_token
+                    access_token: access_token
                 }, {'async': false}).then(function (data) {
                 $form.html(data);
                 handler.open({
