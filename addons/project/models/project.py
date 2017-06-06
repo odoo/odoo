@@ -610,7 +610,7 @@ class Task(models.Model):
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
         # user_id change: update date_assign
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_assign' not in vals:
             vals['date_assign'] = now
 
         result = super(Task, self).write(vals)
