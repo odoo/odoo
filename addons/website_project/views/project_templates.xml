@@ -222,9 +222,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container" t-if="task.description">
-                        <p t-field="task.description" />
-                    </div>
+                    <t t-if="task.description">
+                        <div class="col-md-12">
+                            <strong>Description</strong>
+                            <div t-field="task.description"/>
+                        </div>
+                    </t>
                 </div>
             </div>
             <div class="row mt32">
