@@ -593,6 +593,9 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
+        # Stage change: Update date_end if folded stage
+        if vals.get('stage_id'):
+            vals.update(self.update_date_end(vals['stage_id']))
         task = super(Task, self.with_context(context)).create(vals)
         return task
 
@@ -601,6 +604,7 @@ class Task(models.Model):
         now = fields.Datetime.now()
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
+            vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
             # reset kanban state when changing stage
             if 'kanban_state' not in vals:
@@ -612,6 +616,12 @@ class Task(models.Model):
         result = super(Task, self).write(vals)
 
         return result
+
+    def update_date_end(self, stage_id):
+        project_task_type = self.env['project.task.type'].browse(stage_id)
+        if project_task_type.fold:
+            return {'date_end': fields.Datetime.now()}
+        return {'date_end': False}
 
     # ---------------------------------------------------
     # Mail gateway
