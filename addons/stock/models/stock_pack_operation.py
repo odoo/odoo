@@ -29,12 +29,12 @@ class PackOperation(models.Model):
     product_uom_qty = fields.Float('Reserved', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'), copy=False)
-    package_id = fields.Many2one('stock.quant.package', 'Source Package')
+    package_id = fields.Many2one('stock.quant.package', 'Source Package', ondelete='restrict')
     lot_id = fields.Many2one('stock.production.lot', 'Lot')
     lot_name = fields.Char('Lot/Serial Number')
     result_package_id = fields.Many2one(
         'stock.quant.package', 'Destination Package',
-        ondelete='cascade', required=False,
+        ondelete='restrict', required=False,
         help="If set, the operations are packed into this package")
     date = fields.Datetime('Date', default=fields.Datetime.now(), required=True)
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")

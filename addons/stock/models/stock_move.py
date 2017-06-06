@@ -178,10 +178,10 @@ class StockMove(models.Model):
             multi_locations_enabled = False
             if self.user_has_groups('stock.group_stock_multi_locations'):
                 multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
-
+            has_package = move.pack_operation_ids.mapped('package_id') | move.pack_operation_ids.mapped('result_package_id')
             if move.picking_id.picking_type_id.show_operations is False\
                     and move.state not in ['cancel', 'draft', 'confirmed']\
-                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.pack_operation_ids) > 1):
+                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.pack_operation_ids) > 1 or has_package):
                 move.show_details_visible = True
             else:
                 move.show_details_visible = False
@@ -790,6 +790,7 @@ class StockMove(models.Model):
                             break
                         if move.state != 'partially_available':
                             move.state = 'partially_available'
+            self.mapped('picking_id')._check_entire_pack()
 
     @api.multi
     def action_cancel(self):

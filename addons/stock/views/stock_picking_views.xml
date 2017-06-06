@@ -215,6 +215,7 @@
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available'))]}"/>
                     <field name="show_operations" invisible="1"/>
                     <field name="pack_operation_exist" invisible="1"/>
+                    <field name="has_packages" invisible="1"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
                     <field name="picking_type_entire_packs" invisible="1"/>
@@ -225,6 +226,10 @@
                         <button name="action_see_move_scrap" string="Scraps" type="object"
                             class="oe_stat_button" icon="fa-arrows-v"
                             attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
+                        <button name="action_see_packages" string="Packages" type="object"
+                            class="oe_stat_button" icon="fa-arrows-v"
+                            attrs="{'invisible': [('has_packages', '=', False)]}"/>
+                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Up/Down Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                     </div>
                     <h1 class="hidden-xs">
                         <field name="name" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
@@ -258,7 +263,7 @@
                                     <field name="package_id" groups="stock.group_tracking_lot" invisible="1"/>
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
-                                    <field name="result_package_id" readonly="1" groups="stock.group_tracking_lot" context="{'default_location_id': location_dest_id}" invisible="1"/>
+                                    <field name="result_package_id" groups="stock.group_tracking_lot" context="{'default_location_id': location_dest_id}" invisible="1"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="owner_id" groups="stock.group_tracking_owner"/>
                                     <field name="state" invisible="1"/>

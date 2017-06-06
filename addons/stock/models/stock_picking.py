@@ -5,11 +5,13 @@ from collections import namedtuple
 import json
 import time
 
+from itertools import groupby
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
+from operator import itemgetter
 
 
 class PickingType(models.Model):
@@ -274,6 +276,10 @@ class Picking(models.Model):
         'Has Pack Operations', compute='_compute_pack_operation_exist',
         help='Check the existence of pack operation on the picking')
 
+    has_packages = fields.Boolean(
+        'Has Packages', compute='_compute_has_packages',
+        help='Check the existence of destination packages on move lines')
+
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -366,6 +372,15 @@ class Picking(models.Model):
     @api.one
     def _compute_pack_operation_exist(self):
         self.pack_operation_exist = bool(self.pack_operation_ids)
+
+    @api.one
+    def _compute_has_packages(self):
+        has_packages = False
+        for pack_op in self.pack_operation_ids:
+            if pack_op.result_package_id:
+                has_packages = True
+                break
+        self.has_packages = has_packages
 
     @api.onchange('picking_type_id', 'partner_id')
     def onchange_picking_type(self):
@@ -474,6 +489,7 @@ class Picking(models.Model):
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
         moves.action_assign()
+        self._check_entire_pack()
         return True
 
     @api.multi
@@ -731,26 +747,26 @@ class Picking(models.Model):
 
     @api.multi
     def _put_in_pack(self):
-        # TDE FIXME: reclean me
-        QuantPackage = self.env["stock.quant.package"]
         package = False
         for pick in self:
-            operations = [x for x in pick.pack_operation_ids if x.qty_done > 0 and (not x.result_package_id)]
-            pack_operation_ids = self.env['stock.pack.operation']
-            for operation in operations:
-                # If we haven't done all qty in operation, we have to split into 2 operation
-                op = operation
-                if operation.qty_done < operation.product_qty:
-                    new_operation = operation.copy({'product_qty': operation.qty_done,'qty_done': operation.qty_done})
-
-                    operation.write({'product_qty': operation.product_qty - operation.qty_done,'qty_done': 0})
-
-                    op = new_operation
-                pack_operation_ids |= op
+            operations = pick.pack_operation_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
+            operation_ids = self.env['stock.pack.operation']
             if operations:
-                pack_operation_ids.check_tracking()
-                package = QuantPackage.create({})
-                pack_operation_ids.write({'result_package_id': package.id})
+                package = self.env['stock.quant.package'].create({})
+                for operation in operations:
+                    if float_compare(operation.qty_done, operation.product_qty, precision_rounding=operation.product_uom_id.rounding) >= 0:
+                        operation_ids |= operation
+                    else:
+                        quantity_left_todo = float_round(
+                            operation.product_qty - operation.qty_done,
+                            precision_rounding=operation.product_uom_id.rounding,
+                            rounding_method='UP')
+                        new_operation = operation.copy(
+                            default={'product_uom_qty': operation.qty_done, 'qty_done': operation.qty_done})
+                        operation.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                        operation_ids |= new_operation
+
+                operation_ids.write({'result_package_id': package.id})
             else:
                 raise UserError(_('Please process some quantities to put in the pack first!'))
         return package
@@ -781,4 +797,13 @@ class Picking(models.Model):
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         scraps = self.env['stock.scrap'].search([('picking_id', '=', self.id)])
         action['domain'] = [('id', 'in', scraps.ids)]
+        return action
+
+    @api.multi
+    def action_see_packages(self):
+        self.ensure_one()
+        action = self.env.ref('stock.action_package_view').read()[0]
+        packages = self.pack_operation_ids.mapped('result_package_id')
+        action['domain'] = [('id', 'in', packages.ids)]
+        action['context'] = {'picking_id': self.id}
         return action
