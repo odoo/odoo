@@ -311,6 +311,9 @@ class product_pricelist(osv.osv):
                     for seller_id in product.seller_ids:
                         if (not partner) or (seller_id.name.id != partner):
                             continue
+                        if seller_id.company_id and pricelist.company_id and \
+                                (seller_id.company_id.id != pricelist.company_id.id):
+                            continue
                         seller = seller_id
                     if not seller and product.seller_ids:
                         seller = product.seller_ids[0]
