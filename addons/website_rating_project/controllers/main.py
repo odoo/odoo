@@ -27,14 +27,14 @@ class WebsiteRatingProject(http.Controller):
             raise NotFound()
         values = {
             'project': project,
-            'task_data': self._calculate_rating(project.id, "project.task"),
+            'task_data': self._calculate_rating(project.id),
         }
         return request.render('website_rating_project.project_rating_page', values)
 
-    def _calculate_rating(self, project_id, model_name):
+    def _calculate_rating(self, project_id):
         # Calculate rating for Tasks
-        records = request.env[model_name].sudo().search([('project_id', '=', project_id)])
-        domain = [('res_model', '=', model_name), ('res_id', 'in', records.ids), ('consumed', '=', True)]
+        records = request.env["project.task"].sudo().search([('project_id', '=', project_id)])
+        domain = [('res_model', '=', "project.task"), ('res_id', 'in', records.ids), ('consumed', '=', True)]
         ratings = request.env['rating.rating'].search(domain, order="id desc", limit=100)
 
         yesterday = (datetime.date.today() - datetime.timedelta(days=-1)).strftime('%Y-%m-%d 23:59:59')
