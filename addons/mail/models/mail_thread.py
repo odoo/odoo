@@ -1870,7 +1870,23 @@ class MailThread(models.AbstractModel):
 
         # 3. Attachments
         #   - HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
+
+        # Avoid creating duplicate attachments on model from chatter attachments
+        mail_attachments = kwargs.pop('attachment_ids', [])
+        cleaned_attachments = []
+        for attachment_id in mail_attachments:
+            attachment = self.env['ir.attachment'].browse(attachment_id)
+            cleaned_attachment = self.env['ir.attachment'].search([('checksum', '=', attachment.checksum), ('res_model', '=', model), ('res_id', 'in', self.ids)])
+            cleaned_attachment = cleaned_attachment - attachment
+            if cleaned_attachment:
+                cleaned_attachment = cleaned_attachment[0] if len(cleaned_attachment) > 1 else cleaned_attachment
+                attachment.unlink()
+            cleaned_attachments.append(cleaned_attachment.id or attachment.id)
+        mail_attachments = cleaned_attachments
+
+        attachment_ids = self._message_post_process_attachments(
+            attachments, cleaned_attachments, values or None)
+
         values['attachment_ids'] = attachment_ids
 
         # Avoid warnings about non-existing fields
