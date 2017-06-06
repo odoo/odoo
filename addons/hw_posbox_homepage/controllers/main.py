@@ -57,9 +57,7 @@ index_template = """
         <p>
         If you need to grant remote debugging access to a developer, you can do it <a href='/remote_connect'>here</a>.
         </p>
-        <p>
-        If you need to display the current customer basket on another device, you can do it <a href='/point_of_sale/display'>here</a>.
-        </p>
+        %s
         <p>
         The PosBox software installed on this posbox is <b>version 16</b>,
         the posbox version number is independent from Odoo. You can upgrade
@@ -74,10 +72,21 @@ index_template = """
 
 
 class PosboxHomepage(openerp.addons.web.controllers.main.Home):
+
+    def get_hw_screen_message(self):
+        return """
+<p>
+    The activate the customer display feature, you will need to reinstall the PosBox software.
+    You can find the latest images on the <a href="http://nightly.odoo.com/master/posbox/">Odoo Nightly builds</a> website.
+    Make sure to download at least the version 16.<br/>
+    Odoo version 11, or above, is required to use the customer display feature.
+</p>
+"""
+
     @http.route('/', type='http', auth='none', website=True)
     def index(self):
         #return request.render('hw_posbox_homepage.index',mimetype='text/html')
-        return index_template
+        return index_template % self.get_hw_screen_message()
 
     @http.route('/wifi', type='http', auth='none', website=True)
     def wifi(self):
