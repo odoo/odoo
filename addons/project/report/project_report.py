@@ -27,9 +27,10 @@ class ReportProjectTaskUser(models.Model):
     delay_endings_days = fields.Float(string='# Days to Deadline', digits=(16,2), readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
     priority = fields.Selection([
-            ('0','Non Starred'),
-            ('1','Starred')
-        ], size=1, readonly=True, string="Starred")
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High')
+        ], size=1, readonly=True, string="Priority")
     state = fields.Selection([
             ('normal', 'In Progress'),
             ('blocked', 'Blocked'),
