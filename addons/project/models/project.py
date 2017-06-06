@@ -13,9 +13,6 @@ class ProjectTaskType(models.Model):
     _description = 'Task Stage'
     _order = 'sequence, id'
 
-    def _get_mail_template_id_domain(self):
-        return [('model', '=', 'project.task')]
-
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
@@ -40,7 +37,7 @@ class ProjectTaskType(models.Model):
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
-        domain=lambda self: self._get_mail_template_id_domain(),
+        domain=[('model', '=', 'project.task')],
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
