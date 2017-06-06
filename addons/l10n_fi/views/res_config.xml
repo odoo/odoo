@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_config_settings_finnish" model="ir.ui.view">
+            <field name="name">Finnish Account Settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+
+                <!-- Add Payment Reference Type field before payment acquirers -->
+                <xpath expr="//div[@name='payment_acquirer']" position="before">
+                    <label for="payment_reference_type"/>
+                    <field name="payment_reference_type" class="oe_inline"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
