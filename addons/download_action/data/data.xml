@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="ir_cron_clean_download_cache" model="ir.cron">
+            <field name="name">Clean the download cache</field>
+            <field name="active" eval="True"/>
+            <field name="interval_number">10</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model">ir.actions.download</field>
+            <field name="function">_clean_cache</field>
+            <field name="args">()</field>
+        </record>
+    </data>
+</openerp>
