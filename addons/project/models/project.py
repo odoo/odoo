@@ -13,9 +13,6 @@ class ProjectTaskType(models.Model):
     _description = 'Task Stage'
     _order = 'sequence, id'
 
-    def _get_mail_template_id_domain(self):
-        return [('model', '=', 'project.task')]
-
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
@@ -40,7 +37,7 @@ class ProjectTaskType(models.Model):
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
-        domain=lambda self: self._get_mail_template_id_domain(),
+        domain=[('model', '=', 'project.task')],
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
@@ -100,11 +97,6 @@ class Project(models.Model):
                        for project_data in projects_data}
         for project in self:
             project.task_needaction_count = mapped_data.get(project.id, 0)
-
-    @api.model
-    def _get_alias_models(self):
-        """ Overriden in project_issue to offer more options """
-        return [('project.task', "Tasks")]
 
     @api.multi
     def attachment_tree_view(self):
@@ -168,9 +160,6 @@ class Project(models.Model):
         result['use_tasks'] = True
         return result
 
-    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
-    _alias_models = lambda self: self._get_alias_models()
-
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
@@ -201,8 +190,6 @@ class Project(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
-    alias_model = fields.Selection(_alias_models, string="Alias Model", index=True, required=True, default='project.task',
-        help="The kind of document created when an email is received on this project's email alias")
     privacy_visibility = fields.Selection([
             ('followers', _('On invitation only')),
             ('employees', _('Visible by all employees')),
@@ -263,9 +250,6 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        # if alias_model has been changed, update alias_model_id accordingly
-        if vals.get('alias_model'):
-            vals['alias_model_id'] = self.env['ir.model']._get(vals.get('alias_model', 'project.task')).id
         res = super(Project, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
