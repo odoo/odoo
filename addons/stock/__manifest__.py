@@ -25,6 +25,7 @@
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'views/stock_menu_views.xml',
+        'data/stock_traceability_report_data.xml',
 
         'report/report_stock_forecast.xml',
         'report/stock_report_views.xml',
@@ -57,6 +58,9 @@
         'views/stock_move_views.xml',
         'views/product_views.xml',
         'views/stock_config_settings_views.xml',
+        'views/report_stock_traceability.xml',
+        'views/stock_traceability_report_views.xml',
+        'views/stock_template.xml',
 
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
