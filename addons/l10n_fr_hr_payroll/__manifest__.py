@@ -31,5 +31,6 @@ TODO:
         'report/report_l10n_fr_fiche_paye.xml',
         'report/l10n_fr_hr_payroll_report.xml',
         'views/l10n_fr_hr_payroll_config_settings_views.xml',
+        'views/hr_employee.xml'
     ],
 }
