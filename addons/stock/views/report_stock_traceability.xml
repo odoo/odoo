@@ -4,8 +4,8 @@
     <template id="report_mrp_line">
         <t t-foreach="lines" t-as="a">
             <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
-            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-            <t t-if="a.get('model') == 'stock.move'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
+            <t t-if="a.get('model') == 'stock.pack.operation'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
             <t t-set="domainClass" t-value="'o_stock_reports_domain_line'"/>
             <t t-if="a['unfoldable'] == false">
                 <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
@@ -30,7 +30,7 @@
                     </td>
                 </t>
             <td>
-                <t t-if="a.get('model') == 'stock.quant'">
+                <t t-if="a.get('model') == 'stock.pack.operation'">
                     <span t-if="a['stream'] == 'downstream'" class="o_stock_reports_stream text-muted" data-stream="upstream" title="Upstream Traceability"><i class="fa fa-arrow-up"></i></span>
                     <span t-if="a['stream'] == 'upstream'" class="o_stock_reports_stream" data-stream="downstream" title="Downstream Traceability"><i class="fa fa-arrow-down"></i></span>
                 </t>
@@ -60,7 +60,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-call="mrp_workorder.report_mrp_line"/>
+                            <t t-call="stock.report_mrp_line"/>
                         </tbody>
                     </table>
                 </t>
@@ -70,15 +70,15 @@
 
     <template id="assets_stock_print_report" inherit_id="web.assets_common" active="True">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/mrp_workorder/static/src/less/stock_traceability_report.less" />
+            <link rel="stylesheet" href="/stock/static/src/less/stock_traceability_report.less" />
         </xpath>
     </template>
 
     <template id="report_stock_inventory_print">
         <t t-raw="'&lt;base href=%s&gt;' % base_url"/>
         <t t-call="web.html_container">
-            <t t-call-assets="mrp_workorder.assets_stock_print_report" t-js="False"/>
-            <t t-call='mrp_workorder.report_stock_body_print'/>
+            <t t-call-assets="stock.assets_stock_print_report" t-js="False"/>
+            <t t-call='stock.report_stock_body_print'/>
         </t>
     </template>
 
@@ -101,8 +101,8 @@
                         <t t-foreach="lines" t-as="a">
                             <t t-set="space_td" t-value="'margin-left: '+ str(a['level']) + 'px;'"/>
                             <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
-                            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-                            <t t-if="a.get('model') == 'stock.move'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
+                            <t t-if="a.get('model') == 'stock.pack.operation'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+                            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
                             <t t-set="column" t-value="0" />
                             <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
                                 <t t-set="tdclass" t-value="''" />

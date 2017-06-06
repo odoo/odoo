@@ -19,7 +19,7 @@ class BarcodeController(http.Controller):
 
 class StockReportController(http.Controller):
 
-    @http.route('/mrp_workorder/<string:output_format>/<string:report_name>/<int:report_id>', type='http', auth='user')
+    @http.route('/stock/<string:output_format>/<string:report_name>/<int:report_id>', type='http', auth='user')
     def report(self, output_format, report_name, token, report_id=False, **kw):
         uid = request.session.uid
         domain = [('create_uid', '=', uid)]

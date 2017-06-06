@@ -1,4 +1,4 @@
-odoo.define('mrp_workorder.ReportWidget', function (require) {
+odoo.define('stock.ReportWidget', function (require) {
 'use strict';
 
 var core = require('web.core');
@@ -19,7 +19,7 @@ var ReportWidget = Widget.extend({
         this._super.apply(this, arguments);
     },
     start: function() {
-        QWeb.add_template("/mrp_workorder/static/src/xml/stock_traceability_report_line.xml");
+        QWeb.add_template("/stock/static/src/xml/stock_traceability_report_line.xml");
         return this._super.apply(this, arguments);
     },
     boundLink: function(e) {
@@ -46,7 +46,7 @@ var ReportWidget = Widget.extend({
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),
                 ttype: stream || false,
-                url: '/mrp_workorder/output_format/stock/active_id'
+                url: '/stock/output_format/stock/active_id'
             },
         });
     },
