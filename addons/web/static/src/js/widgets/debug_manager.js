@@ -356,24 +356,6 @@ DebugManager.include({
             this._active_view.controller.renderer.arch, true)
         ).appendTo(dialog.$el);
     },
-    print_workflow: function() {
-        var ids = this._active_view.controller.getSelectedIds();
-        framework.blockUI();
-        var action = {
-            context: { active_ids: ids },
-            report_name: "workflow.instance.graph",
-            datas: {
-                model: this._view_manager.dataset.model,
-                id: ids[0],
-                nested: true,
-            }
-        };
-        session.get_file({
-            url: '/web/report',
-            data: {action: JSON.stringify(action)},
-            complete: framework.unblockUI
-        });
-    },
 });
 function make_context(width, height, fn) {
     var canvas = document.createElement('canvas');
