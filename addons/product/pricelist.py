@@ -268,7 +268,7 @@ class product_pricelist(osv.osv):
 class product_pricelist_item(osv.osv):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc"
+    _order = "applied_on, min_quantity desc, categ_id desc, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for obj_list in self.browse(cr, uid, ids, context=context):
