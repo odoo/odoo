@@ -54,8 +54,6 @@ class TestProjectFlow(TestProjectBase):
         # Test: messages
         self.assertEqual(len(task.message_ids), 2,
                          'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[1].subtype_id.name, 'Task Opened',
-                         'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
