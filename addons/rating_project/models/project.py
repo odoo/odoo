@@ -65,12 +65,8 @@ class Project(models.Model):
     @api.model
     def _send_rating_all(self):
         projects = self.search([('rating_status', '=', 'periodic'), ('rating_request_deadline', '<=', fields.Datetime.now())])
-        projects._send_rating_mail()
+        projects.mapped('task_ids')._send_task_rating_mail()
         projects._compute_rating_request_deadline()
-
-    def _send_rating_mail(self):
-        for project in self:
-            project.task_ids._send_task_rating_mail()
 
     @api.depends('percentage_satisfaction_task')
     def _compute_percentage_satisfaction_project(self):
