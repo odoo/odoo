@@ -191,7 +191,7 @@
                     </xpath>
 
                     <xpath expr="//t[@name='first_options']" position="after">
-                        <div class="row" t-if="record.unassigned_leads_count.raw_value">
+                        <div class="row" t-if="record.use_leads.raw_value and record.unassigned_leads_count.raw_value">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action" context="{'search_default_unassigned': True}">
                                 <field name="unassigned_leads_count"/>
                                 <t t-if="record.unassigned_leads_count.raw_value == 1">Unassigned Lead</t>
