@@ -680,6 +680,10 @@ class StockMove(models.Model):
                     procurements |= move.procurement_id
 
         self.write({'state': 'cancel', 'move_dest_id': False})
+        # Recompute pack operations
+        self.mapped('picking_id').filtered(
+            lambda p: p.state == 'assigned' and p.move_type == 'one').\
+            do_prepare_partial()
         if procurements:
             procurements.check()
         return True
