@@ -288,6 +288,7 @@ form: module.record_id""" % (xml_id,)
                             ('report_type', 'report_type'),
                             ('parser', 'parser'),
                             ('print_report_name', 'print_report_name'),
+                            ('show_watermark', 'show_watermark'),
                             ):
             if rec.get(field):
                 res[dest] = rec.get(field)
@@ -316,6 +317,11 @@ form: module.record_id""" % (xml_id,)
             pf_name = rec.get('paperformat')
             pf_id = self.id_get(pf_name)
             res['paperformat_id'] = pf_id
+
+        if rec.get('watermark'):
+            pdf_watermark = rec.get('watermark')
+            watermark_id = self.id_get(pdf_watermark)
+            res['watermark_id'] = watermark_id
 
         id = self.env['ir.model.data']._update("ir.actions.report", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
