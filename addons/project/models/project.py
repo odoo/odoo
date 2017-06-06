@@ -410,6 +410,9 @@ class Task(models.Model):
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
+    email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
+    email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
+        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign the task', store=True, group_operator="avg")
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close the task', store=True, group_operator="avg")
@@ -450,6 +453,10 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        self.email_from = self.partner_id.email
+
     @api.onchange('project_id')
     def _onchange_project(self):
         default_partner_id = self.env.context.get('default_partner_id')
@@ -458,8 +465,11 @@ class Task(models.Model):
             self.partner_id = self.project_id.partner_id or default_partner
             if self.project_id not in self.stage_id.project_ids:
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+            if not self.email_from:
+                self.email_from = self.partner_id.email
         else:
             self.partner_id = default_partner
+            self.email_from = default_partner.email
             self.stage_id = False
 
     @api.onchange('user_id')
@@ -673,6 +683,8 @@ class Task(models.Model):
             custom_values = {}
         defaults = {
             'name': msg.get('subject'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id')
         }
@@ -714,7 +726,10 @@ class Task(models.Model):
         recipients = super(Task, self).message_get_suggested_recipients()
         for task in self.filtered('partner_id'):
             reason = _('Customer Email') if task.partner_id.email else _('Customer')
-            task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
+            if task.partner_id:
+                task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
+            elif task.email_from:
+                task._message_add_suggested_recipient(recipients, partner=task.email_from, reason=reason)
         return recipients
 
     @api.multi
