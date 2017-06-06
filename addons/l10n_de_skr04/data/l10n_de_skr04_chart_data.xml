@@ -1140,7 +1140,7 @@
         <field name="name">Forderungen aus Lieferungen und Leistungen</field>
         <field name="code">1200</field>
         <field name="reconcile" eval="True"/>
-        <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_asset_bs_B_II_1'), ref('l10n_de.tag_de_liabilities_bs_C_8'),])]"/>
+        <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_asset_bs_B_II_1'),])]"/>
         <field name="user_type_id" ref="account.data_account_type_receivable"/>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
     </record>
@@ -3677,7 +3677,7 @@
         <field name="name">Verbindlichkeiten aus Lieferungen und Leistungen</field>
         <field name="code">3300</field>
         <field name="reconcile" eval="True"/>
-        <field name="tag_ids" eval="[(6,0, [ref('l10n_de.tag_de_asset_bs_B_II_4'), ref('l10n_de.tag_de_liabilities_bs_C_4'),])]"/>
+        <field name="tag_ids" eval="[ref('l10n_de.tag_de_liabilities_bs_C_4'),])]"/>
         <field name="user_type_id" ref="account.data_account_type_payable"/>
         <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
     </record>
