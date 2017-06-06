@@ -353,9 +353,10 @@ class Task(models.Model):
     name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-            ('0','Non Starred'),
-            ('1','Starred')
-        ], default='0', index=True, string="Starred")
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High')
+        ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
