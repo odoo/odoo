@@ -140,14 +140,13 @@
         <field name="arch" type="xml">
             <form string="Package">
                 <header>
-                    <button name="unpack" string="Unpack" type="object" groups="base.group_no_one"/>
+                    <button name="unpack" string="Unpack" type="object"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="action_view_picking"
                         string="Package Transfers" type="object"
                         widget="statinfo" icon="fa-dropbox"/>
-                        <button name="get_content_package" type="object" string="View Contained Packages content" icon="fa-cogs" attrs="{'invisible': [('children_ids','=',[])]}"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Package Reference" class="oe_edit_only"/>
@@ -155,34 +154,22 @@
                     </div>
                     <group>
                         <group>
-                           <field name="packaging_id"/>
-                           <field name='company_id' groups="base.group_multi_company"/>
-                           <field name='owner_id' groups="stock.group_tracking_owner"/>
-                        </group>
-                        <group>
-                        <field name="location_id"/>
-                        <field name="parent_id"/>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                            <field name='owner_id' groups="stock.group_tracking_owner"/>
+                            <field name="location_id"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Content">
-                            <separator string="Bulk Content" />
-                            <field name="quant_ids">
-                                <tree string="Quants">
+                            <separator string="Products" />
+                            <field name="current_picking_id" invisible="1"/>
+                            <field name="current_picking_move_line_ids" readonly="1" attrs="{'invisible': [('current_picking_id', '=', False)]}">
+                                <tree>
                                     <field name="product_id"/>
-                                    <field name="quantity"/>
-                                    <field name="location_id"/>
-                                    <field name="in_date"/>
+                                    <field name="qty_done" string="Quantity"/>
                                 </tree>
                             </field>
-                            <separator string="Contained Packages"/>
-                            <field name="children_ids">
-                                <tree string="Contained Packages">
-                                    <field name="display_name"/>
-                                    <field name="packaging_id"/>
-                                    <field name="location_id"/>
-                                </tree>
-                            </field>
+                            <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}"/>
                         </page>
                     </notebook>
                 </sheet>
@@ -204,10 +191,30 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_quant_package_kanban">
+        <field name="name">stock.quant.package.kanban</field>
+        <field name="model">stock.quant.package</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                <field name="name"/>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_vignette">
+                                <strong><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_package_view">
         <field name="context">{}</field>
         <field name="name">Packages</field>
         <field name="res_model">stock.quant.package</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="help" type="html">
             <p>Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
             </p>

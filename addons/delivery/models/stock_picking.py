@@ -11,14 +11,11 @@ class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
     @api.one
-    @api.depends('quant_ids', 'children_ids')
+    @api.depends('quant_ids')
     def _compute_weight(self):
         weight = 0
         for quant in self.quant_ids:
             weight += quant.qty * quant.product_id.weight
-        for pack in self.children_ids:
-            pack._compute_weight()
-            weight += pack.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight')
