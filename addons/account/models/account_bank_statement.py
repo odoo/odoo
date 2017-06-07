@@ -891,6 +891,10 @@ class AccountBankStatementLine(models.Model):
             # Create the move
             self.sequence = self.statement_id.line_ids.ids.index(self.id) + 1
             move_name = (self.statement_id.name or self.name) + "/" + str(self.sequence)
+            # Ensure no duplicate is created
+            if self.env['account.move'].search([('name', '=', move_name)]):
+                count = self.env['account.move'].search_count([('name', '=like', move_name + '/%')])
+                move_name = u'{}/{}'.format(move_name, count + 1)
             move_vals = self._prepare_reconciliation_move(move_name)
             move = self.env['account.move'].create(move_vals)
             counterpart_moves = (counterpart_moves | move)
