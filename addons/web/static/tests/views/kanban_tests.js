@@ -1375,6 +1375,37 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('formate date and time in Kanban view', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].datetime = "2016-12-12 10:55:00";
+        this.data.partner.records[1].datetime = "2017-12-13 12:15:00";
+        this.data.partner.records[2].datetime = "2016-12-14 04:30:00";
+        this.data.partner.records[3].datetime = "2017-12-15 13:45:00";
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div>' +
+                        '<field name="foo"/>' +
+                        '<field name="datetime"/>' +
+                        '<div class="date"><t t-esc="kanban_moment(record.datetime.raw_value,\'lll\')"/></div>' +
+                    '</div>' +
+                '</t></templates>' +
+            '</kanban>',
+        });
+
+        assert.strictEqual(kanban.$('.date:eq(0)').html(),"Dec 12, 2016 10:55 AM","should have formatted date and time");
+        assert.strictEqual(kanban.$('.date:eq(1)').html(),"Dec 13, 2017 12:15 PM","should have formatted date and time");
+        assert.strictEqual(kanban.$('.date:eq(2)').html(),"Dec 14, 2016 4:30 AM","should have formatted date and time");
+        assert.strictEqual(kanban.$('.date:eq(3)').html(),"Dec 15, 2017 1:45 PM","should have formatted date and time");
+
+        kanban.destroy();
+    });
+
 });
 
 });
