@@ -98,7 +98,7 @@
                     <field name="subtask_project_id" invisible="1" />
                 </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
-                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}"  groups="hr_timesheet.group_hr_timesheet_user">
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
