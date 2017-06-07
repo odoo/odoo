@@ -14,7 +14,7 @@
                         <div class="o_setting_right_pane">
                             <label string="Product Prices" for="sale_show_tax"/>
                             <div class="text-muted">
-                                Product prices displaying in web catalog
+                                Product prices in web catalog
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
@@ -23,6 +23,10 @@
                                     <field name="group_show_price_subtotal" invisible="1"/>
                                     </div>
                             </div>
+                            <div>
+                                <button type="action" name="%(account.action_account_config)d" string="Configure Taxes" class="btn-link" icon="fa-arrow-right"/>
+                            </div>
+                            <a href="http://www.odoo.com/documentation/user/online/accounting/others/taxes/tax_included.html" class="oe-link" target="_blank"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
                         </div>
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Boost your sales with two kinds of discount programs: promotions and coupon codes. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">

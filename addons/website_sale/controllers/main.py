@@ -318,7 +318,8 @@ class WebsiteSale(http.Controller):
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids,
             'rating_message_values': rating_message_values,
-            'rating_product': rating_product
+            'rating_product': rating_product,
+            'is_tax_included': request.env['ir.values'].get_default('website.config.settings', 'sale_show_tax') == 'total'
         }
         return request.render("website_sale.product", values)
 
