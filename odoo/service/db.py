@@ -263,7 +263,7 @@ def restore_db(db, dump_file, copy=False):
                 env['ir.config_parameter'].init(force=True)
             if filestore_path:
                 filestore_dest = env['ir.attachment']._filestore()
-                shutil.move(filestore_path, filestore_dest)
+                _move_filestore(filestore_path, filestore_dest)
 
             if odoo.tools.config['unaccent']:
                 try:
@@ -273,6 +273,19 @@ def restore_db(db, dump_file, copy=False):
                     pass
 
     _logger.info('RESTORE DB: %s', db)
+
+def _move_filestore(source_dir_root, dest_dir_root):
+    for source_dir, source_subdirs, source_files in os.walk(source_dir_root):
+        dest_dir = source_dir.replace(source_dir_root, dest_dir_root)
+        for source_file in source_files:
+            source_path = os.path.join(source_dir, source_file)
+            dest_path = os.path.join(dest_dir, source_file)
+            shutil.move(source_path, dest_path)
+        for source_subdir in source_subdirs:
+            dest_subdir = os.path.join(dest_dir, source_subdir)
+            if not os.path.exists(dest_subdir):
+                os.makedirs(dest_subdir)
+    shutil.rmtree(source_dir_root)
 
 def exp_rename(old_name, new_name):
     odoo.modules.registry.Registry.delete(old_name)
