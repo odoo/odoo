@@ -99,18 +99,23 @@ class ir_module_module(osv.osv):
                     raise UserError(msg % zf.filename)
 
             with openerp.tools.osutil.tempdir() as module_dir:
-                z.extractall(module_dir)
-                dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
-                for mod_name in dirs:
-                    module_names.append(mod_name)
-                    try:
-                        # assert mod_name.startswith('theme_')
-                        path = opj(module_dir, mod_name)
-                        self.import_module(cr, uid, mod_name, path, force=force, context=context)
-                        success.append(mod_name)
-                    except Exception, e:
-                        _logger.exception('Error while importing module')
-                        errors[mod_name] = exception_to_unicode(e)
+                import openerp.modules as addons
+                try:
+                    addons.module.ad_paths.append(module_dir)
+                    z.extractall(module_dir)
+                    dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
+                    for mod_name in dirs:
+                        module_names.append(mod_name)
+                        try:
+                            # assert mod_name.startswith('theme_')
+                            path = opj(module_dir, mod_name)
+                            self.import_module(cr, uid, mod_name, path, force=force, context=context)
+                            success.append(mod_name)
+                        except Exception, e:
+                            _logger.exception('Error while importing module')
+                            errors[mod_name] = exception_to_unicode(e)
+                finally:
+                    addons.module.ad_paths.remove(module_dir)
         r = ["Successfully imported module '%s'" % mod for mod in success]
         for mod, error in errors.items():
             r.append("Error while importing module '%s': %r" % (mod, error))
