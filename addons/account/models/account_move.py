@@ -1074,6 +1074,11 @@ class AccountMoveLine(models.Model):
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = AccountObj.browse(vals['account_id'])
+            # Round debit and credit since it won't be done by the ORM
+            # FORWARDPORT UP TO SAAS-16
+            vals['debit'] = account.company_id.currency_id.round(vals.get('debit', 0.0))
+            vals['credit'] = account.company_id.currency_id.round(vals.get('credit', 0.0))
+            amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
             if journal.type_control_ids:
                 type = account.user_type_id
                 for t in journal.type_control_ids:
@@ -1166,6 +1171,18 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use deprecated account.'))
+
+        # Round debit and credit since it won't be done by the ORM
+        # FORWARDPORT UP TO SAAS-16
+        account = self.env['account.account'].browse(vals['account_id']) if 'account_id' in vals else False
+        if not account:
+            account = self[0].account_id if self else False
+        if account:
+            if 'debit' in vals:
+                vals['debit'] = account.company_id.currency_id.round(vals['debit'])
+            if 'credit' in vals:
+                vals['credit'] = account.company_id.currency_id.round(vals['credit'])
+
         if any(key in vals for key in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')):
             self._update_check()
         if not self._context.get('allow_amount_currency') and any(key in vals for key in ('amount_currency', 'currency_id')):
