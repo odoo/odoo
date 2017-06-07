@@ -180,7 +180,7 @@ screens.OrderWidget.include({
 var _super_order = models.Order.prototype;
 models.Order = models.Order.extend({
     build_line_resume: function(){
-        var resume = {};
+        var resume = [];
         this.orderlines.each(function(line){
             if (line.mp_skip) {
                 return;
@@ -189,11 +189,12 @@ models.Order = models.Order.extend({
             var qty  = Number(line.get_quantity());
             var note = line.get_note();
             var product_id = line.get_product().id;
+            var product = _.findWhere(resume, {line_hash:line_hash});
 
-            if (typeof resume[line_hash] === 'undefined') {
-                resume[line_hash] = { qty: qty, note: note, product_id: product_id };
+            if (product) {
+                product.qty += qty;
             } else {
-                resume[line_hash].qty += qty;
+                resume.push({ qty: qty, note: note, product_id: product_id, line_hash: line_hash });
             }
 
         });
@@ -208,15 +209,14 @@ models.Order = models.Order.extend({
     },
     computeChanges: function(categories){
         var current_res = this.build_line_resume();
-        var old_res     = this.saved_resume || {};
+        var old_res     = this.saved_resume || [];
         var json        = this.export_as_JSON();
         var add = [];
         var rem = [];
-        var line_hash;
 
-        for ( line_hash in current_res) {
-            var curr = current_res[line_hash];
-            var old  = old_res[line_hash];
+        for (var i = 0; i < current_res.length; i++) {
+            var curr = current_res[i];
+            var old  = old_res[i];
 
             if (typeof old === 'undefined') {
                 add.push({
@@ -242,9 +242,9 @@ models.Order = models.Order.extend({
             }
         }
 
-        for (line_hash in old_res) {
-            if (typeof current_res[line_hash] === 'undefined') {
-                var old = old_res[line_hash];
+        for (var i = 0; i < old_res.length; i++) {
+            if (typeof current_res[i] === 'undefined') {
+                var old = old_res[i];
                 rem.push({
                     'id':       old.product_id,
                     'name':     this.pos.db.get_product_by_id(old.product_id).display_name,
