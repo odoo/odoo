@@ -867,7 +867,8 @@ class SaleOrderLine(models.Model):
             quantity=vals.get('product_uom_qty') or self.product_uom_qty,
             date=self.order_id.date_order,
             pricelist=self.order_id.pricelist_id.id,
-            uom=self.product_uom.id
+            uom=self.product_uom.id,
+            business_case='sale',
         )
 
         name = product.name_get()[0][1]
