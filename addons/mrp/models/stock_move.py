@@ -369,9 +369,33 @@ class StockMove(models.Model):
         if processed_moves and self.state == 'assigned':
             # Set the state of resulting moves according to 'assigned' as the original move is assigned
             processed_moves.write({'state': 'assigned'})
+        processed_moves._update_price_processed_moves(original_move=self)
         # delete the move with original product which is not relevant anymore
         self.sudo().unlink()
         return processed_moves
+
+    def _update_price_processed_moves(self, original_move):
+        total_price_original = original_move.product_qty * original_move.price_unit
+        if total_price_original:
+            total_qty = 0
+            total_value = 0
+            dic_moves = []
+            for move in self:
+                move_qty = move.product_qty
+                total_qty += move_qty
+                price_unit = move.product_id.uom_id._compute_price(move.product_id.standard_price or 0, move.product_uom)
+                dic_moves.append((move, price_unit * move_qty))
+                total_value += price_unit * move_qty
+
+            if total_value > 0:
+                factor = total_price_original / total_value
+                for move, price in dic_moves:
+                    move.price_unit = factor * price
+
+            elif total_qty > 0:
+                new_price_unit = total_price_original / total_qty
+                for move in self:
+                    move.price_unit = new_price_unit
 
     def _generate_move_phantom(self, bom_line, quantity):
         if bom_line.product_id.type in ['product', 'consu']:
