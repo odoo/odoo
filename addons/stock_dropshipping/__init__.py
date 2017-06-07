@@ -20,5 +20,6 @@
 ##############################################################################
 import stock_dropshipping
 import wizard
+import dropshipping
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
