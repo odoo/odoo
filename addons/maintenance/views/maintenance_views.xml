@@ -103,6 +103,7 @@
                 <field name="priority"/>
                 <field name="equipment_id"/>
                 <field name="technician_user_id"/>
+                <field name="request_date"/>
                 <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
@@ -132,6 +133,11 @@
                                     <b><field name="name"/></b> <br/>
                                     <span name="owner_user_id" t-if="record.owner_user_id.raw_value"><field name="owner_user_id"/><br/></span>
                                     <span class="oe_grey" t-if="record.equipment_id.raw_value"><field name="equipment_id"/><br/></span>
+                                </div>
+                                <div t-if="record.request_date.raw_value">
+                                    <span class="mt4 label label-default">
+                                        <t t-raw="moment(record.request_date.raw_value).format('MMMM Do')"/>
+                                    </span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:2px;">
                                     <t t-if="record.message_needaction_counter.raw_value">
