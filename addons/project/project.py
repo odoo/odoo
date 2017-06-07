@@ -1114,6 +1114,7 @@ class task(osv.osv):
             custom_values = {}
         defaults = {
             'name': msg.get('subject'),
+            'partner_id': msg.get('author_id', False),
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
