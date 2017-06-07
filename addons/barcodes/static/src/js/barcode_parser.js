@@ -123,7 +123,22 @@ var BarcodeParser = Class.extend({
             value: 0,
             base_code: barcode,
             match: false,
+	    variable_strings: [],
         };
+
+        // if there are dot series in the partern, extract the corresponding values in the barcode and return them
+        var serie = "";
+        for (var i = 0; i < barcode.length; i++) {
+            if (pattern[i] == '.') {
+                serie += barcode[i];
+            } else {
+                if (serie != "") {
+                    match.variable_strings.push(serie);
+                }
+                serie = "" ;
+            }
+        }
+
         barcode = barcode.replace("\\", "\\\\").replace("{", '\{').replace("}", "\}").replace(".", "\.");
 
         var numerical_content = pattern.match(/[{][N]*[D]*[}]/); // look for numerical content in pattern
@@ -192,6 +207,7 @@ var BarcodeParser = Class.extend({
             code:barcode,
             base_code: barcode,
             value: 0,
+            variables_strings:[],
         };
 
         if (!this.nomenclature) {
@@ -229,6 +245,7 @@ var BarcodeParser = Class.extend({
                     parsed_result.encoding  = rules[i].encoding;
                     parsed_result.type      = rules[i].type;
                     parsed_result.value     = match.value;
+                    parsed_result.variable_strings     = match.variable_strings;
                     parsed_result.code      = cur_barcode;
                     if (rules[i].encoding === "ean13"){
                         parsed_result.base_code = this.sanitize_ean(match.base_code);

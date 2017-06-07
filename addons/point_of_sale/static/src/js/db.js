@@ -25,6 +25,7 @@ var PosDB = core.Class.extend({
         this.product_by_id = {};
         this.product_by_barcode = {};
         this.product_by_category_id = {};
+        this.product_by_default_code = {};
 
         this.partner_sorted = [];
         this.partner_by_id = {};
@@ -42,6 +43,7 @@ var PosDB = core.Class.extend({
         this.packagings_by_id = {};
         this.packagings_by_product_tmpl_id = {};
         this.packagings_by_barcode = {};
+        this.packagings_by_default_code = {};
     },
 
     /* 
@@ -213,6 +215,10 @@ var PosDB = core.Class.extend({
             if(product.barcode){
                 this.product_by_barcode[product.barcode] = product;
             }
+            if(product.default_code){
+                this.product_by_default_code[product.default_code] = product;
+            }
+
         }
     },
     add_packagings: function(packagings){
@@ -226,6 +232,10 @@ var PosDB = core.Class.extend({
             if(pack.barcode){
                 this.packagings_by_barcode[pack.barcode] = pack;
             }
+            if(pack.default_code){
+                this.packagings_by_default_code[pack.default_code] = pack;
+            }
+
         }
     },
     _partner_search_string: function(partner){
@@ -365,6 +375,18 @@ var PosDB = core.Class.extend({
         }
         return undefined;
     },
+
+    get_product_by_default_code: function(default_code){
+        if(this.product_by_default_code[default_code]){
+	    return this.product_by_default_code[default_code];
+        }
+        var pack = this.packagings_by_default_code[default_code];
+        if(pack){
+            return this.product_by_id[pack.product_tmpl_id[0]];
+        }
+        return undefined;
+    },
+
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];
         var list = [];
