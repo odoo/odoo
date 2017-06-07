@@ -25,7 +25,7 @@ Spanish charts of accounts (PGCE 2008).
     * Defines templates for sale and purchase VAT
     * Defines tax code templates
     * Defines fiscal positions for spanish fiscal legislation
-""",
+""", #TODO OCO quand tu auras fini, revoir la description du module
     "depends" : [
         "account",
         "base_iban",
@@ -33,13 +33,16 @@ Spanish charts of accounts (PGCE 2008).
     ],
     "data" : [
         'data/account_account_type_data.xml',
-        'data/l10n_es_chart_data.xml', #TODO OCO virer ce fichier
         'data/account_chart_template_data.xml',
         #TODO OCO refaire un check général d'utilité
         'data/account_account_template_common_data.xml',
         'data/account_account_template_pymes_data.xml',
+        'data/account_account_template_assoc_data.xml',
+        'data/account_account_template_full_data.xml',
+        'data/account_chart_template_account_account_link.xml',
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
         'data/account_chart_template_data.yml',
+        'views/menus.xml',
     ],
 }
