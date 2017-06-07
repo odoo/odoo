@@ -43,7 +43,7 @@ class BaseAutomation(models.Model):
         ('on_unlink', 'On Deletion'),
         ('on_change', 'Based on Form Modification'),
         ('on_time', 'Based on Timed Condition')
-        ], string='Trigger condition', required=True, oldname="kind")
+        ], string='Trigger Condition', required=True, oldname="kind")
     trg_date_id = fields.Many2one('ir.model.fields', string='Trigger Date',
                                   help="""When should the condition be triggered.
                                   If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
@@ -58,7 +58,7 @@ class BaseAutomation(models.Model):
                                             help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
     filter_pre_domain = fields.Char(string='Before Update Domain',
                                     help="If present, this condition must be satisfied before the update of the record.")
-    filter_domain = fields.Char(string='Domain', help="If present, this condition must be satisfied before executing the action rule.")
+    filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_fields = fields.Char(string="On Change Fields Trigger", help="Comma-separated list of field names that triggers the onchange.")
 
