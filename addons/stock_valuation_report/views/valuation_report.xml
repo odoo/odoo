@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="valuation_report">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Valuation report</h2>
+                <table class="table table-condensed">
+                    <thead>
+                        <th><strong>Name</strong></th>
+                        <th><strong>Qty</strong></th>
+                        <th><strong>Value</strong></th>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="standard_average(data['form'])" t-as="line">
+                            <td>
+                                <span t-esc="line['name']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['qty']"/>
+                            </td>
+                           <td>
+                                <span t-esc="line['value']"/>
+                            </td>
+                        </tr>
+                        <tr t-foreach="real(data['form'])" t-as="line">
+                            <td>
+                                <span t-esc="line['name']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['qty']"/>
+                            </td>
+                           <td>
+                                <span t-esc="line['value']"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
