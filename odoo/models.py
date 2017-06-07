@@ -3577,6 +3577,7 @@ class BaseModel(object):
                 if self.env.recompute and self._context.get('recompute', True):
                     self.recompute()
 
+        self.check_access_rule('write')
         return True
 
     @api.multi
