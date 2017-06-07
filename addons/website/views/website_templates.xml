@@ -3,9 +3,9 @@
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/backend/button.js"></script>
         <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.backendDashboard.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"></script>
         <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
     </xpath>
 </template>
@@ -24,9 +24,9 @@
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.zoomodoo.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/content/share.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"></script>
     </xpath>
 </template>
 
@@ -35,20 +35,20 @@
 
     <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/tours/rte.js"></script>
 
-    <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"></script>
     <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/content.js"></script>
 
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"></script>
     <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
 </template>
 
@@ -129,7 +129,7 @@
             <script type="text/javascript">
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
-                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,  
+                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                     is_frontend: true,
                     translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
