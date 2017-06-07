@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="base.view_translation_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//search">
-                     <filter string="To Approve In Gengo" domain="[('state','=','inprogress'),('gengo_translation','=',True)]"></filter>
+                     <filter string="To Approve In Gengo" name="to_approve_gengo" domain="[('state','=','inprogress'),('gengo_translation','=',True)]"></filter>
                 </xpath>
             </field>
         </record>
