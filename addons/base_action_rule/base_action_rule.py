@@ -251,6 +251,8 @@ class base_action_rule(osv.osv):
             @openerp.api.multi
             def _write(self, vals, **kw):
                 # retrieve the action rules to possibly execute
+                if self.env.context.get('recompute') and 'message_follower_ids' in vals:
+                    return True
                 actions = self.env['base.action.rule']._get_actions(self, ['on_write', 'on_create_or_write'])
                 records = self.with_env(actions.env)
 

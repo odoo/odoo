@@ -5884,7 +5884,7 @@ class BaseModel(object):
             # update records in batch when possible
             with recs.env.norecompute():
                 for vals, ids in updates.iteritems():
-                    recs.browse(ids)._write(dict(vals))
+                    recs.with_context(recompute=True).browse(ids)._write(dict(vals))
             # mark computed fields as done
             map(recs._recompute_done, fs)
 
