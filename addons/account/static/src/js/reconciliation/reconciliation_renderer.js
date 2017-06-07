@@ -354,7 +354,21 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
 
         // reconciliation_proposition
         var $props = this.$('.accounting_view tbody').empty();
-        var props = _.filter(state.reconciliation_proposition, {'display': true});
+
+        // loop state propositions
+        var props = [];
+        var nb_debit_props = 0;
+        var nb_credit_props = 0;
+        _.each(state.reconciliation_proposition, function (prop) {
+            if (prop.display) {
+                props.push(prop);
+                if (prop.amount < 0)
+                    nb_debit_props += 1;
+                else if (prop.amount > 0)
+                    nb_credit_props += 1;
+            }
+        });
+
         _.each(props, function (line) {
             var $line = $(qweb.render("reconciliation.line.mv_line", {'line': line, 'state': state}));
             if (!isNaN(line.id)) {
@@ -362,18 +376,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .appendTo($line.find('.cell_info_popover'))
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
-
-            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
-                    line.already_paid === false &&
-                    (
-                        (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
-                        (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
-                    ) {
+            if (line.already_paid === false &&
+                ((state.balance.amount < 0 || line.partial_reconcile) && nb_credit_props == 1
+                    && line.amount > 0 && state.st_line.amount > 0 && state.st_line.amount < line.amount) ||
+                ((state.balance.amount > 0 || line.partial_reconcile) && nb_debit_props == 1
+                    && line.amount < 0 && state.st_line.amount < 0 && state.st_line.amount > line.amount)) {
                 var $cell = $line.find(line.amount > 0 ? '.cell_right' : '.cell_left');
                 var text;
                 if (line.partial_reconcile) {
                     text = _t("Undo the partial reconciliation.");
-                    $cell.text(state.st_line.amount_str);
+                    $cell.text(line.write_off_amount_str);
                 } else {
                     text = _t("This move's amount is higher than the transaction's amount. Click to register a partial payment and keep the payment balance open.");
                 }

@@ -799,14 +799,14 @@ QUnit.module('account', {
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 0, "should not display the partial reconciliation alert");
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
         assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
         assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
-        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
+        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_true'), "should display the partial reconciliation information");
         assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
+        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
         widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
