@@ -84,7 +84,7 @@ QUnit.module('Views', {
     QUnit.module('ListView');
 
     QUnit.test('simple readonly list', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var list = createView({
             View: ListView,
@@ -92,6 +92,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
         });
+
+        assert.notOk(list.$el.hasClass('o_cannot_create'),
+            "should not have className 'o_cannot_create'");
 
         // 3 th (1 for checkbox, 2 for columns)
         assert.strictEqual(list.$('th').length, 3, "should have 3 columns");
@@ -111,6 +114,24 @@ QUnit.module('Views', {
             "should not have a visible save button");
         assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should not have a visible save button");
+        list.destroy();
+    });
+
+    QUnit.test('list with create="0"', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree create="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.$el.hasClass('o_cannot_create'),
+            "should have className 'o_cannot_create'");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add').length, 0,
+            "should not have the 'Create' button");
+
         list.destroy();
     });
 
