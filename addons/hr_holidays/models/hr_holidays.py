@@ -7,6 +7,7 @@ import logging
 import math
 from datetime import timedelta
 from werkzeug import url_encode
+import pytz
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, AccessError, ValidationError
@@ -286,6 +287,14 @@ class Holidays(models.Model):
             employee = self.env['hr.employee'].browse(employee_id)
             resource = employee.resource_id.sudo()
             if resource and resource.calendar_id:
+                # FORWARD-PORT UP TO SAAS-14
+                # Workaround to convert the datetimes from UTC to user TZ. The reason is that
+                # 'get_working_hours' doesn't take into account TZ.
+                tz_name = self.env.context.get('tz') or self.env.user.tz
+                tz = pytz.timezone(tz_name) if tz_name else pytz.UTC
+                from_dt = pytz.UTC.localize(from_dt, is_dst=False).astimezone(tz).replace(tzinfo=None)
+                to_dt = pytz.UTC.localize(to_dt, is_dst=False).astimezone(tz).replace(tzinfo=None)
+
                 hours = resource.calendar_id.get_working_hours(from_dt, to_dt, resource_id=resource.id, compute_leaves=True)
                 uom_hour = resource.calendar_id.uom_id
                 uom_day = self.env.ref('product.product_uom_day')
