@@ -46,6 +46,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     start: function () {
+        // add classname to reflect the (absence of) access rights (used to
+        // correctly display the nocontent helper)
+        this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
         return this._super.apply(this, arguments)
                           .then(this._updateEnv.bind(this));
     },
