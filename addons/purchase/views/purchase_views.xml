@@ -208,7 +208,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="order_line" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
+                            <field name="order_line" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" mode="tree,kanban">
                                  <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="currency_id" invisible="1"/>
                                     <field name="state" invisible="1"/>
@@ -227,6 +227,36 @@
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
+                                    <kanban class="o_kanban_mobile" editable="top">
+                                        <field name="product_id"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="currency_id"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div t-attf-class="oe_kanban_global_click_edit">
+                                                    <div class="row" name="product">
+                                                        <div class="col-xs-12">
+                                                            <strong>
+                                                                <t t-esc='record.product_id.value'/>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" groups="product.group_uom">
+                                                        <div class="col-xs-6">
+                                                            <span><t t-esc='record.product_qty.value'/>&#160;<t t-esc='record.product_uom.value'/></span>
+                                                        </div>
+                                                        <div class="col-xs-6" t-if="record.price_subtotal.raw_value">
+                                                            <span class="pull-right">
+                                                                <field name="price_subtotal" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>   
                                 <form string="Purchase Order Line">
                                     <sheet>
                                         <group>
