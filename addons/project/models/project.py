@@ -320,14 +320,6 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
-    @api.model
-    def default_get(self, field_list):
-        """ Set 'date_assign' if user_id is set. """
-        result = super(Task, self).default_get(field_list)
-        if 'user_id' in result:
-            result['date_assign'] = fields.Datetime.now()
-        return result
-
     def _get_default_partner(self):
         if 'default_project_id' in self.env.context:
             default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
