@@ -1,13 +1,11 @@
-odoo.define('website_portal.tour', function (require) {
+odoo.define('portal.tour', function (require) {
 'use strict';
 
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 tour.register('portal_load_homepage', {
     test: true,
     url: '/my',
-    wait_for: base.ready()
 },
     [
         {

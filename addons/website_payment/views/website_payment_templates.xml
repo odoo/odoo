@@ -70,8 +70,8 @@
         </t>
     </template>
 
-    <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
-        <xpath expr="//div[@class='o_my_details']" position="inside">
+    <template id="pay_meth_link" inherit_id="portal.portal_layout" customize_show="True">
+        <xpath expr="//div[@class='o_portal_my_details']" position="inside">
             <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
                 <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment acquirers</a></div>
             </t>

@@ -11,15 +11,14 @@ from odoo import fields
 from odoo import http
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 
 from odoo.tools import pycompat
 from odoo.tools.translate import _
 
-from odoo.addons.website_portal.controllers.main import website_account
 
-
-class WebsiteAccount(website_account):
+class WebsiteAccount(CustomerPortal):
 
     def get_domain_my_lead(self, user):
         return [

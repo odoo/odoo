@@ -8,11 +8,10 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import pycompat
 from odoo.tools.translate import _
+from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal
 
-from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 
-
-class WebsitePortal(website_account):
+class WebsitePortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(WebsitePortal, self)._prepare_portal_layout_values()

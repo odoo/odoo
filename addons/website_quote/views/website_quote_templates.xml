@@ -166,7 +166,7 @@
 
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
-      <t t-call="website_portal.portal_layout">
+      <t t-call="portal.portal_layout">
         <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
@@ -470,7 +470,7 @@
                      <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
                   </li>
                   <li>
-                    <t t-call='website_portal.record_pager'/>
+                    <t t-call='portal.record_pager'/>
                   </li>
                </ul>
             </div>

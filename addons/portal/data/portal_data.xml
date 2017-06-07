@@ -4,7 +4,7 @@
 
         <record id="mail_template_data_portal_welcome" model="mail.template">
             <field name="name">Portal: new user</field>
-            <field name="model_id" ref="website_portal.model_portal_wizard_user"/>
+            <field name="model_id" ref="portal.model_portal_wizard_user"/>
             <field name="email_to">${object.partner_id.email}</field>
             <field name="subject">Your Odoo account at ${user.company_id.name}</field>
             <field name="lang">${object.partner_id.lang}</field>
