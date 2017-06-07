@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <record model="account.account.type" id="user_type_tax">
+        <field name="name">Impostos</field>
+        <field name="code">tax</field>
+        <field name="report_type">expense</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record model="account.account.type" id="user_type_equity">
+        <field name="name">Passivo</field>
+        <field name="code">equity</field>
+        <field name="report_type">liability</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+   </data>
+</openerp>
