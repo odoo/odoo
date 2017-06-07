@@ -1,7 +1,8 @@
 
-odoo.define('website_portal', function(require) {
-    'use strict';
-    require('website.website');
+odoo.define('portal.portal', function(require) {
+'use strict';
+
+$(document).ready(function () {
 
     if(!$('.o_portal').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_portal'");
@@ -44,4 +45,5 @@ odoo.define('website_portal', function(require) {
             }
         });
     }
+});
 });

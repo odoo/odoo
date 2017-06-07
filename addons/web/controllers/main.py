@@ -458,6 +458,9 @@ class Home(http.Controller):
         ensure_db()
         return werkzeug.utils.redirect(redirect, 303)
 
+    def _login_redirect(self, uid, redirect=None):
+        return redirect if redirect else '/web'
+
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
         ensure_db()
@@ -479,9 +482,7 @@ class Home(http.Controller):
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 request.params['login_success'] = True
-                if not redirect:
-                    redirect = '/web'
-                return http.redirect_with_hash(redirect)
+                return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
         else:

@@ -216,17 +216,6 @@
     </xpath>
 </template>
 
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
-    <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
-            <a t-attf-href="/web/login">
-                <b>Sign in</b>
-            </a>
-        </li>
-    </xpath>
-</template>
-
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div class="oe_structure" id="footer" t-if='not no_footer'>
