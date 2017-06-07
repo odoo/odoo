@@ -380,10 +380,8 @@ var FormController = BasicController.extend({
             });
         }
 
-        if (event.data.show_wow) {
-            def.then(function () {
-                self.show_wow();
-            });
+        if (event.data.showWow) {
+            def.then(this.trigger_up.bind(this, 'show_wow'));
         }
 
         def.always(this._enableButtons.bind(this));
