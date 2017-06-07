@@ -1,7 +1,12 @@
-[![Build Status](http://runbot.odoo.com/runbot/badge/flat/1/8.0.svg)](http://runbot.odoo.com/runbot)
-[![Tech Doc](http://img.shields.io/badge/8.0-docs-8f8f8f.svg?style=flat)](http://www.odoo.com/documentation/8.0) 
-[![Help](http://img.shields.io/badge/8.0-help-8f8f8f.svg?style=flat)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](http://img.shields.io/badge/8.0-nightly-8f8f8f.svg?style=flat)](http://nightly.odoo.com/)
+[![Build Status](https://travis-ci.org/Vauxoo/odoo.svg?branch=8.0)](https://travis-ci.org/Vauxoo/odoo)
+[![Coverage Status](https://coveralls.io/repos/Vauxoo/odoo/badge.svg?branch=8.0&service=github)](https://coveralls.io/github/Vauxoo/odoo?branch=8.0)
+
+
+Translation Status
+------------------
+
+[![Transifex Status](https://www.transifex.com/projects/p/odoo-8/chart/image_png)](https://www.transifex.com/projects/p/odoo-8)
+
 
 Odoo
 ----

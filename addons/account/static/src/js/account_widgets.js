@@ -184,7 +184,7 @@ openerp.account = function (instance) {
                     self.monetaryIsZero = _.partial(instance.web.float_is_zero, _, digits);
                 })
             );
-    
+
             // Get statement lines
             deferred_promises.push(self.model_bank_statement_line
                 .query(['id'])

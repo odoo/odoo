@@ -111,6 +111,7 @@ class account_invoice_line(osv.osv):
                         'uos_id':i_line.uos_id.id,
                         'account_analytic_id': False,
                         'taxes':i_line.invoice_line_tax_id,
+                        'invl_id': i_line.id,
                     },
 
                     {
@@ -124,6 +125,7 @@ class account_invoice_line(osv.osv):
                         'uos_id':i_line.uos_id.id,
                         'account_analytic_id': i_line.account_analytic_id.id,
                         'taxes':i_line.invoice_line_tax_id,
+                        'invl_id': i_line.id,
                     },
                 ]
         return []
@@ -189,6 +191,7 @@ class account_invoice_line(osv.osv):
                                 'uos_id': line['uos_id'],
                                 'account_analytic_id': line['account_analytic_id'],
                                 'taxes': line.get('taxes', []),
+                                'invl_id': i_line.id,
                                 })
                 return diff_res
         return []
