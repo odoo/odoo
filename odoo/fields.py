@@ -329,6 +329,7 @@ class Field(object):
         'string': None,                 # field label
         'help': None,                   # field tooltip
         'readonly': False,              # whether the field is readonly
+        'save_readonly': False,         # whether the field is readonly and this can be save
         'required': False,              # whether the field is required
         'states': None,                 # set readonly and required depending on state
         'groups': None,                 # csv list of group xml ids
@@ -731,6 +732,7 @@ class Field(object):
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
     _description_readonly = property(attrgetter('readonly'))
+    _description_save_readonly = property(attrgetter('save_readonly'))
     _description_required = property(attrgetter('required'))
     _description_states = property(attrgetter('states'))
     _description_groups = property(attrgetter('groups'))

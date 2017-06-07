@@ -817,6 +817,8 @@ var FormView = View.extend(common.FieldManagerMixin, {
                         // on 'edit' : save non readonly modified fields
                         if (!f.get("readonly")) {
                             values[f.name] = f.get_value(true);
+                        } else if (f.get("readonly") && f.get("save_readonly")){
+                        	values[f.name] = f.get_value();
                         } else {
                             readonly_values[f.name] = f.get_value(true);
                         }
