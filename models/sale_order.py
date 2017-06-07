@@ -273,10 +273,11 @@ class SaleOrderLine(models.Model):
             coupons_to_reactivate.write({'state': 'new'})
             line.order_id.applied_coupon_ids -= coupons_to_reactivate
         # Remove the program from the order in the case it's still valid
-        related_program = self.env['sale.coupon.program'].search([('discount_line_product_id', '=', self.product_id.id)])
-        if related_program:
-            self.order_id.no_code_promo_program_ids -= related_program
-            self.order_id.code_promo_program_id -= related_program
+        for line in self:
+            related_program = self.env['sale.coupon.program'].search([('discount_line_product_id', '=', line.product_id.id)])
+            if related_program:
+                line.order_id.no_code_promo_program_ids -= related_program
+                line.order_id.code_promo_program_id -= related_program
         orders = self.mapped('order_id')
         res = super(SaleOrderLine, self).unlink()
         orders._recompute_coupon_lines()
