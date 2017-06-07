@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>    
+<odoo>
     <!-- Tipos de cuenta nuevos -->
-    <record id="account_type_terceros" model="account.account.type">
+    <record id="l10n_es.account_type_terceros" model="account.account.type">
         <field name="name">Terceros</field>
     </record>
-    <record id="account_type_financieras" model="account.account.type">
+    <record id="l10n_es.account_type_financieras" model="account.account.type">
         <field name="name">Financieras</field>
+    </record>
+
+    <!--TODO OCO
+    ATTENTION
+    Si on reprend finalement certains tags en plus (que je mets ci-dessous pour
+    permettre que ça tourne tant qu'on n'a pas pris une décision), il faudra repasser
+    sur les comptes déclarés dans common, car la version de base utilisée pour ce
+    fichier est celle de commuinty, et donc les nouveaux types définis par les
+    partenaires n'y sont tout simplement PAS !!
+    -->
+
+    <record id="account_type_capital" model="account.account.type"> <!--TODO OCO > account.data_account_type_current_assets-->
+        <field name="name">Capital</field>
+        <field name="include_initial_balance" eval="True"/>
+    </record>
+    <record id="account_type_tax" model="account.account.type"> <!--TODO OCO "traduction" en tag standard inconstante dans le CoA commun ... Que faire ?-->
+        <field name="name">Tax</field>
+        <field name="include_initial_balance" eval="True"/>
+    </record>
+    <record id="account_type_stock" model="account.account.type"> <!--TODO OCO > account.data_account_type_current_assets-->
+        <field name="name">Existencias</field>
+        <field name="include_initial_balance" eval="True"/>
+    </record>
+    <record id="account_type_gastos_neto" model="account.account.type"> <!--TODO OCO (="frais de participations") => Uniquement définis sur full, donc pas possible de trouver une correspondance dans common :/ -->
+        <field name="name">Gastos patrimonio neto</field>
+        <field name="include_initial_balance" eval="True"/>
+    </record>
+    <record id="account_type_ingresos_neto" model="account.account.type"> <!--TODO OCO (="quote-part") A nouveau, pas de correspondance en dehors de full => que faire ?-->
+        <field name="name">Ingresos patrimonio neto</field>
+        <field name="include_initial_balance" eval="True"/>
     </record>
 </odoo>

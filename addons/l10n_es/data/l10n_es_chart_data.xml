@@ -8,17 +8,19 @@
            <field name="code">577</field>
            <field name="user_type_id" ref="account.data_account_type_current_assets" />
            <field name="reconcile" eval="True" />
-        </record>
+        </record> <!--TODO OCO voir si défini chez les partenaires et (probablement déplacer) => attention, tu l'as p-ê déjà rajouté !
+                        ==> Le bouger est probablement une mauvaise idée => l'intérêt, c'est qu'il ne dépend pas d'un CoA, et permet ainsi leur création.
+                        -->
 
-        <record id="account_chart_template_common" model="account.chart.template">
+        <!--record id="account_chart_template_common" model="account.chart.template">
             <field name="name">PGCE común</field>
             <field name="currency_id" ref="base.EUR"/>
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
             <field name="transfer_account_id" ref="common_transfer_account_id"/>
-        </record>
+        </record-->
 
-        <record id="common_transfer_account_id" model="account.account.template">
+        <!--record id="common_transfer_account_id" model="account.account.template">
             <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        </record>
+        </record--> <!--TODO OCO: c'est dégueulasse, ça ! => En fait non, c'est à cause de la déclaration du CoA en plein milieu-->
 </odoo>

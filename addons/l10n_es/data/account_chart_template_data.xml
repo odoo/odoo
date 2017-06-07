@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data noupdate="1">
+
+        <!--Declared here in two parts instead of account_account_template_common_data.xml
+        to allow creating the common CoA without causing a mistake due to a missing
+        value for field transfer_account_id.-->
+        <record id="l10n_es.account_common_572999" model="account.account.template">
+           <field name="name">Cuenta de transferencia inter-bancos</field>
+           <field name="code">572999</field>
+           <field name="user_type_id" ref="account.data_account_type_current_assets" />
+           <field name="reconcile" eval="True" />
+       </record>
+
         <!-- Plantillas de los planes contables - Asignación del resto de valores -->
         <record id="l10n_es.account_chart_template_common" model="account.chart.template">
             <field name="name">PGCE común</field>
@@ -7,7 +19,7 @@
             <field name="currency_id" ref="base.EUR"/>
             <field name="cash_account_code_prefix">570</field>
             <field name="bank_account_code_prefix">572</field>
-            <field name="transfer_account_id" ref="l10n_es.account_572999"/>
+            <field name="transfer_account_id" ref="l10n_es.account_common_572999"/>
             <!--TODO OCO tout ceci n'est pas sur le module du partenaire ... ça doit vraiment disparaître ?
             <field name="property_account_receivable_id" ref="pgc_4300_child"/>
             <field name="property_account_payable_id" ref="pgc_4100_child"/>
@@ -16,4 +28,19 @@
             <field name="income_currency_exchange_account_id" ref="pgc_768_child"/>
             <field name="expense_currency_exchange_account_id" ref="pgc_668_child"/>-->
         </record>
+
+        <record id="l10n_es.account_common_572999" model="account.account.template"> <!--TODO OCO c'était déclaré dans account_chart_template, en 2 parties, chez le partenaire ... Je le bouge ici, mais si jamais il y a une merde, c'est pour ça ! Il faut aussi voir si on ne peut pas s'en débarrasser-->
+           <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+       </record>
+
+        <record id="l10n_es.account_chart_template_pymes" model="account.chart.template">
+            <field name="name">PGCE PYMEs 2008</field>
+            <field name="complete_tax_set" eval="True"/> <!--TODO OCO sert à quoi ?-->
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="cash_account_code_prefix">570</field>
+            <field name="bank_account_code_prefix">572</field>
+            <field name="transfer_account_id" ref="l10n_es.account_common_572999"/>
+            <field name="parent_id" ref="l10n_es.account_chart_template_common"/>
+        </record>
+    </data>
 </odoo>

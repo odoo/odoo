@@ -33,12 +33,13 @@ Spanish charts of accounts (PGCE 2008).
     ],
     "data" : [
         'data/account_account_type_data.xml',
-        'data/l10n_es_chart_data.xml',
-        'data/account_account_template_data.xml',
-        'data/account_data.xml',
+        'data/l10n_es_chart_data.xml', #TODO OCO virer ce fichier
+        'data/account_chart_template_data.xml',
+        #TODO OCO refaire un check général d'utilité
+        'data/account_account_template_common_data.xml',
+        'data/account_account_template_pymes_data.xml',
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
-        'data/account_chart_template_data.xml',
         'data/account_chart_template_data.yml',
     ],
 }

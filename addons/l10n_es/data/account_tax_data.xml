@@ -306,65 +306,65 @@
         <!-- IVA SOPORTADO -->
 
         <record id="iva_sop_4" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">4% IVA Soportado (operaciones corrientes)</field>
             <field name="name">P_IVA4_BC</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_1')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_sop_4_inv" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">4% IVA Soportado (bienes de inversión)</field>
             <field name="name">P_IVA4_BI</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_2')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_sop_10" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">10% IVA Soportado (operaciones corrientes)</field>
             <field name="name">P_IVA10_BC</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_3')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_sop_10_inv" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">10% IVA Soportado (bienes de inversión)</field>
             <field name="name">P_IVA10_BI</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_4')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_sop_12_agr" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">12% IVA Soportado régimen agricultura</field>
             <field name="name">P_IVA12_AGR</field>
             <field eval="12" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field eval="1" name="include_base_amount"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_5')])]"/>
@@ -372,13 +372,13 @@
         </record>
 
         <record id="iva_sop_21" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">21% IVA Soportado (operaciones corrientes)</field>
             <field name="name">P_IVA21_BC</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="sequence" eval="0"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_6')])]"/>
@@ -386,13 +386,13 @@
         </record>
 
         <record id="iva_sop_21_inv" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">21% IVA Soportado (bienes de inversión)</field>
             <field name="name">P_IVA21_BI</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_7')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
@@ -402,7 +402,7 @@
         
         <!-- Compras -->
         <record id="iva_X0_compras_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 0% Importaciones bienes corrientes</field>
             <field name="name">P_IVAO_IBC</field>
             <field eval="0.00" name="amount"/>
@@ -412,7 +412,7 @@
             <field name="tax_group_id" ref="tax_group_iva_0"/>
         </record>
         <record id="iva_X0_compras_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 0% Importaciones bienes de inversión</field>
             <field name="name">P_IVAO_IBI</field>
             <field eval="0.00" name="amount"/>
@@ -423,75 +423,75 @@
         </record>
 
         <record id="iva_X4_compras_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Importaciones bienes corrientes</field>
             <field name="name">P_IVA4_IBC</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_10')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_X4_compras_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Importaciones bienes de inversión</field>
             <field name="name">P_IVA4_IBI</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_11')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_X10_compras_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Importaciones bienes corrientes</field>
             <field name="name">P_IVA10_IBC</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_12')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_X10_compras_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Importaciones bienes de inversión</field>
             <field name="name">P_IVA10_IBI</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_13')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_X21_compras_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Importaciones bienes corrientes</field>
             <field name="name">P_IVA21_IBC</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_14')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_X21_compras_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Importaciones bienes de inversión</field>
             <field name="name">P_IVA21_IBI</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_15')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
@@ -500,7 +500,7 @@
         <!-- Ventas -->
 
         <record id="iva_X0" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 0% Exportaciones</field>
             <field name="name">S_IVAO</field>
             <field eval="0.00" name="amount"/>
@@ -513,7 +513,7 @@
         <!-- INVERSIÓN DEL SUJETO PASIVO -->
 
         <record id="iva_ISP_compras_21_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Inversión del sujeto pasivo (1)</field>
             <field name="name">P_IVA21_SP_1</field>
             <field name="amount" eval="0.00"/>
@@ -523,33 +523,33 @@
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_ISP_compras_21_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Inversión del sujeto pasivo (2)</field>
             <field name="name">P_IVA21_SP_2</field>
             <field name="amount" eval="-21"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_18')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_ISP_compras_21_3" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Inversión del sujeto pasivo (3)</field>
             <field name="name">P_IVA21_SP_3</field>
             <field name="amount" eval="21"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_19')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_ISP_compras_21" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Inversión del sujeto pasivo</field>
             <field name="name">P_IVA21_SP</field>
             <field name="amount" eval="100.00"/>
@@ -564,39 +564,39 @@
         <!-- IVA REPERCUTIDO-->
 
         <record id="iva_rep_4" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4%</field>
             <field name="name">S_IVA4</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_21')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_rep_10" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10%</field>
             <field name="name">S_IVA10</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_22')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_rep_21" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21%</field>
             <field name="name">S_IVA21</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field eval="0" name="sequence"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_23')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
@@ -605,78 +605,78 @@
         <!-- RECARGO DE EQUIVALENCIA -->
 
         <record id="re_05" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">0.50% Recargo Equivalencia Ventas</field>
             <field name="name">S_REQ0.5</field>
             <field eval="0.5" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_24')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_05"/>
         </record>
 
         <record id="re_14" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">1.4% Recargo Equivalencia Ventas</field>
             <field name="name">S_REQ1.4</field>
             <field eval="1.4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_25')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_14"/>
         </record>
 
         <record id="re_52" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">5.2% Recargo Equivalencia Ventas</field>
             <field name="name">S_REQ5.2</field>
             <field eval="5.2" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_477_child"/>
-            <field name="account_id" ref="pgc_477_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_26')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_52"/>
         </record>
 
         <record id="re_buy_05" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">0.50% Recargo Equivalencia Compras</field>
             <field name="name">P_REQ0.5</field>
             <field eval="0.5" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_27')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_05"/>
         </record>
 
         <record id="re_buy_14" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">1.4% Recargo Equivalencia Compras</field>
             <field name="name">P_REQ1.4</field>
             <field eval="1.4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_28')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_14"/>
         </record>
 
         <record id="re_buy_52" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">5.2% Recargo Equivalencia Compras</field>
             <field name="name">P_REQ5.2</field>
             <field eval="5.2" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_472_child"/>
-            <field name="account_id" ref="pgc_472_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_29')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_52"/>
@@ -687,7 +687,7 @@
         <!-- Ventas -->
 
         <record id="iva_IO" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 0% Intracomunitario</field>
             <field name="name">S_IVA0_IC</field>
             <field eval="0.00" name="amount"/>
@@ -700,32 +700,32 @@
         <!-- Compras -->
 
         <record id="iva_IC_compras_4_bc_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes corrientes (1)</field>
             <field name="name">P_IVA4_IC_BC_1</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_31')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_IC_compras_4_bc_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes corrientes (2)</field>
             <field name="name">P_IVA4_IC_BC_2</field>
             <field eval="-4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_32')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_IC_compras_4_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes corrientes</field>
             <field name="name">P_IVA4_IC_BC</field>
             <field eval="100.00" name="amount"/>
@@ -737,32 +737,32 @@
         </record>
 
         <record id="iva_IC_compras_4_bi_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes de inversión (1)</field>
             <field name="name">P_IVA4_IC_BI_1</field>
             <field eval="4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_34')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
         <record id="iva_IC_compras_4_bi_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes de inversión (2)</field>
             <field name="name">P_IVA4_IC_BI_2</field>
             <field eval="-4" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_35')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_4"/>
         </record>
 
         <record id="iva_IC_compras_4_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 4% Intracomunitario. Bienes de inversión</field>
             <field name="name">P_IVA4_IC_BI</field>
             <field eval="100.00" name="amount"/>
@@ -775,32 +775,32 @@
 
 
         <record id="iva_IC_compras_10_bc_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes corrientes (1)</field>
             <field name="name">P_IVA10_IC_BC_1</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_37')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_IC_compras_10_bc_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes corrientes (2)</field>
             <field name="name">P_IVA10_IC_BC_2</field>
             <field eval="-10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_38')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_10_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes corrientes</field>
             <field name="name">P_IVA10_IC_BC</field>
             <field eval="100.00" name="amount"/>
@@ -812,32 +812,32 @@
         </record>
 
         <record id="iva_IC_compras_10_bi_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes de inversión (1)</field>
             <field name="name">P_IVA10_IC_BI_1</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_40')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
         <record id="iva_IC_compras_10_bi_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes de inversión (2)</field>
             <field name="name">P_IVA10_IC_BI_2</field>
             <field eval="-10" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_41')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_10"/>
         </record>
 
         <record id="iva_IC_compras_10_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 10% Intracomunitario. Bienes de inversión</field>
             <field name="name">P_IVA10_IC_BI</field>
             <field eval="100.00" name="amount"/>
@@ -849,32 +849,32 @@
         </record>
 
         <record id="iva_IC_compras_21_bc_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes corrientes (1)</field>
             <field name="name">P_IVA21_IC_BC_1</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_43')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_IC_compras_21_bc_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes corrientes (2)</field>
             <field name="name">P_IVA21_IC_BC_2</field>
             <field eval="-21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_44')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_bc" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes corrientes</field>
             <field name="name">P_IVA21_IC_BC</field>
             <field eval="100.00" name="amount"/>
@@ -886,32 +886,32 @@
         </record>
 
         <record id="iva_IC_compras_21_bi_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes de inversión (1)</field>
             <field name="name">P_IVA21_IC_BI_1</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_46')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
         <record id="iva_IC_compras_21_bi_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes de inversión (2)</field>
             <field name="name">P_IVA21_IC_BI_2</field>
             <field eval="-21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_47')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_bi" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Bienes de inversión</field>
             <field name="name">P_IVA21_IC_BI</field>
             <field eval="100.00" name="amount"/>
@@ -923,33 +923,33 @@
         </record>
 
         <record id="iva_IC_compras_21_sv_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Servicios (1)</field>
             <field name="name">P_IVA21_IC_SV_1</field>
             <field eval="21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_472_child"/>
-            <field name="refund_account_id" ref="pgc_472_child"/>
+            <field name="account_id" ref="l10n_es.account_common_472"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_472"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_49')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_sv_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Servicios (2)</field>
             <field name="name">P_IVA21_IC_SV_2</field>
             <field eval="-21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="account_id" ref="pgc_477_child"/>
-            <field name="refund_account_id" ref="pgc_477_child"/>
+            <field name="account_id" ref="l10n_es.account_common_477"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_477"/>
             <field name="type_tax_use">none</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_50')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
         </record>
 
         <record id="iva_IC_compras_21_sv" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA 21% Intracomunitario. Servicios</field>
             <field name="name">P_IVA21_IC_SV</field>
             <field eval="100.00" name="amount"/>
@@ -965,7 +965,7 @@
         <!-- Ventas -->
 
         <record id="iva_rep_ex" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA Exento</field>
             <field name="name">S_IVA0</field>
             <field eval="0.0" name="amount"/>
@@ -978,7 +978,7 @@
         <!-- Compras -->
 
         <record id="iva_sop_ex" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">IVA Soportado exento (operaciones corrientes)</field>
             <field name="name">P_IVA0_BC</field>
             <field eval="0.0" name="amount"/>
@@ -1004,26 +1004,26 @@
 
         <!-- Retenciones soportadas -->
         <record id="irpf_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 1%</field>
             <field name="name">P_IRPF1</field>
             <field eval="-1" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_54')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_1"/>
         </record>
 
         <record id="irpf_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 2%</field>
             <field name="name">P_IRPF2</field>
             <field eval="-2" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field eval="50" name="sequence"/>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_55')])]"/>
@@ -1031,65 +1031,65 @@
         </record>
 
         <record id="irpf_7" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 7%</field>
             <field name="name">P_IRPF7</field>
             <field eval="-7" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_56')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_7"/>
         </record>
 
         <record id="irpf_9" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 9%</field>
             <field name="name">P_IRPF9</field>
             <field eval="-9" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_57')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_9"/>
         </record>
 
         <record id="irpf_15" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 15%</field>
             <field name="name">P_IRPF15</field>
             <field eval="-15" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_58')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
         <record id="irpf_20" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 20%</field>
             <field name="name">P_IRPF20</field>
             <field eval="-20" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_59')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_20"/>
         </record>
 
         <record id="irpf_21" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones IRPF 21%</field>
             <field name="name">P_IRPF21</field>
             <field eval="-21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_4751_child"/>
-            <field name="account_id" ref="pgc_4751_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_4751"/>
+            <field name="account_id" ref="l10n_es.account_common_4751"/>
             <field name="type_tax_use">purchase</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_60')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
@@ -1099,91 +1099,91 @@
         <!-- Retenciones practicadas -->
 
         <record id="irpf_sale_1" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 1%</field>
             <field name="name">S_IRPF1</field>
             <field eval="-1" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_61')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_1"/>
         </record>
 
         <record id="irpf_sale_2" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 2%</field>
             <field name="name">S_IRPF2</field>
             <field eval="-2" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_62')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_2"/>
         </record>
 
         <record id="irpf_sale_7" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 7%</field>
             <field name="name">S_IRPF7</field>
             <field eval="-7" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_63')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_7"/>
         </record>
 
         <record id="irpf_sale_9" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 9%</field>
             <field name="name">S_IRPF9</field>
             <field eval="-9" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_64')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_9"/>
         </record>
 
         <record id="irpf_sale_15" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 15%</field>
             <field name="name">S_IRPF15</field>
             <field eval="-15" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_65')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_15"/>
         </record>
 
         <record id="irpf_sale_20" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 20%</field>
             <field name="name">S_IRPF20</field>
             <field eval="-20" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_66')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_20"/>
         </record>
 
         <record id="irpf_sale_21" model="account.tax.template">
-            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
             <field name="description">Retenciones a cuenta IRPF 21%</field>
             <field name="name">S_IRPF21</field>
             <field eval="-21" name="amount"/>
             <field name="amount_type">percent</field>
-            <field name="refund_account_id" ref="pgc_473_child"/>
-            <field name="account_id" ref="pgc_473_child"/>
+            <field name="refund_account_id" ref="l10n_es.account_common_473"/>
+            <field name="account_id" ref="l10n_es.account_common_473"/>
             <field name="type_tax_use">sale</field>
             <field name="tag_ids" eval="[(6,0,[ref('tax_tag_67')])]"/>
             <field name="tax_group_id" ref="tax_group_iva_21"/>
