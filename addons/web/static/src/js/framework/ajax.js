@@ -203,7 +203,7 @@ function get_file(options) {
     // opening a new window seems the best way to workaround
     if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
         var params = _.extend({}, options.data || {}, {token: token});
-        var url = options.session.url(options.url, params);
+        var url = (options.url || '/') + '?' + $.param(params);
         if (options.complete) { options.complete(); }
 
         return window.open(url);
