@@ -255,6 +255,9 @@ For Odoo 10.0 Enterprise, get the package from the Download_ page. Then run:
             repositories does not support headers and footers so it can not
             be installed automatically. Use the version available on
             `the wkhtmltopdf download page`_.
+.. warning:: If you print large PDF file (over 100 pages) with footer and header, 
+             an error can be occure (error : -11). This error come from an excess of handle file (256 on mac os).
+             You can fixe this issue by raising this limit : http://stackoverflow.com/questions/16526783/python-subprocess-too-many-open-files.
 
 Configuration
 '''''''''''''
