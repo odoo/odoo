@@ -250,9 +250,14 @@ odoo.define('website_sale.website_sale', function (require) {
                 precision = parseInt($(".decimal_precision").last().data('precision'));
                 if (!precision) { precision = 0; } //todo: remove me in master/saas-17
             }
-            var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
-            formatted[0] = utils.insert_thousand_seps(formatted[0]);
-            return formatted.join(l10n.decimal_point);
+            if (precision) {
+                var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+                formatted[0] = utils.insert_thousand_seps(formatted[0]);
+                return formatted.join(l10n.decimal_point);
+            }
+            else {
+                return price;
+            }
         }
 
         function update_product_image(event_source, product_id) {
