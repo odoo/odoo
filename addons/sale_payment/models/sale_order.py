@@ -27,7 +27,7 @@ class SaleOrder(models.Model):
         env = self.env
         # auto-increment reference with a number suffix
         # if the reference already exists
-        reference = env['payment.transaction'].get_next_reference(self.reference)
+        reference = env['payment.transaction'].get_next_reference(self.name)
         acquirers = env['payment.acquirer'].sudo().search([
             ('website_published', '=', True),
             ('company_id', '=', self.company_id.id)
@@ -72,8 +72,7 @@ class SaleOrder(models.Model):
                 'currency_id': self.currency_id.id,
                 'partner_id': self.partner_id.id,
                 'partner_country_id': self.partner_id.country_id.id,
-                'reference': Transaction.get_next_reference(self.reference),
-                'payment_request_id': self.id,
+                'reference': Transaction.get_next_reference(self.name),
             }
             if add_tx_values:
                 tx_values.update(add_tx_values)
