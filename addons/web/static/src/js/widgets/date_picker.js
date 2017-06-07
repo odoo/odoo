@@ -39,6 +39,7 @@ var DateWidget = Widget.extend({
             locale : moment.locale(),
             allowInputToggle: true,
             keyBinds: null,
+            widgetParent: 'body',
         });
     },
     start: function() {

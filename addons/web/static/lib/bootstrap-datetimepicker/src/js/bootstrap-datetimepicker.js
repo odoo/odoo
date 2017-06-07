@@ -421,6 +421,12 @@
                     element.children().first().after(widget);
                 }
 
+                // !! ODOO FIX START !!
+                var parentOffset = parent.offset();
+                position.top = offset.top - parentOffset.top;
+                position.left = offset.left - parentOffset.left;
+                // !! ODOO FIX END !!
+
                 // Top and bottom logic
                 if (vertical === 'auto') {
                     if (offset.top + widget.height() * 1.5 >= $(window).height() + $(window).scrollTop() &&
