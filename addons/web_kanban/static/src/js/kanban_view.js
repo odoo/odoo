@@ -72,6 +72,7 @@ var KanbanView = View.extend({
         this.grouped_by_m2o = undefined;
         this.relation = undefined;
         this.is_empty = undefined;
+        this.editable = this.fields_view.arch.attrs.editable;
         // Retrieve many2manys stored in the fields_view if it has already been processed
         this.many2manys = this.fields_view.many2manys || [];
         this.m2m_context = {};
@@ -176,6 +177,20 @@ var KanbanView = View.extend({
             'offset': offset,
         };
         dataset = dataset || this.dataset;
+        // short the new created record in first
+        if (this.editable === "top") {
+            var e_string = [];
+            var e_ids = [];
+            var ids = dataset.ids;
+            for (var x in ids) {
+                if (typeof ids[x] === "string") {
+                    e_string.unshift(ids[x]);
+                } else {
+                    e_ids.push(ids[x]);
+                }
+            }
+            dataset.ids = e_string.concat(e_ids);
+        }
         return dataset
             .read_slice(this.fields_keys.concat(['__last_update']), options)
             .then(function(records) {
