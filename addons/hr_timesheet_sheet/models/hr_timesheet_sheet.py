@@ -115,9 +115,13 @@ class HrTimesheetSheet(models.Model):
         return super(HrTimesheetSheet, self).write(vals)
 
     @api.multi
-    def action_timesheet_draft(self):
+    def _check_action_timesheet_draft_allowed(self):
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             raise UserError(_('Only an HR Officer or Manager can refuse timesheets or reset them to draft.'))
+
+    @api.multi
+    def action_timesheet_draft(self):
+        self._check_action_timesheet_draft_allowed()
         self.write({'state': 'draft'})
         return True
 
@@ -130,9 +134,13 @@ class HrTimesheetSheet(models.Model):
         return True
 
     @api.multi
-    def action_timesheet_done(self):
+    def _check_action_timesheet_done_allowed(self):
         if not self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             raise UserError(_('Only an HR Officer or Manager can approve timesheets.'))
+
+    @api.multi
+    def action_timesheet_done(self):
+        self._check_action_timesheet_done_allowed()
         if self.filtered(lambda sheet: sheet.state != 'confirm'):
             raise UserError(_("Cannot approve a non-submitted timesheet."))
         self.write({'state': 'done'})
