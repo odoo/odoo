@@ -837,6 +837,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on separators', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<separator string="Geolocation" attrs=\'{"invisible": [["bar", "=", True]]}\'/>'+
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.strictEqual(form.$('div.o_horizontal_separator').hasClass('o_invisible_modifier'), true,
+                "separator div should be hidden");
+        form.destroy();
+    });
+
     QUnit.test('buttons in form view', function (assert) {
         assert.expect(7);
 

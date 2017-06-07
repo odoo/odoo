@@ -732,7 +732,10 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagSeparator: function (node) {
-        return $('<div/>').addClass('o_horizontal_separator').text(node.attrs.string);
+        var $separator = $('<div/>').addClass('o_horizontal_separator').text(node.attrs.string);
+        this._handleAttributes($separator, node);
+        this._registerModifiers(node, this.state, $separator);
+        return $separator;
     },
     /**
      * @private
