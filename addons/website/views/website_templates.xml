@@ -163,8 +163,9 @@
     <xpath expr="//header//ul[@id='top_menu']/li[@class='divider']" position="replace">
         <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
     </xpath>
-    <xpath expr="//header//u[@id='top_menu']/li[@class='dropdown']" position="replace">
-        <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id"/>
+    <xpath expr="//header//ul[@id='top_menu']/li[@class='dropdown']" position="attributes">
+        <attribute name="t-if">"website.user_id != user_id"</attribute>
+        <!-- <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id"> -->
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[@class='divider']" position="before">
         <t t-foreach="website.menu_id.child_id" t-as="submenu">

@@ -1,5 +1,5 @@
 <odoo>
-	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="website_portal.portal_layout" priority="30">
+	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'invoice'" class="active">
                 Invoices
@@ -7,7 +7,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="website_portal.portal_my_home" priority="30">
+    <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
         <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
             <li t-if="invoice_count" class="list-group-item">
                 <span class="badge" t-esc="invoice_count"/>
@@ -17,9 +17,9 @@
     </template>
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
-      <t t-call="website_portal.portal_layout">
+      <t t-call="portal.portal_layout">
         <h3>Invoices
-            <t t-call="website_portal.portal_searchbar"/>
+            <t t-call="portal.portal_searchbar"/>
         </h3>
         <t t-if="not invoices">
             <p>There are currently no invoices and payments for your account.</p>

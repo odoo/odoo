@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="45">
+    <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="portal.portal_layout" priority="45">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'issue' or issue">
                 <a t-if="issue" t-attf-href="/my/issues?{{ keep_query() }}">Issues</a>
@@ -13,7 +13,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="45">
+    <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="portal.portal_my_home" priority="45">
         <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
             <li t-if="issue_count" class="list-group-item">
                 <span class="badge" t-esc="issue_count"/>
@@ -23,9 +23,9 @@
     </template>
 
     <template id="my_issues" name="My Issues">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <h3>Issues
-                <t t-call="website_portal.portal_searchbar"/>
+                <t t-call="portal.portal_searchbar"/>
             </h3>
             <t t-if="not issues">
                 <div class="alert alert-warning mt8" role="alert">
@@ -61,13 +61,13 @@
     </template>
 
     <template id="my_issues_issue" name="My Issue">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12">
                             <h4>
-                                <t t-call='website_portal.record_pager'/>
+                                <t t-call='portal.record_pager'/>
                                 Issue <span t-esc="issue.id"/> - <span t-field="issue.name"/>
                                 <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.issue&amp;id=%s&amp;view_type=form' % (issue.id)" groups="project.group_project_user">Edit Issue</a>
                                 <span t-field="issue.stage_id.name" class="pull-right label label-info" title="Current stage of this issue"/>

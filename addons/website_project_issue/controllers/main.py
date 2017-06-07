@@ -4,7 +4,8 @@
 from collections import OrderedDict
 
 from odoo import http, _
-from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
+from odoo.addons.portal.controllers.portal import get_records_pager
+from odoo.addons.website_portal.controllers.main import website_account
 from odoo.http import request
 from odoo.osv.expression import OR
 from odoo.tools import pycompat
