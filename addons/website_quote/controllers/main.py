@@ -60,26 +60,19 @@ class sale_quote(http.Controller):
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,
             'need_payment': order_sudo.invoice_status == 'to invoice' and Transaction.state in ['draft', 'cancel', 'error'],
             'token': token,
+            'show_button_modal_cancel': True,
+            'call_url': '/quote/%s/transaction' % order_sudo.id,
         }
 
         if order_sudo.require_payment or values['need_payment']:
-            values['acquirers'] = list(request.env['payment.acquirer'].sudo().search([('website_published', '=', True), ('company_id', '=', order_sudo.company_id.id)]))
-            extra_context = {
-                'submit_class': 'btn btn-primary',
-                'submit_txt': _('Pay & Confirm')
+            render_values = {
+                'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+                'type': 'form',
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+                'partner_id': order_sudo.partner_id.id,
             }
-            values['buttons'] = {}
-            for acquirer in values['acquirers']:
-                values['buttons'][acquirer.id] = acquirer.with_context(**extra_context).render(
-                    '/',
-                    order_sudo.amount_total,
-                    order_sudo.pricelist_id.currency_id.id,
-                    values={
-                        'return_url': '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                        'type': 'form',
-                        'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                        'partner_id': order_sudo.partner_id.id,
-                    })
+            values.update(order_sudo.with_context(submit_class="btn btn-primary", submit_txt=_('Pay & Confirm'))._prepare_payment_acquirer(values=render_values))
+            values['save_option'] = False
         history = request.session.get('my_quotes_history', [])
         values.update(get_records_pager(history, order_sudo))
         return request.render('website_quote.so_quotation', values)
@@ -176,15 +169,17 @@ class sale_quote(http.Controller):
         token = request.env['payment.token'].sudo()  # currently no support of payment tokens
         tx = request.env['payment.transaction'].sudo().search([('reference', '=', order.name)], limit=1)
         tx_type = order._get_payment_type()
-        tx = tx.check_or_create_sale_tx(order, acquirer, payment_token=token, tx_type=tx_type, add_tx_values={
+        tx = order._prepare_payment_transaction(acquirer, tx_type=tx_type, transaction=tx, payment_token=token, add_tx_values={
             'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', order._name)], limit=1).id,
             'callback_res_id': order.id,
             'callback_method': '_confirm_online_quote',
         })
         request.session['quote_%s_transaction_id' % order.id] = tx.id
 
-        return tx.render_sale_button(order, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
-                                     submit_txt=_('Pay & Confirm'), render_values={
-                                         'type': order._get_payment_type(),
-                                         'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
-                                         })
+        return order.render_sale_payment_button(
+            tx, '/quote/%s/%s' % (order_id, token) if token else '/quote/%s' % order_id,
+            submit_txt=_('Pay & Confirm'), render_values={
+                'type': order._get_payment_type(),
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+            }
+        )
