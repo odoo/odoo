@@ -482,11 +482,6 @@ class Task(models.Model):
             if task.parent_id.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
                 raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))
 
-    @api.constrains('date_start', 'date_end')
-    def _check_dates(self):
-        if any(self.filtered(lambda task: task.date_start and task.date_end and task.date_start > task.date_end)):
-            raise ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
-
     # Override view according to the company definition
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
