@@ -4895,5 +4895,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('wow effect', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        var clickCount = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<button name="test" string="Mark Won" type="object" class="o_wow"/>' +
+                '</form>',
+            intercepts: {
+                execute_action: function (event) {
+                    if (clickCount === 0) {
+                        event.data.on_success();
+                    } else {
+                        event.data.on_fail();
+                    }
+                    clickCount++;
+                },
+                show_wow: function () {
+                    assert.step('wow');
+                },
+            },
+        });
+
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+
+        form.destroy();
+    });
 });
 });

@@ -206,7 +206,7 @@ var FormRenderer = BasicRenderer.extend({
             self.trigger_up('button_clicked', {
                 attrs: node.attrs,
                 record: self.state,
-                show_wow: self.$el.hasClass('o_wow'),  // TODO: implement this (in view)
+                showWow: $el.hasClass('o_wow'),
             });
         });
     },
