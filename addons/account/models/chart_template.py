@@ -836,11 +836,6 @@ class WizardMultiChartsAccounts(models.TransientModel):
         accounting properties... accordingly for the chosen company.
         '''
         existing_accounts = self.env['account.account'].search([('company_id', '=', self.company_id.id)])
-        if self.env.context.get('first_install', True) and len(existing_accounts) > 0:
-            # We are in a case where we already have some accounts existing, meaning that user has probably
-            # created its own accounts and does not need a coa, so skip installation of coa.
-            _logger.info('Could not install chart of account since some accounts already exists for the company (%s)', (self.company_id.id,))
-            return {}
         if existing_accounts:
             model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.bank.statement']
             for model in model_to_check:
