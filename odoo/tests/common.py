@@ -382,6 +382,13 @@ class HttpCase(TransactionCase):
             if phantom.poll() is None:
                 phantom.terminate()
                 phantom.wait()
+
+            # check PhantomJS health
+            from signal import SIGSEGV
+            _logger.info("Phantom JS return code: %d" % phantom.returncode)
+            if phantom.returncode == -SIGSEGV:
+                _logger.error("Phantom JS has crashed (segmentation fault) during testing; log may not be relevant")
+
             self._wait_remaining_requests()
             # we ignore phantomjs return code as we kill it as soon as we have ok
             _logger.info("phantom_run execution finished")
