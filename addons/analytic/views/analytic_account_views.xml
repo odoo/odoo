@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <!--
+        <record id="account_analytic_distribution_tree_view" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.tree</field>
+            <field name="model">account.analytic.distribution</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Distribution">
+                    <field name="account_id"/>
+                    <field name="percentage"/>
+                </tree>
+            </field>
+        </record>
+        -->
         <record id="account_analytic_tag_tree_view" model="ir.ui.view">
             <field name="name">account.analytic.tag.tree</field>
             <field name="model">account.analytic.tag</field>
@@ -23,8 +35,15 @@
                         </div>
                         <group>
                             <field name="name"/>
-                            <field name="analytic_distribution"/>
+                            <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
                         </group>
+                        <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
+                            attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
+                            <tree string="Analytic Distribution" editable="bottom">
+                                <field name="account_id"/>
+                                <field name="percentage"/>
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>
@@ -328,6 +347,7 @@
                     <field name="account_id" type="row"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>
+                    <field name="amount_user_currency" type="measure"/>
                 </pivot>
             </field>
         </record>
