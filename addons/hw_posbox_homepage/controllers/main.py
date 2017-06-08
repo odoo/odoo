@@ -156,6 +156,12 @@ class PosboxHomepage(openerp.addons.web.controllers.main.Home):
                         <input type="submit" value="Clear persistent network configuration"/>
                 </form>
         </p>
+        <p>
+                You can scan for wifi networks in your surrounding:
+                <form action='/wifi_scan'>
+                        <input type="submit" value="Scan for wifi networks"/>
+                </form>
+        </p>
         <form>
     </body>
 </html>
@@ -171,6 +177,11 @@ class PosboxHomepage(openerp.addons.web.controllers.main.Home):
 
         subprocess.call(['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/connect_to_wifi.sh', essid, password, persistent])
         return "connecting to " + essid
+
+    @http.route('/wifi_scan', type='http', auth='none', cors='*')
+    def wifi_scan(self):
+        os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/scan_wifi.sh')
+        return "scanning wifi"
 
     @http.route('/wifi_clear', type='http', auth='none', cors='*')
     def clear_wifi_configuration(self):
