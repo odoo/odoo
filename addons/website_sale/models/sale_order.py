@@ -215,7 +215,8 @@ class website(orm.Model):
         partner = self.pool['res.users'].browse(cr, SUPERUSER_ID, uid, context=context).partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
-        pl_ids = self._get_pl_partner_order(cr, uid, isocountry, show_visible,
+        new_uid = request.session.get('uid', uid) if request.session else uid
+        pl_ids = self._get_pl_partner_order(cr, new_uid, isocountry, show_visible,
                                             website.user_id.sudo().partner_id.property_product_pricelist.id,
                                             request.session.get('website_sale_current_pl'),
                                             website.website_pricelist_ids,
@@ -268,6 +269,7 @@ class website(orm.Model):
                 # then this special pricelist is amongs these available pricelists, and therefore it won't fall in this case.
                 pl = available_pricelists[0]
 
+        request.session['website_sale_current_pl'] = pl.id
         return pl
 
     def sale_product_domain(self, cr, uid, ids, context=None):
