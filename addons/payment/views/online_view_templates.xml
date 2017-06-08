@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- new layout view for online -->
+    <template id="layout" name="Online Payment Layout">&lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <meta charset="utf-8" />
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-esc="title or 'Odoo Online Payment'"/></title>
+                <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </head>
+            <body>
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <a href="/" class="navbar-brand logo">
+                                    <img class="company_logo" t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                                </a>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                    <li><span class="navbar-text o_powered_by">
+                                            Powered By
+                                        </span>
+                                        <img src="/web/static/src/img/logo.png"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <footer>
+                <div class="container mt16 mb8" id="footer"/>
+            </footer>
+        </html>
+    </template>
+
+    <!-- Forbidden error messages-->
+    <template id="403">
+        <t t-call="payment.layout">
+            <div id="wrap">
+                <div class="container">
+                    <h1 class="mt32">403: Forbidden</h1>
+                    <p>The page you were looking for could not be authorized.</p>
+                    <p>Maybe you were looking for this popular page ?</p>
+                    <li><a href="/web">Home</a></li>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Page not found error messages-->
+    <template id="404">
+        <t t-call="payment.layout">
+            <div id="wrap">
+                <t t-raw="0"/>
+                <div class="oe_structure oe_empty">
+                    <div class="container">
+                        <h1 class="mt32">404: Page not found!</h1>
+                        <p>
+                            The page you were looking for could not be found; it is possible you have
+                            typed the address incorrectly, but it has most probably been removed due
+                            to the recent website reorganisation.
+                        </p>
+                        <p>Maybe you were looking for one of these popular pages ?</p>
+                        <ul>
+                            <li><a href="/web">Homepage</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
