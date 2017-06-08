@@ -15,6 +15,7 @@ except ImportError:
 import odoo
 from odoo import api, models
 from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
+from odoo.addons.portal.controllers.portal import pager
 from odoo.http import request
 from odoo.tools import config, ustr
 
@@ -282,6 +283,7 @@ class IrHttp(models.AbstractModel):
                         set on request will be created with uid=None (and it is a lazy property)
         """
         first_pass = not hasattr(request, 'website_enabled')
+        request.pager = pager
 
         func = None
         # locate the controller method
