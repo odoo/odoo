@@ -86,6 +86,11 @@ class common_report_header(object):
     def _get_account(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return self.pool.get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
+        elif data['model'] == 'account.account' and data['ids']:
+            account = self.pool.get('account.account').browse(self.cr, self.uid, data['ids'][0])
+            while account.parent_id:  # Need to traverse one by one as there is no parent_of operator
+                account = account.parent_id
+            return account.name
         return ''
 
     def _get_sortby(self, data):
