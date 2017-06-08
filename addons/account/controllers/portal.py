@@ -5,10 +5,10 @@ from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.portal.controllers.portal import CustomerPortal
 
 
-class PortalAccount(website_account):
+class PortalAccount(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(PortalAccount, self)._prepare_portal_layout_values()
@@ -53,7 +53,7 @@ class PortalAccount(website_account):
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)
         # pager
-        pager = request.website.pager(
+        pager = request.pager(
             url="/my/invoices",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=invoice_count,
@@ -72,7 +72,7 @@ class PortalAccount(website_account):
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
         })
-        return request.render("website_account.portal_my_invoices", values)
+        return request.render("account.portal_my_invoices", values)
 
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="user", website=True)
     def portal_my_invoices_report(self, invoice_id, **kw):
@@ -80,8 +80,10 @@ class PortalAccount(website_account):
         try:
             invoice.check_access_rights('read')
             invoice.check_access_rule('read')
+        # TDE FIXME: does not exist, or maybe, don't know
         except AccessError:
-            return request.render("website.403")
+            return request.redirect('/my')
+
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
         pdf = request.env.ref('account.account_invoices').sudo().render_qweb_pdf([invoice_id])[0]
