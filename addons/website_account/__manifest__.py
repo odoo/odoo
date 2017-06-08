@@ -15,10 +15,6 @@ Add your accounting document in the frontend portal. Give customers the list and
         'website_payment',
     ],
     'data': [
-        'views/account_views.xml',
-        'views/account_templates.xml',
-        'security/ir.model.access.csv',
-        'security/account.xml',
     ],
     'demo': [],
     'installable': True,

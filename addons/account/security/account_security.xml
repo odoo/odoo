@@ -128,5 +128,19 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <!-- Portal for invoice and invoice lines -->
+    <record id="account_invoice_rule_portal" model="ir.rule">
+        <field name="name">Portal Personal Account Invoices</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_portal" model="ir.rule">
+        <field name="name">Portal Invoice Lines</field>
+        <field name="model_id" ref="account.model_account_invoice_line"/>
+        <field name="domain_force">[('invoice_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
 </data>
 </odoo>
