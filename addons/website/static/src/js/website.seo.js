@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var Class = require('web.Class');
 var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
+var rpc = require("web.rpc");
 var Widget = require('web.Widget');
 var base = require('web_editor.base');
 var website = require('website.website');
@@ -490,22 +491,21 @@ var Configurator = Dialog.extend({
             def.resolve(null);
         } else {
             var fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords'];
-            this._rpc({
-                    model: obj.model,
-                    method: 'read',
-                    args: [[obj.id], fields, base.get_context()],
-                })
-                .then(function (data) {
-                    if (data.length) {
-                        var meta = data[0];
-                        meta.model = obj.model;
-                        def.resolve(meta);
-                    } else {
-                        def.resolve(null);
-                    }
-                }).fail(function () {
-                    def.reject();
-                });
+            rpc.query({
+                model: obj.model,
+                method: 'read',
+                args: [[obj.id], fields, base.get_context()],
+            }).then(function (data) {
+                if (data.length) {
+                    var meta = data[0];
+                    meta.model = obj.model;
+                    def.resolve(meta);
+                } else {
+                    def.resolve(null);
+                }
+            }).fail(function () {
+                def.reject();
+            });
         }
         return def;
     },
@@ -514,11 +514,11 @@ var Configurator = Dialog.extend({
         if (!obj) {
             return $.Deferred().reject();
         } else {
-            return this._rpc({
-                    model: obj.model,
-                    method: 'write',
-                    args: [[obj.id], data, base.get_context()],
-                });
+            return rpc.query({
+                model: obj.model,
+                method: 'write',
+                args: [[obj.id], data, base.get_context()],
+            });
         }
     },
     titleChanged: function () {
