@@ -88,7 +88,13 @@ class pos_details(report_sxw.rml_parse):
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
         date_start, date_end = self._get_utc_time_range(form)
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=', date_start),('date_order','<=',date_end),('user_id','in',user_ids),('company_id','=',company_id),('invoice_id','<>',False)])
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order','>=', date_start),
+            ('date_order','<',date_end),
+            ('user_id','in',user_ids),
+            ('company_id','=',company_id),
+            ('invoice_id','<>',False)
+        ])
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_invoiced += (pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))
@@ -107,7 +113,12 @@ class pos_details(report_sxw.rml_parse):
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
         date_start, date_end = self._get_utc_time_range(form)
-        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',date_start),('date_order','<=',date_end),('user_id','in',user_ids),('company_id','=',company_id)])
+        pos_ids = pos_obj.search(self.cr, self.uid, [
+            ('date_order','>=',date_start),
+            ('date_order','<',date_end),
+            ('user_id','in',user_ids),
+            ('company_id','=',company_id)
+        ])
         for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
             for pol in pos.lines:
                 self.total_discount += ((pol.price_unit * pol.qty) * (pol.discount / 100))
@@ -119,7 +130,13 @@ class pos_details(report_sxw.rml_parse):
         user_ids = form['user_ids'] or self._get_all_users()
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
         date_start, date_end = self._get_utc_time_range(form)
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',date_start),('date_order','<=',date_end),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
+        pos_ids = pos_order_obj.search(self.cr, self.uid, [
+            ('date_order','>=',date_start),
+            ('date_order','<',date_end),
+            ('state','in',['paid','invoiced','done']),
+            ('user_id','in',user_ids),
+            ('company_id', '=', company_id)
+        ])
         data={}
         if pos_ids:
             st_line_ids = statement_line_obj.search(self.cr, self.uid, [('pos_statement_id', 'in', pos_ids)])
@@ -163,7 +180,13 @@ class pos_details(report_sxw.rml_parse):
         pos_order_obj = self.pool.get('pos.order')
         company_id = self.pool['res.users'].browse(self.cr, self.uid, self.uid).company_id.id
         date_start, date_end = self._get_utc_time_range(form)
-        pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',date_start),('date_order','<=',date_end),('state','in',['paid','invoiced','done']),('user_id','in',user_ids), ('company_id', '=', company_id)])
+        pos_ids = pos_order_obj.search(self.cr, self.uid, [
+            ('date_order','>=',date_start),
+            ('date_order','<',date_end),
+            ('state','in',['paid','invoiced','done']),
+            ('user_id','in',user_ids),
+            ('company_id', '=', company_id)
+        ])
         for order in pos_order_obj.browse(self.cr, self.uid, pos_ids):
             currency = order.session_id.currency_id
             for line in order.lines:
