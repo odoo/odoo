@@ -20,3 +20,8 @@ class ProjectConfiguration(models.TransientModel):
     module_sale_timesheet = fields.Boolean("Time Billing")
     module_hr_expense = fields.Boolean("Expenses")
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
+
+    @api.onchange('module_sale_timesheet')
+    def _onchange_module_sale_timesheet(self):
+        if self.module_sale_timesheet:
+            self.module_hr_timesheet = True
