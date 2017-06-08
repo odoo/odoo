@@ -63,10 +63,9 @@ class AccountInvoice(models.Model):
 
                 # NOTE JEM : changing quantity (or unit price) of invoice line does not impact the revenue calculation. (FP specs)
                 if uninvoiced_timesheet_lines:
-                    precision = invoice_line.currency_id.decimal_places
                     # delivered : update revenue with the prorata of number of hours on the timesheet line
                     if invoice_line.product_id.invoice_policy == 'delivery':
-                        invoiced_price_per_hour = float_round(invoice_line.price_subtotal / float(sum(uninvoiced_timesheet_lines.mapped('unit_amount'))), precision)
+                        invoiced_price_per_hour = invoice_line.currency_id.round(invoice_line.price_subtotal / float(sum(uninvoiced_timesheet_lines.mapped('unit_amount'))))
                         # invoicing analytic lines of different currency
                         total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('company_currency_id').ids, 0.0)
                         for index, timesheet_line in enumerate(uninvoiced_timesheet_lines):
