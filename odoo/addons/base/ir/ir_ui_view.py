@@ -773,7 +773,8 @@ actual arch.
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
-        orm.transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
+        #orm.transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view)
+        orm.transfer_node_to_modifiers(node, modifiers, self._context, in_tree_view, self.env)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter', 'separator')):
