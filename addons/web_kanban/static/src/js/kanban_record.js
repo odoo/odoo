@@ -153,6 +153,17 @@ var KanbanRecord = Widget.extend({
         return url;
     },
 
+    kanban_text_ellipsis: function(s, size) {
+        size = size || 160;
+        if (!s) {
+            return '';
+        } else if (s.length <= size) {
+            return s;
+        } else {
+            return s.substr(0, size) + '...';
+        }
+    },
+
     kanban_getcolor: function(variable) {
         if (typeof(variable) === 'number') {
             return Math.round(variable) % 10;
