@@ -249,6 +249,7 @@ class Lead(models.Model):
         team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
         return {'team_id': team_id}
 
+    @api.constrains('user_id')
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
