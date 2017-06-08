@@ -139,11 +139,7 @@ models.Orderline = models.Orderline.extend({
         this.trigger('change',this);
     },
     get_line_diff_hash: function(){
-        if (this.get_note()) {
-            return this.id + '|' + this.get_note();
-        } else {
-            return '' + this.id;
-        }
+        return this.id;
     },
 });
 
