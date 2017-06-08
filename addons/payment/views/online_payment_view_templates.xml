@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="invoice_payment_detail" name="Payment Detail">
+        <div id="wrap">
+            <div t-att-class="payment_request.state == 'paid' and 'panel panel-success' or payment_request.state == 'pending' and 'panel panel-warning' or 'panel panel-default'">
+                <t t-if="payment_request.state not in ['open', 'paid'] and message">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <h4>
+                                <div class="col-md-6" t-raw="message"/>
+                            </h4>
+                        </div>
+                    </div>
+                </t>
+                <div class="panel-body">
+                    <div class="o_invoice_report_html">
+                        <iframe id="print_invoice"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="invoice_payment" name="Payment">
+        <div id="wrap">
+            <div class="o_invoice_payment">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>
+                                Your Invoice<br></br>
+                                <em t-esc="payment_request.reference"/>
+                                <small t-field="payment_request.state"/>
+                            </h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-10 hidden-print text-right" id="pay_button" t-ignore="true">
+                            <div>
+                                <ul class="list-inline pull-right">
+                                    <li class="o_divider">
+                                         <h2>
+                                            <span t-esc="payment_request.amount_total" t-options="{'widget': 'monetary', 'display_currency': payment_request.currency_id}"/>
+                                        </h2>
+                                        <t t-if="payment_request.due_date">
+                                            <h4>Due by<span class="ml4" t-esc="payment_request.due_date" t-options='{"widget": "date"}'/></h4>
+                                        </t>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" t-att-href="'/payment/%s' % payment_request.access_token+'?pdf=True'" t-att-title="payment_request.reference">
+                                            <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                                        </a><br></br>
+                                    </li>
+                                    <li>
+                                        <a id="print_iframe" t-att-title="payment_request.reference">
+                                            <i class="fa fa-print fa-2x" aria-hidden="true"/>
+                                        </a>
+                                    </li>
+                                    <li t-if="payment_request.state != 'paid'">
+                                        <h3>
+                                            <a class="btn btn-primary btn-lg o_paynow_button"  data-toggle="modal" data-target="#modalpayment">
+                                                <i class="fa fa-arrow fa-5x" aria-hidden="true"/>Pay Now
+                                            </a>
+                                        </h3>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb16">
+                        <div class="col-md-12 hidden-sm hidden-xs">
+                            <t t-call="payment.invoice_payment_detail"/>
+                        </div>
+                    </div>
+                    <div id="online_invoice_payment">
+                        <input type='hidden' name="access_token" t-att-value="payment_request.access_token" t-if="payment_request.access_token"/>
+                        <t t-call="payment.payment"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="invoice_pay" name="Invoice Pay">
+        <span class="o_extend_layout">
+            <t t-call="payment.layout">
+                <t t-call="payment.invoice_payment"/>
+            </t>
+        </span>
+    </template>
+
+    <template id="invoice_sign_dialog" name="Sign Dialog" inherit_id="payment.payment">
+        <xpath expr="//div[@id='sign-dialog']" position="inside">
+            <t t-if="invoice_pay">
+                <p>
+                    <span>I agree that by paying this proposal, I
+                    accept it on the behalf of </span><b t-field="payment_request.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                    <b data-id="total_amount" t-field="payment_request.amount_total"
+                    t-options='{"widget": "monetary", "display_currency": payment_request.currency_id}'/>
+                    <t t-if="payment_request.invoice_id.payment_term_id">
+                        <span>with payment terms: </span><b t-field="payment_request.invoice_id.payment_term_id"/>.
+                    </t>
+                </p>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='payment_method']" position="inside">
+            <t t-if="invoice_pay">
+                <div class="col-md-6">
+                    <t t-call="payment.save_payment_data"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

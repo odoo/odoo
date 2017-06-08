@@ -16,6 +16,7 @@
         'views/payment_assets.xml',
         'views/res_partner_views.xml',
         'views/online_view_templates.xml',
+        'views/online_payment_view_templates.xml',
         'security/ir.model.access.csv',
         'security/payment_security.xml',
     ],
