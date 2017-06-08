@@ -7,8 +7,9 @@ from werkzeug.utils import redirect
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_portal_sale.controllers.main import website_account
+from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+
 
 class WebsiteSaleDigitalConfirmation(WebsiteSale):
     @http.route([
@@ -22,7 +23,7 @@ class WebsiteSaleDigitalConfirmation(WebsiteSale):
         return response
 
 
-class WebsiteSaleDigital(website_account):
+class WebsiteSaleDigital(CustomerPortal):
     orders_page = '/my/orders'
 
     @http.route([

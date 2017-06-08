@@ -706,7 +706,7 @@
       </xpath>
   </template>
 
-  <template id="quotations" inherit_id="website_portal_sale.portal_my_quotations">
+  <template id="quotations" inherit_id="sale.portal_my_quotations">
       <xpath expr="//t[@t-foreach='quotations']" position="replace">
           <t t-foreach="quotations" t-as="quotation">
               <tr>
