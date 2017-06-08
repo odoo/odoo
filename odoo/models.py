@@ -1347,23 +1347,8 @@ class BaseModel(object):
         return result
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        """ fields_view_get([view_id | view_type='form'])
-
-        Get the detailed composition of the requested view like fields, model, view architecture
-
-        :param view_id: id of the view or None
-        :param view_type: type of the view to return if view_id is None ('form', 'tree', ...)
-        :param toolbar: true to include contextual actions
-        :param submenu: deprecated
-        :return: dictionary describing the composition of the requested view (including inherited views and extensions)
-        :raise AttributeError:
-                            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
-                            * if some tag other than 'position' is found in parent view
-        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
-        """
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         View = self.env['ir.ui.view']
-
         result = {
             'model': self._name,
             'field_parent': False,
@@ -1391,7 +1376,6 @@ class BaseModel(object):
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(self._name, view_type)
 
-        # context for post-processing might be overriden
         if view_id:
             # read the view with inherited views applied
             root_view = View.browse(view_id).read_combined(['id', 'name', 'field_parent', 'type', 'model', 'arch'])
@@ -1400,9 +1384,7 @@ class BaseModel(object):
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
-            # override context from postprocessing
-            if root_view['model'] != self._name:
-                View = View.with_context(base_model_name=root_view['model'])
+            result['base_model'] = root_view['model']
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
@@ -1412,6 +1394,32 @@ class BaseModel(object):
                 result['name'] = 'default'
             except AttributeError:
                 raise UserError(_("No default view of type '%s' could be found !") % view_type)
+        return result
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        """ fields_view_get([view_id | view_type='form'])
+
+        Get the detailed composition of the requested view like fields, model, view architecture
+
+        :param view_id: id of the view or None
+        :param view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param toolbar: true to include contextual actions
+        :param submenu: deprecated
+        :return: dictionary describing the composition of the requested view (including inherited views and extensions)
+        :raise AttributeError:
+                            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
+                            * if some tag other than 'position' is found in parent view
+        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
+        """
+        View = self.env['ir.ui.view']
+
+        # Get the view arch and all other attributes describing the composition of the view
+        result = self._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        # Override context for postprocessing
+        if view_id and result.get('base_model', self._name) != self._name:
+            View = View.with_context(base_model_name=result['base_model'])
 
         # Apply post processing, groups and modifiers etc...
         xarch, xfields = View.postprocess_and_fields(self._name, etree.fromstring(result['arch']), view_id)
