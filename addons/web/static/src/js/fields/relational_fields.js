@@ -619,12 +619,15 @@ var FieldX2Many = AbstractField.extend({
      * @returns {Deferred}
      */
     commitChanges: function () {
+        var self = this;
         var inEditionRecordID =
             this.renderer
             && this.renderer.viewType === "list"
             && this.renderer.getEditableRecordID();
         if (inEditionRecordID) {
-            return this._saveLine(inEditionRecordID);
+            return this.renderer.commitChanges(inEditionRecordID).then(function () {
+                return self._saveLine(inEditionRecordID);
+            });
         }
         return this._super.apply(this, arguments);
     },
@@ -767,21 +770,17 @@ var FieldX2Many = AbstractField.extend({
      *                     did not agree to discard.
      */
     _saveLine: function (recordID) {
-        var self = this;
         var def = $.Deferred();
-        this.renderer.commitChanges(recordID).then(function () { // TODO wrong as no mutex protection
-            var fieldNames = self.renderer.canBeSaved(recordID);
-            if (fieldNames.length) {
-                self.trigger_up('discard_changes', {
-                    recordID: recordID,
-                    onSuccess: def.resolve.bind(def),
-                    onFailure: def.reject.bind(def),
-                });
-            } else {
-                self.renderer.setRowMode(recordID, 'readonly')
-                    .done(def.resolve.bind(def));
-            }
-        });
+        var fieldNames = this.renderer.canBeSaved(recordID);
+        if (fieldNames.length) {
+            this.trigger_up('discard_changes', {
+                recordID: recordID,
+                onSuccess: def.resolve.bind(def),
+                onFailure: def.reject.bind(def),
+            });
+        } else {
+            this.renderer.setRowMode(recordID, 'readonly').done(def.resolve.bind(def));
+        }
         return def;
     },
 
@@ -900,9 +899,15 @@ var FieldX2Many = AbstractField.extend({
         ev.stopPropagation();
         this.trigger_up('mutexify', {
             action: function () {
-                return self._saveLine(ev.data.recordID)
-                    .done(ev.data.onSuccess)
-                    .fail(ev.data.onFailure);
+                return self.renderer.commitChanges(ev.data.recordID).then(function () {
+                    self.trigger_up('mutexify', {
+                        action: function () {
+                            return self._saveLine(ev.data.recordID)
+                                .done(ev.data.onSuccess)
+                                .fail(ev.data.onFailure);
+                        },
+                    });
+                });
             },
         });
     },
@@ -922,7 +927,7 @@ var FieldX2Many = AbstractField.extend({
                 id: rowID,
                 data: data,
             });
-        })
+        });
     },
     /**
      * Adds field name information to the event, so that the view upstream is
