@@ -5,58 +5,74 @@ var ajax = require("web.ajax");
 var Widget = require('web.Widget');
 var core = require('web.core');
 var qweb = core.qweb;
+var _t = core._t;
 
 ajax.loadXML("/web/static/src/xml/rainbow_man.xml", qweb);
 
 var RainbowMan = Widget.extend({
     template: 'rainbow_man.notification',
-
+    /**
+     * @constructor
+     * @param {Object} [options] - key-value options to decide rainbowman behavior / appearance
+     * @param {string} [options.message] - Message to be displayed on rainbowman card
+     * @param {string} [options.fadeout]
+     *        Delay for rainbowman to disappear - [options.fadeout='fast'] will make rainbowman
+     *        dissapear quickly, [options.fadeout='medium'] and [options.fadeout='slow'] will
+     *        wait little longer before disappearing (can be used when [options.message]
+     *        is longer), [options.fadeout='no'] will keep rainbowman on screen until
+     *        user clicks anywhere outside rainbowman
+     * @param {string} [options.img_url] - URL of the image to be displayed
+     * @param {Boolean} [options.blur_close] - If true, destroys rainbowman on click outside
+     */
+    events: {
+        'blur': '_onBlur'
+    },
+    init: function (options) {
+        var rainbowDelay = {slow: 3000, medium: 1500, fast:500, no: false };
+        this.options = _.defaults(options || {}, {
+            fadeout: 'medium',
+            img_url: '/web/static/src/img/smile.svg',
+            message: _t('Well Done!'),
+            blur_close: true,
+        });
+        this.delay = rainbowDelay[this.options.fadeout];
+        this._super.apply(this, arguments);
+    },
     start: function () {
-        if (this.data) {
-            var data_rainbow_man_type = this.data.rainbowManType ? this.data.rainbowManType : 'medium',
-                data_rainbow_man_url = this.data.rainbowManUrl ? this.data.rainbowManUrl : '/web/static/src/img/smile.svg';
-            var duration = data_rainbow_man_type == 'fast' ? 2500 : (data_rainbow_man_type == 'medium' ? 3500 : 5000);
-
-            this.$('.o_reward_face').css('background-image', "url('" + data_rainbow_man_url + "')")
-            if (this.data.rainbowManMessage) {
-                this.$('.o_reward_msg_txt').append(this.data.rainbowManMessage);
-            } else {
-                this.$('.o_reward_msg_container').remove();
+        var self = this;
+        return this._super.apply(this, arguments).then(function() {
+            $(self.$el).focus();
+            self.$('.o_reward_msg_content').append(self.options.message);
+            if (self.delay) {
+                setTimeout(function () {
+                    self.$el.addClass('o_reward_fading');
+                    setTimeout(function () {
+                        self.destroy();
+                    }, 4000); // destroy only after fadeout animation is completed
+                }, self.delay);
             }
-            if (data_rainbow_man_type !== 'no') {
-                var self = this;
-                this.$el.addClass('o_reward_fading')
-                    .animate({display: 'none'},duration,function() {
-                        self.$el.remove();
-                    });
-            };
-        };
+        });
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Handlers
     //--------------------------------------------------------------------------
 
     /**
-     * @param {Object} action
-     * @param {Object} attrs
+     * Destroy rainbowman on clicking outside / performing another action
+     * (behavior decided based on 'blur_close' option)
+     *
+     * @private
+     *
      */
-    prepareData: function (action, attrs) {
-        if (!attrs.data_rainbow_man_url) {
-            attrs.data_rainbow_man_url = action.rainbow_image_url;
-        };
-        if (!attrs.data_rainbow_man_message) {
-            attrs.data_rainbow_man_message = action.rainbow_message;
-        };
-        if (!attrs.data_rainbow_man_type) {
-            attrs.data_rainbow_man_type = action.rainbow_type;
-        };
-        this.data = {
-            'rainbowManType': attrs.data_rainbow_man_type,
-            'rainbowManUrl': attrs.data_rainbow_man_url,
-            'rainbowManMessage': attrs.data_rainbow_man_message,
-        };
-    },
+    _onBlur: function () {
+        if (this.options.blur_close) {
+            this.destroy();
+        }
+        else {
+            core.bus.on('clear_uncommitted_changes', this, this.destroy);
+        }
+    }
 });
 
 return RainbowMan;

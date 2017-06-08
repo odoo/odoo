@@ -352,45 +352,47 @@ class Lead(models.Model):
         for lead in self:
             stage_id = lead._stage_find(domain=[('probability', '=', 100.0), ('on_change', '=', True)])
             lead.write({'stage_id': stage_id.id, 'probability': 100})
-            image = '/web/image/%s/%s/image' % (lead.user_id._name, lead.user_id.id)
-            rainbow_man = lead.probability
-            rainbow_message = ''
+            if lead.user_id and lead.team_id and lead.planned_revenue:
+                query = """
+                    SELECT
+                        SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
+                        MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                    FROM crm_lead
+                    WHERE
+                        probability = 100
+                    AND
+                        DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+                    AND
+                        (user_id = %(user_id)s OR team_id = %(team_id)s)
+                """
+                lead.env.cr.execute(query, {'user_id': lead.user_id.id,
+                                            'team_id': lead.team_id.id})
+                query_result = self.env.cr.dictfetchone()
 
-            query = """WITH currentYear AS (
-                        SELECT team_id, user_id, planned_revenue, date(date_closed),
-                       (CASE WHEN user_id = %(user_id)s THEN user_id END) AS current_year_opp_user
-                        FROM crm_lead
-                        WHERE probability = 100 AND DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
-                        GROUP BY team_id, user_id, planned_revenue, date(date_closed)
-                    ), last30Days AS (
-                        SELECT date, current_year_opp_user,
-                        (CASE WHEN user_id = %(user_id)s THEN planned_revenue END) AS user_opp_for_30_days,
-                        (CASE WHEN team_id = %(sales_team)s THEN planned_revenue END) AS team_opp_for_30_days
-                        from currentYear WHERE date >= CURRENT_DATE - INTERVAL '30 days'
-                    )
-                    SELECT count(current_year_opp_user) AS count_current_year_opp_user,
-                        max(user_opp_for_30_days) AS max_user_opp_for_30_days,
-                        max(team_opp_for_30_days) AS max_team_opp_for_30_days,
-                        (SELECT max(team_opp_for_30_days) FROM last30Days WHERE date >= CURRENT_DATE - INTERVAL '7 days') AS max_team_opp_for_7_days
-                     FROM last30Days
-                 """
-            lead.env.cr.execute(query, {'user_id': lead.user_id.id,
-                                        'sales_team': lead.team_id.id})
-            query_result = self.env.cr.dictfetchall()[0]
+                message = False
+                if query_result['total_won'] == 1:
+                    message = _('Go, go, go! Congrats for your first deal.')
+                elif query_result['max_team_30'] == lead.planned_revenue:
+                    message = _('Boum! Team record for the past 30 days.')
+                elif query_result['max_team_7'] == lead.planned_revenue:
+                    message = _('Yeah! Deal of the last 7 days for the team.')
+                elif query_result['max_user_30'] == lead.planned_revenue:
+                    message = _('You just beat your personal record for the past 30 days.')
+                elif query_result['max_user_7'] == lead.planned_revenue:
+                    message = _('You just beat your personal record for the past 7 days.')
 
-            if query_result['count_current_year_opp_user'] == 1:
-                rainbow_message = _('Go, go, go! Congrats for your first deal.')
-            elif query_result['max_team_opp_for_30_days'] == lead.planned_revenue:
-                rainbow_message = _('Boum! Team record for the past 30 days.')
-            elif query_result['max_team_opp_for_7_days'] == lead.planned_revenue:
-                rainbow_message = _('Yeah! Deal of the last 7 days for the team.')
-            elif query_result['max_user_opp_for_30_days'] == lead.planned_revenue:
-                rainbow_message = _('You just beat your personal record for the past 30 days.')
-            else:
-                rainbow_man = 10
-            return {'rainbow_man': rainbow_man,
-                    'rainbow_image_url': image,
-                    'rainbow_message': rainbow_message}
+                if message:
+                    return {
+                        'rainbow': {
+                            'fadeout': 'slow',
+                            'message': message,
+                            'img_url': '/web/image/%s/%s/image' % (lead.team_id.user_id._name, lead.team_id.user_id.id) if lead.team_id.user_id.image else '/web/static/src/img/smile.svg',
+                        }
+                    }
+            return True
 
     @api.multi
     def action_schedule_meeting(self):

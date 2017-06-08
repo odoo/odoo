@@ -11,7 +11,6 @@ var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var view_registry = require('web.view_registry');
 var Widget = require('web.Widget');
-var RainbowMan = require('web.rainbow_man');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -563,14 +562,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         // response handler
         var handler = function (action) {
-            //show rainbow if button have data_rainbow attribute
-            if (action_data.data_rainbow && pyeval.py_eval(action_data.data_rainbow)) {
-                self.RainbowMan = new RainbowMan();
-                if (!action.rainbow_man || action.rainbow_man === 100) {
-                    self.RainbowMan.prepareData(action, action_data);
-                    self.RainbowMan.appendTo($('.o_content'));
-                };
+            // show rainbow if button have rainbow attribute
+            // Rainbowman can be displayed from two places : from attribute on a button, or from python.
+            // Code below handles the first case i.e 'rainbow' attribute on button.
+            var rainbow = false;
+            if (action_data.rainbow) {
+                rainbow = pyeval.py_eval(action_data.rainbow);
             };
+
             if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
@@ -590,11 +589,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
+                // In case rainbow data is returned from python and also there is rainbow
+                // attribute on button, priority is given to button attribute
+                action.rainbow = rainbow || action.rainbow;
                 return self.do_action(action, {
                     on_close: result_handler,
                 });
             } else {
-                self.do_action({"type":"ir.actions.act_window_close"});
+                // If action doesn't return anything, but have rainbow
+                // attribute on button, display rainbowman
+                self.do_action({"type":"ir.actions.act_window_close", 'rainbow': rainbow});
                 return result_handler();
             }
         };

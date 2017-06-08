@@ -4,10 +4,10 @@ odoo.define('web_tour.TourManager', function(require) {
 var core = require('web.core');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
+var RainbowMan = require('web.rainbow_man');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
-var RainbowMan = require('web.rainbow_man');
 
 var _t = core._t;
 
@@ -409,14 +409,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +
-                                '</strong>')
-            this.RainbowMan = new RainbowMan();
-            this.RainbowMan.data = {
-                'rainbowManType': 'medium',
-                'rainbowManUrl': '/web/static/src/img/smile.svg',
-                'rainbowManMessage': $rainbow_message,
-            };
-            this.RainbowMan.appendTo($('body'));
+                                '</strong>');
+            new RainbowMan({fadeout: 'fast', message: $rainbow_message, blur_close: false}).appendTo($('body'));
         };
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

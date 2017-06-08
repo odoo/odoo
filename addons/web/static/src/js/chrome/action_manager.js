@@ -20,6 +20,7 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var framework = require('web.framework');
 var pyeval = require('web.pyeval');
+var RainbowMan = require('web.rainbow_man');
 var session = require('web.session');
 var ViewManager = require('web.ViewManager');
 var Widget = require('web.Widget');
@@ -862,6 +863,11 @@ var ActionManager = Widget.extend({
             options.on_close();
         }
         this.dialog_stop();
+        // Display rainbowman on appropriate actions
+        if (action.rainbow) {
+            new RainbowMan(action.rainbow).appendTo(this.$el);
+        }
+
         return $.when();
     },
     ir_actions_server: function (action, options) {

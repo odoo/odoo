@@ -12,7 +12,7 @@
 
 <t t-name="reconciliation.statement">
     <div t-if="widget._initialState.valuemax">
-        <div class="reconciliation_statement">
+        <div>
             <h1 class="statement_name"/>
             <h1 class="statement_name_edition" style="display: none;"><button class="btn btn-primary btn-sm pull-right">OK</button></h1>
             <div class="progress progress-striped">
@@ -23,9 +23,9 @@
             </div>
             <button class="btn btn-default o_automatic_reconciliation pull-right" title="Let odoo try to reconcile entries for the user">Automatic reconciliation</button>
             <div class="notification_area"/>
-            <div class="o_reconciliation_lines"/>
-            <div class="pull-right text-muted o_tip">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
         </div>
+        <div class="o_reconciliation_lines"/>
+        <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
     </div>
     <div t-else="" class="o_view_nocontent">
         <p><b>Good Job!</b> Bank statements are fully reconciled.</p>
@@ -45,9 +45,9 @@
     </t>
 </t>
 
-<div t-name="reconciliation.done">
+<div t-name="reconciliation.done" class="done_message">
     <h2>Congrats, you're all done!</h2>
-    <p>you reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+    <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
 </div>
 
 <t t-name="reconciliation.line">

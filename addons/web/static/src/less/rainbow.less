@@ -17,12 +17,13 @@
 // o_reward
 .o_reward {
     will-change: transform;
-    z-index: @zindex-modal;
+    z-index: @zindex-modal + 1;
     padding: 50px;
-    margin: -5% auto 10% -(@reward-size/2);
+    margin: -5% auto 0 -(@reward-size/2);
     background-image: -webkit-radial-gradient(#EDEFF4 30%,transparent 70%, transparent);
     background-image: -o-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
+    outline: none;
 
     .o-animation(reward-fading, @reward-base-time, ease-in-out, 0s, 1, normal, forwards);
     .o-position-absolute(20%, auto, auto, 50%);
@@ -149,7 +150,7 @@
             }
         }
 
-        .o_reward_msg_txt {
+        .o_reward_msg_content {
             position: relative;
             font-family: sans-serif;
             text-align: left;
