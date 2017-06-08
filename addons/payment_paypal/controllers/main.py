@@ -101,7 +101,7 @@ class PaypalController(http.Controller):
         _logger.info('Beginning Paypal DPN form_feedback with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
         self.paypal_validate_data(**post)
-        return werkzeug.utils.redirect(return_url)
+        return http.local_redirect(return_url, code=302)
 
     @http.route('/payment/paypal/cancel', type='http', auth="none")
     def paypal_cancel(self, **post):
@@ -109,4 +109,4 @@ class PaypalController(http.Controller):
         cr, uid, context = request.cr, SUPERUSER_ID, request.context
         _logger.info('Beginning Paypal cancel with post data %s', pprint.pformat(post))  # debug
         return_url = self._get_return_url(**post)
-        return werkzeug.utils.redirect(return_url)
+        return http.local_redirect(return_url, code=302)

@@ -6,7 +6,6 @@ except ImportError:
 
 import logging
 import pprint
-import werkzeug
 
 from openerp import http, SUPERUSER_ID
 from openerp.http import request
@@ -32,4 +31,4 @@ class BuckarooController(http.Controller):
         request.registry['payment.transaction'].form_feedback(request.cr, SUPERUSER_ID, post, 'buckaroo', context=request.context)
         post = dict((key.upper(), value) for key, value in post.items())
         return_url = post.get('ADD_RETURNDATA') or '/'
-        return werkzeug.utils.redirect(return_url)
+        return http.local_redirect(return_url, code=302)

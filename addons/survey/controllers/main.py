@@ -21,14 +21,12 @@
 
 import json
 import logging
-import werkzeug
-import werkzeug.utils
 from datetime import datetime
 from math import ceil
 
 from openerp import SUPERUSER_ID
 from openerp.addons.web import http
-from openerp.addons.web.http import request
+from openerp.addons.web.http import local_redirect, request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT as DTF, ustr
 
 
@@ -42,7 +40,7 @@ class WebsiteSurvey(http.Controller):
     def _check_bad_cases(self, cr, uid, request, survey_obj, survey, user_input_obj, context=None):
         # In case of bad survey, redirect to surveys list
         if survey_obj.exists(cr, SUPERUSER_ID, survey.id, context=context) == []:
-            return werkzeug.utils.redirect("/survey/")
+            return local_redirect("/survey/", code=302)
 
         # In case of auth required, block public user
         if survey.auth_required and uid == request.website.user_id.id:

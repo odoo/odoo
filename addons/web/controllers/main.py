@@ -22,7 +22,6 @@ from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import babel.messages.pofile
-import werkzeug.utils
 import werkzeug.wrappers
 try:
     import xlwt
@@ -89,7 +88,7 @@ def redirect_with_hash(*args, **kw):
 
 def abort_and_redirect(url):
     r = request.httprequest
-    response = werkzeug.utils.redirect(url, 302)
+    response = http.local_redirect(url, code=302)
     response = r.app.get_response(r, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
@@ -120,7 +119,7 @@ def ensure_db(redirect='/web/database/selector'):
             # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
             # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
             url_redirect += '?' + r.query_string
-        response = werkzeug.utils.redirect(url_redirect, 302)
+        response = http.local_redirect(url_redirect, code=302)
         request.session.db = db
         abort_and_redirect(url_redirect)
 
@@ -135,7 +134,7 @@ def ensure_db(redirect='/web/database/selector'):
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
     if not db:
-        werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
+        werkzeug.exceptions.abort(http.local_redirect(redirect, code=303))
 
     # always switch the session to the computed db
     if db != request.session.db:
@@ -305,7 +304,7 @@ def login_and_redirect(db, login, key, redirect_url='/web'):
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
-    redirect = werkzeug.utils.redirect(redirect_url, 303)
+    redirect = http.local_redirect(redirect_url, code=303)
     redirect.autocorrect_location_header = False
     return redirect
 
@@ -470,7 +469,7 @@ class Home(http.Controller):
         ensure_db()
         if request.session.uid:
             if kw.get('redirect'):
-                return werkzeug.utils.redirect(kw.get('redirect'), 303)
+                return http.local_redirect(kw.get('redirect'), code=303)
             if not request.uid:
                 request.uid = request.session.uid
 
@@ -482,7 +481,7 @@ class Home(http.Controller):
     @http.route('/web/dbredirect', type='http', auth="none")
     def web_db_redirect(self, redirect='/', **kw):
         ensure_db()
-        return werkzeug.utils.redirect(redirect, 303)
+        return http.local_redirect(redirect, code=303)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -516,13 +515,13 @@ class Home(http.Controller):
         else:
             # probably not an odoo compatible database
             error = 'Unable to login on database %s' % request.session.db
-            return werkzeug.utils.redirect('/web/database/selector?error=%s' % error, 303)
+            return http.local_redirect('/web/database/selector?error=%s' % error, code=303)
 
 
     @http.route('/login', type='http', auth="none")
     def login(self, db, login, key, redirect="/web", **kw):
         if not http.db_filter([db]):
-            return werkzeug.utils.redirect('/', 303)
+            return http.local_redirect('/', code=303)
         return login_and_redirect(db, login, key, redirect_url=redirect)
 
     @http.route([
@@ -864,7 +863,7 @@ class Session(http.Controller):
     @http.route('/web/session/logout', type='http', auth="none")
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
-        return werkzeug.utils.redirect(redirect, 303)
+        return http.local_redirect(redirect, code=303)
 
 class Menu(http.Controller):
 
@@ -1624,7 +1623,8 @@ class Apps(http.Controller):
 
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
-        return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+        return http.local_redirect(
+            '/web{0}#sa={1}'.format(debug, sakey), code=302)
 
 
 

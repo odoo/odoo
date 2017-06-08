@@ -33,7 +33,6 @@ from openid.consumer import consumer
 from openid.cryptutil import randomString
 from openid.extensions import ax, sreg
 
-import openerp
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
@@ -142,7 +141,7 @@ class OpenIDController(http.Controller):
         if 'error' in result:
             return werkzeug.exceptions.BadRequest(result['error'])
         if result['action'] == 'redirect':
-            return werkzeug.utils.redirect(result['value'])
+            return http.local_redirect(result['value'], code=302)
         return result['value']
 
     @http.route('/auth_openid/login/verify', type='json', auth='none')
