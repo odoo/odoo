@@ -127,8 +127,7 @@
                         <div name="options_active" class="oe_edit_only">
                             <div>
                                 <field name="use_tasks" class="oe_inline"/>
-                                <label for="use_tasks" class="oe_inline" string="Tasks"/>
-                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as </span>
+                                <label for="use_tasks" class="oe_inline" string="Name of the tasks :"/>
                                 <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
@@ -368,6 +367,7 @@ action = model.activate_sample_project()
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <header>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
                     </header>
@@ -417,6 +417,8 @@ action = model.activate_sample_project()
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id"/>
+                                    <field name="email_from"/>
+                                    <field name="email_cc"/>
                                     <field name="parent_id" groups="project.group_subtask_project"/>
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
@@ -426,10 +428,14 @@ action = model.activate_sample_project()
                                 <group>
                                     <field name="date_assign" groups="base.group_no_one"/>
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
-                                    <field name="working_hours_open"/>
-                                    <field name="working_hours_close"/>
-                                    <field name="working_days_open"/>
-                                    <field name="working_days_close"/>
+                                </group>
+                                <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
+                                    <field name="working_hours_open" string="Hours"/>
+                                    <field name="working_days_open" string="Days"/>
+                                </group>
+                                <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
+                                    <field name="working_hours_close" string="Hours"/>
+                                    <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
                         </page>
@@ -494,6 +500,7 @@ action = model.activate_sample_project()
                                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
+                                    <t t-if="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
@@ -628,7 +635,7 @@ action = model.activate_sample_project()
         </record>
 
         <record id="project_task_action_activity" model="ir.actions.act_window">
-            <field name="name">My Next Task Activities</field>
+            <field name="name">My Next Activities</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban,calendar</field>
@@ -652,7 +659,7 @@ action = model.activate_sample_project()
         </record>
 
         <menuitem id="project_task_menu_activity"
-            name="Next Task Activities"
+            name="Next Activities"
             parent="project.menu_project_management"
             action="project_task_action_activity"
             sequence="25"/>

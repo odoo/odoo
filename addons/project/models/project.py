@@ -398,10 +398,10 @@ class Task(models.Model):
     email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
         and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
     # Computed field about working time elapsed between record creation and assignation/closing.
-    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign the task', store=True, group_operator="avg")
-    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close the task', store=True, group_operator="avg")
-    working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign the task', store=True, group_operator="avg")
-    working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close the task', store=True, group_operator="avg")
+    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
+    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
+    working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
+    working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
 
     @api.multi
     @api.depends('create_date', 'date_end', 'date_assign')
@@ -761,6 +761,9 @@ class Task(models.Model):
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
         return super(Task, self)._message_post_after_hook(message)
 
+    def action_assign_to_me(self):
+        self.write({'user_id': self.env.user.id})
+
     def action_open_parent_task(self):
         return {
             'name': _('Parent Task'),
@@ -860,9 +863,9 @@ class AccountAnalyticAccount(models.Model):
         return result
 
 class ProjectTags(models.Model):
-    """ Tags of project's tasks (or issues) """
+    """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Tags of project's tasks, issues..."
+    _description = "Tags of project's tasks"
 
     name = fields.Char(required=True)
     color = fields.Integer(string='Color Index', default=10)
