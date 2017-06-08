@@ -4979,5 +4979,65 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('readonly fields are not sent when saving', function (assert) {
+        assert.expect(5);
+
+        // define an onchange on display_name to check that the value of readonly
+        // fields is correctly sent for onchanges
+        this.data.partner.onchanges = {
+            display_name: function () {},
+        };
+        var checkOnchange = false;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                            '<field name="foo" attrs="{\'readonly\': [[\'display_name\', \'=\', \'readonly\']]}"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (checkOnchange && args.method === 'onchange') {
+                    assert.strictEqual(args.args[1].foo, 'foo value',
+                        "readonly fields value should be sent for onchanges");
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, false, {display_name: 'readonly'}]]
+                    }, "should not have sent the value of the readonly field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal input.o_field_widget[name=foo]').length, 1,
+            'foo should be editable');
+        checkOnchange = true;
+        $('.modal .o_field_widget[name=foo]').val('foo value').trigger('input');
+        $('.modal .o_field_widget[name=display_name]').val('readonly').trigger('input');
+        checkOnchange = false;
+        assert.strictEqual($('.modal span.o_field_widget[name=foo]').length, 1,
+            'foo should be readonly');
+        $('.modal .modal-footer .btn-primary').click(); // close the modal
+
+        form.$('.o_data_row').click(); // re-open previous record
+        assert.strictEqual($('.modal .o_field_widget[name=foo]').text(), 'foo value',
+            "the edited value should have been kept");
+        $('.modal .modal-footer .btn-primary').click(); // close the modal
+
+        form.$buttons.find('.o_form_button_save').click(); // save the record
+
+        form.destroy();
+    });
 });
 });

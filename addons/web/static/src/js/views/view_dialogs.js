@@ -222,6 +222,7 @@ var FormViewDialog = ViewDialog.extend({
                 stayInEdit: true,
                 reload: false,
                 savePoint: this.shouldSaveLocally,
+                viewType: 'form',
             });
         }
         return $.when(def).then(function () {

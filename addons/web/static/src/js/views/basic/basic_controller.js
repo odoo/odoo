@@ -419,6 +419,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             var saveDef = this.model.save(recordID, { // Save then leave edit mode
                 reload: options.reload,
                 savePoint: options.savePoint,
+                viewType: options.viewType,
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
