@@ -56,13 +56,6 @@ class SaleOrder(models.Model):
 
         return groups
 
-    def _force_lines_to_invoice_policy_order(self):
-        for line in self.order_line:
-            if self.state in ['sale', 'done']:
-                line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
-            else:
-                line.qty_to_invoice = 0
-
     @api.multi
     def get_signup_url(self):
         self.ensure_one()
