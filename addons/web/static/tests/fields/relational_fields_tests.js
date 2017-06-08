@@ -659,6 +659,87 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('list in form: quick create then add a new line directly', function (assert) {
+        // required many2one inside a one2many list: directly after quick creating
+        // a new many2one value (before the name_create returns), click on add an item:
+        // at this moment, the many2one has still no value, and as it is required,
+        // the row is discarded if a saveLine is requested. However, it should
+        // wait for the name_create to return before trying to save the line.
+        var done = assert.async();
+        assert.expect(8);
+
+        this.data.partner.onchanges = {
+            trululu: function () {},
+        };
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var def = $.Deferred();
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="trululu" required="1"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    return def.then(_.constant(result)).then(function (nameGet) {
+                        newRecordID = nameGet[0];
+                        return nameGet;
+                    });
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0].p[0][2].trululu, newRecordID);
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').val('b').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'b'
+            form.$('.o_field_x2many_list_row_add a').click();
+
+            assert.strictEqual(form.$('.o_data_row').length, 1,
+                "there should still be only one row");
+            assert.ok(form.$('.o_data_row').hasClass('o_selected_row'),
+                "the row should still be in edition");
+
+            def.resolve();
+
+            assert.strictEqual(form.$('.o_data_row:first .o_data_cell').text(), 'b',
+                "first row should have the correct m2o value");
+            assert.strictEqual(form.$('.o_data_row').length, 2,
+                "there should now be 2 rows");
+            assert.ok(form.$('.o_data_row:nth(1)').hasClass('o_selected_row'),
+                "the second row should be in edition");
+
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.strictEqual(form.$('.o_data_row').length, 1,
+                "there should be 1 row saved (the second one was empty and invalid)");
+            assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'b',
+                "should have the correct m2o value");
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
 
