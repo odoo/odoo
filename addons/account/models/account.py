@@ -684,15 +684,13 @@ class AccountTax(models.Model):
     @api.multi
     def unlink(self):
         company_id = self.env.user.company_id.id
-        ir_values = self.env['ir.values']
-        supplier_taxes_id = set(ir_values.get_default('product.template', 'supplier_taxes_id', company_id=company_id) or [])
-        deleted_sup_tax = self.filtered(lambda tax: tax.id in supplier_taxes_id)
-        if deleted_sup_tax:
-            ir_values.sudo().set_default('product.template', "supplier_taxes_id", list(supplier_taxes_id - set(deleted_sup_tax.ids)), for_all_users=True, company_id=company_id)
-        taxes_id = set(self.env['ir.values'].get_default('product.template', 'taxes_id', company_id=company_id) or [])
-        deleted_tax = self.filtered(lambda tax: tax.id in taxes_id)
-        if deleted_tax:
-            ir_values.sudo().set_default('product.template', "taxes_id", list(taxes_id - set(deleted_tax.ids)), for_all_users=True, company_id=company_id)
+        IrDefault = self.env['ir.default']
+        taxes = self.browse(IrDefault.get('product.template', 'taxes_id', company_id=company_id) or [])
+        if self & taxes:
+            IrDefault.sudo().set('product.template', 'taxes_id', (taxes - self).ids, company_id=company_id)
+        taxes = self.browse(IrDefault.get('product.template', 'supplier_taxes_id', company_id=company_id) or [])
+        if self & taxes:
+            IrDefault.sudo().set('product.template', 'supplier_taxes_id', (taxes - self).ids, company_id=company_id)
         return super(AccountTax, self).unlink()
 
     @api.one
