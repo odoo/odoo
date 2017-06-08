@@ -379,18 +379,7 @@
     </t>
 </template>
 
-<template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
-        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
-        </li>
-        <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-        </t>
-        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
-        </li>
-    </ul>
+<template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 
 <!--
