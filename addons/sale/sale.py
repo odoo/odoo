@@ -701,6 +701,7 @@ class SaleOrderLine(models.Model):
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
+            lines[0].order_id.picking_ids.recompute()
         return result
 
     order_id = fields.Many2one('sale.order', string='Order Reference', required=True, ondelete='cascade', index=True, copy=False)
