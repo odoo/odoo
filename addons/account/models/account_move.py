@@ -174,6 +174,10 @@ class AccountMove(models.Model):
         for move in self:
             if not move.journal_id.update_posted:
                 raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
+            # We remove all the analytics entries for this journal
+            for line in move.line_ids:
+                if line.analytic_line_ids:
+                    line.analytic_line_ids.unlink()
         if self.ids:
             self._check_lock_date()
             self._cr.execute('UPDATE account_move '\
@@ -369,42 +373,6 @@ class AccountMoveLine(models.Model):
             line.amount_residual = line.company_id.currency_id.round(amount * sign)
             line.amount_residual_currency = line.currency_id and line.currency_id.round(amount_residual_currency * sign) or 0.0
 
-    @api.multi
-    @api.depends('debit', 'credit', 'amount_currency', 'currency_id', 'matched_debit_ids', 'matched_credit_ids', 'matched_debit_ids.amount', 'matched_credit_ids.amount', 'account_id.currency_id', 'move_id.state')
-    def _compute_amount_user_currency(self):
-        '''Compute the amount expressed in the currency of the current user's company.
-        Is equal to the amount_residual value if the user's company is the same as the move line company,
-        otherwise, the amount is converted.
-        '''
-        context = dict(self._context or {})
-        user_currency_id = self.env.user.company_id.currency_id
-        ctx = context.copy()
-        for line in self:
-            ctx['date'] = line.date
-            company_currency_id = line.company_id.currency_id
-            amount = line.amount_residual
-            if user_currency_id == company_currency_id:
-                line.amount_user_currency = amount
-            else:
-                line.amount_user_currency = company_currency_id.with_context(ctx).compute(amount, user_currency_id)
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        res = super(AccountMoveLine, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
-
-        if 'amount_user_currency' in fields:
-            self._compute_amount_user_currency()
-            for line in res:
-                __domain = list('__domain' in line and line['__domain'] or [])
-                records = self.search_read(__domain, ['amount_user_currency'])
-                line['amount_user_currency'] = 0
-                for r in records:
-                    line['amount_user_currency'] = line['amount_user_currency'] + r['amount_user_currency']
-        return res
-
-
-
-
     @api.depends('debit', 'credit')
     def _store_balance(self):
         for line in self:
@@ -477,8 +445,6 @@ class AccountMoveLine(models.Model):
     amount_residual_currency = fields.Monetary(compute='_amount_residual', string='Residual Amount in Currency', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
     tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
-    amount_user_currency = fields.Monetary(compute='_compute_amount_user_currency', string='Amount User Currency',
-        help='Amount expressed in the user currency.')
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
@@ -507,7 +473,7 @@ class AccountMoveLine(models.Model):
     tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic tags')
-    company_id = fields.Many2one('res.company', string='Company', required=True, store=True,  default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True)
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
     # TODO: put the invoice link and partner_id on the account_move
@@ -1499,10 +1465,10 @@ class AccountMoveLine(models.Model):
             for tag in obj_line.analytic_tag_ids:
                 if tag.active_analytic_distribution:
                     for distribution in tag.analytic_distribution_ids:
-                        vals_line = obj_line._prepare_analytic_distribution_line(distribution)
+                        vals_line = obj_line._prepare_analytic_distribution_line(distribution)[0]
                         self.env['account.analytic.line'].create(vals_line)
 
-    @api.multi
+    @api.one
     def _prepare_analytic_distribution_line(self, distribution):
         """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
             analytic tags with analytic distribution.
@@ -1518,18 +1484,18 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, analytic_account_id.currency_id) if analytic_account_id.currency_id else amount,
+            'amount': amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
-            'user_id': self.invoice_id.user_id.id or self._uid
+            'user_id': self.invoice_id.user_id.id or self._uid,
+            'company_id': self.env.user.company_id.id
         }
 
 
     @api.multi
     def create_analytic_lines(self):
-        """ Create analytic items upon validation of an account.move.line having an analytic account. This
-            method first remove any existing analytic item related to the line before creating any new one.
+        """ Create analytic items upon validation of an account.move.line having an analytic account.
         """
         self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
@@ -1552,11 +1518,12 @@ class AccountMoveLine(models.Model):
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': self.company_currency_id.with_context(date=self.date or fields.Date.context_today(self)).compute(amount, self.analytic_account_id.currency_id) if self.analytic_account_id.currency_id else amount,
+            'amount': amount,
             'general_account_id': self.account_id.id,
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
+            'company_id': self.env.user.company_id.id,
         }
 
     @api.model

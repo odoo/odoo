@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, exceptions
+from odoo import api, fields, models, exceptions, _
 
 
 class AccountAnalyticDistribution(models.Model):
     _name = 'account.analytic.distribution'
+    _rec_name = 'account_id'
+
     account_id = fields.Many2one('account.analytic.account', string='Analytic Account', required=True)
     percentage = fields.Float(string='Percentage', required=True, default=100.0)
     name = fields.Char(string='Name', related='account_id.name')
@@ -13,18 +15,26 @@ class AccountAnalyticDistribution(models.Model):
 
     @api.onchange('percentage')
     def _onchange_percentage(self):
-        if self.percentage > 100:
+        if self.percentage > 100 or self.percentage <= 0:
             return {'warning': {
-                    'title' : "Invalid percentage",
-                    'message': "The percentage cannot be greater than 100%"
+                    'title' : _("Invalid percentage"),
+                    'message': _("The percentage must be between 0% and 100%")
                 }
             }
-        if self.percentage < 0:
-            return {'warning': {
-                    'title' : "Invalid percentage",
-                    'message': "The percentage cannot be less than 0%"
-                }
-            }
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for distribution in self:
+            res.append((distribution.id, distribution.account_id.name))
+        return res
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if args is None:
+            args = []
+        domain = args + ['|', ('account_id', operator, name)]
+        return super(AccountAnalyticDistribution, self).search(domain, limit=limit).name_get()
 
 class AccountAnalyticTag(models.Model):
     _name = 'account.analytic.tag'
@@ -34,25 +44,6 @@ class AccountAnalyticTag(models.Model):
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
     analytic_distribution = fields.Boolean(string="Analytic Distribution")
     analytic_distribution_ids = fields.One2many('account.analytic.distribution', 'tag_id', string="Analytic Accounts")
-
-    @api.constrains('analytic_distribution_ids')
-    def _check_analytic_distribution(self):
-        total_percentage = 0
-        negative_percentage = False
-        for r in self.analytic_distribution_ids:
-            total_percentage = total_percentage + r.percentage
-
-            if r.percentage < 0:
-                negative_percentage = True
-
-        if total_percentage > 100.0:
-            raise exceptions.ValidationError("The total sum of percentages cannot be greater than 100%")
-
-        if negative_percentage == True:
-            raise exceptions.ValidationError("There cannot be a negative percentage.")
-
-
-
 
 class AccountAnalyticCategory(models.Model):
     _name = 'account.analytic.category'
@@ -175,7 +166,7 @@ class AccountAnalyticLine(models.Model):
                 records = self.search_read(__domain, ['amount_user_currency'])
                 line['amount_user_currency'] = 0
                 for r in records:
-                    line['amount_user_currency'] = line['amount_user_currency'] + r['amount_user_currency']
+                    line['amount_user_currency'] += r['amount_user_currency']
         return res
 
 
@@ -191,6 +182,6 @@ class AccountAnalyticLine(models.Model):
 
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_line_tag_rel', 'line_id', 'tag_id', string='Tags', copy=True)
 
-    company_id = fields.Many2one('res.company', string='Company', readonly=True, default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
-    amount_user_currency = fields.Monetary(compute='_compute_amount_user_currency', string='Amount User Currency', help='Amount expressed in the user currency.')
+    amount_user_currency = fields.Monetary(compute='_compute_amount_user_currency', string='Amount', help='Amount expressed in the user currency.')
