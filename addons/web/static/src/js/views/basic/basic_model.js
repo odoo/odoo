@@ -704,6 +704,8 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.savePoint=false] if true, the record will only
      *   be 'locally' saved: its changes written in a _savePoint key that can
      *   be restored later by call discardChanges with option rollback to true
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Deferred}
      *   Resolved with the list of field names (whose value has been modified)
      */
@@ -718,6 +720,11 @@ var BasicModel = AbstractModel.extend({
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
                     } else {
+                        // save the viewType of edition, so that the correct readonly modifiers
+                        // can be evaluated when the record will be saved
+                        for (var fieldName in (rec._changes || {})) {
+                            rec._editionViewType[fieldName] = options.viewType;
+                        }
                         rec._savePoint = _.extend({}, newValue);
                     }
                 });
@@ -728,7 +735,7 @@ var BasicModel = AbstractModel.extend({
                 // id never changes, and should not be written
                 delete record._changes.id;
             }
-            var changes = self._generateChanges(record);
+            var changes = self._generateChanges(record, options.viewType);
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -1869,12 +1876,26 @@ var BasicModel = AbstractModel.extend({
      *
      * @private
      * @param {Object} record
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record. Note that if an editionViewType is
+     *   specified for a field, it will take the priority over the viewType arg.
      * @returns {Object} a map from changed fields to their new value
      */
-    _generateChanges: function (record) {
+    _generateChanges: function (record, viewType) {
+        viewType = viewType || record.viewType;
         var changes = _.extend({}, record._changes);
         var commands = this._generateX2ManyCommands(record, true);
         for (var fieldName in record.fields) {
+            // remove readonly fields from the list of changes
+            if (fieldName in changes || fieldName in commands) {
+                var editionViewType = record._editionViewType[fieldName] || viewType;
+                if (this._isFieldReadonly(record, fieldName, editionViewType)) {
+                    delete changes[fieldName];
+                    continue;
+                }
+            }
+
+            // process relational fields and handle the null case
             var type = record.fields[fieldName].type;
             if (type === 'one2many' || type === 'many2many') {
                 if (commands[fieldName].length) { // replace localId by commands
@@ -2200,6 +2221,31 @@ var BasicModel = AbstractModel.extend({
         return context;
     },
     /**
+     * Returns true if the field is readonly (checking first in the modifiers,
+     * and if there is no readonly modifier, checking the readonly attribute of
+     * the field).
+     *
+     * @private
+     * @param {Object} record an element from the localData
+     * @param {string} fieldName
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
+     * @returns {boolean}
+     */
+    _isFieldReadonly: function (record, fieldName, viewType) {
+        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var modifiers;
+        if (fieldInfo) {
+            var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+            modifiers = this._evalModifiers(record, rawModifiers);
+        }
+        if (modifiers && 'readonly' in modifiers) {
+            return modifiers.readonly;
+        } else {
+            return record.fields[fieldName].readonly;
+        }
+    },
+    /**
      * Returns true iff value is considered to be set for the given field's type.
      *
      * @private
@@ -2329,6 +2375,12 @@ var BasicModel = AbstractModel.extend({
             value: value,
             viewType: params.viewType,
         };
+
+        // _editionViewType is a dict whose keys are field names and which is populated when a field
+        // is edited with the viewType as value. This is useful for one2manys to determine whether
+        // or not a field is readonly (using the readonly modifiers of the view in which the field
+        // has been edited)
+        dataPoint._editionViewType = {};
 
         dataPoint.evalModifiers = this._evalModifiers.bind(this, dataPoint);
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
@@ -2507,7 +2559,7 @@ var BasicModel = AbstractModel.extend({
                     .then(function () {
                         // save initial changes, so they can be restored later,
                         // if we need to discard.
-                        self.save(record.id, {savePoint: true})
+                        self.save(record.id, {savePoint: true});
 
                         return record.id;
                     });
@@ -2582,8 +2634,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred} The returned deferred can fail, in which case the
-     *   fail value will be the warning message received from the server
+     * @returns {Deferred}
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
