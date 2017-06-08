@@ -1343,6 +1343,13 @@ class AccountMoveLine(models.Model):
         where_clause = ""
         where_clause_params = []
         tables = ''
+        for condition in domain:
+            if 'tax_ids' in condition[0] and '.' in condition[0]:
+                new_condition = (condition[0].split('.')[1], condition[1], condition[2])
+                taxes = self.env['account.tax'].with_context(active_test=False).search([new_condition])
+                if taxes:
+                    domain.pop(domain.index(condition))
+                    domain.append(('tax_ids', 'in', taxes.ids))
         if domain:
             query = self._where_calc(domain)
             tables, where_clause, where_clause_params = query.get_sql()
