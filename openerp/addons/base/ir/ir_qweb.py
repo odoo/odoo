@@ -281,7 +281,10 @@ class QWeb(orm.AbstractModel):
                         attrs = self._render_att[attribute](
                             self, element, attribute_name, attribute_value, qwebcontext)
                         for att, val in attrs:
-                            if not val: continue
+                            is_num = (lambda val:
+                                      isinstance(val, (int, float))
+                                      and not isinstance(val, bool))
+                            if not val and not is_num(val): continue
                             generated_attributes += self.render_attribute(element, att, val, qwebcontext)
                         break
                 else:
