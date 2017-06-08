@@ -189,6 +189,31 @@ var FormRenderer = BasicRenderer.extend({
     },
     /**
      * @private
+     * @param {OdooWidget} widget
+     */
+    _handleRequiredIcon: function(widget) {
+        if(this.mode === 'edit') {
+            var self = this;
+            var $el = widget.getFocusableElement();
+            $el.blur(function() {
+                var modifiers = self._getEvaluatedModifiers(widget.__node, widget.record);
+                var $required_icon = $el.data('required_icon') || $();
+                if(!widget.isSet() && modifiers.required && !$required_icon.length){
+                    var $icon = $('<span/>', {
+                        title: _t('This is required field'),
+                        class: "o_required_icon"
+                    }).insertAfter($el);
+                    // can we store required icon state in widget ?
+                    $el.data('required_icon', $icon);
+                } else if(widget.isSet() && $required_icon.length) {
+                    $el.data('required_icon', false);
+                    $required_icon.remove();
+                }
+            });
+        }
+    },
+    /**
+     * @private
      * @param {string} name
      * @returns {string}
      */
@@ -290,6 +315,7 @@ var FormRenderer = BasicRenderer.extend({
         var widget = this._super.apply(this, arguments);
         this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
         this._handleAttributes(widget.$el, node);
+        this._handleRequiredIcon(widget);
         if (JSON.parse(node.attrs.default_focus || "0")) {
             this.defaultFocusField = widget;
         }
