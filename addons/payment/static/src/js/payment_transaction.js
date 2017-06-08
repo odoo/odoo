@@ -59,8 +59,8 @@ odoo.define('payment.transaction', function (require) {
             if (acquirer_token) {
                 params.token = acquirer_token;
             }
-            if (tx_data.access_token) {
-                params.access_token = tx_data.access_token;
+            if (tx_data.accessToken) {
+                params.access_token = tx_data.accessToken;
             }
             $form.off('submit');
             ajax.jsonRpc(tx_data.callUrl, 'call', params).then(function (data) {

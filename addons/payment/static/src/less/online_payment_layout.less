@@ -1,0 +1,74 @@
+#wrapwrap {
+    position: relative;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    height: 100%;
+
+    > * {
+        display: table-row;
+    }
+    > main {
+        height: 100%;
+    }
+}
+
+// Default Style
+header a.navbar-brand {
+    &.logo {
+        padding: 0 15px;
+    }
+    .invoice_company_logo {
+        img {
+            max-height: 60px;
+            margin-top: 8px;
+        }
+    }
+}
+footer {
+    background-color: #F8F8F8;
+
+    #footer {
+        padding-top: 32px;
+    }
+}
+// HEADER NAV BAR
+.navbar.navbar-static-top {
+    margin-bottom: 0;
+    ul.nav > li {
+        .o_powered_by {
+            margin-top: 10px;
+            font-size: 12px;
+            margin-right: -70px;
+        }
+        img {
+            max-height: 70px;
+            margin-top: 8px;
+        }
+    }
+}
+
+.o_paynow_button {
+    font-size: 25px;
+}
+
+#pay_button ul li {
+    vertical-align: middle;
+}
+.o_divider {
+    margin-top: 1%;
+    border-right: 1px solid grey;
+}
+/* apply when payment module install only not website */
+.company_logo {
+    max-height: 60px;
+    margin-top: 8px;
+}
+.o_invoice_report_html {
+    width: 100%;
+    height: 500px;
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
+}

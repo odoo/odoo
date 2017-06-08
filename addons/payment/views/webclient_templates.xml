@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="invoice_payment_assets" inherit_id="web.assets_frontend" name="Invoice Payment Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/less" href="/payment/static/src/less/online_payment_layout.less"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/payment/static/src/js/invoice_payment.js"></script>
+        </xpath>
+    </template>
+
     <!-- new layout view for online -->
     <template id="layout" name="Online Payment Layout">&lt;!DOCTYPE html&gt;
         <html>
@@ -19,7 +28,7 @@
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="navbar-header">
-                                <a href="/" class="navbar-brand logo">
+                                <a href="/" class="navbar-brand">
                                     <img class="company_logo" t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
                                 </a>
                             </div>
