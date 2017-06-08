@@ -4,6 +4,31 @@ from odoo.addons.account.tests.account_test_classes import AccountingTestCase
 
 class TestStockLandedCostsCommon(AccountingTestCase):
 
+    def ensure_property(self, property_name):
+        '''Ensure the ir.property passed as parameter exists for the product template.
+        If not, create them with a random account.
+        :param property_name: The name of the property.
+        '''
+        company_id = self.env.user.company_id
+        field_id = self.env['ir.model.fields'].search(
+            [('model', '=', 'product.template'), ('name', '=', property_name)], limit=1)
+        property_id = self.env['ir.property'].search([
+            ('company_id', '=', company_id.id),
+            ('name', '=', property_name),
+            ('res_id', '=', None),
+            ('fields_id', '=', field_id.id)], limit=1)
+        account_id = self.env['account.account'].search([('company_id', '=', company_id.id)], limit=1)
+        value_reference = 'account.account,%d' % account_id.id
+        if property_id and not property_id.value_reference:
+            property_id.value_reference = value_reference
+        else:
+            self.env['ir.property'].create({
+                'name': property_name,
+                'company_id': company_id.id,
+                'fields_id': field_id.id,
+                'value_reference': value_reference,
+            })
+
     def setUp(self):
         super(TestStockLandedCostsCommon, self).setUp()
         # Objects
@@ -59,6 +84,9 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.brokerage_quantity = self._create_services('Brokerage Cost')
         self.transportation_weight = self._create_services('Transportation Cost')
         self.packaging_volume = self._create_services('Packaging Cost')
+        # Ensure the account properties exists.
+        self.ensure_property('property_stock_account_input')
+        self.ensure_property('property_stock_account_output')
 
     def _create_services(self, name):
         return self.Product.create({
