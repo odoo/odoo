@@ -170,6 +170,84 @@ class resource_calendar(osv.osv):
     # --------------------------------------------------
     # Date and hours computation
     # --------------------------------------------------
+    def get_attendances_for_weekday_with_timezone(self, cr, uid, id, weekday_ret, time_zone, date_for_dst, context=None):
+        """ Given a list of weekdays, return matching resource.calendar.attendance"""
+         
+        def day_num_before(day_num):
+            if day_num == 0:
+                return 6
+            else:
+                return day_num - 1
+         
+        def day_num_after(day_num):
+            if day_num == 6:
+                return 0
+            else:
+                return day_num + 1
+         
+        calendar = self.browse(cr, uid, id, context=None)
+
+        #Declerate list of attendances in UTC; For each day one list of tuples (the resource-working-times interpreted as timezone) 
+        #[[(0,12), (13,14)]][..][..][..][..][..][..]]
+        att_utc = []
+        
+        for i in range (0, 7):
+            att_utc.append([])
+             
+        week = []      
+           
+        for wd in range (0, 7):
+            times_of_weekday = []
+            for att in calendar.attendance_ids :
+                if int(att.dayofweek) == wd:
+                    times_of_weekday.append((att.hour_from , att.hour_to))
+            week.append(times_of_weekday)
+                 
+        utc_offset = time_zone.utcoffset(date_for_dst).total_seconds()/60/60      
+        
+        """ 
+            Create a list like att_utc, but convert times to timezone, while switching days 
+            if the conversion leads to the day before / the day after)
+        """
+        wd = 0
+        for times_of_week_day in week:
+            for t in times_of_week_day:
+                t = list(t)
+                t_0_utc = t[0] - utc_offset 
+                t_1_utc = t[1] - utc_offset
+                 
+                if t_0_utc < 0:  # if previous day included
+                    #examples:
+                    # if begin-time in timezone UTC+2 = 1:00 -> -1:00 in UTC -> add additional tuple for day before: 23:00 to 24:00
+                    # if end-time in timezone UTC+2  3:00 -> 1:00 in UTC
+                    if t_1_utc < 0:
+                        att_utc[day_num_before(wd)].append((24.00 + t_0_utc, 24.00 + t_1_utc)) # "plus" because negative
+                    else:
+                        att_utc[day_num_before(wd)].append((24.00 + t_0_utc, 24.00))
+                        att_utc[wd].append((0.00, t_1_utc ))
+                 
+                elif t_1_utc > 24.00: # if next day included
+                    #examples:
+                    # if begin-time  in timezone UTC-2 = 20:00 -> 22:00 in UTC
+                    # if end-time  in timezone UTC-2 = 23:00 -> 25:00 in UTC -> add additional tuple for day after: 00:00 to 01:00
+                    
+                    if t_0_utc > 24.00:
+                        att_utc[day_num_after(wd)].append((t_0_utc - 24.00, t_1_utc  - 24.00)) 
+                    else:
+                        att_utc[day_num_after(wd)].append((00.00, t_1_utc - 24.00  )) 
+                        att_utc[wd].append((t_0_utc, 24.00 ))
+
+                else: # if still the same day
+                    att_utc[wd].append((t_0_utc, t_1_utc))
+            wd = wd + 1
+         
+        #sort tuples
+        wd = 0
+        att_utc_sorted = att_utc   
+        for times_of_week_day in att_utc:
+            att_utc_sorted[wd] = sorted(times_of_week_day, key=lambda x: x[1])
+            wd = wd + 1
+        return att_utc_sorted[weekday_ret]
 
     def get_attendances_for_weekdays(self, cr, uid, id, weekdays, context=None):
         """ Given a list of weekdays, return matching resource.calendar.attendance"""
@@ -277,7 +355,6 @@ class resource_calendar(osv.osv):
                                      default_interval=None, context=None):
         """ Get the working intervals of the day based on calendar. This method
         handle leaves that come directly from the leaves parameter or can be computed.
-
         :param int id: resource.calendar id; take the first one if is a list
         :param datetime start_dt: datetime object that is the beginning hours
                                   for the working intervals computation; any
@@ -305,12 +382,11 @@ class resource_calendar(osv.osv):
                                        Example: default_interval = (8, 16).
                                        Otherwise, a void list of working intervals
                                        is returned when id is None.
-
         :return list intervals: a list of tuples (start_datetime, end_datetime)
                                 of work intervals """
         if isinstance(id, (list, tuple)):
             id = id[0]
-
+ 
         # Computes start_dt, end_dt (with default values if not set) + off-interval work limits
         work_limits = []
         if start_dt is None and end_dt is not None:
@@ -324,10 +400,10 @@ class resource_calendar(osv.osv):
         else:
             work_limits.append((end_dt, end_dt.replace(hour=23, minute=59, second=59)))
         assert start_dt.date() == end_dt.date(), 'get_working_intervals_of_day is restricted to one day'
-
+ 
         intervals = []
         work_dt = start_dt.replace(hour=0, minute=0, second=0)
-
+ 
         # no calendar: try to use the default_interval, then return directly
         if not id:
             working_interval = []
@@ -335,26 +411,28 @@ class resource_calendar(osv.osv):
                 working_interval = (start_dt.replace(hour=default_interval[0], minute=0, second=0), start_dt.replace(hour=default_interval[1], minute=0, second=0))
             intervals = self.interval_remove_leaves(working_interval, work_limits)
             return intervals
-
+ 
         working_intervals = []
+         
         tz_info = fields.datetime.context_timestamp(cr, uid, work_dt, context=context).tzinfo
-        for calendar_working_day in self.get_attendances_for_weekdays(cr, uid, id, [start_dt.weekday()], context):
-            x = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_from * 3600))
-            y = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(calendar_working_day.hour_to * 3600))
-            x = x.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
-            y = y.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None)
+
+        for calendar_working_day in self.get_attendances_for_weekday_with_timezone(cr, uid, id, start_dt.weekday(), tz_info, work_dt, context):
+            x = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(list(calendar_working_day)[0] * 3600))
+            y = work_dt.replace(hour=0, minute=0, second=0) + timedelta(seconds=(list(calendar_working_day)[1] * 3600))
             working_interval = (x, y)
             working_intervals += self.interval_remove_leaves(working_interval, work_limits)
-
+         
+       
+ 
         # find leave intervals
         if leaves is None and compute_leaves:
             leaves = self.get_leave_intervals(cr, uid, id, resource_id=resource_id, context=None)
-
+ 
         # filter according to leaves
         for interval in working_intervals:
             work_intervals = self.interval_remove_leaves(interval, leaves)
             intervals += work_intervals
-
+ 
         return intervals
 
     def get_working_hours_of_date(self, cr, uid, id, start_dt=None, end_dt=None,
