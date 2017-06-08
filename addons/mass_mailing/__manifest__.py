@@ -30,7 +30,7 @@ professional emails and reuse templates in a few clicks.
         'views/link_tracker_views.xml',
         'views/mass_mailing_template.xml',
         'views/mass_mailing_views.xml',
-        'views/res_config_views.xml',
+        'views/mass_mailing_config_settings_views.xml',
         'security/ir.model.access.csv',
         'views/editor_field_html.xml',
         'views/themes_templates.xml',

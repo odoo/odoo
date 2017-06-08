@@ -37,7 +37,7 @@ Main Features
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
-        'views/res_config_views.xml',
+        'views/base_config_settings_views.xml',
         'data/mail_data.xml',
         'data/mail_channel_data.xml',
         'data/mail_shortcode_data.xml',
