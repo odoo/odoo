@@ -1491,6 +1491,7 @@ var ReceiptScreenWidget = ScreenWidget.extend({
         }
     },
     click_next: function() {
+        this.pos.push_order();
         this.pos.get_order().finalize();
     },
     click_back: function() {
@@ -1983,7 +1984,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
                 self.gui.show_screen('receipt');
             });
         } else {
-            this.pos.push_order(order);
+            this.pos.save_order_to_local(order);
             this.gui.show_screen('receipt');
         }
 
