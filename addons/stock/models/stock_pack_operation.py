@@ -31,6 +31,8 @@ class PackOperation(models.Model):
         help='The stock operation where the packing has been made')
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure')
+    previous_product_uom_id = fields.Many2one('product.uom', compute='_compute_previous_product_uom_id') # hidden computed field to manage product_uom_id onchange method
+    product_uom_categ_id = fields.Many2one(related='product_uom_id.category_id')
     product_qty = fields.Float('To Do', default=0.0, digits=dp.get_precision('Product Unit of Measure'), required=True)
     ordered_qty = fields.Float('Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'))
     qty_done = fields.Float('Done', default=0.0, digits=dp.get_precision('Product Unit of Measure'))
@@ -125,21 +127,26 @@ class PackOperation(models.Model):
         else:
             self.lots_visible = self.product_id.tracking != 'none'
 
+    @api.depends() # no dependencies wanted, only handled and used by onchange_product_id
+    def _compute_previous_product_uom_id(self):
+        for pack_operation in self:
+            pack_operation.previous_product_uom_id = pack_operation.product_uom_id
+
     @api.onchange('pack_lot_ids')
     def _onchange_packlots(self):
         self.qty_done = sum([x.qty for x in self.pack_lot_ids])
 
-    @api.multi
     @api.onchange('product_id', 'product_uom_id')
     def onchange_product_id(self):
         if self.product_id:
             self.lots_visible = self.product_id.tracking != 'none'
             if not self.product_uom_id or self.product_uom_id.category_id != self.product_id.uom_id.category_id:
                 self.product_uom_id = self.product_id.uom_id.id
-            res = {'domain': {'product_uom_id': [('category_id', '=', self.product_uom_id.category_id.id)]}}
-        else:
-            res = {'domain': {'product_uom_id': []}}
-        return res
+            if self.previous_product_uom_id and self.product_uom_id.category_id == self.previous_product_uom_id.category_id:
+                self.product_qty = self.previous_product_uom_id._compute_quantity(self.product_qty, self.product_uom_id)
+                self.ordered_qty = self.previous_product_uom_id._compute_quantity(self.ordered_qty, self.product_uom_id)
+                self.qty_done = self.previous_product_uom_id._compute_quantity(self.qty_done, self.product_uom_id)
+            self.previous_product_uom_id = self.product_uom_id
 
     @api.model
     def create(self, vals):
@@ -207,7 +214,6 @@ class PackOperation(models.Model):
 
     @api.multi
     def show_details(self):
-        # TDE FIXME: does not seem to be used
         view_id = self.env.ref('stock.view_pack_operation_details_form_save').id
         return {
             'name': _('Operation Details'),
