@@ -64,7 +64,7 @@ Dashboard for CRM will include:
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
         'views/res_partner_views.xml',
-        'views/res_config_views.xml',
+        'views/sale_config_settings_views.xml',
         'views/crm_team_views.xml',
     ],
     'demo': [

@@ -19,7 +19,7 @@ It assigns manager and user access rights to the Administrator for the accountin
         'data/account_accountant_data.xml',
         'security/account_accountant_security.xml',
         'views/account_accountant_templates.xml',
-        'views/res_config_view.xml',
+        'views/account_config_settings_views.xml',
         'views/product_views.xml',
     ],
     'demo': ['data/account_accountant_demo.xml'],
