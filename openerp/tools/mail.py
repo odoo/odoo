@@ -68,7 +68,7 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False):
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
     # html encode email tags
-    part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
+    part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^\"<>]+>)", re.IGNORECASE | re.DOTALL)
     src = part.sub(lambda m: cgi.escape(m.group(1)), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
     src = src.replace('<%', cgi.escape('<%'))
@@ -106,6 +106,12 @@ def html_sanitize(src, silent=True, strict=False, strip_style=False):
     try:
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
+
+        # thanks to stackoverflow questions/15386605/lxml-cleaner-to-ignore-base64-image for solution
+        if clean._is_javascript_scheme:     # patch only if the LXML_VERSION uses the _is_javascript_scheme variable
+            cleaner_pattern = r'(?:javascript:|jscript:|livescript:|vbscript:|data:[^(?:image/.+;base64)]+|about:|mocha:)'
+            clean._is_javascript_scheme = re.compile(cleaner_pattern,re.I).search
+
         cleaned = cleaner.clean_html(src)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
         cleaned = cleaned.replace('%24', '$')
