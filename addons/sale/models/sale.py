@@ -97,10 +97,6 @@ class SaleOrder(models.Model):
     def _default_note(self):
         return self.env.user.company_id.sale_note
 
-    @api.model
-    def _get_default_team(self):
-        return self.env['crm.team']._get_default_team_id()
-
     @api.onchange('fiscal_position_id')
     def _compute_tax_id(self):
         """
@@ -131,7 +127,7 @@ class SaleOrder(models.Model):
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
-    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange')
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.")
@@ -161,7 +157,7 @@ class SaleOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
     fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
-    team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, oldname='section_id')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
@@ -224,14 +220,12 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
+            'user_id': self.partner_id.user_id.id,
+            'team_id': self.partner_id.user_id.sale_team_id.id
         }
         if self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
-        if self.partner_id.user_id:
-            values['user_id'] = self.partner_id.user_id.id
-        if self.partner_id.team_id:
-            values['team_id'] = self.partner_id.team_id.id
         self.update(values)
 
     @api.onchange('partner_id')
