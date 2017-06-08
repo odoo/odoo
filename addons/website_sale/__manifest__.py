@@ -6,7 +6,7 @@
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
     'description': "",
-    'depends': ['website', 'sale', 'sale_payment', 'payment', 'website_payment', 'website_portal_sale', 'website_account', 'website_mail', 'website_form', 'website_rating'],
+    'depends': ['website', 'sale', 'sale_payment', 'payment', 'website_payment', 'website_account', 'website_mail', 'website_form', 'website_rating'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_sale.xml',

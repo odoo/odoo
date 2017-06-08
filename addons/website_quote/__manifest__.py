@@ -7,7 +7,7 @@
     'website': 'https://www.odoo.com/page/quote-builder',
     'version': '1.0',
     'description': "",
-    'depends': ['website', 'sale_management', 'mail', 'payment', 'website_portal_sale', 'website_mail'],
+    'depends': ['website', 'sale_management', 'mail', 'payment', 'website_mail'],
     'data': [
         'data/website_quote_data.xml',
         'report/sale_order_reports.xml',
