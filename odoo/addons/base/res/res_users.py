@@ -355,7 +355,7 @@ class Users(models.Model):
                 if user.partner_id.company_id and user.partner_id.company_id.id != values['company_id']:
                     user.partner_id.write({'company_id': user.company_id.id})
             # clear default ir values when company changes
-            self.env['ir.values'].get_defaults_dict.clear_cache(self.env['ir.values'])
+            self.env['ir.default'].clear_caches()
 
         # clear caches linked to the users
         if 'groups_id' in values:

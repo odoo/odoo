@@ -111,6 +111,22 @@
             <field name="perm_read" eval="False"/>
         </record>
 
+        <record model="ir.rule" id="ir_default_user_rule">
+            <field name="name">Defaults: alter personal defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="ir_default_system_rule">
+            <field name="name">Defaults: alter all defaults</field>
+            <field name="model_id" ref="model_ir_default"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
         <!-- Used for dashboard customizations, users should only be able to edit their own dashboards -->
         <record model="ir.rule" id="ir_ui_view_custom_personal">
             <field name="name">ir.ui.view_custom rule</field>

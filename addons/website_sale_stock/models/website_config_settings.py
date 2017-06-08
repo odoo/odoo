@@ -18,14 +18,14 @@ class WebsiteConfigSettings(models.TransientModel):
     @api.multi
     def set_values(self):
         super(WebsiteConfigSettings, self).set_values()
-        self.env['ir.values'].sudo().set_default('product.template', 'inventory_availability', self.inventory_availability)
-        self.env['ir.values'].sudo().set_default('product.template', 'available_threshold', self.available_threshold if self.inventory_availability == 'threshold' else None)
+        IrDefault = self.env['ir.default'].sudo()
+        IrDefault.set('product.template', 'inventory_availability', self.inventory_availability)
+        IrDefault.set('product.template', 'available_threshold', self.available_threshold if self.inventory_availability == 'threshold' else None)
 
     @api.model
     def get_values(self):
         res = super(WebsiteConfigSettings, self).get_values()
-        param = self.env['ir.values'].sudo()
-        res.update(inventory_availability=param.get_default('product.template', 'inventory_availability') or 'never',
-                   available_threshold=param.get_default('product.template', 'available_threshold') or 5.0
-                   )
+        IrDefault = self.env['ir.default'].sudo()
+        res.update(inventory_availability=IrDefault.get('product.template', 'inventory_availability') or 'never',
+                   available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0)
         return res
