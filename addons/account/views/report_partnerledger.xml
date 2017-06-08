@@ -79,7 +79,7 @@
                                 <strong t-esc="formatLang((sum_debit_partner(partner) - sum_credit_partner(partner)), currency_obj=res_company.currency_id)"/>
                             </td>
                         </tr>
-                        <tr t-if="initial_balance">
+                        <tr t-if="data['form']['initial_balance']">
                             <td colspan="5">Initial Balance</td>
                             <td>
                                 <span t-esc="formatLang(get_intial_balance(partner)[0][0])"/>
