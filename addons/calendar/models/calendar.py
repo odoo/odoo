@@ -553,7 +553,7 @@ class Meeting(models.Model):
         if not event_date:
             event_date = datetime.now()
 
-        if self.allday and self.rrule and 'Z' not in self.rrule:
+        if self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule:
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
         else:
             # Convert the event date to saved timezone (or context tz) as it'll
