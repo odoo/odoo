@@ -404,30 +404,78 @@ def multi(method):
 
 def one(method):
     """ Decorate a record-style method where ``self`` is expected to be a
-        singleton instance. The decorated method automatically loops on records,
-        and makes a list with the results. In case the method is decorated with
-        :func:`returns`, it concatenates the resulting instances. Such a
-        method::
+        singleton instance. The decorated method automatically loops on
+        records::
 
             @api.one
-            def method(self, args):
-                return self.name
+            def rename(self, name):
+                self.name = name
 
-        may be called in both record and traditional styles, like::
+        The method may be called in both record and traditional styles, like::
 
             # recs = model.browse(cr, uid, ids, context)
-            names = recs.method(args)
+            recs.rename(newname)
+            model.rename(cr, uid, ids, newname, context=context)
 
-            names = model.method(cr, uid, ids, args, context=context)
+        .. warning::
+            If you ``return`` something from the method, **you could get
+            undesired results**.
 
-        .. deprecated:: 9.0
+            :func:`~.one` always returns a list, so a method like this::
 
-            :func:`~.one` often makes the code less clear and behaves in ways
-            developers and readers may not expect.
+                @api.one
+                def is_invalid(self):
+                    return False
 
-            It is strongly recommended to use :func:`~.multi` and either
-            iterate on the ``self`` recordset or ensure that the recordset
-            is a single record with :meth:`~openerp.models.Model.ensure_one`.
+            ... would return ``[False]``, and **could cause false positives**
+            because ``bool([False])`` is ``True``::
+
+                record = model.browse(1)
+                if record.is_invalid():
+                    record.unlink()  # Bad things will happen
+
+            So, if you have to ``return`` something, It is strongly recommended
+            to use :func:`~.multi` and either iterate on the ``self`` recordset
+            or ensure that the recordset is a single record with
+            :meth:`~openerp.models.Model.ensure_one`. This means that
+            **:func:`~.onchange` and action methods should be always
+            :func:`~.multi`**.
+
+            However, sometimes you have to return a recordset. In such case,
+            **you will want to decorate it with :func:`~.returns`** to allow
+            chaining operations. Consider this 2 methods::
+
+                # Bad
+                @api.one
+                def get_partner_list(self):
+                    return self.partner_id
+
+                # Good
+                @api.one
+                @api.returns("res.partner")
+                def get_partner_recordset(self):
+                    return self.partner_id
+
+            The results are quite different::
+
+                # Bad
+                partners = record.get_partner_list()
+                # partners == [res.partner(1), res.partner(2)]
+                names = partners.mapped("name")  # Boom! AttributeError
+
+                # Good
+                partners = record.get_partner_recordset()
+                # partners == res.partner(1, 2)
+                names = partners.mapped("name")  # You have a names list now
+
+            Finally, you should keep in mind that **abusing :func:`~.one` could
+            reduce your code performance**. For instance, the first method
+            above could have been better written like this to improve
+            performance, reducing loops and database calls::
+
+                @api.multi
+                def rename(self, name):
+                    self.write({"name": name})
     """
     split = get_context_split(method)
     downgrade = get_downgrade(method)
