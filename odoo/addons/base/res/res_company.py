@@ -352,3 +352,16 @@ class Company(models.Model):
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('Error ! You cannot create recursive companies.'))
+
+    @api.multi
+    def copy(self, default=None):
+        """
+        Duplicating a company without specifying a partner duplicate the partner
+        """
+        self.ensure_one()
+        default = dict(default or {})
+        if not default.get('name') and not default.get('partner_id'):
+            copy_partner = self.partner_id.copy()
+            default['partner_id'] = copy_partner.id
+            default['name'] = copy_partner.name
+        return super(Company, self).copy(default)
