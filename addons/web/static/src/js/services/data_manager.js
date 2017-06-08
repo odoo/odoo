@@ -11,6 +11,7 @@ var utils = require('web.utils');
 return core.Class.extend({
     init: function () {
         this._init_cache();
+        core.bus.on('clear_cache', this, this.invalidate.bind(this));
     },
 
     _init_cache: function () {
