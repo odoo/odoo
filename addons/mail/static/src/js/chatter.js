@@ -97,9 +97,17 @@ var ChatterComposer = composer.BasicComposer.extend({
         return !event.shiftKey;
     },
 
+    /*
+        Default, suggested recipients are unchecked
+    */
+    get_suggested_recipients_check: function() {
+        return true;
+    },
+
     message_get_suggested_recipients: function () {
         var self = this;
         var email_addresses = _.pluck(this.suggested_partners, 'email_address');
+        var default_check = this.get_suggested_recipients_check();
         return this.thread_dataset
             .call('message_get_suggested_recipients', [[this.context.default_res_id], this.context])
             .done(function (suggested_recipients) {
@@ -108,7 +116,7 @@ var ChatterComposer = composer.BasicComposer.extend({
                     var parsed_email = utils.parse_email(recipient[1]);
                     if (_.indexOf(email_addresses, parsed_email[1]) === -1) {
                         self.suggested_partners.push({
-                            checked: true,
+                            checked: default_check,
                             partner_id: recipient[0],
                             full_name: recipient[1],
                             name: parsed_email[0],
@@ -544,6 +552,9 @@ var Chatter = form_common.AbstractField.extend({
 
 core.form_widget_registry.add('mail_thread', Chatter);
 
-return Chatter;
+return {
+    Chatter: Chatter,
+    ChatterComposer: ChatterComposer,
+};
 
 });
