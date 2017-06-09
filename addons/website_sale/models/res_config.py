@@ -26,6 +26,7 @@ class WebsiteConfigSettings(models.TransientModel):
     module_delivery_fedex = fields.Boolean("Fedex integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
+    module_delivery_bpost = fields.Boolean("bpost integration")
 
     module_sale_ebay = fields.Boolean("eBay connector")
     module_sale_coupon = fields.Boolean("Discount Programs")
