@@ -837,6 +837,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on separators', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<separator string="Geolocation" attrs=\'{"invisible": [["bar", "=", True]]}\'/>'+
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.strictEqual(form.$('div.o_horizontal_separator').hasClass('o_invisible_modifier'), true,
+                "separator div should be hidden");
+        form.destroy();
+    });
+
     QUnit.test('buttons in form view', function (assert) {
         assert.expect(7);
 
@@ -3770,7 +3792,7 @@ QUnit.module('Views', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
         assert.strictEqual(form.$('input[name="foo"]')[0].selectionStart, 3,
             "cursor should be at the end");
@@ -3792,7 +3814,25 @@ QUnit.module('Views', {
             res_id: 1,
         });
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
+
+        form.destroy();
+    });
+
+    QUnit.test('in create mode, autofocus fields are focused', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="foo" default_focus="1"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
 
         form.destroy();
@@ -3817,6 +3857,24 @@ QUnit.module('Views', {
         });
 
         form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus first visible field', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field" invisible="1"/>' +
+                        '<field name="foo"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
 
         form.destroy();
     });
@@ -4893,5 +4951,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('wow effect', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        var clickCount = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<button name="test" string="Mark Won" type="object" class="o_wow"/>' +
+                '</form>',
+            intercepts: {
+                execute_action: function (event) {
+                    if (clickCount === 0) {
+                        event.data.on_success();
+                    } else {
+                        event.data.on_fail();
+                    }
+                    clickCount++;
+                },
+                show_wow: function () {
+                    assert.step('wow');
+                },
+            },
+        });
+
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+
+        form.destroy();
+    });
 });
 });
