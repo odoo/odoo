@@ -333,7 +333,7 @@ class MaintenanceRequest(models.Model):
         # Overridden to reset the kanban_state to normal whenever
         # the stage (stage_id) of the Maintenance Request changes.
         if 'stage_id' in vals and self.env.user.id != SUPERUSER_ID and not self.user_has_groups('maintenance.group_equipment_manager'):
-            raise UserError(_("As a employee, You can not change the state of maintenance request"))
+            raise UserError(_("As an employee, you cannot change the status of the maintenance request."))
         if vals and 'kanban_state' not in vals and 'stage_id' in vals:
             vals['kanban_state'] = 'normal'
         res = super(MaintenanceRequest, self).write(vals)
