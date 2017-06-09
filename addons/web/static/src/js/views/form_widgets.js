@@ -524,6 +524,8 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
             fs_filters: this.options.fs_filters,
             debugMode: session.debug,
         }).open();
+        this.trigger("dialog_opened", dialog);
+        return dialog;
     },
 });
 
