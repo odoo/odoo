@@ -407,7 +407,7 @@ class PurchaseOrder(models.Model):
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
-                moves.force_assign()
+                moves.action_assign()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
@@ -656,7 +656,7 @@ class PurchaseOrderLine(models.Model):
             'location_dest_id': self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
-            'move_dest_id': False,
+            'move_dest_ids': False,
             'state': 'draft',
             'purchase_line_id': self.id,
             'company_id': self.order_id.company_id.id,
@@ -679,7 +679,7 @@ class PurchaseOrderLine(models.Model):
                 tmp = template.copy()
                 tmp.update({
                     'product_uom_qty': min(procurement_qty, diff_quantity),
-                    'move_dest_id': procurement.move_dest_id.id,  # move destination is same as procurement destination
+                    'move_dest_ids': procurement.move_dest_id and [(4, procurement.move_dest_id.id)] or [],  # move destination is same as procurement destination
                     'procurement_id': procurement.id,
                     'propagate': procurement.rule_id.propagate,
                 })
