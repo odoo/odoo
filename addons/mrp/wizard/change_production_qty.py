@@ -72,7 +72,11 @@ class change_production_qty(osv.osv_memory):
         uom_obj = self.pool.get('product.uom')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
-            prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
+            data = {'product_qty': wiz_qty.product_qty}
+            if prod.product_uos.id:
+                data['product_uos_qty'] = uom_obj._compute_qty(
+                    cr, uid, prod.product_uom.id, wiz_qty.product_qty, prod.product_uos.id)
+            prod_obj.write(cr, uid, [prod.id], data)
             prod_obj.action_compute(cr, uid, [prod.id])
 
             for move in prod.move_lines:
@@ -95,7 +99,11 @@ class change_production_qty(osv.osv_memory):
                     if r['product_id'] == move.product_id.id:
                         move_obj.write(cr, uid, [move.id], {'product_uom_qty': r['product_qty']})
             if prod.move_prod_id:
-                move_obj.write(cr, uid, [prod.move_prod_id.id], {'product_uom_qty' :  wiz_qty.product_qty})
+                data = {'product_uom_qty': wiz_qty.product_qty}
+                if prod.move_prod_id.product_uos.id:
+                    data['product_uos_qty'] = uom_obj._compute_qty(
+                        cr, uid, prod.move_prod_id.product_uom.id, wiz_qty.product_qty, prod.move_prod_id.product_uos.id)
+                move_obj.write(cr, uid, [prod.move_prod_id.id], data)
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
         return {}
 
