@@ -408,6 +408,9 @@
                 </script>
 
                 <style>
+                    body {
+                        position: relative; // bootstrap-datepicker needs this
+                    }
                     body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
                         opacity: 0 !important;
                     }
