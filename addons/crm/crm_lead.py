@@ -1017,8 +1017,8 @@ class crm_lead(format_address, osv.osv):
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name':  msg.get('subject') or _("No Subject"),
-            'email_from': msg.get('from'),
+            'name': msg.get('subject') or _("No Subject"),
+            'email_from': msg.get('reply_to') or msg.get('from'),
             'email_cc': msg.get('cc'),
             'partner_id': msg.get('author_id', False),
             'user_id': False,
@@ -1042,9 +1042,9 @@ class crm_lead(format_address, osv.osv):
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             update_vals['priority'] = msg.get('priority')
         maps = {
-            'cost':'planned_cost',
+            'cost': 'planned_cost',
             'revenue': 'planned_revenue',
-            'probability':'probability',
+            'probability': 'probability',
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
