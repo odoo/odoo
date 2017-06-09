@@ -75,21 +75,21 @@
     }
 }
 
-.modal-backdrop {
-    // Change the z-index of the modal-backdrop element to be equal to the
-    // modal element's one. Bootstrap does not support multi-modals, and without
-    // this rule all the modal-backdrops are below all the opened modals.
-    // Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
-    // element (unique in their supported cases) might be put after the modal
-    // element (if the modal is already in the DOM, hidden, then opened). This
-    // cannot happen in odoo though as modals are not hidden but removed from
-    // the DOM and are always put at the end of the body when opened.
-    //
-    // Note that changing the @zindex-modal-background variable would have had
-    // the same effect but bootstrap removed it in their newest version, so this
-    // will be the proper fix. Note that they removed it to fix an issue with
-    // the "close on click on the backdrop" feature, so that is ok as we do not
-    // use this feature.
-    // (https://github.com/twbs/bootstrap/commit/4bbe80658a9d32df131e5fb13bc20688b99a70d5)
-    z-index: @zindex-modal;
+// Change the z-index of the modal-backdrop elements to be equal to the
+// modal elements' ones. Bootstrap does not support multi-modals, and without
+// this rule all the modal-backdrops are below all the opened modals.
+// Indeed, bootstrap forces them to a lower z-index as the modal-backdrop
+// element (unique in their supported cases) might be put after the modal
+// element (if the modal is already in the DOM, hidden, then opened). This
+// cannot happen in odoo though as modals are not hidden but removed from
+// the DOM and are always put at the end of the body when opened.
+//
+// Note that the variable @zindex-modal-background may be renamed/removed in
+// newer versions of bootstrap.
+@zindex-modal-background: @zindex-modal;
+
+// Temporary fix for modals which are not instantiated thanks to the Dialog
+// JS classes (deprecated case).
+:not(body) > .modal {
+    z-index: @zindex-modal-background + 1;
 }
