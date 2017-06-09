@@ -10,7 +10,7 @@
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
                 </field>
                 <xpath expr="//notebook/page[@name='extra_info']" position="before">
-                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}">
+                    <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_project_id': project_id}"
                                 groups="base.group_user">
                             <tree editable="top" string="Timesheet Activities">

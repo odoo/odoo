@@ -7,6 +7,13 @@ from odoo import api, fields, models
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
+    @api.model
+    def default_get(self, field_list):
+        result = super(AccountAnalyticLine, self).default_get(field_list)
+        if 'employee_id' in field_list and result.get('user_id') and result.get('project_id'):
+            result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id'])], limit=1).id
+        return result
+
     task_id = fields.Many2one('project.task', 'Task')
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 

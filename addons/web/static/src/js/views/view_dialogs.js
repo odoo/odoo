@@ -4,6 +4,7 @@ odoo.define('web.view_dialogs', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var ListController = require('web.ListController');
 var ListView = require('web.ListView');
 var pyeval = require('web.pyeval');
@@ -194,8 +195,10 @@ var FormViewDialog = ViewDialog.extend({
                     if ($buttons.children().length) {
                         self.$footer.empty().append($buttons.contents());
                     }
-                    _super().$el.append(fragment);
-                    self.form_view.autofocus();
+                    dom.append(_super().$el, fragment, {
+                        callbacks: [{widget: self.form_view}],
+                        in_DOM: true,
+                    });
                 });
         });
 
@@ -281,6 +284,7 @@ var SelectCreateDialog = ViewDialog.extend({
         if(this.options.initial_view !== "search") {
             return this.create_edit_record();
         }
+        var self = this;
         var user_context = this.getSession().user_context;
 
         var _super = this._super.bind(this);
@@ -298,7 +302,10 @@ var SelectCreateDialog = ViewDialog.extend({
         this.loadViews(this.dataset.model, this.dataset.get_context(), [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this, search_defaults))
             .then(function (fragment) {
-                _super().$el.append(fragment);
+                dom.append(_super().$el, fragment, {
+                    callbacks: [{widget: self.list_controller}],
+                    in_DOM: true,
+                });
             });
         return this;
     },

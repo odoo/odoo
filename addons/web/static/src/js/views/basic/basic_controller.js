@@ -46,6 +46,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Deferred}
      */
     start: function () {
+        // add classname to reflect the (absence of) access rights (used to
+        // correctly display the nocontent helper)
+        this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
         return this._super.apply(this, arguments)
                           .then(this._updateEnv.bind(this));
     },
@@ -186,8 +189,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // user if some discarding has to be made). This operation must also be
         // mutex-protected as commitChanges function of x2m has to be aware of
         // all final changes made to a row.
-        this.mutex.exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle)); // TODO write a test for this
-        return this.mutex.exec(this._saveRecord.bind(this, recordID, options));
+        var self = this;
+        return this.mutex
+            .exec(this.renderer.commitChanges.bind(this.renderer, recordID || this.handle))
+            .then(function () {
+                return self.mutex.exec(self._saveRecord.bind(self, recordID, options));
+            });
     },
     /**
      * @override
