@@ -78,11 +78,14 @@ class TestPartnerLeadPortal(TestCrmCases):
 
     def test_partner_lead_accept(self):
         """ Test an integrating partner accepting the lead """
+        team_before = self.lead.team_id
+        user_before = self.lead.user_id
+
         self.lead.sudo(self.portal_user.id).partner_interested(comment="Oh yeah, I take that lead !")
 
         self.assertEqual(self.lead.type, 'opportunity', 'Bad Type: accepted lead by portal user should become an opportunity.')
-        self.assertFalse(self.lead.team_id, 'Accepting lead does not change the sales team.')
-        self.assertFalse(self.lead.user_id, 'Accepting lead does not change the salesman.')
+        self.assertEqual(self.lead.team_id, team_before, 'Accepting lead does not change the sales team.')
+        self.assertEqual(self.lead.user_id, user_before, 'Accepting lead does not change the salesman.')
 
     def test_partner_lead_decline(self):
         """ Test an integrating partner decline the lead """

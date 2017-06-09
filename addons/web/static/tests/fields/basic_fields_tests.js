@@ -1378,14 +1378,14 @@ QUnit.module('basic_fields', {
 
         // click on the input and select another value
         form.$('.o_datepicker_input').click();
-        assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        assert.strictEqual(form.$('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        form.$('.day:contains(22)').click(); // select the 22 February
-        assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        assert.strictEqual($('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/22/2017',
             'the selected date should be displayed in the input');
 
@@ -1430,13 +1430,13 @@ QUnit.module('basic_fields', {
 
         // click on the input and select another value
         list.$('input.o_datepicker_input').click();
-        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        list.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        list.$('.day:contains(22)').click(); // select the 22 February
-        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
         assert.strictEqual(list.$('.o_datepicker_input').val(), '02/22/2017',
             'the selected date should be displayed in the input');
 
@@ -1513,21 +1513,21 @@ QUnit.module('basic_fields', {
             'the datetime should be correct in edit mode');
         // click on the input and select 22 February at 8:23:33
         form.$('.o_datepicker_input').click();
-        assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
-        form.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
-        form.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
-        form.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
-        form.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
-        form.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
-        form.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
-        assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        $('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        $('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        $('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        $('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        $('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        $('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
 
         var newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(form.$('.o_datepicker_input').val(), newExpectedDateString,
@@ -1578,21 +1578,21 @@ QUnit.module('basic_fields', {
 
         // click on the input and select 22 February at 8:23:33
         list.$('input.o_datepicker_input').click();
-        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        list.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
-        list.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
-        list.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
-        list.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
-        list.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
-        list.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
-        list.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
-        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        $('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        $('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        $('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        $('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        $('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        $('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
 
         var newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(list.$('.o_datepicker_input').val(), newExpectedDateString,

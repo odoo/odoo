@@ -2313,11 +2313,11 @@ QUnit.module('relational_fields', {
 
         form.$('td:contains(01/25/2017)').click();
         form.$('.o_datepicker_input').click();
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        form.$('.day:contains(22)').click(); // select the 22 February
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
 
         form.$buttons.find('.o_form_button_save').click();
 
