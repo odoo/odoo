@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import time
 import json
 import logging
 import os
@@ -263,6 +264,11 @@ def restore_db(db, dump_file, copy=False):
                 env['ir.config_parameter'].init(force=True)
             if filestore_path:
                 filestore_dest = env['ir.attachment']._filestore()
+                if os.path.exists(filestore_dest):
+                    # filestore already exists
+                    # could be a previous db or a request during pg_restore
+                    filestore_dest_tmp = "%s_%s" % (filestore_dest, time.time())
+                    os.rename(filestore_dest, filestore_dest_tmp)
                 shutil.move(filestore_path, filestore_dest)
 
             if odoo.tools.config['unaccent']:
