@@ -1,0 +1,66 @@
+<?xml	version="1.0"?>
+<openerp>
+<data>
+
+    <report id="report_advance_stamped_receipt"
+	    string="Advance Stamped Receipt"
+	    model="sales.adv.stamp.receipt"
+	    report_type="qweb-pdf"
+	    name="sale.report_adv_stamp_receipt_template"/>
+
+    <!--    Template for Advance Stamped Receipt    -->  
+    <template id="report_adv_stamp_receipt_template">
+	<t t-call="report.html_container">
+	<t t-foreach="docs" t-as="o">
+	<t t-call="report.external_layout">
+	<div class="page">        
+	<div class="oe_structure"/>
+				    
+        <div class="row">
+	<div class="col-xs-4 pull-right">
+            <table>
+                <tr>
+                    <td><strong>Phone :</strong></td>
+                    <td class="text-right">
+                    <span t-field="o.contact"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Fax :</strong></td>
+                    <td class="text-right">
+                    <span t-field="o.fax"/>
+                    </td>
+                </tr>
+                <tr>
+		    <td><strong>Date :</strong></td>
+                    <td class="text-right">
+                    <span t-field="o.date"/>
+		    </td>
+		</tr>
+            </table>
+	</div>	
+	</div>
+	<br/>
+	<br/>
+            <u><h4 class="text-centre">ADVANCE STAMPED RECEIPT</h4></u>
+	    <br/>
+	    <br/>
+	    <div>
+	        <p class="text-justify">
+		Received a sum of <strong>Rs.<u><span t-field="o.amount"/></u>/-</strong> with thanks from the Senior Manager/Officer-in charge Mr./Ms. <u><strong><span t-field="o.name"/></strong></u> only by cheque / Demand Draft towards the payment against Bill No.<u><strong><span t-field="o.bill_no"/></strong></u> dated<u><strong><span t-field="o.bill_date"/></strong></u> for the supply of <u><strong><span t-field="o.product_id"/></strong></u>.
+		</p>
+	    </div>
+	    <br/>
+	    <br/>
+	    <br/>
+	    <br/>
+	    <div class="row">
+	    <div class="col-xs-4 pull-right"><strong>Signature of the Employer/Authorised Authority</strong></div>
+	    </div>
+	    </div>
+        </t>
+	</t>
+        </t>
+    </template>
+</data>
+</openerp>
