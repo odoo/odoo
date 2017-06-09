@@ -88,16 +88,15 @@ class crm_lead(format_address, osv.osv):
         if read_group_order == 'stage_id desc':
             order = "%s desc" % order
         # retrieve team_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
+
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         search_domain = []
         team_id = context and context.get('default_team_id') or False
         if team_id:
             search_domain += ['|', ('team_ids', '=', team_id)]
-            search_domain += [('id', 'in', ids)]
-        else:
-            search_domain += [('id', 'in', ids)]
+
+
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
