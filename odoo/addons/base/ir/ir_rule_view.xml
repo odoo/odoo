@@ -63,13 +63,13 @@
             <field name="arch" type="xml">
                 <search string="Record Rules">
                     <field name="name" string="Record Rule"/>
-                    <filter string="Global" domain="[('global','=',True)]"/>
+                    <filter string="Global" name="global" domain="[('global','=',True)]"/>
                     <separator/>
-                    <filter string="Full Access Right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access Right" domain="[('perm_read','=',True)]"/>
-                    <filter string="Write Access Right" domain="[('perm_write','=',True)]"/>
-                    <filter string="Create Access Right" domain="[('perm_create','=',True)]"/>
-                    <filter string="Delete Access Right" domain="[('perm_unlink','=',True)]"/>
+                    <filter string="Full Access Right" name="full_access_right" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
+                    <filter string="Read Access Right" name="read_access_right" domain="[('perm_read','=',True)]"/>
+                    <filter string="Write Access Right" name="write_access_right" domain="[('perm_write','=',True)]"/>
+                    <filter string="Create Access Right" name="create_access_right" domain="[('perm_create','=',True)]"/>
+                    <filter string="Delete Access Right" name="delete_access_right" domain="[('perm_unlink','=',True)]"/>
                     <field name="model_id"/>
                     <field name="groups"/>
                 </search>

@@ -41,9 +41,9 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('archive','=',True)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Assigned' domain="[]" context="{'group_by': 'technician_user_id'}"/>
-                    <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>
-                    <filter string='Stages' domain="[]" context="{'group_by' : 'stage_id'}"/>
+                    <filter string='Assigned' name="assigned" domain="[]" context="{'group_by': 'technician_user_id'}"/>
+                    <filter string='Category' name="category" domain="[]" context="{'group_by' : 'category_id'}"/>
+                    <filter string='Stages' name="stages" domain="[]" context="{'group_by' : 'stage_id'}"/>
                     <filter string='Created By' name='created_by' domain="[]" context="{'group_by': 'owner_user_id'}"/>
                 </group>
             </search>
@@ -475,7 +475,7 @@
                 <field name="name"  filter_domain="['|','|','|',('name','ilike',self),('model','ilike',self),('serial_no','ilike',self),('partner_ref', 'ilike', self)]"/>
                 <field name="category_id"/>
                 <field name="owner_user_id"/>
-                <filter string="Under Maintenance"  domain="[('maintenance_open_count', '&gt;', 0)]"/>
+                <filter string="Under Maintenance" name="under_maintenance" domain="[('maintenance_open_count', '&gt;', 0)]"/>
                 <separator/>
                 <filter string="Assigned" name="assigned" domain="[('owner_user_id', '!=', False)]"/>
                 <filter string="Available" name="available" domain="[('owner_user_id', '=', False)]"/>
@@ -500,10 +500,10 @@
                         ]"/>
                 <!-- <filter string="Archived" name="inactive" domain="[('active','=',False)]"/> -->
                 <group  expand='0' string='Group by...'>
-                    <filter string='Technicians' domain="[]" context="{'group_by': 'technician_user_id'}"/>
-                    <filter string='Category' domain="[]" context="{'group_by': 'category_id'}"/>
-                    <filter string='Owner' domain="[]" context="{'group_by': 'owner_user_id'}"/>
-                    <filter string='Vendor' domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string='Technicians' name="technicians" domain="[]" context="{'group_by': 'technician_user_id'}"/>
+                    <filter string='Category' name="category" domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter string='Owner' name="owner" domain="[]" context="{'group_by': 'owner_user_id'}"/>
+                    <filter string='Vendor' name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
                 </group>
             </search>
         </field>
@@ -617,7 +617,7 @@
             <search string="Search">
                 <field name="name" string="Category Name" filter_domain="[('name','ilike',self)]"/>
                 <group  expand='0' string='Group by...'>
-                    <filter string='Responsible' domain="[]" context="{'group_by' : 'technician_user_id'}"/>
+                    <filter string='Responsible' name="responsible" domain="[]" context="{'group_by' : 'technician_user_id'}"/>
                 </group>
             </search>
         </field>

@@ -12,13 +12,13 @@
                     <field name="email"/>
                     <field name="partner_id"/>
                     <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
-                    <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
-                    <filter string="New" domain="[('state', '=', 'new')]"/>
-                    <filter string="Test" domain="[('test_entry','=', True)]"/>
+                    <filter string="Partially completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
+                    <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                    <filter string="Test" name="test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
-                        <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
-                        <filter string="Partner" domain="[]" context="{'group_by': ['partner_id']}"/>
+                        <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': ['partner_id']}"/>
                     </group>
                 </search>
             </field>

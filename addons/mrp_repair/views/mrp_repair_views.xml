@@ -233,11 +233,11 @@
               <search string="Search Repair Orders">
                   <field name="name" string="Repair Orders"/>
                   <field name="state"/>
-                  <filter string="Quotations" domain="[('state','=','draft')]"/>
+                  <filter string="Quotations" name="quotations" domain="[('state','=','draft')]"/>
                   <filter string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
-                  <filter string="Ready To Repair" domain="[('state','=','ready')]"/>
+                  <filter string="Ready To Repair" name="ready_to_repair" domain="[('state','=','ready')]"/>
                   <separator/>
-                  <filter string="Invoiced" domain="[('invoiced','=',True)]"/>
+                  <filter string="Invoiced" name="invoiced" domain="[('invoiced','=',True)]"/>
                   <field name="product_id"/>
                   <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                   <separator/>
@@ -253,11 +253,11 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                   <group expand="0" string="Group By">
-                      <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                      <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
-                      <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                      <filter string="Guarantee limit Month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit by Month"/>
-                      <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                      <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                      <filter string="Product" name="product" domain="[]" context="{'group_by':'product_id'}"/>
+                      <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                      <filter string="Guarantee limit Month" name="guarantee_limit" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit by Month"/>
+                      <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
               </search>
           </field>

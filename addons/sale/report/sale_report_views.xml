@@ -70,14 +70,14 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
+                    <filter string="Sales Channel" name="sales_channel" context="{'group_by':'team_id'}"/>
                     <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
-                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
-                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Order Month" name="order_month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
                 </group>
             </search>
         </field>

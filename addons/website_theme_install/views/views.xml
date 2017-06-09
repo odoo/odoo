@@ -52,8 +52,8 @@
                 <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name', 'ilike', self)]" string="Theme"/>
                 <field name="category_id" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('category_id', 'ilike', self)]" string="Category"/>
                 <group>
-                    <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
-                    <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                    <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
+                    <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                 </group>
             </search>
         </field>

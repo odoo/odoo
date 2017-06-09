@@ -69,11 +69,11 @@
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <filter name="today" string="Today" domain="[('check_in', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0)),('check_in', '&lt;=', datetime.datetime.now().replace(hour=23, minute=59, second=59))]" />
-                <filter string="Current Month" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                <filter string="Current Month" name="currentmonth" domain="[('check_in', '&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
                 <separator/>
-                <filter string="No Check Out" domain="[('check_out', '=', False)]" />
+                <filter string="No Check Out" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <separator/>
-                <filter string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                 <group expand="0" string="Group By">
                     <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <separator/>

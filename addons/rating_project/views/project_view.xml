@@ -84,7 +84,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="before">
                     <separator/>
-                    <filter string="Rated tasks" domain="[('rating_last_value', '!=', 0.0)]" />
+                    <filter string="Rated tasks" name="rated_tasks" domain="[('rating_last_value', '!=', 0.0)]" />
                 </xpath>
             </field>
         </record>

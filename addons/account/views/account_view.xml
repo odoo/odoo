@@ -136,11 +136,11 @@
             <field name="arch" type="xml">
                 <search string="Accounts">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','=like',str(self)+'%')]" string="Account"/>
-                    <filter string="Receivable Accounts" domain="[('internal_type','=','receivable')]"/>
-                    <filter string="Payable Accounts" domain="[('internal_type','=','payable')]"/>
+                    <filter string="Receivable Accounts" name="receivableacc" domain="[('internal_type','=','receivable')]"/>
+                    <filter string="Payable Accounts" name="payableacc" domain="[('internal_type','=','payable')]"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" domain="" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" name="accounttype" domain="" context="{'group_by':'user_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -254,10 +254,10 @@
                 <search string="Search Account Journal">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <filter domain="[('type', '=', 'sale')]" string="Sales"/>
-                    <filter domain="[('type', '=', 'purchase')]" string="Purchases"/>
-                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
-                    <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
+                    <filter name="sales" domain="[('type', '=', 'sale')]" string="Sales"/>
+                    <filter name="purchases" domain="[('type', '=', 'purchase')]" string="Purchases"/>
+                    <filter name="liquidity" domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
+                    <filter name="miscellaneous" domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
                     <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
                 </search>
             </field>
@@ -602,13 +602,13 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','open')]"/>
-                    <filter string="Confirmed" domain="[('state','=','confirm')]"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
                     <group expand="0" string="Group By">
-                        <filter string="Journal" context="{'group_by': 'journal_id'}"/>
-                        <filter string="Status" context="{'group_by': 'state'}"/>
-                        <filter string="Date" context="{'group_by': 'date'}"/>
+                        <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
             </field>
@@ -898,7 +898,7 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
-                        <filter string="With tax" domain="[('tax_id','!=',False)]"/>
+                        <filter string="With tax" name="withtax" domain="[('tax_id','!=',False)]"/>
                         <field name="amount_type"/>
                         <field name="journal_id"/>
                 </search>
@@ -1038,8 +1038,8 @@
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
                     <group string="Group By">
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Tax Application" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
                     </group>
                 </search>
             </field>
@@ -1288,7 +1288,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
                     <separator/>
-                    <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
+                    <filter string="Unposted" name="unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
                     <separator/>
                     <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance','!=', 0), ('account_id.reconcile','=',True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
@@ -1303,10 +1303,10 @@
                     <field name="tax_line_id"/>
                     <field name="tax_ids" />
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account"  context="{'group_by':'account_id'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account" name="account" context="{'group_by':'account_id'}"/>
+                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -1488,23 +1488,23 @@
                 <search string="Search Move">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
-                    <filter string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
+                    <filter string="Unposted" name="unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                     <separator/>
-                    <filter string="Sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank Operations" domain="[('journal_id.type','=','bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash Operations" domain="[('journal_id.type','=','cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type','=','sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type','=','purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank Operations" name="bankoperations" domain="[('journal_id.type','=','bank')]" context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash Operations" name="cashoperations" domain="[('journal_id.type','=','cash')]" context="{'default_journal_type': 'cash'}"/>
                     <filter string="Miscellaneous Operations" domain="[('journal_id.type','=','general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
                     <field name="dummy_account_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Month"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date'}" help="Journal Entries by Month"/>
                     </group>
                 </search>
             </field>
@@ -1728,7 +1728,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account Template"/>
                     <field name="user_type_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Account Type" domain="[]" context="{'group_by':'user_type_id'}"/>
+                        <filter string="Account Type" name="accounttype" domain="[]" context="{'group_by':'user_type_id'}"/>
                    </group>
                 </search>
             </field>
@@ -1781,10 +1781,10 @@
                     <field name="bank_account_code_prefix"/>
                     <field name="cash_account_code_prefix"/>
                     <group expand="0" string="Group By">
-                        <filter string="Receivable Account" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
-                        <filter string="Payable Account" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
-                        <filter string="Income Account" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
-                        <filter string="Expense Account" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
+                        <filter string="Receivable Account" name="receivalbeacc" domain="[]" context="{'group_by':'property_account_receivable_id'}"/>
+                        <filter string="Payable Account" name="payableacc" domain="[]" context="{'group_by':'property_account_payable_id'}"/>
+                        <filter string="Income Account" name="incomeacc" domain="[]" context="{'group_by':'property_account_income_categ_id'}"/>
+                        <filter string="Expense Account" name="expenseacc" domain="[]" context="{'group_by':'property_account_expense_categ_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1890,8 +1890,8 @@
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]" string="Tax Template"/>
-                    <filter string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
-                    <filter string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
+                    <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
+                    <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                     <field name="chart_template_id"/>
                 </search>
             </field>
@@ -2170,8 +2170,8 @@
                     <field name="type"/>
                     <field name="account_report_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Parent Report" domain="" context="{'group_by':'parent_id'}"/>
-                        <filter string="Report Type" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Parent Report" name="parentreport" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Report Type" name="reporttype" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>

@@ -195,8 +195,8 @@
                     <field name="website_id"/>
 
                     <group string="Group By">
-                        <filter string="name" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="url" domain="[]" context="{'group_by':'url'}"/>
+                        <filter string="name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="url" name="group_by_url" domain="[]" context="{'group_by':'url'}"/>
                         <filter string="website"  name="my_websites" domain="[]" context="{'group_by':'website_id'}"/>
                     </group>
                 </search>

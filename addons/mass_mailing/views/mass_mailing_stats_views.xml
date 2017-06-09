@@ -15,11 +15,11 @@
                 <filter string="Replied" name="filter_replied" domain="[('replied', '!=', False)]"/>
                 <filter string="Bounced" name="filter_bounced" domain="[('bounced', '!=', False)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Open Date" name="group_open_date" context="{'group_by': 'opened:day'}"/>
                     <filter string="Reply Date" name="group_reply_date" context="{'group_by': 'replied:day'}"/>
-                    <filter string="Last State Update" domain="[]" context="{'group_by':'state_update'}"/>
-                    <filter string="Mass Mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
+                    <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by':'state_update'}"/>
+                    <filter string="Mass Mailing"  name="mass_mailing" domain="[]" context="{'group_by':'mass_mailing_id'}"/>
                 </group>
             </search>
         </field>

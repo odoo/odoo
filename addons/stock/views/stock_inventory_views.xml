@@ -58,8 +58,8 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="product_id" string="Inventory Product" filter_domain="['|', ('product_id', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Inventories Month" domain="[]" context="{'group_by':'date'}" help="Physical Inventories by Month"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Inventories Month" name="inventories_month" domain="[]" context="{'group_by':'date'}" help="Physical Inventories by Month"/>
                 </group>
             </search>
 

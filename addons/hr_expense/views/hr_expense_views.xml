@@ -164,18 +164,18 @@
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
                     <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
                     <separator />
-                    <filter string="My Team Expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
-                    <filter string="My Expenses" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Report" domain="[]" context="{'group_by': 'sheet_id'}"/>
-                        <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
-                        <filter string="Analytic Account" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
-                        <filter string="Expenses Month" domain="[]" context="{'group_by': 'date'}" help="Expenses by Month"/>
-                        <filter string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Report" name="report" domain="[]" context="{'group_by': 'sheet_id'}"/>
+                        <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                        <filter string="Analytic Account" name="analyticacc" domain="[]" context="{'group_by': 'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Expenses Month" name="expensesmonth" domain="[]" context="{'group_by': 'date'}" help="Expenses by Month"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                     <separator />
                     <filter domain="[('employee_id.active', '=', False)]" string="Former Employees" name="inactive" groups="hr_expense.group_hr_expense_user,hr_expense.group_hr_expense_manager"/>
@@ -537,15 +537,15 @@
                     <filter domain="[('state', '=', 'approve')]" string="To Post" name="to_post" help="Approved Expenses"/>
                     <filter domain="['|', ('state', '=', 'approve'), ('state', '=', 'post')]" string="To Pay" name="approved" help="Expenses to Invoice"/>
                     <separator/>
-                    <filter string="My Team Reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
-                    <filter string="My Reports" domain="[('employee_id.user_id', '=', uid)]"/>
+                    <filter string="My Team Reports" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <separator />
                     <filter string="New Mail" name="message_unread" domain="[('message_unread', '=', True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-                        <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Expenses Month" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Month"/>
+                        <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Expenses Month" name="expenses_month" domain="[]" context="{'group_by': 'accounting_date'}" help="Expenses by Month"/>
                         <filter string="State" domain="[]" context="{'group_by': 'state'}" name="state"/>
                     </group>
                     <separator />

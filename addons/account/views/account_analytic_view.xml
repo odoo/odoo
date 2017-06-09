@@ -46,9 +46,9 @@
                         <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     </xpath>
                     <xpath expr="//group[@name='groupby']" position="after">
-                        <filter string="Financial Account" context="{'group_by':'general_account_id'}"/>
-                        <filter string="Product" context="{'group_by':'product_id'}"/>
-                        <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                        <filter string="Financial Account" name="financialaccount" context="{'group_by':'general_account_id'}"/>
+                        <filter string="Product" name="product" context="{'group_by':'product_id'}"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
                     </xpath>
                 </data>
             </field>

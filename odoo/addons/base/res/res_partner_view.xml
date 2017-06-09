@@ -397,7 +397,7 @@
                 <search string="Search Partner">
                    <field name="name"
                        filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"/>
-                   <filter help="My Partners" domain="[('user_id','=',uid)]"/>
+                   <filter name="my_partners" help="My Partners" domain="[('user_id','=',uid)]"/>
                    <separator/>
                    <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
                    <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
@@ -411,8 +411,8 @@
                    <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
                    <group expand="0" name="group_by" string="Group By">
                        <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}" />
-                       <filter string="Company" context="{'group_by': 'parent_id'}"/>
-                       <filter string="Country" context="{'group_by': 'country_id'}"/>
+                       <filter string="Company" name="company" context="{'group_by': 'parent_id'}"/>
+                       <filter string="Country" name="country" context="{'group_by': 'country_id'}"/>
                    </group>
                </search>
             </field>

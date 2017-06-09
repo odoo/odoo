@@ -122,17 +122,17 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <separator/>
-                    <filter string="To Review" domain="[('state','=','posted')]" help="To Review"/>
+                    <filter string="To Review" name="toreview" domain="[('state','=','posted')]" help="To Review"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" /> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Date" domain="[]" context="{'group_by':'date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Date" name="date" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -174,15 +174,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Vendor" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','purchase')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Bill Date" domain="[]" context="{'group_by':'date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Bill Date" name="billdate" domain="[]" context="{'group_by':'date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -195,15 +195,15 @@
                 <search string="Search Vouchers">
                     <field name="number" string="Voucher"/>
                     <field name="date"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                    <filter string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <filter string="Draft" name="darft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter string="Posted" name="posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                     <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','=','sale')]"/> <!-- Keep widget=selection on this field to pass numeric `self` value, which is not the case for regular m2o widgets! -->
                     <group expand="0" string="Group By">
-                        <filter string="Customer" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Account Date" domain="[]" context="{'group_by':'account_date','visible':True}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Customer" name="customer" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Journal" name="journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Account Date" name="accountdate" domain="[]" context="{'group_by':'account_date','visible':True}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

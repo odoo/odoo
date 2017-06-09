@@ -148,7 +148,7 @@
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Production Location" domain="[]" context="{'group_by':'location_id'}"/>
+                        <filter string="Production Location" name="production_location" domain="[]" context="{'group_by':'location_id'}"/>
                     </group>
                 </search>
             </field>

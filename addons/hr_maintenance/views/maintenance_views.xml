@@ -70,8 +70,8 @@
           <field name="department_id"/>
         </field>
         <group position="inside">
-          <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-          <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+          <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+          <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
         </group>
       </field>
     </record>

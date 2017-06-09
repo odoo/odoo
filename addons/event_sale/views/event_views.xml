@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="event.view_registration_search" />
             <field name="arch" type="xml">
                 <filter name="group_event" position="after">
-                    <filter string="Ticket Type" domain="[]" context="{'group_by':'event_ticket_id'}"/>
+                    <filter string="Ticket Type" name ="tickettype" domain="[]" context="{'group_by':'event_ticket_id'}"/>
                 </filter>
             </field>
         </record>

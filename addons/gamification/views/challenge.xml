@@ -220,8 +220,8 @@
                     domain="[('category', '=', 'hr')]"/>
                 <field name="name"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Period" domain="[]" context="{'group_by':'period'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Period" name="period" domain="[]" context="{'group_by':'period'}"/>
                 </group>
             </search>
         </field>
