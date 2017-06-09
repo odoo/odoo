@@ -31,6 +31,8 @@ class MaintenanceEquipmentCategory(models.Model):
         self.fold = False if self.equipment_count else True
 
     name = fields.Char('Category Name', required=True, translate=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     technician_user_id = fields.Many2one('res.users', 'Responsible', track_visibility='onchange', default=lambda self: self.env.uid, oldname='user_id')
     color = fields.Integer('Color Index')
     note = fields.Text('Comments', translate=True)
@@ -120,6 +122,8 @@ class MaintenanceEquipment(models.Model):
         return recs.name_get()
 
     name = fields.Char('Equipment Name', required=True, translate=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     technician_user_id = fields.Many2one('res.users', string='Technician', track_visibility='onchange', oldname='user_id')
     owner_user_id = fields.Many2one('res.users', string='Owner', track_visibility='onchange')
@@ -269,9 +273,11 @@ class MaintenanceRequest(models.Model):
         return super(MaintenanceRequest, self)._track_subtype(init_values)
 
     def _get_default_team_id(self):
-        return self.env['maintenance.team'].search([], limit=1)
+        return self.env['maintenance.team'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).id
 
     name = fields.Char('Subjects', required=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     description = fields.Text('Description')
     request_date = fields.Date('Request Date', track_visibility='onchange', default=fields.Date.context_today,
                                help="Date requested for the maintenance to happen")
@@ -361,6 +367,8 @@ class MaintenanceTeam(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
