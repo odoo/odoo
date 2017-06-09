@@ -30,19 +30,20 @@ You accept and agree to the following terms and conditions for Your present and 
 
 
 ```
-Corporation name: __________________________________________
-Corporation address: _______________________________________
+Corporation name: Centre for Development of Advanced Computing__________________________________________
+Corporation address: CDAC 8th Floor , D South & North, Tidel Park Ltd, No.4 Rajiv Gandhi Salai, Taramani Chennai-600113_______________________________________
                      _______________________________________
-Country: ___________________________________________________
-Point of contact: __________________________________________
-Title: _____________________________________________________
-Email: _____________________________________________________
-Telephone: _________________________________________________
-Signature: _________________________________________________
-Date: ______________________________________________________
+Country: _______India____________________________________________
+Point of contact: ____S.Janani______________________________________
+Title: __________Project Engineer___________________________________________
+Email: _________jananis@cdac.in____________________________________________
+Telephone: _____9840377893____________________________________________
+Signature: ___________S.Janani______________________________________
+Date: __9.6.2017____________________________________________________
 ```
 
 ## Schedule A
 [Initial list of designated employees. NB: authorization is not tied to particular Contributions.]
-
+Jaya Durga R
+Janani S
 
