@@ -175,9 +175,7 @@ class AccountMove(models.Model):
             if not move.journal_id.update_posted:
                 raise UserError(_('You cannot modify a posted entry of this journal.\nFirst you should set the journal to allow cancelling entries.'))
             # We remove all the analytics entries for this journal
-            for line in move.line_ids:
-                if line.analytic_line_ids:
-                    line.analytic_line_ids.unlink()
+            move.mapped('line_ids.analytic_line_ids').unlink()
         if self.ids:
             self._check_lock_date()
             self._cr.execute('UPDATE account_move '\

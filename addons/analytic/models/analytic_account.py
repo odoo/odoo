@@ -142,17 +142,10 @@ class AccountAnalyticLine(models.Model):
     def _compute_amount_user_currency(self):
         """ Compute the amount into the user's currency
         """
-        context = dict(self._context or {})
         user_currency_id = self.env.user.company_id.currency_id
-        ctx = context.copy()
         for line in self:
-            ctx['date'] = line.date
             company_currency_id = line.company_id.currency_id
-            amount = line.amount
-            if user_currency_id == company_currency_id:
-                line.amount_user_currency = amount
-            else:
-                line.amount_user_currency = company_currency_id.with_context(ctx).compute(amount, user_currency_id)
+            line.amount_user_currency = company_currency_id.with_context(date=line.date).compute(line.amount, user_currency_id)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -162,15 +155,10 @@ class AccountAnalyticLine(models.Model):
         if 'amount_user_currency' in fields:
             self._compute_amount_user_currency()
             for line in res:
-                __domain = list('__domain' in line and line['__domain'] or [])
+                __domain = '__domain' in line and line['__domain'] or []
                 records = self.search_read(__domain, ['amount_user_currency'])
-                line['amount_user_currency'] = 0
-                for r in records:
-                    line['amount_user_currency'] += r['amount_user_currency']
+                line['amount_user_currency'] = sum([r['amount_user_currency'] for r in records])
         return res
-
-
-
 
     name = fields.Char('Description', required=True)
     date = fields.Date('Date', required=True, index=True, default=fields.Date.context_today)
