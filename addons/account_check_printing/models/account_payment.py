@@ -131,4 +131,4 @@ class AccountPayment(models.Model):
     def do_print_checks(self):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
         raise UserError(_("There is no check layout configured.\nMake sure the proper check printing module is installed"
-                          " and its configuration (in company settings > 'Configuration' tab) is correct."))
+                          " and its configuration (in accounting settings > 'Check printing' group) is correct."))
