@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+from sys import exc_info
+from traceback import format_exception
 from psycopg2 import OperationalError
 
 from openerp import SUPERUSER_ID
@@ -203,11 +205,31 @@ class procurement_order(osv.osv):
             if procurement.state not in ("running", "done"):
                 try:
                     if self._assign(cr, uid, procurement, context=context):
-                        res = self._run(cr, uid, procurement, context=context or {})
-                        if res:
-                            self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
-                        else:
+                        try:
+                            res = self._run(cr, uid, procurement, context=context or {})
+                            if res:
+                                self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
+                            else:
+                                self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                        except (openerp.exceptions.Warning, osv.except_osv):
+                            cr.rollback()
+                            type, value, traceback = exc_info()
                             self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                            self.message_post(cr, uid, [procurement.id],
+                                body=(_('Cannot run procurement: %s\n%s')
+                                    % (value.name, value.value)),
+                                context=context)
+                        except:
+                            # only interfere in batch mode
+                            if not autocommit:
+                                raise
+                            cr.rollback()
+                            type, value, traceback = exc_info()
+                            exception_text = "".join(format_exception(type, value, traceback))
+                            self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
+                            self.message_post(cr, uid, [procurement.id],
+                                body=(_('Error while trying to run procurement:\n%s') % exception_text),
+                                context=context)
                     else:
                         self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
                         self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)

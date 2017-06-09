@@ -192,5 +192,5 @@ class IrAttachment(osv.Model):
 
     _columns = {
         'file_type_icon': fields.function(get_attachment_type, type='char', string='File Type Icon'),
-        'file_type': fields.related('file_type_icon', type='char'),     # FIXME remove in trunk
+        'file_type': fields.related('file_type_icon', type='char', nodrop=True),     # FIXME remove in trunk
     }
