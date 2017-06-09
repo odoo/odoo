@@ -67,10 +67,17 @@ class PackOperation(models.Model):
         ('partially_available', 'Partially Available'),
         ('assigned', 'Available'),
         ('done', 'Done')], related='picking_id.state')
+    warning = fields.Boolean(compute="_compute_warning")
 
     @api.one
     def _compute_is_done(self):
         self.is_done = self.qty_done > 0.0
+
+    def _compute_warning(self):
+        for op in self.filtered(lambda x: x.location_id.usage != 'supplier' and x.product_id.type == 'product' and x.state not in ('done', 'cancel')):
+            location_quants = op.product_id.stock_quant_ids.filtered(lambda x: x.location_id == op.location_id)
+            if not location_quants or op.product_qty > sum(location_quants.mapped('qty')) or op.pack_lot_ids.filtered(lambda x: x.warning):
+                op.warning = True
 
     @api.onchange('is_done')
     def on_change_is_done(self):
@@ -260,6 +267,8 @@ class PackOperationLot(models.Model):
     lot_name = fields.Char('Lot/Serial Number')
     qty_todo = fields.Float('To Do', default=0.0)
     plus_visible = fields.Boolean(compute='_compute_plus_visible', default=True)
+    warning = fields.Boolean(compute='_compute_warning')
+    is_done_equal_todo = fields.Boolean(compute='_compute_is_done_equal_todo')
 
     _sql_constraints = [
         ('qty', 'CHECK(qty >= 0.0)', 'Quantity must be greater than or equal to 0.0!'),
@@ -272,6 +281,17 @@ class PackOperationLot(models.Model):
             self.plus_visible = (self.qty == 0.0)
         else:
             self.plus_visible = (self.qty_todo == 0.0) or (self.qty < self.qty_todo)
+
+    def _compute_warning(self):
+        # Warning in case of lot not available or less quantity available at location.
+        for pack in self.filtered(lambda x: x.operation_id.location_id.usage != 'supplier' and x.operation_id.product_id.type == 'product' and x.operation_id.state not in ('done', 'cancel')):
+            location_quants = pack.lot_id.quant_ids.filtered(lambda q: q.location_id == pack.operation_id.location_id)
+            if not location_quants or pack.qty > sum(location_quants.mapped('qty')) or pack.operation_id.product_qty < pack.operation_id.qty_done:
+                pack.warning = True
+
+    def _compute_is_done_equal_todo(self):
+        for pack in self.filtered(lambda x: x.operation_id.product_qty == x.operation_id.qty_done):
+            pack.is_done_equal_todo = True
 
     @api.constrains('lot_id', 'lot_name')
     def _check_lot(self):
