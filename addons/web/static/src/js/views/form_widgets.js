@@ -468,6 +468,8 @@ var FieldCharDomain = common.AbstractField.extend(common.ReinitializeFieldMixin,
                 }
             }
         }).open();
+        this.trigger("dialog_opened", dialog);
+        return dialog;
     },
 });
 
