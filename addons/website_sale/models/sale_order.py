@@ -244,19 +244,19 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request.website
-        if not request.website:
+        website = request and request.website or None
+        if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
                 website = self.search([], limit=1)
-        isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
+        isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   request.session.get('website_sale_current_pl'),
+                                                   request and request.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=order_pl and order_pl.id or None)
@@ -280,7 +280,7 @@ class Website(models.Model):
         available_pricelists = self.get_pricelist_available()
         pl = None
         partner = self.env.user.partner_id
-        if request.session.get('website_sale_current_pl'):
+        if request and request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
             #  - Either, he entered a coupon code
