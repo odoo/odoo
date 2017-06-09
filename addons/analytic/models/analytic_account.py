@@ -30,10 +30,10 @@ class AccountAnalyticDistribution(models.Model):
         return res
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        if args is None:
-            args = []
-        domain = args + ['|', ('account_id', operator, name)]
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        if name:
+            recs = self.search([('account_id', operator, name)] + (args or []), limit=limit)
+            return recs.name_get()
         return super(AccountAnalyticDistribution, self).search(domain, limit=limit).name_get()
 
 class AccountAnalyticTag(models.Model):
