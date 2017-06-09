@@ -248,7 +248,7 @@ class AccountBankStatement(models.Model):
                 for aml in st_line.journal_entry_ids:
                     moves |= aml.move_id
             if moves:
-                moves.post()
+                moves.filtered(lambda m: m.state != 'posted').post()
             statement.message_post(body=_('Statement %s confirmed, journal items were created.') % (statement.name,))
         statements.link_bank_to_partner()
         statements.write({'state': 'confirm', 'date_done': time.strftime("%Y-%m-%d %H:%M:%S")})

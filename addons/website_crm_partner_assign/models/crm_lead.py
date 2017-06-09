@@ -47,8 +47,6 @@ class CrmLead(models.Model):
         for salesman_id, leads_ids in salesmans_leads.items():
             leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
-            for lead in leads:
-                lead._onchange_user_id()
 
     @api.multi
     def action_assign_partner(self):
