@@ -317,7 +317,7 @@
                     <filter name="draft" string="Quotations" domain="[('state','in',('draft','sent','to approve'))]"/>
                     <filter name="approved" string="Purchase Orders" domain="[('state','in',('purchase','done'))]"/>
                     <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
-                    <filter string="My Purchases" domain="[('user_id','=', uid)]"/>
+                    <filter name="my_purchases" string="My Purchases" domain="[('user_id','=', uid)]"/>
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
@@ -335,10 +335,10 @@
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Vendor" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Purchase Representative" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Order Date" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Expected Date" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Vendor" name="vendor" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Expected Date" name="expected_date" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                 </search>
             </field>
@@ -529,8 +529,8 @@
                     <group expand="0" string="Group By">
                         <filter name="groupby_supplier" string="Vendor" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter name="groupby_product" string="Product" domain="[]" context="{'group_by' : 'product_id'}" />
-                        <filter string="Order Reference" domain="[]" context="{'group_by' :'order_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string="Order Reference" name="order_reference" domain="[]" context="{'group_by' :'order_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by' : 'state'}" />
                     </group>
                 </search>
             </field>

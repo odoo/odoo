@@ -643,22 +643,22 @@
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                             help="Show all opportunities with a deadline for which the next action date is before today"/>
                     <separator/>
-                    <filter string="Lost" domain="[('active', '=', False)]"/>
+                    <filter string="Lost" name="lost" domain="[('active', '=', False)]"/>
                     <filter string="Won" name="won"
                             domain="[('stage_id.probability', '=', 100)]"/>
                     <group expand="0" string="Group By" colspan="16">
-                        <filter string="Salesperson" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                        <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter name="stage" string="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Campaign" domain="[]" context="{'group_by':'campaign_id'}"/>
-                        <filter string="Medium" domain="[]" context="{'group_by':'medium_id'}"/>
-                        <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <filter string="Campaign" name="compaign" domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Medium" name="medium" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Source" name="source" domain="[]" context="{'group_by':'source_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
-                        <filter string="Expected Closing Date" context="{'group_by':'date_deadline'}"/>
-                        <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Expected Closing Date" name="date_deadline" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
             </field>

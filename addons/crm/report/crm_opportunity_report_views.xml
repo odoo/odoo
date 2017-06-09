@@ -134,17 +134,17 @@
                         <field name="date_closed"/>
                     </group>
                     <group expand="1" string="Group By">
-                        <filter string="Salesperson" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                        <filter string="City" context="{'group_by':'city'}" />
-                        <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Salesperson" name="salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
+                        <filter string="City" name="city" context="{'group_by':'city'}" />
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Expected Closing" context="{'group_by':'date_deadline:month'}" name="date_deadline" help="Expiration Closing Month"/>
                         <filter string="Conversion Date" context="{'group_by':'date_conversion:month'}" name="conversion_date" help="Conversion Date from Lead to Opportunity"/>
-                        <filter string="Lost Reason" context="{'group_by':'lost_reason'}"/>
+                        <filter string="Lost Reason" name="lostreason" context="{'group_by':'lost_reason'}"/>
                     </group>
                 </search>
             </field>

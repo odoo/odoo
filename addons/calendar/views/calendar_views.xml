@@ -292,14 +292,14 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
-                <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
+                <filter string="My Events" name="myevents" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>

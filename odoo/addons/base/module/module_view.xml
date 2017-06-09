@@ -41,11 +41,11 @@
                     <filter name="extra" string="Extra" domain="[('application', '=', 0)]"/>
                     <separator/>
                     <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                    <filter string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <filter name="not_installed" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
                     <group expand="0" string="Group By">
-                        <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
-                        <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Author" name="author" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" name="category" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>

@@ -183,7 +183,7 @@
                     <field name="partner_id"/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Associated Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Associated Partner" name="associatedpartner" domain="[]" context="{'group_by':'partner_id'}"/>
                     </group>
                 </search>
             </field>

@@ -27,7 +27,7 @@
             <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//group/filter[@name='user']" position="after">
-                    <filter string="Sales Channel" domain="[]" context="{'group_by':'team_id'}"/>
+                    <filter string="Sales Channel" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
                 </xpath>
             </field>
         </record>

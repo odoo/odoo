@@ -192,7 +192,7 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="My Applications" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -890,12 +890,12 @@
                 <field name="user_id"/>
                 <filter string="This Year" name="year" domain="[('create_date','&lt;=', time.strftime('%%Y-12-31')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"/>
                 <separator/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
-                <filter string="New" domain="[('stage_id.sequence', '=', 1)]"/>
+                <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
                 <separator/>
-                <filter string="Ongoing" domain="[('active', '=', True)]"/>
-                <filter string="Refused" domain="[('active', '=', False)]"/>
+                <filter string="Ongoing" name="ongoing" domain="[('active', '=', True)]"/>
+                <filter string="Refused" name="refused" domain="[('active', '=', False)]"/>
                 <separator/>
                 <group expand="0" string="Extended Filters">
                     <field name="priority"/>
@@ -906,12 +906,12 @@
                 </group>
                 <group expand="1" string="Group By">
                    <filter string="Responsible" name='User' context="{'group_by':'user_id'}"/>
-                   <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                   <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    <filter string="Jobs" name="job" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" context="{'group_by':'department_id'}"/>
-                   <filter string="Stage" context="{'group_by':'stage_id'}" />
+                   <filter string="Stage" name="stage" context="{'group_by':'stage_id'}" />
                    <separator/>
-                   <filter string="Creation Week" context="{'group_by':'create_date:week'}" help="Creation Week"/>
+                   <filter string="Creation Week" name="creation_week" context="{'group_by':'create_date:week'}" help="Creation Week"/>
                 </group>
             </search>
         </field>

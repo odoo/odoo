@@ -361,9 +361,9 @@
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
                     <field name="name" string="Mrp Workcenter" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Archived" domain="[('active','=',False)]"/>
+                    <filter string="Archived" name="archived" domain="[('active','=',False)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>

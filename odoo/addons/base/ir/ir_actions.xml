@@ -118,8 +118,8 @@
                         string="Report"/>
                     <field name="model" filter_domain="[('model','=', self)]" string="Model"/>
                     <group expand="0" string="Group By" colspan="4">
-                        <filter string="Report Type" domain="[]" context="{'group_by':'report_type'}"/>
-                        <filter string="Report Model" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Report Type" name="report_type" domain="[]" context="{'group_by':'report_type'}"/>
+                        <filter string="Report Model" name="report_model" domain="[]" context="{'group_by':'model'}"/>
                     </group>
                 </search>
             </field>
@@ -220,7 +220,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
                     <field name="view_type"/>
                     <group expand="0" string="Group By" colspan="4">
-                        <filter string="View Type" domain="[]" context="{'group_by':'view_type'}"/>
+                        <filter string="View Type" name="view_type" domain="[]" context="{'group_by':'view_type'}"/>
                     </group>
                 </search>
             </field>
@@ -364,9 +364,9 @@ env['res.partner'].create({'name': partner_name})
                     <field name="model_id"/>
                     <field name="state"/>
                     <group expand="0" string="Group By" colspan="4" col="4">
-                        <filter string="Action Type" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
-                        <filter string="Usage" domain="[]" context="{'group_by':'usage'}"/>
+                        <filter string="Action Type" name="action_type" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Usage" name="usage" domain="[]" context="{'group_by':'usage'}"/>
                     </group>
                 </search>
             </field>

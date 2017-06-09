@@ -42,10 +42,10 @@
                     <field name="author_id" string="Created By"/>
                     <group expand="1" string="Group By">
                         <filter string="Created By" name="group_by_salesperson" context="{'group_by':'author_id'}"/>
-                        <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                        <filter string="Country" context="{'group_by':'country_id'}" />
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Sales Channel" name="saleschannel" context="{'group_by':'team_id'}"/>
+                        <filter string="Country" name="country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Month" context="{'group_by':'date:month'}" name="month"/>
                         <filter string="Leads" name="group_by_opportunity" context="{'group_by':'lead_id'}" />
                     </group>

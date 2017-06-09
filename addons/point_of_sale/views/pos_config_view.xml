@@ -510,7 +510,7 @@
         <field name="arch" type="xml">
             <search string="Point of Sale Config">
                 <field name="name"/>
-                <filter string="Inactive" domain="[('active', '=', False)]" />
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]" />
                 <field name="stock_location_id" groups="stock.group_stock_multi_locations" />
             </search>
         </field>
