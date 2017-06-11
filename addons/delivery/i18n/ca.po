@@ -54,7 +54,7 @@ msgstr "# Ordres de Producció"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variants de producte"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -132,6 +132,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Un producte emmagatzemable és un producte pel qual gestiona l'estoc. L'aplicació \"inventari\" ha d'instal·lar-se.\n"
+"En canvi, un producte consumible és un producte pel qual no es gestiona l'estoc.\n"
+"Un servei és un producte no material que vostè proporciona.\n"
+"Un contingut digital és un producte no material que ven en línia. Els arxius adjunts als productes són els que es venen en el comerç electrònic, tals com llibres electrònics, música, fotos, ... El mòdul \"Producte Digital\" ha de ser instal·lat."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -293,7 +297,7 @@ msgstr "Transportista"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_route_from_categ_ids
 msgid "Category Routes"
-msgstr ""
+msgstr "Categoria de rutes"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
@@ -419,7 +423,7 @@ msgstr "Termini d'entrega del client"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Referència de client"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_taxes_id
@@ -518,7 +522,7 @@ msgstr "Descripció"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_picking
 msgid "Description on Picking"
-msgstr ""
+msgstr "Descripció de Picking"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1179,7 +1183,7 @@ msgstr "Element de tarifa"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "ID de la tarifa del producte"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1570,6 +1574,8 @@ msgstr "Suma de la quantitat en factures de Venedor"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Camp tècnic. S'utilitza per buscar en tarifes, no emmagatzemades en la base "
+"dades."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
@@ -1607,6 +1613,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"El preu de venda es gestiona des de la plantilla del producte. Faci clic al "
+"botó 'Preus Variants' per establir els preus addicionals dels atributs."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1821,7 +1829,7 @@ msgstr "Imatge de la variable"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Extra preu de les variants"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
