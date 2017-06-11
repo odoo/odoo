@@ -7073,7 +7073,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7102,6 +7108,12 @@ msgstr ""
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
 msgstr ""
 
 #. module: stock
