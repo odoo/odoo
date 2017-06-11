@@ -20,10 +20,10 @@
 # Mario Calvar <ventas.bbca@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Roberto Lizana <robertolizana@trey.es>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # juani_aizean <juani@aizean.com>, 2016
@@ -536,10 +536,10 @@ msgid ""
 "Purchase Order is generated according the minimum stock rules in order to "
 "get the products required"
 msgstr ""
-"<strong>Contra Stock:</strong> sus clientes son abastecidos desde el stock "
-"disponible. Si la cantidad en stock es demasiado baja para cubrir el pedido,"
-" se generará un pedido de compra de acuerdo a las reglas de stock mínimo a "
-"fin de abastecer los productos requeridos en el pedido."
+"<strong>Hacer invetario:</strong> sus clientes son abastecidos desde el "
+"stock disponible. Si la cantidad en stock es demasiado baja para cubrir el "
+"pedido, se generará un pedido de compra de acuerdo a las reglas de stock "
+"mínimo a fin de abastecer los productos requeridos en el pedido."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -1179,22 +1179,22 @@ msgstr "Desmarcando el campo activo, podrá ocultar un INCOTERM que no use."
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIP
 msgid "CARRIAGE AND INSURANCE PAID TO"
-msgstr ""
+msgstr "Envío y seguro pagado a "
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CPT
 msgid "CARRIAGE PAID TO"
-msgstr ""
+msgstr "Envío pagado a "
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CFR
 msgid "COST AND FREIGHT"
-msgstr ""
+msgstr "Coste y flete"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_CIF
 msgid "COST, INSURANCE AND FREIGHT"
-msgstr ""
+msgstr "Coste, seguro y flete"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
@@ -1763,37 +1763,37 @@ msgstr "Clientes"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAF
 msgid "DELIVERED AT FRONTIER"
-msgstr ""
+msgstr "Entregada en frontera"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr ""
+msgstr "Entregado en un punto"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DAT
 msgid "DELIVERED AT TERMINAL"
-msgstr ""
+msgstr "Entregado en terminal"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr ""
+msgstr "Entregado con derechos pagados"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DDU
 msgid "DELIVERED DUTY UNPAID"
-msgstr ""
+msgstr "Entregada derechos no pagados"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DEQ
 msgid "DELIVERED EX QUAY"
-msgstr ""
+msgstr "DELIVERED EX QUAY"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_DES
 msgid "DELIVERED EX SHIP"
-msgstr ""
+msgstr "Entrega sobre buque"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -2277,7 +2277,7 @@ msgstr "Dropshipping"
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_EXW
 msgid "EX WORKS"
-msgstr ""
+msgstr "En fábrica"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2362,17 +2362,17 @@ msgstr "FIFO, LIFO..."
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr ""
+msgstr "Franco al costado del buque"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr ""
+msgstr "Franco transportista"
 
 #. module: stock
 #: model:stock.incoterms,name:stock.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr ""
+msgstr "Libre a bordo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
@@ -2516,7 +2516,7 @@ msgstr "Reglas de abastecimiento global"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_location_path
 msgid "Global Push Rules"
-msgstr "Reclas Push globales"
+msgstr "Reglas Push globales"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_default_resupply_wh_id
@@ -2605,7 +2605,7 @@ msgid ""
 "                received using the buttons on the right of each line."
 msgstr ""
 "Aquí puede recibir productos individuales, no importa de qué pedido de compra o de \n"
-"qué albarán provengan. Encontrará la lista de todos los productos que están es espera. \n"
+"qué albarán provengan. Encontrará la lista de todos los productos que están en espera. \n"
 "Una vez reciba el pedido, puede realizar un filtro basado en el nombre del proveedor \n"
 "o la referencia del pedido de venta. Puede confirmar entonces todos los productos \n"
 "recibidos usando los botones a la derecha de cada línea.\n"
@@ -7636,7 +7636,13 @@ msgstr ""
 "No puede cancelar un movimiento de existencias que está como 'Realizado'."
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr "No se puede eliminar una chatarra hecha."
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7674,6 +7680,12 @@ msgid ""
 msgstr ""
 "No puede establecer una cantidad negativa de producto en una línea de inventario:\n"
 "%s - Ctdad.: %s"
+
+#. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:919
