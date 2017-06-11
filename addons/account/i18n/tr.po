@@ -99,6 +99,11 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+" * 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir fatura hazırlıyorsa kullanılır.\n"
+" * 'Proforma' faturanın Proforma durumunda olması ve bu durumda fatura numaralandırılmaz.\n"
+" * 'Açık' durumu, kullanıcı bir fatura oluştururken kullanılır, fatura numarası oluşturulur. Kullanıcı fatutaryı ödemeyinceye kadar açık durumdadır.\n"
+" * 'Ödendi' durumu, fatura ödenince otomatik olarak ayarlanır. Yevmiye girişlerinin uzlaştırılımış  yada uzlaştırılmamış olamsıyla ilgilidir.\n"
+" * 'İptal edildi' durumu kullanıcı bir faturayı iptal ettiğinde kullanılır."
 
 #. module: account
 #. openerp-web
@@ -224,7 +229,7 @@ msgstr ": Büyük defter"
 #: code:addons/account/models/account.py:354
 #, python-format
 msgid ": Refund"
-msgstr ""
+msgstr ": İade"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -1014,6 +1019,8 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"Bir yevmiye, günlük işle ilgili tüm muhasebe verilerinin işlemlerini "
+"kaydetmek için kullanılır."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1023,7 +1030,7 @@ msgstr "Vergiler ve onların oranlarının bir listesi"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "Müşteri ve tedarikçi ödeme koşullarınızın bir listesi."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1039,7 +1046,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:800
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr ""
+msgstr "Uzlaştırma, en az 2 hareket satırı içermelidir."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
@@ -1059,7 +1066,7 @@ msgstr "Seçilen hareket satırı zaten uzlaştı."
 #: code:addons/account/models/account_bank_statement.py:218
 #, python-format
 msgid "A statement cannot be canceled when its lines are reconciled."
-msgstr ""
+msgstr "Bir hesap özeti, satırları uzlaştırıldığında iptal edilemez."
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -1071,7 +1078,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:379
 #, python-format
 msgid "A transaction can't have a 0 amount."
-msgstr ""
+msgstr "Bir işlem 0 tutar içeremez."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -1084,7 +1091,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr ""
+msgstr "Bir ortak üzerinde bir uyarı yapılabilir (Hesap)"
 
 #. module: account
 #. openerp-web
@@ -1378,6 +1385,8 @@ msgid ""
 "Account that will be set on invoice tax lines for invoices. Leave empty to "
 "use the expense account."
 msgstr ""
+"Faturalar için fatura vergi satırlarında ayarlanacak hesap. Gider hesabını "
+"kullanmak için boş bırakın."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_refund_account_id
@@ -1386,6 +1395,8 @@ msgid ""
 "Account that will be set on invoice tax lines for refunds. Leave empty to "
 "use the expense account."
 msgstr ""
+"İadeler için fatura vergi satırlarında belirlenecek hesap. Gider hesabını "
+"kullanmak için boş bırakın."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_account_dest_id
@@ -1396,7 +1407,7 @@ msgstr "Yerine Kullanılacak Hesap"
 #: model:ir.model.fields,help:account.field_account_tax_cash_basis_account
 #: model:ir.model.fields,help:account.field_account_tax_template_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Vergi nakit esasına göre giriş oluşturulurken hesap kullanımı"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -1500,7 +1511,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Activate the option in the"
-msgstr ""
+msgstr "Seçeneğini etkinleştirin."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_active
@@ -1575,7 +1586,7 @@ msgstr "Müşavir"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_include_base_amount
 msgid "Affect Base of Subsequent Taxes"
-msgstr ""
+msgstr "Sonraki vergi tabanını etkiler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template_include_base_amount
@@ -1599,6 +1610,10 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"Yaşlandırılmış İş Ortağı Bakiyesi, alacağınızın aralıklarla daha ayrıntılı "
+"bir raporudur. Odoo başlangıç tarihine göre bir kredi bakiyesi tablosunu "
+"hesaplar. Dolayısıyla, 30 günde bir aralık isteğinde bulunursanız, Odoo, son"
+" bir ay, son iki ay gibi bir sürede alacaklıların analizini üretir."
 
 #. module: account
 #. openerp-web
@@ -1679,6 +1694,7 @@ msgid ""
 "All invoices and payments have been matched, your accounts' balances are "
 "clean."
 msgstr ""
+"Tüm faturalar ve ödemeler eşleştirildi, hesaplarınızın bakiyeleri temiz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_state
@@ -1700,6 +1716,8 @@ msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
 msgstr ""
+"Tüm seçili yevmiye girişleri doğrulandığında ve işlendiğinde. Onları daha "
+"sonra değiştirmek mümkün olmayacaktır."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:240
@@ -1795,12 +1813,12 @@ msgstr "Ödenecek Tutar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "Şirket Para Birimi Tutarı"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Fatura Para Birimi Tutarı"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -1821,7 +1839,7 @@ msgstr "Tutar Türü"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile_amount
 msgid "Amount concerned by this matching. Assumed to be always positive"
-msgstr ""
+msgstr "Bu eşleştirme ile ilgili tutar. Her zaman artı olarak kabul edilir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile_amount_currency
@@ -1857,6 +1875,10 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
+"Her tür borç ve alacak kayıtlarının kaydedilebileceği Muhasebe \n"
+"                hesapları defterlerin parçalarıdır. Şirketler yıllık\n"
+"                hesaplarını iki ana bölümde tutarlar : Bilanço, \n"
+"                ve gelir tablosu (kâr ve zarar hesapları)"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -1867,6 +1889,10 @@ msgid ""
 "                Sheet and the Profit and Loss report use the category\n"
 "                (profit/loss or balance sheet)."
 msgstr ""
+"Hesap tipi bir hesabın her yevmiye defterinde nasıl kullanıldığını\n"
+"                belirlemek için kullanılır. Hesap tipindeki erteleme yöntemi\n"
+"                yıl sonu kapanış girişleri sırasındaki işleyişi belirler.\n"
+"                Bilanço kâr/zarar raporları gibi raporlarda bu alanı kullanır."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
@@ -2058,13 +2084,13 @@ msgstr "Otomatik biçimleme"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:15
 #, python-format
 msgid "Automatic reconciliation"
-msgstr ""
+msgstr "Otomatik Uzlaştırma"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:466
 #, python-format
 msgid "Automatically reconciled items"
-msgstr ""
+msgstr "Otomatik Uzlaştırma Öğeleri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_price_average
@@ -2150,6 +2176,9 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Refund, otherwise a Partner "
 "bank account number."
 msgstr ""
+"Fatura ödemesinin yapılacağı Banka Hesabı. Eğer bu bir Müşteri Faturası ya "
+"da Tedarikçi İadesi ise bir Şirket Banka Hesabı, yoksa bir İş Ortağı banka "
+"hesap numarasıdır."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_bank_journal_form
