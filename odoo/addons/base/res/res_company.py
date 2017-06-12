@@ -13,6 +13,19 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
+    @api.multi
+    def copy(self, default=None):
+        """
+        Duplicating a company without specifying a partner duplicate the partner
+        """
+        self.ensure_one()
+        default = dict(default or {})
+        if not default.get('name') and not default.get('partner_id'):
+            copy_partner = self.partner_id.copy()
+            default['partner_id'] = copy_partner.id
+            default['name'] = copy_partner.name
+        return super(Company, self).copy(default)
+
     _header = """
 <header>
 <pageTemplate>
