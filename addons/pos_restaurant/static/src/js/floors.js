@@ -843,6 +843,7 @@ models.PosModel = models.PosModel.extend({
                 return _super_posmodel.add_new_order.call(this);
             } else {
                 console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                return null;
             }
         } else {
             return _super_posmodel.add_new_order.apply(this,arguments);
