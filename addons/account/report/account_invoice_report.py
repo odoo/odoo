@@ -15,18 +15,29 @@ class AccountInvoiceReport(models.Model):
     def _compute_amounts_in_user_currency(self):
         """Compute the amounts in the currency of the user
         """
-        context = dict(self._context or {})
         user_currency_id = self.env.user.company_id.currency_id
-        currency_rate_id = self.env['res.currency.rate'].search([
-            ('rate', '=', 1),
-            '|', ('company_id', '=', self.env.user.company_id.id), ('company_id', '=', False)], limit=1)
-        base_currency_id = currency_rate_id.currency_id
-        ctx = context.copy()
         for record in self:
-            ctx['date'] = record.date
-            record.user_currency_price_total = base_currency_id.with_context(ctx).compute(record.price_total, user_currency_id)
-            record.user_currency_price_average = base_currency_id.with_context(ctx).compute(record.price_average, user_currency_id)
-            record.user_currency_residual = base_currency_id.with_context(ctx).compute(record.residual, user_currency_id)
+            record.user_currency_price_total = record.currency_id.compute(record.price_total, user_currency_id)
+            record.user_currency_price_average = record.currency_id.with_context(date=record.date).compute(record.price_average, user_currency_id)
+            record.user_currency_residual = record.currency_id.with_context(date=record.date).compute(record.residual, user_currency_id)
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        res = super(AccountInvoiceReport, self).read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+        # In the pivot view, the compute functions are never called, so we need to call them manually and fill the pivot view with the results
+        self._compute_amounts_in_user_currency()
+
+        for line in res:
+            computed_fields = ['user_currency_price_total', 'user_currency_price_average', 'user_currency_residual']
+            __domain = ('__domain' in line and line['__domain'] or []) + domain
+            records = self.search_read(__domain, computed_fields)
+            # loop through all the computed fields
+            for f in computed_fields:
+                # check if the computed is displayed in the pivot view
+                if f in fields:
+                    # if so we compute the total value and store it in the results
+                    line[f] = sum([rec[f] for rec in records])
+        return res
 
     date = fields.Date(readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)

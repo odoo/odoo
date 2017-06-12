@@ -8,7 +8,7 @@
              <pivot string="Invoices Analysis" disable_linking="True">
                  <field name="categ_id" type="row"/>
                  <field name="date" type="col"/>
-                 <field name="price_total" type="measure"/>
+                 <field name="user_currency_price_total" type="measure"/>
              </pivot>
          </field>
     </record>
@@ -19,7 +19,7 @@
          <field name="arch" type="xml">
              <graph string="Invoices Analysis">
                  <field name="categ_id"/>
-                 <field name="price_total" type="measure"/>
+                 <field name="user_currency_price_total" type="measure"/>
              </graph>
          </field>
     </record>
