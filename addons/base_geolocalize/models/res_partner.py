@@ -32,6 +32,8 @@ from openerp.exceptions import UserError
 
 
 def geo_find(addr):
+    if not addr:
+        return None
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
     url += urllib2.quote(addr.encode('utf8'))
 
