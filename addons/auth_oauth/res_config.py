@@ -23,8 +23,8 @@ class base_config_settings(osv.TransientModel):
         google_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'auth_oauth', 'provider_google')[1]
         rg = self.pool.get('auth.oauth.provider').read(cr, uid, [google_id], ['enabled','client_id'], context=context)
         return {
-            'auth_oauth_google_enabled': rg[0]['enabled'],
-            'auth_oauth_google_client_id': rg[0]['client_id'],
+            'auth_oauth_google_enabled': rg[0]['enabled'] if rg else False,
+            'auth_oauth_google_client_id': rg[0]['client_id'] if rg else False,
         }
 
     def set_oauth_providers(self, cr, uid, ids, context=None):
