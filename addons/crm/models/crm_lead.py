@@ -247,12 +247,18 @@ class Lead(models.Model):
         team_id = self.env['crm.team']._get_default_team_id(user_id=user_id)
         return {'team_id': team_id}
 
-    @api.constrains('user_id')
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
         values = self._onchange_user_values(self.user_id.id)
         self.update(values)
+
+    @api.constrains('user_id')
+    def _valid_team(self):
+        if self.user_id:
+            values = self.with_context(team_id=self.team_id.id)._onchange_user_values(self.user_id.id)
+            if values:
+                self.update(values)
 
     @api.onchange('state_id')
     def _onchange_state(self):
