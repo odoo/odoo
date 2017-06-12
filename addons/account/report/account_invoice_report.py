@@ -17,7 +17,7 @@ class AccountInvoiceReport(models.Model):
         """
         user_currency_id = self.env.user.company_id.currency_id
         for record in self:
-            record.user_currency_price_total = record.currency_id.compute(record.price_total, user_currency_id)
+            record.user_currency_price_total = record.currency_id.with_context(date=record.date).compute(record.price_total, user_currency_id)
             record.user_currency_price_average = record.currency_id.with_context(date=record.date).compute(record.price_average, user_currency_id)
             record.user_currency_residual = record.currency_id.with_context(date=record.date).compute(record.residual, user_currency_id)
 
