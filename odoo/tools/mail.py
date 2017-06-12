@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 import logging
 from lxml.html import clean
 import random
@@ -147,7 +148,7 @@ class _Cleaner(clean.Cleaner):
         attributes = el.attrib
         styling = attributes.get('style')
         if styling:
-            valid_styles = {}
+            valid_styles = collections.OrderedDict()
             styles = self._style_re.findall(styling)
             for style in styles:
                 if style[0].lower() in self._style_whitelist:

@@ -27,6 +27,7 @@ class Company(models.Model):
         return currency_id or self._get_euro()
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True)
+    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
@@ -52,7 +53,6 @@ class Company(models.Model):
     website = fields.Char(related='partner_id.website')
     vat = fields.Char(related='partner_id.vat', string="TIN")
     company_registry = fields.Char()
-    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('report.paperformat_euro', raise_if_not_found=False))
     external_report_layout = fields.Selection([
         ('background', 'Background'),
