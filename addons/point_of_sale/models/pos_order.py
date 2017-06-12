@@ -5,6 +5,7 @@ from datetime import timedelta
 from functools import partial
 
 import psycopg2
+import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero
@@ -907,7 +908,9 @@ class ReportSaleDetails(models.AbstractModel):
         if not configs:
             configs = self.env['pos.config'].search([])
 
-        today = fields.Datetime.from_string(fields.Date.context_today(self))
+        user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+        today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
+        today = today.astimezone(pytz.timezone('UTC'))
         if date_start:
             date_start = fields.Datetime.from_string(date_start)
         else:
