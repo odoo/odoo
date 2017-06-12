@@ -596,6 +596,7 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         try:
+            self.raw_jsonrequest = request
             self.jsonrequest = json.loads(request)
         except ValueError:
             msg = 'Invalid JSON data: %r' % (request,)
