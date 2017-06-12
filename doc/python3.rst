@@ -61,6 +61,35 @@ features whereas:
     generator delegation, pathlib, ...), you must *not *use them in Odoo
     until Python 2 support is dropped
 
+Semantics changes
+=================
+
+Dict & set iteration order ("Hash Randomisation")
+-------------------------------------------------
+
+In Python 2, the iteration order depends on the value's hash (modulo the
+collection's capacity and conflict resolution), which provides a
+spec-undefined but implementation-defined order. While that's not supposed to
+happen, it turns out code may depend on the specific order of iteration over
+a hash collection (``dict`` or ``set``).
+
+Python 3.3 enables `hash randomisation`_ by default (this can be optionally
+enabled on previous versions including Python 2 by providing the ``-R``
+command-line parameter), which means *the order of iteration changes from one
+run to the next*.
+
+When discovered, this can be fixed by one of:
+
+* making iteration steps properly independent (removing the dependency of
+  order of iteration)
+* using different checking method (e.g. when serialising sets or dictionaries
+  and checking against the specific serialised value)
+* fixing dependencies
+* using a ``collections.OrderedDict`` or ``odoo.tools.misc.OrderedSet`` instead
+  of a regular one, they guarantee order of iteration is order of insertion
+* sorting the collection's items before iterating over them (this may require
+  adding some sort of iteration key to the items)
+
 Moved and removed
 =================
 
@@ -339,6 +368,8 @@ Minor syntax changes
   In Python 3, leading zeroes followed by neither a 0 nor a period is an
   error, octal literals now follow the hexadecimal convention with a ``0o``
   prefix.
+
+.. _hash randomisation: http://bugs.python.org/issue13703
 
 .. _requests: http://docs.python-requests.org/
 
