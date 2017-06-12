@@ -1421,6 +1421,33 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('cannot duplicate a record', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners" duplicate="false">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.get('title'), 'first record',
+            "should have the display name of the record as  title");
+        assert.ok(form.sidebar.$('a:contains(Duplicate)').length === 0,
+            "should not contains a 'Duplicate' action");
+        form.destroy();
+    });
+
     QUnit.test('buttons in footer are moved to $buttons if necessary', function (assert) {
         // not sure about this test...
         assert.expect(2);
