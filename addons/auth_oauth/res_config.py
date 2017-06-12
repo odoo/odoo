@@ -45,10 +45,10 @@ class base_config_settings(osv.TransientModel):
         rg = self.pool.get('auth.oauth.provider').read(cr, uid, [google_id], ['enabled','client_id'], context=context)
         rf = self.pool.get('auth.oauth.provider').read(cr, uid, [facebook_id], ['enabled','client_id'], context=context)
         return {
-            'auth_oauth_google_enabled': rg[0]['enabled'],
-            'auth_oauth_google_client_id': rg[0]['client_id'],
-            'auth_oauth_facebook_enabled': rf[0]['enabled'],
-            'auth_oauth_facebook_client_id': rf[0]['client_id'],
+            'auth_oauth_google_enabled': rg[0]['enabled'] if rg else False,
+            'auth_oauth_google_client_id': rg[0]['client_id'] if rg else False,
+            'auth_oauth_facebook_enabled': rf[0]['enabled'] if rf else False,
+            'auth_oauth_facebook_client_id': rf[0]['client_id'] if rf else False,
         }
 
     def set_oauth_providers(self, cr, uid, ids, context=None):
