@@ -257,9 +257,9 @@ var Chatter = Widget.extend(chat_mixin, {
     _onChatterFilter: function(event) {
         event.stopPropagation();
         $(event.currentTarget).toggleClass('selected');
-        var filter_name = $(event.target).data('filter');
-        var filter_index = _.indexOf(this.fields.thread.filter, filter_name);
-        filter_index === -1 ? this.fields.thread.filter.push(filter_name) : this.fields.thread.filter.splice(filter_index, 1);
+        var filterName = $(event.target).data('filter');
+        var filterIndex = _.indexOf(this.fields.thread.filter, filterName);
+        filterIndex === -1 ? this.fields.thread.filter.push(filterName) : this.fields.thread.filter.splice(filterIndex, 1);
         this.fields.thread._render();
         if (this.fields.activity) {
             this.fields.activity.filter = this.fields.thread.filter;

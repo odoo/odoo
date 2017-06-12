@@ -90,15 +90,15 @@ var ThreadField = AbstractField.extend(chat_mixin, {
         options = options || {};
         options.ids = ids;
         var fetch_def = this.dp.add(this._getMessages(options));
-        return fetch_def.then(function (raw_messages) {
-            var total_raw_messages = raw_messages.length;
+        return fetch_def.then(function (rawMessages) {
+            var totalRawMessages = rawMessages.length;
             $('.o_chatter_topbar .o_search_options .fa-filter').toggleClass('btn-link', self.filter && self.filter.length ? true : false);
             if (self.filter.length) {
-                var raw_messages = _.filter(raw_messages, function(message) {
+                var rawMessages = _.filter(rawMessages, function(message) {
                     return ((_.contains(self.filter, "is_note") && message.is_note) || (_.contains(self.filter, message.message_type) && !message.is_note)) ? true : false;
                 });
             }
-            self.thread.render(raw_messages, {display_load_more: total_raw_messages < ids.length});
+            self.thread.render(rawMessages, {display_load_more: totalRawMessages < ids.length});
         });
     },
 
