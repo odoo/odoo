@@ -2,10 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from functools import partial
-try:
-    from itertools import zip_longest as izip_longuest
-except ImportError:
-    from itertools import izip_longest
 
 from lxml import etree
 from lxml.builder import E
@@ -28,21 +24,7 @@ class ViewXMLID(common.TransactionCase):
 class ViewCase(common.TransactionCase):
     def setUp(self):
         super(ViewCase, self).setUp()
-        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.View = self.env['ir.ui.view']
-
-    def assertTreesEqual(self, n1, n2, msg=None):
-        self.assertEqual(n1.tag, n2.tag, msg)
-        self.assertEqual((n1.text or '').strip(), (n2.text or '').strip(), msg)
-        self.assertEqual((n1.tail or '').strip(), (n2.tail or '').strip(), msg)
-
-        # Because lxml uses ordereddicts in which order is important to
-        # equality (!?!?!?!)
-        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
-
-        for c1, c2 in izip_longest(n1, n2):
-            self.assertEqual(c1, c2, msg)
-
 
 class TestNodeLocator(common.TransactionCase):
     """

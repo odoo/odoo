@@ -8,7 +8,7 @@ Sell digital product using attachments to virtual products
 """,
     'depends': [
         'document',
-        'website_sale',
+        'website_portal_sale',
     ],
     'installable': True,
     'data': [
