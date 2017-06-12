@@ -33,6 +33,7 @@ Connection
 
     require 'uri'
     require 'xmlrpc/client'
+    XMLRPC::Config.const_set(:ENABLE_NIL_PARSER, true)
 
 .. snippet:: php
     :hide:
@@ -60,15 +61,37 @@ Connection
     version := "0.1"
     resolvers += "Central" at "http://central.maven.org/maven2/"
     libraryDependencies += "org.apache.xmlrpc" % "xmlrpc-client" % "3.1.3"
+    libraryDependencies += "org.apache.ws.commons.util" % "ws-commons-util" % "1.0.2"
     * run "sbt run" in this file's directory
     */
     import java.net.URL;
     import java.util.*;
-    import org.apache.xmlrpc.client.XmlRpcClient;
-    import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+    import org.xml.sax.SAXException;
     import static java.util.Arrays.asList;
     import static java.util.Collections.*;
 
+    import org.apache.ws.commons.util.NamespaceContextImpl;
+    import org.apache.xmlrpc.common.*;
+    import org.apache.xmlrpc.client.*;
+    import org.apache.xmlrpc.parser.*;
+    import org.apache.xmlrpc.serializer.*;
+
+    // adds support for <nil/>: https://zugiart.com/2011/07/apache-xml-rpc-handle-null-nil/
+    class XmlRpcTypeNil extends TypeFactoryImpl {
+        XmlRpcTypeNil(XmlRpcClient c) {
+            super(c);
+        }
+        public TypeParser getParser(XmlRpcStreamConfig pConfig, NamespaceContextImpl pContext, String pURI, String pLocalName) {
+            return NullSerializer.NIL_TAG.equals(pLocalName)
+                ? new NullParser()
+                : super.getParser(pConfig, pContext, pURI, pLocalName);
+        }
+        public TypeSerializer getSerializer(XmlRpcStreamConfig pConfig, Object pObject) throws SAXException {
+            return (pObject instanceof XmlRpcTypeNil)
+                ? new NullSerializer()
+                : super.getSerializer(pConfig, pObject);
+        }
+    }
     class api_integration {
         public static void main(String[] args)
             throws org.apache.xmlrpc.XmlRpcException,
@@ -237,7 +260,7 @@ authentication)
 
     .. snippet:: python
 
-        common = xmlrpclib.ServerProxy('{}/RPC2'.format(url))
+        common = xmlrpclib.ServerProxy('{}/RPC2'.format(url), allow_none=True)
         common.version()
 
     .. snippet:: ruby
@@ -308,7 +331,7 @@ to be initialized with authentication.
                 db=database,
                 user=username,
                 password=password,
-            ),
+            ), allow_none=True
         )
         db.res.users.context_get(())
 
@@ -330,15 +353,25 @@ to be initialized with authentication.
         );
         $db->res->users->context_get([]);
 
-    .. snippet:: java
+    .. case:: java
 
-        final XmlRpcClient db = new XmlRpcClient();
-        final XmlRpcClientConfigImpl dbConfig = new XmlRpcClientConfigImpl();
-        dbConfig.setServerURL(new URL(url+"/RPC2?db="+database));
-        dbConfig.setBasicUserName(username);
-        dbConfig.setBasicPassword(password);
-        db.setConfig(dbConfig);
-        db.execute("res.users.context_get", asList(0));
+        .. snippet:: java
+
+            final XmlRpcClient db = new XmlRpcClient();
+            db.setTypeFactory(new XmlRpcTypeNil(db));
+            final XmlRpcClientConfigImpl dbConfig = new XmlRpcClientConfigImpl();
+            dbConfig.setServerURL(new URL(url+"/RPC2?db="+database));
+            dbConfig.setBasicUserName(username);
+            dbConfig.setBasicPassword(password);
+            db.setConfig(dbConfig);
+            db.execute("res.users.context_get", asList(0));
+
+        .. note::
+
+            Apache XML-RPC does not implement the null extension to XML-RPC by
+            default. See `apache xml-rpc handling null/nil`_ for a working
+            implementation of ``XmlRpcTypeNil`` which will let you handle such
+            results.
 
     .. case:: sh
 
@@ -1543,6 +1576,42 @@ activated as actual fields on the model.
     }
     !
 
+.. ir.attachment.check("read") does nothing and returns None, call it to check
+   that <nil/> is correctly handled
+
+.. snippet:: sh
+    :hide:
+
+    curl $db <<! | jq -ec '.result == null'
+    {
+        "jsonrpc": "2.0",
+        "id": null,
+        "method": "ir.attachment.check",
+        "params": [[], ["read"]]
+    }
+    !
+
+.. snippet:: python
+    :hide:
+
+    assert db.ir.attachment.check((), ['read']) is None
+
+.. snippet:: ruby
+    :hide:
+
+    fail unless db.call('ir.attachment.check', [], ['read']).nil?
+
+.. snippet:: php
+    :hide:
+
+    assert(is_null($db->ir->attachment->check([], ['read'])));
+
+.. snippet:: java
+    :hide:
+
+    final Object check = db.execute("ir.attachment.check", asList( 0, asList("read")));
+    assert check == null;
+
 Report printing
 ---------------
 
@@ -1571,7 +1640,7 @@ Reports can be printed over RPC with the following information:
             invoice_ids = models.execute_kw(
                 db, uid, password, 'account.invoice', 'search',
                 [[('type', '=', 'out_invoice'), ('state', '=', 'open')]])
-            report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(url))
+            report = xmlrpclib.ServerProxy('{}/xmlrpc/2/report'.format(url), allow_none=True)
             result = report.render_report(
                 db, uid, password, 'account.report_invoice', invoice_ids)
             report_data = result['result'].decode('base64')
@@ -1634,6 +1703,7 @@ Reports can be printed over RPC with the following information:
         }
     }
 
+.. _apache xml-rpc handling null/nil: https://zugiart.com/2011/07/apache-xml-rpc-handle-null-nil/
 .. _Basic HTTP Authentication: https://tools.ietf.org/html/rfc7617
 .. _cURL: https://curl.haxx.se
 .. _here document: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_07_04

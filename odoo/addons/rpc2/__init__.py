@@ -52,7 +52,6 @@ class Rpc2(http.Controller):
         elif req.mimetype == 'application/json':
             request = {}
             try:
-                # FIXME: reject parsing null for coherence?
                 request = json.load(req.stream)
                 assert 'id' in request, "Notification requests are not supported"
                 result = self.dispatch(
@@ -73,7 +72,6 @@ class Rpc2(http.Controller):
                         'data': http.serialize_exception(e)
                     }
                 }
-            # FIXME: reject marshalling None for coherence
             response = JSONMarshaller().encode(resp)
         else:
             return werkzeug.exceptions.UnsupportedMediaType(
@@ -152,9 +150,8 @@ class Dispatcher(object):
 
 class XMLRPCMarshaller(object):
     serialize = Dispatcher()
-    def __init__(self, encoding='utf-8', allow_none=False):
+    def __init__(self, encoding='utf-8'):
         self.encoding = encoding
-        self.allow_none = allow_none
         self.memo = set()
     def dumps(self, values):
         if isinstance(values, xmlrpclib.Fault):
@@ -173,9 +170,7 @@ class XMLRPCMarshaller(object):
 
     @serialize.register(types.NoneType)
     def dump_none(self, value):
-        if self.allow_none:
-            return E.nil()
-        raise TypeError("cannot marshal None unless allow_none is enabled")
+        return E.value(E.nil())
 
     @serialize.register(bool)
     def dump_bool(self, value):
