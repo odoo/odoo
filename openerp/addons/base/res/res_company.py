@@ -95,6 +95,19 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
+    @api.multi
+    def copy(self, default=None):
+        """
+        Duplicating a company without specifying a partner duplicate the partner
+        """
+        self.ensure_one()
+        default = dict(default or {})
+        if not default.get('name') and not default.get('partner_id'):
+            copy_partner = self.partner_id.copy()
+            default['partner_id'] = copy_partner.id
+            default['name'] = copy_partner.name
+        return super(res_company, self).copy(default)
+
     @api.onchange('custom_footer', 'phone', 'fax', 'email', 'website', 'vat', 'company_registry')
     def onchange_footer(self):
         if not self.custom_footer:
