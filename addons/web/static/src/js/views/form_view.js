@@ -208,9 +208,10 @@ var FormView = View.extend(common.FieldManagerMixin, {
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
+            var canDuplicate = this.is_action_enabled('create') && this.is_action_enabled('duplicate');
             this.sidebar.add_items('other', _.compact([
                 this.is_action_enabled('delete') && { label: _t('Delete'), callback: this.on_button_delete },
-                this.is_action_enabled('create') && { label: _t('Duplicate'), callback: this.on_button_duplicate }
+                canDuplicate && { label: _t('Duplicate'), callback: this.on_button_duplicate }
             ]));
 
             $node = $node || this.$('.oe_form_sidebar');

@@ -212,7 +212,7 @@
         <record id="view_model_fields_form" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <form string="Fields">
+                <form string="Fields" duplicate="false">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -315,7 +315,7 @@
         <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="model">ir.model.fields</field>
             <field name="arch" type="xml">
-                <tree string="Fields">
+                <tree string="Fields" duplicate="false">
                     <field name="name"/>
                     <field name="field_description"/>
                     <field name="model_id"/>
