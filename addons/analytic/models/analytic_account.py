@@ -155,7 +155,7 @@ class AccountAnalyticLine(models.Model):
         if 'amount_user_currency' in fields:
             self._compute_amount_user_currency()
             for line in res:
-                __domain = '__domain' in line and line['__domain'] or []
+                __domain = ('__domain' in line and line['__domain'] or []) + (domain or [])
                 records = self.search_read(__domain, ['amount_user_currency'])
                 line['amount_user_currency'] = sum([r['amount_user_currency'] for r in records])
         return res
