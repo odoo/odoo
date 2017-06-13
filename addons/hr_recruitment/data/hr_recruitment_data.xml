@@ -209,7 +209,7 @@
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
-        <field name="name">Application Received</field>
+        <field name="name">Applicant: Acknowledgment</field>
         <field name="subject">Job Application Confirmation: ${object.job_id.name | safe}</field>
         <field name="email_to">${(not object.partner_id and object.email_from or '') | safe}</field>
         <field name="partner_to">${object.partner_id.id or ''}</field>
