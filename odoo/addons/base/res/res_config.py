@@ -523,7 +523,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         IrValues = self.env['ir.values'].sudo()
         for name, model, field in classified['default']:
             if isinstance(self[name], models.BaseModel):
-                value = self[name].ids
+                field_type = self.env[model]._fields.get(field).type
+                if field_type == 'one2many':
+                    continue
+                if field_type == 'many2many':
+                    value = self[name].ids
+                else:
+                    value = self[name].id
             else:
                 value = self[name]
             IrValues.set_default(model, field, value)
