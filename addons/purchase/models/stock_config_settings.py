@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class StockConfigSettings(models.TransientModel):
     _inherit = 'stock.config.settings'
 
-    po_lead = fields.Float(related='company_id.po_lead', default=lambda self: self.env.user.company_id.po_lead)
+    po_lead = fields.Float(related='company_id.po_lead')
     use_po_lead = fields.Boolean(
         string="Security Lead Time for Purchase",
         oldname='default_new_po_lead',
