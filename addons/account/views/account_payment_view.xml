@@ -110,7 +110,7 @@
             <field name="name">account.payment.form</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <form string="Register Payment" version="7">
+                <form string="Register Payment">
                     <header>
                         <button name="post" class="oe_highlight" states="draft" string="Confirm" type="object"/>
                         <button name="action_draft" states="cancel" string="Set to Draft" type="object"/>
@@ -221,7 +221,7 @@
             <field name="name">account.payment.invoice.form</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <form string="Register Payment" version="7">
+                <form string="Register Payment">
                     <sheet>
                         <group>
                             <field name="payment_type" invisible="1"/>
@@ -284,7 +284,7 @@
             <field name="name">account.register.payments.wizard</field>
             <field name="model">account.register.payments</field>
             <field name="arch" type="xml">
-                <form string="Register Payment" version="7">
+                <form string="Register Payment">
                     <field name="payment_type" invisible="1"/>
                     <field name="partner_type" invisible="1"/>
                     <field name="partner_id" invisible="1"/>

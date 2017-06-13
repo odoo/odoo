@@ -105,12 +105,14 @@
             <field name="name">Order Printer</field>
             <field name="model">restaurant.printer</field>
             <field name="arch" type="xml">
-                <form string="POS Printer" version="7.0">
-                    <group col="2">
-                        <field name="name" />
-                        <field name="proxy_ip" />
-                        <field name="product_categories_ids" />
-                    </group>
+                <form string="POS Printer">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="proxy_ip" />
+                            <field name="product_categories_ids" />
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
