@@ -23,9 +23,12 @@ class StockConfigSettings(models.TransientModel):
             self.security_lead = 0.0
 
     def get_default_fields(self, fields):
-        return dict(
+        res = super(StockConfigSettings, self).get_default_fields(fields)
+        res.update(dict(
             use_security_lead=self.env['ir.config_parameter'].sudo().get_param('sale_stock.use_security_lead')
-        )
+        ))
+        return res
 
     def set_fields(self):
+        super(StockConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param('sale_stock.use_security_lead', self.use_security_lead)

@@ -87,16 +87,19 @@ class WebsiteConfigSettings(models.TransientModel):
     def get_default_fields(self, fields):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
-        return dict(
+        res = super(WebsiteConfigSettings, self).get_default_fields(fields)
+        res.update(dict(
             has_google_analytics=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics'),
             has_google_analytics_dashboard=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics_dashboard'),
             has_google_maps=self.env['ir.config_parameter'].sudo().get_param('website.has_google_maps'),
-        )
+        ))
+        return res
 
     @api.multi
     def set_fields(self):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
+        super(WebsiteConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics', self.has_google_analytics)
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_maps', self.has_google_maps)

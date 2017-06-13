@@ -148,14 +148,17 @@ class SaleConfiguration(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
-        return dict(
+        res = super(SaleConfiguration, self).get_default_fields(fields)
+        res.update(dict(
             use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
             auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
             default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
-        )
+        ))
+        return res
 
     @api.multi
     def set_fields(self):
+        super(SaleConfiguration, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param("sale.use_sale_note", self.use_sale_note)
         self.env['ir.config_parameter'].sudo().set_param("sale.auto_done_setting", self.auto_done_setting)
         self.env['ir.config_parameter'].sudo().set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)

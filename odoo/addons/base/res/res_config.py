@@ -478,6 +478,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
 
+    def get_default_fields(self, fields):
+        return {}
+
     @api.model
     def default_get(self, fields):
         IrValues = self.env['ir.values']
@@ -504,11 +507,16 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 res[name] = int(res[name])
 
         # other fields: call all methods that start with 'get_default_'
+        # and call the method 'get_default_fields'
         for method in dir(self):
-            if method.startswith('get_default_'):
+            if method.startswith('get_default_') and method is not 'get_default_fields':
                 res.update(getattr(self, method)(fields))
+        res.update(self.get_default_fields(fields))
 
         return res
+
+    def set_fields(self):
+        pass
 
     @api.multi
     def execute(self):
@@ -540,9 +548,11 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
 
         # other fields: execute all methods that start with 'set_'
+        # and the method 'set_fields'
         for method in dir(self):
-            if method.startswith('set_'):
+            if method.startswith('set_') and method is not 'set_fields':
                 getattr(self, method)()
+        self.set_fields()
 
         # module fields: install/uninstall the selected modules
         to_install = []

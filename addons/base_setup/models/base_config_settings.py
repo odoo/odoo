@@ -38,17 +38,20 @@ class BaseConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
+        res = super(BaseConfigSettings, self).get_default_fields(fields)
         default_external_email_server = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_external_email_server', default=False)
         default_user_rights = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_user_rights', default=False)
         default_custom_report_footer = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_custom_report_footer', default=False)
-        return {
+        res.update({
             'default_external_email_server': default_external_email_server,
             'default_user_rights': default_user_rights,
             'default_custom_report_footer': default_custom_report_footer,
-        }
+        })
+        return res
 
     @api.multi
-    def set_default_fields(self):
+    def set_fields(self):
+        super(BaseConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
