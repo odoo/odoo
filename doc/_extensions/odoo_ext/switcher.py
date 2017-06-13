@@ -23,7 +23,8 @@ class SwitcherDirective(Directive):
             else:
                 assert child['names'], ("A switcher case must be either a "\
                                         "code block or a compound with a name")
-                titles.append(' '.join(child['names']))
+                [name] = child['names']
+                titles.append(get_lexer_by_name(name).name)
         tabs = nodes.bullet_list('', *[
             nodes.list_item('', nodes.Text(title))
             for title in titles

@@ -16,6 +16,12 @@ easily available over XML-RPC_ and accessible from a variety of languages.
 Connection
 ==========
 
+.. snippet:: sh
+    :hide:
+
+    set -e
+    set -x
+
 .. snippet:: python
     :hide:
 
@@ -130,11 +136,21 @@ parameters.
                 username = "admin",
                 password = <insert password for your admin user (default: admin)>;
 
+    .. snippet:: sh
+        :indent: #
+
+        url=<insert server URL>
+        database=<insert database name>
+        username="admin"
+        password=<insert password for your admin user (default: admin)>
+
 demo
 ''''
 
 To make exploration simpler, you can also ask https://demo.odoo.com for a test
 database.
+
+.. todo:: curl/jsonrpc version of start?
 
 .. rst-class:: setup doc-aside
 
@@ -197,12 +213,20 @@ database.
             The examples do not include imports as these imports couldn't be
             pasted in the code.
 
+    .. case:: sh
+
+        .. note::
+
+            While higher-level languages have XML-RPC libraries, for shell
+            examples we will hand-craft JSON-RPC2_ requests using cURL_,
+            extracting data using jq_.
+
 Logging in
 ----------
 
-Odoo uses `Basic HTTP Authentication <https://tools.ietf.org/html/rfc7617>`_
-for RPC authentication. The authentication credentials are provided to the
-XML-RPC API either as part of the URL or separately depending on the library.
+Odoo uses `Basic HTTP Authentication`_ for RPC authentication. The
+authentication credentials are provided to the XML-RPC API either as part of
+the URL or separately depending on the library.
 
 The bare ``/RPC2`` endpoint handles meta calls (which may or may not require
 authentication)
@@ -233,6 +257,29 @@ authentication)
         common_config.setServerURL(
             new URL(String.format("%s/RPC2", url)));
         common.execute(common_config, "version", emptyList());
+
+    .. case:: sh
+
+        .. snippet:: sh
+
+            curl -H "Content-Type: application/json" \
+                 -s -X POST \
+                 -d@- "$url/RPC2" \
+                 <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "version",
+                "params": []
+            }
+            !
+
+        .. note::
+
+            Using cURL_, we must manually set the ``Content-Type`` header
+            (so that the RPC endpoint understands this is a JSON-RPC request)
+            and ``POST`` it. ``-d@-`` lets us provide the JSON-RPC *request
+            body* as a `here document`_ immediately following our command.
 
 .. rst-class:: doc-aside
 
@@ -292,6 +339,25 @@ to be initialized with authentication.
         dbConfig.setBasicPassword(password);
         db.setConfig(dbConfig);
         db.execute("res.users.context_get", asList(0));
+
+    .. case:: sh
+
+        .. snippet:: sh
+
+            db="-u $username:$password -H Content-Type:application/json -s -X POST -d@- $url/RPC2?db=$database"
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.users.context_get",
+                "params": [[]]
+            }
+            !
+
+        .. note::
+
+            Using cURL_, `Basic HTTP Authentication`_ credentials are provided
+            via the ``-u`` parameter.
 
 Calling methods
 ===============
@@ -357,6 +423,17 @@ model on which you can keep calling methods.
                 new HashMap<String, Object>() {{ put("raise_exception", false); }}
             ));
 
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.check_access_rights",
+                "params": [[], ["read"], {"raise_exception": false}]
+            }
+            !
+
     .. code-block:: json
 
         true
@@ -402,6 +479,19 @@ companies for instance:
                     asList("customer", "=", true))
             ))));
 
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search",
+                "params": [[], [
+                    [["is_company", "=", true], ["customer", "=", true]]
+                ]]
+            }
+            !
+
     .. code-block:: json
 
         [7, 18, 12, 14, 17, 19, 8, 31, 26, 16, 13, 20, 30, 22, 29, 15, 23, 28, 74]
@@ -416,27 +506,27 @@ available to only retrieve a subset of all matched records.
 .. container:: doc-aside
 
     .. switcher::
-    
+
         .. snippet:: python
 
             partners.search((), [
                 [['is_company', '=', True], ['customer', '=', True]]
             ], {'offset': 10, 'limit': 5})
-    
+
         .. snippet:: ruby
-    
+
             partners.search([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ], {offset: 10, limit: 5})
-    
+
         .. snippet:: php
-    
+
             $partners->search([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ], ['offset'=>10, 'limit'=>5]);
-    
+
         .. snippet:: java
-    
+
             asList((Object[])db.execute(
                 "res.partner.search", asList(0, asList(
                 asList(
@@ -447,9 +537,22 @@ available to only retrieve a subset of all matched records.
                 put("limit", 5);
             }}
             )));
-    
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search",
+                "params": [[], [
+                    [["is_company", "=", true], ["customer", "=", true]]
+                ], {"offset": 10, "limit": 5}]
+            }
+            !
+
     .. code-block:: json
-    
+
         [13, 20, 30, 22, 29]
 
 Count records
@@ -464,36 +567,49 @@ only the number of records matching the query. It takes the same
 .. container:: doc-aside
 
     .. switcher::
-    
+
         .. snippet:: python
-    
+
             partners.search_count((), [
                 [['is_company', '=', True], ['customer', '=', True]]
             ])
-    
+
         .. snippet:: ruby
-    
+
             partners.search_count([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ])
-    
+
         .. snippet:: php
-    
+
             $partners->search_count([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ]);
-    
+
         .. snippet:: java
-    
+
             Integer.class.cast(db.execute(
                 "res.partner.search_count", asList(0, asList(
                 asList(
                     asList("is_company", "=", true),
                     asList("customer", "=", true))
             ))));
-    
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search_count",
+                "params": [[], [
+                    [["is_company", "=", true], ["customer", "=", true]]
+                ]]
+            }
+            !
+
     .. code-block:: json
-    
+
         19
 
 .. warning::
@@ -512,38 +628,38 @@ fetch. By default, it will fetch all the fields the current user can read,
 which tends to be a huge amount.
 
 .. container:: doc-aside
-    
+
     .. switcher::
-    
+
         .. snippet:: python
-    
+
             ids = partners.search((), [
                 [['is_company', '=', True], ['customer', '=', True]]
             ], {'limit': 1})
             [record] = partners.read(ids)
             # count the number of fields fetched by default
             len(record)
-    
+
         .. snippet:: ruby
-    
+
             ids = partners.search([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ], {limit: 1})
             record = partners.read(ids).first
             # count the number of fields fetched by default
             record.length
-    
+
         .. snippet:: php
-    
+
             $ids = $partners->search([], [
                 [['is_company', '=', true], ['customer', '=', true]]
             ], ['limit'=>1]);
             $records = $partners->read($ids);
             // count the number of fields fetched by default
             count($records[0]);
-    
+
         .. snippet:: java
-    
+
             final List ids = asList((Object[])db.execute(
                 "res.partner.search", asList(0, asList(
                 asList(
@@ -555,9 +671,32 @@ which tends to be a huge amount.
             ))[0];
             // count the number of fields fetched by default
             record.size();
-    
+
+        .. snippet:: sh
+
+            ids=$(curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search",
+                "params": [[], [
+                    [["is_company", "=", true], ["customer", "=", true]]
+                ], {"limit": 1}]
+            }
+            !
+            )
+
+            curl $db <<! | jq -e -c '.result[0] | length'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.read",
+                "params": [$ids]
+            }
+            !
+
     .. code-block:: json
-    
+
         121
 
 Conversedly, picking only three fields deemed interesting.
@@ -587,6 +726,17 @@ Conversedly, picking only three fields deemed interesting.
                     put("fields", asList("name", "country_id", "comment"));
                 }}
             )));
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.read",
+                "params": [$ids, {"fields": ["name", "country_id", "comment"]}]
+            }
+            !
 
     .. code-block:: json
 
@@ -631,6 +781,17 @@ updating a record):
                     put("attributes", asList("string", "help", "type"));
                 }}
             ));
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.fields_get",
+                "params": [[], {"attributes": ["string", "help", "type"]}]
+            }
+            !
 
     .. code-block:: json
 
@@ -719,6 +880,19 @@ if that list is not provided it will fetch all fields of matched records):
                 put("limit", 5);
             }})));
 
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search_read",
+                "params": [[], [
+                    [["is_company", "=", true], ["customer", "=", true]]
+                ], {"fields": ["name", "country_id", "comment"], "limit": 5}]
+            }
+            !
+
     .. code-block:: json
 
         [
@@ -794,6 +968,20 @@ set through the mapping argument, the default value will be used.
                 new HashMap<String, Object>() {{ put("name", "New Partner"); }}
             )));
 
+        .. snippet:: sh
+
+            newids=$(curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.create",
+                "params": [[], [{
+                    "name": "New Partner"
+                }]]
+            }
+            !
+            )
+
     .. code-block:: json
 
         78
@@ -863,6 +1051,27 @@ a record).
                 newids
             )));
 
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.write",
+                "params": [$newids, [{
+                    "name": "Newer partner"
+                }]]
+            }
+            !
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.name_get",
+                "params": [$newids]
+            }
+            !
+
     .. code-block:: json
 
         [[78, "Newer partner"]]
@@ -870,7 +1079,7 @@ a record).
 Delete records
 --------------
 
-Records can be deleted in bulk by providing their ids to 
+Records can be deleted in bulk by providing their ids to
 :meth:`~odoo.models.Model.unlink`.
 
 .. container:: doc-aside
@@ -903,6 +1112,25 @@ Records can be deleted in bulk by providing their ids to
                 "res.partner.search", asList(
                 0, asList(asList(asList("id", "in", newids)))
             )));
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.unlink",
+                "params": [$newids]
+            }
+            !
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "res.partner.search",
+                "params": [[], [[["id", "in", $newids]]]]
+            }
+            !
 
     .. code-block:: json
 
@@ -1022,6 +1250,31 @@ Provides information about Odoo models via its various fields
                 }}
             )));
 
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "ir.model.create",
+                "params": [[], [{
+                    "name": "Custom Model",
+                    "model": "x_custom_model",
+                    "state": "manual"
+                }]]
+            }
+            !
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "x_custom_model.fields_get",
+                "params": [[], {
+                    "attributes": ["string", "help", "type"]
+                }]
+            }
+            !
+
     .. code-block:: json
 
         {
@@ -1099,17 +1352,16 @@ activated as actual fields on the model.
 
         .. snippet:: python
 
-            [id] = db.ir.model.create((), [{
+            db.ir.model.create((), [{
                 'name': "Custom Model",
                 'model': "x_custom",
                 'state': 'manual',
-            }])
-            db.ir.model.fields.create((), [{
-                'model_id': id,
-                'name': 'x_name',
-                'ttype': 'char',
-                'state': 'manual',
-                'required': True,
+                'field_id': [(0, 0, {
+                    'name': 'x_name',
+                    'field_description': "Name",
+                    'ttype': 'char',
+                    'required': True,
+                })],
             }])
             record_ids = db.x_custom.create((), [{
                 'x_name': "test record",
@@ -1118,17 +1370,16 @@ activated as actual fields on the model.
 
         .. snippet:: php
 
-            $ids = $db->ir->model->create([], [[
+            $db->ir->model->create([], [[
                 'name' => "Custom Model",
                 'model' => 'x_custom',
-                'state' => 'manual'
-            ]]);
-            $db->ir->model->fields->create([], [[
-                'model_id' => $ids[0],
-                'name' => 'x_name',
-                'ttype' => 'char',
                 'state' => 'manual',
-                'required' => true
+                'field_id' => [[0, 0, [
+                    'name' => 'x_name',
+                    'field_description' => "Name",
+                    'ttype' => 'char',
+                    'required' => true
+                ]]]
             ]]);
             $record_ids = $db->x_custom->create([], [[
                 'x_name' => "test record"
@@ -1137,17 +1388,16 @@ activated as actual fields on the model.
 
         .. snippet:: ruby
 
-            ids = db.call('ir.model.create', [], [{
+            db.call('ir.model.create', [], [{
                 name: "Custom Model",
                 model: "x_custom",
-                state: 'manual'
-            }])
-            db.call('ir.model.fields.create', [], [{
-                model_id: ids.first,
-                name: "x_name",
-                ttype: "char",
-                state: "manual",
-                required: true
+                state: 'manual',
+                field_id: [[0, 0, {
+                    name: "x_name",
+                    field_description: "Name",
+                    ttype: "char",
+                    required: true
+                }]]
             }])
             record_ids = db.call('x_custom.create', [], [{
                 x_name: "test record"
@@ -1156,22 +1406,18 @@ activated as actual fields on the model.
 
         .. snippet:: java
 
-            final Object[] model_ids = (Object[])db.execute(
+            db.execute(
                 "ir.model.create", asList(
                 0, asList(new HashMap<String, Object>() {{
                     put("name", "Custom Model");
                     put("model", "x_custom");
                     put("state", "manual");
-                }})
-            ));
-            db.execute(
-                "ir.model.fields.create", asList(
-                0, asList(new HashMap<String, Object>() {{
-                    put("model_id", model_ids[0]);
-                    put("name", "x_name");
-                    put("ttype", "char");
-                    put("state", "manual");
-                    put("required", true);
+                    put("field_id", asList(asList(0, 0, new HashMap<String, Object>() {{
+                        put("name", "x_name");
+                        put("field_description", "Name");
+                        put("ttype", "char");
+                        put("required", true);
+                    }})));
                 }})
             ));
             final Object record_ids = db.execute(
@@ -1182,6 +1428,46 @@ activated as actual fields on the model.
             ));
 
             db.execute("x_custom.read", asList(record_ids));
+
+        .. snippet:: sh
+
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "ir.model.create",
+                "params": [[], [{
+                    "name": "Custom Model",
+                    "model": "x_custom",
+                    "state": "manual",
+                    "field_id": [[0, 0, {
+                        "name": "x_name",
+                        "field_description": "Name",
+                        "ttype": "char",
+                        "required": true
+                    }]]
+                }]]
+            }
+            !
+            records_ids=$(curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "x_custom.create",
+                "params": [[], [{
+                    "x_name": "test record"
+                }]]
+            }
+            !
+            )
+            curl $db <<! | jq -e -c '.result'
+            {
+                "jsonrpc": "2.0",
+                "id": null,
+                "method": "x_custom.read",
+                "params": [$record_ids]
+            }
+            !
 
     .. code-block:: json
 
@@ -1199,7 +1485,6 @@ activated as actual fields on the model.
         ]
 
 .. custom models cleanup
-
 .. snippet:: python
     :hide:
 
@@ -1234,6 +1519,29 @@ activated as actual fields on the model.
         ))
     ));
     db.execute("ir.model.unlink", asList(custom_ids));
+
+.. snippet:: sh
+    :hide:
+
+    custom_ids=$(curl $db <<! | jq -e -c '.result'
+    {
+        "jsonrpc": "2.0",
+        "id": null,
+        "method": "ir.model.search",
+        "params": [[], [
+            [["model", "ilike", "x_custom"]]
+        ]]
+    }
+    !
+    )
+    curl $db <<! | jq -e -c '.result'
+    {
+        "jsonrpc": "2.0",
+        "id": null,
+        "method": "ir.model.unlink",
+        "params": [$custom_ids]
+    }
+    !
 
 Report printing
 ---------------
@@ -1326,6 +1634,11 @@ Reports can be printed over RPC with the following information:
         }
     }
 
+.. _Basic HTTP Authentication: https://tools.ietf.org/html/rfc7617
+.. _cURL: https://curl.haxx.se
+.. _here document: http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_07_04
+.. _jq: https://stedolan.github.io/jq/
+.. _JSON-RPC2: http://www.jsonrpc.org/specification
 .. _PostgreSQL: http://www.postgresql.org
 .. _XML-RPC: http://en.wikipedia.org/wiki/XML-RPC
 .. _base64: http://en.wikipedia.org/wiki/Base64
