@@ -92,7 +92,7 @@ class PortalAccount(website_account):
         return request.make_response(pdf, headers=pdfhttpheaders)
 
     def details_form_validate(self, data):
-        error, error_message = super(website_account, self).details_form_validate(data)
+        error, error_message = super(PortalAccount, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
         partner = request.env['res.users'].browse(request.uid).partner_id
         invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
