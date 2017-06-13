@@ -33,7 +33,7 @@ class WebsiteConfigSettings(models.TransientModel):
 
     group_website_multiimage = fields.Boolean(string='Multi-Images', implied_group='website_sale.group_website_multi_image', group='base.group_portal,base.group_user,base.group_public')
     group_discount_per_so_line = fields.Boolean(string="Discounted Prices", implied_group='sale.group_discount_per_so_line')
-    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address')
+    group_delivery_invoice_address = fields.Boolean(string="Shipping Address", implied_group='sale.group_delivery_invoice_address', group='base.group_portal,base.group_user,base.group_public')
 
     module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
     module_website_sale_digital = fields.Boolean("Digital Content")
