@@ -16,9 +16,10 @@ odoo.define('web.PivotModel', function (require) {
  * @todo add a full description/specification of the data layout
  */
 
-var core = require('web.core');
-var utils = require('web.utils');
 var AbstractModel = require('web.AbstractModel');
+var core = require('web.core');
+var session = require('web.session');
+var utils = require('web.utils');
 
 var _t = core._t;
 
@@ -189,6 +190,8 @@ var PivotModel = AbstractModel.extend({
         }
         return {
             colGroupBys: this.data.main_col.groupbys,
+            context: this.data.context,
+            domain: this.data.domain,
             fields: this.fields,
             headers: !isRaw && this._computeHeaders(),
             has_data: true,
@@ -225,7 +228,7 @@ var PivotModel = AbstractModel.extend({
         this.modelName = params.modelName;
         this.data = {
             domain: params.domain,
-            context: params.context,
+            context: _.extend({}, session.user_context, params.context),
             groupedBy: params.rowGroupBys,
             colGroupBys: params.colGroupBys,
             measures: params.measures,
