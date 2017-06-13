@@ -127,8 +127,8 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
-                <filter string="Active" domain="[('active', '=', True)]" help="Opened Programs"/>
-                <filter string="Closed" domain="[('active', '=', False)]" help="Closed Programs"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
+                <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
                 <filter string="Expired" name="expired" domain="[('rule_date_to', '&lt;', datetime.datetime.now())]" help="Expired Programs"/>
             </search>
         </field>
@@ -271,8 +271,8 @@
         <field name="model">sale.coupon.program</field>
         <field name="arch" type="xml">
             <search>
-                <filter string="Active" domain="[('active', '=', True)]" help="Opened Programs"/>
-                <filter string="Closed" domain="[('active', '=', False)]" help="Closed Programs"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]" help="Opened Programs"/>
+                <filter string="Closed" name="closed" domain="[('active', '=', False)]" help="Closed Programs"/>
             </search>
         </field>
     </record>
