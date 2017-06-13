@@ -4,6 +4,8 @@ from odoo.tests import common
 from odoo.tools import float_compare
 
 
+@common.at_install(False)
+@common.post_install(True)
 class TestDeliveryCost(common.TransactionCase):
 
     def setUp(self):
@@ -80,8 +82,8 @@ class TestDeliveryCost(common.TransactionCase):
             ('product_id', '=', self.sale_normal_delivery_charges.carrier_id.product_id.id)])
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
 
-        self.assertEqual(float_compare(line.price_subtotal, 10, precision_digits=2), 0,
-            "Delivey cost is not correspond.")
+        self.assertEqual(float_compare(line.price_subtotal, 10.0, precision_digits=2), 0,
+            "Delivery cost is not correspond.")
 
         # I confirm the sales order
 
@@ -119,7 +121,7 @@ class TestDeliveryCost(common.TransactionCase):
 
         self.assertEqual(len(line), 1, "Delivery cost is not Added")
         self.assertEqual(float_compare(line.price_subtotal, 0, precision_digits=2), 0,
-            "Delivey cost is not correspond.")
+            "Delivery cost is not correspond.")
 
         # I set default delivery policy
 
