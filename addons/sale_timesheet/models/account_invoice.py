@@ -68,7 +68,7 @@ class AccountInvoice(models.Model):
                         invoiced_price_per_hour = invoice_line.currency_id.round(invoice_line.price_subtotal / float(sum(uninvoiced_timesheet_lines.mapped('unit_amount'))))
                         # invoicing analytic lines of different currency
                         total_revenue_per_currency = dict.fromkeys(uninvoiced_timesheet_lines.mapped('company_currency_id').ids, 0.0)
-                        for index, timesheet_line in enumerate(uninvoiced_timesheet_lines.sorted(key=lambda ts: ts.date)):
+                        for index, timesheet_line in enumerate(uninvoiced_timesheet_lines.sorted(key=lambda ts: (ts.date, ts.id))):
                             if index+1 != len(uninvoiced_timesheet_lines):
                                 line_revenue = invoice_line.currency_id.compute(invoiced_price_per_hour, timesheet_line.company_currency_id) * timesheet_line.unit_amount
                                 total_revenue_per_currency[timesheet_line.company_currency_id.id] += line_revenue
@@ -91,7 +91,7 @@ class AccountInvoice(models.Model):
                         # invoicing analytic lines of different currency
                         total_revenue_per_currency = dict.fromkeys(no_zero_timesheet_revenue.mapped('company_currency_id').ids, 0.0)
 
-                        for index, timesheet_line in enumerate(no_zero_timesheet_revenue.sorted(key=lambda ts: ts.date)):
+                        for index, timesheet_line in enumerate(no_zero_timesheet_revenue.sorted(key=lambda ts: (ts.date, ts.id))):
                             if index+1 != len(no_zero_timesheet_revenue):
                                 price_subtotal_inv = invoice_line.currency_id.compute(invoice_line.price_subtotal, timesheet_line.company_currency_id)
                                 price_subtotal_sol = timesheet_line.so_line.currency_id.compute(timesheet_line.so_line.price_subtotal, timesheet_line.company_currency_id)
