@@ -4,7 +4,7 @@
 from odoo import api, fields, models
 
 
-class SaleConfiguration(models.TransientModel):
+class SaleConfigSettings(models.TransientModel):
     _inherit = 'sale.config.settings'
 
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
@@ -148,7 +148,7 @@ class SaleConfiguration(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
-        res = super(SaleConfiguration, self).get_default_fields(fields)
+        res = super(SaleConfigSettings, self).get_default_fields(fields)
         res.update(dict(
             use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
             auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
@@ -158,7 +158,7 @@ class SaleConfiguration(models.TransientModel):
 
     @api.multi
     def set_fields(self):
-        super(SaleConfiguration, self).set_fields()
+        super(SaleConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param("sale.use_sale_note", self.use_sale_note)
         self.env['ir.config_parameter'].sudo().set_param("sale.auto_done_setting", self.auto_done_setting)
         self.env['ir.config_parameter'].sudo().set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)

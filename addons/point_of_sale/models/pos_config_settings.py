@@ -3,7 +3,7 @@
 from odoo import api, fields, models
 
 
-class PosConfiguration(models.TransientModel):
+class PosConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
     _name = 'pos.config.settings'
 
@@ -59,7 +59,7 @@ class PosConfiguration(models.TransientModel):
             })
 
     def get_default_fields(self, fields):
-        res = super(PosConfiguration, self).get_default_fields(fields)
+        res = super(PosConfigSettings, self).get_default_fields(fields)
         res.update(dict(
             use_pos_sale_price=self.env['ir.config_parameter'].sudo().get_param('pos.use_pos_sale_price'),
             pos_pricelist_setting=self.env['ir.config_parameter'].sudo().get_param('pos.pos_pricelist_setting'),
@@ -67,6 +67,6 @@ class PosConfiguration(models.TransientModel):
         return res
 
     def set_fields(self):
-        super(PosConfiguration, self).set_fields()
+        super(PosConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param('pos.use_pos_sale_price', self.use_pos_sale_price)
         self.env['ir.config_parameter'].sudo().set_param('pos.pos_pricelist_setting', self.pos_pricelist_setting)
