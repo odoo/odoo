@@ -208,6 +208,7 @@ var BasicModel = AbstractModel.extend({
                         delete self.localData[record.id];
                     } else {
                         record.res_ids.splice(record.offset, 1);
+                        record.offset = Math.min(record.offset, record.res_ids.length - 1);
                         record.res_id = record.res_ids[record.offset];
                         record.count--;
                     }

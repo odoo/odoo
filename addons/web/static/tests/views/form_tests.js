@@ -5064,5 +5064,55 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('delete a duplicated record', function (assert) {
+        assert.expect(5);
+
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="display_name"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    // rpcs done by the sidebar
+                    return $.when([]);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'copy') {
+                    return result.then(function (id) {
+                        newRecordID = id;
+                        return id;
+                    });
+                }
+                if (args.method === 'unlink') {
+                    assert.deepEqual(args.args[0], [newRecordID],
+                        "should delete the newly created record");
+                }
+                return result;
+            },
+        });
+
+        form.sidebar.$('a:contains(Duplicate)').click(); // duplicate record 1
+        assert.strictEqual(form.$('.o_form_editable').length, 1,
+            "form should be in edit mode");
+        assert.strictEqual(form.$('.o_field_widget').val(), 'first record (copy)',
+            "duplicated record should have correct name");
+        form.$buttons.find('.o_form_button_save').click(); // save duplicated record
+
+        form.sidebar.$('a:contains(Delete)').click(); // delete duplicated record
+        assert.strictEqual($('.modal').length, 1, "should have opened a confirm dialog");
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'first record',
+            "should have come back to previous record");
+
+        form.destroy();
+    });
 });
 });
