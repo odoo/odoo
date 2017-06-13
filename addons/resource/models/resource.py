@@ -552,7 +552,11 @@ class ResourceCalendar(models.Model):
     def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None):
         """ Return datetime after having planned hours """
         res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id)
-        return res and res[0][0] or False
+        if res and hours < 0.0:
+            return res[0][0]
+        elif res:
+            return res[-1][1]
+        return False
 
     @api.multi
     def _schedule_days(self, days, day_dt, compute_leaves=False, resource_id=None):
