@@ -27,6 +27,9 @@ class TestDeliveryCost(common.TransactionCase):
         self.product_2 = self.env.ref('product.product_product_2')
         self.product_category = self.env.ref('product.product_category_all')
         self.free_delivery = self.env.ref('delivery.free_delivery_carrier')
+        # as the tests hereunder assume all the prices in USD, we must ensure
+        # that the company actually uses USD
+        self.env.user.company_id.write({'currency_id': self.env.ref('base.USD').id})
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
