@@ -125,13 +125,15 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_quotation_send']" position="after">
-                <button name="action_mark_as_paid" type="object" string="Mark as Paid" states="sent,sale" class="btn-primary" attrs="{'invisible': [('can_directly_mark_as_paid', '=', False)]}"/>
+                <button name="action_mark_as_paid" type="object"
+                    string="Mark as Paid" class="btn-primary"
+                    attrs="{'invisible': ['|', ('can_directly_mark_as_paid', '=', False), ('state', 'not in', ['sent', 'sale'])]}"/>
             </xpath>
             <field name="partner_id" position="after">
                 <field name="can_directly_mark_as_paid" invisible="1"/>
             </field>
             <xpath expr="//button[@id='action_confirm']" position="attributes">
-                <attribute name="attrs">{'invisible': [('can_directly_mark_as_paid', '=', True)]}</attribute>
+                <attribute name="attrs">{'invisible': ['|',('can_directly_mark_as_paid', '=', True), ('state', 'not in', ['sent'])]}</attribute>
             </xpath>
         </field>
     </record>
