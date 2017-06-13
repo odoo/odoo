@@ -152,15 +152,6 @@
         </t>
     </template>
 
-    <template id="custom_panel" inherit_id="portal_layout" customize_show="True" name="Portal Editable Panel" active="False">
-        <xpath expr="//div[@id='o_my_sidebar']" position="inside">
-            <div class="oe_structure">
-              <h3 class="page-header">Custom Panel</h3>
-              <p>Place your content here.</p>
-            </div>
-        </xpath>
-    </template>
-
     <template id="contact" name="Contact">
         <h3 class="page-header">Salesperson</h3>
           <h5 t-esc="sales_rep.name"/>
