@@ -4,3 +4,4 @@
 from . import res_country
 from . import delivery
 from . import sale_order
+from . import website_config_settings
