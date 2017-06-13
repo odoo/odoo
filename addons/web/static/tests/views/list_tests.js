@@ -1046,6 +1046,24 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with a button without icon', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                    '<field name="foo"/>' +
+                    '<button string="abc" type="object" name="schedule_another_phonecall"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('table button').first().text(), 'abc',
+            "should have rendered a button with string attribute as label");
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, can discard', function (assert) {
         assert.expect(5);
 
