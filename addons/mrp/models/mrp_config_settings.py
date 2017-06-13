@@ -25,12 +25,15 @@ class MrpConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
-        return dict(
+        res = super(MrpConfigSettings, self).get_default_fields(fields)
+        res.update(dict(
             use_manufacturing_lead=self.env['ir.config_parameter'].sudo().get_param('mrp.use_manufacturing_lead')
-        )
+        ))
+        return res
 
     @api.multi
     def set_fields(self):
+        super(MrpConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', self.use_manufacturing_lead)
 
     @api.onchange('use_manufacturing_lead')

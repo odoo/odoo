@@ -77,12 +77,15 @@ class StockConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
-        return dict(
+        res = super(StockConfigSettings, self).get_default_fields(fields)
+        res.update(dict(
             use_propagation_minimum_delta=self.env['ir.config_parameter'].sudo().get_param('stock.use_propagation_minimum_delta')
-        )
+        ))
+        return res
 
     @api.multi
-    def set_default_fields(self):
+    def set_fields(self):
+        super(StockConfigSettings, self).set_fields()
         self.env['ir.config_parameter'].sudo().set_param('stock.use_propagation_minimum_delta', self.use_propagation_minimum_delta)
 
     @api.multi

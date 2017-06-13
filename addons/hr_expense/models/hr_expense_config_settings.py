@@ -21,13 +21,16 @@ class HrExpenseConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_fields(self, fields):
-        return dict(
+        res = super(HrExpenseConfigSettings, self).get_default_fields(fields)
+        res.update(dict(
             alias_prefix=self.env.ref('hr_expense.mail_alias_expense').alias_name,
             use_mailgateway=self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway'),
-        )
+        ))
+        return res
 
     @api.multi
     def set_fields(self):
+        super(HrExpenseConfigSettings, self).set_fields()
         self.env.ref('hr_expense.mail_alias_expense').write({'alias_name': self.alias_prefix})
         self.env['ir.config_parameter'].sudo().set_param('hr_expense.use_mailgateway', self.use_mailgateway)
 
