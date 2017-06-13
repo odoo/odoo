@@ -5039,5 +5039,30 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('id is False in evalContext for new records', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="id"/>' +
+                        '<field name="foo" attrs="{\'readonly\': [[\'id\', \'=\', False]]}"/>' +
+                '</form>',
+        });
+
+        assert.ok(form.$('.o_field_widget[name=foo]').hasClass('o_readonly_modifier'),
+            "foo should be readonly in 'Create' mode");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.notOk(form.$('.o_field_widget[name=foo]').hasClass('o_readonly_modifier'),
+            "foo should not be readonly anymore");
+
+        form.destroy();
+    });
 });
 });
