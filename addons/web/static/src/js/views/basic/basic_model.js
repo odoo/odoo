@@ -2176,7 +2176,7 @@ var BasicModel = AbstractModel.extend({
             if (context[fieldName] === null) {
                 context[fieldName] = false;
             }
-            if (!field) {
+            if (!field || field.name === 'id') {
                 continue;
             }
             if (field.type === 'float' ||
