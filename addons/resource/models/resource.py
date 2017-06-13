@@ -517,7 +517,9 @@ class ResourceCalendar(models.Model):
         backwards = (hours < 0)
         intervals = []
         remaining_hours, iterations = abs(hours * 1.0), 0
-        current_datetime = day_dt
+
+        day_dt_tz = to_naive_user_tz(day_dt, self.env.user)
+        current_datetime = day_dt_tz
 
         call_args = dict(compute_leaves=compute_leaves, resource_id=resource_id)
 
@@ -576,7 +578,9 @@ class ResourceCalendar(models.Model):
         backwards = (days < 0)
         intervals = []
         planned_days, iterations = 0, 0
-        current_datetime = day_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+
+        day_dt_tz = to_naive_user_tz(day_dt, self.env.user)
+        current_datetime = day_dt_tz.replace(hour=0, minute=0, second=0, microsecond=0)
 
         while planned_days < abs(days) and iterations < 100:
             working_intervals = self._get_day_work_intervals(
