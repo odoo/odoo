@@ -12,6 +12,14 @@
                     </div>
                 </div>
             </div>
+            <div id="website_delivery_easypost" position="after">
+                <field name="is_installed_easypost" invisible="1"/>
+                <div class="content-group">
+                    <div class="mt16" attrs="{'invisible': ['|', ('module_delivery_easypost', '=', False), ('is_installed_easypost','=',False)]}">
+                        <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Easypost Delivery Methods" class="btn-link" context="{'search_default_delivery_type': 'easypost'}"/>
+                    </div>
+                </div>
+            </div>
         </field>
     </record>
 </odoo>
