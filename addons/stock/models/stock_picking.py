@@ -783,7 +783,7 @@ class Picking(models.Model):
 
     @api.multi
     def do_new_transfer(self):
-        for pick in self:
+        for pick in self.filtered(lambda p: p.state not in ['done', 'cancel']):
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
                 raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))
@@ -852,11 +852,12 @@ class Picking(models.Model):
         """ If no pack operation, we do simple action_done of the picking.
         Otherwise, do the pack operations. """
         # TDE CLEAN ME: reclean me, please
-        self._create_lots_for_picking()
+        pickings = self.filtered(lambda p: p.state not in ['done', 'cancel'])
+        pickings._create_lots_for_picking()
 
         no_pack_op_pickings = self.filtered(lambda picking: not picking.pack_operation_ids)
         no_pack_op_pickings.action_done()
-        other_pickings = self - no_pack_op_pickings
+        other_pickings = pickings - no_pack_op_pickings
         for picking in other_pickings:
             need_rereserve, all_op_processed = picking.picking_recompute_remaining_quantities()
             todo_moves = self.env['stock.move']
