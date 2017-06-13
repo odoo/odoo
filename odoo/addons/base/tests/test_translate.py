@@ -271,3 +271,23 @@ class TestXMLTranslation(TransactionCase):
         view3 = view0.with_env(env_fr).copy({})
         self.assertEqual(view3.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view3.with_env(env_fr).arch_db, archf % terms_fr)
+
+    def test_spaces(self):
+        """ Create translations where value has surrounding spaces. """
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        terms_fr = (' Couteau', 'Fourchette ', ' Cuiller ')
+        view0 = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms_en,
+        })
+        for src, value in zip(terms_en, terms_fr):
+            self.env['ir.translation'].create({
+                'type': 'model',
+                'name': 'ir.ui.view,arch_db',
+                'lang': 'fr_FR',
+                'res_id': view0.id,
+                'src': src,
+                'value': value,
+            })
