@@ -273,6 +273,9 @@ class TestResource(TestResourceCommon):
             td += item[1] - item[0]
         self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
+        res = self.calendar.schedule_hours_get_date(-40, day_dt=self.date1.replace(minute=0, second=0))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 09:00:00'))
+
         # --------------------------------------------------
         # Test2: schedule hours forward
         # --------------------------------------------------
@@ -298,6 +301,9 @@ class TestResource(TestResourceCommon):
         for item in res:
             td += item[1] - item[0]
         self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+
+        res = self.calendar.schedule_hours_get_date(40, day_dt=self.date1.replace(minute=0, second=0))
+        self.assertEqual(res, Datetime.from_string('2013-02-26 09:00:00'))
 
         res = self.calendar.schedule_hours(
             40, day_dt=self.date1.replace(minute=0, second=0),
@@ -400,6 +406,11 @@ class TestResource(TestResourceCommon):
             compute_leaves=False, resource_id=self.resource1_id)
         # 7h30 -> 12h30 = 5 / 13h -> 14h = 1 / -> 6h
         self.assertEqual(res, 6, 'resource_calendar: wrong get_working_hours computation')
+
+    def test_45_calendar_hours_scheduling_minutes(self):
+        """ Testing minutes computation in calendar hours scheduling """
+        res = self.calendar.schedule_hours_get_date(-39, day_dt=self.date1.replace(minute=25, second=20))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 10:25:20'))
 
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
