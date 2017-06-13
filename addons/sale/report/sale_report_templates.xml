@@ -34,7 +34,7 @@
                     <span t-if="doc.state in ['draft','sent']">Quotation # </span>
                 </t>
                 <t t-if="env.context.get('proforma', False)">
-                    <span>Pro-Forma # </span>
+                    <span>Pro-Forma Invoice # </span>
                 </t>
                 <span t-field="doc.name"/>
             </h2>
