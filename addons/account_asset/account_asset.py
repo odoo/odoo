@@ -431,7 +431,7 @@ class AccountAssetDepreciationLine(models.Model):
             depreciation_date = self.env.context.get('depreciation_date') or line.depreciation_date or fields.Date.context_today(self)
             company_currency = line.asset_id.company_id.currency_id
             current_currency = line.asset_id.currency_id
-            amount = current_currency.compute(line.amount, company_currency)
+            amount = current_currency.with_context(date=depreciation_date).compute(line.amount, company_currency)
             asset_name = line.asset_id.name + ' (%s/%s)' % (line.sequence, len(line.asset_id.depreciation_line_ids))
             reference = line.asset_id.code
             journal_id = line.asset_id.category_id.journal_id.id
