@@ -236,10 +236,13 @@ var FieldTextHtml = AbstractField.extend({
         // this.$translate = $();
         return def;
     },
+    getDatarecord: function () {
+        return this.recordData;
+    },
     get_url: function (_attr) {
         var src = this.nodeOptions.editor_url || "/mass_mailing/field/email_template";
         var k;
-        var datarecord = this.recordData;
+        var datarecord = this.getDatarecord();
         var attr = {
             'model': this.model,
             'field': this.name,
