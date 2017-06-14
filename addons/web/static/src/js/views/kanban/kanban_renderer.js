@@ -188,6 +188,7 @@ var KanbanRenderer = BasicRenderer.extend({
     _renderGrouped: function (fragment) {
         var self = this;
         var groupByFieldAttrs = this.state.fields[this.state.groupedBy[0]];
+        var groupByFieldInfo = this.state.fieldsInfo.kanban[this.state.groupedBy[0]];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly
@@ -201,8 +202,10 @@ var KanbanRenderer = BasicRenderer.extend({
         }
         var groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
         var grouped_by_field = groupedByM2O && groupByFieldAttrs.relation;
+        var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
             draggable: draggable,
+            group_by_tooltip: groupByTooltip,
             grouped_by_m2o: groupedByM2O,
             relation: grouped_by_field,
         });
