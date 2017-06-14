@@ -703,7 +703,7 @@ class PosOrder(models.Model):
                     qty_done = pack_operation.product_qty
                 pack_operation.write({'pack_lot_ids': map(lambda x: (0, 0, x), pack_lots), 'qty_done': qty_done})
 
-    def add_payment(self, data):
+    def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""
         args = {
             'amount': data['amount'],
@@ -748,8 +748,16 @@ class PosOrder(models.Model):
             'journal_id': journal_id,
             'ref': self.session_id.name,
         })
+
+        return args
+
+    def add_payment(self, data):
+        """Create a new payment for the order"""
+        args = self._prepare_bank_statement_line_payment_values(data)
+        context = dict(self.env.context)
+        context.pop('pos_session_id', False)
         self.env['account.bank.statement.line'].with_context(context).create(args)
-        return statement_id
+        return args.get('statement_id', False)
 
     @api.multi
     def refund(self):
