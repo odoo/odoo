@@ -93,17 +93,12 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="mb4">
-                                    <field name="product_id"/>
-                                </div>
                                 <div class="row">
-                                    <div class="col-xs-4">
-                                        <strong><span><field name="priority" widget="priority"/></span></strong>
-                                    </div>
                                     <div class="col-xs-8">
-                                        <span class="pull-right">
-                                            <i class="fa fa-clock-o"/> <field name="date"/>
-                                        </span>
+                                        <field name="product_id"/>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span class="pull-right"><field name="product_uom_qty"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -440,6 +435,42 @@
             </field>
         </record>
 
+        <record id="stock_move_view_kanban" model="ir.ui.view">
+            <field name="name">stock.move.kanban2</field>
+            <field name="model">stock.move</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row mb4">
+                                    <div class="col-xs-8">
+                                        <strong><span><field name="product_id"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <span class="pull-right text-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'cancel': 'danger',
+                                            'assigned': 'success', 'confirmed': 'default'}}"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-4">
+                                        <strong><span><field name="priority" widget="priority"/></span></strong>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <span class="pull-right">
+                                            <i class="fa fa-clock-o"/> <field name="date"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <!-- test -->
         <record id="view_move_tree_receipt_picking_board" model="ir.ui.view">
             <field name="name">stock.move.tree3</field>
@@ -501,7 +532,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
-            <field name="view_id" ref="view_move_tree_receipt_picking"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_move_tree_receipt_picking')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('stock_move_view_kanban')})]"/>
             <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">

@@ -486,28 +486,15 @@
     </record>
 
         <!-- hr related job position menu action -->
-         <record model="ir.actions.act_window" id="action_hr_job">
-            <field name="name">Job Positions</field>
-            <field name="res_model">hr.job</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="context">{}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                  Click here to create a new job position.
-              </p><p>
-                  Once a job position is created, you can track related applications
-                  and manage the recruitment process.
-              </p>
-            </field>
-        </record>
-
-        <!-- hr related job position menu action -->
          <record model="ir.actions.act_window" id="action_hr_job_config">
             <field name="name">Job Positions</field>
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('hr.view_hr_job_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr.hr_job_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('hr.view_hr_job_form')})]"/>
             <field name="context">{'search_default_in_recruitment': 1}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -586,7 +573,6 @@
         sequence="100"/>
 
     <!-- ALL JOBS REQUESTS -->
-    <menuitem parent="menu_hr_recruitment_root" id="menu_hr_job_position" action="action_hr_job" sequence="1"/>
     <menuitem parent="menu_hr_recruitment_configuration" id="menu_hr_job_position_config" action="action_hr_job_config" sequence="10"/>
     <menuitem
         name="Applications"
@@ -660,6 +646,7 @@
         </field>
     </record>
 
+    <!-- Stage Kanban View -->
     <record id="view_hr_recruitment_stage_kanban" model="ir.ui.view">
         <field name="name">hr.recruitment.stage.kanban</field>
         <field name="model">hr.recruitment.stage</field>
@@ -671,10 +658,10 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
-                                <field name="name"/>
+                                <strong><field name="name"/></strong>
                             </div>
                             <div>
-                                <strong>Folded in Recruitment Pipe: </strong>
+                                <span>Folded in Recruitment Pipe: </span>
                                 <field name="fold" widget="boolean"/>
                             </div>
                         </div>

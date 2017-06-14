@@ -680,14 +680,30 @@
             </tree>
         </field>
     </record>
+    <record id="hr_equipment_stage_view_kanban" model="ir.ui.view">
+        <field name="name">equipment.stage.kanban</field>
+        <field name="model">maintenance.stage</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
     <!-- equipment.stages : actions -->
     <record id="hr_equipment_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">maintenance.stage</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_equipment_stage_view_tree"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a stage in the maintenance request.
@@ -725,6 +741,24 @@
             <tree string="Maintenance Team">
                 <field name="name"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="maintenance_team_view_kanban" model="ir.ui.view">
+        <field name="name">maintenance.team.kanban</field>
+        <field name="model">maintenance.team</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -858,7 +892,10 @@
         <field name="name">Teams</field>
         <field name="res_model">maintenance.team</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('maintenance_team_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('maintenance_team_view_kanban')})]"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a team in the maintenance request.
@@ -871,6 +908,7 @@
         <field name="res_model">maintenance.team</field>
         <field name="view_mode">kanban,form</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="maintenance_team_kanban"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a stage in the maintenance request.

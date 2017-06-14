@@ -61,11 +61,16 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                         <span><field name="partner_id"/></span>
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-xs-6">
-                                        <span class="pull-right">
+                                        <field name="amount" widget='monetary'/>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right label label-default">
                                             <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'sent': 'success'}}"/>
                                         </span>
                                     </div>
