@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="my_task" inherit_id="website_project.my_task" name="Project Task Timesheets">
-        <xpath expr="//div[@class='panel-body']" position="inside">
+        <xpath expr="//div[hasclass('panel-body')]" position="inside">
             <div class="container" t-if="task.timesheet_ids">
                 <hr/>
                 <table class="table table-hover">

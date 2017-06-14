@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_layout" priority="40">
-        <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'project' or project">
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
                 <t t-else="">Projects</t>
@@ -20,7 +20,7 @@
     </template>
 
     <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="portal.portal_my_home" priority="40">
-        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="project_count" class="list-group-item">
                 <span class="badge" t-esc="project_count"/>
                 <a href="/my/projects">Projects</a>

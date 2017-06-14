@@ -48,7 +48,7 @@ class FormatAddressMixin(models.AbstractModel):
         if address_view_id and not self._context.get('no_address_format'):
             #render the partner address accordingly to address_view_id
             doc = etree.fromstring(arch)
-            for address_node in doc.xpath("//div[@class='o_address_format']"):
+            for address_node in doc.xpath("//div[hasclass('o_address_format')]"):
                 Partner = self.env['res.partner'].with_context(no_address_format=True)
                 sub_view = Partner.fields_view_get(
                     view_id=address_view_id.id, view_type='form', toolbar=False, submenu=False)

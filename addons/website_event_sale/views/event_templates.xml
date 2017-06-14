@@ -84,7 +84,7 @@
 </template>
 
 <template id="cart" inherit_id="website_sale.cart_lines" name="Hide product reduction for event tickets">
-    <xpath expr="//td[@class='td-product_name']/div/a" position="attributes">
+    <xpath expr="//td[hasclass('td-product_name')]/div/a" position="attributes">
         <attribute name="t-attf-href"/>
         <attribute name="t-att-href">
             line.event_id and ('/event/%s/register' % slug(line.event_id)) or ('/shop/product/%s' % slug(line.product_id.product_tmpl_id))

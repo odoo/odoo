@@ -118,12 +118,12 @@
                 <field name="use_tasks" position="after">
                     <field name="allow_timesheets" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]/div[last()]" position="after">
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[last()]" position="after">
                     <div attrs="{'invisible': [('allow_timesheets', '=', False)]}">
                         <a name="%(act_hr_timesheet_line_by_project)d" type="action">Timesheets</a>
                     </div>
                 </xpath>
-                <xpath expr="//div[contains(@class, 'o_project_kanban_box')]/div[last()]" position="after">
+                <xpath expr="//div[hasclass('o_project_kanban_boxes')]/div[last()]" position="after">
                     <div attrs="{'invisible': [('allow_timesheets', '=', False)]}" class="o_project_kanban_box">
                         <a t-if="record.allow_timesheets.raw_value" name="%(act_hr_timesheet_line_by_project)d" type="action">
                             <span class="o_label">Timesheets</span>

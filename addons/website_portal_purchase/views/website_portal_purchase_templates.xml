@@ -2,7 +2,7 @@
 <odoo>
 
   <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="portal.portal_layout" priority="25">
-    <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
+    <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
       <li t-if="page_name == 'purchase' or purchase_order">
         <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
         <t t-else="">Purchase Orders</t>
@@ -14,7 +14,7 @@
   </template>
 
   <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
-    <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+    <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
         <li t-if="purchase_count" class="list-group-item">
           <span class="badge" t-esc="purchase_count"/>
           <a href="/my/purchase">Purchase Orders</a>

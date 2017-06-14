@@ -193,7 +193,7 @@
         </xpath>
     </template>
     <template id="portal_my_home_menu_lead" name="Portal layout : lead menu entry" inherit_id="portal.portal_layout" priority="15">
-        <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'lead' or lead">
                 <a t-if="lead" t-attf-href="/my/leads?{{ keep_query() }}">
                     My Leads
@@ -220,7 +220,7 @@
     </template>
 
     <template id="portal_my_home_lead" name="Portal My Home : lead entries" inherit_id="portal.portal_my_home" priority="15">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+        <xpath expr="//div[hasclass('o_my_home_content')]" position="inside">
             <t t-if="user_id.commercial_partner_id.grade_id">
                 <h3 t-if="lead_count" class="page-header">
                     <a href="/my/leads">My Leads

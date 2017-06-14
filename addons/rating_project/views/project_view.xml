@@ -98,7 +98,7 @@
                     <field name="rating_last_value"/>
                     <field name="rating_ids"/>
                 </xpath>
-                <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+                <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
                     <b t-if="record.rating_ids.raw_value.length">
                         <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
                         <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
@@ -148,7 +148,7 @@
                     <field name="percentage_satisfaction_project" invisible="1"/>
                     <field name="rating_status" invisible="1"/>
                 </field>
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_left')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_primary_left')]" position="inside">
                     <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu.">
                         <b>
                             <t t-if="record.percentage_satisfaction_project.value == -1">
@@ -162,7 +162,7 @@
                         </b>
                     </div>
                 </xpath>
-                <xpath expr="//div[contains(@class, 'o_kanban_card_manage_section')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_card_manage_section')]" position="inside">
                     <div t-if="record.rating_status.raw_value != 'no'">
                         <a name="action_view_all_rating" type="object">
                             Customer Ratings

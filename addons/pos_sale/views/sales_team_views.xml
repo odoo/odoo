@@ -70,15 +70,15 @@
                 <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
             </xpath>
 
-            <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="attributes">
+            <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="attributes">
                 <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
             </xpath>
 
-            <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="attributes">
+            <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="attributes">
                 <attribute name="attrs">{'invisible': [('team_type', '=', 'pos')]}</attribute>
             </xpath>
 
-            <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+            <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                 <t t-if="record.team_type.raw_value == 'pos'">
                     <a name="%(point_of_sale.action_report_pos_order_all)d" type="action">
                         Sales

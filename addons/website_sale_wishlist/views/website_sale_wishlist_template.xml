@@ -9,7 +9,7 @@
     </template>
 
     <template id="add_to_wishlist" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Wishlist" priority="20">
-        <xpath expr="//div[@class='product_price']" position="inside">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
             <t t-set="in_wish" t-value="product.product_variant_ids[0] in request.env.user.partner_id.wishlist_ids.mapped('product_id')"/>
             <a class="btn btn-default btn-xs o_add_wishlist" t-att-disabled='in_wish or None' title="Add to Wishlist" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_wishlist"><span class="fa fa-heart"></span></a>
         </xpath>

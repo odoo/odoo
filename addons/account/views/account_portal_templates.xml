@@ -1,6 +1,6 @@
 <odoo>
 	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
-        <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'invoice'" class="active">
                 Invoices
             </li>
@@ -8,7 +8,7 @@
     </template>
 
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
-        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
             <li t-if="invoice_count" class="list-group-item">
                 <span class="badge" t-esc="invoice_count"/>
                 <a href="/my/invoices">Invoices</a>

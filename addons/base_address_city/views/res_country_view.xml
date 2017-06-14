@@ -5,7 +5,7 @@
         <field name="model">res.country</field>
         <field name="inherit_id" ref="base.view_country_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@class='oe_button_box']" position="inside">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_res_city_tree)d"
                     class="oe_stat_button"
                     icon="fa-globe"

@@ -1,6 +1,6 @@
 <odoo>
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-    <xpath expr="//table[contains(@class, 'o_my_status_table')]/thead/tr/th[last()]" position="before">
+    <xpath expr="//table[hasclass('o_my_status_table')]/thead/tr/th[last()]" position="before">
         <th></th>
     </xpath>
     <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">

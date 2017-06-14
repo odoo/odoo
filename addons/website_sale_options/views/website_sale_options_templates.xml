@@ -10,13 +10,13 @@
 </template>
 
 <template id="optional_products" inherit_id="website_sale.cart_lines" name="Optional products">
-  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]/div" position="attributes">
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]/div" position="attributes">
     <attribute name="t-if">not line.linked_line_id</attribute>
   </xpath>
   <xpath expr="//table[@id='cart_products']/tbody//tr" position="attributes">
     <attribute name="t-att-class">'optional_product info' if line.linked_line_id else None</attribute>
   </xpath>
-  <xpath expr="//table[@id='cart_products']/tbody//td[contains(@class, 'td-qty')]" position="inside">
+  <xpath expr="//table[@id='cart_products']/tbody//td[hasclass('td-qty')]" position="inside">
     <t t-if="line.linked_line_id">
       <span class="js_quantity text-muted" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-esc="int(line.product_uom_qty)"/>
     </t>
@@ -141,10 +141,10 @@
 </template>
 
 <template id="products_add_to_cart" inherit_id="website_sale.products_add_to_cart">
-  <xpath expr="//div[@class='product_price']/t[1]" position="attributes">
+  <xpath expr="//div[hasclass('product_price')]/t[1]" position="attributes">
     <attribute name="t-if">len(product.product_variant_ids) == 1 and not len(product.optional_product_ids) &gt;= 1</attribute>
   </xpath>
-  <xpath expr="//div[@class='product_price']/t[2]" position="attributes">
+  <xpath expr="//div[hasclass('product_price')]/t[2]" position="attributes">
     <attribute name="t-if">len(product.product_variant_ids) &gt; 1 or len(product.optional_product_ids) &gt;= 1</attribute>
   </xpath>
 </template>

@@ -153,6 +153,7 @@ xpath_utils = etree.FunctionNamespace(None)
 xpath_utils['hasclass'] = _hasclass
 
 TRANSLATED_ATTRS_RE = re.compile(r"@(%s)\b" % "|".join(TRANSLATED_ATTRS))
+WRONGCLASS = re.compile(r"(@class\s*=|=\s*@class|contains\(@class)")
 
 
 class View(models.Model):
@@ -301,6 +302,12 @@ actual arch.
                 if match:
                     message = "View inheritance may not use attribute %r as a selector." % match.group(1)
                     self.raise_view_error(message, self.id)
+                if WRONGCLASS.search(node.get('expr', '')):
+                    _logger.warn(
+                        "Error-prone use of @class in view %s (%s): use the "
+                        "hasclass(*classes) function to filter elements by "
+                        "their classes", self.name, self.xml_id
+                    )
             else:
                 for attr in TRANSLATED_ATTRS:
                     if node.get(attr):
