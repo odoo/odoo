@@ -146,7 +146,7 @@ class PurchaseOrder(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False)
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
