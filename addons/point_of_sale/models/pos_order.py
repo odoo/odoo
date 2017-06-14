@@ -334,6 +334,58 @@ class PosOrder(models.Model):
             move.sudo().post()
         return True
 
+    @api.multi
+    def _prepare_statement_line_payment_values(self, data):
+        """
+        Returns a dictionnary of values to create an account.bank.statement.line
+        which will represents the payment
+        :param data: default values
+        :return: dict
+        """
+        self.ensure_one()
+        values = {
+            'amount': data['amount'],
+            'date': data.get('payment_date', fields.Date.today()),
+            'name': self.name + ': ' + (data.get('payment_name', '') or ''),
+            'partner_id': self.env['res.partner']._find_accounting_partner(self.partner_id).id or False,
+        }
+
+        journal_id = data.get('journal', False)
+        statement_id = data.get('statement_id', False)
+        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
+
+        journal = self.env['account.journal'].browse(journal_id)
+        # use the company of the journal and not of the current user
+        company_cxt = dict(self.env.context, force_company=journal.company_id.id)
+        account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner')
+        values['account_id'] = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
+
+        if not values['account_id']:
+            if not values['partner_id']:
+                msg = _('There is no receivable account defined to make payment.')
+            else:
+                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (
+                    self.partner_id.name, self.partner_id.id,)
+            raise UserError(msg)
+
+        for statement in self.session_id.statement_ids:
+            if statement.id == statement_id:
+                journal_id = statement.journal_id.id
+                break
+            elif statement.journal_id.id == journal_id:
+                statement_id = statement.id
+                break
+        if not statement_id:
+            raise UserError(_('You have to open at least one cashbox.'))
+
+        values.update({
+            'statement_id': statement_id,
+            'pos_statement_id': self.id,
+            'journal_id': journal_id,
+            'ref': self.session_id.name,
+        })
+        return values
+
     def _reconcile_payments(self):
         for order in self:
             aml = order.statement_ids.mapped('journal_entry_ids').mapped('line_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
@@ -705,50 +757,11 @@ class PosOrder(models.Model):
 
     def add_payment(self, data):
         """Create a new payment for the order"""
-        args = {
-            'amount': data['amount'],
-            'date': data.get('payment_date', fields.Date.today()),
-            'name': self.name + ': ' + (data.get('payment_name', '') or ''),
-            'partner_id': self.env["res.partner"]._find_accounting_partner(self.partner_id).id or False,
-        }
-
-        journal_id = data.get('journal', False)
         statement_id = data.get('statement_id', False)
-        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
-
-        journal = self.env['account.journal'].browse(journal_id)
-        # use the company of the journal and not of the current user
-        company_cxt = dict(self.env.context, force_company=journal.company_id.id)
-        account_def = self.env['ir.property'].with_context(company_cxt).get('property_account_receivable_id', 'res.partner')
-        args['account_id'] = (self.partner_id.property_account_receivable_id.id) or (account_def and account_def.id) or False
-
-        if not args['account_id']:
-            if not args['partner_id']:
-                msg = _('There is no receivable account defined to make payment.')
-            else:
-                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d).') % (
-                    self.partner_id.name, self.partner_id.id,)
-            raise UserError(msg)
-
+        values = self._prepare_statement_line_payment_values(data)
         context = dict(self.env.context)
         context.pop('pos_session_id', False)
-        for statement in self.session_id.statement_ids:
-            if statement.id == statement_id:
-                journal_id = statement.journal_id.id
-                break
-            elif statement.journal_id.id == journal_id:
-                statement_id = statement.id
-                break
-        if not statement_id:
-            raise UserError(_('You have to open at least one cashbox.'))
-
-        args.update({
-            'statement_id': statement_id,
-            'pos_statement_id': self.id,
-            'journal_id': journal_id,
-            'ref': self.session_id.name,
-        })
-        self.env['account.bank.statement.line'].with_context(context).create(args)
+        self.env['account.bank.statement.line'].with_context(context).create(values)
         return statement_id
 
     @api.multi
