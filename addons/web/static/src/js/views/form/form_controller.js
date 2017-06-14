@@ -154,7 +154,7 @@ var FormController = BasicController.extend({
                     callback: this._deleteRecords.bind(this, [this.handle]),
                 });
             }
-            if (this.is_action_enabled('create')) {
+            if (this.is_action_enabled('create') && this.is_action_enabled('duplicate')) {
                 otherItems.push({
                     label: _t('Duplicate'),
                     callback: this._onDuplicateRecord.bind(this),

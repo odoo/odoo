@@ -59,7 +59,7 @@ class RecruitmentStage(models.Model):
                              help='Specific job that uses this stage. Other jobs will not use this stage.')
     requirements = fields.Text("Requirements")
     template_id = fields.Many2one(
-        'mail.template', "Use template",
+        'mail.template', "Automated Email",
         help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.")
     fold = fields.Boolean(
         "Folded in Recruitment Pipe",

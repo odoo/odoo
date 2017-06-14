@@ -18,10 +18,15 @@ import itertools
 import unittest
 from contextlib import contextmanager
 from datetime import datetime, timedelta
+from lxml import etree
 from pprint import pformat
 
 import requests
 
+try:
+    from itertools import zip_longest as izip_longest
+except ImportError:
+    from itertools import izip_longest
 try:
     from xmlrpc import client as xmlrpclib
 except ImportError:
@@ -82,7 +87,24 @@ def post_install(flag):
         return obj
     return decorator
 
-class BaseCase(unittest.TestCase):
+class TreeCase(unittest.TestCase):
+    def __init__(self, methodName='runTest'):
+        super(TreeCase, self).__init__(methodName)
+        self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
+
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertEqual(n1.tag, n2.tag, msg)
+        # Because lxml.attrib is an ordereddict for which order is important
+        # to equality, even though *we* don't care
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
+
+        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
+        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
+
+        for c1, c2 in izip_longest(n1, n2):
+            self.assertEqual(c1, c2, msg)
+
+class BaseCase(TreeCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
