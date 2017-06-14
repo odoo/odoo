@@ -1655,26 +1655,6 @@ class account_move_reconcile(osv.osv):
                                                         opening/closing fiscal year process.'))
         return super(account_move_reconcile, self).unlink(cr, uid, ids, context=context)
     
-    # Look in the line_id and line_partial_ids to ensure the partner is the same or empty
-    # on all lines. We allow that only for opening/closing period
-    def _check_same_partner(self, cr, uid, ids, context=None):
-        for reconcile in self.browse(cr, uid, ids, context=context):
-            move_lines = []
-            if not reconcile.opening_reconciliation:
-                if reconcile.line_id:
-                    first_partner = reconcile.line_id[0].partner_id.id
-                    move_lines = reconcile.line_id
-                elif reconcile.line_partial_ids:
-                    first_partner = reconcile.line_partial_ids[0].partner_id.id
-                    move_lines = reconcile.line_partial_ids
-                if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
-                    return False
-        return True
-
-    _constraints = [
-        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id', 'line_partial_ids']),
-    ]
-    
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
         for rec in self.browse(cr, uid, ids, context=context):

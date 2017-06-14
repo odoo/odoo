@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 
-from openerp import workflow
+from openerp import api, workflow
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
@@ -606,6 +606,27 @@ class account_move_line(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_date_id_index ON account_move_line (date DESC, id desc)')
         return res
+
+    @api.constrains('reconcile_id', 'reconcile_partial_id')
+    def _check_reconcile_same_partner(self):
+        """ Ensure the partner is the same or empty on all lines and a reconcile mark.
+            We allow that only for opening/closing period"""
+        for line in self:
+            rec = False
+            move_lines = []
+            if line.reconcile_id:
+                rec = line.reconcile_id
+                move_lines = rec.line_id
+            elif line.reconcile_partial_id:
+                rec = line.reconcile_partial_id
+                move_lines = rec.line_partial_ids
+            if rec and not rec.opening_reconciliation:
+                first_partner = line.partner_id
+                for rline in move_lines:
+                    if (rline.partner_id != first_partner and
+                            rline.account_id.type in ('receivable', 'payable')):
+                        raise osv.except_osv(
+                                _('Error!'), _("You can only reconcile journal items with the same partner."))
 
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
