@@ -10,34 +10,34 @@ Mobile JavaScript
 Introduction
 ============
 
-In Odoo 10.0 we released a mobile app, allows you to access all **Odoo apps** (Even your customized modules). 
+In Odoo 10.0 we released a mobile app, allows you to access all **Odoo apps** (even your customized modules). 
 
 The application is a combination of **Odoo Web** and **Native Mobile components**, in other words it is a Odoo Web instance loaded inside native WebView container of mobile.
 
-This page documents how you can access mobile native components like Camera, Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you no need to be a mobile developer, if you know Odoo JavaScript API you can access all available mobile features.
+This page documents how you can access mobile native components like Camera, Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you do not need to be a mobile developer, if you know Odoo JavaScript API you can access all available mobile features.
 
 .. warning:: This features works with **Odoo Enterprise 10.0+** only
 
-How it works? 
-=============
+How does it work? 
+=================
 
 Internal working of Mobile application:
 
 .. image:: images/mobile_working.jpg
     :align: left
 
-Ofcourse, Its web page that loads on Mobile Native Web container. But it is integrated in a such way so you can access native resources from your web JavaScript.
+Of course, it is a web page that loads on a Mobile Native Web container. But it is integrated in such a way that you can access native resources from your web JavaScript.
 
 WebPages (Odoo Web) is on the top of each layer, where second layer is a Bridge between Odoo Web (JS) and Native component of mobile.
 
 When any call from JavaScript triggered it passes through Bridge and Bridge pass it to native invoker to perform that action.
 
-When native component done their work, It again passed to Bridge and you get the output in JavaScript.
+When the native component has done their work, it again is passed to Bridge and you get the output in JavaScript.
 
-Process time taken by Native component is depend on what you are requesting from Native resources. Like Camera or GPS Location.
+Process time taken by the Native component depends on what you are requesting from Native resources. Like Camera or GPS Location.
 
-How to use?
-===========
+How to use it?
+==============
 
 As Odoo Web Framework, Mobile api can be used anywhere by getting object of **web_mobile.rpc**
 
@@ -75,7 +75,7 @@ Vibrating device
 
 .. js:function:: vibrate
 
-	:param object args: Vibrate constantly for the specified period of time (in miliseconds).
+	:param object args: Vibrates constantly for the specified period of time (in milliseconds).
 
 Vibrate mobile device with given duration.
 
@@ -121,7 +121,7 @@ A notification is a message you can display to the user outside of your applicat
 .. image:: images/mobile_notification.png
 
 
-Create contact to device
+Create contact in device
 .........................
 
 .. js:function:: addContact
