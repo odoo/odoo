@@ -82,6 +82,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             });
         },
+        show_wow: '_onShowWow',
     },
     init: function (parent) {
         this.client_options = {};
@@ -318,6 +319,22 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         } else if (this.notification_manager) {
             this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
         }
+    },
+    /**
+     * Displays a thumb up, heart or peace image (randomly) for a moment (e.g.
+     * used when an opportunity is won)
+     *
+     * @private
+     */
+    _onShowWow: function () {
+        var className = 'o_wow_thumbs';
+        if (Math.random() > 0.9) {
+            var otherClasses = ['o_wow_peace', 'o_wow_heart'];
+            className = otherClasses[Math.floor(Math.random()*otherClasses.length)];
+        }
+        var $body = $('body');
+        $body.addClass(className);
+        setTimeout($body.removeClass.bind($body, className), 1000);
     },
 });
 

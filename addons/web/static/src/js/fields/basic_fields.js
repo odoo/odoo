@@ -1281,8 +1281,26 @@ var PriorityWidget = AbstractField.extend({
     },
 });
 
-var AttachmentImage =  AbstractField.extend({
-    template: 'AttachmentImage',
+var AttachmentImage = AbstractField.extend({
+    className: 'o_attachment_image',
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reset cover image when widget value change
+     *
+     * @private
+     */
+    _render: function () {
+        if (this.value) {
+            this.$el.empty().append($('<img>/', {
+                src: "/web/image/" + this.value.data.id + "?unique=1",
+                title: this.value.data.display_name
+            }));
+        }
+    }
 });
 
 var StateSelectionWidget = AbstractField.extend({

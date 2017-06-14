@@ -1841,7 +1841,6 @@ var BasicModel = AbstractModel.extend({
                         return d.res_id === res_id;
                     });
                     m2mList.data.push(dataPoint.id);
-                    m2mList.count++;
                 });
             });
         });
@@ -2476,7 +2475,10 @@ var BasicModel = AbstractModel.extend({
                                 // REPLACE_WITH
                                 x2manyList.res_ids = value[2];
                                 x2manyList.count = x2manyList.res_ids.length;
-                                defs.push(self._readUngroupedList(x2manyList));
+                                var def = self._readUngroupedList(x2manyList).then(function () {
+                                    return self._fetchX2ManysBatched(x2manyList);
+                                });
+                                defs.push(def);
                             }
                         });
 

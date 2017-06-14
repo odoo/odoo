@@ -399,7 +399,10 @@ class AssetsBundle(object):
             return ''
         result = compiler.communicate(input=source.encode('utf-8'))
         if compiler.returncode:
-            error = self.get_preprocessor_error(''.join(result), source=source)
+            cmd_output = ''.join(result)
+            if not cmd_output:
+                cmd_output = "Process exited with return code %d\n" % compiler.returncode
+            error = self.get_preprocessor_error(cmd_output, source=source)
             _logger.warning(error)
             self.css_errors.append(error)
             return ''

@@ -1165,6 +1165,54 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get: fetch x2manys inside x2manys', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.o2m = {
+            string: "O2M", type: 'one2many', relation: 'partner', default: [[6, 0, [1]]],
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['o2m'],
+            fields: this.data.partner.fields,
+            fieldsInfo: {
+                form: {
+                    o2m: {
+                        relatedFields: this.data.partner.fields,
+                        fieldsInfo: {
+                            list: {
+                                category: {
+                                    relatedFields: { display_name: {} },
+                                },
+                            },
+                        },
+                        viewType: 'list',
+                    },
+                },
+            },
+            modelName: 'partner',
+            type: 'record',
+            viewType: 'form',
+        };
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.o2m.count, 1, "o2m field should contain 1 record");
+            var categoryList = record.data.o2m.data[0].data.category;
+            assert.strictEqual(categoryList.count, 1,
+                "category field should contain 1 record");
+            assert.strictEqual(categoryList.data[0].data.display_name,
+                'gold', "category records should have been fetched");
+        });
+
+        model.destroy();
+    });
+
     QUnit.test('contexts and domains can be properly fetched', function (assert) {
         assert.expect(8);
 
@@ -1448,6 +1496,7 @@ QUnit.module('Views', {
             fieldsInfo: {
                 form: {
                     product_ids: {
+                        relatedFields: this.data.product.fields,
                         fieldsInfo: { list: { name: {}, date: {} } },
                         viewType: 'list',
                     }

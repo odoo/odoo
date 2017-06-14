@@ -7,7 +7,7 @@ from werkzeug.utils import redirect
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_portal.controllers.main import website_account
+from odoo.addons.website_portal_sale.controllers.main import website_account
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleDigitalConfirmation(WebsiteSale):

@@ -40,6 +40,7 @@ class StockConfigSettings(models.TransientModel):
     module_delivery_fedex = fields.Boolean("FedEx")
     module_delivery_ups = fields.Boolean("UPS")
     module_delivery_usps = fields.Boolean("USPS")
+    module_delivery_bpost = fields.Boolean("bpost")
     group_uom = fields.Boolean("Units of Measure", implied_group='product.group_uom')
     group_product_variant = fields.Boolean("Attributes & Variants", implied_group='product.group_product_variant')
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
