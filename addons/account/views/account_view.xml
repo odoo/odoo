@@ -1239,6 +1239,7 @@
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
+                    <field name="partner_id"/>
                     <field name="date"/>
                     <field name="tax_line_id"/>
                     <field name="tax_ids" />
@@ -1253,7 +1254,6 @@
                     <separator/>
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
-                    <field name="partner_id"/>
                     <field name="journal_id"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
