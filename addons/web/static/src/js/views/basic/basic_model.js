@@ -1399,7 +1399,8 @@ var BasicModel = AbstractModel.extend({
      * @param {string} [optinos.viewType] the type of view for which the record
      *   is fetched (usefull to load the adequate fields), by defaults, uses
      *   record.viewType
-     * @returns {Deferred -> Object} resolves to the record
+     * @returns {Deferred -> Object} resolves to the record or is rejected in
+     *   case no id given were valid ids
      */
     _fetchRecord: function (record, options) {
         var self = this;
@@ -1412,6 +1413,9 @@ var BasicModel = AbstractModel.extend({
                 context: _.extend({}, record.context, {bin_size: true}),
             })
             .then(function (result) {
+                if (result.length === 0) {
+                    return $.Deferred().reject();
+                }
                 result = result[0];
                 record.data = _.extend({}, record.data, result);
             })

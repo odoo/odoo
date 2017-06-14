@@ -92,6 +92,23 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('rejects loading a record with invalid id', function (assert) {
+        assert.expect(1);
+
+        this.params.res_id = 99;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).always(function (error) {
+            assert.strictEqual(this.state(), 'rejected',
+                "load should return a rejected deferred for an invalid id")
+        });
+        model.destroy();
+    });
+
     QUnit.test('notify change with many2one', function (assert) {
         assert.expect(2);
 

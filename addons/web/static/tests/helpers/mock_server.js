@@ -537,11 +537,11 @@ var MockServer = Class.extend({
             ids = [ids];
         }
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
-        var results = _.map(ids, function (id) {
-            var record = _.findWhere(self.data[model].records, {id: id});
-            if (!record) {
-                throw "mock read: id does not exist...";
-            }
+        var records = _.reduce(ids, function (records, id) {
+            var record =  _.findWhere(self.data[model].records, {id: id});
+            return record ? records.concat(record) : records
+        }, []);
+        var results = _.map(records, function (record) {
             var result = {};
             for (var i = 0; i < fields.length; i++) {
                 var field = self.data[model].fields[fields[i]];
