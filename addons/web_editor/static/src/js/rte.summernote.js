@@ -67,8 +67,8 @@ renderer.createPalette = function ($container, options) {
     var $palettes = $container.find(".note-color .note-color-palette");
     $palettes.prepend(html);
 
-    var $bg = $palettes.first().find("button:not(.note-color-btn)").addClass("note-color-btn");
-    var $fore = $palettes.last().find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $bg = $palettes.filter(":even").find("button:not(.note-color-btn)").addClass("note-color-btn");
+    var $fore = $palettes.filter(":odd").find("button:not(.note-color-btn)").addClass("note-color-btn");
     $bg.each(function () {
         var $el = $(this);
         var className = 'bg-' + $el.data('color');
@@ -146,10 +146,7 @@ renderer.tplPopovers = function (lang, options) {
         })).appendTo($resizefa);
     }
     var $colorfa = $airPopover.find('.note-color').clone();
-    $colorfa.find(".btn-group:first").remove();
     $colorfa.find("ul.dropdown-menu").css('min-width', '172px');
-    $colorfa.find('button[data-event="color"]').attr('data-value', '{"foreColor": "#f00"}')
-        .find("i").css({'background': '', 'color': '#f00'});
     $resizefa.after($colorfa);
 
     // show dialog box and delete
@@ -454,7 +451,7 @@ $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) &&
         $node.hasClass("o_editable") &&
         !$node[0].children.length &&
-        "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small pre th td".toUpperCase().indexOf($node[0].nodeName) === -1) {
+        "h1 h2 h3 h4 h5 h6 p b bold i u code sup strong small pre th td span".toUpperCase().indexOf($node[0].nodeName) === -1) {
         var p = $('<p><br/></p>')[0];
         $node.append( p );
         range.createFromNode(p.firstChild).select();
@@ -849,6 +846,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
             if ($(e.target).closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
             show_tooltip = false;
             callback();
+            e.stopImmediatePropagation();
         });
 
         oLayoutInfo.editor().on("click", selector, function (e) {
