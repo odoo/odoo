@@ -2234,6 +2234,7 @@ var AceEditor = DebouncedField.extend({
 });
 
 return {
+    TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
