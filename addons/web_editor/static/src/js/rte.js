@@ -535,7 +535,6 @@ var RTE = Widget.extend({
         }
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0]) &&
                 ($target.closest('[contenteditable]').attr('contenteditable') || "").toLowerCase() !== 'false') {
-
             $editable.summernote(this.config($editable));
 
             $editable.data('NoteHistory', history);
@@ -578,6 +577,21 @@ var RTE = Widget.extend({
         _.defer(function () {
             self.historyRecordUndo($target, 'activate',  true);
         });
+
+        // To Fix Google Chrome Issue Tripleclick; which remove the current line and drag to next line
+        //find tipleclick in chrom browser
+        //unselect the last space and recreate the range of selection
+        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
+        if ($.browser.chrome === true && event.originalEvent.detail === 3) {
+            var currentSelection = range.create();
+            if (currentSelection.sc.parentNode === currentSelection.ec) {
+                //to select one line from paragraph(for <br> tag)
+                range.create(currentSelection.sc, currentSelection.so, currentSelection.sc, currentSelection.sc.length).select();
+            } else {
+                //to select perticular element, exa: <b> is inside <p> tag and triple click on <b> tag will select the <b> tag element
+                $target.selectContent();
+            }
+        }
     },
 
     editable: function () {
