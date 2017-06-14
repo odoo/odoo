@@ -206,7 +206,7 @@ var FieldTextHtml = AbstractField.extend({
         };
         window.odoo[this.callback+"_updown"] = null;
         window.odoo[this.callback+"_downup"] = function (value) {
-            self.set_value(value);
+            self._setValue(value);
             self.resize();
         };
 
