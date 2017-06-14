@@ -18,7 +18,7 @@ KanbanRecord.include({
      * @private
      */
     _openRecord: function () {
-        if (this.modelName === 'project.project') {
+        if (this.modelName === 'project.project' && this.$(".o_project_kanban_boxes a").length) {
             this.$('.o_project_kanban_boxes a').first().click();
         } else {
             this._super.apply(this, arguments);

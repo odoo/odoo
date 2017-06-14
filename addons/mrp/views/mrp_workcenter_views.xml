@@ -45,6 +45,29 @@
             </field>
         </record>
 
+        <record id="mrp_workcenter_view_kanban" model="ir.ui.view">
+            <field name="name">mrp.workcenter.kanban</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <span>Code <field name="code"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="oee_pie_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.productivity.graph</field>
             <field name="model">mrp.workcenter.productivity</field>
@@ -349,6 +372,10 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('mrp_workcenter_tree_view')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('mrp_workcenter_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('mrp_workcenter_view')})]"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -367,6 +394,7 @@
             <field name="res_model">mrp.workcenter</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="mrp_workcenter_kanban"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
             <field name="help" type="html">
               <p>
@@ -436,12 +464,15 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>Reason: </strong><field name="name"/>
-                                <span class="pull-right" title="Is a Blocking Reason?">
-                                    <field name="manual" widget="boolean"/>
-                                </span>
                             </div>
                             <div>
                                 <strong>Effectiveness Category: </strong><field name="loss_type"/>
+                            </div>
+                            <div>
+                                <strong>Is a Blocking Reason? </strong>
+                                <span class="pull-right" title="Is a Blocking Reason?">
+                                    <field name="manual" widget="boolean"/>
+                                </span>
                             </div>
                         </div>
                     </t>

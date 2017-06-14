@@ -810,6 +810,19 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="product_pricelist_view_kanban">
+            <field name="name">product.pricelist.kanban.inherit.product</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr='//div[contains(@id, "product_pricelist")]' position="after">
+                        <field name="discount_policy"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <!-- search by Salesteams -->
         <record id="action_orders_salesteams" model="ir.actions.act_window">
             <field name="name">Sales Orders</field>

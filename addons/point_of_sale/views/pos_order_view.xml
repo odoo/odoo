@@ -112,6 +112,8 @@
                 <field name="amount_total"/>
                 <field name="date_order"/>
                 <field name="state"/>
+                <field name="pos_reference"/>
+                <field name="partner_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -120,12 +122,19 @@
                                     <strong><span><t t-esc="record.user_id.value"/></span></strong>
                                 </div>
                                 <div class="col-xs-6 pull-right text-right">
-                                    <strong><field name="amount_total"/></strong>
+                                    <strong>
+                                        <span class="badge"><i class="fa fa-money"/> <field name="amount_total"/></span>
+                                    </strong>
                                 </div>
                             </div>
                             <div class="row">
+                                <div class="col-xs-12">
+                                <span><t t-esc="record.pos_reference.value"/></span>
+                            </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xs-8 text-muted">
-                                    <span><t t-esc="record.name.value"/> <t t-esc="record.date_order.value"/></span>
+                                    <span><t t-esc="record.date_order.value"/></span>
                                 </div>
                                 <div class="col-xs-4">
                                     <span class="pull-right text-right">

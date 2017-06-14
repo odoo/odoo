@@ -95,18 +95,17 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
-                            <div t-if="record.name.value">
-                                <strong><t t-esc="record.name.value"/></strong>
+                            <div t-if="record.product_id.value">
+                                <strong>Product: <t t-esc="record.product_id.value"/></strong>
                             </div>
                             <hr class="mt4 mb4"/>
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-8">
                                     <div t-if="record.name.value">
-                                        <strong>Product: </strong><t t-esc="record.product_id.value"/>
+                                        <t t-esc="record.name.value"/>
                                     </div>
-                                    <strong>Valid until: </strong><t t-esc="record.valid_until.value"/>
                                 </div>
-                                <div class="col-xs-6">
+                                <div class="col-xs-4">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.create_uid.raw_value)" t-att-title="record.create_uid.value" width="40" height="40" class="oe_kanban_avatar pull-right"/>
                                 </div>
                             </div>
