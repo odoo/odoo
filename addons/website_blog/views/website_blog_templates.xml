@@ -300,7 +300,7 @@
 
 <!-- Options: Blog Post: user can reply -->
 <template id="opt_blog_post_complete_comment" name="Allow blog post comment" inherit_id="website_blog.blog_post_complete" active="False" customize_show="True">
-    <xpath expr="//div[@class='o_blog_post_complete o_sharing_links']" position="after">
+    <xpath expr="//div[hasclass('o_blog_post_complete','o_sharing_links')]" position="after">
         <section id="comments" class="read_width">
             <t t-call="website_mail.message_thread">
               <t t-set="object" t-value="blog_post"/>
@@ -312,7 +312,7 @@
 <!-- Options: Blog Post : Read Next Article  -->
 <template id="opt_blog_post_complete_read_next" name="Read next article"
         inherit_id="website_blog.blog_post_complete" active="True" customize_show="True">
-    <xpath expr="//div[@id='comments']|//div[@class='o_blog_post_complete o_sharing_links']" position="after">
+    <xpath expr="//div[@id='comments']|//div[hasclass('o_blog_post_complete','o_sharing_links')]" position="after">
         <t t-if="next_post">
             <t t-call="website_blog.blog_cover">
                 <t t-set="cover_properties" t-value="next_post_cover_properties"/>
@@ -359,7 +359,7 @@
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="class" add="js_tweet" separator=" "/>
     </xpath>
-    <xpath expr="//div[@id='title']//div[contains(@class, 'blog_title')]" position="attributes">
+    <xpath expr="//div[@id='title']//div[hasclass('blog_title')]" position="attributes">
         <attribute name="class" add="js_tweet" separator=" "/>
     </xpath>
 </template>
@@ -369,7 +369,7 @@
     <xpath expr="//div[@id='blog_content']" position="attributes">
         <attribute name="class" add="js_comment" separator=" "/>
     </xpath>
-    <xpath expr="//div[@id='title']//div[contains(@class, 'blog_title')]" position="attributes">
+    <xpath expr="//div[@id='title']//div[hasclass('blog_title')]" position="attributes">
         <attribute name="class" add="js_comment" separator=" "/>
     </xpath>
 </template>

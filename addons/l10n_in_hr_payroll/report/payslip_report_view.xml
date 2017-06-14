@@ -84,7 +84,7 @@
         <field name="groups_id" eval="[(4,ref('hr_payroll.group_hr_payroll_user'))]"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//div[contains(@class, 'manage_reports')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(action_payslip_report_all)d" type="action">

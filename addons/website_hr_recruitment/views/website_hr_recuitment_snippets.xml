@@ -23,7 +23,7 @@
 
 <!-- Add Snippets' into library  -->
 <template id="website_hr_recuitment_snippets_include" inherit_id="website.snippets" name="Website HR Recruitment Snippets Include">
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/*[1]" position="before">
+    <xpath expr="//div[@id='snippet_content']/div[hasclass('o_panel_body')]/*[1]" position="before">
         <t t-snippet="website_hr_recruitment.s_hr_rating" t-thumbnail="/website_hr_recruitment/static/src/img/ui/s_hr_rating_thumb.jpg"/>
     </xpath>
 </template>

@@ -57,7 +57,7 @@
     </template>
 
     <template id="search count" inherit_id="website.website_search_box" active="False" customize_show="True" name="Show # found">
-        <xpath expr="//button[contains(@class, 'oe_search_button')]" position="inside">
+        <xpath expr="//button[hasclass('oe_search_button')]" position="inside">
             <span t-if='search and search_count' class='oe_search_found'> <small>(<t t-esc="search_count"/> found)</small></span>
         </xpath>
     </template>
@@ -123,7 +123,7 @@
     </template>
 
     <template id="products_description" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Product Description">
-        <xpath expr="//div[@class='product_price']" position="before">
+        <xpath expr="//div[hasclass('product_price')]" position="before">
             <div class="text-info oe_subdescription" contenteditable="false">
                 <div itemprop="description" t-field="product.description_sale"></div>
             </div>
@@ -131,7 +131,7 @@
     </template>
 
     <template id="products_add_to_cart" inherit_id="website_sale.products_item" active="False" customize_show="True" name="Add to Cart">
-        <xpath expr="//div[@class='product_price']" position="inside">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
             <input name="product_id" t-att-value="product.product_variant_id.id" type="hidden" />
             <t t-if="len(product.product_variant_ids) == 1">
                 <a class="btn btn-default btn-xs a-submit">
@@ -222,7 +222,7 @@
     </template>
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
-        <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
+        <xpath expr="//div[hasclass('products_pager')]/div/t[@t-call][last()]" position="after">
             <t t-set="list_price_desc_label">Catalog price: High to Low</t>
             <t t-set="list_price_asc_label">Catalog price: Low to High</t>
             <t t-set="name_asc_label">Name - A to Z</t>
@@ -505,7 +505,7 @@
     </template>
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Activate Magnify">
-        <xpath expr='//div[contains(@class, "js_sale")]' position='attributes'>
+        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-hover" />
         </xpath>
     </template>

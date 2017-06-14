@@ -184,7 +184,7 @@
                         <field name="use_opportunities"/>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_primary')]" position="after">
+                    <xpath expr="//div[hasclass('o_primary')]" position="after">
                         <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
                             <small><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
@@ -212,7 +212,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -225,7 +225,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
                         <div t-if="record.use_opportunities.raw_value">
                             <a  name="%(action_opportunity_form)d" type="action">
                                 Opportunity
@@ -233,7 +233,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads
