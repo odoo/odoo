@@ -4981,12 +4981,13 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly fields are not sent when saving', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         // define an onchange on display_name to check that the value of readonly
         // fields is correctly sent for onchanges
         this.data.partner.onchanges = {
             display_name: function () {},
+            p: function () {},
         };
         var checkOnchange = false;
 
@@ -5007,8 +5008,14 @@ QUnit.module('Views', {
                 '</form>',
             mockRPC: function (route, args) {
                 if (checkOnchange && args.method === 'onchange') {
-                    assert.strictEqual(args.args[1].foo, 'foo value',
-                        "readonly fields value should be sent for onchanges");
+                    if (args.args[2] === 'display_name') { // onchange on field display_name
+                        assert.strictEqual(args.args[1].foo, 'foo value',
+                            "readonly fields value should be sent for onchanges");
+                    } else { // onchange on field p
+                        assert.deepEqual(args.args[1].p, [
+                            [0, false, {display_name: 'readonly', foo: 'foo value'}]
+                        ], "readonly fields value should be sent for onchanges");
+                    }
                 }
                 if (args.method === 'create') {
                     assert.deepEqual(args.args[0], {
@@ -5025,10 +5032,10 @@ QUnit.module('Views', {
         checkOnchange = true;
         $('.modal .o_field_widget[name=foo]').val('foo value').trigger('input');
         $('.modal .o_field_widget[name=display_name]').val('readonly').trigger('input');
-        checkOnchange = false;
         assert.strictEqual($('.modal span.o_field_widget[name=foo]').length, 1,
             'foo should be readonly');
         $('.modal .modal-footer .btn-primary').click(); // close the modal
+        checkOnchange = false;
 
         form.$('.o_data_row').click(); // re-open previous record
         assert.strictEqual($('.modal .o_field_widget[name=foo]').text(), 'foo value',
