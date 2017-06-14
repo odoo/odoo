@@ -57,14 +57,14 @@ class account_abstract_payment(models.AbstractModel):
     @api.multi
     @api.depends('payment_type', 'journal_id')
     def _compute_hide_payment_method(self):
-        for record in self:
-            if not record.journal_id:
-                record.hide_payment_method = True
+        for payment in self:
+            if not payment.journal_id:
+                payment.hide_payment_method = True
                 continue
-            journal_payment_methods = record.payment_type == 'inbound'\
-                and record.journal_id.inbound_payment_method_ids\
-                or record.journal_id.outbound_payment_method_ids
-            record.hide_payment_method = len(journal_payment_methods) == 1 and journal_payment_methods[0].code == 'manual'
+            journal_payment_methods = payment.payment_type == 'inbound'\
+                and payment.journal_id.inbound_payment_method_ids\
+                or payment.journal_id.outbound_payment_method_ids
+            payment.hide_payment_method = len(journal_payment_methods) == 1 and journal_payment_methods[0].code == 'manual'
 
     @api.onchange('journal_id')
     def _onchange_journal(self):
@@ -129,30 +129,30 @@ class account_register_payments(models.TransientModel):
         if not active_ids:
             raise UserError(_("Programmation error: wizard action executed without active_ids in context."))
 
-        invoice_ids = self.env['account.invoice'].browse(active_ids)
+        invoices = self.env['account.invoice'].browse(active_ids)
 
         # Check all invoices are open
-        if any(invoice.state != 'open' for invoice in invoice_ids):
+        if any(invoice.state != 'open' for invoice in invoices):
             raise UserError(_("You can only register payments for open invoices"))
         # Check all invoices have the same currency
-        if any(inv.currency_id != invoice_ids[0].currency_id for inv in invoice_ids):
+        if any(inv.currency_id != invoices[0].currency_id for inv in invoices):
             raise UserError(_("In order to pay multiple invoices at once, they must use the same currency."))
 
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
-        multi = any(inv.commercial_partner_id != invoice_ids[0].commercial_partner_id
-            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoice_ids[0].type]
-            for inv in invoice_ids)
+        multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
+            or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            for inv in invoices)
 
-        total_amount = self._compute_payment_amount(invoice_ids)
+        total_amount = self._compute_payment_amount(invoices)
 
         rec.update({
             'amount': abs(total_amount),
-            'currency_id': invoice_ids[0].currency_id.id,
+            'currency_id': invoices[0].currency_id.id,
             'payment_type': total_amount > 0 and 'inbound' or 'outbound',
-            'partner_id': False if multi else invoice_ids[0].commercial_partner_id.id,
-            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoice_ids[0].type],
-            'communication': ' '.join([ref for ref in invoice_ids.mapped('reference') if ref]),
-            'invoice_ids': [(6, 0, invoice_ids.ids)],
+            'partner_id': False if multi else invoices[0].commercial_partner_id.id,
+            'partner_type': False if multi else MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
+            'communication': ' '.join([ref for ref in invoices.mapped('reference') if ref]),
+            'invoice_ids': [(6, 0, invoices.ids)],
             'multi': multi,
         })
         return rec
@@ -256,10 +256,9 @@ class account_payment(models.Model):
     @api.one
     @api.depends('invoice_ids', 'amount', 'payment_date', 'currency_id')
     def _compute_payment_difference(self):
-        invoice_ids = self.invoice_ids
-        if len(invoice_ids) == 0:
+        if len(self.invoice_ids) == 0:
             return
-        if invoice_ids[0].type in ['in_invoice', 'out_refund']:
+        if self.invoice_ids[0].type in ['in_invoice', 'out_refund']:
             self.payment_difference = self.amount - self._compute_total_invoices_amount()
         else:
             self.payment_difference = self._compute_total_invoices_amount() - self.amount

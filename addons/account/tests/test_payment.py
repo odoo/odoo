@@ -219,9 +219,6 @@ class TestPayment(AccountingTestCase):
                 self.assertEqual(payment_id.amount, 200)
                 inv_3_pay = payment_id
 
-        for payment_id in payment_ids:
-            self.assertEqual(payment_id.state, 'posted')
-
         self.assertIsNotNone(inv_1_2_pay)
         self.assertIsNotNone(inv_3_pay)
         self.assertIsNotNone(inv_4_pay)
@@ -281,11 +278,8 @@ class TestPayment(AccountingTestCase):
             'payment_method_id': self.payment_method_manual_in.id,
         })
 
-        self.assertEqual(register_payments.amount, 600)
-
+        # Perform the partial payment by setting the amount at 550 instead of 600
         register_payments.amount = 550
-
-        self.assertEqual(register_payments.amount, 550)
 
         register_payments.create_payment()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
@@ -309,11 +303,8 @@ class TestPayment(AccountingTestCase):
             'payment_method_id': self.payment_method_manual_in.id,
         })
 
-        self.assertEqual(register_payments.amount, 500)
-
+        # Perform the partial payment by setting the amount at 300 instead of 500
         register_payments.amount = 300
-
-        self.assertEqual(register_payments.amount, 300)
 
         register_payments.create_payment()
         payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
