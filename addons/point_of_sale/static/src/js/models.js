@@ -731,6 +731,7 @@ exports.PosModel = Backbone.Model.extend({
         return $.when.apply($, get_image_deferreds).then(function () {
             var rendered_order_lines = "";
             var rendered_payment_lines = "";
+            var order_total_with_tax = self.chrome.format_currency(0);
 
             if (order) {
                 rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
@@ -741,11 +742,12 @@ exports.PosModel = Backbone.Model.extend({
                     'order': order,
                     'widget': self.chrome,
                 });
+                order_total_with_tax = self.chrome.format_currency(order.get_total_with_tax());
             }
 
             var $rendered_html = $(rendered_html);
             $rendered_html.find('.pos_orderlines_list').html(rendered_order_lines);
-            $rendered_html.find('.pos-total').find('.pos_total-amount').html(self.chrome.format_currency(order.get_total_with_tax()));
+            $rendered_html.find('.pos-total').find('.pos_total-amount').html(order_total_with_tax);
             var pos_change_title = $rendered_html.find('.pos-change_title').text();
             $rendered_html.find('.pos-paymentlines').html(rendered_payment_lines);
             $rendered_html.find('.pos-change_title').text(pos_change_title);
