@@ -30,7 +30,7 @@ class EtherpadLiteClient:
         params = arguments or {}
         params['apikey'] = self.apiKey
 
-        r = requests.get(url, data=params, timeout=self.TIMEOUT)
+        r = requests.post(url, data=params, timeout=self.TIMEOUT)
         r.raise_for_status()
         return self.handleResult(r.json())
 
