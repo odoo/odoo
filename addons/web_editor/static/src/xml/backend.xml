@@ -22,7 +22,7 @@
     </t>
 
     <t t-name="web_editor.FieldTextHtml.translate">
-        <div t-if="widget.recordData.id &amp;&amp; widget.languages.length" style="margin: 5px; position: fixed; top: 0; left: 0; z-index: 2000;">
+        <div t-if="widget.recordData.id and widget.languages.length and widget.mode === 'edit'" style="margin: 5px; position: fixed; top: 0; left: 0; z-index: 2000;">
             <select style="
                     width: 148px;
                     height: 22px;
