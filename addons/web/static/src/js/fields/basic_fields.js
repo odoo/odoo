@@ -851,6 +851,9 @@ var FieldEmail = InputField.extend({
 var FieldPhone = FieldEmail.extend({
     className: 'o_field_phone',
     prefix: 'tel',
+    events: _.extend({}, {
+        'change': '_onChange',
+    }),
 
     /**
      * The phone widget is an extension of email, with the distinction that, in
@@ -913,7 +916,11 @@ var FieldPhone = FieldEmail.extend({
      */
     _canCall: function () {
         return config.device.size_class <= config.device.SIZES.XS;
-    }
+    },
+
+    _onChange: function () {
+        this._doAction();
+    },
 });
 
 var UrlWidget = InputField.extend({
