@@ -3267,35 +3267,64 @@ class stock_inventory_line(osv.osv):
             res['value']['product_qty'] = th_qty
         return res
 
-    def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
-        stock_move_obj = self.pool.get('stock.move')
-        quant_obj = self.pool.get('stock.quant')
-        diff = inventory_line.theoretical_qty - inventory_line.product_qty
-        if not diff:
-            return
-        #each theorical_lines where difference between theoretical and checked quantities is not 0 is a line for which we need to create a stock move
-        vals = {
+    # Do not forward port in 10.0 and beyond
+    def _get_move_values(self, cr, uid, inventory_line, qty, location_id, location_dest_id):
+        return {
             'name': _('INV:') + (inventory_line.inventory_id.name or ''),
             'product_id': inventory_line.product_id.id,
             'product_uom': inventory_line.product_uom_id.id,
+            'product_uom_qty': qty,
             'date': inventory_line.inventory_id.date,
             'company_id': inventory_line.inventory_id.company_id.id,
             'inventory_id': inventory_line.inventory_id.id,
             'state': 'confirmed',
             'restrict_lot_id': inventory_line.prod_lot_id.id,
             'restrict_partner_id': inventory_line.partner_id.id,
-         }
+            'location_id': location_id,
+            'location_dest_id': location_dest_id,
+        }
+
+    def _fixup_negative_quants(self, cr, uid, inventory_line):
+        """ This will handle the irreconciable quants created by a force availability followed by a
+        return. When generating the moves of an inventory line, we look for quants of this line's
+        product created to compensate a force availability. If there are some and if the quant
+        which it is propagated from is still in the same location, we move it to the inventory
+        adjustment location before getting it back. Getting the quantity from the inventory
+        location will allow the negative quant to be compensated.
+        """
+        quant_obj = self.pool.get('stock.quant')
+        stock_move_obj = self.pool.get('stock.move')
+        quant_ids = self._get_quants(cr, uid, inventory_line)
+        for quant in quant_obj.browse(cr, uid, quant_ids).filtered(lambda q: q.propagated_from_id.location_id.id == inventory_line.location_id.id):
+            # send the quantity to the inventory adjustment location
+            move_out_vals = self._get_move_values(cr, uid, inventory_line, quant.qty, inventory_line.location_id.id, inventory_line.product_id.property_stock_inventory.id)
+            move_out = stock_move_obj.create(cr, uid, move_out_vals)
+            move_out = stock_move_obj.browse(cr, uid, [move_out])
+            quant_obj.quants_reserve(cr, uid, [(quant, quant.qty)], move_out)
+            move_out.action_done()
+
+            # get back the quantity from the inventory adjustment location
+            move_in_vals = self._get_move_values(cr, uid, inventory_line, quant.qty, inventory_line.product_id.property_stock_inventory.id, inventory_line.location_id.id)
+            move_in = stock_move_obj.create(cr, uid, move_in_vals)
+            move_in = stock_move_obj.browse(cr, uid, [move_in])
+            move_in.action_done()
+
+    def _resolve_inventory_line(self, cr, uid, inventory_line, context=None):
+        stock_move_obj = self.pool.get('stock.move')
+        quant_obj = self.pool.get('stock.quant')
+        self._fixup_negative_quants(cr, uid, inventory_line)
+
+        if float_compare(inventory_line.theoretical_qty, inventory_line.product_qty, precision_rounding=inventory_line.product_id.uom_id.rounding) == 0:
+            return False
+        diff = inventory_line.theoretical_qty - inventory_line.product_qty
+
+        #each theorical_lines where difference between theoretical and checked quantities is not 0 is a line for which we need to create a stock move
         inventory_location_id = inventory_line.product_id.property_stock_inventory.id
-        if diff < 0:
-            #found more than expected
-            vals['location_id'] = inventory_location_id
-            vals['location_dest_id'] = inventory_line.location_id.id
-            vals['product_uom_qty'] = -diff
+        if diff < 0:  # found more than expected
+            vals = self._get_move_values(cr, uid, inventory_line, abs(diff), inventory_location_id, inventory_line.location_id.id)
         else:
-            #found less than expected
-            vals['location_id'] = inventory_line.location_id.id
-            vals['location_dest_id'] = inventory_location_id
-            vals['product_uom_qty'] = diff
+            vals = self._get_move_values(cr, uid, inventory_line, abs(diff), inventory_line.location_id.id, inventory_location_id)
+
         move_id = stock_move_obj.create(cr, uid, vals, context=context)
         move = stock_move_obj.browse(cr, uid, move_id, context=context)
         if diff > 0:
