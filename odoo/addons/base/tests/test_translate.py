@@ -3,6 +3,7 @@
 
 import unittest
 
+from odoo.tools import pycompat
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
 from odoo.tests.common import TransactionCase
 
@@ -290,7 +291,7 @@ class TestXMLTranslation(TransactionCase):
             'model': 'res.partner',
             'arch': archf % terms_en,
         })
-        for src, value in zip(terms_en, terms_fr):
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
                 'type': 'model',
                 'name': 'ir.ui.view,arch_db',
@@ -330,7 +331,7 @@ class TestXMLTranslation(TransactionCase):
             'model': 'res.partner',
             'arch': archf % terms_en,
         })
-        for src, value in zip(terms_en, terms_fr):
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
                 'type': 'model',
                 'name': 'ir.ui.view,arch_db',
