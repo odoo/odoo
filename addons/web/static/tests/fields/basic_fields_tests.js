@@ -536,6 +536,35 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float widget on monetary field', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.monetary = {string: "Monetary", type: 'monetary'};
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="monetary" widget="float"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=monetary]').text(), '9.99',
+            'value should be correctly formatted (with the float formatter)');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldEmail');
 
     QUnit.test('email field in form view', function (assert) {

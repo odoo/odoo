@@ -322,6 +322,14 @@ var FieldDate = InputField.extend({
     supportedFieldTypes: ['date'],
 
     /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        // use the session timezone when formatting dates
+        this.formatOptions.timezone = true;
+    },
+    /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
      *
      * @override
@@ -396,17 +404,6 @@ var FieldDate = InputField.extend({
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.date(value, {timezone: true});
-    },
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -448,17 +445,6 @@ var FieldDateTime = FieldDate.extend({
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.datetime(value, {timezone: true});
-    },
 });
 
 var FieldMonetary = InputField.extend({
@@ -490,6 +476,13 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
         }
+
+        // use the formatFloat function in edit
+        if (this.mode === 'edit') {
+            this.formatType = 'float';
+        }
+        this.formatOptions.currency = this.currency;
+        this.formatOptions.digits = [16, 2];
     },
 
     //--------------------------------------------------------------------------
@@ -561,22 +554,6 @@ var FieldMonetary = InputField.extend({
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
-    },
-    /**
-     * FieldMonetary overrides _formatValue to use the format monetary method
-     * in readonly.
-     *
-     * @override
-     * @private
-     * @param {float} value
-     * @returns {string}
-     */
-    _formatValue: function (value) {
-        var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
-        return format(value, this.field, {
-            digits: [16, 2],
-            currency: this.currency,
-        });
     },
 });
 
@@ -739,7 +716,7 @@ var FieldInteger = InputField.extend({
             }
             return value;
         }
-        return field_utils.format.integer(value, this.field);
+        return this._super.apply(this, arguments);
     },
 });
 
@@ -776,31 +753,11 @@ var FieldFloat = InputField.extend({
 });
 
 var FieldFloatTime = FieldFloat.extend({
-    supportedFieldTypes: ['float'],
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Format the float time value into a human-readable time format.
-     *
-     * @override
-     * @private
-     */
-    _formatValue: function (value) {
-        return field_utils.format.float_time(value);
-    },
-
-    /**
-     * Parse the human-readable formatted time value into a float.
-     *
-     * @override
-     * @private
-     */
-    _parseValue: function (value) {
-        return field_utils.parse.float_time(value);
-    },
+    // this is not strictly necessary, as for this widget to be used, the 'widget'
+    // attrs must be set to 'float_time', so the formatType is automatically
+    // 'float_time', but for the sake of clarity, we explicitely define a
+    // FieldFloatTime widget with formatType = 'float_time'.
+    formatType: 'float_time',
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
