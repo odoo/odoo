@@ -686,6 +686,11 @@ var FieldBoolean = AbstractField.extend({
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.RIGHT:
+            case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.LEFT:
+                ev.preventDefault();
         }
         this._super.apply(this, arguments);
     },
