@@ -474,7 +474,11 @@ class ResourceCalendar(models.Model):
         """ Wrapper on _schedule_hours: return the beginning/ending datetime of
         an hours scheduling. """
         res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
-        return res and res[0][0] or False
+        if res and hours < 0.0:
+            return res[0][0]
+        elif res:
+            return res[-1][1]
+        return False
 
     @api.multi
     def schedule_hours(self, hours, day_dt=None,
