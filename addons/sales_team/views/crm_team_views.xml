@@ -120,18 +120,27 @@
             </field>
         </record>
 
-        <record id="crm_team_act" model="ir.actions.act_window">
-            <field name="name">Sales Channels</field>
-            <field name="res_model">crm.team</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_team_view_tree"/>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to define a new sales channel.
-                </p><p>
-                    Use sales channels to organize your sales departments. 
-                    Each channel will work with a separate pipeline.
-                </p>
+        <!-- Case Teams Kanban View -->
+        <record id="crm_team_view_kanban" model="ir.ui.view">
+            <field name="name">crm.team.kanban</field>
+            <field name="model">crm.team</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right"><field name="user_id"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -139,7 +148,6 @@
         <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/sales_team/static/src/less/sales_team_dashboard.less"/>
-                <script type="text/javascript" src="/sales_team/static/src/js/sales_team.js"></script>
             </xpath>
         </template>
 
