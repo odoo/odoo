@@ -51,7 +51,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 from . import tools
 from .tools.func import frame_codeinfo
 
-from tools import parse_version as pv
+from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
     from psycopg2._psycopg import QuotedString
     def adapt_string(adapted):
