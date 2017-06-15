@@ -90,6 +90,21 @@ var KanbanModel = BasicModel.extend({
             });
     },
     /**
+     * Add the key `tooltipData` (kanban specific) when performing a `geŧ`.
+     *
+     * @override
+     * @see _readTooltipFields
+     * @returns {Object}
+     */
+    get: function () {
+        var result = this._super.apply(this, arguments);
+        var dp = result && this.localData[result.id];
+        if (dp && dp.tooltipData) {
+            result.tooltipData = $.extend(true, {}, dp.tooltipData);
+        }
+        return result;
+    },
+    /**
      * @override
      */
     load: function (params) {
@@ -203,10 +218,55 @@ var KanbanModel = BasicModel.extend({
      * @param {Object} list valid resource object
      */
     _readGroup: function (list) {
+        var self = this;
         if (list.groupedBy.length > 1) {
             list.groupedBy = [list.groupedBy[0]];
         }
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(function (result) {
+            return self._readTooltipFields(list).then(_.constant(result));
+        });
+    },
+    /**
+     * Fetches tooltip specific fields on the group by relation and stores it in
+     * the column datapoint in a special key `tooltipData`.
+     * Data for the tooltips (group_by_tooltip) are fetched in batch for all
+     * groups, to avoid doing multiple calls.
+     * Data are stored in a special key `tooltipData` on the datapoint.
+     * Note that the option `group_by_tooltip` is only for m2o fields.
+     *
+     * @private
+     * @param {Object} list a list of groups
+     * @returns {Deferred}
+     */
+    _readTooltipFields: function (list) {
+        var self = this;
+        var groupedByField = list.fields[list.groupedBy[0]];
+        if (groupedByField.type !== 'many2one') {
+            return $.when();
+        }
+        var groupIds = _.map(list.data, function (id) {
+            return self.get(id, {raw: true}).res_id;
+        });
+        var tooltipFields = [];
+        var groupedByFieldInfo = list.fieldsInfo.kanban[list.groupedBy[0]];
+        if (groupedByFieldInfo && groupedByFieldInfo.options) {
+            tooltipFields = Object.keys(groupedByFieldInfo.options.group_by_tooltip || {});
+        }
+        if (groupIds.length && tooltipFields.length) {
+            var fieldNames = _.union(['display_name'], tooltipFields);
+            return this._rpc({
+                model: groupedByField.relation,
+                method: 'read',
+                args: [groupIds, fieldNames],
+                context: list.context,
+            }).then(function (result) {
+                _.each(list.data, function (id) {
+                    var dp = self.localData[id];
+                    dp.tooltipData = _.findWhere(result, {id: dp.res_id});
+                });
+            });
+        }
+        return $.when();
     },
 });
 

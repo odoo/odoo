@@ -222,6 +222,7 @@ var FormViewDialog = ViewDialog.extend({
                 stayInEdit: true,
                 reload: false,
                 savePoint: this.shouldSaveLocally,
+                viewType: 'form',
             });
         }
         return $.when(def).then(function () {
@@ -326,7 +327,6 @@ var SelectCreateDialog = ViewDialog.extend({
         var searchview = new SearchView(this, this.dataset, fields_views.search, options);
         searchview.prependTo($header).done(function () {
             var d = searchview.build_search_data();
-            d.domains = d.domains.concat([self.domain]);
             if (self.initial_ids) {
                 d.domains.push([["id", "in", self.initial_ids]]);
                 self.initial_ids = undefined;
@@ -387,8 +387,9 @@ var SelectCreateDialog = ViewDialog.extend({
             contexts: [this.context].concat(contexts),
             group_by_seq: groupbys || []
         });
+        var context = _.omit(results.context, function (value, key) { return key.indexOf('search_default_') === 0; });
         return {
-            context: results.context,
+            context: context,
             domain: results.domain,
             groupBy: results.group_by,
         };

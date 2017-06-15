@@ -208,6 +208,7 @@ var BasicModel = AbstractModel.extend({
                         delete self.localData[record.id];
                     } else {
                         record.res_ids.splice(record.offset, 1);
+                        record.offset = Math.min(record.offset, record.res_ids.length - 1);
                         record.res_id = record.res_ids[record.offset];
                         record.count--;
                     }
@@ -704,6 +705,8 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.savePoint=false] if true, the record will only
      *   be 'locally' saved: its changes written in a _savePoint key that can
      *   be restored later by call discardChanges with option rollback to true
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record
      * @returns {Deferred}
      *   Resolved with the list of field names (whose value has been modified)
      */
@@ -718,6 +721,11 @@ var BasicModel = AbstractModel.extend({
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
                     } else {
+                        // save the viewType of edition, so that the correct readonly modifiers
+                        // can be evaluated when the record will be saved
+                        for (var fieldName in (rec._changes || {})) {
+                            rec._editionViewType[fieldName] = options.viewType;
+                        }
                         rec._savePoint = _.extend({}, newValue);
                     }
                 });
@@ -728,7 +736,7 @@ var BasicModel = AbstractModel.extend({
                 // id never changes, and should not be written
                 delete record._changes.id;
             }
-            var changes = self._generateChanges(record);
+            var changes = self._generateChanges(record, {viewType: options.viewType});
 
             if (method === 'create') {
                 var fieldNames = record.getFieldNames();
@@ -1869,12 +1877,36 @@ var BasicModel = AbstractModel.extend({
      *
      * @private
      * @param {Object} record
+     * @param {Object} [options]
+     * @param {boolean} [options.changesOnly=true] if true, only generates
+     *   commands for fields that have changed (concerns x2many fields only)
+     * @param {boolean} [options.withReadonly=false] if false, doesn't generate
+     *   changes for readonly fields
+     * @param {string} [options.viewType] current viewType. If not set, we will
+     *   assume main viewType from the record. Note that if an editionViewType is
+     *   specified for a field, it will take the priority over the viewType arg.
      * @returns {Object} a map from changed fields to their new value
      */
-    _generateChanges: function (record) {
+    _generateChanges: function (record, options) {
+        options = options || {};
+        var viewType = options.viewType || record.viewType;
         var changes = _.extend({}, record._changes);
-        var commands = this._generateX2ManyCommands(record, true);
+        var withReadonly = options.withReadonly || false;
+        var commands = this._generateX2ManyCommands(record, {
+            changesOnly: 'changesOnly' in options ? options.changesOnly : true,
+            withReadonly: withReadonly,
+        });
         for (var fieldName in record.fields) {
+            // remove readonly fields from the list of changes
+            if (!withReadonly && fieldName in changes || fieldName in commands) {
+                var editionViewType = record._editionViewType[fieldName] || viewType;
+                if (this._isFieldReadonly(record, fieldName, editionViewType)) {
+                    delete changes[fieldName];
+                    continue;
+                }
+            }
+
+            // process relational fields and handle the null case
             var type = record.fields[fieldName].type;
             if (type === 'one2many' || type === 'many2many') {
                 if (commands[fieldName].length) { // replace localId by commands
@@ -1901,7 +1933,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Object} the data
      */
     _generateOnChangeData: function (record) {
-        var commands = this._generateX2ManyCommands(record, false);
+        var commands = this._generateX2ManyCommands(record, {withReadonly: true});
         var data = _.extend(this.get(record.id, {raw: true}).data, commands);
 
         // one2many records have a parentID
@@ -1924,12 +1956,16 @@ var BasicModel = AbstractModel.extend({
      * or write them...
      *
      * @param {Object} record
+     * @param {Object} [options]
      * @param {boolean} [changesOnly=false] if true, only generates commands for
      *   fields that have changed
+     * @param {boolean} [options.withReadonly=false] if false, doesn't generate
+     *   changes for readonly fields in commands
      * @returns {Object} a map from some field names to commands
      */
-    _generateX2ManyCommands: function (record, changesOnly) {
+    _generateX2ManyCommands: function (record, options) {
         var self = this;
+        options = options || {};
         var commands = {};
         var data = _.extend({}, record.data, record._changes);
         var type;
@@ -1943,7 +1979,7 @@ var BasicModel = AbstractModel.extend({
                     continue;
                 }
                 var list = this.localData[data[fieldName]];
-                if (changesOnly && !list._changes) {
+                if (options.changesOnly && !list._changes) {
                     // if only changes are requested, skip if there is no change
                     continue;
                 }
@@ -1961,7 +1997,7 @@ var BasicModel = AbstractModel.extend({
                     // generate update commands for records that have been
                     // updated (it may happen with editable lists)
                     _.each(relData, function (relRecord) {
-                        var changes = self._generateChanges(relRecord);
+                        var changes = self._generateChanges(relRecord, options);
                         if (!_.isEmpty(changes)) {
                             var command = x2ManyCommands.update(relRecord.res_id, changes);
                             commands[fieldName].push(command);
@@ -1980,7 +2016,7 @@ var BasicModel = AbstractModel.extend({
                         if (_.contains(keptIds, relIds[i])) {
                             // this is an id that already existed
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
-                            changes = this._generateChanges(relRecord);
+                            changes = this._generateChanges(relRecord, options);
                             if (!_.isEmpty(changes)) {
                                 command = x2ManyCommands.update(relRecord.res_id, changes);
                                 didChange = true;
@@ -1991,11 +2027,11 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(addedIds, relIds[i])) {
                             // this is a new id
                             relRecord = _.findWhere(relData, {res_id: relIds[i]});
-                            changes = this._generateChanges(relRecord);
+                            changes = this._generateChanges(relRecord, options);
                             commands[fieldName].push(x2ManyCommands.create(changes));
                         }
                     }
-                    if (changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
+                    if (options.changesOnly && !didChange && addedIds.length === 0 && removedIds.length === 0) {
                         // in this situation, we have no changed ids, no added
                         // ids and no removed ids, so we can safely ignore the
                         // last changes
@@ -2155,7 +2191,7 @@ var BasicModel = AbstractModel.extend({
             if (context[fieldName] === null) {
                 context[fieldName] = false;
             }
-            if (!field) {
+            if (!field || field.name === 'id') {
                 continue;
             }
             if (field.type === 'float' ||
@@ -2198,6 +2234,31 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+    /**
+     * Returns true if the field is readonly (checking first in the modifiers,
+     * and if there is no readonly modifier, checking the readonly attribute of
+     * the field).
+     *
+     * @private
+     * @param {Object} record an element from the localData
+     * @param {string} fieldName
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
+     * @returns {boolean}
+     */
+    _isFieldReadonly: function (record, fieldName, viewType) {
+        var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
+        var modifiers;
+        if (fieldInfo) {
+            var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
+            modifiers = this._evalModifiers(record, rawModifiers);
+        }
+        if (modifiers && 'readonly' in modifiers) {
+            return modifiers.readonly;
+        } else {
+            return record.fields[fieldName].readonly;
+        }
     },
     /**
      * Returns true iff value is considered to be set for the given field's type.
@@ -2329,6 +2390,12 @@ var BasicModel = AbstractModel.extend({
             value: value,
             viewType: params.viewType,
         };
+
+        // _editionViewType is a dict whose keys are field names and which is populated when a field
+        // is edited with the viewType as value. This is useful for one2manys to determine whether
+        // or not a field is readonly (using the readonly modifiers of the view in which the field
+        // has been edited)
+        dataPoint._editionViewType = {};
 
         dataPoint.evalModifiers = this._evalModifiers.bind(this, dataPoint);
         dataPoint.getContext = this._getContext.bind(this, dataPoint);
@@ -2507,7 +2574,7 @@ var BasicModel = AbstractModel.extend({
                     .then(function () {
                         // save initial changes, so they can be restored later,
                         // if we need to discard.
-                        self.save(record.id, {savePoint: true})
+                        self.save(record.id, {savePoint: true});
 
                         return record.id;
                     });
@@ -2582,8 +2649,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string[]} fields changed fields
      * @param {string} [viewType] current viewType. If not set, we will assume
      *   main viewType from the record
-     * @returns {Deferred} The returned deferred can fail, in which case the
-     *   fail value will be the warning message received from the server
+     * @returns {Deferred}
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;

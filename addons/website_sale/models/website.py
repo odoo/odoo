@@ -149,7 +149,7 @@ class Website(models.Model):
     @api.model
     def sale_get_payment_term(self, partner):
         DEFAULT_PAYMENT_TERM = 'account.account_payment_term_immediate'
-        return self.env.ref(DEFAULT_PAYMENT_TERM, False).id or partner.property_payment_term_id.id
+        return partner.property_payment_term_id.id or self.env.ref(DEFAULT_PAYMENT_TERM, False).id
 
     @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
@@ -157,6 +157,7 @@ class Website(models.Model):
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
         addr = partner.address_get(['delivery', 'invoice'])
+        default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
             'partner_id': partner.id,
             'pricelist_id': pricelist.id,
@@ -164,7 +165,7 @@ class Website(models.Model):
             'team_id': self.salesteam_id.id,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
-            'user_id': salesperson_id or self.salesperson_id.id,
+            'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
         }
         company = self.company_id or pricelist.company_id
         if company:

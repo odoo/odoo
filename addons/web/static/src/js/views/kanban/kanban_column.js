@@ -45,7 +45,6 @@ var KanbanColumn = Widget.extend({
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.size = data.count;
-        this.values = data.values;
         this.fields = data.fields;
         this.records = [];
         this.modelName = data.model;
@@ -63,13 +62,12 @@ var KanbanColumn = Widget.extend({
 
         this.record_options = _.clone(recordOptions);
 
-        if (data.options && data.options.group_by_tooltip) {
-            var self = this;
-            this.tooltip_info = _.map(data.options.group_by_tooltip, function (key, value) {
-                return (self.values && self.values[value] && "<div>" +key + "<br>" + self.values[value] + "</div>") || '';
+        if (options.group_by_tooltip) {
+            this.tooltipInfo = _.map(options.group_by_tooltip, function (help, field) {
+                return (data.tooltipData && data.tooltipData[field] && "<div>" + help + "<br>" + data.tooltipData[field] + "</div>") || '';
             }).join('');
         } else {
-            this.tooltip_info = "";
+            this.tooltipInfo = "";
         }
     },
     /**
@@ -217,7 +215,7 @@ var KanbanColumn = Widget.extend({
 
         this.$el.toggleClass('o_column_folded', this.folded);
         var tooltip = this.size + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
+        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
         this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();

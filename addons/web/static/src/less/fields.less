@@ -33,7 +33,7 @@
     }
 
     // Block fields
-    &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_view_manager_content, &.o_field_domain {
+    &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_view_manager_content, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
         display: block;
     }
 
@@ -177,24 +177,6 @@
             &.fa-star {
                 color: gold;
             }
-        }
-    }
-
-    // Status
-    &.o_selection .o_status {
-        display: inline-block;
-        height: 12px;
-        width: 12px;
-        border-radius: 6px;
-        vertical-align: middle;
-
-        background-color: @odoo-brand-secondary;
-
-        &.o_status_green {
-            background-color: @brand-success;
-        }
-        &.o_status_red {
-            background-color: @brand-danger;
         }
     }
 
