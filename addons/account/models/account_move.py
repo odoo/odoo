@@ -1331,9 +1331,8 @@ class AccountMoveLine(models.Model):
         """ Create analytic items upon validation of an account.move.line having an analytic account. This
             method first remove any existing analytic item related to the line before creating any new one.
         """
+        self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
-            if obj_line.analytic_line_ids:
-                obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
