@@ -12,6 +12,7 @@ class AccountAnalyticDefault(models.Model):
 
     sequence = fields.Integer(string='Sequence', help="Gives the sequence order when displaying a list of analytic distribution")
     analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     product_id = fields.Many2one('product.product', string='Product', ondelete='cascade', help="Select a product which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)")
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='cascade', help="Select a partner which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this partner, it will automatically take this as an analytic account)")
     user_id = fields.Many2one('res.users', string='User', ondelete='cascade', help="Select a user which will use analytic account specified in analytic default.")
@@ -62,13 +63,17 @@ class AccountInvoiceLine(models.Model):
         rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self.env.uid,
                                                                fields.Date.today(), company_id=self.company_id.id)
         self.account_analytic_id = rec.analytic_id.id
+        self.analytic_tag_ids = rec.analytic_tag_ids
         return res
 
     def _set_additional_fields(self, invoice):
-        if not self.account_analytic_id:
+        if not self.account_analytic_id or not self.analytic_tag_ids:
             rec = self.env['account.analytic.default'].account_get(
                 self.product_id.id, self.invoice_id.partner_id.id, self.env.uid,
                 fields.Date.today(), company_id=self.company_id.id)
             if rec:
-                self.account_analytic_id = rec.analytic_id.id
+                if self.account_analytic_id:
+                    self.account_analytic_id = rec.analytic_id.id
+                if self.analytic_tag_ids:
+                    self.analytic_tag_ids = rec.analytic_tag_ids
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)
