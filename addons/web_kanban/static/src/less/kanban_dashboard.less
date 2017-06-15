@@ -39,7 +39,7 @@
 
         // If invisible, elem will no take more than its original height
         a, span {
-            .o-text-overflow(block);
+            .o-text-overflow(inline-block);
             position: relative;
         }
 
@@ -88,9 +88,10 @@
 
             .o_kanban_manage_button_section {
                 .o-flex(1, 0, 0);
-                padding: @odoo-horizontal-padding;
 
                 .o_kanban_manage_toggle_button {
+                    display: block;
+                    padding: @odoo-horizontal-padding;
                     text-align: right;
                 }
             }
