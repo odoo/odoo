@@ -157,36 +157,53 @@ class account_register_payments(models.TransientModel):
         })
         return rec
 
-    @api.model
-    def get_payment_vals(self):
-        '''Return the a values dictionary to create a new payment object.
+    @api.multi
+    def _groupby_invoices(self):
+        '''Split the invoices linked to the wizard according to their commercial partner and their type.
 
-        :return: Payment values as a dict.
+        :return: a dictionary mapping (commercial_partner_id, type) => invoices recordset.
         '''
-        if self.multi:
-            invoice_ids = self._context.get('invoice_ids') or self.invoice_ids
-            amount = self._compute_payment_amount(invoice_ids)
-            payment_type = 'inbound' if amount > 0 else 'outbound'
-            partner_id = invoice_ids[0].commercial_partner_id
-            partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice_ids[0].type]
-        else:
-            invoice_ids = self.invoice_ids
-            amount = self.amount
-            payment_type = self.payment_type
-            partner_id = self.partner_id
-            partner_type = self.partner_type
+        results = {}
+        # Create a dict dispatching invoices according to their commercial_partner_id and type
+        for inv in self.invoice_ids:
+            key = (inv.commercial_partner_id.id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])
+            if not key in results:
+                results[key] = self.env['account.invoice']
+            results[key] += inv
+        return results
+
+    @api.multi
+    def get_payment_vals(self, invoices):
+        '''Create the payment values.
+
+        :param invoices: The invoices that should have the same commercial partner and the same type.
+        :return: The payment values as a dictionary.
+        '''
+        amount = self._compute_payment_amount(invoices) if self.multi else self.amount
+        payment_type = ('inbound' if amount > 0 else 'outbound') if self.multi else self.payment_type
         return {
             'journal_id': self.journal_id.id,
             'payment_method_id': self.payment_method_id.id,
             'payment_date': self.payment_date,
             'communication': self.communication,
-            'invoice_ids': [(6, 0, invoice_ids.ids)],
+            'invoice_ids': [(6, 0, invoices.ids)],
             'payment_type': payment_type,
             'amount': abs(amount),
             'currency_id': self.currency_id.id,
-            'partner_id': partner_id.id,
-            'partner_type': partner_type,
+            'partner_id': invoices[0].commercial_partner_id.id,
+            'partner_type': MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type],
         }
+
+    @api.multi
+    def get_payments_vals(self):
+        '''Compute the values for payments.
+
+        :return: a list of payment values (dictionary).
+        '''
+        if self.multi:
+            groups = self._groupby_invoices()
+            return [self.get_payment_vals(invoices) for invoices in groups.values()]
+        return [self.get_payment_vals(self.invoice_ids)]
 
     @api.multi
     def create_payment(self):
@@ -198,32 +215,14 @@ class account_register_payments(models.TransientModel):
 
         :return: The ir.actions.act_window to show created payments.
         '''
-        self.ensure_one()
-        payment_ids = []
-        values = {}
-        # Create a dict dispatching invoices according to their commercial_partner_id and type
-        for inv in self.invoice_ids:
-            partner_id = inv.commercial_partner_id.id
-            partner_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
-            if partner_id not in values:
-                values[partner_id] = {}
-            if partner_type not in values[partner_id]:
-                values[partner_id][partner_type] = inv
-            else:
-                values[partner_id][partner_type] += inv
-        # Create payments
-        for p_invoice_ids in values.values():
-            for t_invoice_ids in p_invoice_ids.values():
-                ctx = self._context
-                if self.multi:
-                    ctx = dict(ctx, invoice_ids=t_invoice_ids)
-                payment_vals = self.with_context(ctx).get_payment_vals()
-                payment_id = self.env['account.payment'].create(payment_vals)
-                payment_id.post()
-                payment_ids.append(payment_id.id)
+        Payment = self.env['account.payment']
+        payments = Payment
+        for payment_vals in self.get_payments_vals():
+            payments += Payment.create(payment_vals)
+        payments.post()
         return {
             'name': _('Payments'),
-            'domain': [('id', 'in', payment_ids), ('state', '=', 'posted')],
+            'domain': [('id', 'in', payments.ids), ('state', '=', 'posted')],
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.payment',
