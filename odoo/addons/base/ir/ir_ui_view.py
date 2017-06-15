@@ -404,6 +404,15 @@ actual arch.
     # Inheritance mecanism
     #------------------------------------------------------
     @api.model
+    def _get_inheriting_views_arch_domain(self, view_id, model):
+        return [
+            ['inherit_id', '=', view_id],
+            ['model', '=', model],
+            ['mode', '=', 'extension'],
+            ['active', '=', True],
+        ]
+
+    @api.model
     def get_inheriting_views_arch(self, view_id, model):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
@@ -418,13 +427,8 @@ actual arch.
            :return: [(view_arch,view_id), ...]
         """
         user_groups = self.env.user.groups_id
+        conditions = self._get_inheriting_views_arch_domain(view_id, model)
 
-        conditions = [
-            ['inherit_id', '=', view_id],
-            ['model', '=', model],
-            ['mode', '=', 'extension'],
-            ['active', '=', True],
-        ]
         if self.pool._init and not self._context.get('load_all_views'):
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
