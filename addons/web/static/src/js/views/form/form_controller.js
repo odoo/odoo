@@ -151,7 +151,7 @@ var FormController = BasicController.extend({
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
                     label: _t('Delete'),
-                    callback: this._deleteRecords.bind(this, [this.handle]),
+                    callback: this._onDeleteRecord.bind(this),
                 });
             }
             if (this.is_action_enabled('create') && this.is_action_enabled('duplicate')) {
@@ -393,6 +393,14 @@ var FormController = BasicController.extend({
      */
     _onCreate: function () {
         this.createRecord();
+    },
+    /**
+     * Deletes the current record
+     *
+     * @private
+     */
+    _onDeleteRecord: function () {
+        this._deleteRecords([this.handle]);
     },
     /**
      * Called when the user wants to discard the changes made to the current
