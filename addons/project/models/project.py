@@ -29,13 +29,13 @@ class ProjectTaskType(models.Model):
         string='Starred Explanation', translate=True,
         help='Explanation text to help users using the star on tasks or issues in this stage.')
     legend_blocked = fields.Char(
-        'Red Kanban Label', default='Blocked', translate=True,
+        'Red Kanban Label', default='Blocked', translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection, when the task or issue is in that stage.')
     legend_done = fields.Char(
-        'Green Kanban Label', default='Ready for Next Stage', translate=True,
+        'Green Kanban Label', default='Ready for Next Stage', translate=True, required=True,
         help='Override the default value displayed for the done state for kanban selection, when the task or issue is in that stage.')
     legend_normal = fields.Char(
-        'Grey Kanban Label', default='In Progress', translate=True,
+        'Grey Kanban Label', default='In Progress', translate=True, required=True,
         help='Override the default value displayed for the normal state for kanban selection, when the task or issue is in that stage.')
     mail_template_id = fields.Many2one(
         'mail.template',
@@ -369,11 +369,12 @@ class Task(models.Model):
         ('normal', 'Grey'),
         ('done', 'Green'),
         ('blocked', 'Red')], string='Kanban State',
-        copy=False, default='normal', required=True, track_visibility='onchange',
+        copy=False, default='normal', required=True,
         help="A task's kanban state indicates special situations affecting it:\n"
              " * Grey is the default situation\n"
              " * Red indicates something is preventing the progress of this task\n"
              " * Green indicates the task is ready to be pulled to the next stage")
+    kanban_state_label = fields.Char(compute='_compute_kanban_state_label', string='Kanban State', track_visibility='onchange')
     create_date = fields.Datetime(index=True)
     write_date = fields.Datetime(index=True)  #not displayed in the view but it might be useful with base_automation module (and it needs to be defined first for that)
     date_start = fields.Datetime(string='Starting Date',
@@ -419,6 +420,16 @@ class Task(models.Model):
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
+
+    @api.depends('stage_id', 'kanban_state')
+    def _compute_kanban_state_label(self):
+        for task in self:
+            if task.kanban_state == 'normal':
+                task.kanban_state_label = task.legend_normal
+            elif task.kanban_state == 'blocked':
+                task.kanban_state_label = task.legend_blocked
+            else:
+                task.kanban_state_label = task.legend_done
 
     @api.onchange('project_id')
     def _onchange_project(self):
@@ -588,9 +599,9 @@ class Task(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'kanban_state' in init_values and self.kanban_state == 'blocked':
+        if 'kanban_state_label' in init_values and self.kanban_state == 'blocked':
             return 'project.mt_task_blocked'
-        elif 'kanban_state' in init_values and self.kanban_state == 'done':
+        elif 'kanban_state_label' in init_values and self.kanban_state == 'done':
             return 'project.mt_task_ready'
         elif 'user_id' in init_values and self.user_id:  # assigned -> new
             return 'project.mt_task_new'
