@@ -1,2 +1,2 @@
-import res_company
-import account
+from . import res_company
+from . import account
