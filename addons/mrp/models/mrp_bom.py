@@ -117,11 +117,56 @@ class MrpBom(models.Model):
             Quantity describes the number of times you need the BoM: so the quantity divided by the number created by the BoM
             and converted into its UoM
         """
+        from collections import defaultdict
+
+        graph = defaultdict(list)
+        #V for Vertices
+        V = {}
+
+        def addEdge(u,v, graph):
+            graph[u].append(v)
+            return graph
+
+        def isCyclicUtil(v, visited, recStack, graph):
+            # Mark current node as visited and
+            # adds to recursion stack
+            visited[v] = True
+            recStack[v] = True
+            # Recur for all neighbours
+            # if any neighbour is visited and in
+            # recStack then graph is cyclic
+            for neighbour in graph[v]:
+                if visited[neighbour] == False:
+                    if isCyclicUtil(neighbour, visited, recStack, graph) == True:
+                        return True
+                elif recStack[neighbour] == True:
+                    return True
+
+            # The node needs to be poped from
+            # recursion stack before function ends
+            recStack[v] = False
+            return False
+
+        # Returns true if graph is cyclic else false
+        def isCyclic(V, graph):
+            visited = [False] * V
+            recStack = [False] * V
+            for node in range(V):
+                if visited[node] == False:
+                    if isCyclicUtil(node, visited, recStack, graph) == True:
+                        return True
+            return False
+
         boms_done = [(self, {'qty': quantity, 'product': product, 'original_qty': quantity, 'parent_line': False})]
         lines_done = []
         templates_done = product.product_tmpl_id
+        V[product.product_tmpl_id.id] = len(V)
 
         bom_lines = [(bom_line, product, quantity, False) for bom_line in self.bom_line_ids]
+        for bom_line in self.bom_line_ids:
+            if not bom_line.product_id.product_tmpl_id.id in V.keys():
+                V[bom_line.product_id.product_tmpl_id.id] = len(V)
+            graph = addEdge(V[product.product_tmpl_id.id], V[bom_line.product_id.product_tmpl_id.id], graph)
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
             bom_lines = bom_lines[1:]
@@ -129,13 +174,18 @@ class MrpBom(models.Model):
             if current_line._skip_bom_line(current_product):
                 continue
             if current_line.product_id.product_tmpl_id in templates_done:
-                raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
+                if isCyclic(len(V), graph):
+                    raise UserError(_('Recursion error!  A product with a Bill of Material should not have itself in its BoM or child BoMs!'))
 
             line_quantity = current_qty * current_line.product_qty
             bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id)
             if bom.type == 'phantom':
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
+                for bom_line in bom.bom_line_ids:
+                    if not bom_line.product_id.product_tmpl_id.id in V.keys():
+                        V[bom_line.product_id.product_tmpl_id.id] = len(V)
+                    graph = addEdge(V[current_line.product_id.product_tmpl_id.id], V[bom_line.product_id.product_tmpl_id.id], graph)
                 templates_done |= current_line.product_id.product_tmpl_id
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
