@@ -417,7 +417,7 @@ actual arch.
         """
         user_groups = self.env.user.groups_id
 
-        conditions = [
+        conditions = self.env.context.get("inheriting_views_domain", []) + [
             ['inherit_id', '=', view_id],
             ['model', '=', model],
             ['mode', '=', 'extension'],

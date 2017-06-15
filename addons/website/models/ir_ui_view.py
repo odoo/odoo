@@ -70,6 +70,16 @@ class View(models.Model):
         return view_id
 
     @api.model
+    def get_inheriting_views_arch(self, view_id, model):
+        """Skip views from other websites."""
+        domain = [("website_id", "=", False)]
+        website = self.env.context.get("website_id")
+        if website:
+            domain = ["|"] + domain + [("website_id", "=", website)]
+        self = self.with_context(inheriting_views_domain=domain)
+        return super(View, self).get_inheriting_views_arch(view_id, model)
+
+    @api.model
     @tools.ormcache_context('self._uid', 'xml_id', keys=('website_id',))
     def get_view_id(self, xml_id):
         if 'website_id' in self._context and not isinstance(xml_id, (int, long)):
