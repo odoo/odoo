@@ -1531,9 +1531,6 @@ class TestStockFlow(TestStockCommon):
                 'product_return_moves'
             ])
 
-        list_return_moves = default_data['product_return_moves']
-        default_data['product_return_moves'] = [(0, 0, return_move) for return_move in list_return_moves]
-
         return_wiz = self.env['stock.return.picking']\
             .with_context(active_ids=picking_out.ids, active_id=picking_out.ids[0])\
             .create(default_data)
