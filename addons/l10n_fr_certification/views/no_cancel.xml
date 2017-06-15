@@ -15,7 +15,7 @@
             <field name="model">account.invoice</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='invoice_cancel']" position="attributes">
+                <xpath expr="//button[@name='action_invoice_cancel']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
             </field>

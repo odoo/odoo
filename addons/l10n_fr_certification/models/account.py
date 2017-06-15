@@ -16,8 +16,8 @@ LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id', 'partner_id']
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_fr_secure_sequence_number = fields.Integer(readonly=True)
-    l10n_fr_hash = fields.Char(readonly=True)
+    l10n_fr_secure_sequence_number = fields.Integer(readonly=True, copy=False)
+    l10n_fr_hash = fields.Char(readonly=True, copy=False)
     l10n_fr_string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True, store=False)
 
     def _get_new_hash(self, secure_seq_number):
