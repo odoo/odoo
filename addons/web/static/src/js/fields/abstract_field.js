@@ -142,6 +142,21 @@ var AbstractField = Widget.extend({
         // this is the last value that was set by the user, unparsed.  This is
         // used to avoid setting the value twice in a row with the exact value.
         this.lastSetValue = undefined;
+
+        // formatType is used to determine which format (and parse) functions
+        // to call to format the field's value to insert into the DOM (typically
+        // put into a span or an input), and to parse the value from the input
+        // to send it to the server. These functions are chosen according to
+        // the 'widget' attrs if is is given, and if it is a valid key, with a
+        // fallback on the field type, ensuring that the value is formatted and
+        // displayed according to the choosen widget, if any.
+        this.formatType = this.attrs.widget in field_utils.format ?
+                            this.attrs.widget :
+                            this.field.type;
+        // formatOptions (resp. parseOptions) is a dict of options passed to
+        // calls to the format (resp. parse) function.
+        this.formatOptions = {};
+        this.parseOptions = {};
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
@@ -266,15 +281,15 @@ var AbstractField = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * convert the value from the field to a string representation
+     * Converts the value from the field to a string representation.
      *
      * @private
      * @param {any} value (from the field type)
      * @returns {string}
      */
     _formatValue: function (value) {
-        var options = _.extend({}, this.nodeOptions, { data: this.recordData });
-        return field_utils.format[this.field.type](value, this.field, options);
+        var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
+        return field_utils.format[this.formatType](value, this.field, options);
     },
     /**
      * This method check if a value is the same as the current value of the
@@ -291,15 +306,14 @@ var AbstractField = Widget.extend({
         return this.value === value;
     },
     /**
-     * convert a string representation to a valid value, depending on the field
-     * type.
+     * Converts a string representation to a valid value.
      *
      * @private
      * @param {string} value
      * @returns {any}
      */
     _parseValue: function (value) {
-        return field_utils.parse[this.field.type](value, this.field);
+        return field_utils.parse[this.formatType](value, this.field, this.parseOptions);
     },
     /**
      * main rendering function.  Override this if your widget has the same render

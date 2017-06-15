@@ -5153,7 +5153,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('widget selection,  edition and on many2one field', function (assert) {
-        assert.expect(15);
+        assert.expect(18);
 
         this.data.partner.onchanges = {product_id: function () {}};
         this.data.partner.records[0].product_id = 37;
@@ -5178,6 +5178,13 @@ QUnit.module('relational_fields', {
         });
 
         assert.ok(!form.$('select').length, "should not have a select tag in dom");
+        assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
+            "should have rendered the many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
+            "should have rendered the unset many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=color]').text(), 'Red',
+            "should have rendered the selection field correctly");
+
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('select').length, 3,

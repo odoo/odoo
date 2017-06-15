@@ -1763,6 +1763,7 @@ var FieldSelection = AbstractField.extend({
         this._super.apply(this, arguments);
         if (this.field.type === 'many2one') {
             this.values = this.record.specialData[this.name];
+            this.formatType = 'many2one';
         } else {
             this.values = _.reject(this.field.selection, function (v) {
                 return v[0] === false && v[1] === '';
