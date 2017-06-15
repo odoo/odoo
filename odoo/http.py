@@ -593,6 +593,8 @@ class JsonRequest(WebRequest):
         else:
             # regular jsonrpc2
             request = self.httprequest.stream.read()
+        
+        request = '{}' if not request else request
 
         # Read POST content or POST Form Data named "request"
         try:
