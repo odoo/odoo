@@ -279,7 +279,6 @@ class ResourceWorkingHours(TestResourceCommon):
         res = self.calendar.plan_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         self.assertEqual(res, Datetime.from_string('2013-01-29 09:00:00'))
 
-
     def test_calendar_hours_scheduling_forward(self):
         res = self.calendar._schedule_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
@@ -289,9 +288,6 @@ class ResourceWorkingHours(TestResourceCommon):
         self.assertEqual(res[4][:2], (Datetime.from_string('2013-02-22 08:00:00'), Datetime.from_string('2013-02-22 13:00:00')))
         self.assertEqual(res[5][:2], (Datetime.from_string('2013-02-22 16:00:00'), Datetime.from_string('2013-02-22 23:00:00')))
         self.assertEqual(res[6][:2], (Datetime.from_string('2013-02-26 08:00:00'), Datetime.from_string('2013-02-26 09:00:00')))
-
-        res = self.calendar.schedule_hours_get_date(40, day_dt=self.date1.replace(minute=0, second=0))
-        self.assertEqual(res, Datetime.from_string('2013-02-26 09:00:00'))
 
         td = timedelta()
         for item in res:
