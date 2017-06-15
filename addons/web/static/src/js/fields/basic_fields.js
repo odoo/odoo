@@ -250,7 +250,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this._formatValue(this.value));
+        this.$el.text(this._formatValue(this.value, this.attrs.options));
     },
 
     //--------------------------------------------------------------------------
@@ -455,9 +455,10 @@ var FieldDateTime = FieldDate.extend({
      * @override
      * @private
      * @param {Moment} value
+     * @param {Object} options
      */
-    _formatValue: function (value) {
-        return field_utils.format.datetime(value, {timezone: true});
+    _formatValue: function (value, options) {
+        return field_utils.format.datetime(value, {timezone: true}, options);
     },
 });
 

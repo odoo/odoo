@@ -2373,6 +2373,23 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('format datetime in list view', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records[0].datetime= "2016-12-12 10:55:05";
+        this.data.foo.records[1].datetime= "2017-08-15 15:00:00";
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="datetime" options="{\'date_format\' : \'LLLL\'}"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:eq(0)').html(),"Monday, December 12, 2016 10:55 AM","date formated in moment format");
+        assert.strictEqual(list.$('.o_data_cell:eq(1)').html(),"Tuesday, August 15, 2017 3:00 PM","date formated in moment format");
+        list.destroy();
+    });
 });
 
 });

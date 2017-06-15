@@ -1540,6 +1540,27 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('format datetime in kanban view', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].datetime= "2016-12-12 10:55:05";
+        this.data.partner.records[1].datetime= "2017-08-15 15:00:00";
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="datetime" options="{\'date_format\' : \'lll\'}"/></div>' +
+                    '</t></templates></kanban>',
+        });
+
+        assert.strictEqual(kanban.$(".o_kanban_record span:eq(0)").html(),"Dec 12, 2016 10:55 AM","date formated in moment format");
+        assert.strictEqual(kanban.$(".o_kanban_record span:eq(1)").html(),"Aug 15, 2017 3:00 PM","date formated in moment format");
+        kanban.destroy();
+    });
 });
 
 });
