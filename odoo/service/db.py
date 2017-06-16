@@ -211,9 +211,13 @@ def dump_db(db_name, stream, backup_format='zip'):
             return stdout
 
 def exp_restore(db_name, data, copy=False):
+    def chunks(d, n=8192):
+        for i in range(0, len(d), n):
+            yield d[i:i+n]
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        for chunk in chunks(data):
+            data_file.write(chunk.decode('base64'))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
