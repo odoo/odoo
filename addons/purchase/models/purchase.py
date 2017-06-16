@@ -75,16 +75,18 @@ class PurchaseOrder(models.Model):
             types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
         return types[:1]
 
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.state',
+                 'order_line.move_ids.picking_id',
+                 'order_line.move_ids.returned_move_ids',
+                 'order_line.move_ids.returned_move_ids.returned_move_ids')
     def _compute_picking(self):
         for order in self:
             pickings = self.env['stock.picking']
             for line in order.order_line:
                 # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
                 # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
+                return_moves = line.move_ids.mapped('returned_move_ids')
+                moves = line.move_ids | return_moves | return_moves.mapped('returned_move_ids')
                 moves = moves.filtered(lambda r: r.state != 'cancel')
                 pickings |= moves.mapped('picking_id')
             order.picking_ids = pickings
@@ -530,7 +532,10 @@ class PurchaseOrderLine(models.Model):
                         qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.depends('order_id.state', 'move_ids.state')
+    @api.depends('order_id.state',
+                 'move_ids.state',
+                 'move_ids.returned_move_ids.state',
+                 'move_ids.returned_move_ids.returned_move_ids.state')
     def _compute_qty_received(self):
         for line in self:
             if line.order_id.state not in ['purchase', 'done']:
@@ -540,13 +545,16 @@ class PurchaseOrderLine(models.Model):
                 line.qty_received = line.product_qty
                 continue
             total = 0.0
-            for move in line.move_ids:
+            return_moves = line.move_ids.mapped('returned_move_ids')
+            moves = line.move_ids | return_moves | return_moves.mapped('returned_move_ids')
+            for move in moves:
+                value = 0.0
                 if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
-                        if move.to_refund:
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                    value = move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                    if move.location_id.usage == 'supplier':
+                        total += value
                     else:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                        total -= value
             line.qty_received = total
 
     @api.model
