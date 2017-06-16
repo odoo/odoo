@@ -305,6 +305,35 @@ class ResourceWorkingHours(TestResourceCommon):
             to_naive_utc(Datetime.from_string('2013-02-12 09:25:00'), self.env.user))
         self.assertEqual(res, to_naive_utc(Datetime.from_string('2013-02-26 11:25:00'), self.env.user))
 
+    def test_calendar_hours_scheduling_timezone_2(self):
+        # Call schedule_hours for a user in Autralia, Sydney (GMT+10)
+        # Two cases:
+        # - start at 2013-02-15 08:00:00 => 2013-02-14 21:00:00 in UTC
+        # - start at 2013-02-15 11:00:00 => 2013-02-15 00:00:00 in UTC
+        self.env.user.tz = 'Australia/Sydney'
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 1',
+            'dayofweek': '3',
+            'hour_from': 8,
+            'hour_to': 12,
+            'calendar_id': self.calendar.id,
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 2',
+            'dayofweek': '3',
+            'hour_from': 13,
+            'hour_to': 17,
+            'calendar_id': self.calendar.id,
+        })
+        hours = 1.0/60.0
+        for test_date in ['2013-02-15 08:00:00', '2013-02-15 11:00:00']:
+            start_dt = Datetime.from_string(test_date)
+            start_dt_utc = to_naive_utc(start_dt, self.env.user)
+            res = self.calendar._schedule_hours(hours, start_dt_utc)
+            self.assertEqual(
+                [(start_dt_utc, start_dt_utc.replace(minute=1))], res,
+                'resource_calendar: wrong schedule_hours computation')
+
     def test_calendar_hours_scheduling_forward_leaves_resource(self):
         res = self.calendar._schedule_hours(
             40, day_dt=Datetime.from_string('2013-02-12 09:00:00'),
