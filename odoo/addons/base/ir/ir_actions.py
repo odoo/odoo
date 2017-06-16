@@ -638,33 +638,6 @@ class IrActionsTodo(models.Model):
         """ Sets configuration wizard in TODO state"""
         return self.write({'state': 'open'})
 
-    @api.multi
-    def progress(self):
-        """ Returns a dict with 3 keys {todo, done, total}.
-
-        These keys all map to integers and provide the number of todos
-        marked as open, the total number of todos and the number of
-        todos not open (which is basically a shortcut to total-todo)
-
-        :rtype: dict
-        """
-        user_groups = self.env.user.groups_id
-
-        done_count = self.search_count([
-            ('state', '!=', open),
-            '|', ('groups_id', '=', False),
-                 ('groups_id', 'in', user_groups.ids),
-        ])
-        total_count = self.search_count([
-            '|', ('groups_id', '=', False),
-                 ('groups_id', 'in', user_groups.ids),
-        ])
-        return {
-            'done': done_count,
-            'total': total_count,
-            'todo': total_count - done_count,
-        }
-
 
 class IrActionsActClient(models.Model):
     _name = 'ir.actions.client'
