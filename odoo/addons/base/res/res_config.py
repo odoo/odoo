@@ -53,26 +53,6 @@ class ResConfigConfigurable(models.TransientModel):
     '''
     _name = 'res.config'
 
-    def _next_action(self):
-        Todos = self.env['ir.actions.todo']
-        _logger.info('getting next %s', Todos)
-
-        active_todo = Todos.search([('state', '=', 'open')], limit=1)
-        if active_todo:
-            return active_todo
-
-    def _next(self):
-        _logger.info('getting next operation')
-        next = self._next_action()
-        _logger.info('next action is %s', next)
-        if next:
-            return next.action_launch()
-
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': '/web',
-        }
 
     @api.multi
     def start(self):
@@ -80,10 +60,13 @@ class ResConfigConfigurable(models.TransientModel):
 
     @api.multi
     def next(self):
-        """ Returns the next todo action to execute (using the default
-        sort order)
         """
-        return self._next()
+        Reload the settings page
+        """
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     @api.multi
     def execute(self):
@@ -565,9 +548,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if to_uninstall_modules:
             to_uninstall_modules.button_immediate_uninstall()
 
-        action = self._install_modules(to_install)
-        if action:
-            return action
+        self._install_modules(to_install)
 
         if to_install or to_uninstall_modules:
             # After the uninstall/install calls, the registry and environments
