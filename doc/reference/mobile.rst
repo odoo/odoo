@@ -10,11 +10,17 @@ Mobile JavaScript
 Introduction
 ============
 
-In Odoo 10.0 we released a mobile app, allows you to access all **Odoo apps** (even your customized modules). 
+In Odoo 10.0 we released a mobile app, allows you to access all **Odoo apps**
+(even your customized modules). 
 
-The application is a combination of **Odoo Web** and **Native Mobile components**, in other words it is a Odoo Web instance loaded inside native WebView container of mobile.
+The application is a combination of **Odoo Web** and **Native Mobile
+components**, in other words it is a Odoo Web instance loaded inside native
+WebView container of mobile.
 
-This page documents how you can access mobile native components like Camera, Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you do not need to be a mobile developer, if you know Odoo JavaScript API you can access all available mobile features.
+This page documents how you can access mobile native components like Camera,
+Vibration, Notification, Toast through Odoo Web (via JavaScript). For this, you
+do not need to be a mobile developer, if you know Odoo JavaScript API you can
+access all available mobile features.
 
 .. warning:: This features works with **Odoo Enterprise 10.0+** only
 
@@ -24,34 +30,41 @@ How does it work?
 Internal working of Mobile application:
 
 .. image:: images/mobile_working.jpg
-    :align: left
 
-Of course, it is a web page that loads on a Mobile Native Web container. But it is integrated in such a way that you can access native resources from your web JavaScript.
+Of course, it is a web page that loads on a Mobile Native Web container. But it
+is integrated in such a way that you can access native resources from your web
+JavaScript.
 
-WebPages (Odoo Web) is on the top of each layer, where second layer is a Bridge between Odoo Web (JS) and Native component of mobile.
+WebPages (Odoo Web) is on the top of each layer, where second layer is a Bridge
+between Odoo Web (JS) and Native component of mobile.
 
-When any call from JavaScript triggered it passes through Bridge and Bridge pass it to native invoker to perform that action.
+When any call from JavaScript triggered it passes through Bridge and Bridge
+pass it to native invoker to perform that action.
 
-When the native component has done their work, it again is passed to Bridge and you get the output in JavaScript.
+When the native component has done their work, it again is passed to Bridge and
+you get the output in JavaScript.
 
-Process time taken by the Native component depends on what you are requesting from Native resources. Like Camera or GPS Location.
+Process time taken by the Native component depends on what you are requesting
+from Native resources. Like Camera or GPS Location.
 
 How to use it?
 ==============
 
-As Odoo Web Framework, Mobile api can be used anywhere by getting object of **web_mobile.rpc**
+As Odoo Web Framework, Mobile api can be used anywhere by getting object of
+**web_mobile.rpc**
 
 .. image:: images/odoo_mobile_api.png
-    :align: left
 
-Mobile rpc object provide list of methods available (Works only with Mobile App). 
+Mobile rpc object provide list of methods available (Works only with Mobile
+App). 
 
 Just check for method availability and execute it.
 
 Methods
 -------
 
-.. note:: Each of the methods returns JQuery Deffered object with returning data JSON dictionary
+.. note:: Each of the methods returns JQuery Deffered object with returning
+   data JSON dictionary
 
 Show Toast in device
 .....................
@@ -60,7 +73,9 @@ Show Toast in device
 
 	:param object args: **message** text to display
 
-A toast provides simple feedback about an operation in a small popup. It only fills the amount of space required for the message and the current activity remains visible and interactive
+A toast provides simple feedback about an operation in a small popup. It only
+fills the amount of space required for the message and the current activity
+remains visible and interactive
 
 .. code-block:: javascript
 
@@ -75,7 +90,8 @@ Vibrating device
 
 .. js:function:: vibrate
 
-	:param object args: Vibrates constantly for the specified period of time (in milliseconds).
+	:param object args: Vibrates constantly for the specified period of time
+	       (in milliseconds).
 
 Vibrate mobile device with given duration.
 
@@ -91,7 +107,10 @@ Show snackbar with action
 	:param object args: (*required*) **Message** to show in snackbar and action **button label** in Snackbar (optional)
 	:returns:  ``True`` if User click on Action button, ``False`` if SnackBar auto dismissed after some time
 
-Snackbars provide lightweight feedback about an operation. They show a brief message at the bottom of the screen on mobile and lower left on larger devices. Snackbars appear above all other elements on screen and only one can be displayed at a time.
+Snackbars provide lightweight feedback about an operation. They show a brief
+message at the bottom of the screen on mobile and lower left on larger devices.
+Snackbars appear above all other elements on screen and only one can be
+displayed at a time.
 
 .. code-block:: javascript
 
@@ -112,7 +131,12 @@ Showing notification
 
 	:param object args: **title** (first row) of the notification, **message** (second row) of the notification, in a standard notification.
 
-A notification is a message you can display to the user outside of your application's normal UI. When you tell the system to issue a notification, it first appears as an icon in the notification area. To see the details of the notification, the user opens the notification drawer. Both the notification area and the notification drawer are system-controlled areas that the user can view at any time.
+A notification is a message you can display to the user outside of your
+application's normal UI. When you tell the system to issue a notification, it
+first appears as an icon in the notification area. To see the details of the
+notification, the user opens the notification drawer. Both the notification
+area and the notification drawer are system-controlled areas that the user can
+view at any time.
 
 .. code-block:: javascript
 	
