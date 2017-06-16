@@ -89,8 +89,6 @@ class ir_cron(models.Model):
 
         """
         self._cr.rollback()
-        _logger.exception("Call of self.env[%r].%s(*%r) failed in Job %s",
-                          model_name, method_name, args, job_id)
 
     @api.model
     def _callback(self, model_name, method_name, args, job_id):
@@ -114,10 +112,11 @@ class ir_cron(models.Model):
                 if hasattr(model, method_name):
                     log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
                     odoo.netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (self._cr.dbname, self._uid, '*', model_name, method_name)+tuple(args), depth=log_depth)
+                    start_time = False
                     if _logger.isEnabledFor(logging.DEBUG):
                         start_time = time.time()
                     getattr(model, method_name)(*args)
-                    if _logger.isEnabledFor(logging.DEBUG):
+                    if start_time and _logger.isEnabledFor(logging.DEBUG):
                         end_time = time.time()
                         _logger.debug('%.3fs (%s, %s)', end_time - start_time, model_name, method_name)
                     self.pool.signal_caches_change()
@@ -126,6 +125,8 @@ class ir_cron(models.Model):
             else:
                 _logger.warning("Model %r does not exist.", model_name)
         except Exception, e:
+            _logger.exception("Call of self.env[%r].%s(*%r) failed in Job #%s",
+                              model_name, method_name, args, job_id)
             self._handle_callback_exception(model_name, method_name, args, job_id, e)
 
     @classmethod

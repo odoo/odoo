@@ -71,7 +71,7 @@ class SaleOrder(models.Model):
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line.tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line[0].tax_id)
 
         return {
             'product_id': product_id,
@@ -228,7 +228,7 @@ class Website(models.Model):
         if not pricelists:  # no pricelist for this country, or no GeoIP
             pricelists |= all_pl.filtered(lambda pl: not show_visible or pl.selectable or pl.id in (current_pl, order_pl))
         else:
-            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.code)
+            pricelists |= all_pl.filtered(lambda pl: not show_visible and pl.sudo().code)
 
         # This method is cached, must not return records! See also #8795
         return pricelists.ids
@@ -244,19 +244,19 @@ class Website(models.Model):
         :param bool show_visible: if True, we don't display pricelist where selectable is False (Eg: Code promo)
         :returns: pricelist recordset
         """
-        website = request.website
-        if not request.website:
+        website = request and request.website or None
+        if not website:
             if self.env.context.get('website_id'):
                 website = self.browse(self.env.context['website_id'])
             else:
                 website = self.search([], limit=1)
-        isocountry = request.session.geoip and request.session.geoip.get('country_code') or False
+        isocountry = request and request.session.geoip and request.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         order_pl = partner.last_website_so_id and partner.last_website_so_id.state == 'draft' and partner.last_website_so_id.pricelist_id
         partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
-                                                   request.session.get('website_sale_current_pl'),
+                                                   request and request.session.get('website_sale_current_pl') or None,
                                                    website.pricelist_ids,
                                                    partner_pl=partner_pl and partner_pl.id or None,
                                                    order_pl=order_pl and order_pl.id or None)
@@ -280,7 +280,7 @@ class Website(models.Model):
         available_pricelists = self.get_pricelist_available()
         pl = None
         partner = self.env.user.partner_id
-        if request.session.get('website_sale_current_pl'):
+        if request and request.session.get('website_sale_current_pl'):
             # `website_sale_current_pl` is set only if the user specifically chose it:
             #  - Either, he chose it from the pricelist selection
             #  - Either, he entered a coupon code
@@ -397,6 +397,9 @@ class Website(models.Model):
                 partner.write({'last_website_so_id': sale_order.id})
 
         if sale_order:
+            # case when user emptied the cart
+            if not request.session.get('sale_order_id'):
+                request.session['sale_order_id'] = sale_order.id
 
             # check for change of pricelist with a coupon
             pricelist_id = pricelist_id or partner.property_product_pricelist.id
@@ -435,7 +438,7 @@ class Website(models.Model):
                     update_pricelist = True
 
             if code and code != sale_order.pricelist_id.code:
-                code_pricelist = self.env['product.pricelist'].search([('code', '=', code)], limit=1)
+                code_pricelist = self.env['product.pricelist'].sudo().search([('code', '=', code)], limit=1)
                 if code_pricelist:
                     pricelist_id = code_pricelist.id
                     update_pricelist = True
@@ -463,7 +466,15 @@ class Website(models.Model):
         tx_id = request.session.get('sale_transaction_id')
         if tx_id:
             transaction = self.env['payment.transaction'].sudo().browse(tx_id)
-            if transaction.state != 'cancel':
+            # Ugly hack for SIPS: SIPS does not allow to reuse a payment reference, even if the
+            # payment was not not proceeded. For example:
+            # - Select SIPS for payment
+            # - Be redirected to SIPS website
+            # - Go back to eCommerce without paying
+            # - Be redirected to SIPS website again => error
+            # Since there is no link module between 'website_sale' and 'payment_sips', we prevent
+            # here to reuse any previous transaction for SIPS.
+            if transaction.state != 'cancel' and transaction.acquirer_id.provider != 'sips':
                 return transaction
             else:
                 request.session['sale_transaction_id'] = False

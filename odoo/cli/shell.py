@@ -14,6 +14,25 @@ from . import Command
 _logger = logging.getLogger(__name__)
 
 
+"""
+    Shell exit behaviors
+    ====================
+
+    Legend:
+        stop = The REPL main loop stop.
+        raise = Exception raised.
+        loop = Stay in REPL.
+
+   Shell  | ^D    | exit() | quit() | sys.exit() | raise SystemExit()
+----------------------------------------------------------------------
+ python   | stop  | raise  | raise  | raise      | raise
+ ipython  | stop  | stop   | stop   | loop       | loop
+ ptpython | stop  | raise  | raise  | raise      | raise
+ bpython  | stop  | stop   | stop   | stop       | stop
+
+"""
+
+
 def raise_keyboard_interrupt(*a):
     raise KeyboardInterrupt()
 
@@ -95,6 +114,7 @@ class Shell(Command):
                     local_vars['env'] = env
                     local_vars['self'] = env.user
                     self.console(local_vars)
+                    cr.rollback()
             else:
                 self.console(local_vars)
 

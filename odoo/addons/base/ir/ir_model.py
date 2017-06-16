@@ -1227,16 +1227,22 @@ class IrModelData(models.Model):
 
             record = record.create(values)
             if xml_id:
-                for parent_model, parent_field in record._inherits.iteritems():
-                    if parent_model in existing_parents:
-                        continue
-                    self.sudo().create({
-                        'name': xml_id + '_' + parent_model.replace('.', '_'),
-                        'model': parent_model,
-                        'module': module,
-                        'res_id': record[parent_field].id,
-                        'noupdate': noupdate,
-                    })
+                #To add an external identifiers to all inherits model
+                inherit_models = [record]
+                while inherit_models:
+                    current_model = inherit_models.pop()
+                    for parent_model_name, parent_field in current_model._inherits.iteritems():
+                        inherit_models.append(self.env[parent_model_name])
+                        if parent_model_name in existing_parents:
+                            continue
+                        self.sudo().create({
+                            'name': xml_id + '_' + parent_model_name.replace('.', '_'),
+                            'model': parent_model_name,
+                            'module': module,
+                            'res_id': record[parent_field].id,
+                            'noupdate': noupdate,
+                        })
+                        existing_parents.add(parent_model_name)
                 self.sudo().create({
                     'name': xml_id,
                     'model': model,

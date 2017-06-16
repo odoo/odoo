@@ -16,13 +16,14 @@
 # Abdullah J <bosaeed4@gmail.com>, 2016
 # Hossam Esam <hossamesam17@gmail.com>, 2016
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
+# Islam Eldeeb <islameldeb@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2017\n"
+"Last-Translator: Islam Eldeeb <islameldeb@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,7 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"لا تتطابق بنود التكلفة والتسويات. يجب عليك إعادة حساب تكلفة البضاعة الواصلة"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -196,6 +198,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"متساوية: سيتم تقسيم التكلفة بالتساوي\n"
+"بواسطة الكمية: وسيتم تقسيم التكلفة وفقا لكمية المنتج\n"
+"حسب التكلفة الحالية: سيتم تقسيم التكلفة وفقا للتكلفة الحالية للمنتج .\n"
+"حسب الوزن: سيتم تقسيم التكلفة اعتمادا على وزنه\n"
+"حسب الحجم: سيتم تقسيم التكلفة اعتمادا على حجمها."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -269,7 +276,7 @@ msgstr "Landed Costs"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "يتم احتساب تكلفة البضاعة الواصلة بناء على وحدة الشراء."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -314,6 +321,7 @@ msgstr "الاسم"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"لا توجد بنود تسويات للتقييم. يجب عليك إعادة حساب تكلفة البضاعة الواصلة"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75

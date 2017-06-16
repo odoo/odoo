@@ -304,10 +304,11 @@ var KanbanView = View.extend({
         return this._super(action);
     },
     has_active_field: function() {
-        return this.fields.active;
+        return this.fields_view.fields.active;
     },
     _is_quick_create_enabled: function() {
-        if(!_.contains(['char', 'boolean', 'many2one'], this.fields[this.group_by_field].type)){
+        var group_by_field = this.group_by_field.split(':')[0]
+        if(!_.contains(['char', 'boolean', 'many2one'], this.fields[group_by_field].type)){
             return false;
         }
         if (!this.quick_creatable || !this.is_action_enabled('create'))
@@ -740,14 +741,15 @@ var KanbanView = View.extend({
     add_new_column: function (event) {
         var self = this;
         var model = new Model(this.relation, this.search_context);
-        model.call('create', [{name: event.data.value}], {
+        var name = event.data.value;
+        model.call('name_create', [name], {
             context: this.search_context,
-        }).then(function (id) {
+        }).then(function (result) {
             var dataset = new data.DataSetSearch(self, self.model, self.dataset.get_context(), []);
             var group_data = {
                 records: [],
                 title: event.data.value,
-                id: id,
+                id: result[0],
                 attributes: {folded: false},
                 dataset: dataset,
                 values: {},

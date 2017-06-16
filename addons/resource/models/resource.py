@@ -369,7 +369,7 @@ class ResourceCalendar(models.Model):
                           resource_id=None, default_interval=None):
         hours = 0.0
         for day in rrule.rrule(rrule.DAILY, dtstart=start_dt,
-                               until=(end_dt + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0),
+                               until=end_dt.replace(hour=23, minute=59, second=59, microsecond=999999),
                                byweekday=self.get_weekdays()):
             day_start_dt = day.replace(hour=0, minute=0, second=0, microsecond=0)
             if start_dt and day.date() == start_dt.date():
@@ -474,7 +474,11 @@ class ResourceCalendar(models.Model):
         """ Wrapper on _schedule_hours: return the beginning/ending datetime of
         an hours scheduling. """
         res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, default_interval)
-        return res and res[0][0] or False
+        if res and hours < 0.0:
+            return res[0][0]
+        elif res:
+            return res[-1][1]
+        return False
 
     @api.multi
     def schedule_hours(self, hours, day_dt=None,

@@ -4,7 +4,7 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero
 
 import odoo.addons.decimal_precision as dp
@@ -467,9 +467,12 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.one
-    @api.depends('expense_line_ids', 'expense_line_ids.total_amount')
+    @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
     def _compute_amount(self):
-        self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        if len(self.expense_line_ids.mapped('currency_id')) < 2:
+            self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        else:
+            self.total_amount = 0.0
 
     # FIXME: A 4 command is missing to explicitly declare the one2many relation
     # between the sheet and the lines when using 'default_expense_line_ids':[ids]
@@ -545,3 +548,19 @@ class HrExpenseSheet(models.Model):
         res['domain'] = [('ref', 'in', self.mapped('name'))]
         res['context'] = {}
         return res
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_amounts(self):
+        # DO NOT FORWARD-PORT! ONLY FOR v10
+        positive_lines = any([l.total_amount > 0 for l in self.expense_line_ids])
+        negative_lines = any([l.total_amount < 0 for l in self.expense_line_ids])
+        if positive_lines and negative_lines:
+            raise ValidationError(_('You cannot have a positive and negative amounts on the same expense report.'))
+
+    @api.one
+    @api.constrains('expense_line_ids')
+    def _check_employee(self):
+        employee_ids = self.expense_line_ids.mapped('employee_id')
+        if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
+            raise ValidationError(_('You cannot add expense lines of another employee.'))

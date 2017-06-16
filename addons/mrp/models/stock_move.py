@@ -154,7 +154,7 @@ class StockMove(models.Model):
         lots = self.env['stock.move.lots']
         for move in self:
             unlink_move_lots = move.move_lot_ids.filtered(lambda x : (x.quantity_done == 0) and not x.workorder_id)
-            unlink_move_lots.unlink()
+            unlink_move_lots.sudo().unlink()
             group_new_quant = {}
             old_move_lot = {}
             for movelot in move.move_lot_ids:
@@ -386,3 +386,12 @@ class StockMove(models.Model):
                 'split_from': self.id,  # Needed in order to keep sale connection, but will be removed by unlink
             })
         return self.env['stock.move']
+
+class PushedFlow(models.Model):
+    _inherit = "stock.location.path"
+
+    def _prepare_move_copy_values(self, move_to_copy, new_date):
+        new_move_vals = super(PushedFlow, self)._prepare_move_copy_values(move_to_copy, new_date)
+        new_move_vals['production_id'] = False
+
+        return new_move_vals

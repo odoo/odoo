@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
 # Yuan Xulei <hi@yxl.name>, 2017
 msgid ""
 msgstr ""
@@ -32,13 +31,13 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:217
 #, python-format
 msgid " (%s reserved)"
-msgstr " (%s 已保留)"
+msgstr " (%s 已预留)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:220
 #, python-format
 msgid " (reserved)"
-msgstr " (已保留)"
+msgstr " (已预留)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_state
@@ -96,7 +95,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ", if accounting or purchase is installed"
-msgstr ", 会计或采购模块是否已安装"
+msgstr ", 假如会计或采购模块已安装"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -357,7 +356,7 @@ msgstr "<strong>自动流程</strong>: 从销售到交货，从采购到收货"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "<strong>Automated replenishment rules</strong>"
-msgstr "<strong>自动补货规则</strong>"
+msgstr "<strong>自动补给规则</strong>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -610,7 +609,7 @@ msgstr ""
 #. module: stock
 #: model:res.groups,name:stock.group_warning_stock
 msgid "A warning can be set on a partner (Stock)"
-msgstr "可以针对合作伙伴设置警告消息(库存)"
+msgstr "警告消息可以针对合作伙伴设置(库存)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -637,7 +636,7 @@ msgstr "有效"
 #. module: stock
 #: selection:stock.config.settings,module_stock_calendar:0
 msgid "Adapt lead times using the suppliers' open days calendars (advanced)"
-msgstr "使用供应商的开放天数日历调整交货时间(高级)"
+msgstr "使用供应商的开放天数日历调整前置时间(高级)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -734,7 +733,7 @@ msgstr "这个补货的所有库存移动都会被取消。"
 #. module: stock
 #: selection:stock.config.settings,group_warning_stock:0
 msgid "All the partners can be used in pickings"
-msgstr "所有合作伙伴在分拣单可用"
+msgstr "所有合作伙伴可用于拣货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_entire_packs
@@ -959,7 +958,7 @@ msgstr "条码命名规则"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_barcode
 msgid "Barcode scanner support"
-msgstr "条码扫描支持"
+msgstr "支持条码扫描器"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -992,7 +991,7 @@ msgstr "在送货之前将货物送到出货位置（分拣+送货）"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
 #: model:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Bulk Content"
-msgstr "包含内容"
+msgstr "批量内容"
 
 #. module: stock
 #: selection:product.template,tracking:0
@@ -1002,7 +1001,7 @@ msgstr "按批次"
 #. module: stock
 #: selection:product.template,tracking:0
 msgid "By Unique Serial Number"
-msgstr "唯一序列号"
+msgstr "按唯一序列号"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:397
@@ -1042,18 +1041,38 @@ msgid ""
 msgstr "通过取消勾选有效字段，你能隐藏不再使用的INCOTERM。"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIP
+msgid "CARRIAGE AND INSURANCE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CPT
+msgid "CARRIAGE PAID TO"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CFR
+msgid "COST AND FREIGHT"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_CIF
+msgid "COST, INSURANCE AND FREIGHT"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_calendar
 msgid "Calendar View"
 msgstr "日历视图"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:396
+#: code:addons/stock/models/stock_warehouse.py:400
 #, python-format
 msgid "Can't find any customer or supplier location."
 msgstr "找不到任何客户或供应商位置。"
 
 #. module: stock
-#: code:addons/stock/models/stock_warehouse.py:444
+#: code:addons/stock/models/stock_warehouse.py:448
 #, python-format
 msgid "Can't find any generic Make To Order route."
 msgstr "找不到任何按订单生产路线。"
@@ -1084,7 +1103,7 @@ msgstr "已取消"
 #: code:addons/stock/models/stock_move.py:357
 #, python-format
 msgid "Cannot unreserve a done move"
-msgstr "不能取消保留一个已完成的移动"
+msgstr "不能取消预留一个已完成的移动"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -1115,7 +1134,7 @@ msgstr "勾选这次拣货关联的数量的存在"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_pack_operation_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr "检查在分拣打包作业的存在"
+msgstr "检查在拣货打包作业的存在"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_return_location
@@ -1137,7 +1156,7 @@ msgstr "点检的数量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partially_available
 msgid "Checks if the move has some stock reserved"
-msgstr "检查移动是否有库存保留"
+msgstr "检查移动是否有库存预留"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_form
@@ -1338,37 +1357,37 @@ msgstr "通道(X)"
 msgid ""
 "Could not reserve all requested products. Please use the 'Mark as Todo' "
 "button to handle the reservation manually."
-msgstr "不能保留所需要的产品。请使用‘标记为待做’按钮手工的处理保留"
+msgstr "不能预留全部需要的产品。请使用‘标记为待做’按钮手工的处理保留"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking
 msgid "Count picking"
-msgstr "分拣个数"
+msgstr "拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_backorders
 msgid "Count picking backorders"
-msgstr "分拣欠单个数"
+msgstr "拣货欠单个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_draft
 msgid "Count picking draft"
-msgstr "草稿分拣个数"
+msgstr "草稿拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_late
 msgid "Count picking late"
-msgstr "迟到分拣个数"
+msgstr "迟到拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_ready
 msgid "Count picking ready"
-msgstr "就绪分拣个数"
+msgstr "就绪拣货个数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_count_picking_waiting
 msgid "Count picking waiting"
-msgstr "等待分拣个数"
+msgstr "等待拣货个数"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1579,7 +1598,7 @@ msgstr "客户地址"
 #: model:ir.model.fields,field_description:stock.field_product_product_sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template_sale_delay
 msgid "Customer Lead Time"
-msgstr "客户交货时间"
+msgstr "客户前置时间"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_property_stock_customer
@@ -1597,6 +1616,41 @@ msgstr "客户位置"
 #: selection:stock.picking.type,code:0
 msgid "Customers"
 msgstr "客户"
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAF
+msgid "DELIVERED AT FRONTIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAP
+msgid "DELIVERED AT PLACE"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DAT
+msgid "DELIVERED AT TERMINAL"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDP
+msgid "DELIVERED DUTY PAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DDU
+msgid "DELIVERED DUTY UNPAID"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DEQ
+msgid "DELIVERED EX QUAY"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_DES
+msgid "DELIVERED EX SHIP"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
@@ -1855,18 +1909,18 @@ msgstr "说明"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Pickings"
-msgstr "分拣说明"
+msgstr "拣货说明"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Pickings (Rack, Row and Case Information)"
-msgstr "分拣说明（货架，行和箱子的信息）"
+msgstr "拣货说明（货架，行和箱子的信息）"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template_description_picking
 msgid "Description on Picking"
-msgstr "分拣说明"
+msgstr "拣货说明"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
@@ -1912,7 +1966,7 @@ msgstr "目的路线"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_location_path_form
 msgid "Details"
-msgstr "详细信息"
+msgstr "细节"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_procure_method
@@ -2048,6 +2102,11 @@ msgid "Dropshipping"
 msgstr "直运"
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_EXW
+msgid "EX WORKS"
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "Edit its details or add new ones"
 msgstr "编辑详细信息或者添加新的"
@@ -2122,6 +2181,21 @@ msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
 
 #. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FAS
+msgid "FREE ALONGSIDE SHIP"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FCA
+msgid "FREE CARRIER"
+msgstr ""
+
+#. module: stock
+#: model:stock.incoterms,name:stock.incoterm_FOB
+msgid "FREE ON BOARD"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
 msgid "Fedex integration"
 msgstr "Fedex集成"
@@ -2147,8 +2221,6 @@ msgid ""
 "For the Odoo Team,<br/>\n"
 "                            Fabien Pinckaers, Founder"
 msgstr ""
-"关于Odoo团队,<br/>\n"
-"                            Fabien Pinckaers, 创始人F胖子：）"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -2298,7 +2370,7 @@ msgstr "分组 于"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_procurement_form_stock_inherit
 msgid "Group's Pickings"
-msgstr "同组的分拣"
+msgstr "同组的拣货"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_9
@@ -2318,7 +2390,7 @@ msgstr "有报废移动"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_quant_reserved_exist
 msgid "Has quants already reserved"
-msgstr "有早已保留的份"
+msgstr "有早已预留的份"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_posz
@@ -2731,7 +2803,7 @@ msgstr "进货位置"
 msgid ""
 "Install the picking wave module which will help you grouping your pickings "
 "and processing them in batch"
-msgstr "安装stock_picking_wave模块，会帮助你分组分拣的货物并批量处理它们。"
+msgstr "安装stock_picking_wave模块，会帮助你分组拣货的货物并批量处理它们。"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_inter_wh
@@ -2788,6 +2860,24 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's "
 "lot/serial number"
 msgstr "内部参考号码，它不同于制造商的批次/序列号码"
+
+#. module: stock
+#: code:addons/stock/models/product.py:257
+#, python-format
+msgid "Invalid domain left operand %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:259
+#, python-format
+msgid "Invalid domain operator %s"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:261
+#, python-format
+msgid "Invalid domain right operand %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_category_id
@@ -2871,12 +2961,12 @@ msgstr "盘点时间"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Details"
-msgstr "盘点明细"
+msgstr "盘点细节"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "盘点明细"
+msgstr "盘点行"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_property_stock_inventory
@@ -3004,7 +3094,7 @@ msgstr "便携式电脑 E5023"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_last_done_picking
 msgid "Last 10 Done Pickings"
-msgstr "最近10笔完成的分拣"
+msgstr "最近10笔完成的拣货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_make_procurement___last_update
@@ -3134,7 +3224,7 @@ msgstr "启动包装作业"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_days
 msgid "Lead Time"
-msgstr "交货时间"
+msgstr "前置时间"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint_lead_type
@@ -3182,7 +3272,7 @@ msgstr "链接的份"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_location_form
 msgid "Localization"
-msgstr "本地化"
+msgstr "定位"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -3304,7 +3394,7 @@ msgstr "批次/序列号码"
 #: code:addons/stock/models/stock_pack_operation.py:198
 #, python-format
 msgid "Lot/Serial Number Details"
-msgstr "批次/序列号码详情"
+msgstr "批次/序列号码细节"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_tree
@@ -3362,7 +3452,7 @@ msgstr "批次/序列号码使用"
 #: code:addons/stock/models/stock_warehouse.py:504
 #, python-format
 msgid "MTO"
-msgstr "基于订单备货"
+msgstr "MTO"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_mto_pull_id
@@ -3512,7 +3602,7 @@ msgstr "最大数量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "库存分拣单消息"
+msgstr "库存拣货单消息"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_putaway_method
@@ -3665,7 +3755,7 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by procurement rules will be grouped "
 "into one big picking."
-msgstr "通过此订购点创建的移动将放在此补货组中。如果没有被提供，由补货规则生成的移动将被组合到一个大分拣。"
+msgstr "通过此订购点创建的移动将放在此补货组中。如果没有被提供，由补货规则生成的移动将被组合到一个大拣货。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_linked_move_operation_ids
@@ -3943,7 +4033,7 @@ msgstr "作业"
 #: code:addons/stock/models/stock_pack_operation.py:215
 #, python-format
 msgid "Operation Details"
-msgstr "作业详情"
+msgstr "作业细节"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_name
@@ -3993,7 +4083,7 @@ msgstr "用于交货的可选地址，专门用于配发"
 #: model:ir.model.fields,help:stock.field_stock_location_posy
 #: model:ir.model.fields,help:stock.field_stock_location_posz
 msgid "Optional localization details, for information purpose only"
-msgstr "可选位置，仅供参考"
+msgstr "可选的定位细节，仅供参考"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_returned_move_ids
@@ -4130,7 +4220,7 @@ msgstr "打包"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.pack_details
 msgid "Pack Details"
-msgstr "打包详情"
+msgstr "打包细节"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_operation_link
@@ -4359,22 +4449,22 @@ msgstr "拣货 id"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap_picking_id
 #: model:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "分拣"
+msgstr "拣货"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "拣货清单"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "分拣清单"
+msgstr "拣货清单"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "分拣作业"
+msgstr "拣货作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_rule_picking_type_id
@@ -4384,54 +4474,54 @@ msgstr "分拣作业"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Picking Type"
-msgstr "分拣类型"
+msgstr "拣货类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Picking Type Name"
-msgstr "分拣类型名称"
+msgstr "拣货类型名称"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr "分拣类型决定了展示拣货在视图、报告...等中的展示方式"
+msgstr "拣货类型决定了展示拣货在视图、报告...等中的展示方式"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Picking Type for Returns"
-msgstr "退货的分拣类型"
+msgstr "退货的拣货类型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_stock_picking_wave
 msgid "Picking Waves"
-msgstr "分拣波次"
+msgstr "拣货波次"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "分拣清单"
+msgstr "拣货清单"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.procurement_group_form_view_herited
 msgid "Pickings"
-msgstr "分拣"
+msgstr "拣货"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "分拣早已处理"
+msgstr "拣货早已处理"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Pickings for Groups"
-msgstr "群组分拣"
+msgstr "群组拣货"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings that are late on scheduled time"
-msgstr "迟于计划时间的分拣"
+msgstr "迟于计划时间的拣货"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_level_forecast_filter
@@ -4523,7 +4613,7 @@ msgstr "优先级"
 msgid ""
 "Priority for this picking. Setting manually a value here would set it as "
 "priority for all the moves"
-msgstr "此分拣的优先级。手动在这设定一个值作为所有移动的优先级。"
+msgstr "此拣货的优先级。手动在这设定一个值作为所有移动的优先级。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_order
@@ -4842,7 +4932,7 @@ msgstr "在手数量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_availability
 msgid "Quantity Reserved"
-msgstr "已保留的数量"
+msgstr "已预留数量"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:78
@@ -4853,7 +4943,7 @@ msgstr "数量不能为负数"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_availability
 msgid "Quantity in stock that can still be reserved for this move"
-msgstr "仓库里仍然为这次移动保留的数量"
+msgstr "仓库里仍然为这次移动预留的数量"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_qty
@@ -4909,7 +4999,7 @@ msgstr "在谈到此打包作业对移动(以及反向)剩余数量的贡献时�
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_reserved_availability
 msgid "Quantity that has already been reserved for this move"
-msgstr "已为这次移动保留的数量"
+msgstr "已为这次移动预留的数量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.lot_open_quants
@@ -5062,7 +5152,7 @@ msgstr " 与本移动匹配的作业的剩余数量，基于默认计量单位"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "部分分拣后的剩余部分"
+msgstr "部分拣货后的剩余部分"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_remaining_qty
@@ -5132,42 +5222,42 @@ msgstr "Res Model"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Reserve"
-msgstr "保留"
+msgstr "预留"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
 msgid "Reserve products immediately after the sale order confirmation"
-msgstr "销售订单确认后立即保留产品"
+msgstr "销售订单确认后立即预留产品"
 
 #. module: stock
 #: selection:stock.config.settings,module_procurement_jit:0
 msgid "Reserve products manually or based on automatic scheduler"
-msgstr "手动保留产品，还是基于自动调度保留产品"
+msgstr "手动预留产品，还是基于自动调度预留产品"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_picking_form
 msgid "Reserved"
-msgstr "已保留"
+msgstr "已预留"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_operation_link_reserved_quant_id
 msgid "Reserved Quant"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_form
 msgid "Reserved Quants"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reservation_id
 msgid "Reserved for Move"
-msgstr "保留给移动"
+msgstr "预留给移动"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_reserved_quant_ids
 msgid "Reserved quants"
-msgstr "保留的份"
+msgstr "预留的份"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -5203,13 +5293,13 @@ msgstr "退货位置"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退货分拣"
+msgstr "退货拣货"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:161
 #, python-format
 msgid "Returned Picking"
-msgstr "退回的分拣"
+msgstr "退回的拣货"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -5440,7 +5530,7 @@ msgstr "打包序列"
 #: code:addons/stock/models/stock_warehouse.py:661
 #, python-format
 msgid "Sequence picking"
-msgstr " 分拣序列"
+msgstr "拣货序列"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_prodlot_name
@@ -5735,7 +5825,7 @@ msgstr "仓库作业"
 #: model:ir.model.fields,field_description:stock.field_res_partner_picking_warn
 #: model:ir.model.fields,field_description:stock.field_stock_pack_operation_picking_id
 msgid "Stock Picking"
-msgstr "仓库分拣"
+msgstr "仓库拣货"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_stock_move_ids
@@ -5853,7 +5943,7 @@ msgid ""
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
 msgstr ""
-"该技术字段用来记录用户在分拣确认期间设置的产品成本（在使用 '平均价格' 或'实际价格'的成本方法时）。以公司的当前货币及产品的默认计量单位赋值。"
+"该技术字段用来记录用户在拣货确认期间设置的产品成本（在使用 '平均价格' 或'实际价格'的成本方法时）。以公司的当前货币及产品的默认计量单位赋值。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_split_from
@@ -5951,7 +6041,7 @@ msgstr "默认补充仓库应该和自身仓库不同!"
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr "分拣动作的目标位置必须相同的"
+msgstr "拣货动作的目标位置必须相同的"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -5963,7 +6053,7 @@ msgstr "考虑到其上级类别，下面的路线将应用到这个类别的产
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_reservation_id
 msgid "The move the quant is reserved for"
-msgstr "此移动此份是保留给"
+msgstr "此移动此份是预留给"
 
 #. module: stock
 #: sql_constraint:stock.warehouse:0
@@ -6000,7 +6090,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The picking type determines the picking view"
-msgstr "分拣类型决定分拣视图"
+msgstr "拣货类型决定拣货视图"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6077,7 +6167,7 @@ msgstr "序列号%s已经在库存中 "
 #: code:addons/stock/models/stock_picking.py:515
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr "分拣动作的源位置必须相同的"
+msgstr "拣货动作的源位置必须相同的"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_pack_operation_picking_id
@@ -6116,7 +6206,7 @@ msgid ""
 "This allows you to assign a lot (or serial number) to the pickings and "
 "moves.  This can make it possible to know which production lot was sent to a"
 " certain client, ..."
-msgstr "这允许你给分拣或移动指定一个批次(或序列号)。这样才有可能知道哪个批次的产品被送到了哪个客户。"
+msgstr "这允许你给拣货或移动指定一个批次(或序列号)。这样才有可能知道哪个批次的产品被送到了哪个客户。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_config_settings_module_stock_calendar
@@ -6209,7 +6299,7 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品保留，应该慎之又慎。"
+"这是库存视角的产品数量。对于状态为“完成”的移动，这就是真正完成了移动的产品数量。对于其它移动，则是计划进行移动的数量。降低这个数量不会生成欠单。在已指定的移动变更这个数量将影响产品预留，应该慎之又慎。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -6449,7 +6539,7 @@ msgstr "中转位置"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr "如果保留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
+msgstr "如果预留的份变化了，则为True，这意味着我们需要重新计算包裹作业"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_code
@@ -6572,7 +6662,7 @@ msgstr "未计划数量"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Unreserve"
-msgstr "取消保留"
+msgstr "取消预留"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
@@ -6805,7 +6895,7 @@ msgstr "警告"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "分拣单的警告"
+msgstr "拣货的警告"
 
 #. module: stock
 #: code:addons/stock/models/product.py:319
@@ -6994,7 +7084,7 @@ msgstr "已经完成的拣货不能被删除"
 #: code:addons/stock/models/stock_quant.py:143
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr "你不能保留负数数量，或者负数份。"
+msgstr "你不能预留负数数量，或者负数份。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:901
@@ -7014,7 +7104,13 @@ msgid "You cannot cancel a stock move that has been set to 'Done'."
 msgstr "你不能取消一个标记为‘完成’的库存迁移"
 
 #. module: stock
-#: code:addons/stock/models/stock_inventory.py:352
+#: code:addons/stock/models/stock_scrap.py:72
+#, python-format
+msgid "You cannot delete a scrap which is done."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_inventory.py:374
 #, python-format
 msgid ""
 "You cannot have two inventory adjustements in state 'in Progess' with the "
@@ -7050,6 +7146,12 @@ msgstr ""
 "\t%s - qty: %s"
 
 #. module: stock
+#: code:addons/stock/models/stock_production_lot.py:37
+#, python-format
+msgid "You are not allowed to create a lot for this picking type"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_move.py:919
 #, python-format
 msgid "You cannot split a draft move. It needs to be confirmed first."
@@ -7066,7 +7168,7 @@ msgstr "你无法拆分一个已完成的移动"
 msgid ""
 "You do not have any products reserved for this picking.  Please click the 'Reserve' button\n"
 "                                to check if products are available."
-msgstr "你没有为这个Picking保留任何产品，你需要点击‘保留'按钮检查产品是否可用"
+msgstr "你没有为这个拣货预留任何产品，你需要点击‘预留'按钮检查产品是否可用"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:800
@@ -7124,7 +7226,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_picking_return.py:43
 #, python-format
 msgid "You may only return Done pickings"
-msgstr "你只能退回已完成的分拣"
+msgstr "你只能退回已完成的拣货"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:21

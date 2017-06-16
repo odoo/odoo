@@ -47,7 +47,7 @@ msgstr "Нэмэлт газардсан өртөг"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "By Current Cost"
-msgstr ""
+msgstr "Одоогийн Өртгөөр"
 
 #. module: stock_landed_costs
 #: selection:product.template,split_method:0
@@ -80,12 +80,12 @@ msgstr "Цуцлагдсан"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Шинэ газардсан өртөг үүсгэхдээ дарна уу."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Газардсан өртөгийн шинэ ангилал тодорхойлохдоо дарна уу."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -115,6 +115,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
+"Өртөг болон тохируулгын мөрүүд таарахгүй байна. Магадгүй та газардсан "
+"өртөгийг дахин тооцоолуулах шаардлагатай."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -148,6 +150,8 @@ msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
 msgstr ""
+"Өртөгийн аргыг хориглосноор энэ нь газардсан өртөгийн боломжийг ашиглах "
+"боломжгүй болно."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -183,6 +187,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Тэнцүү : Өртөг тэнцүү хуваагдана.\n"
+"Тоогоор : Өртөг нь барааны тоо хэмжээгээр хуваарилагдана.\n"
+"Одоогийн өртөгөөр : Өртөг нь барааны одоогийн өртөгөөр хуваарилагдана.\n"
+"Жингээр : Өртөг барааны жингээр хуваарилагдана.\n"
+"Эзлэхүүнээр : Өртөг барааны эзлэхүүнээр хуваарилагдана."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -235,7 +244,7 @@ msgstr "Газардсан өртөг"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr ""
+msgstr "Газардсан өртөгийн нэр"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -257,6 +266,7 @@ msgstr "Газардсан Өртөгүүд"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
+"Газардсан өртөг нь худалдан авалтын хэмжих нэгж дээр суурилж тооцоологдоно."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -301,12 +311,14 @@ msgstr "Нэр"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Үнэлгээний тохиргооны мөр алга. Газардсан өртөгийг дахин тооцоолох "
+"шаардлагатай."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Зөвхөн ноорог газардсан өртөгийг батлах боломжтой"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -418,6 +430,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
+"Батласан газардсан өртөгийг цуцлах боломжгүй, гэхдээ буцаахын тулд хасах "
+"газардсан өртөг үүсгэж болно"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines

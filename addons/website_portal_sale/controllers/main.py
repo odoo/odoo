@@ -125,9 +125,12 @@ class website_account(website_account):
             order.check_access_rule('read')
         except AccessError:
             return request.render("website.403")
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
+
+        order_sudo = order.sudo()
+        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order_sudo.invoice_ids.mapped('invoice_line_ids')}
+
         return request.render("website_portal_sale.orders_followup", {
-            'order': order.sudo(),
+            'order': order_sudo,
             'order_invoice_lines': order_invoice_lines,
         })
 
@@ -178,10 +181,10 @@ class website_account(website_account):
         partner = request.env['res.users'].browse(request.uid).partner_id
         invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
         if invoices:
-            if (data.get('vat', partner.vat) or False) != partner.vat:
+            if 'vat' in partner and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
-            if data.get('name', partner.name) != partner.name:
+            if 'name' in data and (data['name'] or False) != (partner.name or False):
                 error['name'] = 'error'
                 error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
         return error, error_message
