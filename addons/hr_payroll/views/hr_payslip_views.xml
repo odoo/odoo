@@ -83,6 +83,39 @@
         </field>
     </record>
 
+    <record id="hr_payslip_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.kanban</field>
+        <field name="model">hr.payslip</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong><field name="employee_id"/></strong>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right label label-default">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12">
+                                    <span>
+                                        <field name="date_from"/> - <field name="date_to"/>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12">
+                                    <span><field name="name"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <act_window name="Payslip Computation Details"
         context="{'default_slip_id': active_id,'search_default_slip_id': active_id}"
         res_model="hr.payslip.line"
@@ -251,7 +284,7 @@
         <field name="name">Employee Payslips</field>
         <field name="res_model">hr.payslip</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_hr_payslip_tree"/>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="view_hr_payslip_filter"/>
     </record>
 
@@ -295,6 +328,39 @@
         </field>
     </record>
 
+    <record id="hr_payslip_run_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payslip.run.kanban</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-xs-6">
+                                    <span class="pull-right label label-default">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12">
+                                    <span>
+                                        <field name="date_start"/> - <field name="date_end"/>
+                                    </span>
+                                    <span class="pull-right" title="Is a Blocking Reason?">
+                                        <field name="credit_note" widget="boolean"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="hr_payslip_run_form" model="ir.ui.view">
         <field name="name">hr.payslip.run.form</field>
         <field name="model">hr.payslip.run</field>
@@ -329,7 +395,7 @@
         <field name="name">Payslips Batches</field>
         <field name="res_model">hr.payslip.run</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_payslip_run_tree"/>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="search_view_id" ref="hr_payslip_run_filter"/>
     </record>
     <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_payroll_root"/>
