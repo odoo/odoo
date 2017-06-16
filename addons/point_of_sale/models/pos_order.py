@@ -173,6 +173,33 @@ class PosOrder(models.Model):
             'user_id': self.env.uid,
         }
 
+    @api.model
+    def _get_account_move_line_group_data_type_key(self, data_type, values):
+        """
+        Return a tuple which will be used as a key for grouping account
+        move lines in _create_account_move_line method.
+        :param data_type: 'product', 'tax', ....
+        :param values: account move line values
+        :return: tuple() representing the data_type key
+        """
+        if data_type == 'product':
+            return ('product',
+                    values['partner_id'],
+                    (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
+                    values['analytic_account_id'],
+                    values['debit'] > 0)
+        elif data_type == 'tax':
+            return ('tax',
+                    values['partner_id'],
+                    values['tax_line_id'],
+                    values['debit'] > 0)
+        elif data_type == 'counter_part':
+            return ('counter_part',
+                    values['partner_id'],
+                    values['account_id'],
+                    values['debit'] > 0)
+        return False
+
     def _action_create_invoice_line(self, line=False, invoice_id=False):
         InvoiceLine = self.env['account.invoice.line']
         inv_name = line.product_id.name_get()[0][1]
@@ -230,13 +257,8 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
-                elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
-                elif data_type == 'counter_part':
-                    key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
-                else:
+                key = self._get_account_move_line_group_data_type_key(data_type, values)
+                if not key:
                     return
 
                 grouped_data.setdefault(key, [])
