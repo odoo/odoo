@@ -24,16 +24,16 @@ class MrpConfigSettings(models.TransientModel):
     module_mrp_repair = fields.Boolean("Repair")
 
     @api.model
-    def get_default_fields(self, fields):
-        res = super(MrpConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
+    def get_values(self):
+        res = super(MrpConfigSettings, self).get_values()
+        res.update(
             use_manufacturing_lead=self.env['ir.config_parameter'].sudo().get_param('mrp.use_manufacturing_lead')
-        ))
+        )
         return res
 
     @api.multi
-    def set_fields(self):
-        super(MrpConfigSettings, self).set_fields()
+    def set_values(self):
+        super(MrpConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('mrp.use_manufacturing_lead', self.use_manufacturing_lead)
 
     @api.onchange('use_manufacturing_lead')

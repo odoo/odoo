@@ -37,24 +37,27 @@ class BaseConfigSettings(models.TransientModel):
     external_report_layout = fields.Selection(related="company_id.external_report_layout")
 
     @api.model
-    def get_default_fields(self, fields):
-        res = super(BaseConfigSettings, self).get_default_fields(fields)
-        default_external_email_server = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_external_email_server', default=False)
-        default_user_rights = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_user_rights', default=False)
-        default_custom_report_footer = self.env['ir.config_parameter'].sudo().get_param('base_setup.default_custom_report_footer', default=False)
-        res.update({
-            'default_external_email_server': default_external_email_server,
-            'default_user_rights': default_user_rights,
-            'default_custom_report_footer': default_custom_report_footer,
-        })
+    def get_values(self):
+        res = super(BaseConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+        default_external_email_server = params.get_param('base_setup.default_external_email_server', default=False)
+        default_user_rights = params.get_param('base_setup.default_user_rights', default=False)
+        default_custom_report_footer = params.get_param('base_setup.default_custom_report_footer', default=False)
+        res.update(
+            default_external_email_server=default_external_email_server,
+            default_user_rights=default_user_rights,
+            default_custom_report_footer=default_custom_report_footer,
+            company_share_partner=not self.env.ref('base.res_partner_rule').active,
+        )
         return res
 
     @api.multi
-    def set_fields(self):
-        super(BaseConfigSettings, self).set_fields()
+    def set_values(self):
+        super(BaseConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_external_email_server", self.default_external_email_server)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_user_rights", self.default_user_rights)
         self.env['ir.config_parameter'].sudo().set_param("base_setup.default_custom_report_footer", self.default_custom_report_footer)
+        self.env.ref('base.res_partner_rule').write({'active': not self.company_share_partner})
 
     @api.multi
     def open_company(self):
@@ -73,18 +76,6 @@ class BaseConfigSettings(models.TransientModel):
         action['res_id'] = self.env.ref('base.default_user').id
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
-
-    @api.model
-    def get_default_company_share_partner(self, fields):
-        return {
-            'company_share_partner': not self.env.ref('base.res_partner_rule').active
-        }
-
-    @api.multi
-    def set_default_company_share_partner(self):
-        partner_rule = self.env.ref('base.res_partner_rule')
-        for config in self:
-            partner_rule.write({'active': not config.company_share_partner})
 
     @api.model
     def _prepare_report_view_action(self, template):

@@ -76,33 +76,27 @@ class StockConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     @api.model
-    def get_default_fields(self, fields):
-        res = super(StockConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
+    def get_values(self):
+        res = super(StockConfigSettings, self).get_values()
+        res.update(
             use_propagation_minimum_delta=self.env['ir.config_parameter'].sudo().get_param('stock.use_propagation_minimum_delta')
-        ))
+        )
         return res
 
     @api.multi
-    def set_fields(self):
-        super(StockConfigSettings, self).set_fields()
+    def set_values(self):
+        super(StockConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('stock.use_propagation_minimum_delta', self.use_propagation_minimum_delta)
-
-    @api.multi
-    def set_group_stock_multi_locations(self):
         """ If we are not in multiple locations, we can deactivate the internal
         operation types of the warehouses, so they won't appear in the dashboard.
         Otherwise, activate them.
         """
-        for config in self:
-            if config.group_stock_multi_locations:
-                active = True
-                domain = []
-            else:
-                active = False
-                domain = [('reception_steps', '=', 'one_step'), ('delivery_steps', '=', 'ship_only')]
-
-            warehouses = self.env['stock.warehouse'].search(domain)
-            warehouses.mapped('int_type_id').write({'active': active})
-
-        return True
+        if self.group_stock_multi_locations:
+            warehouses = self.env['stock.warehouse'].search([])
+            active = True
+        else:
+            warehouses = self.env['stock.warehouse'].search([
+                ('reception_steps', '=', 'one_step'),
+                ('delivery_steps', '=', 'ship_only')])
+            active = False
+        warehouses.mapped('int_type_id').write({'active': active})

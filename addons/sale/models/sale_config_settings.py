@@ -130,35 +130,25 @@ class SaleConfigSettings(models.TransientModel):
                 'group_show_price_subtotal': False,
             })
 
-    def get_default_sale_show_tax(self, fields):
-        return dict(
-            sale_show_tax=self.group_show_price_total and 'total' or 'subtotal'
-        )
-
-    def get_multi_sales_price(self, fields):
+    @api.model
+    def get_values(self):
+        res = super(SaleConfigSettings, self).get_values()
         sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
-        return dict(
+        res.update(
+            use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
+            auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
+            default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
+            sale_show_tax=self.group_show_price_total and 'total' or 'subtotal',
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
             sale_pricelist_setting=sale_pricelist_setting,
         )
-
-    def set_multi_sales_price(self):
-        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
-
-    @api.model
-    def get_default_fields(self, fields):
-        res = super(SaleConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
-            use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
-            auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
-            default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
-        ))
         return res
 
     @api.multi
-    def set_fields(self):
-        super(SaleConfigSettings, self).set_fields()
+    def set_values(self):
+        super(SaleConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param("sale.use_sale_note", self.use_sale_note)
         self.env['ir.config_parameter'].sudo().set_param("sale.auto_done_setting", self.auto_done_setting)
         self.env['ir.config_parameter'].sudo().set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
+        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)

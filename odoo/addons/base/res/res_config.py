@@ -458,7 +458,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
 
-    def get_default_fields(self, fields):
+    def get_values(self):
+        """
+        Return values for the fields other that `default`, `group` and `module`
+        """
         return {}
 
     @api.model
@@ -486,16 +489,19 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             if self._fields[name].type == 'selection':
                 res[name] = int(res[name])
 
-        # other fields: call all methods that start with 'get_default_'
-        # and call the method 'get_default_fields'
+        # other fields: call the method 'get_values'
+        # The other methods that start with `get_default_` are deprecated
         for method in dir(self):
-            if method.startswith('get_default_') and method is not 'get_default_fields':
-                res.update(getattr(self, method)(fields))
-        res.update(self.get_default_fields(fields))
+            if method.startswith('get_default_'):
+                _logger.warning(_('Methods that start with `get_default_` are deprecated. Override `get_values` instead(Method %s)') % method)
+        res.update(self.get_values())
 
         return res
 
-    def set_fields(self):
+    def set_values(self):
+        """
+        Set values for the fields other that `default`, `group` and `module`
+        """
         pass
 
     @api.multi
@@ -527,12 +533,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 groups.write({'implied_ids': [(3, implied_group.id)]})
                 implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
 
-        # other fields: execute all methods that start with 'set_'
-        # and the method 'set_fields'
+        # other fields: execute method 'set_values'
+        # Methods that start with `set_` are now deprecated
         for method in dir(self):
-            if method.startswith('set_') and method is not 'set_fields':
-                getattr(self, method)()
-        self.set_fields()
+            if method.startswith('set_') and method is not 'set_values':
+                _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
+        self.set_values()
 
         # module fields: install/uninstall the selected modules
         to_install = []

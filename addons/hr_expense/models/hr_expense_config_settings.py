@@ -20,17 +20,17 @@ class HrExpenseConfigSettings(models.TransientModel):
     module_sale = fields.Boolean(string="Customer Billing")
 
     @api.model
-    def get_default_fields(self, fields):
-        res = super(HrExpenseConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
+    def get_values(self):
+        res = super(HrExpenseConfigSettings, self).get_values()
+        res.update(
             alias_prefix=self.env.ref('hr_expense.mail_alias_expense').alias_name,
             use_mailgateway=self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway'),
-        ))
+        )
         return res
 
     @api.multi
-    def set_fields(self):
-        super(HrExpenseConfigSettings, self).set_fields()
+    def set_values(self):
+        super(HrExpenseConfigSettings, self).set_values()
         self.env.ref('hr_expense.mail_alias_expense').write({'alias_name': self.alias_prefix})
         self.env['ir.config_parameter'].sudo().set_param('hr_expense.use_mailgateway', self.use_mailgateway)
 

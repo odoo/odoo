@@ -60,34 +60,28 @@ class AccountConfigSettings(models.TransientModel):
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
 
     @api.model
-    def get_default_tax_fields(self, fields):
-        default_purchase_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_purchase_tax_id', default=False)
-        default_sale_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
-        return dict(default_purchase_tax_id=int(default_purchase_tax_id), default_sale_tax_id=int(default_sale_tax_id))
+    def get_values(self):
+        res = super(AccountConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+        res.update(
+            default_purchase_tax_id=params.get_param('account.default_purchase_tax_id', default=False),
+            default_sale_tax_id=params.get_param('account.default_sale_tax_id', default=False)
+        )
+        return res
 
     @api.multi
-    def set_default_tax_fields(self):
+    def set_values(self):
+        super(AccountConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
         self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
-
-    @api.depends('company_id')
-    def _compute_has_chart_of_accounts(self):
-        self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
-
-    def set_group_multi_currency(self):
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
-        return True
-
-    def set_default_product_taxes(self):
         """ Set the product taxes if they have changed """
         ir_values_obj = self.env['ir.values']
         if self.default_sale_tax_id:
             ir_values_obj.sudo().set_default('product.template', "taxes_id", [self.default_sale_tax_id.id], for_all_users=True, company_id=self.company_id.id)
         if self.default_purchase_tax_id:
             ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
-
-    def set_chart_of_accounts(self):
         """ install a chart of accounts for the given company (if required) """
         if self.chart_template_id and not self.has_chart_of_accounts and self.company_id.expects_chart_of_accounts:
             if self.company_id.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
@@ -107,6 +101,10 @@ class AccountConfigSettings(models.TransientModel):
                 'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
             })
             wizard.execute()
+
+    @api.depends('company_id')
+    def _compute_has_chart_of_accounts(self):
+        self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

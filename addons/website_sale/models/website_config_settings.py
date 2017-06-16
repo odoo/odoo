@@ -91,15 +91,35 @@ class WebsiteConfigSettings(models.TransientModel):
         ('subtotal', 'Tax-Excluded Prices')],
         "Product Prices", default='total')
 
-    @api.multi
-    def set_automatic_invoice(self):
+    @api.model
+    def get_values(self):
+        res = super(WebsiteConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+
+        sale_delivery_settings = 'none'
+        if self.env['ir.module.module'].search([('name', '=', 'delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
+            sale_delivery_settings = 'internal'
+            if self.env['ir.module.module'].search([('name', '=', 'website_sale_delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
+                sale_delivery_settings = 'website'
+
+        sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
+
+        res.update(
+            automatic_invoice=params.get_param('website_sale.automatic_invoice', default=False),
+            sale_delivery_settings=sale_delivery_settings,
+            multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
+            multi_sales_price_method=sale_pricelist_setting in ['formula'] and 1 or False,
+            sale_pricelist_setting=sale_pricelist_setting,
+            sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.sale_show_tax')
+        )
+        return res
+
+    def set_values(self):
+        super(WebsiteConfigSettings, self).set_values()
         value = self.module_account_invoicing and self.default_invoice_policy == 'order' and self.automatic_invoice
         self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
-
-    @api.model
-    def get_default_automatic_invoice(self, fields):
-        value = self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False)
-        return {'automatic_invoice': value}
+        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
+        self.env['ir.config_parameter'].sudo().set_param('website.sale_show_tax', self.sale_show_tax)
 
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
@@ -132,26 +152,6 @@ class WebsiteConfigSettings(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    @api.model
-    def get_default_sale_delivery_settings(self, fields):
-        sale_delivery_settings = 'none'
-        if self.env['ir.module.module'].search([('name', '=', 'delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
-            sale_delivery_settings = 'internal'
-            if self.env['ir.module.module'].search([('name', '=', 'website_sale_delivery')], limit=1).state in ('installed', 'to install', 'to upgrade'):
-                sale_delivery_settings = 'website'
-        return {'sale_delivery_settings': sale_delivery_settings}
-
-    @api.model
-    def get_default_sale_pricelist_setting(self, fields):
-        sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
-        return dict(
-            multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
-            multi_sales_price_method=sale_pricelist_setting in ['formula'] and 1 or False,
-            sale_pricelist_setting=sale_pricelist_setting,
-        )
-
-    def set_multi_sales_price(self):
-        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
 
     @api.onchange('sale_delivery_settings')
     def _onchange_sale_delivery_settings(self):
@@ -190,9 +190,3 @@ class WebsiteConfigSettings(models.TransientModel):
                 'group_show_price_total': True,
                 'group_show_price_subtotal': False,
             })
-
-    def get_default_sale_show_tax(self, fields):
-        return dict(sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.sale_show_tax'))
-
-    def set_sale_show_tax(self):
-        return self.env['ir.config_parameter'].sudo().set_param('website.sale_show_tax', self.sale_show_tax)

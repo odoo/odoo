@@ -37,17 +37,16 @@ class PurchaseConfigSettings(models.TransientModel):
     is_installed_sale = fields.Boolean()
 
     @api.multi
-    def get_default_is_installed_sale(self, fields):
-        return {
-            'is_installed_sale': self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id
-        }
+    def get_values(self):
+        res = super(PurchaseConfigSettings, self).get_values()
+        res.update(
+            is_installed_sale=self.env['ir.module.module'].search([('name', '=', 'sale'), ('state', '=', 'installed')]).id
+        )
+        return res
 
-    @api.multi
-    def set_lock_confirmed_po(self):
+    def set_values(self):
+        super(PurchaseConfigSettings, self).set_values()
         self.po_lock = 'lock' if self.lock_confirmed_po else 'edit'
-
-    @api.multi
-    def set_po_order_approval(self):
         self.po_double_validation = 'two_step' if self.po_order_approval else 'one_step'
 
 

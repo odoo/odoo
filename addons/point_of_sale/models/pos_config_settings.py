@@ -58,15 +58,15 @@ class PosConfigSettings(models.TransientModel):
                 'group_pricelist_item': False,
             })
 
-    def get_default_fields(self, fields):
-        res = super(PosConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
+    def get_values(self):
+        res = super(PosConfigSettings, self).get_values()
+        res.update(
             use_pos_sale_price=self.env['ir.config_parameter'].sudo().get_param('pos.use_pos_sale_price'),
             pos_pricelist_setting=self.env['ir.config_parameter'].sudo().get_param('pos.pos_pricelist_setting'),
-        ))
+        )
         return res
 
-    def set_fields(self):
-        super(PosConfigSettings, self).set_fields()
+    def set_values(self):
+        super(PosConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('pos.use_pos_sale_price', self.use_pos_sale_price)
         self.env['ir.config_parameter'].sudo().set_param('pos.pos_pricelist_setting', self.pos_pricelist_setting)

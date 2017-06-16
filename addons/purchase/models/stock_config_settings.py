@@ -18,13 +18,13 @@ class StockConfigSettings(models.TransientModel):
         if not self.use_po_lead:
             self.po_lead = 0.0
 
-    def get_default_fields(self, fields):
-        res = super(StockConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
+    def get_values(self):
+        res = super(StockConfigSettings, self).get_values()
+        res.update(
             use_po_lead=self.env['ir.config_parameter'].sudo().get_param('purchase.use_po_lead')
-        ))
+        )
         return res
 
-    def set_fields(self):
-        super(StockConfigSettings, self).set_fields()
+    def set_values(self):
+        super(StockConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('purchase.use_po_lead', self.use_po_lead)
