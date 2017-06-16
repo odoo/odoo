@@ -53,7 +53,7 @@ class PurchaseRequisition(models.Model):
     ordering_date = fields.Date(string="Ordering Date")
     date_end = fields.Datetime(string='Agreement Deadline')
     schedule_date = fields.Date(string='Delivery Date', index=True, help="The expected and scheduled delivery date where all the products are received")
-    user_id = fields.Many2one('res.users', string='Responsible', default= lambda self: self.env.user)
+    user_id = fields.Many2one('res.users', string='Purchase Representative', default= lambda self: self.env.user)
     description = fields.Text()
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env['res.company']._company_default_get('purchase.requisition'))
     purchase_ids = fields.One2many('purchase.order', 'requisition_id', string='Purchase Orders', states={'done': [('readonly', True)]})

@@ -30,7 +30,7 @@ class PurchaseReport(models.Model):
     product_uom = fields.Many2one('product.uom', 'Reference Unit of Measure', required=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True)
-    user_id = fields.Many2one('res.users', 'Responsible', readonly=True)
+    user_id = fields.Many2one('res.users', 'Purchase Representative', readonly=True)
     delay = fields.Float('Days to Validate', digits=(16, 2), readonly=True)
     delay_pass = fields.Float('Days to Deliver', digits=(16, 2), readonly=True)
     unit_quantity = fields.Float('Product Quantity', readonly=True, oldname='quantity')
@@ -62,7 +62,7 @@ class PurchaseReport(models.Model):
                     s.dest_address_id,
                     spt.warehouse_id as picking_type_id,
                     s.partner_id as partner_id,
-                    s.create_uid as user_id,
+                    s.user_id as user_id,
                     s.company_id as company_id,
                     s.fiscal_position_id as fiscal_position_id,
                     l.product_id,
@@ -99,7 +99,7 @@ class PurchaseReport(models.Model):
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
                 group by
                     s.company_id,
-                    s.create_uid,
+                    s.user_id,
                     s.partner_id,
                     u.factor,
                     s.currency_id,
