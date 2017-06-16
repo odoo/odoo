@@ -128,27 +128,36 @@ class WebsiteSaleBackend(WebsiteBackend):
         else:
             previous_sale_label = _('Previous Year')
 
+        prev_date_from = datetime.strftime(date_date_from - timedelta(days=date_diff_days), '%Y-%m-%d')
+        prev_date_to = datetime.strftime(date_date_from, '%Y-%m-%d')
+
         sales_domain = [
             ('team_id.team_type', '=', 'website'),
             ('state', 'in', ['sale', 'done']),
             ('date', '>=', date_from),
             ('date', '<=', date_to)
         ]
+
+        prev_sales_domain = [
+            ('team_id.team_type', '=', 'website'),
+            ('state', 'in', ['sale', 'done']),
+            ('date', '>=', prev_date_from),
+            ('date', '<=', prev_date_to)
+        ]
+
         sales_values['graph'] += [{
             'values': self._compute_sale_graph(date_date_from, date_date_to, sales_domain),
             'key': 'Untaxed Total',
         }, {
-            'values': self._compute_sale_graph(date_date_from - timedelta(days=date_diff_days), date_date_from, sales_domain, previous=True),
+            'values': self._compute_sale_graph(date_date_from - timedelta(days=date_diff_days), date_date_from, prev_sales_domain, previous=True),
             'key': previous_sale_label,
         }]
 
         return results
 
     def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
-
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
-
         daily_sales = request.env['sale.report'].read_group(
             domain=sales_domain,
             fields=['date', 'price_subtotal'],
@@ -161,7 +170,6 @@ class WebsiteSaleBackend(WebsiteBackend):
             # Respect read_group format in models.py
             '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
         } for d in date_list]
-
         return sales_graph
 
     def _compute_previous_sale_evolution(self, date_from, date_to, date_diff_days):
