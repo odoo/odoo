@@ -85,8 +85,7 @@ class WebsiteSaleBackend(WebsiteBackend):
                 ('partner_id', '!=', request.env.ref('base.public_partner').id),
                 ('invoice_status', '=', 'to invoice'),
             ]),
-            order_carts_abandoned_count=request.env['sale.order'].search_count([
-                ('team_id', 'in', request.env['crm.team'].search([('team_type', '=', 'website')]).ids),
+            order_carts_abandoned_count=request.env['sale.order'].search_count(sale_order_domain + [
                 ('state', '=', 'draft'),
                 ('order_line', '!=', 'False'),
                 ('partner_id', '!=', request.env.ref('base.public_partner').id),
