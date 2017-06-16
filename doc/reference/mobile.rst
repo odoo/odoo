@@ -30,7 +30,6 @@ How does it work?
 Internal working of Mobile application:
 
 .. image:: images/mobile_working.jpg
-    :align: left
 
 Of course, it is a web page that loads on a Mobile Native Web container. But it
 is integrated in such a way that you can access native resources from your web
@@ -55,7 +54,6 @@ As Odoo Web Framework, Mobile api can be used anywhere by getting object of
 **web_mobile.rpc**
 
 .. image:: images/odoo_mobile_api.png
-    :align: left
 
 Mobile rpc object provide list of methods available (Works only with Mobile
 App). 
