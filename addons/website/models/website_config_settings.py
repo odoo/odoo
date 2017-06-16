@@ -67,39 +67,30 @@ class WebsiteConfigSettings(models.TransientModel):
             self.google_management_client_id = False
             self.google_management_client_secret = False
 
-    def get_default_google_maps_api_key(self, fields):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
-        google_maps_api_key = self.env['ir.config_parameter'].sudo().get_param('google_maps_api_key', default='')
-        return dict(google_maps_api_key=google_maps_api_key)
-
-    def set_google_maps_api_key(self):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
-        self.env['ir.config_parameter'].sudo().set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
-
     @api.depends('language_ids')
     def _compute_language_count(self):
         for config in self:
             config.language_count = len(self.language_ids)
 
     @api.model
-    def get_default_fields(self, fields):
+    def get_values(self):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
-        res = super(WebsiteConfigSettings, self).get_default_fields(fields)
-        res.update(dict(
-            has_google_analytics=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics'),
-            has_google_analytics_dashboard=self.env['ir.config_parameter'].sudo().get_param('website.has_google_analytics_dashboard'),
-            has_google_maps=self.env['ir.config_parameter'].sudo().get_param('website.has_google_maps'),
-        ))
+        res = super(WebsiteConfigSettings, self).get_values()
+        params = self.env['ir.config_parameter'].sudo()
+        res.update(
+            has_google_analytics=params.get_param('website.has_google_analytics'),
+            has_google_analytics_dashboard=params.get_param('website.has_google_analytics_dashboard'),
+            has_google_maps=params.get_param('website.has_google_maps'),
+            google_maps_api_key=params.get_param('google_maps_api_key', default=''),
+        )
         return res
 
-    @api.multi
-    def set_fields(self):
+    def set_values(self):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
-        super(WebsiteConfigSettings, self).set_fields()
+        super(WebsiteConfigSettings, self).set_values()
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics', self.has_google_analytics)
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
         self.env['ir.config_parameter'].sudo().set_param('website.has_google_maps', self.has_google_maps)
+        self.env['ir.config_parameter'].sudo().set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())

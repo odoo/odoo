@@ -8,7 +8,7 @@ from werkzeug import urls
 from odoo import api, fields, models, tools
 
 
-class BaseConfiguration(models.TransientModel):
+class BaseConfigSettings(models.TransientModel):
     """ Inherit the base settings to add a counter of failed email + configure
     the alias domain. """
     _inherit = 'base.config.settings'
@@ -18,14 +18,11 @@ class BaseConfiguration(models.TransientModel):
                                "the Odoo server, enter the domain name here.")
 
     @api.model
-    def get_default_fail_counter(self, fields):
-        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
-        return {
-            'fail_counter': self.env['mail.mail'].sudo().search_count([('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)), ('state', '=', 'exception')]),
-        }
+    def get_values(self):
+        res = super(BaseConfigSettings, self).get_values()
 
-    @api.model
-    def get_default_alias_domain(self, fields):
+        previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
+
         alias_domain = self.env["ir.config_parameter"].get_param("mail.catchall.domain", default=None)
         if alias_domain is None:
             domain = self.env["ir.config_parameter"].get_param("web.base.url")
@@ -33,9 +30,16 @@ class BaseConfiguration(models.TransientModel):
                 alias_domain = urls.url_parse(domain).host
             except Exception:
                 pass
-        return {'alias_domain': alias_domain or False}
 
-    @api.multi
-    def set_alias_domain(self):
-        for record in self:
-            self.env['ir.config_parameter'].set_param("mail.catchall.domain", record.alias_domain or '')
+        res.update(
+            fail_counter=self.env['mail.mail'].sudo().search_count([
+                ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
+                ('state', '=', 'exception')]),
+            alias_domain=alias_domain or False,
+        )
+
+        return res
+
+    def set_values(self):
+        super(BaseConfigSettings, self).set_values()
+        self.env['ir.config_parameter'].set_param("mail.catchall.domain", self.alias_domain or '')
