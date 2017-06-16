@@ -302,6 +302,89 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('notifyChange on a one2many', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.records[1].product_ids = [37];
+        this.params.fieldNames = ['product_ids'];
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.strictEqual(args.model, 'product');
+                }
+                return this._super(route, args);
+            },
+        });
+
+        var o2mParams = {
+            modelName: 'product',
+            fields: this.data.product.fields,
+            fieldNames: ['display_name'],
+        };
+        model.load(this.params).then(function (resultID) {
+            model.load(o2mParams).then(function (newRecordID) {
+                var record = model.get(resultID);
+                var x2mListID = record.data.product_ids.id;
+
+                assert.strictEqual(record.data.product_ids.count, 1,
+                    "there should be one record in the relation");
+
+                // trigger a 'ADD' command
+                model.notifyChanges(resultID, {product_ids: {operation: 'ADD', id: newRecordID}});
+
+                assert.deepEqual(model.localData[x2mListID]._changes, [{
+                    operation: 'ADD', id: newRecordID,
+                }], "_changes should be correct");
+                record = model.get(resultID);
+                assert.strictEqual(record.data.product_ids.count, 2,
+                    "there should be two records in the relation");
+
+                // trigger a 'UPDATE' command
+                model.notifyChanges(resultID, {product_ids: {operation: 'UPDATE', id: newRecordID}});
+
+                assert.deepEqual(model.localData[x2mListID]._changes, [{
+                    operation: 'ADD', id: newRecordID,
+                }, {
+                    operation: 'UPDATE', id: newRecordID,
+                }], "_changes should be correct");
+                record = model.get(resultID);
+                assert.strictEqual(record.data.product_ids.count, 2,
+                    "there should be two records in the relation");
+
+                // trigger a 'REMOVE' command on the existing record
+                var existingRecordID = record.data.product_ids.data[0].id;
+                model.notifyChanges(resultID, {product_ids: {operation: 'REMOVE', ids: [existingRecordID]}});
+
+                assert.deepEqual(model.localData[x2mListID]._changes, [{
+                    operation: 'ADD', id: newRecordID,
+                }, {
+                    operation: 'UPDATE', id: newRecordID,
+                }, {
+                    operation: 'REMOVE', id: existingRecordID,
+                }],
+                    "_changes should be correct");
+                record = model.get(resultID);
+                assert.strictEqual(record.data.product_ids.count, 1,
+                    "there should be one record in the relation");
+
+                // trigger a 'REMOVE' command on the new record
+                model.notifyChanges(resultID, {product_ids: {operation: 'REMOVE', ids: [newRecordID]}});
+
+                assert.deepEqual(model.localData[x2mListID]._changes, [{
+                    operation: 'REMOVE', id: existingRecordID,
+                }], "_changes should be correct");
+                record = model.get(resultID);
+                assert.strictEqual(record.data.product_ids.count, 0,
+                    "there should be no record in the relation");
+            });
+
+        });
+        model.destroy();
+    });
+
     QUnit.test('notifyChange on a many2one, without display_name', function (assert) {
         assert.expect(3);
 

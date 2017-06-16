@@ -1522,6 +1522,178 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('edition of one2many field with pager', function (assert) {
+        assert.expect(31);
+
+        var ids = [];
+        for (var i = 0; i < 45; i++) {
+            var id = 10 + i;
+            ids.push(id);
+            this.data.partner.records.push({
+                id: id,
+                display_name: "relational record " + id,
+            });
+        }
+        this.data.partner.records[0].p = ids;
+
+        var saveCount = 0;
+        var checkRead = false;
+        var readIDs;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<kanban>' +
+                            '<field name="display_name"/>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right delete_icon"/>' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                    '</field>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && checkRead) {
+                    readIDs = args.args[0];
+                    checkRead = false;
+                }
+                if (args.method === 'write') {
+                    saveCount++;
+                    var nbCommands = args.args[1].p.length;
+                    var nbLinkCommands = _.filter(args.args[1].p, function (command) {
+                        return command[0] === 4;
+                    }).length;
+                    switch(saveCount) {
+                        case 1:
+                            assert.strictEqual(nbCommands, 46,
+                                "should send 46 commands (one for each record)");
+                            assert.strictEqual(nbLinkCommands, 45,
+                                "should send a LINK_TO command for each existing record");
+                            assert.deepEqual(args.args[1].p[45], [0, false, {
+                                display_name: 'new record',
+                            }], "should sent a CREATE command for the new record");
+                            break;
+                        case 2:
+                            assert.strictEqual(nbCommands, 46,
+                                "should send 46 commands");
+                            assert.strictEqual(nbLinkCommands, 45,
+                                "should send a LINK_TO command for each existing record");
+                            assert.deepEqual(args.args[1].p[45], [2, 10, false],
+                                "should sent a DELETE command for the deleted record");
+                            break;
+                        case 3:
+                            assert.strictEqual(nbCommands, 47,
+                                "should send 47 commands");
+                            assert.strictEqual(nbLinkCommands, 43,
+                                "should send a LINK_TO command for each existing record");
+                            assert.deepEqual(args.args[1].p[43],
+                                [0, false, {display_name: 'new record page 1'}],
+                                "should sent correct CREATE command");
+                            assert.deepEqual(args.args[1].p[44],
+                                [0, false, {display_name: 'new record page 2'}],
+                                "should sent correct CREATE command");
+                            assert.deepEqual(args.args[1].p[45],
+                                [2, 11, false],
+                                "should sent correct DELETE command");
+                            assert.deepEqual(args.args[1].p[46],
+                                [2, 52, false],
+                                "should sent correct DELETE command");
+                            break;
+                    }
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records on page 1');
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 45', "pager range should be correct");
+
+        // add a record on page one
+        checkRead = true;
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o-kanban-button-new').click();
+        $('.modal input').val('new record').trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        // checks
+        assert.strictEqual(readIDs, undefined, "should not have read any record");
+        assert.strictEqual(form.$('span:contains(new record)').length, 0,
+            "new record should be on page 2");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records on page 1');
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 46', "pager range should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:first span:contains(new record)').length,
+            0, 'new record should not be on page 1');
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+
+        // delete a record on page one
+        checkRead = true;
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 10)').length,
+            1, 'first record should be the one with id 10 (next checks rely on that)');
+        form.$('.delete_icon:first').click();
+        // checks
+        assert.deepEqual(readIDs, [50],
+            "should have read a record (to display 40 records on page 1)");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records on page 1');
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 45', "pager range should be correct");
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+
+        // add and delete records in both pages
+        form.$buttons.find('.o_form_button_edit').click();
+        checkRead = true;
+        readIDs = undefined;
+        // add and delete a record in page 1
+        form.$('.o-kanban-button-new').click();
+        $('.modal input').val('new record page 1').trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 11)').length,
+            1, 'first record should be the one with id 11 (next checks rely on that)');
+        form.$('.delete_icon:first').click();
+        assert.deepEqual(readIDs, [51],
+            "should have read a record (to display 40 records on page 1)");
+        // add and delete a record in page 2
+        form.$('.o_x2m_control_panel .o_pager_next').click();
+        assert.strictEqual(form.$('.o_kanban_record:first span:contains(relational record 52)').length,
+            1, 'first record should be the one with id 52 (next checks rely on that)');
+        checkRead = true;
+        readIDs = undefined;
+        form.$('.delete_icon:first').click();
+        form.$('.o-kanban-button-new').click();
+        $('.modal input').val('new record page 2').trigger('input');
+        $('.modal .modal-footer .btn-primary:first').click(); // save and close
+        assert.strictEqual(readIDs, undefined, "should not have read any record");
+        // checks
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
+            'there should be 5 records on page 2');
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '41-45 / 45', "pager range should be correct");
+        assert.strictEqual(form.$('.o_kanban_record span:contains(new record page 1)').length,
+            1, 'new records should be on page 2');
+        assert.strictEqual(form.$('.o_kanban_record span:contains(new record page 2)').length,
+            1, 'new records should be on page 2');
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('sorting one2many fields', function (assert) {
         assert.expect(4);
 
@@ -2357,6 +2529,45 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable o2m with onchange and required field: delete an invalid line', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            turtles: function () {},
+        };
+        this.data.partner.records[0].turtles = [1];
+        this.data.turtle.records[0].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="product_id"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_data_cell:first').click();
+        form.$('.o_field_widget[name="product_id"] input').val('').trigger('keyup');
+        assert.verifySteps(['read', 'read'], 'no onchange should be done as line is invalid');
+        form.$('.o_list_record_delete').click();
+        assert.verifySteps(['read', 'read', 'onchange'], 'onchange should have been done');
+
+        form.destroy();
+    });
+
     QUnit.test('onchange in a one2many', function (assert) {
         assert.expect(1);
 
@@ -2512,6 +2723,75 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_save').click();
 
         assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
+        form.destroy();
+    });
+
+    QUnit.test('one2many and onchange (with command DELETE_ALL)', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.p = [[5]];
+            },
+            p: function () {}, // dummy onchange on the o2m to execute _isX2ManyValid()
+        };
+        this.data.partner.records[0].p = [2];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (method, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].p, [
+                        [0, false, {display_name: 'z'}],
+                        [2, 2, false],
+                    ], "correct commands should be sent");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "o2m should contain one row");
+
+        // empty o2m by triggering the onchange
+        form.$('.o_field_widget[name=foo]').val('trigger onchange').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "rows of the o2m should have been deleted");
+
+        // add two new subrecords
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_widget[name=display_name]').val('x').trigger('input');
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_widget[name=display_name]').val('y').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "o2m should contain two rows");
+
+        // empty o2m by triggering the onchange
+        form.$('.o_field_widget[name=foo]').val('trigger onchange again').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "rows of the o2m should have been deleted");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_widget[name=display_name]').val('z').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
         form.destroy();
     });
 
@@ -2778,6 +3058,41 @@ QUnit.module('relational_fields', {
 
         // write in the many2one field
         $('.modal .o_field_many2one input').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('value of invisible x2many fields is correctly evaluated in context', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].timmy = [12];
+        this.data.partner.records[0].p = [2, 3];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<field name="product_id" context="{\'p\': p, \'timmy\': timmy}"/>' +
+                    '<field name="p" invisible="1"/>' +
+                    '<field name="timmy" invisible="1"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.deepEqual(
+                        args.kwargs.context, {
+                            p: [[4, 2, false], [4, 3, false]],
+                            timmy: [[6, false, [12]]],
+                        }, 'values of x2manys should have been correctly evaluated in context');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_widget[name=product_id] input').click();
 
         form.destroy();
     });
@@ -4983,6 +5298,96 @@ QUnit.module('relational_fields', {
             'onchange', // onchange should be triggered on partner
             'read', // reload many2many
         ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('onchange with 40+ commands for a many2many', function (assert) {
+        // this test ensures that the basic_model correctly handles more LINK_TO
+        // commands than the limit of the dataPoint (40 for x2many kanban)
+        assert.expect(23);
+
+        // create a lot of partner_types that will be linked by the onchange
+        var commands = [[5]];
+        for (var i = 0; i < 45; i++) {
+            var id = 100 + i;
+            this.data.partner_type.records.push({id: id, display_name: "type " + id});
+            commands.push([4, id]);
+        }
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.timmy = commands;
+            },
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="timmy">' +
+                        '<kanban>' +
+                            '<field name="display_name"/>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div><t t-esc="record.display_name.value"/></div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].timmy[0][0], 6,
+                        "should send a command 6");
+                    assert.strictEqual(args.args[1].timmy[0][2].length, 45,
+                        "should replace with 45 ids");
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.verifySteps(['read']);
+
+        form.$('.o_field_widget[name=foo]').val('trigger onchange').trigger('input');
+
+        assert.verifySteps(['read', 'onchange', 'read']);
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 45', "pager should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records displayed on page 1');
+
+        form.$('.o_pager_next').click();
+        assert.verifySteps(['read', 'onchange', 'read', 'read']);
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '41-45 / 45', "pager should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
+            'there should be 5 records displayed on page 2');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 45', "pager should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records displayed on page 1');
+
+        form.$('.o_pager_next').click();
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '41-45 / 45', "pager should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 5,
+            'there should be 5 records displayed on page 2');
+
+        form.$('.o_pager_next').click(); // back to page 1
+        assert.strictEqual(form.$('.o_x2m_control_panel .o_pager_counter').text().trim(),
+            '1-40 / 45', "pager should be correct");
+        assert.strictEqual(form.$('.o_kanban_record:not(".o_kanban_ghost")').length, 40,
+            'there should be 40 records displayed on page 1');
 
         form.destroy();
     });
