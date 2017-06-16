@@ -57,12 +57,9 @@ class ResConfigConfigurable(models.TransientModel):
         Todos = self.env['ir.actions.todo']
         _logger.info('getting next %s', Todos)
 
-        active_todos = Todos.search(['&', ('type', '=', 'automatic'), ('state', '=', 'open')])
-        user_groups = self.env.user.groups_id
-
-        for todo in active_todos:
-            if not todo.groups_id or (todo.groups_id & user_groups):
-                return todo
+        active_todo = Todos.search([('state', '=', 'open')], limit=1)
+        if active_todo:
+            return active_todo
 
     def _next(self):
         _logger.info('getting next operation')
