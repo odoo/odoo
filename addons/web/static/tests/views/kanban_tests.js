@@ -1528,6 +1528,62 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test('move a record then put it again in the same column', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<field name="product_id"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="display_name"/></div>' +
+                '</t></templates></kanban>',
+            groupBy: ['product_id'],
+        });
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('column1');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').val('column2');
+        kanban.$('.o_column_quick_create button.o_kanban_add').click();
+
+        kanban.$('.o_kanban_group:eq(1) .o_kanban_quick_add i').click();
+        var $quickCreate = kanban.$('.o_kanban_group:eq(1) .o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record').length, 0,
+                        "column should contain 0 record");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 1,
+                        "column should contain 1 records");
+
+        var $record = kanban.$('.o_kanban_group:eq(1) .o_kanban_record:eq(0)');
+        var $group = kanban.$('.o_kanban_group:eq(0)');
+        testUtils.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record').length, 1,
+                        "column should contain 1 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 0,
+                        "column should contain 0 records");
+
+        $record = kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(0)');
+        $group = kanban.$('.o_kanban_group:eq(1)');
+
+        testUtils.dragAndDrop($record, $group);
+
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record').length, 0,
+                        "column should contain 0 records");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_record').length, 1,
+                        "column should contain 1 records");
+        kanban.destroy();
+    });
 });
 
 });
