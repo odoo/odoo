@@ -571,14 +571,6 @@ class IrActionsTodo(models.Model):
     sequence = fields.Integer(default=10)
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
-    type = fields.Selection([('manual', 'Launch Manually'),
-                             ('once', 'Launch Manually Once'),
-                             ('automatic', 'Launch Automatically')], default='manual', required=True,
-                            help="""Manual: Launched manually.
-                                    Automatic: Runs whenever the system is reconfigured.
-                                    Launch Manually Once: after having been launched manually, it sets automatically to Done.""")
-    groups_id = fields.Many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', string='Groups')
-    note = fields.Text(string='Text', translate=True)
 
     @api.multi
     def name_get(self):
@@ -610,8 +602,8 @@ class IrActionsTodo(models.Model):
     def action_launch(self, context=None):
         """ Launch Action of Wizard"""
         self.ensure_one()
-        if self.type in ('automatic', 'once'):
-            self.write({'state': 'done'})
+
+        self.write({'state': 'done'})
 
         # Load action
         action = self.env[self.action_id.type].browse(self.action_id.id)
@@ -627,8 +619,8 @@ class IrActionsTodo(models.Model):
             result['res_id'] = ctx.pop('res_id')
 
         # disable log for automatic wizards
-        if self.type == 'automatic':
-            ctx['disable_log'] = True
+        ctx['disable_log'] = True
+
         result['context'] = ctx
 
         return result
