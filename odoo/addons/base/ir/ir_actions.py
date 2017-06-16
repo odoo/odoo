@@ -572,6 +572,25 @@ class IrActionsTodo(models.Model):
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
 
+    @api.model
+    def create(self, vals):
+        todo = super(IrActionsTodo, self).create(vals)
+        if todo.state == "open":
+            todo.ensure_one_open_todo()
+        return todo
+
+    def write(self, vals):
+        res = super(IrActionsTodo, self).write(vals)
+        if vals.get('state', '') == 'open':
+            for todo in self:
+                todo.ensure_one_open_todo()
+        return res
+
+    def ensure_one_open_todo(self):
+        open_todo = self.search(['&', ('state', '=', 'open'), ('id', '!=', self.id)])
+        if open_todo:
+            open_todo.write({'state': 'done'})
+
     @api.multi
     def name_get(self):
         return [(record.id, record.action_id.name) for record in self]
