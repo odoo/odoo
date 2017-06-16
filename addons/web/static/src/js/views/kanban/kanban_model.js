@@ -153,7 +153,7 @@ var KanbanModel = BasicModel.extend({
         }).then(function () {
             // Remove record from its current group
             var old_group;
-            for (var i = 0; i < parent.count; i++) {
+            for (var i = 0; i < parent.data.length; i++) {
                 old_group = self.localData[parent.data[i]];
                 var index = _.indexOf(old_group.data, recordID);
                 if (index >= 0) {
