@@ -1038,7 +1038,7 @@ class expression(object):
                 if operator == 'child_of':
                     ids2 = to_ids(right, comodel, context)
                     if column._obj != model._name:
-                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj)
+                        dom = child_of_domain(left, ids2, comodel, prefix=column._obj, context=context)
                     else:
                         dom = child_of_domain('id', ids2, model, parent=left)
                     for dom_leaf in reversed(dom):
