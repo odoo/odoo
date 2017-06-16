@@ -22,7 +22,7 @@ class AccountConfigSettings(models.TransientModel):
         help='The accounting journal where automatic exchange differences will be registered')
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template',
-        domain="[('visible','=', True)]")
+        domain="[('visible','=', True)]", related='company_id.chart_template_id')
     code_digits = fields.Integer(string='# of Digits *', related='company_id.accounts_code_digits', help="No. of digits to use for account code")
     tax_calculation_rounding_method = fields.Selection([
         ('round_per_line', 'Round calculation of taxes per line'),
