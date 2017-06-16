@@ -318,6 +318,7 @@
         <field name="res_model">account.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="account_journal_dashboard_kanban_view"/>
         <field name="usage">menu</field>
         <field name="context">{'search_default_dashboard':1}</field>
         <field name="domain">[('belongs_to_company', '=', True)]</field>

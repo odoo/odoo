@@ -151,8 +151,6 @@
                    <field name="display_name"/>
                    <field name="tag_ids"/>
                    <field name="balance"/>
-                   <field name="debit"/>
-                   <field name="credit"/>
                    <field name="currency_id"/>
                    <templates>
                         <t t-name="kanban-box">
@@ -162,12 +160,11 @@
                                 </div>
                                 <hr class="mt8 mb8"/>
                                 <div class="row">
-                                    <div class="col-xs-4 text-center text-success"><strong>Credit</strong></div>
-                                    <div class="col-xs-4 text-center text-danger"><strong>Debit</strong></div>
-                                    <div class="col-xs-4 text-center"><strong>Balance</strong></div>
-                                    <div class="col-xs-4 text-center text-success"><field name="credit" widget="monetary"/></div>
-                                    <div class="col-xs-4 text-center text-danger"><field name="debit" widget="monetary"/></div>
-                                    <div class="col-xs-4 text-center"><field name="balance" widget="monetary"/></div>
+                                    <div class="col-xs-12 text-center">
+                                        <span>
+                                            <strong>Balance: <field name="balance" widget="monetary"/></strong>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </t>

@@ -223,6 +223,29 @@
                 </tree>
             </field>
         </record>
+        <record id="account_journal_view_kanban" model="ir.ui.view">
+            <field name="name">account.journal.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span class="pull-right"><field name="type"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_account_journal_search" model="ir.ui.view">
             <field name="name">account.journal.search</field>
             <field name="model">account.journal</field>
@@ -339,6 +362,26 @@
                 </tree>
             </field>
         </record>
+        <record id="account_bank_journal_view_kanban" model="ir.ui.view">
+            <field name="name">account.bank.journal.kanban</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
         <record id="view_account_bank_journal_form" model="ir.ui.view">
             <field name="name">account.bank.journal.form</field>
             <field name="model">account.journal</field>
@@ -388,6 +431,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_bank_journal_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_bank_journal_view_kanban')}),
                 (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_bank_journal_form')})]"/>
             <field name="domain">[('type', '=', 'bank')]</field>
             <field name="context">{'default_type': 'bank'}</field>
@@ -404,6 +448,10 @@
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_account_journal_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('account_journal_view_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('view_account_journal_form')})]"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a journal.
@@ -1350,8 +1398,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                         <span><field name="ref"/></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <span><field name="amount" widget='monetary'/></span>
+                                        <span><field name="currency_id" invisible="1"/></span>
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right">
@@ -1613,7 +1667,7 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div><strong><t t-esc="record.name.value"/></strong></div>
-                                <div t-if="record.note.value"><strong>Note: </strong><t t-esc="record.note.value"/></div>
+                                <div t-if="record.note.value"><t t-esc="record.note.value"/></div>
                             </div>
                         </t>
                     </templates>
