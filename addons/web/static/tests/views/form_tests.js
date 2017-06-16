@@ -4327,7 +4327,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('default_order on x2many embedded view', function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         this.data.partner.fields.display_name.sortable = true;
         this.data.partner.records[0].p = [1, 4];
@@ -4384,6 +4384,18 @@ QUnit.module('Views', {
             "record zop should be first");
         assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').length,
             "record yop should be second");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
+            "record xop should be third");
+
+        // client-side sort on edit
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').click();
+        $('.modal input[name="foo"]').val('zzz').trigger("input");
+        $('.modal .modal-footer button:first').click(); // Save
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(0) td:contains(zzz)').length,
+            "record zzz should be first");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(zop)').length,
+            "record zop should be second");
         assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
             "record xop should be third");
 

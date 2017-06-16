@@ -657,7 +657,14 @@ var FieldX2Many = AbstractField.extend({
     reset: function (record, ev) {
         if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
-            if (command.operation === 'UPDATE') {
+            // Here, we only consider 'UPDATE' commands with data, which occur
+            // with editable list view. In order to keep the current line in
+            // edition, we call confirmChange which will reset the widgets
+            // instead of re-rendering the list. 'UPDATE' commands with no data
+            // can be ignored: they occur in one2manys when the record is
+            // updated from a dialog and in this case, we can re-render the
+            // whole subview.
+            if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
@@ -1068,9 +1075,15 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
+        var id = ev.data.id;
+        // trigger an empty 'UPDATE' operation when the user clicks on 'Save' in
+        // the dialog, to notify the main record that a subrecord of this
+        // relational field has changed (those changes will be already stored on
+        // that subrecord, thanks to the 'Save').
+        var onSaved = this._setValue.bind(this, { operation: 'UPDATE', id: id }, {});
         this._openFormDialog({
-            id: ev.data.id,
-            on_saved: this._setValue.bind(this, { operation: 'NOOP' }, {}),
+            id: id,
+            on_saved: onSaved,
             readonly: this.mode === 'readonly',
         });
     },
