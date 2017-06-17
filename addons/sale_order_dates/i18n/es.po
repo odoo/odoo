@@ -3,13 +3,13 @@
 # * sale_order_dates
 # 
 # Translators:
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:41+0000\n"
-"PO-Revision-Date: 2016-11-08 08:25+0000\n"
+"PO-Revision-Date: 2017-06-14 17:09+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish (http://www.transifex.com/odoo/odoo-9/language/es/)\n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr "Fecha en la que el cliente ha solicitado el envío de los productos.\nCuando un pedido se confirma, la fecha estimada del envío se calculará en base a los días de seguridad configurados en la compañía.\nDeja este campo vacío si quieres que se procese el envío lo antes posible. En este caso la fecha estimada se calculara utilizando el método por defecto, basado en el tiempo de entrega del producto y los días de seguridad configurados en la compañía."
+msgstr "Fecha en la que el cliente ha solicitado el envío de los productos.\nCuando un pedido se confirma, la fecha estimada del envío se calculará en base a los días de seguridad configurados en la compañía.\nDeje este campo vacío si quiere que se procese el envío lo antes posible. En ese caso, la fecha estimada se calculará utilizando el método por defecto, basado en el tiempo de entrega del producto y los días de seguridad configurados en la compañía."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
@@ -51,13 +51,13 @@ msgstr "Fecha efectiva"
 #. module: sale_order_dates
 #: model:ir.model.fields,field_description:sale_order_dates.field_sale_order_requested_date
 msgid "Requested Date"
-msgstr "Fecha solicitud"
+msgstr "Fecha solicitada"
 
 #. module: sale_order_dates
 #: code:addons/sale_order_dates/sale_order_dates.py:51
 #, python-format
 msgid "Requested date is too soon!"
-msgstr "¡ La fecha requerida es demasiado pronto !"
+msgstr "¡ La fecha solicitada es demasiado pronto !"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -75,4 +75,4 @@ msgstr "Línea pedido de venta"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr "Fecha de pedido de venta"
+msgstr "La fecha solicitada por el cliente es anterior que la fecha de compromiso. No será capaz de respetar la petición de su cliente."
