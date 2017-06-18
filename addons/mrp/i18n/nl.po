@@ -496,7 +496,7 @@ msgstr "Materiaallijst"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.product_template_search_view_procurment
 msgid "BoM Components"
-msgstr ""
+msgstr "BoM onderdelen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
@@ -706,7 +706,7 @@ msgstr "Bevestigd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_consume_line_ids
 msgid "Consume Line"
-msgstr ""
+msgstr "Verbruik lijn"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
@@ -726,7 +726,7 @@ msgstr "Verbruikte materialen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_consumed_quant_ids
 msgid "Consumed Quant"
-msgstr ""
+msgstr "Verbruikte hoeveelheid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
@@ -746,17 +746,17 @@ msgstr "Kosten structuur"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_late
 msgid "Count Mo Late"
-msgstr ""
+msgstr "Aantal productieorders te laat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_todo
 msgid "Count Mo Todo"
-msgstr ""
+msgstr "Aantal productieorders te doen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type_count_mo_waiting
 msgid "Count Mo Waiting"
-msgstr ""
+msgstr "Aantal productieorders wachtend"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1110,7 +1110,7 @@ msgstr "Heeft bijlages"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
 msgid "Has Moves"
-msgstr ""
+msgstr "Heeft mutaties"
 
 #. module: mrp
 #: selection:ir.attachment,priority:0
@@ -1231,7 +1231,7 @@ msgstr "Is de huidige gebruiker aan het werk"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Is Produced"
-msgstr ""
+msgstr "Is geproduceerd"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
@@ -1994,7 +1994,7 @@ msgstr "Produceren"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_produce_line_ids
 msgid "Produce Line"
-msgstr ""
+msgstr "Produceer lijn"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2004,7 +2004,7 @@ msgstr "Geproduceerd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_produced_quant_ids
 msgid "Produced Quant"
-msgstr ""
+msgstr "Geproduceerde hoeveelheid"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -3419,6 +3419,8 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a stock move having already consumed material"
 msgstr ""
+"U kan een voorraadmutatie niet annuleren waarvoor de grondstoffen al "
+"verbruikt zijn"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
