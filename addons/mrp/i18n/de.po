@@ -21,8 +21,8 @@
 # bal4nce <flipkultur@posteo.de>, 2016
 # Niki Waibel <niki.waibel@gmail.com>, 2016
 # key six <mobile.umts@gmail.com>, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 msgid ""
 msgstr ""
@@ -161,7 +161,7 @@ msgstr "<span>Neu</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Plan Orders</span>"
-msgstr "<span>Plane Auftrag</span>"
+msgstr "<span>Fertigungsauftrag freigeben</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -640,12 +640,12 @@ msgstr "Hier klicken um eine Stückliste zu erstellen."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr ""
+msgstr "Klicken Sie, um einen Fertigungsauftrag zu erstellen."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid "Click to create a new message."
-msgstr ""
+msgstr "Klicken, um eine neue Nachricht zu erstellen."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -792,7 +792,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Create Workorders"
-msgstr ""
+msgstr "Arbeitsaufträge erstellen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
@@ -1239,7 +1239,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Inventory Moves"
-msgstr ""
+msgstr "Lagerbewegungen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
@@ -1593,7 +1593,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Done"
-msgstr ""
+msgstr "Als erledigt markieren"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
@@ -1951,14 +1951,14 @@ msgstr "Picktyp"
 #: model:ir.actions.server,name:mrp.production_order_server_action
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr ""
+msgstr "Fertigungsauftrag freigeben"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Planned"
-msgstr ""
+msgstr "Geplant"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -1981,7 +1981,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Post Inventory"
-msgstr ""
+msgstr "Bestandsänderung buchen"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_maintenance:0
@@ -2024,7 +2024,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced"
-msgstr ""
+msgstr "Produziert"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_produced_quant_ids
@@ -2258,7 +2258,7 @@ msgstr "Quants"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr ""
+msgstr "Rohmaterial"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
@@ -2283,12 +2283,12 @@ msgstr "Bereit"
 #: code:addons/mrp/static/src/js/mrp.js:24
 #, python-format
 msgid "Ready to produce"
-msgstr ""
+msgstr "Bereit für Fertigung"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration
 msgid "Real Duration"
-msgstr ""
+msgstr "Echte Dauer"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_name
@@ -2424,7 +2424,7 @@ msgstr "Arbeitspläne"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 msgid "Routings & Planning"
-msgstr ""
+msgstr "Arbeitspläne & Planung"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2760,6 +2760,10 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"Liste der Vorgänge, um ein Fertigteil zu produzieren. Arbeitspläne werden "
+"primär zur Berechnung der Auslastung von Arbeitsplätzen und deren Kosten "
+"genutzt, sowie um die zukünftige Auslastung der Arbeitsplätze über einen "
+"Fertigungsplan zu ermitteln."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
@@ -2889,7 +2893,7 @@ msgstr "Zu erledigen"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr ""
+msgstr "starten"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view

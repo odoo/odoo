@@ -53,7 +53,7 @@ msgstr "# Ürün Ağacı"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_done_count
 msgid "# Done Work Orders"
-msgstr ""
+msgstr "# Yapılan İş Emirleri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product_mo_count
@@ -64,20 +64,20 @@ msgstr "# Üretim Emirleri"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_ready_count
 msgid "# Read Work Orders"
-msgstr ""
+msgstr "# İş Emirlerini Oku"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_count
 msgid "# Work Orders"
-msgstr ""
+msgstr "# İş Emirleri"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_leg
 #: model:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
-msgstr ""
+msgstr "18″ x 2½″ Kare Ayak"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_laptop_charger
@@ -103,11 +103,14 @@ msgid ""
 "('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
 "('confirmed','progress'))]}\">Raw materials not available!</span>"
 msgstr ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': ['|', "
+"('availability', 'in', ('assigned', 'none')), ('state', 'not in', "
+"('confirmed','progress'))]}\">Hammaddeler mevcut değil!</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kayıp</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -117,7 +120,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Performance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Performans</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -128,22 +131,22 @@ msgstr "<span class=\"o_stat_text\">Hurda</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
 msgid "<span class=\"o_stat_text\">Time<br/> Analysis</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Zaman<br/> Analiz</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">İş Merkezi Yükü</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Work Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">İş Emirleri</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Actions</span>"
-msgstr ""
+msgstr "<span>Eylemler</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -153,7 +156,7 @@ msgstr "<span>Yeni</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Plan Orders</span>"
-msgstr ""
+msgstr "<span>İş Emirleri Planlayın</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -168,7 +171,7 @@ msgstr "<span>Görünüm</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Work Orders</span>"
-msgstr ""
+msgstr "<span>İş Emirleri</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
@@ -259,7 +262,7 @@ msgstr "<strong>İş Merkezi</strong>"
 #: code:addons/mrp/models/mrp_workorder.py:424
 #, python-format
 msgid "A Manufacturing Order is already done or cancelled!"
-msgstr ""
+msgstr "Bir Üretim Siparişi zaten yapılmış ya da iptal edilmiştir!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -298,7 +301,7 @@ msgstr "Hepsi"
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "All components available"
-msgstr ""
+msgstr "Tüm bileşenler mevcuttur"
 
 #. module: mrp
 #: sql_constraint:mrp.bom.line:0
@@ -360,7 +363,7 @@ msgstr "Uygunluk"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Availability Losses"
-msgstr ""
+msgstr "Uygunluk Kayıpları"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -381,7 +384,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
 msgid "BOM Cost"
-msgstr ""
+msgstr "BOM Maliyeti"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
@@ -432,7 +435,7 @@ msgstr "Ürün Ağacı"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr ""
+msgstr "Ürün Ağaç Satırı"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -479,14 +482,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr ""
+msgstr "Engelle"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter_wo
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block Workcenter"
-msgstr ""
+msgstr "Bloke İşmerkezi"
 
 #. module: mrp
 #: selection:mrp.workcenter,working_state:0
@@ -496,12 +499,12 @@ msgstr "Engellendi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked Time"
-msgstr ""
+msgstr "Engelleme Zamanı"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_blocked_time
 msgid "Blocked hour(s) over the last month"
-msgstr ""
+msgstr "Son bir ay boyunca engellenen saat (ler)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_procurement_order_bom_id
@@ -511,7 +514,7 @@ msgstr "BoM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_bom_line_id
 msgid "BoM Line"
-msgstr ""
+msgstr "BoM Satırı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_bom_line_ids
@@ -526,7 +529,7 @@ msgstr "BoM Türü"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "BoM details"
-msgstr ""
+msgstr "BoM detayları"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:67
@@ -574,7 +577,7 @@ msgstr "İptal Edildi"
 #: code:addons/mrp/models/mrp_production.py:263
 #, python-format
 msgid "Cannot delete a manufacturing order not in cancel state"
-msgstr ""
+msgstr "İptal durumundaki üretim siparişini silemezsiniz"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity
@@ -600,12 +603,12 @@ msgstr "Ürün Miktarlarını Değiştir"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_check_to_done
 msgid "Check Produced Qty"
-msgstr ""
+msgstr "Üretilen Miktar Kontrol Edin"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Check availability"
-msgstr ""
+msgstr "Uygunluk Kontrolu"
 
 #. module: mrp
 #. openerp-web
@@ -618,17 +621,17 @@ msgstr "Temizle"
 #: model:ir.actions.act_window,help:mrp.action_work_orders
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click to add a work center."
-msgstr ""
+msgstr "Bir iş merkezi eklemek için tıklayın."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "Click to create a bill of material."
-msgstr ""
+msgstr "Üretim ağacı oluşturmak için tıklayın."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "Click to create a manufacturing order."
-msgstr ""
+msgstr "Bir üretim siparişi oluşturmak için tıklayın."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
@@ -638,7 +641,7 @@ msgstr "Yeni mesaj oluşturmak için tıklayınız."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid "Click to create a new routing."
-msgstr ""
+msgstr "Yeni bir rota oluşturmak için tıklayın."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -649,7 +652,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid "Click to start a new manufacturing order."
-msgstr ""
+msgstr "Yeni bir üretim siparişine başlamak için tıklayın."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -697,7 +700,7 @@ msgstr "Bileşenler"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Compute based on real time"
-msgstr ""
+msgstr "Gerçek zamanlı hesapla"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk
@@ -735,17 +738,17 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed"
-msgstr ""
+msgstr "Tüketilen"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Consumed Materials"
-msgstr ""
+msgstr "Tüketilecek Malzemeler"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_operation_id
 msgid "Consumed in Operation"
-msgstr ""
+msgstr "Operasyonda Tüketilenler"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_consumed_quant_ids
@@ -780,7 +783,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Create Workorders"
-msgstr ""
+msgstr "İş Emri Oluşturun"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_create_uid
@@ -823,7 +826,7 @@ msgstr "Oluşturulma"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_final_lot_id
 msgid "Current Lot"
-msgstr ""
+msgstr "Mevcut Lot"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -833,12 +836,12 @@ msgstr "Geçerli Üretim"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Current Qty"
-msgstr ""
+msgstr "Mevcut Miktar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_producing
 msgid "Currently Produced Quantity"
-msgstr ""
+msgstr "Mevcut Üretilen Miktar"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_dashboard
@@ -853,17 +856,17 @@ msgstr "Tarih"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_finished
 msgid "Deadline End"
-msgstr ""
+msgstr "Zaman Sınırı Bitişi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_date_planned_start
 msgid "Deadline Start"
-msgstr ""
+msgstr "Zaman Sınırı Başlama"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Default Duration"
-msgstr ""
+msgstr "Varsayılan Süre"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -889,12 +892,12 @@ msgstr "Açıklama"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_note
 msgid "Description of the Work Center."
-msgstr ""
+msgstr "Çalışma Merkezinin Tanımı."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Description of the work center..."
-msgstr ""
+msgstr "İş merkezinin açıklaması ..."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_dest_id
@@ -961,22 +964,22 @@ msgstr "Süre"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Duration (minutes)"
-msgstr ""
+msgstr "Süre (dakika)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_mode
 msgid "Duration Computation"
-msgstr ""
+msgstr "Süre Hesaplama"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_percent
 msgid "Duration Deviation (%)"
-msgstr ""
+msgstr "(%) Süre Sapması"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_unit
 msgid "Duration Per Unit"
-msgstr ""
+msgstr "Birim Süresi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -986,23 +989,23 @@ msgstr "Gerçek Tarih"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_finished
 msgid "Effective End Date"
-msgstr ""
+msgstr "Gerçekleşme Bitiş Tarihi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_start
 msgid "Effective Start Date"
-msgstr ""
+msgstr "Gerçekleşme Başlama Tarihi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_loss_type
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_type
 msgid "Effectiveness Category"
-msgstr ""
+msgstr "Gerçekleşme Kategorisi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Efficiency"
-msgstr ""
+msgstr "Verim"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
@@ -1018,12 +1021,12 @@ msgstr "Bitiş Tarihi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration_expected
 msgid "Expected Duration"
-msgstr ""
+msgstr "Beklenen Süre"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_duration_expected
 msgid "Expected duration (in minutes)"
-msgstr ""
+msgstr "Beklenen süre (dakika olarak)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
@@ -1049,7 +1052,7 @@ msgstr "Tamamlandı"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_id
 msgid "Finished Lot"
-msgstr ""
+msgstr "İşlenmiş Lot"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_finished_ids
@@ -1065,7 +1068,7 @@ msgstr "Bitmiş Ürün Konumu"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Fully Productive"
-msgstr ""
+msgstr "Tam Üretkenlik"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -1091,7 +1094,7 @@ msgstr "Görevlerin bir listesini görüntülerken sırasını verir."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_sequence
 msgid "Gives the sequence order when displaying a list of work centers."
-msgstr ""
+msgstr "İş merkezlerinin listesini görüntülerken sıralama siparişi verir."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_sequence
@@ -1127,7 +1130,7 @@ msgstr "HDD İsteğe göre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_has_attachments
 msgid "Has Attachments"
-msgstr ""
+msgstr "Ekleri Var"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_has_moves
@@ -1216,14 +1219,14 @@ msgstr "Devam Eden"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_lot_produced_qty
 msgid "Informative, not used in matching"
-msgstr ""
+msgstr "Bilgilendirici, eşleştirmede kullanılmaz"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_bom
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
 msgid "Inventory Message"
-msgstr ""
+msgstr "Envanter Mesajı"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1233,7 +1236,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Inventory Post Visible"
-msgstr ""
+msgstr "Envanter Mesaj Görünür"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
@@ -1254,7 +1257,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Is produced"
-msgstr ""
+msgstr "Üretilmektedir"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:149
@@ -1402,7 +1405,7 @@ msgstr "Lojistik"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_id_9376
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Loss Reason"
-msgstr ""
+msgstr "Kaybın Sebebi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_lot_id
@@ -1431,22 +1434,22 @@ msgstr "Bakım"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr ""
+msgstr "İş Emri İşlemlerini Yönetin"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_plm:0
 msgid "Manage engineering changes, versions and documents"
-msgstr ""
+msgstr "Mühendislik değişiklikleri, sürümler, ve belgeleri yönetin"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by manufacturing orders"
-msgstr ""
+msgstr "Üretim siparişlerine göre üretim yönetin"
 
 #. module: mrp
 #: selection:mrp.config.settings,group_mrp_routings:0
 msgid "Manage production by work orders"
-msgstr ""
+msgstr "İş emirlerine göre üretim yönetin"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_quality_mrp:0
@@ -1461,7 +1464,7 @@ msgstr "Yönetici"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid "Manual Duration"
-msgstr ""
+msgstr "Manuel Süresi"
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:14
@@ -1484,7 +1487,7 @@ msgstr "Bu Depoda Üret"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Manufacture this product"
-msgstr ""
+msgstr "Bu ürünü üretin"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:64
@@ -1506,7 +1509,7 @@ msgstr "Üretim Süresi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_manufacturing_lead
 msgid "Manufacturing Lead Time *"
-msgstr ""
+msgstr "Üretim Teslim Süresi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_mo_id
@@ -1551,7 +1554,7 @@ msgstr "Şu an üretimde olan Üretim Emirleri"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr ""
+msgstr "Onaylanmış durumdaki üretim emirleri."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_manu_type_id
@@ -1562,12 +1565,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_ready_to_produce
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Manufacturing Readiness"
-msgstr ""
+msgstr "Üretim Hazırlığı"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Manufacturing Reference"
-msgstr ""
+msgstr "Üretim Referansı"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1582,7 +1585,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Mark as Done"
-msgstr ""
+msgstr "Bitti olarak İşaretle"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
@@ -1592,7 +1595,7 @@ msgstr "Ana Veri"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "Ana Üretim Çizelgesi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_message
@@ -1649,7 +1652,7 @@ msgstr "Ürt İşmerkezi"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_search
 msgid "My Messages"
-msgstr ""
+msgstr "Mesajlarım"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_name
@@ -1678,12 +1681,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch
 msgid "Next Operation"
-msgstr ""
+msgstr "Sonraki Operasyon"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_next_work_order_id
 msgid "Next Work Order"
-msgstr ""
+msgstr "Sonraki İş Emri"
 
 #. module: mrp
 #: code:addons/mrp/models/procurement.py:90
@@ -1694,12 +1697,12 @@ msgstr "Bu ürün için hiç Ürün Ağacı yoktur!"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "No Routing"
-msgstr ""
+msgstr "Rota Yok"
 
 #. module: mrp
 #: selection:mrp.config.settings,module_mrp_byproduct:0
 msgid "No by-products in bills of materials (A + B --> C)"
-msgstr ""
+msgstr "Üretim Ağacında yan-ürün olmadan (A + B --> C)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -1728,7 +1731,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_loss_action
 msgid "No productivity loss defined."
-msgstr ""
+msgstr "Verimlilik kaybı tanımlanmadı."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
@@ -1838,7 +1841,7 @@ msgstr "İşlem"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_operation_id
 msgid "Operation To Consume"
-msgstr ""
+msgstr "Operasyonda Tüketilecekler"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1861,14 +1864,14 @@ msgstr "Siparişler"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_qty_production
 msgid "Original Production Quantity"
-msgstr ""
+msgstr "Orijinal Üretim Miktarı"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
 msgid "Overall Equipment Effectiveness"
-msgstr ""
+msgstr "Genel Ekipman Etkinliği"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
@@ -1923,7 +1926,7 @@ msgstr "Performans"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Performance Losses"
-msgstr ""
+msgstr "Performans Kayıpları"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_performance
@@ -1940,14 +1943,14 @@ msgstr "Toplama Türü"
 #: model:ir.actions.server,name:mrp.production_order_server_action
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
-msgstr ""
+msgstr "İş Emirleri Planlayın"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: selection:mrp.production,state:0
 msgid "Planned"
-msgstr ""
+msgstr "Planlanan"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2013,7 +2016,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produced"
-msgstr ""
+msgstr "Üretilen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_quant_produced_quant_ids
@@ -2088,7 +2091,7 @@ msgstr "Üretim"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_date
 msgid "Production Date"
-msgstr ""
+msgstr "Üretim Tarihi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_location_id
@@ -2099,7 +2102,7 @@ msgstr "Üretim Konumu"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_message
 msgid "Production Message"
-msgstr ""
+msgstr "Üretim Mesajı"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_production_order
@@ -2111,17 +2114,17 @@ msgstr "Üretim Emri"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Production Order # :"
-msgstr ""
+msgstr "Üretim Emri # :"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_production_id
 msgid "Production Order for finished products"
-msgstr ""
+msgstr "İşlenmiş ürünler için üretim emri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_raw_material_production_id
 msgid "Production Order for raw materials"
-msgstr ""
+msgstr "Hammaddelerin Üretim Siparişi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2142,7 +2145,7 @@ msgstr "Üretimler"
 #. module: mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Productive"
-msgstr ""
+msgstr "Verimlilik"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productive_time
@@ -2159,7 +2162,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_loss
 msgid "Productivity Losses"
-msgstr ""
+msgstr "Verimlilik Kayıpları"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -2188,7 +2191,7 @@ msgstr "Kalite"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Quality Losses"
-msgstr ""
+msgstr "Kalite Kayıpları"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_lots
@@ -2218,7 +2221,7 @@ msgstr "Kullanılabilir Miktar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_lot_produced_qty
 msgid "Quantity Finished Product"
-msgstr ""
+msgstr "İşlenmiş Ürün Miktarı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_qty_produced
@@ -2230,12 +2233,12 @@ msgstr "Üretilen Miktar"
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty_product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_product_qty
 msgid "Quantity To Produce"
-msgstr ""
+msgstr "Üretilecek Miktar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_batch_size
 msgid "Quantity to Process"
-msgstr ""
+msgstr "İşlenecek Miktar"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_quant
@@ -2245,7 +2248,7 @@ msgstr "Stoklar"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Raw Material"
-msgstr ""
+msgstr "Hammadde"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_move_raw_ids
@@ -2270,12 +2273,12 @@ msgstr "Hazır"
 #: code:addons/mrp/static/src/js/mrp.js:24
 #, python-format
 msgid "Ready to produce"
-msgstr ""
+msgstr "Üretime hazır"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_duration
 msgid "Real Duration"
-msgstr ""
+msgstr "Gerçek Süre"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_name
@@ -2329,7 +2332,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_procurement_ids
 msgid "Related Procurements"
-msgstr ""
+msgstr "İlişkili Tedarikler"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_user_id
@@ -2386,12 +2389,12 @@ msgstr "Rota"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_routing_line_ids
 msgid "Routing Lines"
-msgstr ""
+msgstr "Rota Satırı"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_name
 msgid "Routing Name"
-msgstr ""
+msgstr "Rota Adı"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -2411,7 +2414,7 @@ msgstr "Rotalar"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_mrp_routings
 msgid "Routings & Planning"
-msgstr ""
+msgstr "Rotalar & Planlama"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -2432,12 +2435,12 @@ msgstr "Kaydet"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_finished
 msgid "Scheduled Date Finished"
-msgstr ""
+msgstr "Planlanmış Bitiş Tarih "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_start
 msgid "Scheduled Date Start"
-msgstr ""
+msgstr "Planlanmış Başlama Tarih"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2546,7 +2549,7 @@ msgstr "Sıra"
 #. module: mrp
 #: selection:mrp.routing.workcenter,time_mode:0
 msgid "Set duration manually"
-msgstr ""
+msgstr "Süreyi manuel olarak ayarla"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
@@ -2635,7 +2638,7 @@ msgstr "Stok Hareketleri"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line_child_bom_id
 msgid "Sub BoM"
-msgstr ""
+msgstr "Alt BoM"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2694,7 +2697,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_working_state
 msgid "Technical: used in views only"
-msgstr ""
+msgstr "Teknik: Yalnızca görünüm kullanılır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_id
@@ -2702,7 +2705,7 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_product_uom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_state
 msgid "Technical: used in views only."
-msgstr ""
+msgstr "Teknik: Yalnızca görünüm kullanılır."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:76 code:addons/mrp/models/mrp_bom.py:227
@@ -2718,12 +2721,12 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workcenter.py:143
 #, python-format
 msgid "The capacity must be strictly positive."
-msgstr ""
+msgstr "Kapasitenin kesinlikle pozitif olması gerekir."
 
 #. module: mrp
 #: selection:mrp.bom,ready_to_produce:0
 msgid "The components of 1st operation"
-msgstr ""
+msgstr "1. operasyonun bileşenleri"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_routing_id
@@ -2774,7 +2777,7 @@ msgstr "Malzeme çekme türü malzeme çekme görünümü belirler"
 #. module: mrp
 #: sql_constraint:mrp.production:0
 msgid "The quantity to produce must be positive!"
-msgstr ""
+msgstr "Üretilecek miktar pozitif olmalıdır!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
@@ -2812,7 +2815,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_ids
 msgid "Time Logs"
-msgstr ""
+msgstr "Zaman Günlükleri"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -2823,7 +2826,7 @@ msgstr "Zaman Takibi"
 #: code:addons/mrp/models/mrp_workorder.py:360
 #, python-format
 msgid "Time Tracking: "
-msgstr ""
+msgstr "Zaman Takibi:"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_stop
@@ -2872,19 +2875,21 @@ msgstr "Yapılacak"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr ""
+msgstr "Başlatma"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "To Produce"
-msgstr ""
+msgstr "Üretilecek"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
 "To create a new work center, Go to <b><i> Master Data/Work Centers. </i></b>"
 msgstr ""
+"Yeni bir iş merkezi oluşturmak için, <b><i> Ana Veriler / İş Merkezleri. "
+"</i></b> Gidin "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -2915,12 +2920,12 @@ msgstr "Toplam Maliyet"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
 msgid "Total Cost of Raw Materials"
-msgstr ""
+msgstr "Toplam Hammadde Maliyeti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_late_count
 msgid "Total Late Orders"
-msgstr ""
+msgstr "Geçiken Toplam Siparişler"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -2931,12 +2936,12 @@ msgstr "Toplam Miktar"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_pending_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workorder_progress_count
 msgid "Total Running Orders"
-msgstr ""
+msgstr "Toplam Çalışan Siparişler"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
 msgid "Traceability: Lots"
-msgstr ""
+msgstr "İzlenebilirlik: Lotlar"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_tracking
@@ -2948,19 +2953,19 @@ msgstr "İzleme"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Unblock"
-msgstr ""
+msgstr "Engellemeyi Kaldır"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild"
-msgstr ""
+msgstr "Kaldırma"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unbuild_id
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr ""
+msgstr "Sipariş Kaldırın"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:76
@@ -2973,7 +2978,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr ""
+msgstr "Siparişleri Kaldırın"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_cost_report
@@ -2983,7 +2988,7 @@ msgstr "Birim Maliyeti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_unit_factor
 msgid "Unit Factor"
-msgstr ""
+msgstr "Birim Faktörü"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_product_uom_id
@@ -3058,7 +3063,7 @@ msgstr "Kullanıcı"
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
 msgid "Validity Date"
-msgstr ""
+msgstr "Geçerlilik Tarihi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_form_embedded_product
@@ -3095,14 +3100,14 @@ msgstr "Uygunluk Bekliyor"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_waiting
 msgid "Waiting Availability MO"
-msgstr ""
+msgstr "MO Uygunluk Bekliyor"
 
 #. module: mrp
 #. openerp-web
 #: code:addons/mrp/static/src/js/mrp.js:24
 #, python-format
 msgid "Waiting Materials"
-msgstr ""
+msgstr "Malzemeleri Bekleniyor"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse
@@ -3173,7 +3178,7 @@ msgstr "İş Merkezi Yükleri"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Work Center Name"
-msgstr ""
+msgstr "İş Merkezi Adı"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_form_view
@@ -3199,7 +3204,7 @@ msgstr "İş Merkezleri"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Dashboard"
-msgstr ""
+msgstr "İş Merkezi Gösterge Tablosu"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_work_orders
@@ -3215,7 +3220,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Work Instruction"
-msgstr ""
+msgstr "İş Yönerge"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workorder
@@ -3238,7 +3243,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
 msgid "Work Order To Consume"
-msgstr ""
+msgstr "İş Emri Tüketecek"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -3258,13 +3263,13 @@ msgstr "İş Emirleri"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_delta_report
 msgid "Work Orders Deviation"
-msgstr ""
+msgstr "İş Emri Sapması"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr ""
+msgstr "İş Emiri Performansları"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -3292,18 +3297,18 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Work Sheet"
-msgstr ""
+msgstr "Çalışma Tablosu"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:520
 #, python-format
 msgid "Work order %s is still running"
-msgstr ""
+msgstr "%s iş emirleri hala çalışıyor"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr ""
+msgstr "İş emirleri devam ediyor. iş merkezini engellemek için tıklayın."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_group_product_variant
@@ -3311,11 +3316,13 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Ürün varyantıyla çalışmak, örneğin, e-ticarette ürün yönetimini "
+"kolaylaştıran, aynı ürünlerin bazı varyantlarını tanımlamanıza izin verir."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
 msgid "Workcenter"
-msgstr ""
+msgstr "İş Merkezi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_form_view
@@ -3324,23 +3331,23 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Workcenter Productivity"
-msgstr ""
+msgstr "İş Merkezi Verimliliği"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "İş Merkezi Verimlilik Günlüğü"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr ""
+msgstr "İşmerkezi Verim Kaybı"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr ""
+msgstr "Workcenter engellendi, engelini kaldırmak için tıkla."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_calendar_id
@@ -3351,18 +3358,18 @@ msgstr "Çalışma Süresi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
 msgid "Workorder Message"
-msgstr ""
+msgstr "İş Emri Mesajı"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_message_action_main
 #: model:ir.ui.menu,name:mrp.mrp_message_menu
 msgid "Workorder Messages"
-msgstr ""
+msgstr "İş Emri Mesajları"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
 msgid "Worksheet"
-msgstr ""
+msgstr "Çalışma Tablosu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -3382,13 +3389,13 @@ msgstr ""
 #, python-format
 msgid ""
 "You can not cancel production order, a work order is still in progress."
-msgstr ""
+msgstr "Üretim siparişini iptal edemezsiniz, bir iş emri hala sürmektedir."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:231
 #, python-format
 msgid "You can not change the finished work order."
-msgstr ""
+msgstr "İşlenmiş iş emrini değiştiremezsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:91
@@ -3405,18 +3412,21 @@ msgstr ""
 #, python-format
 msgid "You can only produce 1.0 %s for products with unique serial number."
 msgstr ""
+"Benzersiz seri numarası olan ürünler için sadece %s 1.0 s üretebilirsiniz."
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
 msgstr ""
+"Önceden harcanan materyali de içeren bir hareketin hareketini iptal "
+"edemezsin"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:40
 #, python-format
 msgid "You cannot use the same serial number in two different lines."
-msgstr ""
+msgstr "Aynı seri numarasını iki farklı satırda kullanamazsınız."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
@@ -3455,19 +3465,19 @@ msgstr ""
 #: code:addons/mrp/wizard/mrp_product_produce.py:99
 #, python-format
 msgid "You need to provide a lot for the finished product"
-msgstr ""
+msgstr "İşlenmiş ürün için bir lot sağlamanız gerekiyor"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:246
 #, python-format
 msgid "You need to supply a lot/serial number."
-msgstr ""
+msgstr "Bir lot / seri numarası tedarik etmeniz gerekiyor."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:78
 #, python-format
 msgid "You should at least produce some quantity"
-msgstr ""
+msgstr "En azından bir miktar üretmelisin"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:287
@@ -3489,12 +3499,12 @@ msgstr "gün"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "from"
-msgstr ""
+msgstr "den"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "hour(s)"
-msgstr ""
+msgstr "saat"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_ir_attachment
@@ -3509,7 +3519,7 @@ msgstr "geçen"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "minute(s)"
-msgstr ""
+msgstr "dakika(lar)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3521,7 +3531,7 @@ msgstr "dakika"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "mrp.bom.line"
-msgstr ""
+msgstr "mrp.bom.line"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_config_settings
@@ -3531,17 +3541,17 @@ msgstr "mrp.config.settings"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mrpbomstructure
 msgid "report.mrp.report_mrpbomstructure"
-msgstr ""
+msgstr "report.mrp.report_mrpbomstructure"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_bom_cost
 msgid "report.mrp_bom_cost"
-msgstr ""
+msgstr "report.mrp_bom_cost"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_scrap
 msgid "stock.scrap"
-msgstr ""
+msgstr "stock.scrap"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3551,9 +3561,9 @@ msgstr "to"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr ""
+msgstr "iş emri"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_worksheet
 msgid "worksheet"
-msgstr ""
+msgstr "iş tablosu"
