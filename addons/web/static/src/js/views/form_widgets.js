@@ -1011,6 +1011,7 @@ var FieldReference = common.AbstractField.extend(common.ReinitializeFieldMixin, 
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
             context: this.build_context().eval(),
         }});
+        this.m2o.options = _.extend(this.m2o.options, this.options);
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$el);
         this.m2o
