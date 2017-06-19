@@ -33,7 +33,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
         </xpath>
     </template>
-    
+
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
@@ -805,7 +805,7 @@
                                 </div>
                                 <div class="col-md-8 col-sm-7">
                                     <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-long-arrow-left" /> Previous</a>
-                                    <a class="btn btn-default btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
+                                    <a class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
                                 </div>
                             </div>
                         </form>
@@ -1116,7 +1116,7 @@
                             <div>
                                 <a href="/shop/cart" class="btn btn-default mb32">
                                     <span class="fa fa-long-arrow-left" /> Return to Cart</a>
-                                <a class="btn btn-default btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-long-arrow-right" /></a>
+                                <a class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-long-arrow-right" /></a>
                             </div>
                         </div>
                     </div>
@@ -1273,7 +1273,7 @@
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
-                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
+                                        <a class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
