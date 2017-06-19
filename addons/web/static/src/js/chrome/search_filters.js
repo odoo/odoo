@@ -187,7 +187,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         {value: "∄", text: _lt("is not set")}
     ],
     get_value: function (index) {
-        return this["datewidget_" + (index || 0)].get_value();
+        return this["datewidget_" + (index || 0)].getValue();
     },
     get_domain: function (field, operator) {
         switch (operator.value) {
