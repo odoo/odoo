@@ -519,13 +519,11 @@ var FieldDomain = common.AbstractField.extend(common.ReinitializeFieldMixin).ext
         }).open();
     },
     openDomainDialog: function () {
-        new DomainSelectorDialog(this, this.model, this.get("value") || "[]", {
+        return new DomainSelectorDialog(this, this.model, this.get("value") || "[]", {
             readonly: this.get("effective_readonly"),
             fs_filters: this.options.fs_filters,
             debugMode: session.debug,
         }).open();
-        this.trigger("dialog_opened", dialog);
-        return dialog;
     },
 });
 
