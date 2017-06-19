@@ -11,6 +11,7 @@ import time
 
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import pytz
 from lxml import etree, builder
@@ -59,6 +60,7 @@ def _get_idref(self, env, model_str, idref):
                   datetime=datetime,
                   timedelta=timedelta,
                   relativedelta=relativedelta,
+                  SERVER_DATETIME_FORMAT=DEFAULT_SERVER_DATETIME_FORMAT,
                   version=odoo.release.major_version,
                   ref=self.id_get,
                   pytz=pytz)
