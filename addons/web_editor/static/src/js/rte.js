@@ -442,7 +442,7 @@ var RTE = Widget.extend({
                 $el.data('oe-id'),
                 markup,
                 $el.data('oe-xpath') || null,
-                _.omit(context || base.get_context(), 'lang')
+                $el.data('oe-field') === 'arch' ? _.omit(context || base.get_context(), 'lang') : context || base.get_context()
             ],
         });
     },
