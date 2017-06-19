@@ -484,6 +484,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_confirm(self):
+        if not self._context.get('skip_warning'):
+            partner_warning = self.partner_id.check_warning('sale_warn_msg', 'sale_warn', 'action_confirm')
+            if partner_warning:
+                return partner_warning
         for order in self.filtered(lambda order: order.partner_id not in order.message_partner_ids):
             order.message_subscribe([order.partner_id.id])
         for order in self:

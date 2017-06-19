@@ -785,6 +785,10 @@ class Picking(models.Model):
 
     @api.multi
     def do_new_transfer(self):
+        if not self._context.get('skip_warning'):
+            partner_warning = self.partner_id.check_warning('picking_warn_msg', 'picking_warn', 'do_new_transfer')
+            if partner_warning:
+                return partner_warning
         for pick in self:
             if pick.state == 'done':
                 raise UserError(_('The pick is already validated'))

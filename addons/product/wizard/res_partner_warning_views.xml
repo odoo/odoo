@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="res_partner_warning_view" model="ir.ui.view">
+            <field name="name">Partner Warning</field>
+            <field name="model">res.partner.warning</field>
+            <field name="arch" type="xml">
+                <form string="Partner Warning">
+                    <field name="warning"/>
+                    <footer>
+                        <button string="Continue" type="object" class="oe_highlight" name="action_continue"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+</odoo>

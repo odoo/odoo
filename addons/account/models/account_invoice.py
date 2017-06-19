@@ -600,6 +600,10 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_invoice_open(self):
+        if not self._context.get('skip_warning'):
+            partner_warning = self.partner_id.check_warning('invoice_warn_msg', 'invoice_warn', 'action_invoice_open')
+            if partner_warning:
+                return partner_warning
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
