@@ -3278,6 +3278,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab key in readonly form view', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[1].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                            '<field name="foo"/>' +
+                            '<field name="product_id"/>' +
+                            '<field name="foo" widget="phone"/>' +
+                            '<field name="display_name" widget="url"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // focus first field, trigger tab
+        form.$('[name="trululu"]').focus();
+        form.$('[name="trululu"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('[name="product_id"]')[0], document.activeElement,
+            "product_id should be focused");
+        form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused (emails are focusable but phone aren't)");
+
+        // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        assert.strictEqual(document.activeElement, form.$('[name="trululu"]')[0],
+            "first many2one should be focused");
+
+        form.destroy();
+    });
+
     QUnit.test('skip invisible fields when navigating with TAB', function (assert) {
         assert.expect(1);
 

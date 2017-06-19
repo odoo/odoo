@@ -285,11 +285,15 @@ var InputField = DebouncedField.extend({
      */
     _onNavigationMove: function (ev) {
         this._super.apply(this, arguments);
-        var input = this.$input[0];
-        var selecting = (input.selectionEnd !== input.selectionStart);
-        if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-         || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
-            ev.stopPropagation();
+
+        // the following code only makes sense in edit mode, with an input
+        if (this.mode === 'edit') {
+            var input = this.$input[0];
+            var selecting = (input.selectionEnd !== input.selectionStart);
+            if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
+             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                ev.stopPropagation();
+            }
         }
     },
 });
@@ -815,6 +819,19 @@ var FieldEmail = InputField.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' && this.$el || $();
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -848,6 +865,17 @@ var FieldPhone = FieldEmail.extend({
         if (this.mode === 'readonly' && !this._canCall()) {
             this.tagName = 'span';
         }
+    },
+    /**
+     * Returns the associated link only if there is one.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        if (this._canCall()) {
+            return this._super.apply(this, arguments);
+        }
+        return $();
     },
 
     //--------------------------------------------------------------------------
@@ -900,6 +928,19 @@ var UrlWidget = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' && this.$el || $();
     },
 
     //--------------------------------------------------------------------------
