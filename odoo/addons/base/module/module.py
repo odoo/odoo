@@ -479,6 +479,23 @@ class Module(models.Model):
             known_deps |= missing_mods.upstream_dependencies(known_deps, exclude_states)
         return known_deps
 
+    def next(self):
+        """
+        Return the action linked to an ir.actions.todo is there exists one that
+        should be executed. Otherwise, redirect to /web
+        """
+        Todos = self.env['ir.actions.todo']
+        _logger.info('getting next %s', Todos)
+        active_todo = Todos.search([('state', '=', 'open')], limit=1)
+        if active_todo:
+            _logger.info('next action is %s', active_todo)
+            return active_todo.action_launch()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
+        }
+
     @api.multi
     def _button_immediate_function(self, function):
         function(self)
@@ -489,7 +506,7 @@ class Module(models.Model):
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)
-        config = env['res.config'].next() or {}
+        config = self.next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 

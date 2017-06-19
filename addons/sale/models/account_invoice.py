@@ -15,7 +15,7 @@ class AccountInvoice(models.Model):
 
     def _default_comment(self):
         invoice_type = self.env.context.get('type', 'out_invoice')
-        if invoice_type == 'out_invoice':
+        if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
             return self.env.user.company_id.sale_note
 
     team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')

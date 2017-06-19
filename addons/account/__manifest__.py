@@ -56,7 +56,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'views/report_agedpartnerbalance.xml',
         'views/tax_adjustments.xml',
         'wizard/wizard_tax_adjustments_view.xml',
-        'views/res_config_view.xml',
+        'views/account_config_settings_views.xml',
         'views/web_planner_data.xml',
         'views/account_journal_dashboard_view.xml',
         'report/account_report_payment_receipt_templates.xml',

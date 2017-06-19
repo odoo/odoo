@@ -45,20 +45,21 @@
                         Multiple prices per product: must be set in the Sales tab of the product detail form.
                         Price computed from formulas: must be set in the pricelist form.">
                         <div class="o_setting_left_pane">
-                            <field name="sale_pricelist_setting_split_1"/>
+                            <field name="multi_sales_price"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="sale_pricelist_setting_split_1"/>
+                            <field name="sale_pricelist_setting" invisible="1"/>
+                            <label for="multi_sales_price"/>
                             <div class="text-muted">
                                 Apply specific prices per country, discounts, etc.
                             </div>
-                            <div class="mt16" attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}">
+                            <div class="mt16" attrs="{'invisible': [('multi_sales_price', '=', False)]}">
                                 <field name="group_sale_pricelist" invisible="1"/>
                                 <field name="group_pricelist_item" invisible="1"/>
                                 <field name="group_product_pricelist" invisible="1"/>
-                                <field name="sale_pricelist_setting_split_2" class="o_light_label" widget="radio"/>
+                                <field name="multi_sales_price_method" class="o_light_label" widget="radio"/>
                             </div>
-                            <div attrs="{'invisible': [('sale_pricelist_setting_split_1', '=', False)]}">
+                            <div attrs="{'invisible': [('multi_sales_price', '=', False)]}">
                                 <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
                             </div>
                         </div>

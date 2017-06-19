@@ -12,18 +12,21 @@ class BaseConfigSettings(models.TransientModel):
     auth_signup_template_user_id = fields.Many2one('res.users', string='Template user for new users created through signup')
 
     @api.model
-    def get_default_auth_signup_template_user_id(self, fields):
-        get_param = self.env['ir.config_parameter'].get_param
+    def get_values(self):
+        res = super(BaseConfigSettings, self).get_values()
+        get_param = self.env['ir.config_parameter'].sudo().get_param
         # we use safe_eval on the result, since the value of the parameter is a nonempty string
-        return {
-            'auth_signup_reset_password': safe_eval(get_param('auth_signup.reset_password', 'False')),
-            'auth_signup_uninvited': safe_eval(get_param('auth_signup.allow_uninvited', 'False')),
-            'auth_signup_template_user_id': safe_eval(get_param('auth_signup.template_user_id', 'False')),
-        }
+        res.update(
+            auth_signup_reset_password=safe_eval(get_param('auth_signup.reset_password', 'False')),
+            auth_signup_uninvited=safe_eval(get_param('auth_signup.allow_uninvited', 'False')),
+            auth_signup_template_user_id=safe_eval(get_param('auth_signup.template_user_id', 'False')),
+        )
+        return res
+
     @api.multi
-    def set_auth_signup_template_user_id(self):
-        self.ensure_one()
-        set_param = self.env['ir.config_parameter'].set_param
+    def set_values(self):
+        super(BaseConfigSettings, self).set_values()
+        set_param = self.env['ir.config_parameter'].sudo().set_param
         # we store the repr of the values, since the value of the parameter is a required string
         set_param('auth_signup.reset_password', repr(self.auth_signup_reset_password))
         set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited))

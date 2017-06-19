@@ -53,29 +53,6 @@ class ResConfigConfigurable(models.TransientModel):
     '''
     _name = 'res.config'
 
-    def _next_action(self):
-        Todos = self.env['ir.actions.todo']
-        _logger.info('getting next %s', Todos)
-
-        active_todos = Todos.search(['&', ('type', '=', 'automatic'), ('state', '=', 'open')])
-        user_groups = self.env.user.groups_id
-
-        for todo in active_todos:
-            if not todo.groups_id or (todo.groups_id & user_groups):
-                return todo
-
-    def _next(self):
-        _logger.info('getting next operation')
-        next = self._next_action()
-        _logger.info('next action is %s', next)
-        if next:
-            return next.action_launch()
-
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': '/web',
-        }
 
     @api.multi
     def start(self):
@@ -83,10 +60,13 @@ class ResConfigConfigurable(models.TransientModel):
 
     @api.multi
     def next(self):
-        """ Returns the next todo action to execute (using the default
-        sort order)
         """
-        return self._next()
+        Reload the settings page
+        """
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
 
     @api.multi
     def execute(self):
@@ -478,6 +458,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         return {'default': defaults, 'group': groups, 'module': modules, 'other': others}
 
+    def get_values(self):
+        """
+        Return values for the fields other that `default`, `group` and `module`
+        """
+        return {}
+
     @api.model
     def default_get(self, fields):
         IrValues = self.env['ir.values']
@@ -503,12 +489,20 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             if self._fields[name].type == 'selection':
                 res[name] = int(res[name])
 
-        # other fields: call all methods that start with 'get_default_'
+        # other fields: call the method 'get_values'
+        # The other methods that start with `get_default_` are deprecated
         for method in dir(self):
             if method.startswith('get_default_'):
-                res.update(getattr(self, method)(fields))
+                _logger.warning(_('Methods that start with `get_default_` are deprecated. Override `get_values` instead(Method %s)') % method)
+        res.update(self.get_values())
 
         return res
+
+    def set_values(self):
+        """
+        Set values for the fields other that `default`, `group` and `module`
+        """
+        pass
 
     @api.multi
     def execute(self):
@@ -523,7 +517,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         IrValues = self.env['ir.values'].sudo()
         for name, model, field in classified['default']:
             if isinstance(self[name], models.BaseModel):
-                value = self[name].ids
+                if self._fields[name].type == 'many2one':
+                    value = self[name].id
+                else:
+                    value = self[name].ids
             else:
                 value = self[name]
             IrValues.set_default(model, field, value)
@@ -536,10 +533,12 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 groups.write({'implied_ids': [(3, implied_group.id)]})
                 implied_group.write({'users': [(3, user.id) for user in groups.mapped('users')]})
 
-        # other fields: execute all methods that start with 'set_'
+        # other fields: execute method 'set_values'
+        # Methods that start with `set_` are now deprecated
         for method in dir(self):
-            if method.startswith('set_'):
-                getattr(self, method)()
+            if method.startswith('set_') and method is not 'set_values':
+                _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
+        self.set_values()
 
         # module fields: install/uninstall the selected modules
         to_install = []
@@ -555,9 +554,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if to_uninstall_modules:
             to_uninstall_modules.button_immediate_uninstall()
 
-        action = self._install_modules(to_install)
-        if action:
-            return action
+        self._install_modules(to_install)
 
         if to_install or to_uninstall_modules:
             # After the uninstall/install calls, the registry and environments
