@@ -901,7 +901,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     try:
         relaxng.assert_(doc)
     except Exception:
-        _logger.info('The XML file does not fit the required schema !', exc_info=True)
+        _logger.info('The XML file does not fit the required schema: %s' % xmlfile.name, exc_info=True)
         _logger.info(ustr(relaxng.error_log.last_error))
         raise
 
