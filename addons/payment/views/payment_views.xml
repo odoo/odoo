@@ -81,6 +81,7 @@
                             </page>
                             <page string="Configuration">
                                 <group name="acquirer_config">
+                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
                                     <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                     <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
@@ -88,7 +89,6 @@
                                     <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="specific_countries"/>
                                     <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
                                     <label for="view_template_id" groups="base.group_no_one"/>
