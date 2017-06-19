@@ -130,15 +130,15 @@
                             </div>
                             <div class="col-md-6 col-xs-12 o_setting_box" id="security_lead_time">
                                 <div class="o_setting_left_pane">
-                                    <field name="default_use_manufacturing_lead"/>
+                                    <field name="use_manufacturing_lead"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Security Lead Time" for="default_use_manufacturing_lead"/>
+                                    <label string="Security Lead Time" for="use_manufacturing_lead"/>
                                     <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Schedule manufacturing orders earlier to avoid delays
                                      </div>
-                                     <div class="content-group" attrs="{'invisible': [('default_use_manufacturing_lead','=',False)]}">
+                                     <div class="content-group" attrs="{'invisible': [('use_manufacturing_lead','=',False)]}">
                                         <div class="mt16" >
                                             Move forward deadline start dates by
                                             <field name="manufacturing_lead" class="oe_inline"/> days

@@ -175,15 +175,15 @@
                     </div>
                     <div class="col-xs-12 col-md-6 o_setting_box">
                         <div class="o_setting_left_pane">
-                            <field name="default_use_sale_note"/>
+                            <field name="use_sale_note"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="default_use_sale_note"/>
+                            <label for="use_sale_note"/>
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                             <div class="text-muted">
                                 Show standard terms &amp; conditions on orders
                             </div>
-                            <div class="content-group" attrs="{'invisible': [('default_use_sale_note','=',False)]}">
+                            <div class="content-group" attrs="{'invisible': [('use_sale_note','=',False)]}">
                                 <div class="mt16">
                                     <field name="sale_note" placeholder="Insert your terms &amp; conditions here..."/>
                                 </div>
@@ -278,7 +278,7 @@
                                 Product used for down payments
                             </div>
                             <div class="text-muted">
-                                <field name="deposit_product_id_setting"/>
+                                <field name="default_deposit_product_id"/>
                             </div>
                         </div>
                     </div>

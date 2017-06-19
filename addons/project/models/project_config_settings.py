@@ -14,11 +14,6 @@ class ProjectConfiguration(models.TransientModel):
     module_hr_timesheet = fields.Boolean("Timesheets")
     module_project_timesheet_synchro = fields.Boolean("Awesome Timesheet")
     module_rating_project = fields.Boolean(string="Rating on Tasks")
-    generate_project_alias = fields.Selection([
-        (0, "Do not create an email alias automatically"),
-        (1, "Automatically generate an email alias at the project creation")
-        ], string="Project Alias",
-        help="Odoo will generate an email alias at the project creation from project name.")
     module_project_forecast = fields.Boolean(string="Forecasts")
     module_hr_holidays = fields.Boolean("Leave Management")
     module_hr_timesheet_attendance = fields.Boolean("Attendances")
@@ -26,10 +21,3 @@ class ProjectConfiguration(models.TransientModel):
     module_hr_expense = fields.Boolean("Expenses")
     module_project_issue = fields.Boolean("Issue Tracking")
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
-
-    @api.multi
-    def set_default_generate_project_alias(self):
-        check = self.env.user.has_group('base.group_system')
-        Values = check and self.env['ir.values'].sudo() or self.env['ir.values']
-        for config in self:
-            Values.set_default('project.config.settings', 'generate_project_alias', config.generate_project_alias)

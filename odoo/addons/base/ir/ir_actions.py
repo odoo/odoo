@@ -571,14 +571,25 @@ class IrActionsTodo(models.Model):
     sequence = fields.Integer(default=10)
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
-    type = fields.Selection([('manual', 'Launch Manually'),
-                             ('once', 'Launch Manually Once'),
-                             ('automatic', 'Launch Automatically')], default='manual', required=True,
-                            help="""Manual: Launched manually.
-                                    Automatic: Runs whenever the system is reconfigured.
-                                    Launch Manually Once: after having been launched manually, it sets automatically to Done.""")
-    groups_id = fields.Many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', string='Groups')
-    note = fields.Text(string='Text', translate=True)
+
+    @api.model
+    def create(self, vals):
+        todo = super(IrActionsTodo, self).create(vals)
+        if todo.state == "open":
+            todo.ensure_one_open_todo()
+        return todo
+
+    def write(self, vals):
+        res = super(IrActionsTodo, self).write(vals)
+        if vals.get('state', '') == 'open':
+            for todo in self:
+                todo.ensure_one_open_todo()
+        return res
+
+    def ensure_one_open_todo(self):
+        open_todo = self.search(['&', ('state', '=', 'open'), ('id', '!=', self.id)])
+        if open_todo:
+            open_todo.write({'state': 'done'})
 
     @api.multi
     def name_get(self):
@@ -610,8 +621,8 @@ class IrActionsTodo(models.Model):
     def action_launch(self, context=None):
         """ Launch Action of Wizard"""
         self.ensure_one()
-        if self.type in ('automatic', 'once'):
-            self.write({'state': 'done'})
+
+        self.write({'state': 'done'})
 
         # Load action
         action = self.env[self.action_id.type].browse(self.action_id.id)
@@ -627,8 +638,8 @@ class IrActionsTodo(models.Model):
             result['res_id'] = ctx.pop('res_id')
 
         # disable log for automatic wizards
-        if self.type == 'automatic':
-            ctx['disable_log'] = True
+        ctx['disable_log'] = True
+
         result['context'] = ctx
 
         return result
@@ -637,33 +648,6 @@ class IrActionsTodo(models.Model):
     def action_open(self):
         """ Sets configuration wizard in TODO state"""
         return self.write({'state': 'open'})
-
-    @api.multi
-    def progress(self):
-        """ Returns a dict with 3 keys {todo, done, total}.
-
-        These keys all map to integers and provide the number of todos
-        marked as open, the total number of todos and the number of
-        todos not open (which is basically a shortcut to total-todo)
-
-        :rtype: dict
-        """
-        user_groups = self.env.user.groups_id
-
-        done_count = self.search_count([
-            ('state', '!=', open),
-            '|', ('groups_id', '=', False),
-                 ('groups_id', 'in', user_groups.ids),
-        ])
-        total_count = self.search_count([
-            '|', ('groups_id', '=', False),
-                 ('groups_id', 'in', user_groups.ids),
-        ])
-        return {
-            'done': done_count,
-            'total': total_count,
-            'todo': total_count - done_count,
-        }
 
 
 class IrActionsActClient(models.Model):

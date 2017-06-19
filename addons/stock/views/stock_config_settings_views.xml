@@ -292,15 +292,15 @@
                             <div id="purchase_po_lead"/>
                             <div class="col-xs-12 col-md-6 o_setting_box" id="propagation_info" title="Rescheduling applies to any chain of operations (e.g. Make To Order, Pick Pack Ship). In the case of MTO sales, a vendor delay (updated incoming date) impacts the expected delivery date to the customer. This option allows to not propagate the rescheduling if the change is not critical.">
                                 <div class="o_setting_left_pane">
-                                    <field name="default_new_propagation_minimum_delta"/>
+                                    <field name="use_propagation_minimum_delta"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="default_new_propagation_minimum_delta"/>
+                                    <label for="use_propagation_minimum_delta"/>
                                     <div class="text-muted">
                                         Don’t propagate scheduling changes through chains of operations
                                     </div>
                                     <div class="content-group">
-                                        <div class="mt16" attrs="{'invisible': [('default_new_propagation_minimum_delta', '=', False)]}">
+                                        <div class="mt16" attrs="{'invisible': [('use_propagation_minimum_delta', '=', False)]}">
                                             <span>Change must be higher than <field name="propagation_minimum_delta" class="oe_inline"/> days to be propagated</span>
                                         </div>
                                     </div>

@@ -390,7 +390,6 @@ env["res.partner"].create({"name": partner_name})
                 <tree string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
-                    <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="fa-cogs" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="done"
@@ -417,11 +416,7 @@ env["res.partner"].create({"name": partner_name})
                   <sheet>
                     <group col="4">
                         <field name="action_id"/>
-                        <field name="type"/>
                         <field name="sequence"/>
-                    </group>
-                    <group string="Groups">
-                        <field name="groups_id" nolabel="1" colspan="4"/>
                     </group>
                   </sheet>
                 </form>

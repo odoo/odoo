@@ -40,7 +40,7 @@ Dashboard / Reports for Project Management will include:
         'report/project_report_views.xml',
         'views/project_views.xml',
         'views/res_partner_views.xml',
-        'views/res_config_views.xml',
+        'views/project_config_settings_views.xml',
         'views/project_templates.xml',
         'data/web_planner_data.xml',
         'data/project_mail_template_data.xml',

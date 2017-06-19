@@ -3,5 +3,5 @@
 
 from . import account_analytic
 from . import hr_holidays
+from . import hr_timesheet_config_settings
 from . import res_company
-from . import res_config
