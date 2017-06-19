@@ -31,7 +31,7 @@ tour.register('project_tour', {
     content: _t('Click on the card to <b>go to your project</b> and start organizing tasks.'),
     position: 'right',
     run: function (actions) {
-        actions.auto(this.$anchor.find(".o_project_kanban_box:first > a"));
+        actions.auto(this.$anchor.find(".o_project_kanban_box:first"));
     },
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create",
