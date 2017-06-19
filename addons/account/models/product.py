@@ -10,11 +10,11 @@ class ProductCategory(models.Model):
     property_account_income_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account", oldname="property_account_income_categ",
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices to value sales.")
+        help="This account will be used when validating a customer invoice.")
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense_categ",
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices to value expenses.")
+        help="This account will be used when validating a vendor bill in periodic valuation, or when receiving products with perpetual valuation.\n For continental accounting, always set an expense account. For anglo-saxon accounting (US), you should set an expense account  for consumable, or an inventory account for products that you sell.")
 
 #----------------------------------------------------------
 # Products
@@ -29,11 +29,11 @@ class ProductTemplate(models.Model):
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account", oldname="property_account_income",
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices instead of the default one to value sales for the current product.")
+        help="Keep this field empty to use the default value from the product category.")
     property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense",
         domain=[('deprecated', '=', False)],
-        help="This account will be used for invoices instead of the default one to value expenses for the current product.")
+        help="This account will be used when validating a vendor bill in periodic valuation, or when receiving products with perpetual valuation.\n For continental accounting, always set an expense account. For anglo-saxon accounting (US), you should set an expense account  for consumable, or an inventory account for products that you sell. If the field is empty, it uses the one defined in the product category.")
 
     @api.multi
     def write(self, vals):
