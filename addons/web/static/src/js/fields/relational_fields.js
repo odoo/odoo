@@ -124,7 +124,7 @@ var FieldMany2One = AbstractField.extend({
      * @returns {jQuery}
      */
     getFocusableElement: function () {
-        return this.$input || $();
+        return this.mode === 'edit' && this.$input || this.$el;
     },
     /**
      * TODO
