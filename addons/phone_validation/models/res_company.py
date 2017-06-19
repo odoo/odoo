@@ -9,7 +9,7 @@ class ResCompany(models.Model):
 
     phone_international_format = fields.Boolean(
         string="Enforce International Format", default=False,
-        help="Always encore phone numbers using international format. Otherwise"
+        help="Always encode phone numbers using international format. Otherwise"
              "numbers coming from the company's country are nationaly formatted."
              "International numbers are always using international format."
     )
