@@ -1544,7 +1544,9 @@
                     <div class="o_row">
                         <label for="days" string="Due"/>
                         <field name="days" class="oe_inline"/>
+                        <label for="option" string=""/> <!--Empty label to force space between elements-->
                         <field name="option" class="oe_inline"/>
+                        <label string=""/> <!--Empty label to force space between elements-->
                         <label for="day_of_the_month" string="the" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
                         <field name="day_of_the_month" class="oe_inline" attrs="{'invisible': [('option','not in',('day_after_invoice_date','after_invoice_month'))]}"/>
                     </div>
