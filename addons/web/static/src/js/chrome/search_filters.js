@@ -155,6 +155,7 @@ ExtendedSearchProposition.Field = Widget.extend({
 
 ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
     tagName: 'input',
+    className: 'o_input',
     attributes: {
         type: 'text'
     },
@@ -251,6 +252,7 @@ ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
 
 ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
     tagName: 'input',
+    className: 'o_input',
     attributes: {
         type: 'number',
         value: '0',
