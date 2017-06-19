@@ -199,6 +199,57 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2ones in form views with show_adress', function (assert) {
+        assert.expect(4);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field ' +
+                                'name="trululu" ' +
+                                'string="custom label" ' +
+                                'context="{\'search_default_customer\':1, \'show_address\': 1}" ' +
+                                'options="{\'always_reload\': True}"' +
+                            '/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return this._super(route, args).then(function (result) {
+                        result[0][1] += '\nStreet\nCity ZIP';
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            "input should have a multi-line content in readonly due to show_address");
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should have an open record button");
+
+        form.$('input.o_input').click();
+        form.$('input.o_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ESC,
+            keyCode: $.ui.keyCode.ESC,
+        }));
+
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should still have an open record button");
+        form.$('input.o_input').trigger('focusout');
+        assert.strictEqual($('.modal button:contains(Create and edit)').length, 0,
+            "there should not be a quick create modal");
+
+        form.destroy();
+    });
+
     QUnit.test('many2ones in form views with search more', function (assert) {
         assert.expect(3);
         this.data.partner.records.push({

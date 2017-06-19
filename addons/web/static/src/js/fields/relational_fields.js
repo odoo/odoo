@@ -206,6 +206,17 @@ var FieldMany2One = AbstractField.extend({
         return [];
     },
     /**
+    * Returns the display_name from a string which contains it but was altered
+    * as a result of the show_address option using a horrible hack.
+    *
+    * @private
+    * @param {string} value
+    * @returns {string} display_name without show_address mess
+    */
+    _getDisplayName: function (value) {
+        return value.split('\n')[0];
+    },
+    /**
      * @private
      * @param {string} name
      */
@@ -244,7 +255,7 @@ var FieldMany2One = AbstractField.extend({
         // and hope for the best that noone tries to uses this mechanism to do
         // something else.
         if (this.nodeOptions.always_reload) {
-            value = value.split('\n')[0];
+            value = this._getDisplayName(value);
         }
         this.$input.val(value);
         if (!this.autocomplete_bound) {
@@ -302,7 +313,7 @@ var FieldMany2One = AbstractField.extend({
             .then(function (result) {
                 // possible selections for the m2o
                 var values = _.map(result, function (x) {
-                    x[1] = x[1].split("\n")[0];
+                    x[1] = self._getDisplayName(x[1]);
                     return {
                         label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
                         value: x[1],
@@ -478,7 +489,7 @@ var FieldMany2One = AbstractField.extend({
     _onInputKeyup: function () {
         if (this.$input.val() === "") {
             this.reinitialize(false);
-        } else if (this.m2o_value !== this.$input.val()) {
+        } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
             this.floating = true;
             this._updateExternalButton();
         }
