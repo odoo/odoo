@@ -14,7 +14,7 @@ class ProductCategory(models.Model):
     property_account_expense_categ_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense_categ",
         domain=[('deprecated', '=', False)],
-        help="This account is used when validating a vendor bill, for continental accounting or anglo-saxon without perpetual inventory valuation. For anglo-saxon accounting (US) with perpetual inventory valuation, this account is used when validating the customer invoice (set a Cost of Revenues/COGS account in this case).")
+        help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation.")
 
 #----------------------------------------------------------
 # Products
@@ -33,7 +33,7 @@ class ProductTemplate(models.Model):
     property_account_expense_id = fields.Many2one('account.account', company_dependent=True,
         string="Expense Account", oldname="property_account_expense",
         domain=[('deprecated', '=', False)],
-        help="This account is used when validating a vendor bill, for continental accounting or anglo-saxon without perpetual inventory valuation. For anglo-saxon accounting (US) with perpetual inventory valuation, this account is used when validating the customer invoice (set a Cost of Revenues/COGS account in this case). If the field is empty, it uses the one defined in the product category.")
+        help="The expense is accounted for when a vendor bill is validated, except in anglo-saxon accounting with perpetual inventory valuation in which case the expense (Cost of Goods Sold account) is recognized at the customer invoice validation. If the field is empty, it uses the one defined in the product category.")
 
     @api.multi
     def write(self, vals):
