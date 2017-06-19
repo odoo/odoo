@@ -1059,7 +1059,7 @@ var FieldOne2Many = FieldX2Many.extend({
 
         this._openFormDialog({
             id: ev.data.id,
-            on_saved: this._setValue.bind(this, { operation: 'NOOP' }, {}),
+            on_saved: this._setValue.bind(this, { operation: 'SORT' }, {}),
             readonly: this.mode === 'readonly',
         });
     },
