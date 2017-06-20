@@ -828,7 +828,7 @@ var FieldEmail = InputField.extend({
      * @override
      */
     getFocusableElement: function () {
-        return this.mode === 'readonly' && this.$el || $();
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -940,7 +940,7 @@ var UrlWidget = InputField.extend({
      * @override
      */
     getFocusableElement: function () {
-        return this.mode === 'readonly' && this.$el || $();
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

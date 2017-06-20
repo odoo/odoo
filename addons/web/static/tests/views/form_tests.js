@@ -3244,7 +3244,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in form view', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
@@ -3253,8 +3253,9 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
-                            '<field name="foo"/>' +
+                            '<field name="foo" widget="email"/>' +
                             '<field name="bar"/>' +
+                            '<field name="display_name" widget="url"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
@@ -3266,11 +3267,17 @@ QUnit.module('Views', {
 
         // focus first input, trigger tab
         form.$('input[name="foo"]').focus();
+
         form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.ok($.contains(form.$('div[name="bar"]')[0], document.activeElement),
             "bar checkbox should be focused");
 
+        form.$('div[name="bar"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused");
+
         // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "first input should be focused");
