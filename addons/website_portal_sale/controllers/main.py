@@ -147,7 +147,7 @@ class website_account(website_account):
         domain = [
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
+            ('state', 'in', ['open', 'paid', 'cancel'])
         ]
         archive_groups = self._get_archive_groups('account.invoice', domain)
         if date_begin and date_end:
