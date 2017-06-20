@@ -13,7 +13,7 @@ class TestPayment(AccountingTestCase):
         self.acc_bank_stmt_line_model = self.env['account.bank.statement.line']
 
         self.partner_agrolait = self.env.ref("base.res_partner_2")
-        self.partner_axelor = self.env.ref("base.res_partner_2")
+        self.partner_china_exp = self.env.ref("base.res_partner_3")
         self.currency_chf_id = self.env.ref("base.CHF").id
         self.currency_usd_id = self.env.ref("base.USD").id
         self.currency_eur_id = self.env.ref("base.EUR").id
@@ -36,13 +36,13 @@ class TestPayment(AccountingTestCase):
         self.diff_income_account = self.env['res.users'].browse(self.env.uid).company_id.income_currency_exchange_account_id
         self.diff_expense_account = self.env['res.users'].browse(self.env.uid).company_id.expense_currency_exchange_account_id
 
-    def create_invoice(self, amount=100, type='out_invoice', currency_id=None):
+    def create_invoice(self, amount=100, type='out_invoice', currency_id=None, partner=None):
         """ Returns an open invoice """
         invoice = self.invoice_model.create({
-            'partner_id': self.partner_agrolait.id,
+            'partner_id': partner,
             'reference_type': 'none',
             'currency_id': currency_id,
-            'name': type == 'out_invoice' and 'invoice to client' or 'invoice to supplier',
+            'name': type,
             'account_id': self.account_receivable.id,
             'type': type,
             'date_invoice': time.strftime('%Y') + '-06-26',
@@ -113,8 +113,8 @@ class TestPayment(AccountingTestCase):
 
     def test_full_payment_process(self):
         """ Create a payment for two invoices, post it and reconcile it with a bank statement """
-        inv_1 = self.create_invoice(amount=100, currency_id=self.currency_eur_id)
-        inv_2 = self.create_invoice(amount=200, currency_id=self.currency_eur_id)
+        inv_1 = self.create_invoice(amount=100, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        inv_2 = self.create_invoice(amount=200, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
 
         ctx = { 'active_model': 'account.invoice', 'active_ids': [inv_1.id, inv_2.id] }
         register_payments = self.register_payments_model.with_context(ctx).create({
@@ -122,10 +122,11 @@ class TestPayment(AccountingTestCase):
             'journal_id': self.bank_journal_euro.id,
             'payment_method_id': self.payment_method_manual_in.id,
         })
-        register_payments.create_payment()
+        register_payments.create_payments()
         payment = self.payment_model.search([], order="id desc", limit=1)
 
         self.assertAlmostEquals(payment.amount, 300)
+        self.assertEqual(payment.state, 'posted')
         self.assertEqual(payment.state, 'posted')
         self.assertEqual(inv_1.state, 'paid')
         self.assertEqual(inv_2.state, 'paid')
@@ -170,12 +171,150 @@ class TestPayment(AccountingTestCase):
             'currency_id': self.currency_chf_id,
             'journal_id': self.bank_journal_usd.id,
             'partner_type': 'supplier',
-            'partner_id': self.partner_axelor.id,
+            'partner_id': self.partner_china_exp.id,
             'payment_method_id': self.payment_method_manual_out.id,
         })
         payment.post()
 
         self.check_journal_items(payment.move_line_ids, [
             {'account_id': self.account_usd.id, 'debit': 0.0, 'credit': 38.21, 'amount_currency': -58.42, 'currency_id': self.currency_usd_id},
-            {'account_id': self.partner_axelor.property_account_payable_id.id, 'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_chf_id},
+            {'account_id': self.partner_china_exp.property_account_payable_id.id, 'debit': 38.21, 'credit': 0.0, 'amount_currency': 50, 'currency_id': self.currency_chf_id},
         ])
+
+    def test_multiple_payments_00(self):
+        """ Create test to pay several vendor bills/invoices at once """
+        # One payment for inv_1 and inv_2 (same partner)
+        inv_1 = self.create_invoice(amount=100, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        inv_2 = self.create_invoice(amount=500, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        # One payment for inv_3 (different partner)
+        inv_3 = self.create_invoice(amount=200, currency_id=self.currency_eur_id, partner=self.partner_china_exp.id)
+        # One payment for inv_4 (Vendor Bill)
+        inv_4 = self.create_invoice(amount=50, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id, type='in_invoice')
+
+        ids = [inv_1.id, inv_2.id, inv_3.id, inv_4.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+        })
+        register_payments.create_payments()
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+
+        self.assertEqual(len(payment_ids), 3)
+        self.assertAlmostEquals(register_payments.amount, 750)
+
+        inv_1_2_pay = None
+        inv_3_pay = None
+        inv_4_pay = None
+        for payment_id in payment_ids:
+            self.assertEqual('posted', payment_id.state)
+            if payment_id.partner_id == self.partner_agrolait:
+                if payment_id.partner_type == 'supplier':
+                    self.assertEqual(payment_id.amount, 50)
+                    inv_4_pay = payment_id
+                else:
+                    self.assertEqual(payment_id.amount, 600)
+                    inv_1_2_pay = payment_id
+            else:
+                self.assertEqual(payment_id.amount, 200)
+                inv_3_pay = payment_id
+
+        self.assertIsNotNone(inv_1_2_pay)
+        self.assertIsNotNone(inv_3_pay)
+        self.assertIsNotNone(inv_4_pay)
+
+        self.check_journal_items(inv_1_2_pay.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 600.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 600.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertEqual(inv_1.state, 'paid')
+        self.assertEqual(inv_2.state, 'paid')
+
+        self.check_journal_items(inv_3_pay.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 200.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 200.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertEqual(inv_3.state, 'paid')
+
+        self.check_journal_items(inv_4_pay.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 0.0, 'credit': 50.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 50.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+        self.assertEqual(inv_4.state, 'paid')
+
+    def test_multiple_payments_01(self):
+        """ Create test to pay several invoices/refunds at once """
+        # One payment for inv_1 and inv_2 (same partner) but inv_2 is refund
+        inv_1 = self.create_invoice(amount=550, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        inv_2 = self.create_invoice(amount=100, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id, type='out_refund')
+
+        ids = [inv_1.id, inv_2.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+        })
+        register_payments.create_payments()
+        payment_id = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+
+        self.assertEqual(len(payment_id), 1)
+        self.assertAlmostEquals(register_payments.amount, 450)
+
+        self.assertEqual(payment_id.state, 'posted')
+
+        self.check_journal_items(payment_id.move_line_ids, [
+            {'account_id': self.account_eur.id, 'debit': 450.0, 'credit': 0.0, 'amount_currency': 0.0, 'currency_id': False},
+            {'account_id': inv_1.account_id.id, 'debit': 0.0, 'credit': 450.0, 'amount_currency': 0.0, 'currency_id': False},
+        ])
+
+    def test_partial_payment(self):
+        """ Create test to pay invoices (cust. inv + vendor bill) with partial payment """
+        # Test Customer Invoice
+        inv_1 = self.create_invoice(amount=600, currency_id=self.currency_eur_id, partner=self.partner_agrolait.id)
+        ids = [inv_1.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+        })
+
+        # Perform the partial payment by setting the amount at 550 instead of 600
+        register_payments.amount = 550
+
+        register_payments.create_payments()
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+
+        self.assertEqual(len(payment_ids), 1)
+
+        payment_id = payment_ids[0]
+
+        self.assertEqual(payment_id.invoice_ids[0].id, inv_1.id)
+        self.assertAlmostEquals(payment_id.amount, 550)
+        self.assertEqual(payment_id.payment_type, 'inbound')
+        self.assertEqual(payment_id.partner_id, self.partner_agrolait)
+        self.assertEqual(payment_id.partner_type, 'customer')
+
+        # Test Vendor Bill
+        inv_2 = self.create_invoice(amount=500, currency_id=self.currency_eur_id, type='in_invoice', partner=self.partner_china_exp.id)
+        ids = [inv_2.id]
+        register_payments = self.register_payments_model.with_context(active_ids=ids).create({
+            'payment_date': time.strftime('%Y') + '-07-15',
+            'journal_id': self.bank_journal_euro.id,
+            'payment_method_id': self.payment_method_manual_in.id,
+        })
+
+        # Perform the partial payment by setting the amount at 300 instead of 500
+        register_payments.amount = 300
+
+        register_payments.create_payments()
+        payment_ids = self.payment_model.search([('invoice_ids', 'in', ids)], order="id desc")
+
+        self.assertEqual(len(payment_ids), 1)
+
+        payment_id = payment_ids[0]
+
+        self.assertEqual(payment_id.invoice_ids[0].id, inv_2.id)
+        self.assertAlmostEquals(payment_id.amount, 300)
+        self.assertEqual(payment_id.payment_type, 'outbound')
+        self.assertEqual(payment_id.partner_id, self.partner_china_exp)
+        self.assertEqual(payment_id.partner_type, 'supplier')

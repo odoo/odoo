@@ -53,7 +53,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
             return {'domain': {'payment_method_id': [('payment_type', '=', 'outbound'), ('id', 'in', payment_methods.ids)]}}
         return {}
 
-    def get_payment_vals(self):
+    def _get_payment_vals(self):
         """ Hook for extension """
         return {
             'partner_type': 'supplier',
@@ -76,7 +76,7 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
         expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
 
         # Create payment and post it
-        payment = self.env['account.payment'].create(self.get_payment_vals())
+        payment = self.env['account.payment'].create(self._get_payment_vals())
         payment.post()
 
         # Log the payment in the chatter

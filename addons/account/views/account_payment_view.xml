@@ -139,8 +139,8 @@
                         <group>
                             <group>
                                 <field name="payment_type" widget="radio" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_type" nolabel="1" widget="selection" string="" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
-                                <field name="partner_id" nolabel="1" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
+                                <field name="partner_type" widget="selection" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="partner_id" attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', '!=', 'draft')]}" context="{'default_is_company': True, 'default_supplier': payment_type == 'outbound', 'default_customer': payment_type == 'inbound'}"/>
                                 <field name="journal_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="destination_journal_id" widget="selection" attrs="{'required': [('payment_type', '=', 'transfer')], 'invisible': [('payment_type', '!=', 'transfer')], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="hide_payment_method" invisible="1"/>
@@ -294,8 +294,9 @@
                             <field name="hide_payment_method" invisible="1"/>
                             <field name="payment_method_id" widget="radio" attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
                             <field name="payment_method_code" invisible="1"/>
-                            <field name="amount"/>
                             <field name="currency_id" invisible="1"/>
+                            <field name="multi" invisible="1"/>
+                            <field name="amount" attrs="{'readonly': [('multi', '=', True)]}"/>
                         </group>
                         <group>
                             <field name="payment_date"/>
@@ -303,7 +304,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button string='Validate' name="create_payment" type="object" class="btn-primary"/>
+                        <button string='Validate' name="create_payments" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel"/>
                     </footer>
                </form>
@@ -320,6 +321,26 @@
             target="new"
             key2="client_action_multi"
         />
+
+        <!-- Action confirm_payments for multi -->
+        <record id="action_account_confirm_payments" model="ir.actions.server">
+            <field name="name">Confirm Payments</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="code">
+records.post()
+            </field>
+        </record>
+
+        <record id="account_confirm_payments" model="ir.values">
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="name">Confirm Payments</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,' +str(ref('action_account_confirm_payments'))" />
+            <field name="key">action</field>
+            <field name="model">account.payment</field>
+        </record>
 
     </data>
 </odoo>
