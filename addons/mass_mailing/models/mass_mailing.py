@@ -487,7 +487,7 @@ class MassMailing(osv.Model):
         'create_date': fields.datetime('Creation Date'),
         'sent_date': fields.datetime('Sent Date', oldname='date', copy=False),
         'schedule_date': fields.datetime('Schedule in the Future'),
-        'body_html': fields.html('Body', translate=True),
+        'body_html': fields.html('Body'),
         'attachment_ids': fields.many2many(
             'ir.attachment', 'mass_mailing_ir_attachments_rel',
             'mass_mailing_id', 'attachment_id', 'Attachments'
