@@ -13,7 +13,6 @@ var FieldPad = AbstractField.extend({
     events: {
         'click .oe_pad_switch': '_onToggleFullScreen',
     },
-    supportedFieldTypes: ['char'],
 
     /**
      * @override
