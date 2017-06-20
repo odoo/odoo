@@ -197,13 +197,13 @@ Best Regards,''')
         """ Called by the 'Chart of Accounts' button of the setup bar.
         """
         current_company = self._company_default_get()
+        current_company.account_setup_chart_of_accounts_marked_done = True
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if current_company.opening_move_posted():
             return 'account.action_account_form'
 
         # Otherwise, we open a custom tree view allowing to edit opening balances of the account, to prepare the opening move
-        current_company.account_setup_chart_of_accounts_marked_done = True
         self.create_op_move_if_non_existant()
 
         # We return the name of the action to execute (to display the list of all the accounts,
@@ -222,6 +222,7 @@ Best Regards,''')
 
             return {
                 'type': 'ir.actions.act_window',
+                'name': 'Initial Balances',
                 'view_mode': 'form',
                 'res_model': 'account.move',
                 'target': 'new',
@@ -250,7 +251,6 @@ Best Regards,''')
         """
         current_company = self._company_default_get()
         current_company.account_setup_bar_closed = True
-        return 'account.setup_wizard_refresh_view'
 
     @api.model
     def create_op_move_if_non_existant(self):
@@ -276,13 +276,11 @@ Best Regards,''')
         refreshing the view.
         """
         self.account_setup_company_data_marked_done = True
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def unmark_company_setup_as_done_action(self):
         """ Returns the 'company' setup step to its 'not done' state.
         """
         self.account_setup_company_data_marked_done = False
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def opening_move_posted(self):
         """ Returns true if and only if this company has an opening account move,

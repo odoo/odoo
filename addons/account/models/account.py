@@ -636,14 +636,12 @@ class AccountJournal(models.Model):
         be marked as such in the setup bar.
         """
         self.company_id.account_setup_bank_data_marked_done = True
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def unmark_bank_setup_as_done_action(self):
         """ Forces the 'bank setup' step of setup to mark it as undone. It will hence
         be marked as such in the setup bar.
         """
         self.company_id.account_setup_bank_data_marked_done = False
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank and set it as value of the  field bank_account_id """

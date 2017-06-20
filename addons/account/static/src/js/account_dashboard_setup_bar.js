@@ -65,13 +65,6 @@ var AccountSetupBarRenderer = KanbanRenderer.extend({
      * @param {MouseEvent}
      */
     onActionClicked: function(e) {
-        /* This functions allows the buttons of the setup bar to trigger Python
-        * code defined in api.model functions, in res.company, and then to execute
-        * the action returned by those.
-        * It uses the 'type' attributes on buttons : if 'company_object', it will
-        * run Python function 'name' of company, otherwise, it will directly execute
-        * the action matching 'name'.
-        */
         e.preventDefault();
         var self = this;
         var $action = $(e.currentTarget);
@@ -80,27 +73,12 @@ var AccountSetupBarRenderer = KanbanRenderer.extend({
         var action_context = $action.data('context');
 
         if(type_attr == COMPANY_METHOD_TYPE) {
-           this._rpc({
-                    model: 'res.company',
-                    method: name_attr,
-                    args: [],
-                })
-                .then(
-                    function(rslt_action) {
-                        self.do_action(rslt_action, {
-                            action_context: action_context,
-                        })
-                    });
-        }
-        else { //By default, we consider the content of 'name' as an action.
-            self.do_action(name_attr, {
-                action_context: action_context,
-            });
+            self.trigger_up('company_button_action', {rpc_method: name_attr, context: action_context})
         }
     },
 });
 
-var AccountDashboardModel = KanbanModel.extend({
+var AccountSetupBarModel = KanbanModel.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -170,9 +148,16 @@ var AccountDashboardModel = KanbanModel.extend({
     },
 });
 
-var AccountDashboardController = KanbanController.extend({
+var AccountSetupBarController = KanbanController.extend({
+    /* The company_button_action action allows the buttons of the setup bar to
+    * trigger Python code defined in api.model functions in res.company model,
+    * and to execute the action returned them.
+    * It uses the 'type' attributes on buttons : if 'company_object', it will
+    * run Python function 'name' of company model.
+    */
     custom_events: _.extend({}, KanbanController.prototype.custom_events, {
         dashboard_open_action: '_onDashboardOpenAction',
+        company_button_action: '_triggerCompanyButtonAction',
     }),
 
     //--------------------------------------------------------------------------
@@ -190,25 +175,53 @@ var AccountDashboardController = KanbanController.extend({
             additional_context: action_context,
         });
     },
+
+    /**
+    * Manages the clicks on the setup bar buttons.
+    **/
+    _triggerCompanyButtonAction: function (odooEvent) {
+        var self = this
+        if (odooEvent.data.rpc_method !== undefined) {
+            self._rpc({
+                    model: 'res.company',
+                    method: odooEvent.data.rpc_method,
+                    args: [],
+                })
+                .then(
+                    function(rslt_action) {
+                        if (rslt_action !== undefined) {
+                            self.do_action(rslt_action, {
+                                action_context: odooEvent.data.context,
+                                on_close: function () {
+                                    self.trigger_up('reload'); //Reloads the dashboard to refresh the status of the setup bar.
+                                },
+                            });
+                        }
+                        else { //Happens for any button not returning anything, like the cross to close the setup bar, for example.
+                            self.trigger_up('reload');
+                        }
+                    });
+        }
+    }
 });
 
 var AccountDashboardView = KanbanView.extend({
     config: _.extend({}, KanbanView.prototype.config, {
-        Model: AccountDashboardModel,
+        Model: AccountSetupBarModel,
         Renderer: AccountSetupBarRenderer,
-        Controller: AccountDashboardController,
+        Controller: AccountSetupBarController,
     }),
     display_name: _lt('Dashboard'),
     icon: 'fa-dashboard',
-    searchview_hidden: true,
+    searchview_hidden: false,
 });
 
 view_registry.add('account_setup_bar', AccountDashboardView);
 
 return {
-    Model: AccountDashboardModel,
+    Model: AccountSetupBarModel,
     Renderer: AccountSetupBarRenderer,
-    Controller: AccountDashboardController,
+    Controller: AccountSetupBarController,
 };
 
 });

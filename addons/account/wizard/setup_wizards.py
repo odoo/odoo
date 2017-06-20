@@ -35,13 +35,11 @@ class FinancialYearOpeningWizard(models.TransientModel):
         """ Forces fiscal year setup state to 'done'.
         """
         self.company_id.account_setup_financial_year_data_marked_done = True
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
     def unmark_as_done(self):
         """ Forces fiscal year setup state to 'undone'.
         """
         self.company_id.account_setup_financial_year_data_marked_done = False
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
 
 class OpeningAccountMoveWizard(models.TransientModel):
     _name = 'account.opening'
@@ -57,5 +55,3 @@ class OpeningAccountMoveWizard(models.TransientModel):
         """ Called by this wizard's 'post' button.
         """
         self.opening_move_id.post() # This will raise an error if we don't have debit = credit
-
-        return self.env.ref('account.setup_wizard_refresh_view').read([])[0]
