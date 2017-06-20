@@ -74,8 +74,14 @@ class purchase_requisition(osv.osv):
     }
 
     def _get_picking_in(self, cr, uid, context=None):
-        obj_data = self.pool.get('ir.model.data')
-        return obj_data.get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
+        picking_id = self.pool['ir.model.data'].xmlid_to_res_id(cr, uid, 'stock.picking_type_in', raise_if_not_found=False)
+        if not picking_id:
+            company_id = self.pool['res.company']._company_default_get(cr, uid, 'purchase.requisition', context=context)
+            picking_id = self.pool['stock.picking.type'].search(
+                cr, uid, [('warehouse_id.company_id', '=', company_id), ('code', '=', 'incoming')],
+                limit=1, context=context)
+            picking_id = picking_id[0] if picking_id else False
+        return picking_id
 
     def _get_type_id(self, cr, uid, context=None):
         types = self.pool.get('purchase.requisition.type').search(cr, uid, [], context=context, limit=1)
