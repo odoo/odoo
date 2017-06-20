@@ -374,12 +374,12 @@ class procurement_order(osv.osv):
                             proc_id = procurement_obj.create(cr, uid,
                                                              self._prepare_orderpoint_procurement(cr, uid, op, qty_rounded, context=context),
                                                              context=context)
-                            self.check(cr, uid, [proc_id])
+                            self.check(cr, uid, [proc_id], context=context)
                             # self.run can raise and that would destroy this
                             # procurement, commit at this point
                             if use_new_cursor:
                                 cr.commit()
-                            self.run(cr, uid, [proc_id])
+                            self.run(cr, uid, [proc_id], context=context)
                     if use_new_cursor:
                         cr.commit()
                 except Exception as e:
