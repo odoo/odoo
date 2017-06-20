@@ -75,7 +75,7 @@ var AbstractFieldUpgrade = {
             },
         ];
 
-        new Dialog(this, {
+        return new Dialog(this, {
             size: 'medium',
             buttons: buttons,
             $content: $('<div>', {
