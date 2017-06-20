@@ -18,15 +18,6 @@ var data = {};
 
 /* ----- SNIPPET SELECTOR ---- */
 
-$.extend($.expr[':'], {
-    hasData: function (node) {
-        return !!_.toArray(node.dataset).length;
-    },
-    data: function (node, i, m) {
-        return $(node).data(m[3]);
-    }
-});
-
 data.globalSelector = {
     closest: function () { return $(); },
     all: function () { return $(); },
