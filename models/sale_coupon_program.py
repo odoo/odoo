@@ -150,6 +150,8 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('The reward products should be in the sales order lines to apply the discount.')}
         elif order.partner_id not in self.rule_partner_ids:
             message = {'error': _("The customer doesn't have access to this reward.")}
+        elif not self._filter_programs_on_products(order):
+            message = {'error': _("You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'.")}
         else:
             if self not in applicable_programs:
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
