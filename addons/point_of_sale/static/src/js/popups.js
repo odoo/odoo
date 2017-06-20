@@ -238,6 +238,11 @@ var PasswordPopupWidget = NumberPopupWidget.extend({
         this._super();
         this.$('.popup').addClass('popup-password');
     },
+    click_numpad: function(event){
+        this._super.apply(this, arguments);
+        var $value = this.$('.value');
+        $value.text($value.text().replace(/./g, '•'));
+    },
 });
 gui.define_popup({name:'password', widget: PasswordPopupWidget});
 
