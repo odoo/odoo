@@ -133,28 +133,28 @@ class TestBoM(TestMrpCommon):
 
         #check recursion
         test_bom_3 = self.env['mrp.bom'].create({
-            'product_id': self.product_2.id,
-            'product_tmpl_id': self.product_2.product_tmpl_id.id,
-            'product_uom_id': self.product_2.uom_id.id,
+            'product_id': self.product_9.id,
+            'product_tmpl_id': self.product_9.product_tmpl_id.id,
+            'product_uom_id': self.product_9.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal'
         })
         test_bom_4 = self.env['mrp.bom'].create({
-            'product_id': self.product_4.id,
-            'product_tmpl_id': self.product_4.product_tmpl_id.id,
-            'product_uom_id': self.product_4.uom_id.id,
+            'product_id': self.product_10.id,
+            'product_tmpl_id': self.product_10.product_tmpl_id.id,
+            'product_uom_id': self.product_10.uom_id.id,
             'product_qty': 1.0,
             'type': 'phantom'
         })
         test_bom_3_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_3.id,
-            'product_id': self.product_4.id,
+            'product_id': self.product_10.id,
             'product_qty': 1.0,
         })
         test_bom_4_l1 = self.env['mrp.bom.line'].create({
             'bom_id': test_bom_4.id,
-            'product_id': self.product_2.id,
+            'product_id': self.product_9.id,
             'product_qty': 1.0,
         })
-        # with self.assertRaises(exceptions.UserError):
-        #     test_bom_3.explode(self.product_2, 1)
+        with self.assertRaises(exceptions.UserError):
+            test_bom_3.explode(self.product_9, 1)
