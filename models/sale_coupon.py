@@ -72,6 +72,8 @@ class SaleCoupon(models.Model):
             message = {'error': _('Global discounts are not cumulable.')}
         elif self.program_id.reward_type == 'product' and not order._is_reward_in_order_lines(self.program_id):
             message = {'error': _('The reward products should be in the sales order lines to apply the discount.')}
+        elif order.partner_id not in self.program_id.rule_partner_ids:
+            message = {'error': _("The customer doesn't have access to this reward.")}
         else:
             if self.program_id not in applicable_programs and self.program_id.promo_applicability == 'on_current_order':
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
