@@ -2487,17 +2487,6 @@ class stock_move(osv.osv):
                 fallback_domain = [('reservation_id', '=', False)]
                 fallback_domain2 = ['&', ('reservation_id', '!=', move.id), ('reservation_id', '!=', False)]
                 prefered_domain_list = [prefered_domain] + [fallback_domain] + [fallback_domain2]
-                if move.restrict_lot_id:
-                    self.check_tracking(
-                        cr, uid, move,
-                        move.restrict_lot_id.id, context=context)
-                elif move.reserved_quant_ids:
-                        for quant in move.reserved_quant_ids:
-                            self.check_tracking(
-                                cr, uid, move,
-                                quant.lot_id.id, context=context)
-                else:
-                    self.check_tracking(cr, uid, move, False, context=context)
                 qty = move_qty[move.id]
                 quants = quant_obj.quants_get_prefered_domain(cr, uid, move.location_id, move.product_id, qty, domain=main_domain, prefered_domain_list=prefered_domain_list, restrict_lot_id=move.restrict_lot_id.id, restrict_partner_id=move.restrict_partner_id.id, context=context)
                 quant_obj.quants_move(cr, uid, quants, move, move.location_dest_id, lot_id=move.restrict_lot_id.id, owner_id=move.restrict_partner_id.id, context=context)
@@ -2526,6 +2515,11 @@ class stock_move(osv.osv):
                 done_picking.append(picking.id)
         if done_picking:
             picking_obj.write(cr, uid, done_picking, {'date_done': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        #  check tracking on every quant moved
+        if move.quant_ids:
+            for quant in move.quant_ids:
+                self.check_tracking(
+                    cr, uid, move, quant.lot_id.id, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
