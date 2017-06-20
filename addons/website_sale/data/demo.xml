@@ -1065,7 +1065,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_6"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">599.0</field>
+            <field name="price_unit">899.0</field>
         </record>
 
         <record id="website_sale_order_15" model="sale.order">
@@ -1084,7 +1084,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">900</field>
+            <field name="price_unit">1000</field>
         </record>
 
         <record id="website_sale_order_16" model="sale.order">
@@ -1119,10 +1119,10 @@ Weight: 31 grams</field>
         <record id="website_sale_order_line_18" model="sale.order.line">
             <field name="order_id" ref="website_sale_order_17"/>
             <field name="name">iMac</field>
-            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">1199.0</field>
+            <field name="price_unit">349.0</field>
         </record>
 
         <record id="website_sale_order_18" model="sale.order">
@@ -1141,7 +1141,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_8"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">1599.00</field>
+            <field name="price_unit">499.00</field>
         </record>
 
         <record id="website_sale_order_19" model="sale.order">
@@ -1220,200 +1220,16 @@ Weight: 31 grams</field>
             <field name="price_unit">349.0</field>
         </record>
 
-        <!-- Previous week data -->
-        <record id="website_sale_order_31" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=17)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_31" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_31"/>
-            <field name="name">iPad Mini</field>
-            <field name="product_id" ref="product.product_product_6"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">599.0</field>
-        </record>
-
-        <record id="website_sale_order_32" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=18)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_32" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_32"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">900</field>
-        </record>
-
-        <record id="website_sale_order_33" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=18)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_33" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_33"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">750</field>
-        </record>
-
-        <record id="website_sale_order_34" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=19)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_34" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_34"/>
-            <field name="name">iMac</field>
-            <field name="product_id" ref="product.product_product_8"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">1199.0</field>
-        </record>
-
-        <record id="website_sale_order_35" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=20)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_35" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_35"/>
-            <field name="name">iMac</field>
-            <field name="product_id" ref="product.product_product_8"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">1599.00</field>
-        </record>
-
-        <record id="website_sale_order_36" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=19)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_36" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_36"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
-        </record>
-
-        <record id="website_sale_order_37" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=19)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_37" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_37"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
-        </record>
-
-        <record id="website_sale_order_38" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=19)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_38" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_38"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
-        </record>
-
-        <record id="website_sale_order_39" model="sale.order">
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
-            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="pricelist_id" ref="product.list0"/>
-            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=19)).strftime('%Y-%m-%d %H:%M:%S')"/>
-        </record>
-
-        <record id="website_sale_order_line_39" model="sale.order.line">
-            <field name="order_id" ref="website_sale_order_39"/>
-            <field name="name">iPad Retina Display</field>
-            <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
-        </record>
-
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_31')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_32')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_33')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_34')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_35')]]"/>
-
-        <!-- Cancel the sales orders -->
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_36')]]"/>
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_37')]]"/>
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_38')]]"/>
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_39')]]"/>
-
         <!-- Confirm the sales orders -->
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_14')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_15')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_16')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_17')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_18')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_19')]]"/>
-        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_20')]]"/>
 
         <!-- Cancel the sales orders -->
+        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_19')]]"/>
+        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_15')]]"/>
+        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_20')]]"/>
         <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_21')]]"/>
         <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_22')]]"/>
 
