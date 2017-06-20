@@ -485,13 +485,15 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
-            check_func = request.website.company_id.vat_check_vies and Partner.vies_vat_check or Partner.simple_vat_check
-            vat_country, vat_number = Partner._split_vat(data.get("vat"))
-            if not check_func(vat_country, vat_number):
-                if country.code and check_func(country.code, data["vat"]):
-                    data["vat"] = country.code + data["vat"]
-                else:
-                    error["vat"] = 'error'
+            partner_dummy = Partner.new({
+                'vat': data['vat'],
+                'country_id': (int(data['country_id'])
+                               if data.get('country_id') else False),
+            })
+            try:
+                partner_dummy.check_vat()
+            except ValidationError:
+                error["vat"] = 'error'
 
         if [err for err in pycompat.items(error) if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
