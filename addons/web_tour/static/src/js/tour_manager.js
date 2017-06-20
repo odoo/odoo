@@ -12,34 +12,6 @@ var _t = core._t;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 
-$.extend($.expr[':'],{
-    containsExact: function(element, index, matches){
-        return $.trim(element.innerHTML.toLowerCase()) === matches[3].toLowerCase();
-    },
-    containsExactCase: function(element, index, matches){
-        return $.trim(element.innerHTML) === matches[3];
-    },
-    // Note all escaped characters need to be double escaped
-    // inside of the containsRegex, so "\(" needs to be "\\("
-    containsRegex: function(element, index, matches){
-        var regreg =  /^\/((?:\\\/|[^\/])+)\/([mig]{0,3})$/,
-        reg = regreg.exec(matches[3]);
-        return reg ? new RegExp(reg[1], reg[2]).test($.trim(element.innerHTML)) : false;
-    },
-    propChecked: function(element, index, matches) {
-        return $(element).prop("checked") === true;
-    },
-    propSelected: function(element, index, matches) {
-        return $(element).prop("selected") === true;
-    },
-    propValue: function(element, index, matches) {
-        return $(element).prop("value") === matches[3];
-    },
-    propValueContains: function(element, index, matches) {
-        return $(element).prop("value") && $(element).prop("value").indexOf(matches[3]) !== -1;
-    },
-});
-
 function get_step_key(name) {
     return 'tour_' + name + '_step';
 }

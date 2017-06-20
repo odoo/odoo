@@ -339,7 +339,7 @@ var FormController = BasicController.extend({
      */
     _onBounceEdit: function () {
         if (this.$buttons) {
-            this.$buttons.find('.o_form_button_edit').openerpBounce();
+            this.$buttons.find('.o_form_button_edit').odooBounce();
         }
     },
     /**
