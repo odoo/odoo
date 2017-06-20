@@ -8,11 +8,11 @@ class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
     @api.model
-    def retrieve_account_dashboard(self):
+    def retrieve_account_dashboard_setup_bar(self):
         """ Overridden from account in order to add the certification step to
         the setup bar.
         """
-        data = super(AccountJournal, self).retrieve_account_dashboard()
+        data = super(AccountJournal, self).retrieve_account_dashboard_setup_bar()
 
         company = self.env['res.company']._company_default_get()
         data['certification'] = company.l10n_fr_setup_certification_done
