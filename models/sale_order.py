@@ -22,10 +22,8 @@ class SaleOrder(models.Model):
             order.reward_amount = sum([line.price_subtotal for line in order.order_line.filtered(lambda line: line.is_reward_line)])
 
     @api.multi
-    def _recompute_coupon_lines(self):
-        if self.env.context.get('coupon_recompute', False):
-            return
-        for order in self.with_context(coupon_recompute=True):
+    def recompute_coupon_lines(self):
+        for order in self:
             order._remove_invalid_reward_lines()
             order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
@@ -37,20 +35,9 @@ class SaleOrder(models.Model):
         order.with_context(sale_coupon_no_loop=False)._create_new_no_code_promo_reward_lines()
         return order
 
-    @api.model
-    def create(self, vals):
-        res = super(SaleOrder, self.with_context(coupon_recompute=True)).create(vals)
-        res = res.with_context(coupon_recompute=False)
-        res._recompute_coupon_lines()
-        return res
-
-    def write(self, vals):
-        res = super(SaleOrder, self.with_context(coupon_recompute=True)).write(vals)
-        self._recompute_coupon_lines()
-        return res
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
+        self.recompute_coupon_lines()
         self.generated_coupon_ids.write({'state': 'new'})
         return res
 
@@ -80,10 +67,10 @@ class SaleOrder(models.Model):
     def _get_reward_values_product(self, program):
         price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_unit
 
-        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: x.product_id in program.rule_product_ids)
+        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
         # Remove needed quantity from reward quantity if same reward and rule product
-        if program.reward_product_id in program.rule_product_ids:
+        if program._is_valid_product(program.reward_product_id):
             reward_product_qty = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
         else:
             reward_product_qty = max_product_qty
@@ -253,17 +240,6 @@ class SaleOrderLine(models.Model):
 
     is_reward_line = fields.Boolean('Is a program reward line')
 
-    @api.model
-    def create(self, vals):
-        res = super(SaleOrderLine, self).create(vals)
-        res.order_id._recompute_coupon_lines()
-        return res
-
-    def write(self, vals):
-        res = super(SaleOrderLine, self).write(vals)
-        self.mapped('order_id')._recompute_coupon_lines()
-        return res
-
     def unlink(self):
         # Reactivate coupons related to unlinked reward line
         for line in self.filtered(lambda line: line.is_reward_line):
@@ -278,7 +254,4 @@ class SaleOrderLine(models.Model):
             if related_program:
                 line.order_id.no_code_promo_program_ids -= related_program
                 line.order_id.code_promo_program_id -= related_program
-        orders = self.mapped('order_id')
-        res = super(SaleOrderLine, self).unlink()
-        orders._recompute_coupon_lines()
-        return res
+        return super(SaleOrderLine, self).unlink()
