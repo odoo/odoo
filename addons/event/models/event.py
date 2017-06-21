@@ -82,7 +82,7 @@ class EventEvent(models.Model):
     _order = 'date_begin'
 
     name = fields.Char(
-        string='Event Name', translate=True, required=True,
+        string='Event', translate=True, required=True,
         readonly=False, states={'done': [('readonly', True)]})
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
