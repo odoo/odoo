@@ -11,6 +11,7 @@ var field_registry = require('web.field_registry');
 var transcoder = require('web_editor.transcoder');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 
 /**
@@ -18,11 +19,8 @@ var QWeb = core.qweb;
  * Intended to display HTML content. This widget uses the summernote editor
  * improved by odoo.
  *
- * FIXME: this field has a custom handling of the translation feature, which
- * hasn't been re-introduced yet (because this feature hasn't been introduced
- * yet in the fields in general)
  */
-var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
+var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(basic_fields.TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html_text',
     supportedFieldTypes: ['html'],
 
@@ -133,6 +131,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
         if (history) {
             history.reset();
         }
+        this.$('.note-toolbar').append(this._renderTranslateButton());
     },
     /**
      * @override
@@ -187,6 +186,21 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
         }
         return value;
     },
+    /**
+     * @override
+     * @private
+     * @returns {jQuery}
+     */
+    _renderTranslateButton: function() {
+        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+            return $(QWeb.render('web_editor.FieldTextHtml.button.translate', {
+                    'widget': this
+                }))
+                .on('click', this._onTranslate.bind(this));
+        }
+        return $();
+    },
+
 });
 
 var FieldTextHtml = AbstractField.extend({
