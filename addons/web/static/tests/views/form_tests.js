@@ -4662,6 +4662,64 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
+    QUnit.test('translate event correctly handled with multiple controllers', function (assert) {
+        assert.expect(3);
+
+        this.data.product.fields.name.translate = true;
+        this.data.partner.records[0].product_id = 37;
+        var nbTranslateCalls = 0;
+
+        var multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form>' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="name"/>' +
+                                '<field name="partner_type_id"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    assert.deepEqual(args.args, ["product",37,"name",{}], 'should call "call_button" route');
+                    nbTranslateCalls++;
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('[name="product_id"] .o_external_button').click();
+
+        assert.strictEqual($('.modal-body .o_field_translate').length, 1,
+            "there should be a translate button in the modal");
+
+        $('.modal-body .o_field_translate').click();
+
+        assert.strictEqual(nbTranslateCalls, 1, "should call_button translate once");
+
+        form.destroy();
+        _t.database.multi_lang = multi_lang;
+    });
+
     QUnit.test('buttons are disabled until action is resolved', function (assert) {
         assert.expect(3);
 
