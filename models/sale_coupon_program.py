@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 
 class SaleCouponProgram(models.Model):
@@ -148,7 +149,7 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('Global discounts are not cumulable.')}
         elif self.promo_applicability == 'on_current_order' and self.reward_type == 'product' and not order._is_reward_in_order_lines(self):
             message = {'error': _('The reward products should be in the sales order lines to apply the discount.')}
-        elif order.partner_id not in self.rule_partner_ids:
+        elif not self._is_valid_partner(order.partner_id):
             message = {'error': _("The customer doesn't have access to this reward.")}
         elif not self._filter_programs_on_products(order):
             message = {'error': _("You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'.")}
@@ -188,7 +189,7 @@ class SaleCouponProgram(models.Model):
         return self.filtered(lambda program: program.maximum_use_number == 0 or program.order_count <= program.maximum_use_number)
 
     def _filter_programs_on_partners(self, order):
-        return self.filtered(lambda program: program.rule_partner_ids and order.partner_id.id in program.rule_partner_ids.ids or not program.rule_partner_ids)
+        return self.filtered(lambda program: program._is_valid_partner(order.partner_id))
 
     def _filter_programs_on_products(self, order):
         """
@@ -197,14 +198,15 @@ class SaleCouponProgram(models.Model):
         or  Buy 1 coke + get 1 coke free then check 2 cokes are on cart or not
         """
         order_lines = order.order_line - order._get_reward_lines()
-        products_qties = dict.fromkeys(order_lines.mapped('product_id').ids, 0)
+        products_qties = dict.fromkeys([product for product in order_lines.mapped('product_id')], 0)
         for line in order_lines:
-            products_qties[line.product_id.id] += line.product_uom_qty
-        valid_programs = self.filtered(lambda program: not program.rule_product_ids)
+            products_qties[line.product_id] += line.product_uom_qty
+        valid_programs = self.filtered(lambda program: not program.rule_products_domain)
         for program in self - valid_programs:
-            ordered_rule_products_qty = sum(map(lambda product_id, qty: product_id in program.rule_product_ids.ids and qty, products_qties, products_qties.values()))
+            ordered_rule_products_qty = sum(map(lambda product, qty:
+                program._is_valid_product(product) and qty, products_qties, products_qties.values()))
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
-            if program.reward_product_id in program.rule_product_ids and program.reward_type == 'product':
+            if program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
                 line = order.order_line.filtered(lambda line: line.product_id == program.reward_product_id)
                 ordered_rule_products_qty -= program.reward_product_quantity
             # needed_quantity = program.rule_min_quantity if self.
@@ -236,3 +238,17 @@ class SaleCouponProgram(models.Model):
         programs = programs and programs._filter_programs_on_products(order)
         programs = programs and programs._filter_not_ordered_reward_programs(order)
         return programs
+
+    def _is_valid_partner(self, partner):
+        if self.rule_partners_domain:
+            domain = safe_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
+            return bool(self.env['res.partner'].search_count(domain))
+        else:
+            return True
+
+    def _is_valid_product(self, product):
+        if self.rule_products_domain:
+            domain = safe_eval(self.rule_products_domain) + [('id', '=', product.id)]
+            return bool(self.env['product.product'].search_count(domain))
+        else:
+            return True

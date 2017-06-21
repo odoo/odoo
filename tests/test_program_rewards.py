@@ -27,6 +27,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as the partner is correct, the discount is not created")
 
 

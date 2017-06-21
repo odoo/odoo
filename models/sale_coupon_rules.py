@@ -13,11 +13,12 @@ class SaleCouponRule(models.Model):
     rule_date_from = fields.Datetime(string="Start Date", help="Coupon program start date")
     rule_date_to = fields.Datetime(string="End Date", help="Coupon program end date")
     rule_partners_domain = fields.Char(string="Based on Customers", help="Coupon program will work for selected customers only")
+    # YTI TODO Remove rule_partner_ids and rule_product_ids in master
     rule_partner_ids = fields.Many2many('res.partner', 'rule_partner_rel', 'rule_id', 'partner_id',
-        string="Related Partners", compute='_compute_rule_partner_ids', store=True)
+        string="Related Partners", compute='_compute_rule_partner_ids', store=True, deprecated=True)
     rule_products_domain = fields.Char(string="Based on Products", default=[['sale_ok', '=', True]], help="On Purchase of selected product, reward will be given")
     rule_product_ids = fields.Many2many('product.product', 'rule_product_rel', 'rule_id', 'product_id',
-        string="Related Products", compute='_compute_rule_product_ids', store=True)
+        string="Related Products", compute='_compute_rule_product_ids', store=True, deprecated=True)
     rule_min_quantity = fields.Integer(string="Minimum Quantity", default=1,
         help="Minimum required product quantity to get the reward")
     rule_minimum_amount = fields.Float(default=0.0, help="Minimum required amount to get the reward")
@@ -35,14 +36,11 @@ class SaleCouponRule(models.Model):
         if self.filtered(lambda applicability: applicability.rule_minimum_amount < 0):
             raise ValidationError(_('Minimum purchased amount should be greater than 0'))
 
+    # YTI TODO Remove in master
     @api.depends('rule_partners_domain')
     def _compute_rule_partner_ids(self):
-        for applicability in self.filtered(lambda x: x.rule_partners_domain):
-            domain = safe_eval(applicability.rule_partners_domain)
-            applicability.rule_partner_ids = domain and self.env['res.partner'].search(domain)
+        pass
 
     @api.depends('rule_products_domain')
     def _compute_rule_product_ids(self):
-        for applicability in self.filtered(lambda x: x.rule_products_domain):
-            domain = safe_eval(applicability.rule_products_domain)
-            applicability.rule_product_ids = domain and self.env['product.product'].search(domain)
+        pass
