@@ -210,21 +210,7 @@ def dump_db(db_name, stream, backup_format='zip'):
         else:
             return stdout
 
-def exp_restore(db_name, data, copy=False):
-    def chunks(d, n=8192):
-        for i in range(0, len(d), n):
-            yield d[i:i+n]
-    data_file = tempfile.NamedTemporaryFile(delete=False)
-    try:
-        for chunk in chunks(data):
-            data_file.write(chunk.decode('base64'))
-        data_file.close()
-        restore_db(db_name, data_file.name, copy=copy)
-    finally:
-        os.unlink(data_file.name)
-    return True
-
-def restore_db(db, dump_file, copy=False):
+def exp_restore(db, dump_file, copy=False):
     assert isinstance(db, basestring)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)

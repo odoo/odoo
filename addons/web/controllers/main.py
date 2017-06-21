@@ -17,6 +17,7 @@ import operator
 import os
 import re
 import sys
+import tempfile
 import time
 import werkzeug.utils
 import werkzeug.wrappers
@@ -701,15 +702,17 @@ class Database(http.Controller):
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
+        temp_path = tempfile.mkstemp()[1]
+        with open(temp_path, 'w') as data_file:
+            backup_file.save(data_file)
         try:
-            data = ''
-            for chunk in iter(lambda: backup_file.read(8190), b''):
-                data += base64.b64encode(chunk)
-            dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
+            dispatch_rpc('db', 'restore', [master_pwd, name, temp_path, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % str(e) or repr(e)
             return self._render_template(error=error)
+        finally:
+            os.unlink(temp_path)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
