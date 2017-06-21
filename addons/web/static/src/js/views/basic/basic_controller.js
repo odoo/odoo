@@ -423,7 +423,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
-                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly');
+                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly', recordID);
                     return def.then(function () {
                         return fieldNames;
                     });
