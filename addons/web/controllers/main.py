@@ -38,6 +38,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
                       serialize_exception as _serialize_exception
 from odoo.exceptions import AccessError
 from odoo.models import check_method_name
+from odoo.service import db
 
 _logger = logging.getLogger(__name__)
 
@@ -706,7 +707,7 @@ class Database(http.Controller):
         with open(temp_path, 'w') as data_file:
             backup_file.save(data_file)
         try:
-            dispatch_rpc('db', 'restore', [master_pwd, name, temp_path, str2bool(copy)])
+            db.restore_db(name, temp_path, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % str(e) or repr(e)
