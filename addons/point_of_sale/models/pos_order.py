@@ -761,7 +761,8 @@ class PosOrderLine(models.Model):
             fiscal_position_id = line.order_id.fiscal_position_id
             if fiscal_position_id:
                 taxes = fiscal_position_id.map_tax(taxes)
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            price = self.env['account.tax']._fix_tax_included_price(
+                line.price_unit * (1 - (line.discount or 0.0) / 100.0), line.product_id.taxes_id, taxes)
             line.price_subtotal = line.price_subtotal_incl = price * line.qty
             if taxes:
                 taxes = taxes.compute_all(price, currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
