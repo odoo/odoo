@@ -154,6 +154,7 @@ class WebsiteAccount(website_account):
             'pager': pager,
             'searchbar_sortings': searchbar_sortings,
             'searchbar_inputs': searchbar_inputs,
+            'search_in': search_in,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
             'filterby': filterby,
