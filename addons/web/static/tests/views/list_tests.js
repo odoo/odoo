@@ -136,7 +136,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('simple editable rendering', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         var list = createView({
             View: ListView,
@@ -164,6 +164,15 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.ok(list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should have a visible discard button");
+
+        list.$buttons.find('.o_list_button_save').click();
+
+        assert.ok(list.$buttons.find('.o_list_button_add').is(':visible'),
+            "should have a visible Create button");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
+            "should not have a visible discard button");
         list.destroy();
     });
 
