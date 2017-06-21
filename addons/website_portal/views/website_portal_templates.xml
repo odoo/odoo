@@ -99,42 +99,40 @@
     <template id="portal_layout" name="Portal Layout">
         <t t-call="website.layout">
             <div class="container mt16 o_website_portal">
-                <div class="navbar navbar-default">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe-help-navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="/my/home">
-                            My Account
-                        </a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
-                        <ul class="nav navbar-nav o_portal_submenu">
-                        </ul>
+                <div class="oe_structure">
+                    <div t-if="not no_breadcrumbs" class="row">
+                        <div class="col-sm-12">
+                            <ol class="breadcrumb mt8 o_portal_submenu">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>
             <div id="wrap" class='portal-wrap'>
                 <div class="container mb64">
-                    <div class="row">
-                        <div class="col-md-9 col-lg-8">
-                            <t t-raw="0"/>
+                    <t t-if="my_details">
+                        <div class="row">
+                            <div t-attf-class="col-md-9 col-lg-8">
+                                <t t-raw="0"/>
+                            </div>
+                            <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                                <div class="o_my_contact" t-if="sales_rep">
+                                    <t t-call="website_portal.contact"/>
+                                </div>
+                                <div class="o_my_details">
+                                    <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                    <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                                </div>
+                                <div class="o_my_archives" t-if="archive_groups">
+                                    <t t-call="website_portal.portal_archive_groups"/>
+                                </div>
+                            </div>
                         </div>
-                        <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
-                            <div class="o_my_contact" t-if="sales_rep">
-                                <t t-call="website_portal.contact"/>
-                            </div>
-                            <div class="o_my_details">
-                                <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
-                                <div t-field="user.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
-                            </div>
-                            <div class="o_my_archives" t-if="archive_groups">
-                                <t t-call="website_portal.portal_archive_groups"/>
-                            </div>
-                        </div>
-                    </div>
+                    </t>
+                    <t t-else="">
+                        <t t-raw="0"/>
+                    </t>
                 </div>
             </div>
         </t>
@@ -142,6 +140,7 @@
 
     <template id="portal_my_home" name="My Portal">
         <t t-call="website_portal.portal_layout">
+            <t t-set="my_details" t-value="True"/>
             <div class="o_my_home_content">
                 <div class="oe_structure"></div>
             </div>
