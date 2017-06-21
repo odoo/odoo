@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from uuid import uuid4
 
 from odoo.exceptions import ValidationError, UserError
+from odoo import _
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
 
