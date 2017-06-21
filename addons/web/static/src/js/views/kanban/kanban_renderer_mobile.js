@@ -63,6 +63,23 @@ KanbanRenderer.include({
             self._enableSwipe();
         });
     },
+    /**
+     * Scroll to the position
+     *
+     * @param {position} Scroll postion
+     */
+    scrollTo: function (position) {
+        if (this.widgets.length) {
+            var $column = this.widgets[this.activeColumnIndex].$el;
+            $column.scrollTop(position);
+        }
+    },
+    getScrollPosition: function () {
+        if (this.widgets.length) {
+            var $column = this.widgets[this.activeColumnIndex].$el;
+            return {top: $column.scrollTop(), left: $column.scrollLeft()};
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private

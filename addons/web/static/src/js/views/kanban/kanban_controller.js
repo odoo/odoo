@@ -10,6 +10,7 @@ odoo.define('web.KanbanController', function (require) {
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
 var core = require('web.core');
+var config = require('web.config');
 var view_dialogs = require('web.view_dialogs');
 
 var _t = core._t;
@@ -29,6 +30,8 @@ var KanbanController = BasicController.extend({
         kanban_load_more: '_onLoadMore',
         kanban_load_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
+        getScrollPosition: '_onGetScrollPosition',
+        scrollTo: 'scrollTo'
     }),
     /**
      * @override
@@ -392,6 +395,30 @@ var KanbanController = BasicController.extend({
         var changes = _.clone(ev.data);
         ev.data.force_save = true;
         this._applyChanges(ev.target.db_id, changes, ev);
+    },
+
+    /**
+     * Scrolls the current active column from top
+     *
+     * @param {OdooEvent} ev
+     */
+    scrollTo: function (ev) {
+        if (config.device.isMobile && this.renderer.scrollTo) {
+            this.renderer.scrollTo(ev.data.top);
+        }
+    },
+
+     /**
+     * Find the scroll position of active kanban group in mobile
+     *
+     * @param {OdooEvent} ev
+     */
+    _onGetScrollPosition: function (ev) {
+        var data = this.model.get(this.handle, {raw: true});
+        if (config.device.isMobile && data.groupedBy.length && this.renderer.getScrollPosition) {
+            ev.stopPropagation();
+            return this.renderer.getScrollPosition();
+        }
     },
 });
 

@@ -144,7 +144,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 .then(function () {
                     // Reset the scroll position to the top on page changed only
                     if (!limitChanged) {
-                        self.trigger_up('scrollTo', {offset: 0});
+                        self.trigger_up('scrollTo', {top: 0, left: 0});
                     }
                 })
                 .then(this.pager.enable.bind(this.pager));
