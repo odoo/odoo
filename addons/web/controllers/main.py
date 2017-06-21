@@ -704,7 +704,8 @@ class Database(http.Controller):
         try:
             data = ''
             for chunk in iter(lambda: backup_file.read(8190), b''):
-                data += base64.b64encode(chunk)            dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
+                data += base64.b64encode(chunk)
+            dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
             return http.local_redirect('/web/database/manager')
         except Exception, e:
             error = "Database restore error: %s" % str(e) or repr(e)
