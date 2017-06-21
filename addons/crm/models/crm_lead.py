@@ -913,35 +913,48 @@ class Lead(FormatAddress, models.Model):
         }
 
         opportunities = self.search([('type', '=', 'opportunity'), ('user_id', '=', self._uid)])
+        self._cr.execute("""
+        SELECT
+            count(*) as nbr, sum(planned_revenue) as revenue,
+            case
+              when date_deadline<%(today)s and date_closed IS NULL then 'overdue'
+              when date_deadline=%(today)s then 'today'
+              when date_deadline>%(today)s and date_deadline<=%(next_week)s then 'next_7_days'
+              else NULL
+            end as date_range,
+            case
+              when next_activity_id is not null and date_action<%(today)s then 'overdue'
+              when next_activity_id is not null and date_action=%(today)s then 'today'
+              when next_activity_id is not null and date_action>%(today)s and date_action<=%(next_week)s then 'next_7_days'
+              else NULL
+            end as date_activity_range,
+            case
+              when date_closed>=%(prev_month_start)s and date_closed<%(month_start)s then 'last_month'
+              when date_closed>=%(month_start)s and date_closed<=%(today)s then 'this_month'
+              else NULL
+            end as date_won_range
+        FROM crm_lead
+        WHERE id = ANY(%(ids)s)
+        GROUP BY date_range, date_activity_range, date_won_range
+        """, {
+            'today': date.today(),
+            'next_week': date.today() + timedelta(days=7),
+            'month_start': date.today().replace(day=1),
+            'prev_month_start': date.today() + relativedelta(months=-1, day=1),
+            'ids': opportunities.ids,
+        })
+        grouped_opportunities = self._cr.dictfetchall()
 
-        for opp in opportunities:
+        for gpo in grouped_opportunities:
             # Expected closing
-            if opp.date_deadline:
-                date_deadline = fields.Date.from_string(opp.date_deadline)
-                if date_deadline == date.today():
-                    result['closing']['today'] += 1
-                if date.today() <= date_deadline <= date.today() + timedelta(days=7):
-                    result['closing']['next_7_days'] += 1
-                if date_deadline < date.today() and not opp.date_closed:
-                    result['closing']['overdue'] += 1
+            if gpo['date_range'] and gpo['nbr']:
+                result['closing'][gpo['date_range']] += gpo['nbr']
             # Next activities
-            if opp.next_activity_id and opp.date_action:
-                date_action = fields.Date.from_string(opp.date_action)
-                if date_action == date.today():
-                    result['activity']['today'] += 1
-                if date.today() <= date_action <= date.today() + timedelta(days=7):
-                    result['activity']['next_7_days'] += 1
-                if date_action < date.today():
-                    result['activity']['overdue'] += 1
+            if gpo['date_activity_range'] and gpo['nbr']:
+                result['activity'][gpo['date_activity_range']] += gpo['nbr']
             # Won in Opportunities
-            if opp.date_closed:
-                date_closed = fields.Date.from_string(opp.date_closed)
-                if date.today().replace(day=1) <= date_closed <= date.today():
-                    if opp.planned_revenue:
-                        result['won']['this_month'] += opp.planned_revenue
-                elif  date.today() + relativedelta(months=-1, day=1) <= date_closed < date.today().replace(day=1):
-                    if opp.planned_revenue:
-                        result['won']['last_month'] += opp.planned_revenue
+            if gpo['date_won_range'] and gpo['revenue']:
+                result['won'][gpo['date_won_range']] += gpo['revenue']
 
         result['nb_opportunities'] = len(opportunities)
 
