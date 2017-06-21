@@ -276,7 +276,7 @@
                                 <tr style="vertical-align:middle;">
                                     <td width="50%" style="font-size:12px;padding:0 0 30px 0;">
                                         <span style="font-size:20px;" t-esc="record.user_id.name"/><br/>
-                                        <span t-esc="record.user_id.job_id or ''"/><br/>
+                                        <span t-esc="record.job_id.user_id or ''"/><br/>
                                         <span>TEL: <t t-esc="record.user_id.phone or ''"/></span><br/>
                                     </td>
                                     <td width="20%"></td>
