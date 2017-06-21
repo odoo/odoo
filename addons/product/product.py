@@ -1092,9 +1092,7 @@ class product_product(osv.osv):
                               'name': seller_variant or name,
                               'default_code': s.product_code or product.default_code,
                               }
-                    temp = _name_get(mydict)
-                    if temp not in result:
-                        result.append(temp)
+                    result.append(_name_get(mydict))
             else:
                 mydict = {
                           'id': product.id,
@@ -1102,7 +1100,10 @@ class product_product(osv.osv):
                           'default_code': product.default_code,
                           }
                 result.append(_name_get(mydict))
-        return result
+
+        # Return and remove potential duplicates. reversed() since _select_seller will take the
+        # first seller matching the criteria, so we keep the first one only.
+        return {x[0]: x for x in reversed(result)}.values()
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if context is None:
