@@ -579,6 +579,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {OdooEvent} event
      */
     _onTranslate: function (event) {
+        event.stopPropagation();
         var record = this.model.get(event.data.id, {raw: true});
         this._rpc({
             route: '/web/dataset/call_button',
