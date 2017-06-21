@@ -37,10 +37,8 @@ class SaleCouponRule(models.Model):
             raise ValidationError(_('Minimum purchased amount should be greater than 0'))
 
     # YTI TODO Remove in master
-    @api.depends('rule_partners_domain')
     def _compute_rule_partner_ids(self):
         pass
 
-    @api.depends('rule_products_domain')
     def _compute_rule_product_ids(self):
         pass
