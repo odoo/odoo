@@ -39,8 +39,6 @@ var KanbanColumn = Widget.extend({
 
         var value = data.value;
         this.id = data.res_id || value;
-        // todo: handle group_by_m2o (nameget)
-        this.title = value === undefined ? _t('Undefined') : value;
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.size = data.count;
@@ -60,6 +58,14 @@ var KanbanColumn = Widget.extend({
         this.remaining = this.size - this.data_records.length;
 
         this.record_options = _.clone(recordOptions);
+
+        if (options.grouped_by_m2o) {
+            // For many2one, a false value means that the field is not set.
+            this.title = value ? value : _t('Undefined');
+        } else {
+            // False and 0 might be valid values for these fields.
+            this.title = value === undefined ? _t('Undefined') : value;
+        }
 
         if (options.group_by_tooltip) {
             this.tooltipInfo = _.map(options.group_by_tooltip, function (help, field) {

@@ -1493,7 +1493,8 @@ QUnit.module('Views', {
     });
 
     QUnit.test('group_by_tooltip option when grouping on a many2one', function (assert) {
-        assert.expect(5);
+        assert.expect(12);
+        delete this.data.partner.records[3].product_id;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1516,15 +1517,30 @@ QUnit.module('Views', {
             },
         });
 
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_grouped'),
+                        "should have classname 'o_kanban_grouped'");
         assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have " + 2 + " columns");
 
         // simulate an update coming from the searchview, with another groupby given
         kanban.update({groupBy: ['product_id']});
-        assert.ok(kanban.$('.o_kanban_group:first span.o_column_title:contains(hello)').length,
-            "first column should have a title with a value from the many2one");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3, "should have " + 3 + " columns");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(1) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(2) .o_kanban_record').length, 2,
+                        "column should contain 2 record(s)");
+        assert.strictEqual(kanban.$('.o_kanban_group:nth-child(3) .o_kanban_record').length, 1,
+                        "column should contain 1 record(s)");
+        assert.ok(kanban.$('.o_kanban_group:first span.o_column_title:contains(Undefined)').length,
+            "first column should have a default title for when no value is provided");
         assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_header').data('original-title'),
+            "<p>1 records</p>",
+            "first column should have a tooltip with the number of records, but not" +
+            "the group_by_tooltip title and the many2one field value since it has no value");
+        assert.ok(kanban.$('.o_kanban_group:eq(1) span.o_column_title:contains(hello)').length,
+            "second column should have a title with a value from the many2one");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header').data('original-title'),
             "<p>2 records</p><div>Kikou<br>hello</div>",
-            "first column should have a tooltip with the number of records, the group_by_tooltip title and many2one field value");
+            "second column should have a tooltip with the number of records, the group_by_tooltip title and many2one field value");
 
         kanban.destroy();
     });
