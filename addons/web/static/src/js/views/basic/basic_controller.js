@@ -534,6 +534,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {function} ev.data.action the function to execute in the mutex
      */
     _onMutexify: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
         this.mutex.exec(ev.data.action);
     },
     /**
