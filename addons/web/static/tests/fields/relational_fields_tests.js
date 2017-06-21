@@ -2927,8 +2927,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
-        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.5tototo1.550xphone",
-            "sould display the record values in one2many list");
+        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
+            "should display the record values in one2many list");
 
         $('.o_form_button_save').click();
 

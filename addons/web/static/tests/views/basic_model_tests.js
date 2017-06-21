@@ -1364,8 +1364,8 @@ QUnit.module('Views', {
         delete this.params.res_id;
         model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
-            assert.strictEqual(record.data.bar, false,
-                "should be initialized with correct value");
+            assert.strictEqual(record.data.bar, 0,
+                "should be initialized with correct value (0 as integer)");
 
             model.notifyChanges(resultID, {foo: "anotherverylongstring"});
 

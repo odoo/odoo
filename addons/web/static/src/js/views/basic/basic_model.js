@@ -2198,12 +2198,6 @@ var BasicModel = AbstractModel.extend({
             if (!field || field.name === 'id') {
                 continue;
             }
-            if (field.type === 'float' ||
-                field.type === 'integer' ||
-                field.type === 'monetary') {
-                context[fieldName] = context[fieldName] || 0;
-                continue;
-            }
             if (field.type === 'date' || field.type === 'datetime') {
                 if (context[fieldName]) {
                     context[fieldName] = JSON.parse(JSON.stringify(context[fieldName]));
@@ -2449,7 +2443,11 @@ var BasicModel = AbstractModel.extend({
                     var fieldName = fieldNames[i];
                     if (!(fieldName in result)) {
                         var field = params.fields[fieldName];
-                        if (field.type === 'one2many' || field.type === 'many2many') {
+                        if (field.type === 'float' ||
+                            field.type === 'integer' ||
+                            field.type === 'monetary') {
+                            result[fieldName] = 0;
+                        } else if (field.type === 'one2many' || field.type === 'many2many') {
                             result[fieldName] = [];
                         } else {
                             result[fieldName] = null;

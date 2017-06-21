@@ -539,7 +539,7 @@ var MockServer = Class.extend({
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
         var records = _.reduce(ids, function (records, id) {
             var record =  _.findWhere(self.data[model].records, {id: id});
-            return record ? records.concat(record) : records
+            return record ? records.concat(record) : records;
         }, []);
         var results = _.map(records, function (record) {
             var result = {};
@@ -549,7 +549,12 @@ var MockServer = Class.extend({
                     // the field doens't exist on the model, so skip it
                     continue;
                 }
-                if (field.type === 'many2one') {
+                if (field.type === 'float' ||
+                    field.type === 'integer' ||
+                    field.type === 'monetary') {
+                    // read should return 0 for unset numeric fields
+                    result[fields[i]] = record[fields[i]] || 0;
+                } else if (field.type === 'many2one') {
                     var relatedRecord = _.findWhere(self.data[field.relation].records, {
                         id: record[fields[i]]
                     });

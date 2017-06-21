@@ -394,7 +394,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -408,8 +408,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-        'Non-set float field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+        'Non-set float field should be considered as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0.000",
+        'Non-set float field should be considered as 0.');
 
         form.destroy();
     });
@@ -1955,7 +1957,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -1965,8 +1967,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-            'Non-set integer field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+            'Non-set integer field should be recognized as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0",
+            'Non-set integer field should be recognized as 0.');
 
         form.destroy();
     });

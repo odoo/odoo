@@ -625,10 +625,10 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 2,
-            "should have 2 empty fields with correct class");
-        assert.strictEqual(form.$('.o_form_label_empty').length, 2,
-            "should have 2 muted labels (for the empty fieds) in readonly");
+        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 1,
+            "should have 1 empty field with correct class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 1,
+            "should have 1 muted label (for the empty fied) in readonly");
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -771,7 +771,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('required float fields works as expected', function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
         this.data.partner.fields.qux.required = true;
         var form = createView({
@@ -793,24 +793,26 @@ QUnit.module('Views', {
 
         assert.ok(form.$('input[name="qux"]').hasClass('o_required_modifier'),
             "qux input is flagged as required");
-        assert.strictEqual(form.$('input[name="qux"]').val(), "",
-            "qux input is empty");
+        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+            "qux input is 0 by default (float field)");
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.ok(form.$('input[name="qux"]').hasClass('o_field_invalid'),
-            "qux input is displayed as invalid");
+        assert.notOk(form.$('input[name="qux"]').hasClass('o_field_invalid'),
+            "qux input is not displayed as invalid");
 
-        form.$('input[name="qux"]').val("0").trigger('input');
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input[name="qux"]').val("1").trigger('input');
 
         form.$buttons.find('.o_form_button_save').click();
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+        assert.strictEqual(form.$('input[name="qux"]').val(), "1.0",
             "qux input is properly formatted");
 
-        assert.verifySteps(['default_get', 'create', 'read']);
+        assert.verifySteps(['default_get', 'create', 'read', 'write', 'read']);
         form.destroy();
     });
 
