@@ -110,7 +110,8 @@ class WebsiteSaleBackend(WebsiteBackend):
 
         # Previous Sale-based results computation
         previous_datetime_from = (datetime_from - timedelta(days=date_diff_days))
-        previous_summary = self._compute_previous_sale_evolution(previous_datetime_from, datetime_from, date_diff_days)
+
+        previous_summary = self._compute_sale_graph(date_from=previous_datetime_from, date_to=datetime_from, date_diff_days=date_diff_days)['previous_summary']
         sales_values['evl_summary'].update(
             evl_order_count=round((float(sales_values['summary']['order_count']) / previous_summary['pre_order_count'] * 100) - 100, 2) if previous_summary['pre_order_count'] > 0 else 0,
             evl_total_sold=round((float(sales_values['summary']['total_sold']) / previous_summary['pre_total_sold'] * 100) - 100, 2) if previous_summary['pre_total_sold'] > 0 else 0,
@@ -146,16 +147,16 @@ class WebsiteSaleBackend(WebsiteBackend):
         ]
 
         sales_values['graph'] += [{
-            'values': self._compute_sale_graph(date_date_from, date_date_to, sales_domain),
+            'values': self._compute_sale_graph(date_from=date_date_from, date_to=date_date_to, sales_domain=sales_domain, date_diff_days=date_diff_days)['sales_graph'],
             'key': 'Untaxed Total',
         }, {
-            'values': self._compute_sale_graph(date_date_from - timedelta(days=date_diff_days), date_date_from, prev_sales_domain, previous=True),
+            'values': self._compute_sale_graph(date_from=date_date_from - timedelta(days=date_diff_days), date_to=date_date_from, sales_domain=prev_sales_domain, previous=True, date_diff_days=date_diff_days)['sales_graph'],
             'key': previous_sale_label,
         }]
 
         return results
 
-    def _compute_sale_graph(self, date_from, date_to, sales_domain, previous=False):
+    def _compute_sale_graph(self, date_from, date_to, date_diff_days=False, sales_domain=False, previous=False):
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
         daily_sales = request.env['sale.report'].read_group(
@@ -170,9 +171,7 @@ class WebsiteSaleBackend(WebsiteBackend):
             # Respect read_group format in models.py
             '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
         } for d in date_list]
-        return sales_graph
 
-    def _compute_previous_sale_evolution(self, date_from, date_to, date_diff_days):
         previous_summary = dict(
             pre_order_count=0,  pre_order_carts_count=0, pre_total_sold=0,
             pre_order_per_day_ratio=0, pre_order_sold_ratio=0, pre_order_convertion_pctg=0,
@@ -206,4 +205,4 @@ class WebsiteSaleBackend(WebsiteBackend):
         previous_summary['pre_order_sold_ratio'] = round(float(previous_summary['pre_total_sold']) / previous_summary['pre_order_count'], 2) if previous_summary['pre_order_count'] else 0
         previous_summary['pre_order_convertion_pctg'] = 100.0 * previous_summary['pre_order_count'] / previous_summary['pre_order_carts_count'] if previous_summary['pre_order_carts_count'] else 0
 
-        return previous_summary
+        return {'previous_summary': previous_summary, 'sales_graph': sales_graph}
