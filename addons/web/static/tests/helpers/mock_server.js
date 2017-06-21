@@ -538,6 +538,9 @@ var MockServer = Class.extend({
         }
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
         var records = _.reduce(ids, function (records, id) {
+            if (!id) {
+                throw "mock read: falsy value given as id, would result in an access error in actual server !";
+            }
             var record =  _.findWhere(self.data[model].records, {id: id});
             return record ? records.concat(record) : records;
         }, []);
