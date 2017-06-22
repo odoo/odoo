@@ -82,20 +82,33 @@
 
     .o_reward_stars {
         display: block;
-        width: (@reward-size/2);
-        .o-position-absolute(18%,25%);
+        .size(@reward-size*0.75, @reward-size/2);
+        .o-position-absolute(18%,7%);
 
-        path {
+        svg {
             transform-origin: center center;
-            fill: #fff;
-        }
-
-        .a {
+            .o-position-absolute(28%, @left:3%);
             .o-animation(reward-stars, @reward-base-time, ease-in-out, 0s, infinite, alternate-reverse);
-        }
 
-        .a1 {
-            .o-animation(reward-stars, (@reward-base-time*1.2), ease-in-out, 0s, infinite, alternate);
+            &.star2, &.star4 {
+                .o-animation(reward-stars, (@reward-base-time*1.2), ease-in-out, 0s, infinite, alternate);
+            }
+
+            &.star2 {
+                left: 20%;
+                top: 2%;
+            }
+
+            &.star3 {
+                left: 49%;
+                top: 6%;
+            }
+
+            &.star4 {
+                left: 70%;
+                top: 27%;
+            }
+
         }
     }
 
