@@ -81,6 +81,10 @@
             <field name="name">Switzerland VAT Form: grid 420</field>
             <field name="applicability">taxes</field>
         </record>
+        <record id="vat_tag_900" model="account.account.tag">
+            <field name="name">Switzerland VAT Form: grid 900</field>
+            <field name="applicability">taxes</field>
+        </record>
 
         <record id="vat_tag_dedouanement" model="account.account.tag">
            <field name="name">Switzerland VAT Form: 100% dédouanement (base in grid 400)</field>
@@ -334,6 +338,17 @@
             <field name="type_tax_use">purchase</field>
             <field name="refund_account_id" ref="ch_coa_1171"/>
             <field name="account_id" ref="ch_coa_1171"/>
+        </record>
+        <record model="account.tax.template" id="vat_O_III_autres">
+            <field name="name">TVA 0% taxes touristiques</field>
+            <field name="description">0% excl.</field>
+            <field name="amount" eval="0.00"/>
+            <field name="amount_type">percent</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">sale</field>
+            <field name="refund_account_id" ref="ch_coa_2200"/>
+            <field name="account_id" ref="ch_coa_2200"/>
+            <field name="tag_ids" eval="[(6,0,[ref('vat_tag_900')])]"/>
         </record>
         <!--# 100% on import !! the tax percentage is 00-->
         <record model="account.tax.template" id="vat_100_import">
