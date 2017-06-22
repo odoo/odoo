@@ -31,7 +31,24 @@ class pos_cache(models.Model):
         datas = {
             'cache': base64.encodestring(cPickle.dumps(res)),
         }
+        self.write(datas)
 
+    # Adds all new products and products that have been changed to the existing cache
+    @api.one
+    def add_new_products_to_cache(self):
+        products = self.env['product.product'].search([('write_date', '>', self.write_date)])
+        prod_ctx = products.with_context(pricelist=self.config_id.pricelist_id.id, display_default_code=False,
+                                        lang=self.compute_user_id.lang)
+        prod_ctx = prod_ctx.sudo(self.compute_user_id.id)
+
+        # We decode the existing cache
+        decoded_cache = cPickle.loads(base64.decodestring(self.cache))
+        # We add the new or changed products to the existing cache
+        res = decoded_cache + prod_ctx.read(self.get_product_fields())
+
+        datas = {
+            'cache': base64.encodestring(cPickle.dumps(res)),
+        }
         self.write(datas)
 
     @api.model
@@ -44,6 +61,7 @@ class pos_cache(models.Model):
 
     @api.model
     def get_cache(self, domain, fields):
+        self.add_new_products_to_cache()
         if not self.cache or domain != self.get_product_domain() or fields != self.get_product_fields():
             self.product_domain = str(domain)
             self.product_fields = str(fields)
