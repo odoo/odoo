@@ -67,6 +67,7 @@ class ProcurementOrder(models.Model):
             'date_planned_finished': self.date_planned,
             'procurement_group_id': self.group_id.id,
             'propagate': self.rule_id.propagate,
+            'name': self.rule_id.picking_type_id.sequence_id.next_by_id(),
             'picking_type_id': self.rule_id.picking_type_id.id or self.warehouse_id.manu_type_id.id,
             'company_id': self.company_id.id,
             'procurement_ids': [(6, 0, [self.id])],

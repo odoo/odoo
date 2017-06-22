@@ -266,6 +266,13 @@ class MrpProduction(models.Model):
         self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
         self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
 
+    @api.multi
+    def copy(self, default=None):
+        default = dict(default or {})
+        if self.picking_type_id:
+            default['name'] = self.picking_type_id.sequence_id.next_by_id()
+        return super(MrpProduction, self).copy(default=default)
+
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
