@@ -673,7 +673,7 @@ class PurchaseOrderLine(models.Model):
         }
         # Fullfill all related procurements with this po line
         diff_quantity = self.product_qty - qty
-        for procurement in self.procurement_ids:
+        for procurement in self.procurement_ids.filtered(lambda p: p.state != 'cancel'):
             # If the procurement has some moves already, we should deduct their quantity
             sum_existing_moves = sum(x.product_qty for x in procurement.move_ids if x.state != 'cancel')
             existing_proc_qty = procurement.product_id.uom_id._compute_quantity(sum_existing_moves, procurement.product_uom)
