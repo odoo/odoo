@@ -48,8 +48,8 @@
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                    <label for="standard_price" groups="base.group_user"/>
-                                    <div name="standard_price_uom" groups="base.group_user">
+                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}">
                                         <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                                     </div>
                                     <field name="company_id" groups="base.group_multi_company"
@@ -502,10 +502,11 @@
                 <form string="Vendor Information">
                     <group>
                         <group string="Vendor">
+                            <field name="product_variant_count" invisible="1"/>
+                            <field name="product_id" attrs="{'invisible': [('product_variant_count', '&lt;=', 1)]}" groups="product.group_product_variant" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
                             <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
-                            <field name="product_id" domain="[('product_tmpl_id', '=', product_tmpl_id)]" invisible="1"/>
                             <label for="delay"/>
                             <div>
                                 <field name="delay" class="oe_inline"/> days
@@ -557,6 +558,7 @@
                 <tree string="Vendor Information">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
+                    <field name="product_id" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="min_qty"/>
                     <field name="price" string="Price"/>

@@ -557,8 +557,11 @@
             <field name="arch" type="xml">
                 <page name="sales" position="after">
                     <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
-                        <group string="Vendors" name="vendors">
-                            <field name="seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}" nolabel="1"/>
+                        <group string="Vendors" name="vendors" attrs="{'invisible': [('product_variant_count','&gt;',1)]}">
+                            <field name="seller_ids" context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id)}" nolabel="1"/>
+                        </group>
+                        <group string="Vendors" name="variant_vendors" attrs="{'invisible': [('product_variant_count','&lt;=',1)]}">
+                            <field name="variant_seller_ids" context="{'default_product_tmpl_id': context.get('product_tmpl_id', active_id)}, 'tree_view_ref': 'product.product_supplierinfo_tree_view'" nolabel="1"/>
                         </group>
                     </page>
                 </page>

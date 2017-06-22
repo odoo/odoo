@@ -78,7 +78,7 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="Cost of the product, in the default unit of measure of the product.")
+        help="The cost price is used to valuate your inventory.")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
@@ -110,6 +110,7 @@ class ProductTemplate(models.Model):
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
+    variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
