@@ -1087,3 +1087,51 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
+
+    ###########################
+    # Analytic Methods
+    ###########################
+
+    @api.multi
+    def _analytic_compute_delivered_quantity_domain(self):
+        """ Return the domain of the analytic lines to use to recompute the delivered quantity
+            on SO lines. This method is a hook: since analytic line are used for timesheet,
+            expense, ...  each use case should provide its part of the domain.
+        """
+        return [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
+
+    @api.multi
+    def _analytic_compute_delivered_quantity(self):
+        """ Compute and write the delivered quantity of current SO lines, based on their related
+            analytic lines.
+        """
+        # avoid recomputation if no SO lines concerned
+        if not self:
+            return False
+
+        # group anaytic lines by product uom and so line
+        domain = self._analytic_compute_delivered_quantity_domain()
+        data = self.env['account.analytic.line'].read_group(
+            domain,
+            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+        )
+
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        value_to_write = {}
+        for item in data:
+            if not item['product_uom_id']:
+                continue
+            so_line = self.browse(item['so_line'][0])
+            value_to_write.setdefault(so_line, 0.0)
+            uom = self.env['product.uom'].browse(item['product_uom_id'][0])
+            if so_line.product_uom.category_id == uom.category_id:
+                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom)
+            else:
+                qty = item['unit_amount']
+            value_to_write[so_line] += qty
+
+        # write the delivered quantity
+        for so_line, qty in value_to_write.items():
+            so_line.write({'qty_delivered': qty})
+
+        return True

@@ -31,7 +31,6 @@ class AccountAnalyticLine(models.Model):
             if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'task_id', 'timesheet_revenue', 'so_line', 'amount', 'date']]):
                 raise UserError(_('You can not modify already invoiced timesheets.'))
 
-        so_lines = self.mapped('so_line')
         if values.get('task_id'):
             task = self.env['project.task'].browse(values['task_id'])
             values['so_line'] = task.sale_line_id.id or values.get('so_line', False)
@@ -40,11 +39,34 @@ class AccountAnalyticLine(models.Model):
             values.update(line._get_timesheet_billing_values(values))
             super(AccountAnalyticLine, line).write(values)
 
-        # Update delivered quantity on SO lines which are not linked to the analytic lines anymore
-        so_lines -= self.mapped('so_line')
-        if so_lines:
-            so_lines.with_context(force_so_lines=so_lines).sudo()._compute_analytic()
         return True
+
+    @api.multi
+    def _sale_postprocess(self, additionnal_so_lines=None):
+        """ Set the SO line before recomputed delivered quantity on SO line.
+            Only applied for timesheet lines, having no SO line set yet.
+        """
+        self.filtered(lambda aal: not aal.so_line and aal.project_id)._timesheet_set_sale_order_line()
+        return super(AccountAnalyticLine, self)._sale_postprocess(additionnal_so_lines=additionnal_so_lines)
+
+    @api.multi
+    def _timesheet_set_sale_order_line(self):
+        """ Automatically set the SO line on the analytic line, for the timesheet flow. It retrives
+            the SO line which has create the project (track_service='timesheet'). There is only one line
+            per SO like this (See constraint).
+        """
+        for timesheet in self.filtered(lambda aal: not aal.so_line):
+            sol = self.env['sale.order.line'].search([
+                ('order_id.project_id', '=', timesheet.account_id.id),
+                ('state', 'in', ('sale', 'done')),
+                ('product_id.track_service', '=', 'timesheet'),
+                ('product_id.type', '=', 'service')
+            ], limit=1)
+            if sol:
+                timesheet.write({
+                    'so_line': sol.id,
+                    'product_id': sol.product_id.id,
+                })
 
     def _get_timesheet_values(self, values):
         result = {}
@@ -143,26 +165,3 @@ class AccountAnalyticLine(models.Model):
         result['timesheet_revenue'] = revenue
         result['timesheet_invoice_type'] = billable_type
         return result
-
-    def _get_sale_order_line(self, vals=None):
-        result = dict(vals or {})
-        if self.project_id:
-            if result.get('so_line'):
-                sol = self.env['sale.order.line'].browse([result['so_line']])
-            else:
-                sol = self.so_line
-            if not sol:
-                sol = self.env['sale.order.line'].search([
-                    ('order_id.project_id', '=', self.account_id.id),
-                    ('state', 'in', ('sale', 'done')),
-                    ('product_id.track_service', '=', 'timesheet'),
-                    ('product_id.type', '=', 'service')],
-                    limit=1)
-            if sol:
-                result.update({
-                    'so_line': sol.id,
-                    'product_id': sol.product_id.id,
-                })
-                result.update(self._get_timesheet_values(result))
-
-        return super(AccountAnalyticLine, self)._get_sale_order_line(vals=result)

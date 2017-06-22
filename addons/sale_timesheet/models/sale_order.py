@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 
 
 class SaleOrder(models.Model):
@@ -142,14 +143,17 @@ class SaleOrderLine(models.Model):
             line._create_task()
         return line
 
+    def _timesheet_compute_delivered_quantity_domain(self):
+        # TODO JEM: avoid increment delivered for all AAL or just timesheet ?
+        # see nim commit https://github.com/odoo/odoo/commit/21fbb9776a5fbd1838b189f1f7cf8c5d40663e14
+        so_line_ids = self.filtered(lambda sol: sol.product_id.service_type != 'manual').ids
+        return ['&', ('so_line', 'in', so_line_ids), ('project_id', '!=', False)]
+
     @api.multi
-    def _compute_analytic(self, domain=None):
-        if not domain and self.ids:
-            # To filter on analyic lines linked to an expense
-            expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
-            expense_type_id = expense_type_id and expense_type_id.id
-            domain = [('so_line', 'in', self.ids), '|', ('amount', '<=', 0.0), ('project_id', '!=', False)]
-        return super(SaleOrderLine, self)._compute_analytic(domain=domain)
+    def _analytic_compute_delivered_quantity_domain(self):
+        domain = super(SaleOrderLine, self)._analytic_compute_delivered_quantity_domain()
+        timesheet_domain = self._timesheet_compute_delivered_quantity_domain()
+        return expression.OR([domain, timesheet_domain])
 
     def _convert_qty_company_hours(self):
         company_time_uom_id = self.env.user.company_id.project_time_mode_id
