@@ -316,6 +316,7 @@ class account_payment(models.Model):
                 move.button_cancel()
                 move.unlink()
             rec.state = 'draft'
+            rec.move_name = False
 
     @api.multi
     def unlink(self):
