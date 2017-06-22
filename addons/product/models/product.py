@@ -595,10 +595,11 @@ class SupplierInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        help="When this field is filled in, the vendor data will only apply to the variant.")
+        help="If not set, the vendor price will apply to all variants of this products.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")
