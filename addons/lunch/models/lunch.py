@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from operator import itemgetter
+from collections import OrderedDict
 
 import json
 import datetime
@@ -92,9 +92,9 @@ class LunchOrder(models.Model):
         }.values()
 
         if self.previous_order_ids:
-            lunch_data = []
+            lunch_data = {}
             for line in self.previous_order_ids:
-                lunch_data.append({
+                lunch_data[line.id] = {
                     'line_id': line.id,
                     'product_id': line.product_id.id,
                     'product_name': line.product_id.name,
@@ -103,8 +103,9 @@ class LunchOrder(models.Model):
                     'price': line.price,
                     'date': line.date,
                     'currency_id': line.currency_id.id,
-                })
-            lunch_data.sort(key=itemgetter('date', 'line_id'), reverse=True)
+                }
+            # sort the old lunch orders by (date, id)
+            lunch_data = OrderedDict(sorted(lunch_data.items(), key=lambda t: (t[1]['date'], t[0]), reverse=True))
             self.previous_order_widget = json.dumps(lunch_data)
 
     @api.one
