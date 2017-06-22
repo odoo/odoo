@@ -142,12 +142,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': 2.0,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
             }), (0, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': 3.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
             })]
         })
 
@@ -157,7 +159,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             "active_id": self.pos_order_pos1.id
         }
         self.pos_make_payment_2 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': 1800
+            'amount': 1845
         })
 
         # I click on the validate button to register the payment.
@@ -204,12 +206,14 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'price_unit': 450,
                 'discount': 0.0,
                 'qty': (-2.0),
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
             }), (0, 0, {
                 'name': "OL/0004",
                 'product_id': self.product4.id,
                 'price_unit': 300,
                 'discount': 0.0,
                 'qty': (-3.0),
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
             })]
         })
 
@@ -219,7 +223,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             "active_id": self.pos_order_pos2.id
         }
         self.pos_make_payment_3 = self.PosMakePayment.with_context(context_make_payment).create({
-            'amount': (-1800)
+            'amount': (-1845)
         })
 
         # I click on the validate button to register the payment.
