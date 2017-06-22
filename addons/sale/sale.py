@@ -1223,7 +1223,7 @@ class sale_order_line(osv.osv):
                 if context.get('uom_qty_change', False):
                     values = {'price_unit': price}
                     for field in ['product_uos_qty', 'th_weight']:
-                        if result.get(field):
+                        if not result.get(field, False) is False:
                             values[field] = result[field]
                     return {'value': values, 'domain': {}, 'warning': False}
         if warning_msgs:
