@@ -55,6 +55,13 @@ class AccountAccount(models.Model):
             if account.internal_type in ('receivable', 'payable') and account.reconcile == False:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)') % account.code)
 
+    @api.multi
+    @api.constrains('user_type_id')
+    def _check_user_type_id(self):
+        account_unaffected_earnings = self.search([('company_id', '=', self.company_id.id), ('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)])
+        if len(account_unaffected_earnings) >= 2:
+            raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
+
     name = fields.Char(required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.")
