@@ -132,14 +132,18 @@
                                 <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                             </group>
                             <group name="group_lots_and_weight">
-                                <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
-                                <div class="o_row" name="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                                    <field name="weight"/>
-                                </div>
                                 <field name="tracking" widget="radio" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}" groups="stock.group_production_lot"/>
-                                <label for="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>
-                                <div class="o_row" name="volume" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
-                                    <field name="volume" string="Volume"/>
+                                <div attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
+                                    <label for="weight"/>
+                                    <div class="o_row" name="weight">
+                                        <field name="weight"/>
+                                        <span>kg</span>
+                                    </div>
+                                    <label for="volume"/>
+                                    <div class="o_row" name="volume">
+                                        <field name="volume"/>
+                                        <span>m³</span>
+                                    </div>
                                 </div>
                             </group>
                             <group name="stock_property" groups="base.group_no_one">
