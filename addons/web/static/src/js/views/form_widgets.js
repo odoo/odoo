@@ -1161,6 +1161,8 @@ var FieldBinary = common.AbstractField.extend(common.ReinitializeFieldMixin, {
                 field.set_value(value);
                 field._dirty_flag = true;
             }
+        }else{
+            this.filename = value;
         }
     },
     on_clear: function() {
@@ -1191,6 +1193,9 @@ var FieldBinaryFile = FieldBinary.extend({
     },
     render_value: function() {
         var filename = this.view.datarecord[this.node.attrs.filename];
+        if(!filename){
+            filename = this.filename;
+        }
         if (this.get("effective_readonly")) {
             this.do_toggle(!!this.get('value'));
             if (this.get('value')) {
@@ -1203,7 +1208,7 @@ var FieldBinaryFile = FieldBinary.extend({
             if(this.get('value')) {
                 this.$el.children().removeClass('o_hidden');
                 this.$('.o_select_file_button').first().addClass('o_hidden');
-                this.$input.val(filename || this.get('value'));
+                this.$input.val(filename || "");
             } else {
                 this.$el.children().addClass('o_hidden');
                 this.$('.o_select_file_button').first().removeClass('o_hidden');
