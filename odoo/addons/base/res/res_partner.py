@@ -701,8 +701,11 @@ class Partner(models.Model):
     def _get_gravatar_image(self, email):
         email_hash = hashlib.md5(email.lower()).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
-        res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
-        if res.status_code != requests.codes.ok:
+        try:
+            res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
+            if res.status_code != requests.codes.ok:
+                return False
+        except requests.exceptions.ConnectionError as e:
             return False
         return base64.b64encode(res.content)
 
