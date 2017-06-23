@@ -433,7 +433,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('many2many_tags are correctly fetched and displayed', function (assert) {
-        assert.expect(5);
+        assert.expect(10);
 
         this.data.partner.records[0].category_ids = [6, 7];
         this.data.partner.records[1].category_ids = [7];
@@ -447,6 +447,7 @@ QUnit.module('Views', {
                             '<div>' +
                                 '<field name="category_ids"/>' +
                                 '<field name="foo"/>' +
+                                '<field name="state" widget="priority"/>' +
                             '</div>' +
                         '</t></templates>' +
                     '</kanban>',
@@ -462,7 +463,20 @@ QUnit.module('Views', {
         assert.ok($first_record.find('.o_tag:first()').hasClass('o_tag_color_2'),
             'first tag should have color 2');
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/category/read'],
-            'two RPC should have been done(one search read and one read for the m2m');
+            'two RPC should have been done (one search read and one read for the m2m)');
+
+        // Write on the record using the priority widget to trigger a re-render in readonly
+        kanban.$('.o_field_widget.o_priority a.o_priority_star.fa-star-o').first().click();
+        assert.verifySteps([
+            '/web/dataset/search_read',
+            '/web/dataset/call_kw/category/read',
+            '/web/dataset/call_kw/partner/write',
+            '/web/dataset/call_kw/partner/read',
+            '/web/dataset/call_kw/category/read'
+        ], 'five RPCs should have been done (previous 2, 1 write (triggers a re-render), same 2 at re-render');
+        assert.strictEqual(kanban.$('.o_kanban_record:first()').find('.o_field_many2manytags .o_tag').length, 2,
+            'first record should still contain only 2 tags');
+
         kanban.destroy();
     });
 

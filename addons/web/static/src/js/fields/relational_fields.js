@@ -1596,7 +1596,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _render: function () {
         var self = this;
-        this.$el.addClass('o_field_many2manytags o_kanban_tags');
+        this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
             // 10th color is invisible
             if ('color' in m2m.data && m2m.data.color !== 10) {
