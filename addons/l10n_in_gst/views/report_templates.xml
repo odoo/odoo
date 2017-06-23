@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="l10n_in_external_layout_footer" inherit_id="report.external_layout_footer">
+        <xpath expr="//li[@t-if='company.vat']" position="replace">
+            <li t-if="company.x_gstin">GSTIN: <span t-field="company.x_gstin"/></li>
+        </xpath>
+    </template>
+
+</odoo>

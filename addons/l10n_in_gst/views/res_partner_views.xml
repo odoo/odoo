@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_view_partner_form" model="ir.ui.view">
+        <field name="name">l10n.in.res.partner.gstin.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_position_id" position="after">
+                <label for="x_gstin"/>
+                <div name="gstin" class="o_row">
+                    <field name="x_gstin"/>
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

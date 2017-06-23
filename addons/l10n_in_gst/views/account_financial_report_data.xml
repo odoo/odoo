@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 
+            Tax Financial Reports
+        -->
+        <record id="total_tax_payable_l10n_in_report" model="account.financial.report">
+            <field name="name">Tax Payable</field>
+            <field name="type">sum</field>
+        </record>
+
+        <record id="account_financial_report_output" model="account.financial.report">
+            <field name="name">Output Liability</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="total_tax_payable_l10n_in_report"/>
+            <field name="type">sum</field>
+        </record>
+        <record id="account_financial_report_sgst" model="account.financial.report">
+            <field name="name">SGST</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_output"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p11232')),]"/>
+        </record>
+        <record id="account_financial_report_cgst" model="account.financial.report">
+            <field name="name">CGST</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_output"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p11233')),]"/>
+        </record>
+        <record id="account_financial_report_igst" model="account.financial.report">
+            <field name="name">IGST</field>
+            <field name="sign" eval="-1" />
+            <field name="parent_id" ref="account_financial_report_output"/>
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p11234')),]"/>
+        </record>
+
+        <record id="account_financial_report_input" model="account.financial.report">
+            <field name="name">Input Tax Credit</field>
+            <field name="parent_id" ref="total_tax_payable_l10n_in_report"/>
+            <field name="sign" eval="-1" />
+            <field name="type">sum</field>
+        </record>
+
+        <record id="account_financial_report_in_sgst" model="account.financial.report">
+            <field name="name">SGST</field>
+            <field name="parent_id" ref="account_financial_report_input"/>
+            <field name="sign" eval="-1" />
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p10051')),]"/>
+        </record>
+        <record id="account_financial_report_in_cgst" model="account.financial.report">
+            <field name="name">CGST</field>
+            <field name="parent_id" ref="account_financial_report_input"/>
+            <field name="sign" eval="-1" />
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p10052')),]"/>
+        </record>
+        <record id="account_financial_report_in_igst" model="account.financial.report">
+            <field name="name">IGST</field>
+            <field name="parent_id" ref="account_financial_report_input"/>
+            <field name="sign" eval="-1" />
+            <field name="display_detail">detail_with_hierarchy</field>
+            <field name="type">accounts</field>
+            <field name="account_ids" eval="[(4,ref('l10n_in_gst.p10053')),]"/>
+        </record>
+
+    </data>
+</odoo>
