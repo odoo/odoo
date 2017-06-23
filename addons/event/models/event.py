@@ -141,7 +141,7 @@ class EventEvent(models.Model):
     # Date fields
     date_tz = fields.Selection('_tz_get', string='Timezone Visibility', required=True, default=lambda self: self.env.user.tz)
     timezone_type = fields.Selection(
-        [('visitor', 'Show time in visitior\'s timezone'), ('unique', 'Show timezone in a unique timezone')],
+        [('unique', 'Show timezone in a unique timezone'), ('visitor', 'Show time in visitior\'s timezone')],
         string='Timezone', required=True, default='visitor')
     date_begin = fields.Datetime(
         string='Start Date', required=True, default=lambda self: fields.Datetime.now(),

@@ -3,6 +3,7 @@
 import babel.dates
 import re
 import werkzeug
+import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -228,6 +229,27 @@ class WebsiteEventController(http.Controller):
         if not tickets:
             return request.redirect("/event/%s" % slug(event))
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+
+    @http.route(['/event/<model("event.event"):event>/registration/timezone'], type='json', auth="public", methods=['POST'], website=True)
+    def set_timezone(self, event, **post):
+        return request.env['ir.ui.view'].render_template("website_event.select_user_timezone")
+
+    @http.route(['/event/set_timezone'], type='json', auth="public", methods=['POST'], website=True)
+    def set_new_timezone(self, timezone, date_time):
+        if not timezone or not date_time:
+            return False
+        unaware_utc = datetime.strptime(date_time,"%Y-%m-%d %H:%M:%S")
+        localtz = pytz.utc
+        aware_tz = localtz.localize(unaware_utc)
+        new_tz = aware_tz.astimezone(pytz.timezone(timezone)).strftime("%m/%d/%Y %H:%M")
+        return new_tz
+
+    @http.route(['/event/get_all_timezone'], type='json', auth="public", methods=['POST'], website=True)
+    def get_all_timezone(self):
+        tz_list = []
+        for timezone in pytz.all_timezones:
+            tz_list.append(timezone)
+        return tz_list
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
