@@ -1046,7 +1046,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBinary');
 
     QUnit.test('binary fields are correctly rendered', function (assert) {
-        assert.expect(9);
+        assert.expect(16);
 
         // save the session function
         var oldGetFile = session.get_file;
@@ -1059,18 +1059,24 @@ QUnit.module('basic_fields', {
             return $.when();
         };
 
+        this.data.partner.records[0].foo = 'coucou.txt';
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                    '<field name="document"/>' +
+                    '<field name="document" filename="foo"/>' +
+                    '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
         });
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 1,
             "the binary field should be rendered as a downloadable link in readonly");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), 'coucou.txt',
+            "the binary field should display the name of the file in the link");
+        assert.strictEqual(form.$('.o_field_char').text(), 'coucou.txt',
+            "the filename field should have the file name as value");
 
         form.$('a.o_field_widget[name="document"]').click();
 
@@ -1078,12 +1084,15 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
             "the binary field should not be rendered as a downloadable link in edit");
-        assert.strictEqual(form.$('div.o_field_binary_file[name="document"]').length, 1,
-            "the binary field should be correctly rendered in edit");
+        assert.strictEqual(form.$('div.o_field_binary_file[name="document"] > input').val(), 'coucou.txt',
+            "the binary field should display the file name in the input edit mode");
         assert.strictEqual(form.$('.o_field_binary_file > input').attr('readonly'), 'readonly',
             "the input should be readonly");
         assert.strictEqual(form.$('.o_field_binary_file > .o_clear_file_button').length, 1,
             "there shoud be a button to clear the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), 'coucou.txt',
+            "the filename field should have the file name as value");
+
 
         form.$('.o_field_binary_file > .o_clear_file_button').click();
 
@@ -1091,6 +1100,16 @@ QUnit.module('basic_fields', {
             "the input should be hidden");
         assert.strictEqual(form.$('.o_field_binary_file > .o_select_file_button:not(.o_hidden)').length, 1,
             "there shoud be a button to upload the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), '',
+            "the filename field should be empty since we removed the file");
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
+            "the binary field should not render as a downloadable link since we removed the file");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), '',
+            "the binary field should not display a filename in the link since we removed the file");
+        assert.strictEqual(form.$('.o_field_char').text().trim(), '',
+            "the filename field should be empty since we removed the file");
 
         form.destroy();
 

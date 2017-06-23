@@ -1044,7 +1044,13 @@ var AbstractFieldBinary = AbstractField.extend({
     set_filename: function (value) {
         var filename = this.attrs.filename;
         if (filename && filename in this.fields) {
-            this.trigger_up('update_field', { name: filename, value: value });
+            var changes = {};
+            changes[filename] = value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+                viewType: this.viewType,
+            });
         }
     },
     on_clear: function () {
