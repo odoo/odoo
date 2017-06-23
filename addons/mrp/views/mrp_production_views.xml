@@ -113,7 +113,7 @@
                     <notebook>
                         <page string="Consumed Materials">
                             <field name="move_raw_ids" options="{'reload_on_button': True}" context="{'default_location_id': location_src_id, 'default_location_dest_id': location_dest_id}">
-                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="quantity_available &lt; product_uom_qty" create="0">
+                                <tree editable="bottom" delete="0" default_order="is_done desc,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="quantity_done==product_uom_qty" decoration-danger="reserved_availability &lt; product_uom_qty" create="0">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom" groups="product.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
@@ -122,7 +122,7 @@
                                     <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" invisible="1"/>
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="quantity_available" attrs="{'invisible': [('is_done', '=', True)]}"/>
+                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)]}"/>
                                     <field name="product_uom_qty" readonly="1" attrs="{'required': [('product_id', '!=', False)]}" string="To Consume"/>
                                     <field name="quantity_done" attrs="{'readonly': ['|', ('is_done', '=', True), ('has_tracking', 'in', ['lot','serial'])]}" string="Consumed"/>
                                     <button name="split_move_lot" string="Register lots" type="object" icon="fa-list"

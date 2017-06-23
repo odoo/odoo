@@ -28,14 +28,11 @@
                             <field name="workorder_id" invisible="1"/>
                         </group>
                     </group>
-                    <field name="active_move_lot_ids" attrs="{'readonly': [('is_done', '=', True)]}" context="{'default_workorder_id': workorder_id}">
-                        <tree editable="bottom" decoration-success="quantity==quantity_done" decoration-danger="(quantity &gt; 0) and (quantity_done&gt;quantity)">
+                    <field name="active_move_line_ids" attrs="{'readonly': [('is_done', '=', True)]}" context="{'default_workorder_id': workorder_id}">
+                        <tree editable="bottom" decoration-success="product_qty==qty_done" decoration-danger="(product_qty &gt; 0) and (qty_done&gt;product_qty)">
                             <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}"/>
-                            <field name="quantity" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
-                            <field name="quantity_done"/>
-                            <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('quantity_done', '&lt;=', 0.99)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
-                            <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="not context.get('show_reserved') or context.get('state_done')"/>
-                            <field name="plus_visible" invisible="1"/>
+                            <field name="product_qty" invisible="not context.get('show_reserved') or context.get('serial') or context.get('state_done')" readonly="1"/>
+                            <field name="qty_done"/>
                             <field name="workorder_id" invisible="1"/>
                             <field name="done_wo" invisible="1"/>
                         </tree>
