@@ -76,7 +76,7 @@ class SaleOrder(models.Model):
         # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
         # done in delivery_set method of sale.py, from delivery module
         carrier_ids = DeliveryCarrier.sudo().search(
-            [('website_published', '=', True)]).ids
+            [('website_published', '=', True)]).filtered(lambda r: r.verify_carrier(self.partner_shipping_id)).ids
         for carrier_id in carrier_ids:
             carrier = DeliveryCarrier.browse(carrier_id)
             try:
