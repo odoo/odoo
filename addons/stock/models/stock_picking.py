@@ -854,12 +854,15 @@ class Picking(models.Model):
         """ If no pack operation, we do simple action_done of the picking.
         Otherwise, do the pack operations. """
         # TDE CLEAN ME: reclean me, please
-        self._create_lots_for_picking()
+        pickings = self.filtered(lambda p: p.state not in ['done', 'cancel'])
+        pickings._create_lots_for_picking()
 
         no_pack_op_pickings = self.filtered(lambda picking: not picking.pack_operation_ids)
         no_pack_op_pickings.action_done()
-        other_pickings = self - no_pack_op_pickings
+        other_pickings = pickings - no_pack_op_pickings
         for picking in other_pickings:
+            if picking.state == 'done':
+                raise UserError(_('The pick is already validated'))
             need_rereserve, all_op_processed = picking.picking_recompute_remaining_quantities()
             todo_moves = self.env['stock.move']
             toassign_moves = self.env['stock.move']
