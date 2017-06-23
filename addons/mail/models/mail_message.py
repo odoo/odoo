@@ -298,7 +298,7 @@ class Message(models.Model):
                 message.unlink()
             elif moderator_action in ['allow', 'ban']:
                 channels = message.channel_ids.filtered(lambda c: c.is_moderate)
-                channels.add_to_moderated_email_list(message.email_from, moderator_action, message.author_id.id)
+                channels._add_to_moderated_email_list(message.email_from, moderator_action)
                 message.accept_message() if moderator_action == 'allow' else message.unlink()
         return True
 
@@ -912,13 +912,13 @@ class Message(models.Model):
     def need_moderation(self, channels=False):
         """ This method will check that moderation is required on newly arrival message
         """
-        if self.message_type == 'email' and channels and not channels.is_moderated_email(self.email_from, 'allow'):
+        if self.message_type == 'email' and channels and not channels._is_moderated_email(self.email_from, 'allow'):
             return True
         return False
 
     def channel_moderation_process(self, moderate_channels):
         # we have only one channel on message when message type is email ?
-        if not moderate_channels.is_moderated_email(self.email_from, 'ban'):
+        if not moderate_channels._is_moderated_email(self.email_from, 'ban'):
             self.moderator_status = 'pending_moderation'
             for channel in moderate_channels.filtered(lambda c: c.auto_notification):
                 #notify to the sender on message being waiting for moderation.
