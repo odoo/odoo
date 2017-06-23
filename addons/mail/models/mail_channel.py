@@ -20,13 +20,12 @@ class ChannelPartner(models.Model):
     _rec_name = 'partner_id'
 
     partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
-    partner_email = fields.Char('Email', related='partner_id.email', store=True)
+    partner_email = fields.Char('Email', related='partner_id.email')
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
     is_minimized = fields.Boolean("Conversation is minimized")
     is_pinned = fields.Boolean("Is pinned on the interface", default=True)
-    moderator_action = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')])
 
 
 class Channel(models.Model):
@@ -61,7 +60,6 @@ class Channel(models.Model):
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
-    channel_moderate_partner_ids = fields.One2many('mail.channel.partner', 'channel_id')
     channel_partner_ids = fields.Many2many('res.partner', 'mail_channel_partner', 'channel_id', 'partner_id', string='Listeners')
     channel_message_ids = fields.Many2many('mail.message', 'mail_message_mail_channel_rel')
     is_member = fields.Boolean('Is a member', compute='_compute_is_member')
@@ -94,6 +92,7 @@ class Channel(models.Model):
         'Is Subscribed', compute='_compute_is_subscribed')
     is_moderate = fields.Boolean(string='Moderate this channel')
     moderator_ids = fields.Many2many('res.users', string='Moderators')
+    moderated_email_ids = fields.One2many('channel.moderated.emails', 'channel_id', string='Moderated Emails')
     auto_notification = fields.Boolean(string="Automatic Notification", help="people receive an automatic notification about their message being waiting for moderation.")
     notification_message = fields.Text(string="Notification Message")
 
@@ -637,27 +636,23 @@ class Channel(models.Model):
             channel['last_message'] = message
         return list(channels_preview.values())
 
-    def add_to_moderated_email_list(self, email, moderator_action, partner_id=False):
+    def _add_to_moderated_email_list(self, email, moderator_action):
         """ This method will add a email address into either white list of emails or ban list of emails
             according to the moderator action.
         """
         email_from = tools.email_split(email)
         email = email_from[0] if email_from else False
-        domain = []
         #search if already exist
-        if partner_id:
-            domain += ['|', ('partner_id', '=', partner_id)]
-        domain += [('partner_email', '=', email), ('channel_id', 'in', self.ids)]
-        channel_partner_id = self.env['mail.channel.partner'].search(domain, limit=1).id
-        vals = [(1, channel_partner_id, {'moderator_action': moderator_action})] if channel_partner_id else [(0, 0, {'partner_email': email, 'moderator_action': moderator_action})]
-        self.write({'channel_last_seen_partner_ids': vals})
+        moderated_email_id = self.env['channel.moderated.emails'].search([('email', '=', email), ('channel_id', 'in', self.ids)], limit=1).id
+        vals = [(1, moderated_email_id, {'moderator_action': moderator_action})] if moderated_email_id else [(0, 0, {'email': email, 'moderator_action': moderator_action})]
+        self.write({'moderated_email_ids': vals})
 
-    def is_moderated_email(self, email, moderator_action):
+    def _is_moderated_email(self, email, moderator_action):
         """ This method will returns true if email address is present either in ban list or always allow list according to moderator_action.
         """
         email_from = tools.email_split(email)
         email = email_from[0] if email_from else False
-        return email in self.mapped('channel_last_seen_partner_ids').filtered(lambda e: e.moderator_action == moderator_action).mapped('partner_email')
+        return email in self.mapped('moderated_email_ids').filtered(lambda e: e.moderator_action == moderator_action).mapped('email')
 
     #------------------------------------------------------
     # Commands
@@ -740,3 +735,18 @@ class Channel(models.Model):
             msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
 
         self._send_transient_message(partner, msg)
+
+
+class ChannelModeratedEmails(models.Model):
+    """
+        The purpose of this model is to handle the white & black list of emails.
+    """
+    _name = 'channel.moderated.emails'
+
+    email = fields.Char(string="Email")
+    moderator_action = fields.Selection([('allow', 'Always Allow'), ('ban', 'Permanent Ban')])
+    channel_id = fields.Many2one('mail.channel', string="Channel")
+
+    _sql_constraints = [
+         ('channel_email_uniq', 'unique (email,channel_id)', 'The email address must be unique per channel !')
+    ]
