@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2016 Taŭga Tecnologia - Aristides Caldeira <aristides.caldeira@tauga.com.br>
+    License AGPL-3 or later (http://www.gnu.org/licenses/agpl)
+-->
+<odoo>
+
+    <record id="account_config_settings_form" model="ir.ui.view">
+        <field name="name">account.config.settings.form</field>
+        <field name="model">account.config.settings</field>
+        <field name="inherit_id" ref="account.view_account_config_settings"/>
+        <field name="arch" type="xml">
+            <field name="chart_template_id" position="before">
+                <field name="is_brazilian_chart_template" invisible="1" />
+            </field>
+            <!-- Os campos abaixo não devem ser alterados no caso de empresas brasileiras -->
+            <!-- field sale_tax_id -->
+            <xpath expr="//group[2]/div/div[3]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field purchase_tax_id -->
+            <xpath expr="//group[2]/div/div[4]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field template_transfer_account_id -->
+            <xpath expr="//group[2]/div/div[5]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field sale_tax_rate -->
+            <xpath expr="//group[2]/div/div[5]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field purchase_tax_rate -->
+            <xpath expr="//group[2]/div/div[6]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field template_transfer_account_id -->
+            <xpath expr="//group[2]/div/div[7]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_brazilian_chart_template', '=', True), '|', '|', ('chart_template_id','=',False), ('complete_tax_set','=',False), ('has_chart_of_accounts','!=',False)]}</attribute>
+            </xpath>
+            <!-- field fiscalyear_last_month -->
+            <xpath expr="//group[3]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <field name="currency_id" position="attributes">
+                <attribute name="domain">[('is_currency', '=', True)]</attribute>
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </field>
+            <xpath expr="//group[12]/field[@name='use_anglo_saxon']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[12]/field[@name='bank_account_code_prefix']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[12]/field[@name='cash_account_code_prefix']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[12]/field[@name='code_digits']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[12]/field[@name='tax_calculation_rounding_method']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[7]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//form/separator[1]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='bank_cash']" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//form/separator[3]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//group[13]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//form/div[1]" position="attributes">
+                <attribute name="attrs">{'invisible': [('is_brazilian_chart_template', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

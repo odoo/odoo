@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Part of Odoo. See LICENSE file for full copyright and licensing details.
+    Copyright (C) 2017 KMEE INFORMATICA LTDA (https://www.kmee.com.br)
+-->
+<odoo noupdate="False">
+
+    <!--
+        Plano de Contas Simplificado do Conselho Federal de Contabilidade
+        https://www.google.com.br/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjwv4Hoxp3UAhXDFJAKHVmJCmEQFggoMAA&url=http%3A%2F%2Fportalcfc.org.br%2Fwordpress%2Fwp-content%2Fuploads%2F2013%2F01%2FLivro_Escrituracao_contabil.pdf&usg=AFQjCNF6xWnU91EGpTeEE0M8h2uFqMwj3g&sig2=lW_YM82MTyg0zBnoIcMYug
+    -->
+    <record id="ACCOUNT_TYPE_CFC_BALANCO" model="account.account.type">
+        <field name="name">Balanço (contas de resultado ou analíticas)</field>
+        <field name="note">BALANÇO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_DISPONIVEL" model="account.account.type">
+        <field name="name">Disponível</field>
+        <field name="note">BALANÇO / (+) ATIVO / CIRCULANTE</field>
+        <field name="type">liquidity</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_CONTAS_RECEBER" model="account.account.type">
+        <field name="name">Contas a Receber</field>
+        <field name="note">BALANÇO / (+) ATIVO / CIRCULANTE</field>
+        <field name="type">receivable</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_ESTOQUES" model="account.account.type">
+        <field name="name">Estoques</field>
+        <field name="note">BALANÇO / (+) ATIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_OUTROS_CREDITOS" model="account.account.type">
+        <field name="name">Outros Créditos</field>
+        <field name="note">BALANÇO / (+) ATIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_CIRCULANTE_OUTROS_DEPESAS_EXERCICIO_SEGUINTE" model="account.account.type">
+        <field name="name">Despesas do Exercício Seguinte</field>
+        <field name="note">BALANÇO / (+) ATIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_REALIZAVEL_LONGO_PRAZO_CONTAS_RECEBER" model="account.account.type">
+        <field name="name">Contas a Receber</field>
+        <field name="note">BALANÇO / (+) ATIVO / REALIZÁVEL A LONGO PRAZO</field>
+        <field name="type">receivable</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_REALIZAVEL_LONGO_PRAZO_ESTOQUES" model="account.account.type">
+        <field name="name">Estoques</field>
+        <field name="note">BALANÇO / (+) ATIVO / REALIZÁVEL A LONGO PRAZO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_INVESTIMENTOS" model="account.account.type">
+        <field name="name">Investimentos</field>
+        <field name="note">BALANÇO / (+) ATIVO / PERMANENTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_IMOBILIZADO" model="account.account.type">
+        <field name="name">Imobilizado</field>
+        <field name="note">BALANÇO / (+) ATIVO / PERMANENTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_INTANGIVEL" model="account.account.type">
+        <field name="name">Intangível</field>
+        <field name="note">BALANÇO / (+) ATIVO / PERMANENTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_DIFERIDO" model="account.account.type">
+        <field name="name">Diferido</field>
+        <field name="note">BALANÇO / (+) ATIVO / PERMANENTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_ATIVO_PERMANENTE_DEPRECIACAO_AMORTIZACAO" model="account.account.type">
+        <field name="name">(-) Depreciação e Amortização Acumuladas</field>
+        <field name="note">BALANÇO / (+) ATIVO / PERMANENTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_IMPOSTOS" model="account.account.type">
+        <field name="name">Obrigações Sociais e Impostos a Recolher</field>
+        <field name="note">BALANÇO / (-) PASSIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_CONTAS_PAGAR" model="account.account.type">
+        <field name="name">Contas a Pagar</field>
+        <field name="note">BALANÇO / (-) PASSIVO / CIRCULANTE</field>
+        <field name="type">payable</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_LUCROS_DISTRIBUIR" model="account.account.type">
+        <field name="name">Lucros a Distribuir</field>
+        <field name="note">BALANÇO / (-) PASSIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_CIRCULANTE_EMPRESTIMOS" model="account.account.type">
+        <field name="name">Empréstimos Bancários</field>
+        <field name="note">BALANÇO / (-) PASSIVO / CIRCULANTE</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_EXIGIVEL_LONGO_PRAZO_CONTAS_PAGAR" model="account.account.type">
+        <field name="name">Contas a Pagar</field>
+        <field name="note">BALANÇO / (-) PASSIVO / EXIGÍVEL A LONGO PRAZO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_EXIGIVEL_LONGO_PRAZO_FINANCIAMENTOS" model="account.account.type">
+        <field name="name">Financiamentos Bancários</field>
+        <field name="note">BALANÇO / (-) PASSIVO / EXIGÍVEL A LONGO PRAZO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_RECEITAS_DIFERIDAS" model="account.account.type">
+        <field name="name">Receitas Diferidas</field>
+        <field name="note">BALANÇO / (-) PASSIVO / RESULTADOS DE EXERCÍCIOS_FUTUROS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_CUSTOS_DIFERIDOS" model="account.account.type">
+        <field name="name">(-) Custos Diferidos</field>
+        <field name="note">BALANÇO / (-) PASSIVO / RESULTADOS DE EXERCÍCIOS_FUTUROS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_RESULTADO_FUTURO_DESPESAS_DIFERIDAS" model="account.account.type">
+        <field name="name">(-) Despesas Diferidas</field>
+        <field name="note">BALANÇO / (-) PASSIVO / RESULTADOS DE EXERCÍCIOS_FUTUROS</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_CAPITAL_SOCIAL" model="account.account.type">
+        <field name="name">Capital Social</field>
+        <field name="note">BALANÇO / (-) PASSIVO / PATRIMÔNIO LÍQUIDO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_RESERVAS_CAPITAL" model="account.account.type">
+        <field name="name">Reservas de Capital</field>
+        <field name="note">BALANÇO / (-) PASSIVO / PATRIMÔNIO LÍQUIDO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_AJUSTES" model="account.account.type">
+        <field name="name">Ajustes de Avaliação Patrimonial</field>
+        <field name="note">BALANÇO / (-) PASSIVO / PATRIMÔNIO LÍQUIDO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_RESERVA_LUCROS" model="account.account.type">
+        <field name="name">Reserva de Lucros</field>
+        <field name="note">BALANÇO / (-) PASSIVO / PATRIMÔNIO LÍQUIDO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+    <record id="ACCOUNT_TYPE_CFC_BALANCO_PASSIVO_PATRIMONIO_ACOES_TESOURARIA" model="account.account.type">
+        <field name="name">(-) Ações em Tesouraria</field>
+        <field name="note">BALANÇO / (-) PASSIVO / PATRIMÔNIO LÍQUIDO</field>
+        <field name="type">other</field>
+        <field name="include_initial_balance" eval="False" />
+        <field name="is_brazilian_account_type" eval="True" />
+    </record>
+
+</odoo>
