@@ -1,18 +1,9 @@
 /**************  rainbow  *****************/
 
-// Mixins
-.o-reward-multiple-animation (@animation) {
-    -webkit-animation: @animation;
-    -moz-animation: @animation;
-    -o-animation: @animation;
-    animation: @animation;
-}
-
 // Variables
 @reward-size: 400px;
 @reward-text-color: #727880;
 @reward-base-time: 1.4s;
-@reward-global-time: @reward-base-time*3;
 
 // o_reward
 .o_reward {
@@ -25,23 +16,21 @@
     background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     outline: none;
 
-    .o-animation(reward-fading, @reward-base-time, ease-in-out, 0s, 1, normal, forwards);
+    .o-animation(reward-fading, @reward-base-time * 0.5, ease-in-out, 0s, 1, normal, forwards);
     .o-position-absolute(20%, auto, auto, 50%);
     .size(@reward-size, @reward-size);
 
     &.o_reward_fading {
         display: block;
+        .o-animation(reward-fading-reverse, (@reward-base-time * 0.4), ease-in-out, 0s, 1, normal, forwards);
 
-        .o-reward-multiple-animation(
-            ~"reward-fading @{reward-base-time} ease-in-out forwards,"
-            ~"reward-fading " (@reward-global-time * 0.2) (@reward-global-time * 0.8) ~" ease-in-out reverse forwards"
-        );
+        .o_reward_face_group {
+            .o-animation(reward-jump-reverse, (@reward-base-time * 0.4), ease-in-out, 0s, 1, normal, forwards);
+        }
 
         .o_reward_rainbow {
             path {
-                .o-reward-multiple-animation(
-                    ~"reward-rainbow " (@reward-base-time * 0.7) ~" ease-out forwards, "
-                    ~"reward-rainbow " (@reward-base-time * 0.5) (@reward-base-time * 2.2) ~"reverse forwards");
+                .o-animation(reward-rainbow-reverse, (@reward-base-time * 0.5), ease-out, 0s, 1, normal, forwards);
             }
         }
 
@@ -53,19 +42,18 @@
 
     .o_reward_rainbow {
         path {
-            opacity: 0;
             stroke-dasharray: 600;
             stroke-dashoffset: 0;
             fill:none;
             stroke-linecap:round;
             stroke-width:21px;
-            .o-animation(reward-rainbow, (@reward-base-time * 0.7), ease-out, 0s, 1, normal, forwards);
+            .o-animation(reward-rainbow, (@reward-base-time ), ease-out, 0s, 1, normal, forwards);
         }
     }
 
     .o_reward_face_group {
         transform-origin: center;
-        .o-animation(reward-jump, (@reward-global-time/2), ease-in-out);
+        .o-animation(reward-jump, @reward-base-time * 0.8, ease-in-out);
         .o-position-absolute(6%,0,0,0);
         .size(100%,60%);
     }
@@ -191,58 +179,77 @@
     }
 }
 
+@keyframes reward-fading-reverse {
+    100% {
+        opacity: 0;
+    }
+}
+
 @keyframes reward-jump {
     0% {
-        .o-transform(~"scale(0.5) rotateZ(0)");
+        .o-transform(~"scale(0.5)");
     }
     50% {
-        .o-transform(~"scale(1.05) rotateZ(0)");
+        .o-transform(~"scale(1.05)");
     }
     to {
-        .o-transform(~"scale(1) rotateZ(0)");
+        .o-transform(~"scale(1)");
+    }
+}
+
+@keyframes reward-jump-reverse {
+    0% {
+        .o-transform(~"scale(1)");
+    }
+    50% {
+        .o-transform(~"scale(1.05)");
+    }
+    to {
+        .o-transform(~"scale(0.5)");
     }
 }
 
 @keyframes reward-rainbow {
     0% {
-        opacity: 0;
         stroke-dashoffset: -500;
     }
-    50% {
-        opacity: 1;
-    }
     to {
-        opacity: 1;
         stroke-dashoffset: 0;
+    }
+}
+
+@keyframes reward-rainbow-reverse {
+    to {
+        stroke-dashoffset: -500;
     }
 }
 
 @keyframes reward-float{
     from {
-        .o-transform(~"translateY(0px) rotateZ(0)");
+        .o-transform(~"translateY(0px)");
     }
     to {
-        .o-transform(~"translateY(5px) rotateZ(0)");
+        .o-transform(~"translateY(5px)");
     }
 }
 
 @keyframes reward-stars{
     from {
-        .o-transform(~"scale(0.3) rotateZ(0) rotate(0deg)");
+        .o-transform(~"scale(0.3) rotate(0deg)");
     }
     50% {
-        .o-transform(~"scale(1.0) rotateZ(0) rotate(20deg)");
+        .o-transform(~"scale(1.0) rotate(20deg)");
     }
     to {
-        .o-transform(~"scale(0.3) rotateZ(0) rotate(80deg)");
+        .o-transform(~"scale(0.3) rotate(80deg)");
     }
 }
 
 @keyframes reward-scale {
     from {
-        .o-transform(~"scale(0.8) rotateZ(0)");
+        .o-transform(~"scale(0.8)");
     }
     to {
-        .o-transform(~"scale(1.0) rotateZ(0)");
+        .o-transform(~"scale(1.0)");
     }
 }

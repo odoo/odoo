@@ -28,7 +28,7 @@ var RainbowMan = Widget.extend({
         'blur': '_onBlur'
     },
     init: function (options) {
-        var rainbowDelay = {slow: 3000, medium: 1500, fast:500, no: false };
+        var rainbowDelay = {slow: 4500, medium: 3500, fast:2000, no: false };
         this.options = _.defaults(options || {}, {
             fadeout: 'medium',
             img_url: '/web/static/src/img/smile.svg',
@@ -48,7 +48,7 @@ var RainbowMan = Widget.extend({
                     self.$el.addClass('o_reward_fading');
                     setTimeout(function () {
                         self.destroy();
-                    }, 4000); // destroy only after fadeout animation is completed
+                    }, 600); // destroy only after fadeout animation is completed
                 }, self.delay);
             }
         });
