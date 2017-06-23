@@ -1220,6 +1220,9 @@ var BasicModel = AbstractModel.extend({
             case 'UPDATE':
                 defs.push(this._applyChange(command.id, command.data));
                 break;
+            case 'SORT':
+                self._sortList(list);
+                break;
             case 'REMOVE':
                 list._changes = _.difference(list._changes, command.ids);
                 break;
