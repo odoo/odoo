@@ -963,7 +963,9 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('domain and context are correctly used when doing a name_search in a m2o', function (assert) {
-        assert.expect(2);
+        assert.expect(4);
+
+        this.data.partner.records[0].timmy = [12];
 
         var form = createView({
             View: FormView,
@@ -975,11 +977,13 @@ QUnit.module('relational_fields', {
                         'domain="[[\'foo\', \'=\', \'bar\'], [\'foo\', \'=\', foo]]" ' +
                         'context="{\'hello\': \'world\', \'test\': foo}"/>' +
                     '<field name="foo"/>' +
+                    '<field name="trululu" context="{\'timmy\': timmy}" domain="[[\'id\', \'in\', timmy]]"/>' +
+                    '<field name="timmy" widget="many2many_tags" invisible="1"/>' +
                 '</form>',
             res_id: 1,
             session: {user_context: {hey: "ho"}},
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/product/name_search') {
+                if (args.method === 'name_search' && args.model === 'product') {
                     assert.deepEqual(
                         args.kwargs.args,
                         [['foo', '=', 'bar'], ['foo', '=', 'yop']],
@@ -990,12 +994,20 @@ QUnit.module('relational_fields', {
                         'the field attr context should have been used for the '
                         + 'RPC (evaluated and merged with the session one)');
                 }
+                if (args.method === 'name_search' && args.model === 'partner') {
+                    assert.deepEqual(args.kwargs.args, [['id', 'in', [12]]],
+                        'the field attr domain should have been used for the RPC (and evaluated)');
+                    assert.deepEqual(args.kwargs.context, {hey: 'ho', timmy: [[6, false, [12]]]},
+                        'the field attr context should have been used for the RPC (and evaluated)');
+                }
                 return this._super.apply(this, arguments);
             },
         });
 
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('input').first().click();
+        form.$('.o_field_widget[name=product_id] input').click();
+
+        form.$('.o_field_widget[name=trululu] input').click();
 
         form.destroy();
     });
