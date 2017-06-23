@@ -1783,4 +1783,41 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('x2manys in contexts and domains are correctly evaluated', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_ids = [37, 41];
+        this.params.fieldNames = Object.keys(this.data.partner.fields);
+        this.params.res_id = 1;
+        this.params.context = "{'category': category, 'product_ids': product_ids}";
+        this.params.domain = "[['id', 'in', category], ['id', 'in', product_ids]]";
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            var context = record.getContext();
+            var domain = record.getDomain();
+
+            assert.deepEqual(context, {
+                category: [12],
+                product_ids: [37, 41],
+            }, "x2many values in context manipulated client-side should be lists of ids");
+            assert.strictEqual(JSON.stringify(context),
+                "{\"category\":[[6,false,[12]]],\"product_ids\":[[4,37,false],[4,41,false]]}",
+                "x2many values in context sent to the server should be commands");
+            assert.deepEqual(domain, [
+                ['id', 'in', [12]],
+                ['id', 'in', [37, 41]],
+            ], "x2many values in domains should be lists of ids");
+            assert.strictEqual(JSON.stringify(domain),
+                "[[\"id\",\"in\",[12]],[\"id\",\"in\",[37,41]]]",
+                 "x2many values in domains should be lists of ids");
+        });
+        model.destroy();
+    });
+
 });});

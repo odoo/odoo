@@ -2248,14 +2248,14 @@ var BasicModel = AbstractModel.extend({
             if (fieldInfo && fieldInfo.domain) {
                 return Domain.prototype.stringToArray(
                     fieldInfo.domain,
-                    this._getEvalContext(element)
+                    this._getEvalContext(element, true)
                 );
             }
             var fieldParams = element.fields[options.fieldName];
             if (fieldParams.domain) {
                 return Domain.prototype.stringToArray(
                     fieldParams.domain,
-                    this._getEvalContext(element)
+                    this._getEvalContext(element, true)
                 );
             }
             return [];
@@ -2263,7 +2263,7 @@ var BasicModel = AbstractModel.extend({
 
         return Domain.prototype.stringToArray(
             element.domain,
-            this._getEvalContext(element)
+            this._getEvalContext(element, true)
         );
     },
     /**
@@ -2275,10 +2275,12 @@ var BasicModel = AbstractModel.extend({
      * sure.  This allows some domains to use the uid key for example
      *
      * @param {Object} element - an element from the localData
+     * @param {boolean} [forDomain=false] if true, evaluates x2manys as a list of
+     *   ids instead of a list of commands
      * @returns {Object}
      */
-    _getEvalContext: function (element) {
-        var evalContext = element.type === 'record' ? this._getRecordEvalContext(element) : {};
+    _getEvalContext: function (element, forDomain) {
+        var evalContext = element.type === 'record' ? this._getRecordEvalContext(element, forDomain) : {};
 
         if (element.parentID) {
             var parent = this.localData[element.parentID];
@@ -2286,7 +2288,7 @@ var BasicModel = AbstractModel.extend({
                 parent = this.localData[parent.parentID];
             }
             if (parent.type === 'record') {
-                evalContext.parent = this._getRecordEvalContext(parent);
+                evalContext.parent = this._getRecordEvalContext(parent, forDomain);
             }
         }
         return _.extend({
@@ -2314,9 +2316,11 @@ var BasicModel = AbstractModel.extend({
      * current values for the record, with commands for x2manys fields.
      *
      * @param {Object} record an element of type 'record'
+     * @param {boolean} [forDomain=false] if true, x2many values are a list of
+     *   ids instead of a list of commands
      * @returns Object
      */
-    _getRecordEvalContext: function (record) {
+    _getRecordEvalContext: function (record, forDomain) {
         var self = this;
         var relDataPoint;
         var context = _.extend({}, record.data, record._changes);
@@ -2349,7 +2353,11 @@ var BasicModel = AbstractModel.extend({
             if (field.type === 'one2many' || field.type === 'many2many') {
                 relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
                 var ids = relDataPoint.res_ids.slice(0);
-                ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
+                if (!forDomain) {
+                    // when sent to the server, the x2manys values must be a list
+                    // of commands in a context, but the list of ids in a domain
+                    ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
+                }
                 context[fieldName] = ids;
             }
 
