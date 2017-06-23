@@ -55,19 +55,26 @@ class ProcurementOrder(models.Model):
         return date_planned
 
     def _prepare_mo_vals(self, bom):
+
+        picking_type_id = self.rule_id.picking_type_id or\
+            self.warehouse_id.manu_type_id
+
         return {
             'origin': self.origin,
             'product_id': self.product_id.id,
             'product_qty': self.product_qty,
             'product_uom_id': self.product_uom.id,
-            'location_src_id': self.rule_id.location_src_id.id or self.location_id.id,
-            'location_dest_id': self.location_id.id,
+            'location_src_id': picking_type_id.default_location_src_id.id or
+            self.location_id.id,
+            'location_dest_id': picking_type_id.default_location_dest_id.id or
+            self.location_id.id,
             'bom_id': bom.id,
-            'date_planned_start': fields.Datetime.to_string(self._get_date_planned()),
+            'date_planned_start': fields.Datetime.to_string(
+                self._get_date_planned()),
             'date_planned_finished': self.date_planned,
             'procurement_group_id': self.group_id.id,
             'propagate': self.rule_id.propagate,
-            'picking_type_id': self.rule_id.picking_type_id.id or self.warehouse_id.manu_type_id.id,
+            'picking_type_id': picking_type_id.id,
             'company_id': self.company_id.id,
             'procurement_ids': [(6, 0, [self.id])],
         }
