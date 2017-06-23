@@ -77,7 +77,7 @@ class MrpUnbuild(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals['name'] == _('New'):
+        if not vals.get('name') or vals['name'] == _('New'):
             vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
         return super(MrpUnbuild, self).create(vals)
 
@@ -89,44 +89,34 @@ class MrpUnbuild(models.Model):
 
         consume_move = self._generate_consume_moves()[0]
         produce_moves = self._generate_produce_moves()
-
-        # Search quants that passed production order
-        qty = self.product_qty  # Convert to qty on product UoM
-        if self.mo_id:
-            finished_moves = self.mo_id.move_finished_ids.filtered(lambda move: move.product_id == self.mo_id.product_id)
-            domain = [('qty', '>', 0), ('history_ids', 'in', finished_moves.ids)]
-        else:
-            domain = [('qty', '>', 0)]
-        quants = self.env['stock.quant'].quants_get_preferred_domain(
-            qty, consume_move,
-            domain=domain,
-            preferred_domain_list=[],
-            lot_id=self.lot_id.id)
-        self.env['stock.quant'].quants_reserve(quants, consume_move)
-
         if consume_move.has_tracking != 'none':
-            self.env['stock.move.lots'].create({
+            self.env['stock.pack.operation'].create({
                 'move_id': consume_move.id,
                 'lot_id': self.lot_id.id,
-                'quantity_done': consume_move.product_uom_qty,
-                'quantity': consume_move.product_uom_qty})
+                'qty_done': consume_move.product_uom_qty,
+                'product_qty': consume_move.product_uom_qty, 
+                'location_id': consume_move.location_id.id,
+                'location_dest_id': consume_move.location_dest_id.id,})
         else:
             consume_move.quantity_done = consume_move.product_uom_qty
-        consume_move.move_validate()
+        consume_move.action_done()
         original_quants = consume_move.quant_ids.mapped('consumed_quant_ids')
+        #TODO: needs to be replaced by checking the different stock.move.lots
 
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
                 original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
-                self.env['stock.move.lots'].create({
+                self.env['stock.pack.operation'].create({
                     'move_id': produce_move.id,
                     'lot_id': original.lot_id.id,
-                    'quantity_done': produce_move.product_uom_qty,
-                    'quantity': produce_move.product_uom_qty
+                    'qty_done': produce_move.product_uom_qty,
+                    'product_qty': produce_move.product_uom_qty,
+                    'location_id': produce_move.location_id.id,
+                    'location_dest_id': produce_move.location_dest_id.id,
                 })
             else:
                 produce_move.quantity_done = produce_move.product_uom_qty
-        produce_moves.move_validate()
+        produce_moves.action_done()
         produced_quant_ids = produce_moves.mapped('quant_ids').filtered(lambda quant: quant.qty > 0)
         consume_move.quant_ids.sudo().write({'produced_quant_ids': [(6, 0, produced_quant_ids.ids)]})
 

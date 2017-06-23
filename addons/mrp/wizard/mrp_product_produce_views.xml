@@ -24,13 +24,10 @@
                         <field name="consume_line_ids" attrs="{'invisible': [('consume_line_ids', '=', [])]}" nolabel="1" context="{'w_production': True, 'active_id': production_id, 'default_lot_id': lot_id}">
                             <tree editable="top" delete="0" create="0">
                                 <field name="product_id" readonly="1"/>
-                                <field name="quantity" readonly="1"/>
-                                <field name="plus_visible" invisible="1"/>
-                                <field name="quantity_done"/>
+                                <field name="product_qty" readonly="1"/>
+                                <field name="qty_done"/>
                                 <field name="lot_id" context="{'default_product_id': product_id}"/>
                                 <field name="move_id" invisible="1"/>
-                                <button name="do_minus" type="object" icon="fa-minus-square" attrs="{'invisible': [('quantity_done', '&lt;=', 0.99)]}" invisible="context.get('state_done')"/>
-                                <button name="do_plus" type="object" icon="fa-plus-square" attrs="{'invisible': [('plus_visible', '=', False)]}" invisible="context.get('state_done')"/>
                             </tree>
                         </field>
                     </group>
@@ -51,5 +48,4 @@
             <field name="context">{}</field>
             <field name="target">new</field>
         </record>
-
 </odoo>
