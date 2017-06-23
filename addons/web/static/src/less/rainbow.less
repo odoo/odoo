@@ -10,11 +10,10 @@
     will-change: transform;
     z-index: @zindex-modal + 1;
     padding: 50px;
-    margin: -5% auto 0 -(@reward-size/2);
-    background-image: -webkit-radial-gradient(#EDEFF4 30%,transparent 70%, transparent);
+    margin: -5% auto 0 -(@reward-size / 2);
+    background-image: -webkit-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: -o-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
     background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
-    outline: none;
 
     .o-animation(reward-fading, @reward-base-time * 0.5, ease-in-out, 0s, 1, normal, forwards);
     .o-position-absolute(20%, auto, auto, 50%);
@@ -44,9 +43,9 @@
         path {
             stroke-dasharray: 600;
             stroke-dashoffset: 0;
-            fill:none;
-            stroke-linecap:round;
-            stroke-width:21px;
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 21px;
             .o-animation(reward-rainbow, (@reward-base-time ), ease-out, 0s, 1, normal, forwards);
         }
     }
@@ -54,8 +53,8 @@
     .o_reward_face_group {
         transform-origin: center;
         .o-animation(reward-jump, @reward-base-time * 0.8, ease-in-out);
-        .o-position-absolute(6%,0,0,0);
-        .size(100%,60%);
+        .o-position-absolute(6%, 0, 0, 0);
+        .size(100%, 60%);
     }
 
     .o_reward_face {
@@ -65,13 +64,13 @@
         border-radius: 100%;
         background: center center / contain no-repeat;
         .o-animation(reward-float, @reward-base-time, ease-in-out, @reward-base-time, infinite, alternate);
-        .size(34%,56.67%);
+        .size(34%, 56.67%);
     }
 
     .o_reward_stars {
         display: block;
-        .size(@reward-size*0.75, @reward-size/2);
-        .o-position-absolute(18%,7%);
+        .size(@reward-size * 0.75, @reward-size / 2);
+        .o-position-absolute(18%, 7%);
 
         svg {
             transform-origin: center center;
@@ -104,7 +103,7 @@
         width: 40px;
         display: block;
         .o-animation(reward-scale, @reward-base-time * 0.5, ease-in-out, 0s, infinite, alternate);
-        .o-position-absolute(63%,auto,auto,65%);
+        .o-position-absolute(63%, auto, auto, 65%);
     }
 
     .o_reward_msg_container {
@@ -122,10 +121,10 @@
         .o_reward_thumb_right {
             height: 40px;
             z-index: 1;
-            .o-position-absolute(0,auto,auto,16%);
+            .o-position-absolute(0, auto, auto, 16%);
         }
 
-        .o_reward_msg{
+        .o_reward_msg {
             margin-left: 7%;
             margin-top: -9.5%;
             padding: 25px 15px 20px;
@@ -136,10 +135,10 @@
 
             // Reset margins for first and penultimate childs (the last one is shadow)
             *:first-child {
-                margin-top: 0
+                margin-top: 0;
             }
             *:nth-last-child(2) {
-                margin-bottom: 0
+                margin-bottom: 0;
             }
         }
 
@@ -220,7 +219,7 @@
     }
 }
 
-@keyframes reward-float{
+@keyframes reward-float {
     from {
         .o-transform(~"translateY(0px)");
     }
@@ -229,7 +228,7 @@
     }
 }
 
-@keyframes reward-stars{
+@keyframes reward-stars {
     from {
         .o-transform(~"scale(0.3) rotate(0deg)");
     }

@@ -115,7 +115,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             new RainbowMan({
                 fadeout: 'no',
                 message: $done,
-                blur_close: false,
+                click_close: false,
             }).appendTo(this.$el);
             this.$el.first().css('min-height', '450px');
         }
