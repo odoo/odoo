@@ -270,10 +270,6 @@ class Users(models.Model):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
 
-    @api.onchange('state_id')
-    def onchange_state(self):
-        return self.mapped('partner_id').onchange_state()
-
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         return self.mapped('partner_id').onchange_parent_id()
