@@ -100,18 +100,10 @@
         }
     }
 
-    .o_reward_shadow {
-        .size(100px, 12px);
-        display: block;
-        position: relative;
-        top: 43%;
-        .o-animation(reward-scale, @reward-base-time, ease-in-out, 0s, infinite, alternate-reverse);
-    }
-
     .o_reward_thumbup {
         width: 40px;
         display: block;
-        .o-animation(reward-scale, @reward-base-time, ease-in-out, 0s, infinite, alternate);
+        .o-animation(reward-scale, @reward-base-time * 0.5, ease-in-out, 0s, infinite, alternate);
         .o-position-absolute(63%,auto,auto,65%);
     }
 
@@ -159,12 +151,16 @@
         }
 
         .o_reward_shadow_container {
+            .o-transform(~"translateY(0px) rotateZ(0)");
             .o-animation(reward-float, @reward-base-time, ease-in-out, @reward-base-time, infinite, alternate);
         }
 
         .o_reward_shadow {
-            width: 100%;
-            opacity: 0.7;
+            .size(100%, 12px);
+            background-color: #e7eaf0;
+            border-radius: 100%;
+            .o-transform(~"scale(0.8) rotateZ(0)");
+            .o-animation(reward-scale, @reward-base-time, ease-in-out, @reward-base-time, infinite, alternate);
             .o-position-absolute(auto, auto, -40px, 0);
         }
     }
