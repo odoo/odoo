@@ -33,16 +33,25 @@
 
     .o_column_sortable {
         .user-select(none);  // Prevent unwanted selection while sorting
+        position: relative;
 
         &.o-sort-up:after {
             font-family: FontAwesome;
             margin-left: 5px;
             content: "\f0d7";
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 0;
         }
         &.o-sort-down:after {
             font-family: FontAwesome;
             margin-left: 5px;
             content: "\f0d8";
+            position: absolute;
+            top: 50%;
+            margin-top: -8px;
+            right: 0;
         }
     }
 
