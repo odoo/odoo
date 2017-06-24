@@ -122,6 +122,18 @@
                                  <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                             </td>
                         </tr>
+                        <tr class="border-black" t-if="o.payment_move_line_ids">
+                            <td><strong>Amount Paid</strong></td>
+                            <td class="text-right">
+                                <t t-esc="o._compute_payment_applied()" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr class="border-black" t-if="o.payment_move_line_ids">
+                            <td><strong>Amount Due</strong></td>
+                            <td class="text-right">
+                                <t t-esc="o.residual" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>

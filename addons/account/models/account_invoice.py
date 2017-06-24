@@ -189,6 +189,14 @@ class AccountInvoice(models.Model):
                 })
             self.payments_widget = json.dumps(info)
 
+    def _compute_payment_applied(self):
+        amount = 0.0
+        if self.payment_move_line_ids:
+            payment_dict = json.loads(self.payments_widget)
+            for value in payment_dict['content']:
+                amount += value['amount']
+        return amount
+
     @api.one
     @api.depends('move_id.line_ids.amount_residual')
     def _compute_payments(self):
