@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Tugsbiligt Lamjav <tugsbiligt@icloud.com>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -109,11 +109,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo Project with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -130,108 +129,6 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Автомат Нэвтрэх</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Таны Odoo Төсөл аппликэшн хэвийн ажиллаж байна.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold;\">Дараа нь юу байх вэ?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                % if last_created_project:\n"
-"                                    <li dir=\"ltr\">\n"
-"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                            <span>Дараах хаяг руу имэйл илгээн даалгавар үүсгэж болно </span>\n"
-"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                            </a>\n"
-"                                        </p>\n"
-"                                    </li>\n"
-"                                % endif\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
-"<span>\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Хамтран ажиллах</span></span></span>\n"
-"                                        шинэ хэрэглэгчдийг урих</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Нэмэлт боломжуудыг идэвхижүүлэхийн тулд</span>\n"
-"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">төсөл төлөвлөгчийг</span></a></span>\n"
-"                                <span> сонирхоно уу</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Цагийг цагийн хуудсаар хяна,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Даалгавар ба нөөцүүдийг урьдчилсан мэдээгээр төлөвлө,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Ухаалаг тайлан болон цэгцтэй хянах самбар,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Даалгавар эсвэл асуудлууд дээр цагаа тооц,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Мөн өөр маш олон боломж бий...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Тусламж хэрэгтэй юу?</span>\n"
-"                                <span style=\"font-style:italic;\">Та ганцаараа биш</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Бид таньд туслахдаа үргэлж баяртай байх болно. Бидэнтэй холбоо барих: \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> Мөн та Odoo Төслийн хэргийг бүрэн гаргахын тулд манай </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/project.html\">\n"
-"                                <span style=\"text-decoration:underline;\">Хэрэглэгчийн Баримтжуулалт</span></a>\n"
-"                                </span><span> эсвэл манай </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Баримтжуулалт</span></a> -ыг ашиглаарай.\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Odoo-г таатайгаар туршаарай,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>Odoo баг<br/>Жич: Хүмүүс Odoo-д дуртай байдаг, </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">тэдний юу гэснийг сонирхоорой.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -265,6 +162,7 @@ msgstr "# Дуусах хүртэлх өдөр"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr "#Даалгаврууд"
 
@@ -605,6 +503,8 @@ msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Бид танд туслана:</strong> Хэрэв та дуртай KPI-даа хүрч чадахгүй байгаа бол бидэнтэй холбогдоорой, бид танд өөрийн гэсэн тайлангуудыг хийхэд туслах болно.\n"
+"</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -612,6 +512,8 @@ msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
+"<strong>Хойшлуулах (5 минут)</strong>\n"
+"Хурлыг төслийн амжилтуудын талаарх дэмжсэн мэдэгдэл, эерэг үгсээр дуусгаарай. Төслийг амжилттай байлгахын тулд үргэлж багийн ажлыг бататгаж, гишүүн бүрийг бие биендээ туслаж байхыг дэмжээрэй."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -619,6 +521,8 @@ msgid ""
 "<strong> Critical items (10 min)</strong>\n"
 "                                Upon completing the project status review session, summarize the critical items."
 msgstr ""
+"<strong>Шийдвэрлэх зүйлс (10 минут)</strong>\n"
+"Төслийн төлвийг дуусгахдаа сэшнийг хянаад шийдвэрлэх зүйлсийг нэгтгээрэй."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -626,11 +530,13 @@ msgid ""
 "<strong> New business issues (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
 msgstr ""
+"<strong>Бизнесийн шинэ асуудлууд (5 минут)</strong>\n"
+"Та төсөлд нөлөөлдөг ямар нэгэн зүйлийг илрүүлсэн байж болно. Төслийн төлвийн сэшнийг үргэлжлүүлэнгээ багийн гишүүд асуудлыг анхаарахад туслахын тулд энэ мэдээг хурлын эхэнд зарлаарай. Асуудал бүрт энд цаг зарцуулах боломжгүй тул хэлэлцүүлгийг хамгийн бага байлгаарай."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr ""
+msgstr "<strong>Хэлэлцэх асуудал бэлтгэх (мөн сахих)</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -638,6 +544,8 @@ msgid ""
 "<strong> Project plan status review (20 min) </strong>\n"
 "                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
 msgstr ""
+"<strong> Төсөл төлөвлөлтийн байдлыг хянах (20 минут) </strong>\n"
+"Төслийн төлөвлөгөөг үзээд багийн гишүүн бүрийг энэ долоо хоногт дуусгах даалгаврууд болон дараагийн хоёр долоо хоногт төлөвлөсөн даалгавруудын байдлыг товч танилцуулахыг зөвшөөрөх. Даалгаврууд цагтаа явагдаж байна уу, хэн нэгэн нь төлөвлөсөн эцсийн хугацаанаас хоцрох магадлал байгаа эсэхийг мэдэж болно. Мөн та төслийн бусад даалгавар эсвэл гишүүдэд нөлөөлж мэдэх аль ч тусгай анхаарах зүйлсийг хуваалцахыг багийн гишүүдэд зөвшөөрөөрэй. Энэ хэсгийг болгоомжтой удирдаарай, учир нь багийн зарим гишүүд өөрийнхөөрөө зүтгэн, үнэхээр шаардлагатай цагаас илүүг зарцуулахыг хүсдэг. Та өөрөө төслийн менежер гэдгээ санаарай."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -645,6 +553,8 @@ msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
+"<strong>Асуулт, Хариулт, Хэлэлцүүлгийн цаг (10 минут)</strong>\n"
+"Хэлэлцэгдээгүй асуудлуудын талаар асуулт асуух цагийг багтаа үргэлж өг. Энэ нь таны долоо хоногийн турш эсвэл хурлын үеэр илрүүлсэн гол зүйлсийг бататгах өөр боломжийг олгодог."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -652,6 +562,8 @@ msgid ""
 "<strong> Roll call (5 min)</strong>\n"
 "                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
+"<strong> Ирц дуудах (5 минут)</strong>\n"
+"Эхлэхээсээ өмнө хэн хэн ирсэнийг бүгдэд зарлаарай. Энэ нь залгасан багийн алсын гишүүдэд чухал бөгөөд ирээдүйд таны цагийг хэмнэх болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -659,6 +571,8 @@ msgid ""
 "<strong> Summary and follow-up items (5 min)</strong>\n"
 "                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
+"<strong> Дүгнэлт, Хяналт-шинжилгээ хийх зүйлс (5 минут)</strong>\n"
+"Төслийг урагш ахихад нь туслахын тулд үргэлж төслийн байдлын дүгнэлт болон хурлын үед илрүүлсэн үйлдлүүдийн жагсаалтаар өндөрлөж байгаарай."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -666,6 +580,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
 msgstr ""
+"<strong>Odoo-н нэгэн давуу тал бол Etherpad гэдэг Хамтарсан Тэмдэглэлийн дэвтэр юм.</strong><br/>\n"
+"Энэ нь Даалгавар ба Асуудлууд дээрх стандарт Тайлбарын хэсгийн оронд байрлах бөгөөд хэд хэдэн маш хэрэгтэй чанаруудтай."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -673,6 +589,8 @@ msgid ""
 "<strong>A problem or request from a customer</strong> that needs to be "
 "identified, solved and followed up asap."
 msgstr ""
+"Аль болох хурдан тодорхойлж, шийдэж, дагах шаардлагатай байгаа "
+"<strong>захиалагчаас ирсэн асуудал эсвэл хүсэлт</strong>."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -685,6 +603,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>Эцсийн хугацаа нэмэх</strong><br/>\n"
+"Эцсийн хугацаа даалгавар эсвэл асуудал нь төлөвлөсний дагуу урагшилж байгаа эсэхийг тогтоож, дараагийн шинэчлэлийг нь таамаглахад туслах болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -692,6 +612,8 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
+"Тодорхойлсон хугацааны мөчлөгт багтаж хийгдэх ёстой <strong>дотоод үйл "
+"ажиллагаа</strong>."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -701,7 +623,7 @@ msgstr "<strong>Шинжилгээ тайлангууд</strong> (жил бүр�
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr ""
+msgstr "<strong>Цагийн хуудсуудаа батла</strong> (7 хоног бүр)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -709,6 +631,8 @@ msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
+"<strong>Оролцогчдыг бэлдүүлэх</strong><br/>\n"
+"Үр ашигтай хурал зохион байгуулахын тулд оролцогчдыг эхлээд бэлтгэх хэрэгтэй. Тэдэнд хэрхэн хамтран ажиллахыг нь мэдээллээрэй."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -716,6 +640,8 @@ msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
 "                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
+"<strong>Илгээж буй мэссежүүддээ анхааралтай хандаарай</strong><br/>\n"
+"Odoo-гоор мэссеж илгээх нь дотоод ажилчид, гадаад хэрэглэгчид эсвэл захиалагчид зэрэг бүх дагагчидад таны мэссежийг хадгалсан имэйлийг автоматаар илгээх болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -728,6 +654,8 @@ msgid ""
 "<strong>Choose the right day</strong><br/>\n"
 "                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
 msgstr ""
+"<strong>Зөв өдрийг сонгох</strong><br/>\n"
+"Даваа гарагийн өглөөг тогтмол хурлын өдөр болгохоос зайлс хий; долоо хоногийн сүүлээр уулзах нь  оролцогчдод хуралд бэлтгэх хугацаа өгч, дагалдах өдрүүдэд нь тодорхой зорилтуудын төлөө ажиллах боломжийг олгодог."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -735,6 +663,8 @@ msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
 msgstr ""
+"<strong>Үндсэн цэсний 'Тайлан' дээр дарж</strong> профайл бүрт хамаатай "
+"статистикийг гаргаж авна уу:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -747,6 +677,8 @@ msgid ""
 "<strong>Create tasks and issues by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>Даалгавар ба асуудлуудыг имэйлээр үүсгэх</strong><br/>\n"
+"Odoo дотор төсөл бүр имэйл зохиомол нэртэй байдаг. Хэрэв та энэ зохиомол нэр рүү имэйл илгээвэл энэ нь төслийн эхний шатанд даалгавар эсвэл асуудлыг автоматаар үүсгэдэг бөгөөд имэйлийн бүх хүлээн авагчдыг үндсэн дагагчидаар нь нэмдэг."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -771,6 +703,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Issues."
 msgstr ""
+"<strong>Дасгал:</strong> Асуудлуудын 'Хаахад гарах дундаж саатал' -ын "
+"сараарх график гаргах гэж оролдоорой."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -778,6 +712,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to get a view of the workload for this week "
 "for all your employees (planned hours)."
 msgstr ""
+"<strong>Дасгал:</strong> Бүх ажилчдын энэ долоо хоногийн ажлын ачааллыг "
+"гаргах гэж оролдоорой (төлөвлөсөн цагууд)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -792,6 +728,8 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
 msgstr ""
+"<strong>Зөвхөн хэрэгтэйгээ дага</strong><br/>\n"
+"Мэдэгдлийг ашиглах хамгийн энгийн арга бол бүхэл төслийг дагах юм: та төслийн бүх шинэ ба байгаа даалгавар, асуудлуудын талаарх мэдэгдлүүдийг хүлээн авах болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -806,7 +744,7 @@ msgstr "<strong>Даалгавруудад:</strong>"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr ""
+msgstr "Ажилчдынхаа ажиллаж байгаа зүйлс дээр <strong>тайлан авах</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -814,6 +752,8 @@ msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
 msgstr ""
+"Даалгаврыг дуусгахад шаардагдах хугацааны талаар <strong>статистик</strong> "
+"авах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -845,30 +785,36 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>Захиалагчдаа нэхэмжил</strong> (сар бүр)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Invoicing your customers</strong> on Time &amp; Material projects"
 msgstr ""
+"Цаг ба Материалын төслүүд дээр <strong>захиалагчдаа нэхэмжлэх</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
 msgstr ""
+"<strong>Төслүүдээ бүтэцжүүлэхэд тусламж хэрэгтэй байна уу?</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
 msgstr ""
+"<strong>Цагийн хуудсаа удирдахад тусламж хэрэгтэй байна уу? Бидэнтэй одоо "
+"холбогд:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
+"<strong>Төслүүдээ тодорхойлоход тусламж хэрэгтэй байна уу? Бидэнтэй одоо "
+"холбогд.</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -916,7 +862,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>There are two ways of managing your Kanban stages:</strong>"
-msgstr ""
+msgstr "<strong>Канбан шатуудаа удирдах хоёр арга бий:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -924,6 +870,8 @@ msgid ""
 "<strong>To increase the efficiency of your Projects</strong>, you should "
 "have a look at some of our other apps:"
 msgstr ""
+"<strong>Та төслүүдийнхээ үр ашгийг нэмэгдүүлэхийн тулд</strong>, манай бусад"
+" апп-уудыг сонирхох хэрэгтэй:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -949,12 +897,13 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What Activities</strong> would you like to manage?"
-msgstr ""
+msgstr "Та <strong>ямар үйл ажиллагаануудыг</strong> удирдмаар байна?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>What do you expect</strong> from using Odoo Project?"
 msgstr ""
+"Odoo Төслийг хэрэглэснээр <strong>та ямар үр дүнг хүлээж байгаа вэ?</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -962,6 +911,8 @@ msgid ""
 "<strong>You have different users writing Tasks descriptions</strong><br/>\n"
 "                            It can quickly become messy if everyone uses his own layout. Etherpad will allow you to create a basic template with a few titles and bullet points, making it much easier for everyone."
 msgstr ""
+"<strong>Даалгаврын тайлбарыг өөр өөр хэрэглэгчид бичих</strong><br/>\n"
+"Хүн бүр өөрсдийн төлөвлөлтийг ашиглавал хурдан замбараагүй болно. Etherpad нь цөөхөн гарчиг, цэгтэй ерөнхий үлгэр үүсгэх боложмоор хангана. Энэ нь бүгдэд хамаагүй хялбар болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -969,6 +920,8 @@ msgid ""
 "<strong>You have to manage versions and track changes</strong><br/>\n"
 "                            Etherpad auto-saves the document at regular short intervals and users can permanently save specific versions at any time. Plus, a \"time slider\" feature also allows anyone to explore the history of the pad."
 msgstr ""
+"<strong>Та хувилбаруудыг удирдаж, өөрчлөлтүүдийг хянах хэрэгтэй</strong><br/>\n"
+"Etherpad нь баримтыг тогтмол богино хугацаанд автоматаар хадгалдаг бөгөөд хэрэглэгчид хэдийд ч тодорхой хувилбарыг байнгаар хадгалах боломжтой. Нэмээд \"хугацааны слайдер\" нь хэнийг ч пэд-ний түүхийг үзэх боломжоор хангадаг."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -976,6 +929,8 @@ msgid ""
 "<strong>You organize distant meetings</strong><br/>\n"
 "                            Etherpad allows users to simultaneously edit a text document, see all of the edits in real-time and with the ability to display each author's text in their own color."
 msgstr ""
+"<strong>Та зайн хурал зохион байгуулдаг</strong><br/>\n"
+"Etherpad нь хэрэглэгчдийг нэгэн зэрэг текст баримтыг засварлаж, бүх өөрчлөлтийг бодит-цагаар харж, зохиогч бүрийн текстийг өөрсдийх нь өнгөөр харуулах боломжоор хангадаг."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_defaults
@@ -993,6 +948,9 @@ msgid ""
 "automatically created into a 'Support level 1' project based on the original"
 " email from the customer."
 msgstr ""
+"Захиалагч support@yourcompany.com руу гомдол илгээнэ: захиалагчаас ирсэн эх "
+"имэйл дээр үндэслэн 'Дэмжлэгийн түвшин 1' төсөл рүү Асуудал автоматаар "
+"үүсгэгдэнэ."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1000,6 +958,8 @@ msgid ""
 "A project usually involves many stakeholders, be it the project's sponsor, resources, customers or external contractors. But the most important person in a project is usually the Project Manager.<br/>\n"
 "                    In Odoo, the Project Managers have the responsibility of managing the Kanban view: they ensure smooth progression of the projects, minimal downtime between stages and optimal work distribution between resources."
 msgstr ""
+"Төсөлд ивээн тэтгэгч, нөөц, захиалагч эсвэл гадаад гэрээлэгчид зэрэг олон оролцогч талууд ихэвчлэн хамрагддаг. Гэхдээ төслийн хамгийн чухал хүн бол Төслийн Менежер байдаг.<br/>\n"
+"Odoo -д Төслийн Менежерүүд нь Канбан харагдацыг удирдах үүрэгтэй: төслийг тогтмол ахицтай байлгах, үе шатуудын хооронд идэвхигүй хугацааг хамгийн бага байлгах, нөөц хооронд ажлыг хамгийн оновчтойгоор хуваарилах."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_kanban_state
@@ -1037,6 +997,8 @@ msgid ""
 "Activate 'Allow invoicing based on timesheets' from the <i>Human Resources "
 "Settings</i>."
 msgstr ""
+"<i>Хүний нөөцийн тохиргоо</i> дээрх 'Цагийн хуудсаар нэхэмжлэх'-ийг "
+"идэвхижүүлнэ үү."
 
 #. module: project
 #: model:ir.actions.server,name:project.activate_sample_project
@@ -1062,6 +1024,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
 msgstr ""
+"<b>Даалгавруудын шатуудыг</b> тохируулахын тулд багана "
+"нэмээрэй.<br/><i>ж.нь. Шинжилгээ &gt; Хөгжүүлэлт &gt; Дууссан</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -1073,7 +1037,7 @@ msgstr "Эрхэмлэсэнээс Нэмэх/Хасах"
 #: code:addons/project/static/src/js/web_planner_project.js:55
 #, python-format
 msgid "Added in current sprint"
-msgstr ""
+msgstr "Тухайн гүйлтэд нэмэгдсэн"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -1117,6 +1081,8 @@ msgid ""
 "will  reinforce the need for each of them to be prepared for status "
 "meetings."
 msgstr ""
+"Мөн жишээгээр удирдах. Таны хир зэрэг бэлтгэгдсэн байгааг багийн гишүүд "
+"хараад өөрсдийгөө явцын хурлуудад бэлдэхийг тус бүртээ хичээх болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1124,6 +1090,9 @@ msgid ""
 "Alternatively, Timesheets can be added directly from Tasks by activating "
 "<strong>'Log work activities on tasks'</strong> in the"
 msgstr ""
+"Өөрөөр, энд <strong>'Даалгаврууд дээр ажлын үйл ажиллагааг "
+"тэмдэглэх'</strong> гэдгийг идэвхижүүлсэнээр Цагийн хуудсууд шууд "
+"Даалгавраас нэмэгдэх боломжтой:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1317,7 +1286,7 @@ msgstr ""
 #: model:project.task,legend_done:project.project_task_7
 #: model:project.task.type,legend_done:project.project_stage_1
 msgid "Buzz or set as done"
-msgstr ""
+msgstr "Мэдэгдэх эсвэл хийснээр тохируулах"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_responsible
@@ -1485,7 +1454,7 @@ msgstr "Баяр хүргэе, та хийж дуусгажээ !"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Consulting mission"
-msgstr ""
+msgstr "Зөвлөх үүрэг"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
@@ -1502,14 +1471,14 @@ msgstr "Гэрээ/Шинжилгээ"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Control projects quality and satisfaction"
-msgstr ""
+msgstr "Төслийн чанар, сэтгэл ханамжийг удирдах"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:33
 #, python-format
 msgid "Copywriting / Design"
-msgstr ""
+msgstr "Зар сурталчилгаа / Загвар"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1519,7 +1488,7 @@ msgstr "Үүсгэх"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Create a Gantt chart with your projects tasks and deadlines"
-msgstr ""
+msgstr "Төслийн даалгавар, дуусах хугацаагаар Гант чарт үүсгэх"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
@@ -1537,6 +1506,8 @@ msgid ""
 "Create a task by sending an email to a project alias with one of your "
 "colleagues in copy"
 msgstr ""
+"Төслийн давхар нэр рүү хамт олныхоо нэгийг хуулбарлан имэйл илгээж даалгавар"
+" үүсгэх"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1634,33 +1605,33 @@ msgstr "Харилцагчийн үйлчилгээ"
 #: code:addons/project/static/src/js/web_planner_project.js:73
 #, python-format
 msgid "Customer feedback has been requested"
-msgstr "Хэрэглэгчийн саналын хүсэлт илгээгдсэн"
+msgstr "Захиалагчийн саналын хүсэлт илгээгдсэн"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:91
 #, python-format
 msgid "Customer has cancelled repair"
-msgstr "Хэрэглэгч засварыг цуцласан"
+msgstr "Захиалагч засварыг цуцласан"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:71
 #, python-format
 msgid "Customer has reported new issue"
-msgstr "Хэрэглэгч шинэ асуудал мэдээллэсэн"
+msgstr "Захиалагч шинэ асуудал мэдээллэсэн"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:70
 #, python-format
 msgid "Customer service has found new issue"
-msgstr "Хэрэглэгчийн үйлчилгээ шинэ асуудал олсон"
+msgstr "Захиалагчийн үйлчилгээ шинэ асуудал олсон"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Customer support tickets"
-msgstr "Хэрэглэгчийн дэмжлэгийн тасалбарууд"
+msgstr "Захиалагчийн дэмжлэгийн тасалбарууд"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1720,7 +1691,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Deploy"
-msgstr ""
+msgstr "Байрлуулах"
 
 #. module: project
 #. openerp-web
@@ -1769,7 +1740,7 @@ msgstr "Дэлгэцийн Нэр"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr "Харуулсан Зураг"
+msgstr "Харуулах Зураг"
 
 #. module: project
 #. openerp-web
@@ -1817,7 +1788,7 @@ msgid ""
 "Don't create a Project for each of your customers - this will be too "
 "complicated to manage properly."
 msgstr ""
-"Харилцагч болгон дээрээ Төсөл битгий үүсгэ - энэ нь удирдахад хэтэрхий "
+"Захиалагч болгон дээрээ Төсөл битгий үүсгэ - энэ нь удирдахад хэтэрхий "
 "төвөгтэй байх болно."
 
 #. module: project
@@ -1847,7 +1818,7 @@ msgid ""
 "During a meeting, a customer asks a manager for a few modifications to a "
 "project."
 msgstr ""
-"Уулзалтын үеэр, харилцагч төсөлд цөөн хэдэн өөрчлөлт оруулахыг менежерээс "
+"Уулзалтын үеэр захиалагч төсөлд цөөн хэдэн өөрчлөлт оруулахыг менежерээс "
 "хүснэ."
 
 #. module: project
@@ -1925,6 +1896,8 @@ msgid ""
 "Every business is different.<br/>\n"
 "                    Odoo allows you to customize every application and it's usually a good idea to customize screens to fit your project needs."
 msgstr ""
+"Бизнес болгон адилгүй.<br/>\n"
+"Odoo аппликэшн бүрийг өөрчлөх боломжоор хангадаг бөгөөд төслийн хэрэгцээнд тохируулан дэлгэцүүдийг өөрчлөх нь зүйтэй юм."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1936,7 +1909,7 @@ msgstr "Жишээ"
 #: code:addons/project/static/src/js/web_planner_project.js:74
 #, python-format
 msgid "Expert advice has been requested"
-msgstr ""
+msgstr "Шинжээчийн зөвлөгөө хүссэн"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date
@@ -1965,21 +1938,21 @@ msgstr "Нэмэлт мэдээлэл"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Extra useful for when you're with a customer or in a meeting."
-msgstr ""
+msgstr "Захиалагчтай хамт байх эсвэл уулзалтын үеэр танд маш хэрэгтэй."
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:88
 #, python-format
 msgid "Feedback from customer requested"
-msgstr ""
+msgstr "Захиалагчийн саналыг хүссэн"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:26
 #, python-format
 msgid "Finally task is deployed"
-msgstr ""
+msgstr "Эцэст нь даалгаврыг гаргасан"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_fold
@@ -2003,7 +1976,7 @@ msgstr "Миний дагасан"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "For employees, the"
-msgstr ""
+msgstr "Ажилчдын хувьд, "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2011,6 +1984,8 @@ msgid ""
 "For example, risk and issue owners should come prepared to share the status "
 "of their item and, ideally, a path to resolution."
 msgstr ""
+"Жишээлбэл, эрсдэл ба асуудлын эзэд өөрсдийн зүйлийн төлөв байдлыг, яваандаа "
+"шийдвэрлэх аргыг хуваалцахад бэлэн ирэх хэрэгтэй."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2027,6 +2002,8 @@ msgid ""
 "For the same reason, don't create a Project based on weeks or time (example:"
 " Scrum)."
 msgstr ""
+"Ижил шалтгаантайгаар, Төслийг 7 хоног эсвэл хугацаан дээр үндэслэж битгий "
+"үүсгэ (жишээ: Scrum)."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -2036,7 +2013,7 @@ msgstr "Урьдчилсан таамаг"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts, planning and Gantt charts"
-msgstr ""
+msgstr "Урьдчилсан мэдээ, төлөвлөх, Гант чартууд"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2046,27 +2023,27 @@ msgstr "АА"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Generate a timesheet report to attach to your customer invoices"
-msgstr ""
+msgstr "Захиалагчийн нэхэмжлэл дээр хавсаргах цагийн хуудсын тайлан гарга"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get full synchronization with Odoo"
-msgstr ""
+msgstr "Odoo - гоор бүрэн синхрончлоорой"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get it on Google Play"
-msgstr ""
+msgstr "Google Play дээрээс авах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Get more apps"
-msgstr ""
+msgstr "Илүү апп-ууд авах"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_label_tasks
 msgid "Gives label to tasks on project's kanban view."
-msgstr ""
+msgstr "Төслийн канбан харагдац дээрх даалгавруудад шошго өгдөг."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_sequence
@@ -2087,6 +2064,9 @@ msgid ""
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
 msgstr ""
+"Сайн байна! Та Төслийн Удирдлагын хичээлийг дуусгалаа. Та өөрийн компанид "
+"Төслийн Удирдлагыг суурилуулахдаа үргэлжлүүлэн <b>нэвтрүүлэх зааврыг</b> "
+"дагаж болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2098,11 +2078,12 @@ msgstr "Амжилт хүсье!"
 msgid ""
 "Green: the Task is ready for next stage (the job for this stage is complete)"
 msgstr ""
+"Ногоон: Даалгавар дараагийн шатандаа ороход бэлэн (энэ шатын ажил дууссан)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Grey: the Task is in progress (someone is working on it)"
-msgstr ""
+msgstr "Саарал: Даалгавар хийгдэж байна (хэн нэгэн үүн дээр ажиллаж байна)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2114,12 +2095,12 @@ msgstr "Бүлэглэх"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Here are some of the <strong>available customizations</strong>"
-msgstr ""
+msgstr "Дараах нь зарим <strong>боломжит өөрчлөлтүүд</strong> байна"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 msgid "Here, you can create new tasks"
-msgstr ""
+msgstr "Энд та шинэ даалгавар үүсгэх боломжтой"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2137,12 +2118,18 @@ msgid ""
 "   if website is activated, portal users may see project, tasks or issues followed by\n"
 "   them or by someone of their company\n"
 msgstr ""
+"Тухайн төсөлд хамаарах даалгавар эсвэл асуудлуудын харагдацыг агуулдаг:\n"
+"- Зөвхөн урилгаар: Ажилчид зөвхөн дагасан төсөл, даалгавар эсвэл асуудлуудыг харах боломжтой.\n"
+"- Бүх ажилчдад харагдах: Ажилчид бүх төсөл, даалгавар эсвэл асуудлуудыг харах боломжтой.\n"
+"- Дагаж буй захиалагчдад харагдах: Ажилчид бүгдийг харах боломжтой;\n"
+"вэбсайтыг идэвхижүүлсэн тохиолдолд, портал хэрэглэгчид өөрсдийн эсвэл \n"
+"компанийх нь хэн нэгний дагасан төсөл, даалгавар эсвэл асуудлуудыг харах боломжтой\n"
 
 #. module: project
 #: code:addons/project/models/project.py:567
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Хүлээн зөвшөөрч байна"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_id
@@ -2168,19 +2155,19 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:103
 #, python-format
 msgid "Idea has been transformed into concrete actions"
-msgstr ""
+msgstr "Санааг бодит үйлдэл болгосон"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:102
 #, python-format
 msgid "Idea is fully explained"
-msgstr ""
+msgstr "Санааг бүрэн тайлбарласан"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Ideally, a person should only be responsible for one project."
-msgstr ""
+msgstr "Нэг хүнд нэг л төсөл оноох нь зохимжтой байдаг."
 
 #. module: project
 #. openerp-web
@@ -2192,7 +2179,7 @@ msgstr "Санаанууд"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Identify problems and blocking points more easily"
-msgstr ""
+msgstr "Асуудал болон хаалтын цэгүүдийг илүү хялбар тодорхойлох"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type_mail_template_id
@@ -2200,6 +2187,8 @@ msgid ""
 "If set an email will be sent to the customer when the task or issue reaches "
 "this step."
 msgstr ""
+"Үүнийг тохируулсан бол даалгавар эсвэл асуудал нь энэ шатан дээр хүрч ирэхэд"
+" захиалагчид имэйл илгээгдэх болно."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -2216,6 +2205,8 @@ msgid ""
 "If you don't want to receive email notifications, you can uncheck the option"
 " in your"
 msgstr ""
+"Хэрэв та имэйл мэдэгдлүүд хүлээн авахыг хүсэхгүй байвал, дараах хэсэгт "
+"сонголтын чагтыг авч болно"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2223,6 +2214,9 @@ msgid ""
 "If you want to limit access for certain users or customers, simply use the "
 "Privacy / Visibility settings in the Project Settings."
 msgstr ""
+"Хэрэв та тодорхой хэрэглэгч эсвэл захиалагчдын хандах эрхийг хязгаарлахыг "
+"хүсч байвал Төслийн Тохиргоо доторх Нууцлал / Харагдацын тохиргоог "
+"ашиглаарай."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2231,6 +2225,9 @@ msgid ""
 "extract a Timesheet of the tasks and issues to invoice directly to the "
 "customer. To do that:"
 msgstr ""
+"Хэрэв та Цаг ба Материал төсөл дээр ажилладаг бол захиалагч руу шууд "
+"нэхэмжлэхийн тулд даалгавар болон асуудлуудын Цагийн хуудсыг гаргах "
+"хэрэгтэй. Ингэхийн тулд:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2240,12 +2237,12 @@ msgstr "Хэрэгжүүлэх"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve"
-msgstr ""
+msgstr "Сайжруулах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Improve collaboration with customers"
-msgstr ""
+msgstr "Захиалагчтай илүү хамтран ажиллах"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2287,6 +2284,9 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
+"Энэ төсөлтэй холбогдох дотоод э-мэйл. Ирэх э-мэйлүүд нь автоматаар "
+"даалгавартай ижилтгэгдэнэ. (Эсвэл асуудал хөтлөх модуль суусан бол "
+"асуудалтай ижилтгэгдэнэ)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2294,11 +2294,13 @@ msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
 msgstr ""
+"Дотоод тэмдэглэлүүд нь Чаттер дээр харагдах боловч Odoo -н Inbox -д "
+"мэдэгдэхгүй."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issue Tracking app."
-msgstr ""
+msgstr "Асуудал Хөтлөх апп."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
@@ -2310,14 +2312,14 @@ msgstr "Асуудлын Хувилбар"
 #: code:addons/project/static/src/js/web_planner_project.js:72
 #, python-format
 msgid "Issue is being worked on"
-msgstr ""
+msgstr "Асуудал дээр ажиллаж байна"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Issue is resolved"
-msgstr ""
+msgstr "Асуудлыг шийдсэн"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2338,6 +2340,11 @@ msgid ""
 " as milestones that have been met or are ahead of schedule. This will make "
 "participants feel motivated to engage in the conversation."
 msgstr ""
+"\"Төслийн хариулт\" - аар эхлэх нь дээр, тухайлбал: \"Бид хоёр долоо "
+"хоногоор хоцорч байна\", \"Бид төлөвлөсөн төсөвтөө байна\" эсвэл \"Бид явцын"
+" моделийн 50%-ийг дуусгасан байна\". Мөн боломжтой бол хурлыг хүрсэн болон "
+"хуваариас түрүүлж яваа гол үе шатууд зэрэг эерэг зүйлээр эхлээрэй. Ингэснээр"
+" оролцогчид ярианд оролцох урам зоригийг авах болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2345,6 +2352,8 @@ msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
 "                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task or an issue can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
 msgstr ""
+"Odoo дотор үйл ажиллагаануудаа хэрхэн бодит төсөл болгох талаар бодох цаг иржээ.<br/>\n"
+"Ингэхийн тулд хамгийн чухал нь төслийнхөө үе шатуудыг тодорхойлох юм. Үе шатууд нь даалгавар эсвэл асуудлын үүслээс төгсгөл хүртэл туулж өнгөрөх ялгаатай алхамууд юм. Энэ нь төслүүдийн бидний хэлдэгээр 'Канбан' харагдац дээр гарах болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2352,12 +2361,16 @@ msgid ""
 "It's essential to be clear about why you want to use Odoo Project and what your goals are.\n"
 "                        Indeed, there are many ways to manage a project, to find the best one for you, you need to know exactly what you want to achieve. And later on, we will hopefully transform your objectives into real improvements for your company."
 msgstr ""
+"Odoo Төслийг ашиглах болсон шалтгаан ба зорилгуудаа тодорхой болгох зайлшгүй шаардлагатай.\n"
+"Төслийг удирдах олон арга байдгаас өөрт яг тохирохыг нь олохын тулд та яг юунд хүрмээр байгаагаа мэдэх хэрэгтэй. Дараа нь, бид таны зорилтуудыг бодит сайжруулалт болгон хувиргах болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "It's for logging every change, event or message related to the Document."
 msgstr ""
+"Энэ нь Баримттай холбоотой өөрчлөлт, арга хэмжээ эсвэл мэссеж бүрийг "
+"хөтлөхөд зориулагдсан."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2366,18 +2379,21 @@ msgid ""
 "a year. Here are some KPIs you should take a look at. Ask yourself 'How can "
 "they be improved?'"
 msgstr ""
+"Даалгавар, асуудлуудаа жилд нэг удаа шинжилж байх нь танд хэрэгтэй. Дараах "
+"зарим KPI - уудыг харах хэрэгтэй. 'Эдгээрийг яаж сайжруулж болох вэ?' гэж "
+"өөрөөсөө асуугаарай."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_blocked
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Канбан Хаагдсан Тайлбар"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_normal
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Канбан Үргэлжилж буй Тайлбар"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2399,17 +2415,17 @@ msgstr "Канбан Төлөв"
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Канбан Зөв Тайлбар"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Keep track of messages and conversations"
-msgstr ""
+msgstr "Мэссеж ба харилцан яриануудыг дагах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Know what my employees are working on"
-msgstr ""
+msgstr "Миний ажилчид юун дээр ажиллаж байгааг мэдэх"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2455,6 +2471,8 @@ msgid ""
 "Learn how to better organize your company using Projects, Tasks, Issues and "
 "Timesheets."
 msgstr ""
+"Төсөл, Даалгавар, Асуудал, Цагийн хуудсыг ашиглан компаниа хэрхэн илүү "
+"зохион байгуулахад суралцаарай."
 
 #. module: project
 #. openerp-web
@@ -2469,6 +2487,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
 "-This installs the module pad."
 msgstr ""
+"Компани дундын засварлагчийн ямар хувилбарыг холбох боломжийг олгоно (ж: http://ietherpad.com/).\n"
+"-Энэ нь pad модулийг суулгадаг."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2484,7 +2504,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
-msgstr ""
+msgstr "Хийх зүйлсээ жагсаа, төлөвлө, хяна"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -2503,12 +2523,16 @@ msgid ""
 "Managing a group of people, a team or a department (example: R&amp;D team, "
 "HR Department, etc.)"
 msgstr ""
+"Бүлэг хүмүүс, баг эсвэл хэлтсийг удирдах (жишээ нь: Судалгаа ба "
+"хөгжүүлэлтийн баг, Хүний Нөөцийн Хэлтэс, г.м.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Managing long projects that span over many months and/or need Timesheets."
 msgstr ""
+"Олон сараар үргэлжилдэг ба/эсвэл Цагийн хуудас хэрэгтэй урт төслүүдийг "
+"удирдах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2519,6 +2543,11 @@ msgid ""
 "stages and tasks you want to be informed about. Fortunately, Odoo Project "
 "has many levels of notifications and messages you can choose from."
 msgstr ""
+"Мэдэгдлүүдийг удирдах нь чухал: хэт цөөн бол чухал мэдээллээс хоцрох, хэт "
+"олон бол хэрэггүй мэдээллээр дүүрэх болно. Үүнийг аргалах арга нь мэдэхийг "
+"хүссэн төсөл, шат, даалгавруудын хоорондох зөв тэнцвэрийг олох юм. Аз "
+"болоход Odoo Төсөлд таны сонгох боломжтой мэдэгдэл, мэссежийн олон түвшин "
+"байдаг."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2662,12 +2691,17 @@ msgid ""
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
 msgstr ""
+"Odoo Төсөл нь үйл ажиллагаа болон даалгавруудаа компаний бүх хүмүүст \n"
+"харагддаг болгох маш хурдан бас хялбар арга юм. Зүйлс хэрхэн урагшилж \n"
+"байгааг дагаж, гацах үед нь анзаарч, хэн хариуцаж байгааг бүгдийг нэг дороос."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_generate_project_alias
 msgid ""
 "Odoo will generate an email alias at the project creation from project name."
 msgstr ""
+"Төслийг үүсгэх явцад Odoo нь төслийн нэрээс автоматаар имэйл давхар нэр "
+"үүсгэнэ."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -2676,6 +2710,9 @@ msgid ""
 "efficiently. You can track progress, discuss on tasks, attach documents, "
 "etc."
 msgstr ""
+"Odoo - н төслийн удирдлага нь даалгаврын сувгийг үр ашигтайгаар удирдахад "
+"тусладаг. Та явцыг хянах, даалгавар дээр хэлэлцэх, баримт хавсаргах, г.м. "
+"боломжтой."
 
 #. module: project
 #: code:addons/project/models/project.py:203
@@ -2690,6 +2727,7 @@ msgid ""
 "Once a Timesheet is confirmed by an employee, it needs to be Approved by a "
 "manager in the"
 msgstr ""
+"Цагийн хуудсыг ажилтан батласны дараа түүнийг менежер энд Батлах ёстой"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_force_thread_id
@@ -2713,6 +2751,8 @@ msgid ""
 "Or, if you are using Issues, by activating 'Activate timesheets on issues', "
 "also in the"
 msgstr ""
+"Эсвэл, хэрэв та Асуудлуудыг ашиглаж байгаа бол 'Асуудал дээр цагийн хуудсыг "
+"идэвхижүүлэх' - г идэвхижүүлсэнээр, мөн "
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2725,7 +2765,7 @@ msgid ""
 "Organize your activities (plan tasks, track issues, invoice timesheets) for "
 "internal, personal or customer projects."
 msgstr ""
-"Дотоодын, хувийн эсвэл хэрэглэгчийн төслүүд дээр үйл ажиллагаануудаа "
+"Дотоодын, хувийн эсвэл захиалагчийн төслүүд дээр үйл ажиллагаануудаа "
 "(даалгавруудыг төлөвлөх, асуудлуудыг мөшгих, цагийн хуудсуудыг нэхэмжлэх) "
 "зохион байгуулна уу."
 
@@ -2734,6 +2774,8 @@ msgstr ""
 msgid ""
 "Organize your company, from personal tasks to collaborative meeting minutes."
 msgstr ""
+"Хувийн даалгавруудаас авахуулаад хамтарсан хурлын минутуудыг хүртэл "
+"компанийхаа бүгдийг зохион байгуула."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2747,6 +2789,8 @@ msgid ""
 "Override the default value displayed for the blocked state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын хаагдсан "
+"төлөвт харуулсан анхны утгыг дарж бичих."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_done
@@ -2755,6 +2799,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын дууссан "
+"төлөвт харуулсан анхны утгыг дарж бичих."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_legend_normal
@@ -2763,6 +2809,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection, when the task or issue is in that stage."
 msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын энгийн "
+"төлөвт харуулсан анхны утгыг дарж бичих."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
@@ -2803,7 +2851,7 @@ msgstr "Харилцагч"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
-msgstr ""
+msgstr "Өдрийнхөө үйл ажиллагааг төлөвлө"
 
 #. module: project
 #: model:ir.model,name:project.model_web_planner
@@ -2817,6 +2865,8 @@ msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
 "to delete."
 msgstr ""
+"Төсөл дээрх устгахыг хүсч байгаа бүртгэлүүдтэй холбогдсон даалгавруудыг "
+"устгана уу."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_contact
@@ -2961,7 +3011,7 @@ msgstr "Даалгавар дээрх үнэлгээ"
 #: code:addons/project/static/src/js/web_planner_project.js:40
 #, python-format
 msgid "Ready for layout / copywriting"
-msgstr ""
+msgstr "Төлөвлөлт / зар сурталчилгаанд бэлэн"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -3047,7 +3097,7 @@ msgstr "Ковер зургийг арилгах"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Repair Workshop"
-msgstr ""
+msgstr "Засварын Ажлын хэсэг"
 
 #. module: project
 #. openerp-web
@@ -3098,7 +3148,7 @@ msgstr "Odoo - с гадуур ажилладаг, үргэлж боломжто
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
-msgstr ""
+msgstr "Scrum Аргачлал"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_management
@@ -3128,6 +3178,8 @@ msgid ""
 "Send an automatic confirmation to all issue emails sent to your customer "
 "support"
 msgstr ""
+"Захиалагчийн дэмжлэгт илгээгдсэн бүх асуудлын имэйлд автомат баталгаажуулалт"
+" илгээх"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_sequence
@@ -3139,7 +3191,7 @@ msgstr "Дараалал"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Service Level Agreement (SLA)"
-msgstr ""
+msgstr "Үйлчилгээний Түвшний Гэрээ (ҮТГ)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
@@ -3163,7 +3215,7 @@ msgstr "Тохиргоо"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Severity"
-msgstr ""
+msgstr "Хүндрэлийн зэрэг"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3215,7 +3267,7 @@ msgstr "Даалгаврын дэлгэрэнгүй тодорхойлолт б�
 #: code:addons/project/static/src/js/web_planner_project.js:48
 #, python-format
 msgid "Sprint"
-msgstr ""
+msgstr "Ухасхийх"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_id
@@ -3254,7 +3306,7 @@ msgstr "Үе"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Start / Stop a timer in one click"
-msgstr ""
+msgstr "Нэг даралтаар таймерыг эхлүүлэх / зогсоох"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -3392,6 +3444,7 @@ msgstr "Даалгавар дараагийн үед бэлэн"
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3433,6 +3486,8 @@ msgstr "Даалгаврын шинжилгээ"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks are the main mechanism in Odoo and are activated by default."
 msgstr ""
+"Даалгаврууд нь Odoo дахь үндсэн механизм бөгөөд анхнаасаа идэвхижүүлэгдсэн "
+"байдаг."
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -3451,7 +3506,7 @@ msgstr "Тест"
 #: code:addons/project/static/src/js/web_planner_project.js:57
 #, python-format
 msgid "Test is OK, need to document"
-msgstr ""
+msgstr "Тест давгүй, баримтжуулах хэрэгтэй"
 
 #. module: project
 #. openerp-web
@@ -3470,6 +3525,12 @@ msgid ""
 " mean it's always a good idea: let's start by helping you understand what "
 "can be a good project."
 msgstr ""
+"Шинэ бүтээгдэхүүний хөгжүүлэлтээс авахуулаад захиалагчийн дэмжлэгийн өдөр "
+"тутмын үйл ажиллагаанууд хүртэлх олон үйл ажиллагааг удирдахад Odoo Төсөл "
+"апп-г ашиглах боломжтой. Жаахан бүтээлч байдлаар хандаад үүнийг бүр "
+"маркетингийн харилцаа эсвэл хувийн төслүүдийг удирдахад ч ашигладаг болгох "
+"боломжтой. Гэхдээ хийх боломжтой гэдэг нь энэ үргэлж зөв санаа гэсэн үг биш "
+"юм: сайн төсөл ямар байдгийг ойлгохоос эхлэе."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model
@@ -3515,7 +3576,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "The same features as the Chrome extension, but on your mobile phone!"
-msgstr ""
+msgstr "Chrome өргөтгөлтэй ижил боломжууд таны утсан дээр!"
 
 #. module: project
 #. openerp-web
@@ -3525,11 +3586,13 @@ msgid ""
 "There is no available image to be set as cover. Send a message on the task "
 "with an attached image."
 msgstr ""
+"Ковер болгох боломжит зураг алга. Даалгавар дээр зургийг хавсаргасан мэссеж "
+"илгээнэ үү."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
 msgid "This allows customers to give rating on provided services"
-msgstr ""
+msgstr "Энэ нь захиалагчдад авсан үйлчилгээндээ үнэлгээ өгөх боломжийг олгоно"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3538,6 +3601,8 @@ msgid ""
 "from customers will be transformed into an issue that you'll be able to "
 "track easily!"
 msgstr ""
+"Энэ нь ялангуяа тусламж, дэмжлэгийг удирдахад хэрэгтэй: захиалагчаас ирсэн "
+"бүх имэйлийг амархан хянах боломжтой асуудал болгон хувиргах болно!"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3564,6 +3629,9 @@ msgid ""
 "This whole process might take you a few hours, but don't worry, you can take a break and\n"
 "                        return to it at any time: your progress is automatically saved."
 msgstr ""
+"Энэ бүхэл үйл явц хэдэн цаг болж магадгүй, гэхдээ битгий санаа зов, та "
+"завсарлага аваад хэдийд ч эргэж ирж болно: таны дэвшлийг автоматаар "
+"хадгалдаг."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3571,6 +3639,8 @@ msgid ""
 "This will add an Invoice Tasks menu in the Project module, that can be used "
 "to select the Timesheet to invoice."
 msgstr ""
+"Энэ нь нэхэмжлэх Цагийн хуудсыг сонгоход ашиглах боломжтой Даалгаврууд "
+"нэхэмжлэх цэсийг Төслийн модуль дээр нэмэх болно."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
@@ -3582,6 +3652,8 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Энэ нь төсөл болон даалгаврууд дээр хэрэглэгдэх хэмжих нэгжийг тохируулна.\n"
+"Хэрэв та төслүүдтэй холбогдсон цагийн хуудас ашигладаг бол ажилчид дээр зөв хэмжих нэгжийг тааруулахаа битгий мартаарай."
 
 #. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
@@ -3591,13 +3663,13 @@ msgstr "Даалгавар дээрх цагийн таамаг"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Time Scheduling"
-msgstr ""
+msgstr "Цаг Товлолт"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
-msgstr ""
+msgstr "Цагийн хуудсын Хэмжих Нэгж"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3606,16 +3678,19 @@ msgid ""
 "                    They are also prone to human error, repetitive, annoying, and sometimes stressful to employees.<br/>\n"
 "                    Fortunately, Odoo has several solutions to make them as efficient and painless as possible!<br/>"
 msgstr ""
+"Цагийн хуудас нь компанийг удирдахад голдуу маш чухал үүрэг гүйцэтгэдэг.<br/>\n"
+"Энэ нь хүний гаргасан алдаанд өртөмтгий, давтагдмал байдаг ба ажилчдад заримдаа ядаргаатай санагдах үе ч байдаг.<br/>\n"
+"Аз болоход Odoo үүнийг байж болох хамгийн үр ашигтай, зовлонгүй байлгах хэд хэдэн шийдлүүдийг санал болгодог!<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets can be used for several purposes:"
-msgstr ""
+msgstr "Цагийн хуудсууд нь хэд хэдэн зорилгоор ашиглагдаж болно:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Timesheets to Approve"
-msgstr ""
+msgstr "Батлах Цагийн хуудсууд"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_resource_calendar_id
@@ -3636,16 +3711,18 @@ msgid ""
 "To configure these Kanban Statuses, go to the 'Project Stages' tab of a "
 "Project."
 msgstr ""
+"Эдгээр Канбан Төлвүүдийг тохируулахын тулд Төсөл дээрх 'Төслийн Шатууд' таб "
+"руу очино уу."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Issues, install the"
-msgstr ""
+msgstr "Асуудлуудыг ашиглахын тулд үүнийг суулгана уу"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "To use Timesheets, go to your"
-msgstr ""
+msgstr "Цагийн хуудас ашиглахын тулд ийшээ орно уу"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_remaining_hours
@@ -3659,7 +3736,7 @@ msgstr ""
 #. module: project
 #: selection:project.config.settings,module_rating_project:0
 msgid "Track customer satisfaction on tasks"
-msgstr ""
+msgstr "Даалгаврууд дээр захиалагчийн сэтгэл ханамжийг хянах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3682,12 +3759,12 @@ msgstr "Даалгавруудыг хэрэглэх"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
 msgid "Use Tasks as"
-msgstr ""
+msgstr "Даалгавруудыг дараахиар хэрэглэх"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr ""
+msgstr "Цагийн хуудас ашиглах"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3695,6 +3772,8 @@ msgid ""
 "Use separate meetings to solve big issues or issues that aren’t important "
 "for the entire team."
 msgstr ""
+"Томоохон асуудлууд болон бүхэл багт чухал биш асуудлуудыг шийдэхийн тулд "
+"тусдаа уулзалтуудыг ашиглана уу."
 
 #. module: project
 #. openerp-web
@@ -3704,6 +3783,8 @@ msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
 msgstr ""
+"Компанийхаа Төслийн Менежментийг тохируулахын тулд <b>нэвтрүүлэлтийн "
+"зааврыг</b> ашиглана уу."
 
 #. module: project
 #. openerp-web
@@ -3711,11 +3792,12 @@ msgstr ""
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
 msgstr ""
+"<b>Даалгавруудын суваг руу буцахын</b> тулд линкийн мөрийг ашиглана уу."
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
 msgid "Use the priority for tasks related to gold customers"
-msgstr ""
+msgstr "Алтан захиалагчтай холбоотой даалгавруудын зэрэглэлийг ашиглах"
 
 #. module: project
 #: model:res.groups,name:project.group_project_user
@@ -3735,6 +3817,10 @@ msgid ""
 "                        Your team members will probably try to avoid those kind of meetings, or have to rush afterwards to meet their deadlines...<br/><br/>\n"
 "                        So how can you, as project manager, structure a weekly status meeting where team members are engaged, informed and willing to contribute to the project's next steps? Here are some tips."
 msgstr ""
+"Төслийн багийн гишүүдийг ихэвчлэн долоо хоног (эсвэл сар) бүрийн явцын хурлаар удирддаг.<br/>\n"
+"Заримдаа эдгээр хурлууд нь олон цагаар үргэлжилж, оролцогчдод төслийн хэт нарийвчилсан тоймыг ил гаргадаг.<br/>\n"
+"Таны багийн гишүүд ийм төрлийн хурлаас зайлсхийхийг хичээх, эсвэл дараа нь эцсийн хугацаандаа амжуулахын тулд яарах хэрэгтэй болж магадгүй...<br/><br/>\n"
+"Тэгхээр төслийн менежерийн хувьд та хэрхэн долоо хоног тутмын явцын хурлыг багийн гишүүд мэдээлэлтэй, төслийн дараагийн шатуудад саналаараа оролцохыг хүсдэг хэмжээнд хүргэх вэ? Дараах хэдэн зөвлөгөөнүүд байна."
 
 #. module: project
 #. openerp-web
@@ -3746,26 +3832,26 @@ msgstr "Батлагдсан"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics (time spent, efficiency, etc.)"
-msgstr ""
+msgstr "Статистик харах (зарцуулсан хугацаа, үр ашиг, г.м.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "View statistics for the week"
-msgstr ""
+msgstr "7 хоногийн статистик мэдээг харах"
 
 #. module: project
 #: code:addons/project/models/project.py:204
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
-msgstr ""
+msgstr "Бүх ажилтнаар харах"
 
 #. module: project
 #: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
-msgstr ""
+msgstr "Дагаж буй захиалагчаар харах"
 
 #. module: project
 #. openerp-web
@@ -3773,7 +3859,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:81
 #, python-format
 msgid "Wait. Customer"
-msgstr ""
+msgstr "Хүлээ. Захиалагч"
 
 #. module: project
 #. openerp-web
@@ -3781,7 +3867,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:82
 #, python-format
 msgid "Wait. Expert"
-msgstr ""
+msgstr "Хүлээ. Мэргэжилтэн"
 
 #. module: project
 #. openerp-web
@@ -3790,11 +3876,15 @@ msgstr ""
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
+"<b>Төслүүдээ удирдах</b> илүү дээр аргыг хүсч байна уу? <i>Эндээс "
+"эхлэнэ.</i>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "We can add fields related to your business on any screen, for example:"
 msgstr ""
+"Таны бизнестэй холбоотой талбаруудыг бид аль ч дэлгэц дээр нэмж чадна, "
+"тухайлбал:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3807,6 +3897,8 @@ msgid ""
 "We can implement custom reports based on your Word or GoogleDocs templates, "
 "for example:"
 msgstr ""
+"Таны Word эсвэл GoogleDocs үлгэр дээр суурилаад бид танд зориулсан "
+"тайлангуудыг хийж өгч болно, жишээлбэл:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3814,6 +3906,8 @@ msgid ""
 "We hope this process helped you implement our project management "
 "application."
 msgstr ""
+"Энэ процесс нь төслийн удирдлагын аппликешнийг нэвтрүүлэхэд танд тусласан "
+"гэж бид найдаж байна."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3821,6 +3915,8 @@ msgid ""
 "We've developed a super simple and efficient Chrome extension to enter your "
 "timesheets:<br/><br/>"
 msgstr ""
+"Таны цагийн хуудсуудыг оруулах маш энгийн, үр ашигтай Chrome өргөтгөлийг бид"
+" хөгжүүлсэн:<br/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3831,12 +3927,12 @@ msgstr "Тавтай морил"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "What is the average number of working hours necessary to close an issue?"
-msgstr ""
+msgstr "Асуудлыг хаахад шаардлагатай дундаж ажлын цаг хэд вэ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the average time before an issue is assigned / closed?"
-msgstr ""
+msgstr "Асуудал оноогдох / хаагдахаас өмнөх дундаж хугацаа юу вэ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3847,7 +3943,7 @@ msgstr "Анхны цагийн тооцоолол болон сүүлчийн �
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "What is the number of missed deadlines?"
-msgstr ""
+msgstr "Хэтэрсэн сүүлчийн хугацааны тоо хэд вэ?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3885,7 +3981,7 @@ msgstr "Ажлын ачаалал"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write date"
-msgstr ""
+msgstr "Бичсэн огноо"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3893,6 +3989,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
+"Шатын утга ба зорилгыг хамтран ажиллагсдадаа ойлгуулахын тулд та тайлбар "
+"нэмж болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3900,12 +3998,15 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
+"Та мөн канбан болон форм харагдац дээр боломжтой одын хэрэглээний талаар "
+"багажийн зөвлөгөө оруулж болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "You can even include any report in your dashboard for permanent access!"
 msgstr ""
+"Та хянах самбар дээрээ бүр үргэлж хандахаар аль ч тайланг оруулах боломжтой!"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3913,6 +4014,8 @@ msgid ""
 "You can learn more about Timesheets in the 'Use Timesheets' section of this "
 "planner."
 msgstr ""
+"Та Цагийн хуудсын талаар илүү ихийг энэ төлөвлөгчийн 'Цагийн хуудас ашиглах'"
+" хэсгээс мэдэж авах боломжтой."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3920,6 +4023,8 @@ msgid ""
 "You can now manage your tasks in order to get things done efficiently. Track"
 " progress, discuss, attach documents, etc."
 msgstr ""
+"Та одоо бүгдийг үр ашигтай гүйцэтгэхийн тулд даалгавруудаа удирдах боломжтой"
+" боллоо. Явцыг хянах, хэлэлцэх, баримт хавсаргах, г.м."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3927,6 +4032,8 @@ msgid ""
 "You can reply directly to a message from you email software; the message and"
 " its attachments will be added to the Chatter."
 msgstr ""
+"Та имэйлийн програмаасаа шууд хариу бичих боломжтой; мэссеж болон түүний "
+"хавсралтууд нь Чаттерд нэмэгдэх болно."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
