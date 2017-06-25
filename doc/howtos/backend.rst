@@ -1118,6 +1118,8 @@ default and behave as booleans (they can only be enabled by default).
         .. patch::
 
 Gantt
+
+Note: Gantt views are only available on Odoo 10.0 Enterprise. Using Gantt views in Odoo 10.0 Community requires the installation of a Web Gantt app.
 -----
 
 Horizontal bar charts typically used to show project planning and advancement,
