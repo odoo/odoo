@@ -1080,6 +1080,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Sipariş edilen miktarlarda: Sipariş edilen miktarlara dayalı faturaları kontrol edin.\n"
+"Alınan miktarlarda: Alınan miktara dayalı faturaları kontrol edin."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -1135,7 +1137,7 @@ msgstr "Siparişin miktarından"
 #: code:addons/purchase/models/purchase.py:770
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Sipariş edilen miktar azaldı!"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_configuration
@@ -1904,6 +1906,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Bu satınalma siparişi iptal edilemiyor. Önce ilgili tedarikçi faturalarını "
+"iptal etmeniz gerekir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1950,6 +1954,8 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Bu menüyü tedarikçinizden alacağınız faturalarınızı denetlemek\n"
+"            için kullanın. Yeni bir fatura kaydederken, satınalma siparişini ayarlayın ve Odoo, sipariş edilen veya alınan miktarlara göre otomatik olarak fatura oluşturacaktır."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1959,6 +1965,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Bu menüyü satınalma siparişleriniz içinde referanslara, tedarikçiye, ürüne,\n"
+"                v.b göre aramak için kullanın. Her satınalma siparişi için tedarikçinizle yapılan\n"
+"                ilgili görüşmeleri izleyebilir, kabul edilen ürünleri ve tedarikçi faturalarını\n"
+"                denetleyebilirsiniz."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -2026,6 +2036,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Tedarikçi faturaları, satınalma siparişlerine veya alımlara dayanarak "
+"önceden oluşturulabilir. Bu, Odoo'daki taslak dokümana göre satıcınızdan "
+"aldığınız faturaları kontrol etmenizi sağlar."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -2036,7 +2049,7 @@ msgstr "Hacim"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Bekleyen Faturalar"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -2084,6 +2097,8 @@ msgid ""
 "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."
 msgstr ""
+"Sipariş edilen miktarı azaltıyorsanız!\n"
+"Alım ve / veya faturadaki miktarları güncellemelisiniz."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -2091,6 +2106,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"Tedarikçinizden satın aldığınız (hizmet) veya (ürünleri) \n"
+"faturasından kontrol edebilirsiniz."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -2099,6 +2116,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"Satınaldığınız her şey için bir ürün tanımlamalısınız, alt\n"
+"            yüklenicilerden satın alınacak fiziki bir ürün, bir tüketim malı ya da\n"
+"            bir hizmet de olabilir."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -2107,12 +2127,15 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"Satınaldığınız her şey için bir ürün tanımlamalısınız, alt\n"
+"            yüklenicilerden satın alınacak fiziki bir ürün, bir tüketim malı ya da\n"
+"            bir hizmet de olabilir."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:384
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
