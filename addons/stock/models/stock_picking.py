@@ -612,9 +612,13 @@ class Picking(models.Model):
                         forced_qties[move.product_id] = forced_qty
             for vals in picking._prepare_pack_ops(picking_quants, forced_qties):
                 vals['fresh_record'] = False
-                PackOperation.create(vals)
+                PackOperation |= PackOperation.create(vals)
         # recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities()
+        for pack in PackOperation:
+            pack.ordered_qty = sum(
+                pack.mapped('linked_move_operation_ids').mapped('move_id').filtered(lambda r: r.state != 'cancel').mapped('ordered_qty')
+            )
         self.write({'recompute_pack_op': False})
 
     @api.multi
