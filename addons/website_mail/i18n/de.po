@@ -6,15 +6,15 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Thomas A. Jaeger <tj@jamotion.ch>, 2016
+# Renzo Meister <info@jamotion.ch>, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Anja Funk <anja.funk@afimage.de>, 2016\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -101,10 +101,9 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at \n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover \n"
-"                                how to get the best out of Odoo with our </span>\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation/user\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
@@ -124,6 +123,7 @@ msgstr ""
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail_description
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_description
 #: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_description
 msgid "Description"
@@ -133,16 +133,6 @@ msgstr "Beschreibung"
 #: model:mail.channel,name:website_mail.channel_public
 msgid "Discussion Group"
 msgstr "Diskussionsgruppe"
-
-#. module: website_mail
-#: model:ir.model,name:website_mail.model_mail_compose_message
-msgid "Email composition wizard"
-msgstr "E-Mail Assistent"
-
-#. module: website_mail
-#: model:ir.model,name:website_mail.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "E-Mail-Assistent für die Umfrage"
 
 #. module: website_mail
 #: model:ir.ui.view,arch_db:website_mail.message_thread
@@ -156,6 +146,7 @@ msgstr "Nachricht"
 
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message_description
+#: model:ir.model.fields,help:website_mail.field_mail_mail_description
 #: model:ir.model.fields,help:website_mail.field_mail_message_description
 #: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_description
 msgid "Message description: either the subject, or the beginning of the body"
@@ -172,6 +163,7 @@ msgstr ""
 
 #. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,field_description:website_mail.field_mail_mail_website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message_website_published
 #: model:ir.model.fields,field_description:website_mail.field_survey_mail_compose_message_website_published
 msgid "Published"
@@ -206,6 +198,7 @@ msgstr "Abmelden"
 
 #. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_compose_message_website_published
+#: model:ir.model.fields,help:website_mail.field_mail_mail_website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message_website_published
 #: model:ir.model.fields,help:website_mail.field_survey_mail_compose_message_website_published
 msgid "Visible on the website as a comment"

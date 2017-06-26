@@ -1,74 +1,62 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_quote
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Robert Kirschner <robertkirschner@yahoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-05-08 14:15+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_quote
 #: model:mail.template,body_html:website_quote.confirmation_mail
 msgid ""
 "\n"
-"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 "
-"auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"<div summary=\"o_mail_template\" style=\"padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px "
-"5px;font-size: 12px\">\n"
-"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
-"height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
-"collapse:collapse; background:inherit; color:inherit\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
-"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;"
-"\">\n"
+"            <td valign=\"top\" style=\"width:600px; padding:0px 10px 5px 5px;\">\n"
 "                <div>\n"
-"                    <hr width=\"100%\" style=\"background-color:"
-"rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;"
-"min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0\">\n"
 "                </div>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
 "    </table>\n"
 "</div>\n"
-"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
-"background: #FFFFFF repeat top /100%;color:#777777\">\n"
-"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-"
-"align:justify; margin:0 auto; border-collapse:collapse; background:inherit; "
-"color:inherit\">\n"
+"<div style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit\">\n"
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Dear ${object.partner_id.name},</p><br/>\n"
-"                <p>Your order <a href=\"/quote/${object.id}/${object."
-"access_token}\">${object.name}</a> has been validated!</p><br/>\n"
+"                <p>Your order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> has been validated!</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>You can view your quotes, sales orders and invoices "
-"online by going to our <a style=\"text-decoration:none; color: #875A7B;\" "
-"href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
 "                % endif\n"
 "\n"
-"                <p>If you have any question, do not hesitate to contact us.</"
-"p><br/>\n"
-"                <p>Thank you for choosing ${object.company_id.name or \"us"
-"\"}!</p>\n"
+"                <p>If you have any question, do not hesitate to contact us.</p><br/>\n"
+"                <p>Thank you for choosing ${object.company_id.name or \"us\"}!</p>\n"
 "            </td>\n"
 "        </tr><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
@@ -77,11 +65,9 @@ msgid ""
 "                </p>\n"
 "                % endif\n"
 "                <p style=\"font-size: 11px;\"><strong>Sent by\n"
-"                <a href=\"${user.company_id.website}\" style=\"text-"
-"decoration:none; color: #875A7B;\">\n"
+"                <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #875A7B;\">\n"
 "                    <strong>${user.company_id.name}</strong>\n"
-"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:"
-"none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
+"                </a> using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"><strong>Odoo</strong></a>\n"
 "                </strong></p>\n"
 "            </td>\n"
 "        </tr></tbody>\n"
@@ -104,9 +90,12 @@ msgstr "% zľava"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "&amp;bull;"
-msgstr ""
+msgstr "&amp;bull;"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
@@ -121,8 +110,7 @@ msgstr "&amp;times;"
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation "
-"only if this\n"
+"                                this content will appear on the quotation only if this\n"
 "                                product is put on the quote."
 msgstr ""
 ":\n"
@@ -133,8 +121,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 ":\n"
-"                                this content will appear on the quotation "
-"only if this\n"
+"                                this content will appear on the quotation only if this\n"
 "                                product is used in the quote."
 msgstr ""
 ":\n"
@@ -172,6 +159,9 @@ msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr "<i class=\"fa fa-times\"/> Zamietnuť"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to create dynamic page interacting with the ORM.</i>"
@@ -179,6 +169,9 @@ msgstr ""
 "<i>Budete mať možnosť vytvoriť dynamické stránky interaktívne s ORM.</i>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to develop a full application with backend and user "
@@ -188,12 +181,15 @@ msgstr ""
 "rozhraním.</i>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<i>You will be able to develop simple dynamic compenents in HTML pages.</i>"
 msgstr ""
-"<i>Budete mať možnosť vyvíjať jednoduché dynamické prvky v HTML stránkach.</"
-"i>"
+"<i>Budete mať možnosť vyvíjať jednoduché dynamické prvky v HTML "
+"stránkach.</i>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.quotations
@@ -214,6 +210,9 @@ msgstr ""
 "Zrušené</span>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
 "<span style=\"text-align: -webkit-center; \">This course is dedicated to "
@@ -300,22 +299,35 @@ msgstr ""
 "neustálym navrhovaním nových modulov."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid ""
-"<strong>Having attended this course, participants should be able to:</strong>"
+"<strong>Having attended this course, participants should be able "
+"to:</strong>"
 msgstr "<strong>Po absolvovaní tohto kurzu by mali účastníci vedieť:</strong>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Objectives:</strong>"
 msgstr "<strong>Ciele:</strong>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Our prices include:</strong>"
 msgstr "<strong>Naše ceny zahŕňajú:</strong>"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "<strong>Requirements:</strong>"
 msgstr "<strong>Požiadavky:</strong>"
@@ -337,6 +349,9 @@ msgstr ""
 "šablónu."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "<strong>There are three components to the training</strong>"
 msgstr "<strong>Existujú tri komponenty vzdelávania</strong>"
@@ -385,9 +400,17 @@ msgid "A Valuable Product"
 msgstr "Hodnotný produkt"
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
-msgstr ""
+msgstr "O nás"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
@@ -409,6 +432,9 @@ msgid "Advanced CRM Functional"
 msgstr "pokročilé CRM funkčné"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Advanced JQuery"
 msgstr "Pokročilé JQuery"
@@ -428,9 +454,20 @@ msgstr ""
 "nastveniach spoločnosti."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Arrays"
 msgstr "Rady"
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"As a leading professional services firm,\n"
+"                                       we know that success is all about the\n"
+"                                       commitment we put on strong services."
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.chatter
@@ -440,7 +477,7 @@ msgstr "Vypýtať zmeny"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid "Back"
-msgstr ""
+msgstr "Späť"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -467,6 +504,9 @@ msgstr ""
 "a našej značky Odoo."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Better comfort to facilitate your learning process"
 msgstr "Lepší komfort pre uľahčenie procesu učenia"
@@ -477,22 +517,34 @@ msgid "Bill To:"
 msgstr "Účtovať:"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Bootstrap CSS"
 msgstr "Bootstrap CSS"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Bring your own laptop."
 msgstr "Prineste si vlastný laptop."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Building a Full Application"
 msgstr "Budovanie plnej aplikácie"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Calling the ORM"
 msgstr "Volanie ORM"
@@ -501,6 +553,13 @@ msgstr "Volanie ORM"
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "Cancel"
 msgstr "Zrušiť"
+
+#. module: website_quote
+#: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
+msgid ""
+"Change the look and feel from the front-end (GUI) rather than a need of "
+"technical knowledge."
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.opt_quotation_signature
@@ -533,11 +592,22 @@ msgid "Contact us"
 msgstr "Kontaktujte nás"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
+msgid "Controllers and Views"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Convert Lead to Opportunity &amp; Customer management"
 msgstr "Skonvertovať Iniciatívu na Príležitosť &amp; Zákaznícky manažment"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Course Summary"
 msgstr "Zhrnutie kurzu"
@@ -548,7 +618,7 @@ msgstr "Zhrnutie kurzu"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_uid
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_create_date
@@ -556,7 +626,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_create_date
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -574,18 +644,27 @@ msgid "Database management"
 msgstr "Spravovanie databázy"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 1"
 msgstr "Deň 1"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 2"
 msgstr "Deň 2"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Day 3"
@@ -595,8 +674,7 @@ msgstr "Deň 3"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Deliver <strong>strong value added services</strong> as you can\n"
-"                                       rely on a leading open source "
-"software, with\n"
+"                                       rely on a leading open source software, with\n"
 "                                       the support of the publisher."
 msgstr ""
 "Dodajte <strong>silné služby s pridanou hodnotou</strong> keďže sa môžte\n"
@@ -615,16 +693,27 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_quote_description
+#: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
 msgstr "Popis do ponúk"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
 msgstr "Popis na webstránku"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Develop a new module for a particular application."
 msgstr "Vyvinúť nový modul pre konkrétnu aplikáciu."
@@ -647,9 +736,12 @@ msgstr "Zľava (%)"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_display_name
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Dive into Strings"
 msgstr "Ponorenie do strún"
@@ -673,8 +765,7 @@ msgstr "Upraviť šablónu"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Enjoy the traction of the <strong>fastest growing\n"
-"                                    management software</strong> in the "
-"world."
+"                                    management software</strong> in the world."
 msgstr ""
 "Užite si trakciu <strong>najrýchlejšie rastúceho\n"
 "manažmentového softvéru</strong> vo svete."
@@ -683,16 +774,11 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Every year, we redirect more than 100,000 customer\n"
-"                                requests to our official partners. These are "
-"prospects\n"
-"                                that filled a form on the Odoo website and "
-"wanted to\n"
-"                                use Odoo. The right partner to fulfill the "
-"customer\n"
-"                                request is selected based on the customer "
-"localization\n"
-"                                (nearest partner) and the grade of the "
-"partner."
+"                                requests to our official partners. These are prospects\n"
+"                                that filled a form on the Odoo website and wanted to\n"
+"                                use Odoo. The right partner to fulfill the customer\n"
+"                                request is selected based on the customer localization\n"
+"                                (nearest partner) and the grade of the partner."
 msgstr ""
 "Každý rok sme presmerovali viac ako 100.000 žiadostí\n"
 "zákazníkov o našim oficiálnym partnerom. To sú záujemcovia\n"
@@ -705,13 +791,10 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Every year, we redirect more than 100,000 customer\n"
-"                        requests to our official partners. These are "
-"prospects\n"
-"                        that filled a form on the Odoo website and wanted "
-"to\n"
+"                        requests to our official partners. These are prospects\n"
+"                        that filled a form on the Odoo website and wanted to\n"
 "                        use Odoo. The right partner to fulfill the customer\n"
-"                        request is selected based on the customer "
-"localization\n"
+"                        request is selected based on the customer localization\n"
 "                        (nearest partner) and the grade of the partner."
 msgstr ""
 "Každý rok sme presmerovali viac ako 100.000 žiadostí\n"
@@ -735,12 +818,9 @@ msgstr "Fetchmail konfigurácia"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "For an extra fee, partners can get access to Odoo's\n"
-"                                core developers and functional experts. This "
-"can help\n"
-"                                you succeed in delivering more complex or "
-"bigger\n"
-"                                projects by getting the support of highly "
-"experienced\n"
+"                                core developers and functional experts. This can help\n"
+"                                you succeed in delivering more complex or bigger\n"
+"                                projects by getting the support of highly experienced\n"
 "                                consultants on demand."
 msgstr ""
 "Za príplatok môžu partneri získať prístup k Odoo \n"
@@ -758,6 +838,9 @@ msgid "Functional Training"
 msgstr "Funkčný tréning"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Functions"
 msgstr "Funkcie"
@@ -788,13 +871,10 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. "
-"The\n"
-"                                first section is usually about your "
-"company,\n"
+"                                <strong>boost your success rate</strong>. The\n"
+"                                first section is usually about your company,\n"
 "                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and "
-"conditions, etc."
+"                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
 
 #. module: website_quote
@@ -809,11 +889,17 @@ msgstr ""
 "Enterprise komisného systému."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Hands-on exercises and their solutions"
 msgstr "Praktické cvičenia a ich riešenia"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Hello World"
 msgstr "Ahoj Svet"
@@ -829,6 +915,9 @@ msgid "History"
 msgstr "História"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "How to Debug"
 msgstr "Ako odstraňovať chyby"
@@ -845,10 +934,8 @@ msgstr "ID"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "If edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update the quotation for this customer only. If you "
-"edit the quotation\n"
-"                        template (from the Configuration menu), all future "
-"quotations will\n"
+"                        update the quotation for this customer only. If you edit the quotation\n"
+"                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
 
@@ -886,6 +973,9 @@ msgid "Install and administer Odoo."
 msgstr "Nainštalovať a spravovať Odoo."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Install and administer your own server;"
 msgstr "Inštalovať a spravovať svoj vlastný server;"
@@ -896,6 +986,9 @@ msgid "Installation and Configuration"
 msgstr "Inštalácia a Konfigurácia"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Integrated Help"
 msgstr "Integrovaná pomoc"
@@ -907,16 +1000,25 @@ msgid "Introduction"
 msgstr "Úvod"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to JQuery"
 msgstr "Úvod do JQuery"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to Javascript"
 msgstr "Úvod do Javascript"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Introduction to QWeb"
 msgstr "Úvod do QWeb"
@@ -925,18 +1027,13 @@ msgstr "Úvod do QWeb"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "It includes <strong>discounts on Odoo\n"
-"                                Enterprise</strong>, technical and/or "
-"functional\n"
+"                                Enterprise</strong>, technical and/or functional\n"
 "                                <strong>trainings</strong>,\n"
 "                                <strong>support</strong> services,\n"
-"                                <strong>marketing documents</strong>, access "
-"to\n"
-"                                the <strong>partner portal</strong>, rights "
-"to\n"
-"                                <strong>use the trademark</strong>, sales "
-"support\n"
-"                                from a <strong>dedicated account manager</"
-"strong>."
+"                                <strong>marketing documents</strong>, access to\n"
+"                                the <strong>partner portal</strong>, rights to\n"
+"                                <strong>use the trademark</strong>, sales support\n"
+"                                from a <strong>dedicated account manager</strong>."
 msgstr ""
 "To zahŕňa <strong>zľavy na Odoo\n"
 "Enterprise</strong>, technické a/alebo funkčné\n"
@@ -1014,21 +1111,33 @@ msgid "Lines"
 msgstr "Riadky"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Live Q&amp;A sessions with a trainer"
 msgstr "Živá Q&amp;A schôdza s trénerom"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Loops"
 msgstr "Slučky"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Lower training budget for the same quality courses"
 msgstr "Nižší rozpočet školenia pre rovnako kvalitné kurzy"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Modular approach applied to the learning method"
 msgstr "Modulárny prístup aplikovaný na metódy učenia"
@@ -1039,6 +1148,9 @@ msgid "Module Installation"
 msgstr "Inštalácia modulu"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Modules"
 msgstr "Moduly"
@@ -1059,6 +1171,9 @@ msgid "Negotiation and Quotation Revisions"
 msgstr "Revízie Vyjednávaní a Cenových ponúk"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "New interactive learning experience"
 msgstr "Nová interaktivná učebná skúsenosť"
@@ -1077,15 +1192,21 @@ msgstr "Počet dní pre platnosť dátumu výpočtu cenovej ponuky"
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Objectives"
-msgstr "Cieľe"
+msgstr "Ciele"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Odoo Official Website"
 msgstr "Odoo oficiálna webstránka"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Odoo Web Client"
 msgstr "Odoo web klient"
@@ -1094,14 +1215,10 @@ msgstr "Odoo web klient"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Odoo promotes its partners through various ways:\n"
-"                                publication on our website, official "
-"communication,\n"
-"                                publication of your success stories, etc. As "
-"soon as\n"
-"                                you become an Odoo partner and have followed "
-"the\n"
-"                                official trainings, you will be visible on "
-"the partner\n"
+"                                publication on our website, official communication,\n"
+"                                publication of your success stories, etc. As soon as\n"
+"                                you become an Odoo partner and have followed the\n"
+"                                official trainings, you will be visible on the partner\n"
 "                                directory listing."
 msgstr ""
 "Odoo propaguje svojich partnerov prostredníctvom rôznch spôsobov:\n"
@@ -1115,6 +1232,14 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Official certified partner"
 msgstr "Oficiálny certifikovaný partner"
+
+#. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid "Online Training"
+msgstr "Online tréning"
 
 #. module: website_quote
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
@@ -1144,6 +1269,12 @@ msgid "Optional Products Lines"
 msgstr "Voliteľné produktové riadky"
 
 #. module: website_quote
+#: code:addons/website_quote/models/sale_order.py:169
+#, python-format
+msgid "Order paid by %s. Transaction: %s. Amount: %s."
+msgstr ""
+
+#. module: website_quote
 #: code:addons/website_quote/controllers/main.py:90
 #, python-format
 msgid "Order signed by %s"
@@ -1155,18 +1286,31 @@ msgid "Other Settings"
 msgstr ""
 
 #. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Offer"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid "Our Partnership Offer"
 msgstr "Naša ponuka partnerstva"
 
 #. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Quality"
+msgstr ""
+
+#. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid "Our Service"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Our automated testing server software is called Runbot,\n"
-"                                and you can try it out here: http://runbot."
-"odoo.com.\n"
-"                                A dedicated runbot server is available for "
-"every\n"
+"                                and you can try it out here: http://runbot.odoo.com.\n"
+"                                A dedicated runbot server is available for every\n"
 "                                partner."
 msgstr ""
 "Naše automatizovaný server testovania softvéru sa nazýva Runbot,\n"
@@ -1178,8 +1322,7 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Our partnership offer includes all you need to\n"
-"                                grow your business and deliver quality "
-"services\n"
+"                                grow your business and deliver quality services\n"
 "                                with the Odoo Partner Program."
 msgstr ""
 "Naša ponuka partnerstva zahŕňa všetko, čo potrebujete pre\n"
@@ -1192,6 +1335,9 @@ msgid "Partial and Full Shipment / Delivery"
 msgstr "Čiastočná a Plná Zásielka / Dodanie"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid ""
@@ -1202,6 +1348,9 @@ msgstr ""
 "znalosť programovania Python."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid ""
@@ -1232,7 +1381,7 @@ msgstr "Metóda platby:"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 msgid "Preview"
-msgstr ""
+msgstr "Náhľad"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
@@ -1249,7 +1398,7 @@ msgstr "Cenník a auto-segmentácia"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Pricing"
-msgstr "Cenotvorba"
+msgstr "Oceňovanie"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1278,16 +1427,14 @@ msgstr "Expirácia produktu a Záruka"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_product_template
 msgid "Product Template"
-msgstr "šablona produktu"
+msgstr "Šablóna produktu"
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "Product quality is the foundation we\n"
-"                                       stand on; we build it with a "
-"relentless\n"
-"                                       focus on fabric, performance and "
-"craftsmanship."
+"                                       stand on; we build it with a relentless\n"
+"                                       focus on fabric, performance and craftsmanship."
 msgstr ""
 
 #. module: website_quote
@@ -1306,6 +1453,9 @@ msgid "Purchase Requisition and Purchase Order Management"
 msgstr "Nákupná rekvizícia a Spravovanie nákupných objednávok"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Python Objects"
 msgstr "Python objekty"
@@ -1385,6 +1535,9 @@ msgid "Reject This Quote"
 msgstr "Zamietnuť túto cenovú ponuku"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Report Engine"
 msgstr "Výkazový nástroj"
@@ -1393,13 +1546,16 @@ msgstr "Výkazový nástroj"
 #: model:ir.model.fields,help:website_quote.field_sale_order_require_payment
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_require_payment
 msgid ""
-"Require immediate payment by the customer when validating the order from the "
-"website quote"
+"Require immediate payment by the customer when validating the order from the"
+" website quote"
 msgstr ""
 "Vyžadovať okamžitú platbu zákazníkom pri overovaní objednávky z cenových "
 "ponúk webstránky"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "Requirements"
@@ -1425,12 +1581,12 @@ msgstr "Šablóna ponuky predaja"
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order
 msgid "Sales Order"
-msgstr "Objednávka predaja"
+msgstr "Predajná objednávka"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Položky objednávky"
+msgstr "RIadok predajnej objednávky"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -1442,14 +1598,10 @@ msgstr "Riadky šablóny Cenovej ponuky predaja"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "Save time in your implementation project by having your\n"
-"                                developments tested automatically by our "
-"automated test\n"
-"                                servers. At every code commit, you get a "
-"full Odoo\n"
-"                                instance that you can try out online. When "
-"this\n"
-"                                instance is deployed, your code is "
-"automatically put\n"
+"                                developments tested automatically by our automated test\n"
+"                                servers. At every code commit, you get a full Odoo\n"
+"                                instance that you can try out online. When this\n"
+"                                instance is deployed, your code is automatically put\n"
 "                                through our 2000+ automated unit tests."
 msgstr ""
 "Ušetrite čas na vašom implementačnom projekte automatickým \n"
@@ -1469,7 +1621,7 @@ msgstr "Naplánovať Telefonické hovory a Stretnutia"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_layout_category_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_layout_category_id
 msgid "Section"
-msgstr ""
+msgstr "Sekcia"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_access_token
@@ -1480,7 +1632,7 @@ msgstr "Bezpečnostný token"
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_option_sequence
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation_content
@@ -1498,6 +1650,9 @@ msgid "Sign &amp; Confirm"
 msgstr "Podpísať &amp; Potvrdiť"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Structure of the Training"
 msgstr "Štruktúra tréningu"
@@ -1521,8 +1676,11 @@ msgstr "Dane :"
 
 #. module: website_quote
 #: model:product.product,name:website_quote.product_product_quote_2
+#: model:product.product,quote_description:website_quote.product_product_quote_2
 #: model:product.template,name:website_quote.product_product_quote_2_product_template
 #: model:product.template,name:website_quote.product_template_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,name:website_quote.website_sale_order_line_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Technical Training"
@@ -1554,6 +1712,18 @@ msgid "Test developments automatically"
 msgstr "Testovať vývoj automaticky"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
+#: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
+msgid ""
+"These courses feature the same high quality course content found in our "
+"traditional classroom trainings, supplemented with modular sessions and "
+"cloud-based labs. Many of our online learning courses also include dozens of"
+" recorded webinars and live sessions by our senior instructors."
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
@@ -1564,10 +1734,8 @@ msgstr ""
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the "
-"<i>Sale</i>\n"
-"                                application, using the menu: "
-"Configuration /\n"
+"                                customize it to fit your own needs from the <i>Sale</i>\n"
+"                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
 msgstr ""
 
@@ -1594,8 +1762,7 @@ msgstr "Táto cenová ponuka bola zamietnutá."
 #: model:ir.ui.view,arch_db:website_quote.so_template
 msgid ""
 "Titles with style <i>Heading 1</i> and\n"
-"                                <i>Heading 2</i> will be used to generate "
-"the\n"
+"                                <i>Heading 2</i> will be used to generate the\n"
 "                                table of content automatically."
 msgstr ""
 "Nadpisy v štýle <i>Záhlavie 1</i> a\n"
@@ -1603,6 +1770,9 @@ msgstr ""
 "vygenerovanie obsahu."
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "To get more information, visit the"
@@ -1611,19 +1781,28 @@ msgstr "Ak chcete získať viac informácií, navštívte"
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.pricing
 msgid "Total Price"
-msgstr ""
+msgstr "Celková cena"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Training Center Module"
 msgstr "Modul tréningového centra"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Underscore"
 msgstr "Podčiarknuť"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Understand the development concepts and architecture;"
 msgstr "Pochopiť koncepty vývoja a architektúry;"
@@ -1653,15 +1832,11 @@ msgstr "Merná jednotka"
 #: model:ir.actions.act_window,help:website_quote.action_sale_quotation_template
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                    Send these quotes by email and let your customers sign "
-"online.\n"
-"                    Use cross-selling and discounts to push and boost your "
-"sales."
+"                    Send these quotes by email and let your customers sign online.\n"
+"                    Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Vytvárajte pomocou šablón upravené, profesionáln cenové ponuky v priebehu "
-"niekoľkých minút.\n"
-"Odošlite tieto ponuky emailom a nechajte vašich zákazníkov podpísať ich "
-"online.\n"
+"Vytvárajte pomocou šablón upravené, profesionáln cenové ponuky v priebehu niekoľkých minút.\n"
+"Odošlite tieto ponuky emailom a nechajte vašich zákazníkov podpísať ich online.\n"
 "Použite krížového predaja a zľiav, aby sa pretlačili a zvýšili vaše predaje."
 
 #. module: website_quote
@@ -1670,11 +1845,17 @@ msgid "Validate Order"
 msgstr "Overiť objednávku"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Variables &amp; Operators"
 msgstr "Premenné &amp; Operátori"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Videos with detailed demos"
 msgstr "Videá s podrobnými demami"
@@ -1685,14 +1866,21 @@ msgid "Warehouse Management Introduction"
 msgstr "Úvod do spravovania skladísk"
 
 #. module: website_quote
+#: model:sale.quote.template,website_description:website_quote.website_quote_template_default
+msgid ""
+"We always ensure that our products are\n"
+"                                       set at a fair price so that you will be\n"
+"                                       happy to buy them."
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_1
 msgid ""
 "We will assign you a dedicated account manager, an\n"
 "                        experienced sales person, to help you develop your\n"
 "                        Odoo business. The account manager helps you get\n"
 "                        leads, close deals, gives you feedback and best\n"
-"                        practices, delivers sales training and is your "
-"direct\n"
+"                        practices, delivers sales training and is your direct\n"
 "                        point of contact for any request you may have."
 msgstr ""
 "Priradíme vám výhradného manažéra účtu, \n"
@@ -1713,12 +1901,18 @@ msgid "Website Description"
 msgstr "Popis webstránky"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 #: model:sale.quote.option,website_description:website_quote.website_sale_option_line_1
 msgid "What you will learn?"
 msgstr "Čo sa naučíte?"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "Workflows"
 msgstr "Pracovné toky"
@@ -1727,12 +1921,9 @@ msgstr "Pracovné toky"
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the "
-"descriptions\n"
-"                        of all products in the proposal. The table of "
-"content\n"
-"                        on the left is generated automatically using the "
-"styles you\n"
+"                        automatically create a quotation using the descriptions\n"
+"                        of all products in the proposal. The table of content\n"
+"                        on the left is generated automatically using the styles you\n"
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
 
@@ -1773,6 +1964,9 @@ msgid "Your advantage:"
 msgstr "Vaša výhoda:"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_1
+#: model:product.template,quote_description:website_quote.product_product_quote_1_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_1
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_1
 msgid "Your advantages"
 msgstr "Vaše výhody"
@@ -1824,6 +2018,9 @@ msgid "days"
 msgstr "dni"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "drinks and lunch;"
 msgstr "nápoje a obed;"
@@ -1864,6 +2061,9 @@ msgid "or"
 msgstr "alebo"
 
 #. module: website_quote
+#: model:product.product,quote_description:website_quote.product_product_quote_2
+#: model:product.template,quote_description:website_quote.product_product_quote_2_product_template
+#: model:product.template,quote_description:website_quote.product_template_quote_2
 #: model:sale.quote.line,website_description:website_quote.website_sale_order_line_2
 msgid "training material."
 msgstr "tréningový materiál."

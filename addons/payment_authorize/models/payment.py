@@ -285,15 +285,15 @@ class TxAuthorize(models.Model):
                     'acquirer_reference': tree.get('x_trans_id'),
                     'date_validate': fields.Datetime.now(),
                 })
-                if self.callback_eval and init_state != 'authorized':
-                    safe_eval(self.callback_eval, {'self': self})
+                if self.sudo().callback_eval and init_state != 'authorized':
+                    safe_eval(self.sudo().callback_eval, {'self': self})
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({
                     'state': 'authorized',
                     'acquirer_reference': tree.get('x_trans_id'),
                 })
-                if self.callback_eval:
-                    safe_eval(self.callback_eval, {'self': self})
+                if self.sudo().callback_eval:
+                    safe_eval(self.sudo().callback_eval, {'self': self})
             if tree.get('x_type').lower() == 'void':
                 self.write({
                     'state': 'cancel',

@@ -8,13 +8,14 @@
 # Kaloyan Naumov <kaloyan@lumnus.net>, 2016
 # preslav <hackerz99999@gmail.com>, 2016
 # Radina <radis.choice@gmail.com>, 2016
+# Anton Vassilev <anton.vasilev@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
 "PO-Revision-Date: 2016-10-10 08:44+0000\n"
-"Last-Translator: Radina <radis.choice@gmail.com>, 2016\n"
+"Last-Translator: Anton Vassilev <anton.vasilev@gmail.com>, 2017\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -647,6 +648,7 @@ msgid "Bad Request"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_res_users_badge_ids
 #: model:ir.ui.view,arch_db:website_forum.badge
 #: model:ir.ui.view,arch_db:website_forum.header
 #: model:ir.ui.view,arch_db:website_forum.user_detail_full
@@ -831,6 +833,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:46
 #: selection:forum.post,state:0
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 #, python-format
 msgid "Close"
 msgstr "Затваряне"
@@ -935,6 +938,16 @@ msgid "Convert all answers to comments and vice versa"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+msgid "Convert as a comment"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_comment
+msgid "Convert as an answer"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_accept
 msgid "Convert comment to answer"
 msgstr ""
@@ -1020,6 +1033,12 @@ msgid "Default Post"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Delete"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_unlink_all
 msgid "Delete all posts"
 msgstr ""
@@ -1088,6 +1107,8 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.edit_post
+#: model:ir.ui.view,arch_db:website_forum.post_answers
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Edit"
 msgstr "Редакция"
 
@@ -1235,6 +1256,11 @@ msgid "First upvote"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Flag"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_karma_flag
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_karma_flag
 msgid "Flag a post as offensive"
@@ -1243,6 +1269,7 @@ msgstr ""
 #. module: website_forum
 #: selection:forum.post,state:0
 #: model:ir.ui.view,arch_db:website_forum.moderation_queue
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Flagged"
 msgstr ""
 
@@ -1434,6 +1461,14 @@ msgid "Help"
 msgstr "Помощ"
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"How to create a physical inventory at an anterior date?, How is the "
+"'remaining hours' field computed on tasks?, How to configure TPS and TVQ's "
+"canadian taxes?"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_id
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason_id
@@ -1486,6 +1521,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_tour_forum.js:43
 #, python-format
 msgid "Insert tags related to your question."
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.new_question
+msgid ""
+"Inventory Date Problem, Task remaining hours, Can you help solve solve my "
+"tax computation problem in Canada?"
 msgstr ""
 
 #. module: website_forum
@@ -2061,6 +2103,11 @@ msgid "Re: %s"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reactivate"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
 msgid "Read Guidelines"
 msgstr ""
@@ -2110,6 +2157,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid "Reopen"
 msgstr ""
 
 #. module: website_forum
@@ -2446,6 +2498,13 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:75
 #, python-format
 msgid "This post is already flagged"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.ui.view,arch_db:website_forum.post_description_full
+msgid ""
+"This post is currently awaiting moderation and not yet published... Do you "
+"want <i>Accept</i> or <i>Reject</i> this post ?"
 msgstr ""
 
 #. module: website_forum
@@ -2897,7 +2956,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:36
 #, python-format
 msgid "here"
-msgstr ""
+msgstr "тук"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help

@@ -3,14 +3,15 @@
 # * website_payment
 # 
 # Translators:
-# Jeffery Chen Fan <jeffery9@gmail.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Jeffery Chen Fan <jeffery9@gmail.com>, 2016\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2016\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +83,12 @@ msgid "Manage your payment methods"
 msgstr "管理你的付款方式"
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
+
+#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
@@ -117,17 +124,25 @@ msgstr "付款被...处理过"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
-msgstr "参考"
+msgstr "参照"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "This transaction will be processed by"
-msgstr "本次交易将...被处理"
+msgstr "本次交易处理于"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "网站"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings
@@ -138,4 +153,4 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
-msgstr "付款_提供者_徽标"
+msgstr "payment_provider_logo"

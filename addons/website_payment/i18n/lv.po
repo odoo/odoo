@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * website_payment
 # 
+# Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# JanisJanis <jbojars@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: JanisJanis <jbojars@gmail.com>, 2017\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +38,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Amount"
-msgstr ""
+msgstr "Summa"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.website_settings_payment
@@ -71,7 +75,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "From"
-msgstr ""
+msgstr "No"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
@@ -79,21 +83,27 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
+
+#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Apmaksāt tagad"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Payment"
-msgstr ""
+msgstr "Maksājums"
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "Maksājuma saņēmējs"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
@@ -114,7 +124,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "Reference"
-msgstr ""
+msgstr "Atsauksme"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay
@@ -124,12 +134,20 @@ msgstr ""
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
+msgstr "Tīkla vietne"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
 msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
