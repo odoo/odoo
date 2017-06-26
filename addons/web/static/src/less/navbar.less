@@ -2,17 +2,17 @@
 .o_main_navbar {
     position: relative;
     height: @odoo-navbar-height;
-    border: 1px solid @odoo-navbar-inverse-link-hover-bg;
+    border-bottom: 1px solid @odoo-navbar-inverse-link-hover-bg;
     background-color: @odoo-brand-primary;
     color: white;
 
     > a, > button {
         float: left;
-        width: @odoo-navbar-height - 2;
-        height: @odoo-navbar-height - 2;
+        width: @odoo-navbar-height;
+        height: @odoo-navbar-height;
         border: none;
         padding: 0;
-        line-height: @odoo-navbar-height - 2;
+        line-height: @odoo-navbar-height;
         background-color: transparent;
         text-align: center;
         color: inherit;
@@ -37,7 +37,7 @@
         color: white;
         font-size: 22px;
         font-weight: 500;
-        line-height: @odoo-navbar-height - 2;
+        line-height: @odoo-navbar-height;
 
         @media (max-width: @screen-xs-max) {
             float: none;
@@ -65,10 +65,10 @@
 
             > a {
                 display: block;
-                height: @odoo-navbar-height - 2;
+                height: @odoo-navbar-height;
                 padding: 0 10px;
                 color: white;
-                line-height: @odoo-navbar-height - 2;
+                line-height: @odoo-navbar-height;
 
                 &:hover {
                     background-color: @odoo-navbar-inverse-link-hover-bg;
@@ -81,7 +81,7 @@
 
             &.o_extra_menu_items {
                 > a {
-                    width: @odoo-navbar-height - 2;
+                    width: @odoo-navbar-height;
                     text-align: center;
                 }
                 &.open > ul {
@@ -176,8 +176,8 @@
             }
 
             &.o_menu_systray {
-                .o-position-absolute(0px, @odoo-navbar-height - 2, auto, @odoo-navbar-height - 2);
-                height: @odoo-navbar-height - 2;
+                .o-position-absolute(0px, @odoo-navbar-height, auto, @odoo-navbar-height);
+                height: @odoo-navbar-height;
                 text-align: right;
 
                 > li {
