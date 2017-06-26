@@ -84,7 +84,7 @@
 
     <menuitem name="Fleet" id="menu_root" sequence="115" groups="fleet_group_user" web_icon="fleet,static/description/icon.png"/>
     <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="100" groups="fleet_group_manager"/>
-    <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu"/>
+    <menuitem action="fleet_vehicle_model_action" parent="fleet_configuration" id="fleet_vehicle_model_menu" sequence="1"/>
 
     <record id='fleet_vehicle_model_brand_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.model.brand.tree</field>
@@ -154,5 +154,5 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu"/>
+    <menuitem action="fleet_vehicle_model_brand_action" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" sequence="2"/>
 </odoo>

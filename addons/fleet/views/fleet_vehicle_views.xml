@@ -73,6 +73,7 @@
                             <field name="driver_id" />
                             <field name="location" />
                             <field name="vin_sn" />
+                            <field name="model_year"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group >
@@ -175,6 +176,7 @@
                 <field name="contract_renewal_overdue" />
                 <field name="contract_renewal_name" />
                 <field name="contract_renewal_total" />
+                <field name="contract_count" />
 
                 <templates>
                     <t t-name="kanban-box">
@@ -197,14 +199,20 @@
                                         <t t-if="record.location.raw_value"><field name="location"/></t>
                                     </li>
                                 </ul>
-                                <div class="o_kanban_button">
-                                    <a t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-warning" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
-                                        <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
-                                    </a>
-                                    <a t-if="record.contract_renewal_overdue.raw_value" data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action btn btn-sm btn-danger" data-context='{"xml_id":"fleet_vehicle_log_contract_action"}'>
-                                        <field name="contract_renewal_name"/> <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s)</t>
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="o_kanban_button">
+                                <a t-if="record.contract_count.raw_value>0" data-type="object"
+                                   data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a"
+                                   data-context='{"xml_id":"fleet_vehicle_log_contract_action","search_default_open": 1}'>
+                                    <field name="contract_count"/>
+                                    Contract(s)
+                                    <span t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value"
+                                        class="fa fa-exclamation-triangle" t-att-style="'color:orange'">
+                                    </span>
+                                     <span t-if="record.contract_renewal_overdue.raw_value"
+                                        class="fa fa-exclamation-triangle" t-att-style="'color:red;'">
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     </t>
@@ -244,10 +252,8 @@
                 <sheet>
                     <group>
                         <field name="vehicle_id"/>
-                            <div>
-                                <field name="value" class="oe_inline"/>
-                                <field name="unit" class="oe_inline"/>
-                            </div>
+                        <field name="value" class="oe_inline"/>
+                        <field name="unit" class="oe_inline"/>
                         <field name="date" />
                     </group>
                 </sheet>
@@ -300,7 +306,7 @@
         <field name="name">Vehicles Odometer</field>
         <field name="res_model">fleet.vehicle.odometer</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">tree,form,graph</field>
         <field name="context">{"search_default_groupby_vehicle" : True}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
@@ -322,7 +328,7 @@
         <field name="arch" type="xml">
             <tree string="Service types" editable="top">
                 <field name="name" />
-                <field name="category"/>
+                <field name="category" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -332,6 +338,8 @@
         <field name="res_model">fleet.service.type</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('category','=','service')]</field>
+        <field name="context">{'default_category':'service'}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create a new type of service.
@@ -340,17 +348,31 @@
           </p>
         </field>
     </record>
+    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" sequence="3"/>
 
-    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu"/>
+    <record id='fleet_vehicle_contract_types_action' model='ir.actions.act_window'>
+        <field name="name">Contract Types</field>
+        <field name="res_model">fleet.service.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('category','=','contract')]</field>
+        <field name="context">{'default_category':'contract'}</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new type of contract.
+          </p>
+        </field>
+    </record>
+    <menuitem action="fleet_vehicle_contract_types_action" parent="fleet_configuration" id="fleet_vehicle_contract_types_menu" sequence="4"/>
+
 
     <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.state.tree</field>
         <field name="model">fleet.vehicle.state</field>
         <field name="arch" type="xml">
             <tree string="State" editable="bottom">
-                <field name="sequence" widget="handler"/>
+                <field name="sequence" widget="handle"/>
                 <field name="name" />
-
             </tree>
         </field>
     </record>
