@@ -132,10 +132,7 @@ class Report(models.Model):
         report_model = self.env.get(report_model_name)
 
         if report_model is not None:
-            try:
-                return report_model.render_html(docids, data=data)
-            except UserError as e:
-                _logger.warning("%s: %s", report_name, e.name)
+            return report_model.render_html(docids, data=data)
         else:
             report = self._get_report_from_name(report_name)
             docs = self.env[report.model].browse(docids)

@@ -3,7 +3,6 @@
 from datetime import datetime
 import time
 from odoo import api, models
-from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -70,9 +69,6 @@ class ReportPartnerLedger(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        if not data.get('form'):
-            raise UserError(_("Some data are missing, this report cannot be printed."))
-
         data['computed'] = {}
 
         obj_partner = self.env['res.partner']
