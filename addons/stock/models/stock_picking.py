@@ -325,11 +325,11 @@ class Picking(models.Model):
                 .filtered(lambda move: move.state not in ['cancel', 'done'])\
                 .sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
             if self.move_type == 'one':
-                self.state = moves_todo[0].state
+                self.state = moves_todo[0].state or 'draft'
             elif moves_todo[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in moves_todo):
                 self.state = 'partially_available'
             else:
-                self.state = moves_todo[-1].state
+                self.state = moves_todo[-1].state or 'draft'
 
     @api.one
     @api.depends('move_lines.priority')
