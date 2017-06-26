@@ -1001,7 +1001,7 @@ var BasicModel = AbstractModel.extend({
      */
     _applyMany2OneChange: function (record, fieldName, data) {
         var self = this;
-        if (!data) {
+        if (!data || data.id === false) {
             record._changes[fieldName] = false;
             return $.when();
         }
