@@ -13,7 +13,7 @@
     <t t-name="report_mrp_line">
         <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
         <t t-if="l.model == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-        <t t-if="l.model == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
+        <t t-if="l.model == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
         <t t-set="space_td" t-value="'margin-left: '+ l.level + 'px;'"/>
         <t t-set="domainClass" t-value="'o_stock_reports_domain_line_0'"/>
         <t t-if="l.unfoldable == false">
@@ -31,6 +31,21 @@
                         <t t-if="l.unfoldable">
                             <span class="o_stock_reports_unfoldable o_stock_reports_caret_icon"><i class="fa fa-fw fa-caret-right"></i></span>
                         </t>
+                    </t>
+                    <t t-if="l.res_model == 'mrp.production' and l.reference == c">
+                        <span t-if="c">
+                            <a t-att-data-active-id="l.res_id" t-att-data-res-model="l.res_model" class="o_stock_reports_web_action"><t t-raw="c" /></a>
+                        </span>
+                    </t>
+                    <t t-if="l.res_model == 'mrp.repair' and l.reference == c">
+                        <span t-if="c">
+                            <a t-att-data-active-id="l.res_id" t-att-data-res-model="l.res_model" class="o_stock_reports_web_action"><t t-raw="c" /></a>
+                        </span>
+                    </t>
+                    <t t-if="l.res_model == 'stock.scrap' and l.reference == c">
+                        <span t-if="c">
+                            <a t-att-data-active-id="l.res_id" t-att-data-res-model="l.res_model" class="o_stock_reports_web_action"><t t-raw="c" /></a>
+                        </span>
                     </t>
                     <t t-if="l.res_model == 'stock.inventory' and l.reference == c">
                         <span t-if="c">

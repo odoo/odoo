@@ -12,14 +12,6 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     repair_id = fields.Many2one('mrp.repair')
-    consume_repair_id = fields.Many2one('mrp.repair')
-
-
-class StockMoveLine(models.Model):
-    _inherit = 'stock.move.line'
-
-    repair_id = fields.Many2one('mrp.repair', related='move_id.repair_id')
-    consume_repair_id = fields.Many2one('mrp.repair', related='move_id.consume_repair_id')
 
 
 class Repair(models.Model):
@@ -442,7 +434,7 @@ class Repair(models.Model):
                                            'result_package_id': False,
                                            'location_id': operation.location_id.id, #TODO: owner stuff
                                            'location_dest_id': operation.location_dest_id.id,})],
-                    'consume_repair_id': repair.id,
+                    'repair_id': repair.id,
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
