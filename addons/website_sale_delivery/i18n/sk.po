@@ -1,21 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_sale_delivery
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Stefan Stieranka <stieranka@itec.sk>, 2017
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Robert Kirschner <robertkirschner@yahoo.com>, 2017
+# gebri <gebri@inmail.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-19 12:36+0000\n"
-"PO-Revision-Date: 2016-05-14 07:24+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-19 12:36+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_sale_delivery
@@ -30,10 +35,12 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
 msgid ""
-"A description of the Product that you want to communicate to your customers. "
-"This description will be copied to every Sale Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sale Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
+"Popis Produktu ktorý chcete odkomunikovať vašim zákazníkom. Tento\n"
+"popis bude skopírovaný na každú Predajnú objednávku, Dodaciu objednávku a Zákaznícku Faktúru/Refund"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -56,12 +63,12 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_alternative_product_ids
 msgid "Alternative Products"
-msgstr ""
+msgstr "Alternatívne produkty"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability
 msgid "Availability"
-msgstr ""
+msgstr "Dostupnosť"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_availability_warning
@@ -90,7 +97,7 @@ msgstr "Zvoľte si vašu dodaciu metódu"
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
 msgid "Country"
-msgstr ""
+msgstr "Krajina"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
@@ -100,7 +107,7 @@ msgstr "Suma dodania"
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Dodacie metódy"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -140,7 +147,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_attachment_count
 msgid "File"
-msgstr ""
+msgstr "Súbor"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
@@ -171,16 +178,16 @@ msgstr "Dodacie náklady"
 #: code:addons/website_sale_delivery/models/sale_order.py:99
 #, python-format
 msgid ""
-"No shipping method is available for your current order and shipping address. "
-"Please contact us for more information."
+"No shipping method is available for your current order and shipping address."
+" Please contact us for more information."
 msgstr ""
-"Žiadna dodacia metóda nie je dostupná pre vašu aktuálnu objednávku a dodaciu "
-"adresu. Prosím kontaktujte nás pre viac informácií."
+"Žiadna dodacia metóda nie je dostupná pre vašu aktuálnu objednávku a dodaciu"
+" adresu. Prosím kontaktujte nás pre viac informácií."
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_optional_product_ids
 msgid "Optional Products"
-msgstr ""
+msgstr "Voliteľné produkty"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_optional_product_ids
@@ -197,7 +204,7 @@ msgstr "Obstaranie"
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
 msgid "Published"
-msgstr ""
+msgstr "Publikované"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_rating_ids
@@ -222,7 +229,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Objednávka predaja"
+msgstr "Predajná objednávka"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_size_x
@@ -270,7 +277,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_published
 msgid "Visible in Website"
-msgstr "Viditeľné na webstránke"
+msgstr "Viditelné na Webových stránkach"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
@@ -290,17 +297,17 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_description
 msgid "Website meta description"
-msgstr "Website meta popis"
+msgstr "Meta popis web stránky"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Website meta kľúčové slová"
+msgstr "Meta kľúčové slová web stránky"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_meta_title
 msgid "Website meta title"
-msgstr "Website meta názov"
+msgstr "Meta nadpis web stránky"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
