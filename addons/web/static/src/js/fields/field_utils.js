@@ -115,6 +115,9 @@ function formatDateTime(value, field, options) {
     if (!options || !('timezone' in options) || options.timezone) {
         value = value.clone().add(session.tzOffset, 'minutes');
     }
+    if (options && options.date_format) {
+        return value.format(options.date_format);
+    }
     var l10n = core._t.database.parameters;
     var date_format = time.strftime_to_moment_format(l10n.date_format);
     var time_format = time.strftime_to_moment_format(l10n.time_format);

@@ -11,6 +11,7 @@ var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var pyeval = require('web.pyeval');
 
 var _t = core._t;
 var QWeb = core.qweb;
@@ -220,7 +221,8 @@ var KanbanRecord = Widget.extend({
         // it is much more efficient to use a formatter
         var field = this.fields[field_name];
         var value = this.recordData[field_name];
-        var options = { data: this.recordData };
+        var options = $field.attr("options");
+        options = options ? pyeval.py_eval(options) : {};
         var formatted_value = field_utils.format[field.type](value, field, options);
         var $result = $('<span>', {
             text: formatted_value,

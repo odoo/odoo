@@ -5155,5 +5155,24 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('format datetime in form view', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.datetime = {string: "Datetime Field", type: 'datetime', default: '2016-12-12 10:55:05'};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="datetime" options="{\'date_format\' : \'LLL\'}"/>' +
+                '</form>',
+        });
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$(".o_field_date").html(),"December 12, 2016 10:55 AM","date formated in moment format");
+        form.destroy();
+    });
 });
 });

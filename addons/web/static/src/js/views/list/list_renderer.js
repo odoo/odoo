@@ -7,6 +7,7 @@ var core = require('web.core');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
+var pyeval = require('web.pyeval');
 
 var _t = core._t;
 
@@ -253,11 +254,13 @@ var ListRenderer = BasicRenderer.extend({
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
-        var formattedValue = field_utils.format[field.type](value, field, {
+        var options = {
             data: record.data,
             escape: true,
             isPassword: 'password' in node.attrs,
-        });
+        };
+        options =  _.extend(options, node.attrs.options ? pyeval.py_eval(node.attrs.options) : {});
+        var formattedValue = field_utils.format[field.type](value, field, options);
         return $td.html(formattedValue);
     },
     /**
