@@ -37,7 +37,7 @@
         <field name="name">Abandoned Carts</field>
         <field name="res_model">sale.order</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('date_order', '&lt;=', (context_today() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d'))]</field>
+        <field name="domain">[('state', '=', 'draft'), ('order_line', '!=', False), ('date_order', '&lt;=', (datetime.datetime.utcnow() - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S'))]</field>
         <field name="context">{'show_sale': True, 'search_default_from_website': 1, 'create': False}</field>
         <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
         <field name="help" type="xml">
