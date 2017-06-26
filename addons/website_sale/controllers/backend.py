@@ -58,11 +58,11 @@ class WebsiteSaleBackend(WebsiteBackend):
             'graph': [
                 {
                     'values': sales_graph,
-                    'key': 'Sales',
+                    'key': _('Sales'),
                 },
                 {
                     'values': previous_sales_graph,
-                    'key': 'Previous Sales',
+                    'key': _('Previous Sales'),
                 },
             ],
             'best_sellers': best_sellers,
