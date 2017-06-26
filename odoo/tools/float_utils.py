@@ -54,7 +54,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     epsilon = 2**(epsilon_magnitude-53)
     if rounding_method == 'HALF-UP':
         normalized_value += cmp(normalized_value,0) * epsilon
-        rounded_value = round(normalized_value) # round to integer
+        rounded_value = round(normalized_value) + 0 # round to integer, + 0 remove the case of minus zero
 
     # TIE-BREAKING: UP (for ceiling operations)
     # When rounding the value up, we instead subtract the epsilon value
@@ -67,7 +67,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     elif rounding_method == 'UP':
         sign = cmp(normalized_value, 0)
         normalized_value -= sign*epsilon
-        rounded_value = math.ceil(abs(normalized_value))*sign # ceil to integer
+        rounded_value = math.ceil(abs(normalized_value))*sign + 0 # ceil to integer, remove the case of minus zero
 
     result = rounded_value * rounding_factor # de-normalize
     return result
