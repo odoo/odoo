@@ -343,6 +343,27 @@ QUnit.module('core', function () {
             '2015-02-02');
     });
 
+
+    Quti.test('timedelta', function (assert) {
+        assert.expect(4);
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2017, 2, 15, 1, 7, 31) + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            "2017-02-16 01:07:31");
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) - datetime.timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            "2012-02-15 00:07:31");
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(hours=-1)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            "2012-02-15 00:07:31");
+        assert.strictEqual(
+            py.eval("(datetime.datetime(2012, 2, 15, 1, 7, 31) + datetime.timedelta(minutes=100)).strftime('%Y-%m-%d %H:%M:%S')",
+                    pyEval.context()),
+            "2012-02-15 02:47:31");
+    });
+
     QUnit.test('datetime.tojson', function (assert) {
         assert.expect(7);
 
