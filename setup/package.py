@@ -10,7 +10,10 @@ import signal
 import subprocess
 import tempfile
 import time
-import xmlrpclib
+try:
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    import xmlrpclib
 from contextlib import contextmanager
 from glob import glob
 from os.path import abspath, dirname, join

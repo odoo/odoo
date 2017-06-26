@@ -9,7 +9,10 @@ import cgitb
 import time
 import optparse
 import sys
-import xmlrpclib
+try:
+    from xmlrpc import client as xmlrpclib
+except ImportError:
+    import xmlrpclib
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
