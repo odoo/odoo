@@ -818,6 +818,9 @@ class crm_lead(FormatAddress, osv.osv):
             context['default_team_id'] = vals.get('team_id')
         if vals.get('user_id') and 'date_open' not in vals:
             vals['date_open'] = fields.datetime.now()
+        if context.get('default_partner_id') and not vals.get('email_from'):
+            partner_id = self.pool['res.partner'].browse(cr, uid, context.get('default_partner_id'))
+            vals['email_from'] = partner_id.email
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
