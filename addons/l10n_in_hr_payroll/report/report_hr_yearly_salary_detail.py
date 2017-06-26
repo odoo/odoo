@@ -4,7 +4,6 @@
 from datetime import date
 
 from odoo import api, models
-from odoo.exceptions import UserError
 
 
 class EmployeesYearlySalaryReport(models.AbstractModel):
@@ -128,9 +127,6 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
-        if ('active_model', 'active_id') not in self.env.context.keys():
-            raise UserError(_("Some data are missing, this report cannot be printed."))
-
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
         docargs = {
