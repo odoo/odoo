@@ -72,7 +72,7 @@ class FleetVehicleCost(models.Model):
 
 
 class FleetVehicleLogContract(models.Model):
-
+    _inherit = ['mail.thread']
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
     _name = 'fleet.vehicle.log.contract'
     _description = 'Contract information on a vehicle'

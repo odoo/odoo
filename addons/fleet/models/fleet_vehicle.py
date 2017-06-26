@@ -17,7 +17,7 @@ class FleetVehicle(models.Model):
         return state and state.id or False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean('Active', default=True, track_visibility="onchange")
     company_id = fields.Many2one('res.company', 'Company')
     license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
@@ -36,6 +36,7 @@ class FleetVehicle(models.Model):
     state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
+    model_year = fields.Char('Model Year',help='Year of the model')
     doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', default=5)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
@@ -103,7 +104,7 @@ class FleetVehicle(models.Model):
             record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
             record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
             record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '=', 'open')])
+            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id),('state','!=','closed')])
             record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
 
     @api.depends('log_contracts')
@@ -307,6 +308,5 @@ class FleetServiceType(models.Model):
     name = fields.Char(required=True, translate=True)
     category = fields.Selection([
         ('contract', 'Contract'),
-        ('service', 'Service'),
-        ('both', 'Both')
+        ('service', 'Service')
         ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
