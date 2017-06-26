@@ -70,6 +70,18 @@ var FormController = BasicController.extend({
             return self._setMode('edit');
         });
     },
+    toEditMode: function() {
+        return this._setMode('edit');
+    },
+    nextPage:function() {
+        return this._nextPage();
+    },
+    previousPage:function() {
+        return this._previousPage();
+    },
+    discardChange: function() {
+        return this.discardChanges();
+    },
     /**
      * Returns the current res_id, wrapped in a list. This is only used by the
      * sidebar (and the debugmanager)

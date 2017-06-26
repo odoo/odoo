@@ -114,6 +114,14 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return this.mutex.exec(function () {})
             .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
+    _nextPage: function () {
+        return this.mutex.exec(function () {})
+            .then(this.pager.next());
+    },
+    _previousPage: function(){
+        return this.mutex.exec(function () {})
+            .then(this.pager.previous());
+    },
     /**
      * Method that will be overriden by the views with the ability to have selected ids
      *

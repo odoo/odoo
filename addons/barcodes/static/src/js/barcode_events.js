@@ -173,17 +173,17 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
     },
 
     start: function(prevent_key_repeat){
-        document.body.addEventListener('keypress', this.__handler, true);
+        $('body').bind("keypress", this.__handler);
         if (prevent_key_repeat === true) {
-            document.body.addEventListener('keydown', this.__keydown_handler, true);
-            document.body.addEventListener('keyup', this.__keyup_handler, true);
+            $('body').bind("keydown", this.__keydown_handler);
+            $('body').bind('keyup', this.__keyup_handler);
         }
     },
 
     stop: function(){
-        document.body.removeEventListener('keypress', this.__handler, true);
-        document.body.removeEventListener('keydown', this.__keydown_handler, true);
-        document.body.removeEventListener('keyup', this.__keyup_handler, true);
+        $('body').unbind("keypress", this.__handler);
+        $('body').unbind("keydown", this.__keydown_handler);
+        $('body').unbind('keyup', this.__keyup_handler);
     },
 });
 

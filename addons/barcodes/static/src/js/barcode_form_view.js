@@ -26,12 +26,12 @@ FormController.include({
         this.activeBarcode = {
             form_view: {
                 commands: {
-                    'O-CMD.NEW': 'createRecord',
+                    'O-CMD.NEW': function () { return this.createRecord(this.handle); },
                     'O-CMD.EDIT': 'toEditMode',
                     'O-CMD.CANCEL': 'discardChange',
-                    'O-CMD.SAVE': function () { return this.saveRecord({reload: true}); },
-                    // 'O-CMD.PAGER-PREV':
-                    // 'O-CMD.PAGER-NEXT':
+                    'O-CMD.SAVE': function () { return this.saveRecord(this.handle, {reload: true}); },
+                    'O-CMD.PAGER-PREV': 'previousPage',
+                    'O-CMD.PAGER-NEXT': 'nextPage',
                 }
             }
         };
@@ -129,6 +129,9 @@ FormController.include({
     _getBarCodeRecord: function (record, barcode, activeBarcode) {
         var self = this;
         if (!activeBarcode.fieldName) {
+            return;
+        }
+        if (!record.data[activeBarcode.fieldName]){
             return;
         }
         return _.find(record.data[activeBarcode.fieldName].data, function (record) {
@@ -359,6 +362,21 @@ FormRenderer.include({
         }
         return $button;
     },
+    /**
+     * Add barcode event handler
+     *
+     * @override
+     * @private
+     * @param {Object} node
+     * @returns {jQueryElement}
+     */
+    _renderTagButton: function (node) {
+        var $button = this._super.apply(this, arguments);
+        if (node.attrs.barcode_trigger) {
+            this._barcodeButtonHandler($button, node);
+        }
+        return $button;
+    }
 });
 
 BarcodeEvents.ReservedBarcodePrefixes.push('O-BTN');
