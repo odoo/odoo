@@ -1973,6 +1973,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with currency set by an onchange', function (assert) {
+        // this test ensures that the monetary field can be re-rendered with and
+        // without currency (which can happen as the currency can be set by an
+        // onchange)
+        assert.expect(8);
+
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.currency_id = obj.int_field ? 2 : null;
+            },
+        };
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</tree>',
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+        assert.strictEqual(list.$('div.o_field_widget[name=qux] input').length, 1,
+            "monetary field should have been rendered correctly (without currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span').length, 0,
+            "monetary field should have been rendered correctly (without currency)");
+
+        // set a value for int_field -> should set the currency and re-render qux
+        list.$('.o_field_widget[name=int_field]').click().val('7').trigger('input');
+        assert.strictEqual(list.$('div.o_field_widget[name=qux] input').length, 1,
+            "monetary field should have been re-rendered correctly (with currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span:contains(€)').length, 1,
+            "monetary field should have been re-rendered correctly (with currency)");
+        var $quxInput = list.$('.o_field_widget[name=qux] input');
+        $quxInput.click(); // check that the field is focusable
+        assert.strictEqual(document.activeElement, $quxInput[0],
+            "focus should be on the qux field's input");
+
+        // unset the value of int_field -> should unset the currency and re-render qux
+        list.$('.o_field_widget[name=int_field]').click().val('0').trigger('input');
+        $quxInput = list.$('div.o_field_widget[name=qux] input');
+        assert.strictEqual($quxInput.length, 1,
+            "monetary field should have been re-rendered correctly (without currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span').length, 0,
+            "monetary field should have been re-rendered correctly (without currency)");
+        $quxInput.click(); // check that the field is still focusable
+        assert.strictEqual(document.activeElement, $quxInput[0],
+            "focus should be on the qux field's input");
+
+        list.destroy();
+    });
+
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function (assert) {
