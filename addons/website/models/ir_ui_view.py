@@ -146,3 +146,12 @@ class View(models.Model):
         if full:
             return views
         return views.filtered(lambda v: v.customize_show)
+
+    @api.model
+    def get_default_lang_code(self):
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            lang_code = self.env['website'].browse(website_id).default_lang_code
+            return lang_code
+        else:
+            return super(View, self).get_default_lang_code()

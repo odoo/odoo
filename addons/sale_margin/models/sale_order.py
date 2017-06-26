@@ -55,7 +55,7 @@ class SaleOrderLine(models.Model):
 
         return super(SaleOrderLine, self).create(vals)
 
-    @api.depends('product_id', 'purchase_price', 'product_uom_qty', 'price_unit')
+    @api.depends('product_id', 'purchase_price', 'product_uom_qty', 'price_unit', 'price_subtotal')
     def _product_margin(self):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
