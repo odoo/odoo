@@ -102,7 +102,7 @@ var BarcodeParser = Class.extend({
         ean = ean.substr(0,13);
 
         for(var n = 0, count = (13 - ean.length); n < count; n++){
-            ean = ean + '0';
+            ean = '0' + ean;
         }
         return ean.substr(0,12) + this.ean_checksum(ean);
     },

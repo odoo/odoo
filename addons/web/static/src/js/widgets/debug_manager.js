@@ -250,17 +250,6 @@ DebugManager.include({
             }
         });
     },
-    edit_workflow: function () {
-        return this.do_action({
-            res_model: 'workflow',
-            name: _t('Edit Workflow'),
-            domain: [['osv', '=', this._action.res_model]],
-            views: [[false, 'list'], [false, 'form'], [false, 'diagram']],
-            type: 'ir.actions.act_window',
-            view_type: 'list',
-            view_mode: 'list'
-        });
-    },
     translate: function() {
         var model = this._action.res_model;
         new Model("ir.translation")
