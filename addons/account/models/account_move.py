@@ -906,6 +906,11 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+        if not self:
+            return True
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
