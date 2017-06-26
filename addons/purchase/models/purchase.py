@@ -143,7 +143,7 @@ class PurchaseOrder(models.Model):
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -671,7 +671,7 @@ class PurchaseOrderLine(models.Model):
         }
         # Fullfill all related procurements with this po line
         diff_quantity = self.product_qty - qty
-        for procurement in self.procurement_ids:
+        for procurement in self.procurement_ids.filtered(lambda p: p.state != 'cancel'):
             # If the procurement has some moves already, we should deduct their quantity
             sum_existing_moves = sum(x.product_qty for x in procurement.move_ids if x.state != 'cancel')
             existing_proc_qty = procurement.product_id.uom_id._compute_quantity(sum_existing_moves, procurement.product_uom)

@@ -35,9 +35,6 @@ class Rating(http.Controller):
             return request.not_found()
         record_sudo = request.env[rating.res_model].sudo().browse(rating.res_id)
         record_sudo.rating_apply(rate, token=token, feedback=kwargs.get('feedback'))
-        # redirect to the form view if logged person
-        if request.session.uid:
-            return werkzeug.utils.redirect('/web#model=%s&id=%s&view_type=form' % (record_sudo._name, record_sudo.id))
         lang = rating.partner_id.lang or 'en_US'
         return request.env['ir.ui.view'].with_context(lang=lang).render_template('rating.rating_external_page_view', {
             'web_base_url': request.env['ir.config_parameter'].sudo().get_param('web.base.url'),

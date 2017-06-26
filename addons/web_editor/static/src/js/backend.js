@@ -192,6 +192,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
 var FieldTextHtml = AbstractField.extend({
     template: 'web_editor.FieldTextHtml',
     supportedFieldTypes: ['html'],
+
     start: function () {
         var self = this;
 
