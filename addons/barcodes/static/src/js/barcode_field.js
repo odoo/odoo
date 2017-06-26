@@ -40,7 +40,7 @@ var FieldFloatScannable = basicFields.FieldFloat.extend({
      */
     _onKeypress: function (e) {
         /* only simulate a keypress if it has been previously prevented */
-        if (e.originalEvent.dispatched_by_barcode_reader !== true) {
+        if (e.dispatched_by_barcode_reader !== true) {
             e.preventDefault();
             this.$input.blur();
             return;
