@@ -304,6 +304,11 @@ class ResourceCalendar(models.Model):
         elif start_dt is None:
             start_dt = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         else:
+            # FORWARD-PORT UP TO SAAS-14
+            # Add a strict limit when searching for intervals
+            force_start_dt = self.env.context.get('force_start_dt')
+            if force_start_dt and force_start_dt < start_dt:
+                work_limits.append((force_start_dt.replace(hour=0, minute=0, second=0, microsecond=0), force_start_dt))
             work_limits.append((start_dt.replace(hour=0, minute=0, second=0, microsecond=0), start_dt))
         if end_dt is None:
             end_dt = start_dt.replace(hour=23, minute=59, second=59, microsecond=999999)
@@ -335,7 +340,15 @@ class ResourceCalendar(models.Model):
                 dt_t.replace(tzinfo=tz_info).astimezone(pytz.UTC).replace(tzinfo=None),
                 calendar_working_day.id
             )
-            working_intervals += self.interval_remove_leaves(working_interval, work_limits)
+
+            # FORWARD-PORT UP TO SAAS-14
+            # Add a strict limit when searching for intervals (yeah, once again!)
+            if self.env.context.get('force_start_dt'):
+                for wi in self.interval_remove_leaves(working_interval, work_limits):
+                    if wi[0] >= self.env.context['force_start_dt']:
+                        working_intervals += [wi]
+            else:
+                working_intervals += self.interval_remove_leaves(working_interval, work_limits)
 
         # find leave intervals
         if leaves is None and compute_leaves:
@@ -423,6 +436,12 @@ class ResourceCalendar(models.Model):
         """
         if day_dt is None:
             day_dt = datetime.datetime.now()
+        elif day_dt is not None and hours > 0:
+            # FORWARD-PORT UP TO SAAS-14
+            # FIXME: think about a better fix... However, solved from saas-15 thanks to refactoring
+            # Make sure the to keep the original start date when searching for intervals, since a
+            # difference in day may occur depending on the TZ.
+            self = self.with_context(force_start_dt=day_dt)
         backwards = (hours < 0)
         hours = abs(hours)
         intervals = []

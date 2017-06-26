@@ -779,6 +779,8 @@ class Picking(models.Model):
     @api.multi
     def do_new_transfer(self):
         for pick in self:
+            if pick.state == 'done':
+                raise UserError(_('The pick is already validated'))
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
                 raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))

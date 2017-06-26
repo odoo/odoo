@@ -676,7 +676,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'one2many':
             if partial and not (
                 field_data['relation'] in self.env and (
@@ -686,7 +686,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['inverse_name'] = field_data['relation_field']
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'many2many':
             if partial and field_data['relation'] not in self.env:
                 return
@@ -695,7 +695,7 @@ class IrModelFields(models.Model):
             attrs['relation'] = field_data['relation_table'] or rel
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
