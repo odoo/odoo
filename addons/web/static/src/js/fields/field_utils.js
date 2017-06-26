@@ -494,7 +494,7 @@ return {
         many2one: formatMany2one,
         monetary: formatMonetary,
         one2many: formatX2Many,
-        reference: _.identity, // todo
+        reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
     },
@@ -512,7 +512,7 @@ return {
         many2one: parseMany2one,
         monetary: parseFloat,
         one2many: _.identity,
-        reference: _.identity, // todo
+        reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo
     },

@@ -23,6 +23,8 @@ QUnit.module('Views', {
                     currency_id: {string: "Currency", type: "many2one",
                                   relation: "res_currency", default: 1},
                     datetime: {string: "Datetime Field", type: 'datetime'},
+                    reference: {string: "Reference Field", type: 'reference', selection: [
+                        ["bar", "Bar"], ["res_currency", "Currency"], ["event", "Event"]]},
                 },
                 records: [
                     {
@@ -37,11 +39,12 @@ QUnit.module('Views', {
                         currency_id: 2,
                         date: "2017-01-25",
                         datetime: "2016-12-12 10:55:05",
+                        reference: 'bar,1',
                     },
                     {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13,
-                     m2o: 2, m2m: [1, 2, 3], amount: 500},
+                     m2o: 2, m2m: [1, 2, 3], amount: 500, reference: 'res_currency,1'},
                     {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3,
-                     m2o: 1, m2m: [], amount: 300},
+                     m2o: 1, m2m: [], amount: 300, reference: 'res_currency,2'},
                     {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9,
                      m2o: 1, m2m: [1], amount: 0},
                 ]
@@ -2397,6 +2400,33 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row').length, 5,
             "only one record should have been created");
 
+        list.destroy();
+    });
+
+    QUnit.test('reference field rendering', function (assert) {
+        assert.expect(4);
+
+        this.data.foo.records.push({
+            id: 5,
+            reference: 'res_currency,2',
+        });
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="reference"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.step(args.model);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.verifySteps(['bar', 'res_currency'], "should have done 1 name_get by model in reference values");
+        assert.strictEqual(list.$('tbody td').text(), "Value 1USDEUREUR",
+            "should have the display_name of the reference");
         list.destroy();
     });
 

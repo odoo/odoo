@@ -1943,6 +1943,106 @@ var FieldRadio = FieldSelection.extend({
     },
 });
 
+/**
+ * The FieldReference is a combination of a select (for the model) and
+ * a FieldMany2one for its value.
+ * Its intern representation is similar to the many2one (a datapoint with a
+ * `name_get` as data).
+ */
+var FieldReference = FieldMany2One.extend({
+    supportedFieldTypes: ['reference'],
+    template: 'FieldReference',
+    events: _.extend({}, FieldMany2One.prototype.events, {
+        'change select': '_onSelectionChange',
+    }),
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // needs to be copied as it is an unmutable object
+        this.field = _.extend({}, this.field);
+        if (this.value) {
+            this._setRelation(this.value.model);
+        }
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$('select').val(this.field.relation);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add a select in edit mode (for the model).
+     *
+     * @override
+     */
+    _renderEdit: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$('select').val()) {
+            this.$('.o_input_dropdown').show();
+            this.$el.addClass('o_row'); // this class is used to display the two
+                                        // components (select & input) on the same line
+        } else {
+            // hide the many2one if the selection is empty
+            this.$('.o_input_dropdown').hide();
+        }
+
+    },
+    /**
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setRelation(this.value && this.value.model);
+    },
+    /**
+     * Set `relation` key in field properties.
+     *
+     * @private
+     * @param {string} model
+     */
+    _setRelation: function (model) {
+        // used to generate the search in many2one
+        this.field.relation = model;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        value = value || {};
+        // we need to specify the model for the change in basic_model
+        // the value is then now a dict with id, display_name and model
+        value.model = this.$('select').val();
+        return this._super(value, options);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * When the selection (model) changes, the many2one is reset.
+     *
+     * @private
+     */
+    _onSelectionChange: function () {
+        var value = this.$('select').val();
+        this.reinitialize(false);
+        this._setRelation(value);
+    },
+});
+
 return {
     FieldMany2One: FieldMany2One,
     KanbanFieldMany2One: KanbanFieldMany2One,
@@ -1960,6 +2060,8 @@ return {
     FieldRadio: FieldRadio,
     FieldSelection: FieldSelection,
     FieldStatus: FieldStatus,
+
+    FieldReference: FieldReference,
 };
 
 });

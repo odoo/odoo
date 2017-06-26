@@ -332,8 +332,16 @@ var BasicModel = AbstractModel.extend({
                     } else {
                         data[fieldName] = this.get(data[fieldName]) || false;
                     }
-                }
-                if (field.type === 'one2many' || field.type === 'many2many') {
+                } else if (field.type === 'reference') {
+                    if (options.raw) {
+                        relDataPoint = this.localData[data[fieldName]];
+                        data[fieldName] = relDataPoint ?
+                            relDataPoint.model + ',' + relDataPoint.res_id :
+                            false;
+                    } else {
+                        data[fieldName] = this.get(data[fieldName]) || false;
+                    }
+                } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
                         relDataPoint = this.localData[data[fieldName]];
                         relDataPoint = this._applyX2ManyOperations(relDataPoint);
@@ -946,8 +954,8 @@ var BasicModel = AbstractModel.extend({
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
                 defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], viewType));
-            } else if (field.type === 'many2one') {
-                defs.push(this._applyMany2OneChange(record, fieldName, changes[fieldName]));
+            } else if (field.type === 'many2one' || field.type === 'reference') {
+                defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
                 record._changes[fieldName] = changes[fieldName];
             }
@@ -989,19 +997,19 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Apply a many2one onchange.  There is a need for this function because the
-     * server only gives an id when a onchange modifies a many2one field.  For
-     * this reason, we need (sometimes) to do a /name_get to fetch a
-     * display_name.
+     * Apply an x2one (either a many2one or a reference field) change. There is
+     * a need for this function because the server only gives an id when a
+     * onchange modifies a many2one field. For this reason, we need (sometimes)
+     * to do a /name_get to fetch a display_name.
      *
      * @param {Object} record
      * @param {string} fieldName
      * @param {Object} [data]
      * @returns {Deferred}
      */
-    _applyMany2OneChange: function (record, fieldName, data) {
+    _applyX2OneChange: function (record, fieldName, data) {
         var self = this;
-        if (!data || data.id === false) {
+        if (!data || !data.id) {
             record._changes[fieldName] = false;
             return $.when();
         }
@@ -1022,12 +1030,16 @@ var BasicModel = AbstractModel.extend({
             return $.when();
         }
         var rel_data = _.pick(data, 'id', 'display_name');
+        var field = record.fields[fieldName];
+
+        // the reference field doesn't store its co-model in its field metadata
+        // but directly in the data (as the co-model isn't fixed)
+        var coModel = field.type === 'reference' ? data.model : field.relation;
         var def;
         if (rel_data.display_name === undefined) {
-            var field = record.fields[fieldName];
             // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
-                    model: field.relation,
+                    model: coModel,
                     method: 'name_get',
                     args: [data.id],
                     context: record.context,
@@ -1042,7 +1054,7 @@ var BasicModel = AbstractModel.extend({
                 data: rel_data,
                 fields: {},
                 fieldsInfo: {},
-                modelName: record.fields[fieldName].relation,
+                modelName: coModel,
                 parentID: record.id,
             });
             record._changes[fieldName] = rec.id;
@@ -1239,7 +1251,10 @@ var BasicModel = AbstractModel.extend({
                             list_records[record.id].data = record;
                             self._parseServerData(fieldNames, list, record);
                         });
-                        return self._fetchX2ManysBatched(list);
+                        return $.when(
+                            self._fetchX2ManysBatched(list),
+                            self._fetchReferencesBatched(list)
+                        );
                     });
                     defs.push(def);
                 }
@@ -1544,10 +1559,138 @@ var BasicModel = AbstractModel.extend({
                 self._parseServerData(fieldNames, record, record.data);
             })
             .then(function () {
-                return self._fetchX2Manys(record, options).then(function () {
+                return $.when(
+                    self._fetchX2Manys(record, options),
+                    self._fetchReferences(record)
+                ).then(function () {
                     return self._postprocess(record, options);
                 });
             });
+    },
+    /**
+     * Fetch the extra data (`name_get`) for the reference fields of the record
+     * model.
+     *
+     * @private
+     * @param {Object} record
+     * @returns {Deferred}
+     */
+    _fetchReferences: function (record) {
+        var self = this;
+        var defs = [];
+        var fieldNames = record.getFieldNames();
+        _.each(fieldNames, function (fieldName) {
+            var field = record.fields[fieldName];
+            if (field.type === 'reference') {
+                var value = record.data[fieldName];
+                if (value) {
+                    var model = value.split(',')[0];
+                    var resID = parseInt(value.split(',')[1]);
+                    var def = self._rpc({
+                        model: model,
+                        method: 'name_get',
+                        args: [resID],
+                        context: record.getContext({fieldName: fieldName}),
+                    }).then(function (result) {
+                        var referenceDp = self._makeDataPoint({
+                            data: {
+                                id: result[0][0],
+                                display_name: result[0][1],
+                            },
+                            modelName: model,
+                            parentID: record.id,
+                        });
+                        record.data[fieldName] = referenceDp.id;
+                    });
+                    defs.push(def);
+                }
+            }
+        });
+        return $.when.apply($, defs);
+    },
+    /**
+     * Batch requests for one reference field in list (one request by different
+     * model in the field values).
+     *
+     * @see _fetchReferencesBatched
+     * @param {Object} list
+     * @param {string} fieldName
+     * @returns {Deferred}
+     */
+    _fetchReferenceBatched: function (list, fieldName) {
+        var self = this;
+        list = this._applyX2ManyOperations(list);
+
+        // collect ids by model
+        var toFetch = {};
+        _.each(list.data, function (dataPoint) {
+            var record = self.localData[dataPoint];
+            var value = record.data[fieldName];
+            if (value) {
+                var model = value.split(',')[0];
+                var resID = value.split(',')[1];
+                if (!(model in toFetch)) {
+                    toFetch[model] = {};
+                }
+                // there could be multiple datapoints with the same model/resID
+                if (toFetch[model][resID]) {
+                    toFetch[model][resID].push(dataPoint);
+                } else {
+                    toFetch[model][resID] = [dataPoint];
+                }
+            }
+        });
+
+        var defs = [];
+        var def;
+        // one name_get by model
+        _.each(toFetch, function (datapoints, model) {
+            var ids = _.map(Object.keys(datapoints), function (id) { return parseInt(id); });
+            // we need one parent for the context (they all have the same)
+            var parent = datapoints[ids[0]][0];
+            def = self._rpc({
+                model: model,
+                method: 'name_get',
+                args: [ids],
+                context: self.localData[parent].getContext({fieldName: fieldName}),
+            }).then(function (result) {
+                _.each(result, function (el) {
+                    var parentIDs = datapoints[el[0]];
+                    _.each(parentIDs, function (parentID) {
+                        var parent = self.localData[parentID];
+                        var referenceDp = self._makeDataPoint({
+                            data: {
+                                id: el[0],
+                                display_name: el[1],
+                            },
+                            modelName: model,
+                            parentID: parent,
+                        });
+                        parent.data[fieldName] = referenceDp.id;
+                    });
+                });
+            });
+            defs.push(def);
+        });
+
+        return $.when.apply($, defs);
+    },
+    /**
+     * Batch requests for references for datapoint of type list.
+     *
+     * @param {Object} list
+     * @returns {Deferred}
+     */
+    _fetchReferencesBatched: function (list) {
+        var defs = [];
+        var fieldNames = list.getFieldNames();
+        for (var i = 0; i < fieldNames.length; i++) {
+            var field = list.fields[fieldNames[i]];
+            if (field.type === 'reference') {
+                defs.push(this._fetchReferenceBatched(list, fieldNames[i]));
+            }
+        }
+        return $.when.apply($, defs);
     },
     /**
      * This method is incorrectly named.  It should be named something like
@@ -1826,7 +1969,9 @@ var BasicModel = AbstractModel.extend({
             def = this._searchReadUngroupedList(list);
         }
         return def.then(function () {
-            return self._fetchX2ManysBatched(list);
+            return $.when(
+                self._fetchX2ManysBatched(list),
+                self._fetchReferencesBatched(list));
         }).then(function () {
             return list;
         });
@@ -1880,7 +2025,10 @@ var BasicModel = AbstractModel.extend({
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
                     var def = self._readUngroupedList(list).then(function () {
-                        return self._fetchX2ManysBatched(list);
+                        return $.when(
+                            self._fetchX2ManysBatched(list),
+                            self._fetchReferencesBatched(list)
+                        );
                     });
                     defs.push(def);
                 }
@@ -2029,6 +2177,7 @@ var BasicModel = AbstractModel.extend({
 
             // process relational fields and handle the null case
             var type = record.fields[fieldName].type;
+            var value;
             if (type === 'one2many' || type === 'many2many') {
                 if (commands[fieldName].length) { // replace localId by commands
                     changes[fieldName] = commands[fieldName];
@@ -2036,8 +2185,13 @@ var BasicModel = AbstractModel.extend({
                     delete changes[fieldName];
                 }
             } else if (type === 'many2one' && fieldName in changes) {
-                var value = changes[fieldName];
+                value = changes[fieldName];
                 changes[fieldName] = value ? this.localData[value].res_id : false;
+            } else if (type === 'reference' && fieldName in changes) {
+                value = changes[fieldName];
+                changes[fieldName] = value ?
+                    this.localData[value].model + ',' + this.localData[value].res_id :
+                    false;
             } else if (changes[fieldName] === null) {
                 changes[fieldName] = false;
             }
@@ -2683,7 +2837,10 @@ var BasicModel = AbstractModel.extend({
                                 x2manyList.res_ids = value[2];
                                 x2manyList.count = x2manyList.res_ids.length;
                                 var def = self._readUngroupedList(x2manyList).then(function () {
-                                    return self._fetchX2ManysBatched(x2manyList);
+                                    return $.when(
+                                        self._fetchX2ManysBatched(x2manyList),
+                                        self._fetchReferencesBatched(x2manyList)
+                                    );
                                 });
                                 defs.push(def);
                             }
