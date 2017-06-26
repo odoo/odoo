@@ -34,6 +34,8 @@ QUnit.module('relational_fields', {
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     user_id: {string: "User", type: 'many2one', relation: 'user'},
+                    reference: {string: "Reference Field", type: 'reference', selection: [
+                        ["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                 },
                 records: [{
                     id: 1,
@@ -47,6 +49,7 @@ QUnit.module('relational_fields', {
                     timmy: [],
                     trululu: 4,
                     user_id: 17,
+                    reference: 'product,37',
                 }, {
                     id: 2,
                     display_name: "second record",
@@ -6417,6 +6420,103 @@ QUnit.module('relational_fields', {
             form.destroy();
             done();
         });
+    });
+
+    QUnit.module('FieldReference');
+
+    QUnit.test('reference in form view', function (assert) {
+        assert.expect(15);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="reference" string="custom label"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form string="Product"><field name="display_name"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_action') {
+                    assert.deepEqual(args.args[0], [37], "should call get_formview_action with correct id");
+                    return $.when({
+                        res_id: 17,
+                        type: 'ir.actions.act_window',
+                        target: 'current',
+                        res_model: 'res.partner'
+                    });
+                }
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [37], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                if (args.method === 'name_search') {
+                    assert.strictEqual(args.model, 'partner_type',
+                        "the name_search should be done on the newly set model");
+                }
+                if (args.method === 'write') {
+                    assert.strictEqual(args.model, 'partner',
+                        "should write on the current model");
+                    assert.deepEqual(args.args, [[1], {reference: 'partner_type,12'}],
+                        "should write the correct value");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        testUtils.intercept(form, 'do_action', function (event) {
+            assert.strictEqual(event.data.action.res_id, 17,
+                "should do a do_action with correct parameters");
+        });
+
+        assert.strictEqual(form.$('a.o_form_uri:contains(xphone)').length, 1,
+                        "should contain a link");
+        form.$('a.o_form_uri').click(); // click on the link in readonly mode (should trigger do_action)
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_widget').length, 2,
+            "should contain two field widgets (selection and many2one)");
+        assert.strictEqual(form.$('.o_field_many2one').length, 1,
+            "should contain one many2one");
+        assert.strictEqual(form.$('.o_field_widget select').val(), "product",
+            "widget should contain one select with the model");
+        assert.strictEqual(form.$('.o_field_widget input').val(), "xphone",
+            "widget should contain one input with the record");
+
+        var options = _.map(form.$('.o_field_widget select > option'), function (el) {
+            return $(el).val();
+        });
+        assert.deepEqual(options, ['', 'product', 'partner_type', 'partner'],
+            "the options should be correctly set");
+
+
+        form.$('.o_external_button').click(); // click on the external button (should do an RPC)
+
+        assert.strictEqual($('.modal .modal-title').text().trim(), 'Open: custom label',
+                        "dialog title should display the custom string label");
+        $('.modal .o_form_button_cancel').click();
+
+        form.$('.o_field_widget select').val('partner_type').trigger('change');
+        assert.strictEqual(form.$('.o_field_widget input').val(), "",
+            "many2one value should be reset after model change");
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        // change the value of the m2o with a suggestion of the dropdown
+        form.$('.o_field_many2one input').click(); // will trigger a name_search on partner_type model
+        $dropdown.find('li:first()').click();
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('a.o_form_uri:contains(gold)').length, 1,
+                        "should contain a link with the new value");
+
+        form.destroy();
     });
 
 });

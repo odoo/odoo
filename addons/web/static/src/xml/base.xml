@@ -753,6 +753,14 @@
         <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
     </div>
 </t>
+<t t-name="FieldReference" t-extend="FieldMany2One">
+    <t t-jquery=".o_input_dropdown" t-operation="before">
+        <select class="o_input o_field_widget">
+            <option/>
+            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+        </select>
+    </t>
+</t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
         <span t-attf-class="badge dropdown o_tag_color_#{el.color || 10}" t-att-data-color="el.color || 10" t-att-data-index="el_index" t-att-data-id="el.id">

@@ -20,6 +20,7 @@ QUnit.module('Views', {
                     product_ids: {string: "Favorite products", type: 'one2many', relation: 'product'},
                     category: {string: "Category M2M", type: 'many2many', relation: 'partner_type'},
                     date: {string: "Date Field", type: 'date'},
+                    reference: {string: "Reference Field", type: 'reference', selection: [["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                 },
                 records: [
                     {id: 1, foo: 'blip', bar: 1, product_id: 37, category: [12], display_name: "first partner", date: "2017-01-25"},
@@ -1777,6 +1778,7 @@ QUnit.module('Views', {
                 product_id: 37,
                 product_ids: [],
                 qux: false,
+                reference: false,
                 total: 0
             }, "should use the proper eval context");
         });
@@ -1816,6 +1818,41 @@ QUnit.module('Views', {
             assert.strictEqual(JSON.stringify(domain),
                 "[[\"id\",\"in\",[12]],[\"id\",\"in\",[37,41]]]",
                  "x2many values in domains should be lists of ids");
+        });
+        model.destroy();
+    });
+
+    QUnit.test('fetch references in list, with not too many rpcs', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].reference = 'product,37';
+        this.data.partner.records[1].reference = 'product,41';
+
+        this.params.fieldNames = ['reference'];
+        this.params.domain = [];
+        this.params.groupedBy = [];
+        this.params.res_id = undefined;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(route);
+                if (route === "/web/dataset/call_kw/product/name_get") {
+                    assert.deepEqual(args.args, [[37, 41]],
+                        "the name_get should contain the product ids");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+
+            assert.strictEqual(record.data[0].data.reference.data.display_name, "xphone",
+                "name_get should have been correctly fetched");
+            assert.verifySteps(["/web/dataset/search_read",  "/web/dataset/call_kw/product/name_get"],
+                "should have done 2 rpc (searchread and name_get for product)");
         });
         model.destroy();
     });
