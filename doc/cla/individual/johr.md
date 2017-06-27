@@ -8,6 +8,6 @@ declaration.
 
 Signed,
 
-https://github.com/johr
+johr johr@gmx.at https://github.com/johr
 
 
