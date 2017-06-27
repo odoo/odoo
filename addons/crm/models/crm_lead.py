@@ -256,11 +256,13 @@ class Lead(models.Model):
         self.update(values)
 
     @api.constrains('user_id')
+    @api.multi
     def _valid_team(self):
-        if self.user_id:
-            values = self.with_context(team_id=self.team_id.id)._onchange_user_values(self.user_id.id)
-            if values:
-                self.update(values)
+        for lead in self:
+            if lead.user_id:
+                values = lead.with_context(team_id=lead.team_id.id)._onchange_user_values(lead.user_id.id)
+                if values:
+                    lead.update(values)
 
     @api.onchange('state_id')
     def _onchange_state(self):
