@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_account_report_tax_payable" model="ir.actions.act_window">
+        <field name="name">Tax Payable</field>
+        <field name="res_model">accounting.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.accounting_report_view"/>
+        <field name="target">new</field>
+        <field name="context" eval="{'default_account_report_id':ref('l10n_in_gst.total_tax_payable_l10n_in_report')}"/>
+    </record>
+
+    <menuitem id="menu_account_report_tax_payable" name="Tax Payable" action="action_account_report_tax_payable" parent="l10n_in.account_reports_in_statements_menu"/>
+
+</odoo>
