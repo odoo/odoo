@@ -419,9 +419,6 @@ class ProductTemplate(models.Model):
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids')
 
-    def _is_cost_method_standard(self):
-        return True
-
     def _compute_quantities(self):
         res = self._compute_quantities_dict()
         for template in self:
