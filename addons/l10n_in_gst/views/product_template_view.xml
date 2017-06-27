@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="l10n_in.product_product_hs_code">
+        <field name="name">l10n_in.product.product.form.hs_code</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="x_hsn_code"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

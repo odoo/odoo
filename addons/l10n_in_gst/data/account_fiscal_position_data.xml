@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiscal Position Templates -->
+    <record model="account.fiscal.position" id="fiscal_position_in_inter_state">
+        <field name="name">Inter State</field>
+    </record>
+
+    <record model="account.fiscal.position" id="fiscal_position_in_export">
+        <field name="name">Export</field>
+    </record>
+
+    <!-- Fiscal Position Tax Templates -->
+    <record id="account_fiscal_position_tax_in_sale_5_inter" model="account.fiscal.position.tax">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_sale_5"/>
+        <field name="tax_dest_id" ref="igst_sale_5"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_5_inter" model="account.fiscal.position.tax">
+        <field name="position_id" ref="fiscal_position_in_inter_state"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="igst_purchase_5"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_sale_5_exp" model="account.fiscal.position.tax">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_sale_5"/>
+        <field name="tax_dest_id" ref="igst_sale_5"/>
+    </record>
+
+    <record id="account_fiscal_position_tax_in_purchase_5_exp" model="account.fiscal.position.tax">
+        <field name="position_id" ref="fiscal_position_in_export"/>
+        <field name="tax_src_id" ref="sgst_purchase_5"/>
+        <field name="tax_dest_id" ref="igst_purchase_5"/>
+    </record>
+
+</odoo>
