@@ -409,7 +409,7 @@ var FormController = BasicController.extend({
      * @private
      */
     _onDiscard: function () {
-        this.discardChanges();
+        this._discardChanges();
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
