@@ -13,6 +13,9 @@
         'data/theme_bootswatch_data.xml',
         'views/theme_bootswatch_templates.xml',
     ],
-    'images': ['static/description/bootswatch.png'],
+    'images': [
+        'static/description/bootswatch.png',
+        'static/description/bootswatch_screenshot.jpg',
+    ],
     'application': False,
 }
