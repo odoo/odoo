@@ -32,10 +32,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1)
 
         order.carrier_id = self.env['delivery.carrier'].search([])[1]
         order.delivery_set()
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
 
         # Test case 2: the amount is sufficient, the shipping should
@@ -50,10 +52,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             })
         ]})
 
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 4)
 
         # Test case 3: the amount is not sufficient now, the reward should be removed
         order.write({'order_line': [
             (2, order.order_line.filtered(lambda line: line.product_id.id == self.product_A.id).id, False)
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
