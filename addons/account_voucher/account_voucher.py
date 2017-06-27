@@ -214,6 +214,8 @@ class account_voucher(osv.osv):
             if line_id and self.pool.get('account.move.line').browse(cr, uid, line_id, context=context).currency_id:
                 is_multi_currency = True
                 break
+        # See https://github.com/odoo/odoo/issues/6216
+        amount = context['default_amount']
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
 
     def _get_journal_currency(self, cr, uid, ids, name, args, context=None):
