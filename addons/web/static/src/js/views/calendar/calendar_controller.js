@@ -156,8 +156,10 @@ var CalendarController = AbstractController.extend({
                 self.quick.destroy();
                 self.quick = null;
                 self.reload(id);
-            }, function () {
+            }, function (error, errorEvent) {
                 // This will occurs if there are some more fields required
+                // Preventdefaulting the error event will prevent the traceback window
+                errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
