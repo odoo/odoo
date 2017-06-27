@@ -22,6 +22,7 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "The promo offer shouldn't have been applied as the product B isn't in the order")
 
         # Test case 2 (1 A 1 B): Assert that no reward is given, as the product B is not present in the correct quantity
@@ -33,14 +34,17 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offer shouldn't have been applied as 2 product A aren't in the order")
 
         # Test case 3 (2 A 1 B): Assert that the reward is given as the product B is now in the order
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 2.0})]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied, the discount is not created")
 
         # Test case 4 (1 A 1 B): Assert that the reward is removed as we don't buy 2 products B anymore
         order.write({'order_line': [(1, order.order_line[0].id, {'product_uom_qty': 1.0})]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo reward should have been removed as the rules are not matched anymore")
         self.assertEqual(order.order_line[0].product_id.id, self.product_A.id, "The wrong line has been removed")
         self.assertEqual(order.order_line[1].product_id.id, self.product_B.id, "The wrong line has been removed")
@@ -50,5 +54,6 @@ class TestProgramWithoutCodeOperations(TestSaleCouponCommon):
             (1, order.order_line[0].id, {'product_uom_qty': 2.0}),
             (2, order.order_line[0].id, False)
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "The promo reward should have been removed as the rules are not matched anymore")
         self.assertEqual(order.order_line.product_id.id, self.product_B.id, "The wrong line has been removed")

@@ -42,10 +42,12 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.env['sale.coupon.apply.code'].with_context(active_id=order.id).create({
             'coupon_code': self.code_promotion_program.coupon_ids.code
         }).process_coupon()
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
 
         # Remove the product A from the sale order
         order.write({'order_line': [(2, order.order_line[0].id, False)]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 0)
 
 def test_on_next_order_reward_promo_program(self):
@@ -71,6 +73,7 @@ def test_on_next_order_reward_promo_program(self):
         'coupon_code': 'bleurk'
     }).process_coupon()
     # Ensure that the coupon is correctly generated
+    order.recompute_coupon_lines()
     self.assertEqual(len(self.immediate_promotion_program.coupon_ids.ids), 1)
 
     generated_coupon = self.immediate_promotion_program.coupon_ids[0]
@@ -89,4 +92,5 @@ def test_on_next_order_reward_promo_program(self):
         'coupon_code': generated_coupon.code
     })
     # Ensure that the generated coupon is valid
+    order.recompute_coupon_lines()
     self.assertEqual(len(order.order_line.ids), 2)
