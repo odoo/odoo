@@ -640,7 +640,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use mini calendar', function (assert) {
-        assert.expect(2);
+        assert.expect(12);
 
         var calendar = createView({
             View: CalendarView,
@@ -665,9 +665,26 @@ QUnit.module('Views', {
             },
         });
 
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
         assert.strictEqual(calendar.$('.fc-event').length, 9, "should display 9 events on the week (4 event + 5 days event)");
-        $('.o_calendar_mini a:contains(19)').click();
+        calendar.$('.o_calendar_mini a:contains(19)').click();
+        // Clicking on a day in another week should switch to the other week view
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should display 4 events on the week (1 event + 3 days event)");
+        // Clicking on a day in the same week should switch to that particular day view
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaDay-view').length, 1, "should be in day mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
+        // Clicking on the same day should toggle between day, month and week views
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-month-view').length, 1, "should be in month mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (event 5 is on multiple weeks and generates to .fc-event)");
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should display 4 events on the week (1 event + 3 days event)");
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaDay-view').length, 1, "should be in day mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
 
         calendar.destroy();
     });
