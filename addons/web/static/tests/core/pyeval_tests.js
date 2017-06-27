@@ -344,7 +344,7 @@ QUnit.module('core', function () {
     });
 
 
-    Quti.test('timedelta', function (assert) {
+    QUnit.test('timedelta', function (assert) {
         assert.expect(4);
         assert.strictEqual(
             py.eval("(datetime.datetime(2017, 2, 15, 1, 7, 31) + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')",
