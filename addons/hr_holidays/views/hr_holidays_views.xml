@@ -207,21 +207,27 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div>
-                                    <span>
+                                <div class="row">
+                                    <div class="col-xs-2">
                                         <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar pull-left"/>
-                                    </span>
-                                    <span>
-                                        <div>
-                                            <strong><t t-esc="record.employee_id.value"/></strong>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <strong><t t-esc="record.employee_id.value"/></strong>
+                                            </div>
                                         </div>
-                                        <div class="text-muted">
-                                            <t t-esc="record.name.value"/>
+                                        <div class="row">
+                                            <div class="col-xs-12 o_text_overflow text-mute">
+                                                <t t-esc="record.name.value"/>
+                                            </div>
                                         </div>
-                                    </span>
-                                    <span class="pull-right mt8 label label-default">
-                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'validate': 'success','confirm': 'default', 'cancel': 'danger'}}"/>
-                                    </span>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <span class="pull-right mt8 label label-default">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'validate': 'success','confirm': 'default', 'cancel': 'danger'}}"/>
+                                        </span>
+                                    </div>
                                 </div>
                                 <hr class="mt4 mb4"/>
                                 <div t-if="record.date_from.value">
