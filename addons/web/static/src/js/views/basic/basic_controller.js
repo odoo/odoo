@@ -423,7 +423,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
-                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly');
+                    var def = fieldNames.length ? self._confirmSave(recordID) : self._setMode('readonly', recordID);
                     return def.then(function () {
                         return fieldNames;
                     });
@@ -534,6 +534,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {function} ev.data.action the function to execute in the mutex
      */
     _onMutexify: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
         this.mutex.exec(ev.data.action);
     },
     /**
@@ -578,6 +579,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {OdooEvent} event
      */
     _onTranslate: function (event) {
+        event.stopPropagation();
         var record = this.model.get(event.data.id, {raw: true});
         this._rpc({
             route: '/web/dataset/call_button',

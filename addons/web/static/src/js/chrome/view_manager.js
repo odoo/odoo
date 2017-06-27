@@ -307,7 +307,7 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                     self.trigger('switch_mode', view_type, view_options);
                 }).fail(function(e) {
                     if (!(e && e.code === 200 && e.data.exception_type)) {
-                        self.do_warn(_t("Error"), view.controller.display_name + _t(" view couldn't be loaded"));
+                        self.do_warn(_t("Error"), view.label + _t(" view couldn't be loaded"));
                     }
                     // Restore internal state
                     self.active_view = old_view;

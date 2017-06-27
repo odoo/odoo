@@ -6,7 +6,7 @@ import logging
 from lxml import etree, html
 
 from odoo.exceptions import AccessError
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
@@ -35,6 +35,10 @@ class IrUiView(models.Model):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
     @api.model
+    def get_default_lang_code(self):
+        return False
+
+    @api.model
     def save_embedded_field(self, el):
         Model = self.env[el.get('data-oe-model')]
         field = el.get('data-oe-field')
@@ -45,7 +49,10 @@ class IrUiView(models.Model):
 
         if value is not None:
             # TODO: batch writes?
-            Model.browse(int(el.get('data-oe-id'))).write({field: value})
+            if self.get_default_lang_code() and field != 'arch' and not isinstance(Model._fields[field], fields.Html):
+                Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
+            else:
+                Model.browse(int(el.get('data-oe-id'))).write({field: value})
 
     def _pretty_arch(self, arch):
         # remove_blank_string does not seem to work on HTMLParser, and

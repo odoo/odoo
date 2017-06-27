@@ -285,11 +285,15 @@ var InputField = DebouncedField.extend({
      */
     _onNavigationMove: function (ev) {
         this._super.apply(this, arguments);
-        var input = this.$input[0];
-        var selecting = (input.selectionEnd !== input.selectionStart);
-        if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-         || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
-            ev.stopPropagation();
+
+        // the following code only makes sense in edit mode, with an input
+        if (this.mode === 'edit') {
+            var input = this.$input[0];
+            var selecting = (input.selectionEnd !== input.selectionStart);
+            if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
+             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                ev.stopPropagation();
+            }
         }
     },
 });
@@ -321,6 +325,14 @@ var FieldDate = InputField.extend({
     tagName: "span",
     supportedFieldTypes: ['date'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        // use the session timezone when formatting dates
+        this.formatOptions.timezone = true;
+    },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
      *
@@ -396,17 +408,6 @@ var FieldDate = InputField.extend({
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.date(value, {timezone: true});
-    },
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -448,17 +449,6 @@ var FieldDateTime = FieldDate.extend({
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.datetime(value, {timezone: true});
-    },
 });
 
 var FieldMonetary = InputField.extend({
@@ -490,6 +480,13 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
         }
+
+        // use the formatFloat function in edit
+        if (this.mode === 'edit') {
+            this.formatType = 'float';
+        }
+        this.formatOptions.currency = this.currency;
+        this.formatOptions.digits = [16, 2];
     },
 
     //--------------------------------------------------------------------------
@@ -561,22 +558,6 @@ var FieldMonetary = InputField.extend({
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
-    },
-    /**
-     * FieldMonetary overrides _formatValue to use the format monetary method
-     * in readonly.
-     *
-     * @override
-     * @private
-     * @param {float} value
-     * @returns {string}
-     */
-    _formatValue: function (value) {
-        var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
-        return format(value, this.field, {
-            digits: [16, 2],
-            currency: this.currency,
-        });
     },
 });
 
@@ -686,6 +667,11 @@ var FieldBoolean = AbstractField.extend({
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.RIGHT:
+            case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.LEFT:
+                ev.preventDefault();
         }
         this._super.apply(this, arguments);
     },
@@ -734,7 +720,7 @@ var FieldInteger = InputField.extend({
             }
             return value;
         }
-        return field_utils.format.integer(value, this.field);
+        return this._super.apply(this, arguments);
     },
 });
 
@@ -771,31 +757,11 @@ var FieldFloat = InputField.extend({
 });
 
 var FieldFloatTime = FieldFloat.extend({
-    supportedFieldTypes: ['float'],
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Format the float time value into a human-readable time format.
-     *
-     * @override
-     * @private
-     */
-    _formatValue: function (value) {
-        return field_utils.format.float_time(value);
-    },
-
-    /**
-     * Parse the human-readable formatted time value into a float.
-     *
-     * @override
-     * @private
-     */
-    _parseValue: function (value) {
-        return field_utils.parse.float_time(value);
-    },
+    // this is not strictly necessary, as for this widget to be used, the 'widget'
+    // attrs must be set to 'float_time', so the formatType is automatically
+    // 'float_time', but for the sake of clarity, we explicitely define a
+    // FieldFloatTime widget with formatType = 'float_time'.
+    formatType: 'float_time',
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
@@ -853,6 +819,19 @@ var FieldEmail = InputField.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -886,6 +865,17 @@ var FieldPhone = FieldEmail.extend({
         if (this.mode === 'readonly' && !this._canCall()) {
             this.tagName = 'span';
         }
+    },
+    /**
+     * Returns the associated link only if there is one.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        if (this._canCall()) {
+            return this._super.apply(this, arguments);
+        }
+        return $();
     },
 
     //--------------------------------------------------------------------------
@@ -938,6 +928,19 @@ var UrlWidget = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1041,7 +1044,13 @@ var AbstractFieldBinary = AbstractField.extend({
     set_filename: function (value) {
         var filename = this.attrs.filename;
         if (filename && filename in this.fields) {
-            this.trigger_up('update_field', { name: filename, value: value });
+            var changes = {};
+            changes[filename] = value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+                viewType: this.viewType,
+            });
         }
     },
     on_clear: function () {

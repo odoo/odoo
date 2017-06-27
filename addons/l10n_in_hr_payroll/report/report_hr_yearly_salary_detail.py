@@ -4,6 +4,7 @@
 from datetime import date
 
 from odoo import api, models
+from odoo.exceptions import UserError
 from odoo.tools import pycompat
 
 
@@ -128,6 +129,9 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
 
     @api.model
     def get_report_values(self, docids, data=None):
+        if not self.env.context.get('active_model') or not self.env.context.get('active_id'):
+            raise UserError(_("Some data are missing, this report cannot be printed."))
+
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))
         return {

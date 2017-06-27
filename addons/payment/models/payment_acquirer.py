@@ -527,7 +527,9 @@ class PaymentTransaction(models.Model):
             tx.write({'reference': str(tx.id)})
 
         # Generate callback hash if it is configured on the tx; avoid generating unnecessary stuff
-        if tx.callback_model_id and tx.callback_res_id and tx.sudo().callback_method:
+        # (limited sudo env for checking callback presence, must work for manual transactions too)
+        tx_sudo = tx.sudo()
+        if tx_sudo.callback_model_id and tx_sudo.callback_res_id and tx_sudo.callback_method:
             tx.write({'callback_hash': tx._generate_callback_hash()})
 
         return tx
@@ -657,7 +659,13 @@ class PaymentTransaction(models.Model):
     @api.multi
     def execute_callback(self):
         res = None
-        for transaction in self.filtered(lambda tx: tx.callback_model_id and tx.callback_res_id and tx.sudo().callback_method):
+        for transaction in self:
+            # limited sudo env, only for checking callback presence, not for running it!
+            # manual transactions have no callback, and can pass without being run by admin user
+            tx_sudo = transaction.sudo()
+            if not (tx_sudo.callback_model_id and tx_sudo.callback_res_id and tx_sudo.callback_method):
+                continue
+
             valid_token = transaction._generate_callback_hash()
             if not consteq(ustr(valid_token), transaction.callback_hash):
                 _logger.warning("Invalid callback signature for transaction %d" % (transaction.id))
@@ -665,7 +673,7 @@ class PaymentTransaction(models.Model):
 
             record = self.env[transaction.callback_model_id.model].browse(transaction.callback_res_id).exists()
             if record:
-                res = getattr(record, transaction.sudo().callback_method)(transaction)
+                res = getattr(record, transaction.callback_method)(transaction)
             else:
                 _logger.warning("Did not found record %s.%s for callback of transaction %d" % (transaction.callback_model_id.model, transaction.callback_res_id, transaction.id))
         return res

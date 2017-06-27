@@ -61,5 +61,6 @@ class Holidays(models.Model):
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
         result = super(Holidays, self).action_refuse()
+        self.mapped('timesheet_ids').write({'holiday_id': False})
         self.mapped('timesheet_ids').unlink()
         return result

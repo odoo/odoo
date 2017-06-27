@@ -192,6 +192,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
 var FieldTextHtml = AbstractField.extend({
     template: 'web_editor.FieldTextHtml',
     supportedFieldTypes: ['html'],
+
     start: function () {
         var self = this;
 
@@ -206,7 +207,7 @@ var FieldTextHtml = AbstractField.extend({
         };
         window.odoo[this.callback+"_updown"] = null;
         window.odoo[this.callback+"_downup"] = function (value) {
-            self.set_value(value);
+            self._setValue(value);
             self.resize();
         };
 
@@ -236,10 +237,13 @@ var FieldTextHtml = AbstractField.extend({
         // this.$translate = $();
         return def;
     },
+    getDatarecord: function () {
+        return this.recordData;
+    },
     get_url: function (_attr) {
         var src = this.nodeOptions.editor_url || "/mass_mailing/field/email_template";
         var k;
-        var datarecord = this.recordData;
+        var datarecord = this.getDatarecord();
         var attr = {
             'model': this.model,
             'field': this.name,

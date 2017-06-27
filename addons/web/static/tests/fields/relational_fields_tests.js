@@ -199,6 +199,115 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2ones in form views with show_adress', function (assert) {
+        assert.expect(4);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field ' +
+                                'name="trululu" ' +
+                                'string="custom label" ' +
+                                'context="{\'search_default_customer\':1, \'show_address\': 1}" ' +
+                                'options="{\'always_reload\': True}"' +
+                            '/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return this._super(route, args).then(function (result) {
+                        result[0][1] += '\nStreet\nCity ZIP';
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            "input should have a multi-line content in readonly due to show_address");
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should have an open record button");
+
+        form.$('input.o_input').click();
+        form.$('input.o_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ESC,
+            keyCode: $.ui.keyCode.ESC,
+        }));
+
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should still have an open record button");
+        form.$('input.o_input').trigger('focusout');
+        assert.strictEqual($('.modal button:contains(Create and edit)').length, 0,
+            "there should not be a quick create modal");
+
+        form.destroy();
+    });
+
+    QUnit.test('many2ones in form views with search more', function (assert) {
+        assert.expect(3);
+        this.data.partner.records.push({
+            id: 5,
+            display_name: "Partner 4",
+        }, {
+            id: 6,
+            display_name: "Partner 5",
+        }, {
+            id: 7,
+            display_name: "Partner 6",
+        }, {
+            id: 8,
+            display_name: "Partner 7",
+        }, {
+            id: 9,
+            display_name: "Partner 8",
+        }, {
+            id: 10,
+            display_name: "Partner 9",
+        });
+        this.data.partner.fields.datetime.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="datetime"/></search>',
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
+
+        assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
+
+        $('.o_searchview_more').click();  // Magnifying class for more filters
+        $('button:contains(Filters)').click();
+        $('.o_add_filter').click();  // Add a custom filter, datetime field is selected
+        assert.strictEqual($('li.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
+            "datetime field should be selected");
+        $('.o_apply_filter').click();
+
+        assert.strictEqual($('tr.o_data_row').length, 0, "should display 0 records");
+        form.destroy();
+    });
+
     QUnit.test('onchanges on many2ones trigger when editing record in form view', function (assert) {
         assert.expect(9);
 
@@ -2927,8 +3036,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
-        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.5tototo1.550xphone",
-            "sould display the record values in one2many list");
+        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
+            "should display the record values in one2many list");
 
         $('.o_form_button_save').click();
 
@@ -5153,7 +5262,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('widget selection,  edition and on many2one field', function (assert) {
-        assert.expect(15);
+        assert.expect(18);
 
         this.data.partner.onchanges = {product_id: function () {}};
         this.data.partner.records[0].product_id = 37;
@@ -5178,6 +5287,13 @@ QUnit.module('relational_fields', {
         });
 
         assert.ok(!form.$('select').length, "should not have a select tag in dom");
+        assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
+            "should have rendered the many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
+            "should have rendered the unset many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=color]').text(), 'Red',
+            "should have rendered the selection field correctly");
+
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('select').length, 3,
@@ -5811,6 +5927,52 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('name_create in form dialog', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="product_id"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.step('name_create');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
+        $('.modal input').val('new record').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'new record'
+            assert.verifySteps(['name_create']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
 });
 });
 });

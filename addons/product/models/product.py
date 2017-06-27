@@ -57,6 +57,10 @@ class ProductCategory(models.Model):
             raise ValidationError(_('Error ! You cannot create recursive categories.'))
         return True
 
+    @api.model
+    def name_create(self, name):
+        return self.create({'name': name}).name_get()[0]
+
 
 class ProductPriceHistory(models.Model):
     """ Keep track of the ``product.template`` standard prices as they are changed. """

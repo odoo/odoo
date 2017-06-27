@@ -153,7 +153,7 @@ var KanbanModel = BasicModel.extend({
         }).then(function () {
             // Remove record from its current group
             var old_group;
-            for (var i = 0; i < parent.count; i++) {
+            for (var i = 0; i < parent.data.length; i++) {
                 old_group = self.localData[parent.data[i]];
                 var index = _.indexOf(old_group.data, recordID);
                 if (index >= 0) {
@@ -244,9 +244,14 @@ var KanbanModel = BasicModel.extend({
         if (groupedByField.type !== 'many2one') {
             return $.when();
         }
-        var groupIds = _.map(list.data, function (id) {
-            return self.get(id, {raw: true}).res_id;
-        });
+        var groupIds = _.reduce(list.data, function (groupIds, id) {
+            var res_id = self.get(id, {raw: true}).res_id;
+            // The field on which we are grouping might not be set on all records
+            if (res_id) {
+                groupIds.push(res_id);
+            }
+            return groupIds;
+        }, []);
         var tooltipFields = [];
         var groupedByFieldInfo = list.fieldsInfo.kanban[list.groupedBy[0]];
         if (groupedByFieldInfo && groupedByFieldInfo.options) {

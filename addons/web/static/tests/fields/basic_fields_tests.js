@@ -394,7 +394,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -408,8 +408,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-        'Non-set float field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+        'Non-set float field should be considered as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0.000",
+        'Non-set float field should be considered as 0.');
 
         form.destroy();
     });
@@ -532,6 +534,35 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
 
         assert.verifySteps(['read']); // should not have save as nothing changed
+
+        form.destroy();
+    });
+
+    QUnit.test('float widget on monetary field', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.monetary = {string: "Monetary", type: 'monetary'};
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="monetary" widget="float"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=monetary]').text(), '9.99',
+            'value should be correctly formatted (with the float formatter)');
 
         form.destroy();
     });
@@ -1015,7 +1046,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBinary');
 
     QUnit.test('binary fields are correctly rendered', function (assert) {
-        assert.expect(9);
+        assert.expect(16);
 
         // save the session function
         var oldGetFile = session.get_file;
@@ -1028,18 +1059,24 @@ QUnit.module('basic_fields', {
             return $.when();
         };
 
+        this.data.partner.records[0].foo = 'coucou.txt';
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                    '<field name="document"/>' +
+                    '<field name="document" filename="foo"/>' +
+                    '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
         });
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 1,
             "the binary field should be rendered as a downloadable link in readonly");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), 'coucou.txt',
+            "the binary field should display the name of the file in the link");
+        assert.strictEqual(form.$('.o_field_char').text(), 'coucou.txt',
+            "the filename field should have the file name as value");
 
         form.$('a.o_field_widget[name="document"]').click();
 
@@ -1047,12 +1084,15 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
             "the binary field should not be rendered as a downloadable link in edit");
-        assert.strictEqual(form.$('div.o_field_binary_file[name="document"]').length, 1,
-            "the binary field should be correctly rendered in edit");
+        assert.strictEqual(form.$('div.o_field_binary_file[name="document"] > input').val(), 'coucou.txt',
+            "the binary field should display the file name in the input edit mode");
         assert.strictEqual(form.$('.o_field_binary_file > input').attr('readonly'), 'readonly',
             "the input should be readonly");
         assert.strictEqual(form.$('.o_field_binary_file > .o_clear_file_button').length, 1,
             "there shoud be a button to clear the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), 'coucou.txt',
+            "the filename field should have the file name as value");
+
 
         form.$('.o_field_binary_file > .o_clear_file_button').click();
 
@@ -1060,6 +1100,16 @@ QUnit.module('basic_fields', {
             "the input should be hidden");
         assert.strictEqual(form.$('.o_field_binary_file > .o_select_file_button:not(.o_hidden)').length, 1,
             "there shoud be a button to upload the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), '',
+            "the filename field should be empty since we removed the file");
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
+            "the binary field should not render as a downloadable link since we removed the file");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), '',
+            "the binary field should not display a filename in the link since we removed the file");
+        assert.strictEqual(form.$('.o_field_char').text().trim(), '',
+            "the filename field should be empty since we removed the file");
 
         form.destroy();
 
@@ -1926,7 +1976,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -1936,8 +1986,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-            'Non-set integer field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+            'Non-set integer field should be recognized as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0",
+            'Non-set integer field should be recognized as 0.');
 
         form.destroy();
     });
