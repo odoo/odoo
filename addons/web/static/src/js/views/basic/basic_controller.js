@@ -104,39 +104,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return true;
     },
     /**
-     * Discards the changes made to the record whose ID is given, if necessary.
-     * Automatically leaves to default mode for the given record.
+     * Waits for the mutex to be unlocked and then calls _.discardChanges.
+     * This ensures that the confirm dialog isn't displayed directly if there is
+     * a pending 'write' rpc.
      *
-     * @param {string} [recordID] - default to main recordID
-     * @param {Object} [options]
-     * @param {boolean} [options.readonlyIfRealDiscard=false]
-     *        After discarding record changes, the usual option is to make the
-     *        record readonly. However, the view manager calls this function
-     *        at inappropriate times in the current code and in that case, we
-     *        don't want to go back to readonly if there is nothing to discard
-     *        (e.g. when switching record in edit mode in form view, we expect
-     *        the new record to be in edit mode too, but the view manager calls
-     *        this function as the URL changes...) @todo get rid of this when
-     *        the view manager is improved.
-     * @returns {Deferred}
+     * @see _.discardChanges
      */
     discardChanges: function (recordID, options) {
-        var self = this;
-        recordID = recordID || this.handle;
-        return this.canBeDiscarded(recordID).then(function (needDiscard) {
-            if (options && options.readonlyIfRealDiscard && !needDiscard) {
-                return;
-            }
-
-            if (needDiscard) { // Just some optimization
-                self.model.discardChanges(recordID);
-            }
-            if (self.model.isNew(recordID)) {
-                self._abandonRecord(recordID);
-                return;
-            }
-            return self._confirmSave(recordID);
-        });
+        return this.mutex.exec(function () {})
+            .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
      * Method that will be overriden by the views with the ability to have selected ids
@@ -327,6 +303,42 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Discards the changes made to the record whose ID is given, if necessary.
+     * Automatically leaves to default mode for the given record.
+     *
+     * @private
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @param {boolean} [options.readonlyIfRealDiscard=false]
+     *        After discarding record changes, the usual option is to make the
+     *        record readonly. However, the view manager calls this function
+     *        at inappropriate times in the current code and in that case, we
+     *        don't want to go back to readonly if there is nothing to discard
+     *        (e.g. when switching record in edit mode in form view, we expect
+     *        the new record to be in edit mode too, but the view manager calls
+     *        this function as the URL changes...) @todo get rid of this when
+     *        the view manager is improved.
+     * @returns {Deferred}
+     */
+    _discardChanges: function (recordID, options) {
+        var self = this;
+        recordID = recordID || this.handle;
+        return this.canBeDiscarded(recordID)
+            .then(function (needDiscard) {
+                if (options && options.readonlyIfRealDiscard && !needDiscard) {
+                    return;
+                }
+                if (needDiscard) { // Just some optimization
+                    self.model.discardChanges(recordID);
+                }
+                if (self.model.isNew(recordID)) {
+                    self._abandonRecord(recordID);
+                    return;
+                }
+                return self._confirmSave(recordID);
+            });
+    },
+    /**
      * Enables buttons so they can be clicked again.
      *
      * @private
@@ -501,11 +513,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         ev.stopPropagation();
         var recordID = ev.data.recordID;
-        this.discardChanges(recordID)
+        this._discardChanges(recordID)
             .done(function () {
-                if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
-                }
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any

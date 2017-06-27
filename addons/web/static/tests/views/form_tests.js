@@ -2883,7 +2883,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('onchanges that complete after discarding', function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         var def1 = $.Deferred();
 
@@ -2922,14 +2922,65 @@ QUnit.module('Views', {
 
         // discard changes
         form.$buttons.find('.o_form_button_cancel').click();
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), "1234",
+            "field foo should still contain new value");
+        assert.strictEqual($('.modal').length, 0,
+            "Confirm dialog should not be displayed yet");
+
+        // complete the onchange
+        def1.resolve();
+        assert.strictEqual($('.modal').length, 1,
+            "Confirm dialog should be displayed");
         $('.modal .modal-footer .btn-primary').click();
         assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
             "field foo should still be displayed to initial value");
 
-        // complete the onchange
-        def1.resolve();
-        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
-            "field foo should still be displayed to initial value");
+        form.destroy();
+    });
+
+    QUnit.test('discarding before save returns', function (assert) {
+        assert.expect(4);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'write') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val("1234").trigger('input');
+
+        // save the value and discard directly
+        form.$buttons.find('.o_form_button_save').click();
+        form.discardChanges(); // Simulate click on breadcrumb
+
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), "1234",
+            "field foo should still contain new value");
+        assert.strictEqual($('.modal').length, 0,
+            "Confirm dialog should not be displayed");
+
+        // complete the write
+        def.resolve();
+
+        assert.strictEqual($('.modal').length, 0,
+            "Confirm dialog should not be displayed");
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').text(), "1234",
+            "value should have been saved and rerendered in readonly");
 
         form.destroy();
     });
