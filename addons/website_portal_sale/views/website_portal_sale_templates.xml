@@ -168,7 +168,7 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td class= "cell_overflow">
-                            <a t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-att-href="'/my/invoices/pdf/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td><span t-field="invoice.date_due"/></td>

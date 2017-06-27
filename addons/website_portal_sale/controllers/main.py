@@ -175,6 +175,22 @@ class website_account(website_account):
         })
         return request.render("website_portal_sale.portal_my_invoices", values)
 
+    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="user", website=True)
+    def portal_get_invoice(self, invoice_id=None, **kw):
+        invoice = request.env['account.invoice'].browse([invoice_id])
+        try:
+            invoice.check_access_rights('read')
+            invoice.check_access_rule('read')
+        except AccessError:
+            return request.render("website.403")
+
+        pdf = request.env['report'].sudo().get_pdf([invoice_id], 'account.report_invoice')
+        pdfhttpheaders = [
+            ('Content-Type', 'application/pdf'), ('Content-Length', len(pdf)),
+            ('Content-Disposition', 'attachment; filename=Invoice.pdf;')
+        ]
+        return request.make_response(pdf, headers=pdfhttpheaders)
+
     def details_form_validate(self, data):
         error, error_message = super(website_account, self).details_form_validate(data)
         # prevent VAT/name change if invoices exist
