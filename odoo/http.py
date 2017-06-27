@@ -366,7 +366,7 @@ class WebRequest(object):
 
             use :attr:`.env`
         """
-        return odoo.registry(self.db) if self.db else None
+        return odoo.registry(self.db)
 
     @property
     def db(self):
