@@ -631,7 +631,10 @@
 <!-- Moderation: close a post -->
 <template id="close_post">
     <t t-call="website_forum.header">
-        <h1 class="mt0"><t t-esc="offensive and 'Offensive' or 'Close'"/> Post</h1>
+        <h1 class="mt0">
+            <t t-if="offensive">Offensive Post</t>
+            <t t-if="not offensive">Close Post</t>
+        </h1>
         <p class="text-muted" t-if="not offensive">
             If you close this post, it will be hidden for most users. Only
             users having a high karma can see closed posts to moderate
@@ -668,7 +671,10 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-3 col-md-8">
-                    <button type="submit" class="btn btn-primary"><t t-esc="offensive and 'Mark as offensive' or 'Close post'"/></button>
+                    <button type="submit" class="btn btn-primary">
+                        <t t-if="offensive">Mark as offensive</t>
+                        <t t-if="not offensive">Close post</t>
+                    </button>
                     <span class="text-muted">or</span>
                     <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">back to post</a>
                 </div>
@@ -1005,9 +1011,9 @@
                         <a t-attf-style="cursor: pointer;#{not answer.can_flag and 'color:#999;' or ''}"
                             t-attf-class="flag fa fa-flag #{not answer.can_flag and 'karma_required' or ''}"
                             t-attf-data-karma="#{not answer.can_flag and answer.forum_id.karma_flag or 0}"
-                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag"
-                            >
-                            <t class="flag_flagged_label" t-esc="answer.state == 'flagged' and 'Flagged' or 'Flag'"/>
+                            t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(answer)}/flag">
+                            <t t-if="answer.state == 'flagged'">Flagged</t>
+                            <t t-if="answer.state != 'flagged'">Flag</t>
                         </a>
                     </li>
                     <li t-if="question.post_type == 'question'">
