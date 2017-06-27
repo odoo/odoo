@@ -349,6 +349,63 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('quickcreate switching to actual create for required fields', function (assert) {
+        assert.expect(4);
+
+        var event = $.Event();
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: "Odoo server error",
+                    }, event);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // create a new event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal-dialog.modal-sm .modal-title').text(), 'Create',
+            "should open the quick create dialog");
+
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click').trigger('click');
+
+        // If the event is not default-prevented, a traceback will be raised, which we do not want
+        assert.ok(event.isDefaultPrevented(), "fail deferred event should have been default-prevented");
+
+        assert.strictEqual($('.modal-dialog.modal-lg .modal-title').text(), 'Create: Events',
+            "should have switched to a bigger modal for an actual create rather than quickcreate");
+        assert.strictEqual($('.modal-dialog.modal-lg .modal-body .o_form_view.o_form_editable').length, 1,
+            "should open the full event form view in a dialog");
+
+        calendar.destroy();
+    });
+
     QUnit.test('create event with timezone in week mode', function (assert) {
         assert.expect(5);
 
