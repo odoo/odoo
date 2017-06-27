@@ -271,10 +271,14 @@ var ListRenderer = BasicRenderer.extend({
     _renderButton: function (record, node) {
         var $button = $('<button>', {
             type: 'button',
-            class: 'o_icon_button',
             title: node.attrs.string,
         });
-        $button.append($('<i>', {class: 'fa ' + node.attrs.icon}));
+        if (node.attrs.icon) {
+            $button.addClass('o_icon_button');
+            $button.append($('<i>', {class: 'fa ' + node.attrs.icon}));
+        } else {
+            $button.text(node.attrs.string);
+        }
 
         this._registerModifiers(node, record, $button);
 

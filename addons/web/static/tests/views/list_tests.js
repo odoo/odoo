@@ -136,7 +136,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('simple editable rendering', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         var list = createView({
             View: ListView,
@@ -164,6 +164,15 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.ok(list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should have a visible discard button");
+
+        list.$buttons.find('.o_list_button_save').click();
+
+        assert.ok(list.$buttons.find('.o_list_button_add').is(':visible'),
+            "should have a visible Create button");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
+            "should not have a visible discard button");
         list.destroy();
     });
 
@@ -1043,6 +1052,24 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('table button.o_icon_button i.fa-phone').length, 1,
             "should have rendered a button");
+        list.destroy();
+    });
+
+    QUnit.test('list view with a button without icon', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                    '<field name="foo"/>' +
+                    '<button string="abc" type="object" name="schedule_another_phonecall"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('table button').first().text(), 'abc',
+            "should have rendered a button with string attribute as label");
         list.destroy();
     });
 

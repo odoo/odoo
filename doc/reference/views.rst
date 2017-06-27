@@ -943,7 +943,7 @@ Javascript API
       :returns: an image URL
 
    .. warning::
-   ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
+      ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
 
 .. _reference/views/calendar:
 

@@ -961,7 +961,8 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <input type="text" size="15" t-att-name="attrs.name"
+        <input type="text" size="15" class="o_input"
+               t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -990,7 +991,9 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <select t-att-name="attrs.name" t-att-id="element_id"
+        <select class="o_input"
+                t-att-name="attrs.name"
+                t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
@@ -1012,7 +1015,7 @@
     <li class="o_filter_condition">
         <span class="o_or_filter">or</span>
         <span>
-            <select class="o_searchview_extended_prop_field">
+            <select class="o_input o_searchview_extended_prop_field">
                 <t t-foreach="widget.attrs.fields" t-as="field">
                     <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                             t-att-value="field.name">
@@ -1022,18 +1025,19 @@
             </select>
             <span class="o_searchview_extended_delete_prop fa fa-trash-o"/>
         </span>
-        <select class="o_searchview_extended_prop_op"/>
+        <select class="o_input o_searchview_extended_prop_op"/>
         <span class="o_searchview_extended_prop_value"/>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+    <input class="o_input"
+        t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
         t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
         t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
         t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select>
+    <select class="o_input">
         <option t-foreach="widget.field.selection" t-as="element" t-att-value="element[0]">
             <t t-esc="element[1]"/>
         </option>
@@ -1051,7 +1055,7 @@
     </ul>
 </div>
 <t t-name="GroupByMenuSelector">
-    <li><select class="o_add_group o_group_selector">
+    <li><select class="o_input o_add_group o_group_selector">
         <t t-foreach="groupableFields" t-as="field">
             <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>

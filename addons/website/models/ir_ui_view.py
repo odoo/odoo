@@ -145,3 +145,13 @@ class View(models.Model):
             menu_data=self.env['ir.ui.menu'].load_menus_root() if request.website.is_user() else None,
         )
         return qcontext
+
+
+    @api.model
+    def get_default_lang_code(self):
+        website_id = self.env.context.get('website_id')
+        if website_id:
+            lang_code = self.env['website'].browse(website_id).default_lang_code
+            return lang_code
+        else:
+            return super(View, self).get_default_lang_code()

@@ -625,10 +625,10 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 2,
-            "should have 2 empty fields with correct class");
-        assert.strictEqual(form.$('.o_form_label_empty').length, 2,
-            "should have 2 muted labels (for the empty fieds) in readonly");
+        assert.strictEqual(form.$('.o_field_widget.o_field_empty').length, 1,
+            "should have 1 empty field with correct class");
+        assert.strictEqual(form.$('.o_form_label_empty').length, 1,
+            "should have 1 muted label (for the empty fied) in readonly");
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -771,7 +771,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('required float fields works as expected', function (assert) {
-        assert.expect(8);
+        assert.expect(10);
 
         this.data.partner.fields.qux.required = true;
         var form = createView({
@@ -793,24 +793,26 @@ QUnit.module('Views', {
 
         assert.ok(form.$('input[name="qux"]').hasClass('o_required_modifier'),
             "qux input is flagged as required");
-        assert.strictEqual(form.$('input[name="qux"]').val(), "",
-            "qux input is empty");
+        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+            "qux input is 0 by default (float field)");
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.ok(form.$('input[name="qux"]').hasClass('o_field_invalid'),
-            "qux input is displayed as invalid");
+        assert.notOk(form.$('input[name="qux"]').hasClass('o_field_invalid'),
+            "qux input is not displayed as invalid");
 
-        form.$('input[name="qux"]').val("0").trigger('input');
+        form.$buttons.find('.o_form_button_edit').click();
+
+        form.$('input[name="qux"]').val("1").trigger('input');
 
         form.$buttons.find('.o_form_button_save').click();
 
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('input[name="qux"]').val(), "0.0",
+        assert.strictEqual(form.$('input[name="qux"]').val(), "1.0",
             "qux input is properly formatted");
 
-        assert.verifySteps(['default_get', 'create', 'read']);
+        assert.verifySteps(['default_get', 'create', 'read', 'write', 'read']);
         form.destroy();
     });
 
@@ -3278,7 +3280,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in form view', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var form = createView({
             View: FormView,
@@ -3287,8 +3289,9 @@ QUnit.module('Views', {
             arch: '<form string="Partners">' +
                     '<sheet>' +
                         '<group>' +
-                            '<field name="foo"/>' +
+                            '<field name="foo" widget="email"/>' +
                             '<field name="bar"/>' +
+                            '<field name="display_name" widget="url"/>' +
                         '</group>' +
                     '</sheet>' +
                 '</form>',
@@ -3300,14 +3303,69 @@ QUnit.module('Views', {
 
         // focus first input, trigger tab
         form.$('input[name="foo"]').focus();
+
         form.$('input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.ok($.contains(form.$('div[name="bar"]')[0], document.activeElement),
             "bar checkbox should be focused");
 
+        form.$('div[name="bar"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused");
+
         // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "first input should be focused");
+
+        form.destroy();
+    });
+
+    QUnit.test('navigation with tab key in readonly form view', function (assert) {
+        // The behavior of the phone widget is completely altered by crm_voip so
+        // this test fails if crm_voip is installed. The enterprise module is
+        // responsible for testing its own behavior in its own tests.
+        if ('crm.voip' in odoo.__DEBUG__.services) {
+            assert.expect(0);
+            return;
+        }
+
+        assert.expect(3);
+
+        this.data.partner.records[1].product_id = 37;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                            '<field name="foo"/>' +
+                            '<field name="product_id"/>' +
+                            '<field name="foo" widget="phone"/>' +
+                            '<field name="display_name" widget="url"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        // focus first field, trigger tab
+        form.$('[name="trululu"]').focus();
+        form.$('[name="trululu"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('[name="product_id"]')[0], document.activeElement,
+            "product_id should be focused");
+        form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+        assert.strictEqual(form.$('[name="display_name"]')[0], document.activeElement,
+            "display_name should be focused (emails are focusable but phone aren't)");
+
+        // simulate shift+tab on active element
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB, shiftKey: true}));
+        assert.strictEqual(document.activeElement, form.$('[name="trululu"]')[0],
+            "first many2one should be focused");
 
         form.destroy();
     });
@@ -4637,6 +4695,64 @@ QUnit.module('Views', {
 
         form.destroy();
 
+        _t.database.multi_lang = multi_lang;
+    });
+
+    QUnit.test('translate event correctly handled with multiple controllers', function (assert) {
+        assert.expect(3);
+
+        this.data.product.fields.name.translate = true;
+        this.data.partner.records[0].product_id = 37;
+        var nbTranslateCalls = 0;
+
+        var multi_lang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="product_id"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'product,false,form': '<form>' +
+                        '<sheet>' +
+                            '<group>' +
+                                '<field name="name"/>' +
+                                '<field name="partner_type_id"/>' +
+                            '</group>' +
+                        '</sheet>' +
+                    '</form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                } else if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    assert.deepEqual(args.args, ["product",37,"name",{}], 'should call "call_button" route');
+                    nbTranslateCalls++;
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('[name="product_id"] .o_external_button').click();
+
+        assert.strictEqual($('.modal-body .o_field_translate').length, 1,
+            "there should be a translate button in the modal");
+
+        $('.modal-body .o_field_translate').click();
+
+        assert.strictEqual(nbTranslateCalls, 1, "should call_button translate once");
+
+        form.destroy();
         _t.database.multi_lang = multi_lang;
     });
 
