@@ -1043,6 +1043,40 @@ QUnit.module('basic_fields', {
         _t.database.multi_lang = multiLang;
     });
 
+    QUnit.test('go to next line (and not the next row) when pressing enter', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.foo.type = 'text';
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<list editable="top">' +
+                    '<field name="int_field"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux"/>' +
+                '</list>',
+        });
+
+        list.$('tbody tr:first .o_list_text').click();
+        var $textarea = list.$('textarea.o_field_text');
+        assert.strictEqual($textarea.length, 1, "should have a text area");
+        assert.strictEqual($textarea.val(), 'yop', 'should still be "yop" in edit');
+
+        assert.strictEqual(list.$('textarea').get(0), document.activeElement,
+            "text area should have the focus");
+
+        // click on enter
+        list.$('textarea')
+            .trigger({type: "keydown", which: $.ui.keyCode.ENTER})
+            .trigger({type: "keyup", which: $.ui.keyCode.ENTER});
+
+        assert.strictEqual(list.$('textarea').first().get(0), document.activeElement,
+            "text area should still have the focus");
+
+        list.destroy();
+    });
+
     QUnit.module('FieldBinary');
 
     QUnit.test('binary fields are correctly rendered', function (assert) {

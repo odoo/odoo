@@ -788,6 +788,23 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
         }
         return this._super();
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Stops the enter navigation in a text area.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 /**
