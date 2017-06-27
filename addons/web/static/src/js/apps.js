@@ -83,13 +83,13 @@ var Apps = Widget.extend({
                 });
             },
             'rpc': function(m) {
-                self.session.rpc.apply(self.session, m.args).then(function(r) {
+                return self._rpc({route: m.args[0], params: m.args[1]}).then(function(r) {
                     var w = self.$ifr[0].contentWindow;
                     w.postMessage({id: m.id, result: r}, client.origin);
                 });
             },
             'Model': function(m) {
-                return this._rpc({model: m.model, method: m.method, args: m.args})
+                return self._rpc({model: m.model, method: m.args[0], args: m.args[1]})
                     .then(function(r) {
                         var w = self.$ifr[0].contentWindow;
                         w.postMessage({id: m.id, result: r}, client.origin);
@@ -125,8 +125,8 @@ var Apps = Widget.extend({
                     type: 'ir.actions.client',
                     tag: this.remote_action_tag,
                     params: _.extend({}, this.params, {
-                        db: this.session.db,
-                        origin: this.session.origin,
+                        db: session.db,
+                        origin: session.origin,
                     })
                 };
                 w.postMessage({type:'action', action: act}, client.origin);
@@ -145,7 +145,10 @@ var Apps = Widget.extend({
             def.resolve();
         }, function() {
             self.do_warn(_t('Odoo Apps will be available soon'), _t('Showing locally available modules'), true);
-            return session.rpc('/web/action/load', {action_id: self.failback_action_id}).then(function(action) {
+            return self._rpc({
+                route: '/web/action/load',
+                params: {action_id: self.failback_action_id},
+            }).then(function(action) {
                 return self.do_action(action);
             }).always(function () {
                 def.reject();
