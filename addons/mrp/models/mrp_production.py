@@ -489,7 +489,7 @@ class MrpProduction(models.Model):
             cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
             duration_expected = (operation.workcenter_id.time_start +
                                  operation.workcenter_id.time_stop +
-                                 cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+                                 cycle_number * operation.time_cycle * 100.0 / (operation.workcenter_id.time_efficiency or 100))
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
