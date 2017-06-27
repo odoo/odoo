@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.compat import izip
 
 
 class PackOperation(models.Model):
@@ -112,7 +113,7 @@ class PackOperation(models.Model):
 
     @api.multi
     def _compute_location_description(self):
-        for operation, operation_sudo in zip(self, self.sudo()):
+        for operation, operation_sudo in izip(self, self.sudo()):
             operation.from_loc = '%s%s' % (operation_sudo.location_id.name, operation.product_id and operation_sudo.package_id.name or '')
             operation.to_loc = '%s%s' % (operation_sudo.location_dest_id.name, operation_sudo.result_package_id.name or '')
 
