@@ -13,3 +13,9 @@ class WebsiteSale(WebsiteSale):
         if coupon_status.get('error', False):
             return super(WebsiteSale, self).pricelist(promo, **post)
         return request.redirect(post.get('r', '/shop/cart'))
+
+    @http.route(['/shop/payment'], type='http', auth="public", website=True)
+    def payment(self, **post):
+        order = request.website.sale_get_order()
+        order.recompute_coupon_lines()
+        return super(WebsiteSale, self).payment(**post)
