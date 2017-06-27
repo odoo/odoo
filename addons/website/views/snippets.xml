@@ -280,7 +280,7 @@
 <template id="s_image_gallery" name="Image Gallery">
     <section class="o_gallery o_spc-medium o_slideshow s_image_gallery" data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_editable_mode_display">Add Images from the 'Customize' menu</div>
+            <div class="alert alert-info css_editable_mode_display text-center" ><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
         </div>
     </section>
 </template>
@@ -735,59 +735,10 @@
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
-    <div data-js='background'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
-            <ul class="dropdown-menu">
-                <li data-background=""><a href="#">None</a></li>
-                <li class="divider"></li>
-                <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
-                <li class="divider"></li>
-                <li data-background="/web/image/website.s_background_image_01"><a href="#">Peak</a></li>
-                <li data-background="/web/image/website.s_background_image_02"><a href="#">Downtown</a></li>
-                <li data-background="/web/image/website.s_background_image_03"><a href="#">Panama Sky</a></li>
-                <li data-background="/web/image/website.s_background_image_04"><a href="#">Cubes</a></li>
-                <li data-background="/web/image/website.s_background_image_05"><a href="#">Building Profile</a></li>
-                <li data-background="/web/image/website.s_background_image_06"><a href="#">Type</a></li>
-                <li data-background="/web/image/website.s_background_image_07"><a href="#">People</a></li>
-                <li data-background="/web/image/website.s_background_image_08"><a href="#">City</a></li>
-                <li data-background="/web/image/website.s_background_image_09"><a href="#">Sails</a></li>
-            </ul>
-        </li>
-    </div>
-
-    <div data-js='background_position'
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
-        <li class="background_position_li" data-background_position="background_position">
-            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
-        </li>
-    </div>
-
-    <div data-js="colorpicker"
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel, .s_comparisons .panel, .s_faq_collapse .panel-body, .s_faq_collapse .panel-heading">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
-            <ul class="dropdown-menu">
-                <li></li>
-            </ul>
-        </li>
-    </div>
-    <div data-js="colorpicker"
-        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
-        data-palette-exclude="grayscale"
-        data-palette-default="transparent_grayscale"
-        data-palette-title="Overlay Color">
-        <li class="dropdown-submenu">
-            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
-            <ul class="dropdown-menu">
-                <li></li>
-            </ul>
-        </li>
-    </div>
-
-
     <div data-js='gallery' data-selector=".o_gallery">
+        <li data-images_add="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
+        <li data-images_rm="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li class="separator"/>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
             <ul class="dropdown-menu">
@@ -839,9 +790,58 @@
                <li data-styling="shadow"><a href="#">Shadows</a></li>
            </ul>
         </li>
-       <li class="separator"></li>
-       <li data-images_add="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-       <li data-images_rm="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li class="separator"/>
+    </div>
+
+    <div data-js='background'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .parallax, .s_banner .carousel-content">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
+            <ul class="dropdown-menu">
+                <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
+                <li class="divider"></li>
+                <li data-background="" class="none"><a href="#">None</a></li>
+                <li class="divider"></li>
+                <li data-background="/web/image/website.s_background_image_01"><a href="#">Peak</a></li>
+                <li data-background="/web/image/website.s_background_image_02"><a href="#">Downtown</a></li>
+                <li data-background="/web/image/website.s_background_image_03"><a href="#">Panama Sky</a></li>
+                <li data-background="/web/image/website.s_background_image_04"><a href="#">Cubes</a></li>
+                <li data-background="/web/image/website.s_background_image_05"><a href="#">Building Profile</a></li>
+                <li data-background="/web/image/website.s_background_image_06"><a href="#">Type</a></li>
+                <li data-background="/web/image/website.s_background_image_07"><a href="#">People</a></li>
+                <li data-background="/web/image/website.s_background_image_08"><a href="#">City</a></li>
+                <li data-background="/web/image/website.s_background_image_09"><a href="#">Sails</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-js='background_position'
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
+        <li class="background_position_li" data-background_position="background_position">
+            <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
+        </li>
+    </div>
+
+    <div data-js="colorpicker"
+        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+    <div data-js="colorpicker"
+        data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
+        data-palette-exclude="grayscale"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Overlay Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
     </div>
 
     <div data-js='gallery_img' data-selector=".o_gallery img">

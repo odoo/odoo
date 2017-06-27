@@ -1,6 +1,7 @@
 odoo.define('web.pivot_tests', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
@@ -81,7 +82,7 @@ QUnit.module('Views', {
     QUnit.module('PivotView');
 
     QUnit.test('simple pivot rendering', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var pivot = createView({
             View: PivotView,
@@ -97,6 +98,8 @@ QUnit.module('Views', {
             },
         });
 
+        assert.ok(pivot.$el.hasClass('o_enable_linking'),
+            "root node should have classname 'o_enable_linking'");
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32)').length, 1,
                     "should contain a pivot cell with the sum of all records");
         pivot.destroy();
@@ -116,6 +119,77 @@ QUnit.module('Views', {
 
         // this is important for export functionality.
         assert.strictEqual(pivot.title, _t("Untitled"), "should have a valid title");
+        pivot.destroy();
+    });
+
+    QUnit.test('clicking on a cell triggers a do_action', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(ev.data.action, {
+                        context: {someKey: true, userContextKey: true},
+                        domain: [['product_id', '=', 37]],
+                        name: 'Partners',
+                        res_model: 'partner',
+                        target: 'current',
+                        type: 'ir.actions.act_window',
+                        view_mode: 'list',
+                        view_type: 'list',
+                        views: [[false, 'list'], [2, 'form']],
+                    }, "should trigger do_action with the correct args");
+                },
+            },
+            session: {
+                user_context: {userContextKey: true},
+            },
+            viewOptions: {
+                action: {
+                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                },
+                context: {someKey: true, search_default_test: 3},
+                title: 'Partners',
+            }
+        });
+
+        assert.ok(pivot.$el.hasClass('o_enable_linking'),
+            "root node should have classname 'o_enable_linking'");
+        pivot.$('.o_pivot_cell_value:contains(12)').click(); // should trigger a do_action
+
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with disable_linking="True"', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot disable_linking="True">' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            intercepts: {
+                do_action: function () {
+                    assert.ok(false, "should not trigger do_action");
+                },
+            },
+        });
+
+        assert.notOk(pivot.$el.hasClass('o_enable_linking'),
+            "root node should not have classname 'o_enable_linking'");
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 1,
+            "should have one cell");
+        pivot.$('.o_pivot_cell_value').click(); // should not trigger a do_action
+
         pivot.destroy();
     });
 

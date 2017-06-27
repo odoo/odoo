@@ -7,4 +7,13 @@
         </div>
     </t>
 
+    <t t-name="ReprintReceiptScreenWidget" t-extend="ReceiptScreenWidget">
+        <t t-jquery="div.top-content" t-operation="inner">
+            <span class='button back'>
+                <i class='fa fa-angle-double-left'></i>
+                Back
+            </span>
+        </t>
+    </t>
+
 </templates>

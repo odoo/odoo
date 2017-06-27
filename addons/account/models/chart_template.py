@@ -147,7 +147,7 @@ class AccountChartTemplate(models.Model):
             todo = self.env['ir.actions.todo']
             action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_wizard_multi_chart')
             if action_rec:
-                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template'), 'type': 'automatic'})
+                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template')})
         return True
 
     @api.model

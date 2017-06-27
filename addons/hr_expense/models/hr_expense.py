@@ -309,7 +309,8 @@ class HrExpense(models.Model):
     @api.model
     def get_empty_list_help(self, help_message):
         if help_message:
-            alias_record = self.env.ref('hr_expense.mail_alias_expense')
+            use_mailgateway = self.env['ir.config_parameter'].sudo().get_param('hr_expense.use_mailgateway')
+            alias_record = use_mailgateway and self.env.ref('hr_expense.mail_alias_expense') or False
             if alias_record and alias_record.alias_domain and alias_record.alias_name:
                 link = "<a id='o_mail_test' href='mailto:%(email)s?subject=Lunch%%20with%%20customer%%3A%%20%%2412.32'>%(email)s</a>" % {
                     'email': '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
@@ -473,9 +474,12 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.one
-    @api.depends('expense_line_ids', 'expense_line_ids.total_amount')
+    @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
     def _compute_amount(self):
-        self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        if len(self.expense_line_ids.mapped('currency_id')) < 2:
+            self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        else:
+            self.total_amount = 0.0
 
     # FIXME: A 4 command is missing to explicitly declare the one2many relation
     # between the sheet and the lines when using 'default_expense_line_ids':[ids]

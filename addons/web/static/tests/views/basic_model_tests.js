@@ -572,6 +572,20 @@ QUnit.module('Views', {
         this.params.fieldNames = ['product_id', 'category', 'product_ids'];
         this.params.res_id = undefined;
         this.params.type = 'record';
+        this.params.fieldsInfo = {
+            form: {
+                category: {},
+                product_id: {},
+                product_ids: {
+                    fieldsInfo: {
+                        default: { name: {} },
+                    },
+                    relatedFields: this.data.product.fields,
+                    viewType: 'default',
+                },
+            },
+        };
+        this.params.viewType = 'form';
 
         var model = createModel({
             Model: BasicModel,
@@ -1015,6 +1029,19 @@ QUnit.module('Views', {
         this.params.fieldNames = ['total', 'product_ids'];
         this.params.res_id = undefined;
         this.params.type = 'record';
+        this.params.fieldsInfo = {
+            form: {
+                product_ids: {
+                    fieldsInfo: {
+                        default: { name: {} },
+                    },
+                    relatedFields: this.data.product.fields,
+                    viewType: 'default',
+                },
+                total: {},
+            },
+        };
+        this.params.viewType = 'form';
 
         var o2mRecordParams = {
             fields: this.data.product.fields,
@@ -1165,6 +1192,54 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get: fetch x2manys inside x2manys', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.o2m = {
+            string: "O2M", type: 'one2many', relation: 'partner', default: [[6, 0, [1]]],
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        var params = {
+            fieldNames: ['o2m'],
+            fields: this.data.partner.fields,
+            fieldsInfo: {
+                form: {
+                    o2m: {
+                        relatedFields: this.data.partner.fields,
+                        fieldsInfo: {
+                            list: {
+                                category: {
+                                    relatedFields: { display_name: {} },
+                                },
+                            },
+                        },
+                        viewType: 'list',
+                    },
+                },
+            },
+            modelName: 'partner',
+            type: 'record',
+            viewType: 'form',
+        };
+
+        model.load(params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.o2m.count, 1, "o2m field should contain 1 record");
+            var categoryList = record.data.o2m.data[0].data.category;
+            assert.strictEqual(categoryList.count, 1,
+                "category field should contain 1 record");
+            assert.strictEqual(categoryList.data[0].data.display_name,
+                'gold', "category records should have been fetched");
+        });
+
+        model.destroy();
+    });
+
     QUnit.test('contexts and domains can be properly fetched', function (assert) {
         assert.expect(8);
 
@@ -1229,6 +1304,63 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('dont write on readonly fields (write and create)', function (assert) {
+        assert.expect(6);
+
+        this.params.fieldNames = ['foo', 'bar'];
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.bar = obj.foo.length;
+        };
+        this.data.partner.fields.bar.readonly = true;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {foo: "verylongstring"},
+                        "should only save foo field");
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {foo: "anotherverylongstring"},
+                        "should only save foo field");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 2,
+                "should be initialized with correct value");
+
+            model.notifyChanges(resultID, {foo: "verylongstring"});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 14,
+                "should be changed with correct value");
+
+            model.save(resultID);
+        });
+
+        // start again, but with a new record
+        delete this.params.res_id;
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.bar, false,
+                "should be initialized with correct value");
+
+            model.notifyChanges(resultID, {foo: "anotherverylongstring"});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 21,
+                "should be changed with correct value");
+
+            model.save(resultID);
+        });
+        model.destroy();
+    });
+
     QUnit.test('default_get with one2many values', function (assert) {
         assert.expect(1);
 
@@ -1249,6 +1381,18 @@ QUnit.module('Views', {
             fields: this.data.partner.fields,
             modelName: 'partner',
             type: 'record',
+            fieldsInfo: {
+                form: {
+                    product_ids: {
+                        fieldsInfo: {
+                            default: { name: {} },
+                        },
+                        relatedFields: this.data.product.fields,
+                        viewType: 'default',
+                    },
+                },
+            },
+            viewType: 'form',
         };
         model.load(params).then(function (resultID) {
             assert.strictEqual(typeof resultID, 'string', "result should be a valid id");
@@ -1448,6 +1592,7 @@ QUnit.module('Views', {
             fieldsInfo: {
                 form: {
                     product_ids: {
+                        relatedFields: this.data.product.fields,
                         fieldsInfo: { list: { name: {}, date: {} } },
                         viewType: 'list',
                     }

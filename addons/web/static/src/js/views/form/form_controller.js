@@ -39,12 +39,10 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is supposed to focus the first active control, I think. It
-     * is currently only called by the FormViewDialog.
-     *
-     * @todo To be implemented
+     * Calls autofocus on the renderer
      */
     autofocus: function () {
+        this.renderer.autofocus();
     },
     /**
      * This method switches the form view in edit mode, with a new record.
@@ -91,6 +89,14 @@ var FormController = BasicController.extend({
     getTitle: function () {
         var dataPoint = this.model.get(this.handle, {raw: true});
         return dataPoint.data.display_name || _t('New');
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     *
+     * @todo convert to new style
+     */
+    on_attach_callback: function () {
+        this.autofocus();
     },
     /**
      * Render buttons for the control panel.  The form view can be rendered in
@@ -145,10 +151,10 @@ var FormController = BasicController.extend({
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
                     label: _t('Delete'),
-                    callback: this._deleteRecords.bind(this, [this.handle]),
+                    callback: this._onDeleteRecord.bind(this),
                 });
             }
-            if (this.is_action_enabled('create')) {
+            if (this.is_action_enabled('create') && this.is_action_enabled('duplicate')) {
                 otherItems.push({
                     label: _t('Duplicate'),
                     callback: this._onDuplicateRecord.bind(this),
@@ -333,7 +339,7 @@ var FormController = BasicController.extend({
      */
     _onBounceEdit: function () {
         if (this.$buttons) {
-            this.$buttons.find('.o_form_button_edit').openerpBounce();
+            this.$buttons.find('.o_form_button_edit').odooBounce();
         }
     },
     /**
@@ -374,10 +380,8 @@ var FormController = BasicController.extend({
             });
         }
 
-        if (event.data.show_wow) {
-            def.then(function () {
-                self.show_wow();
-            });
+        if (event.data.showWow) {
+            def.then(this.trigger_up.bind(this, 'show_wow'));
         }
 
         def.always(this._enableButtons.bind(this));
@@ -389,6 +393,14 @@ var FormController = BasicController.extend({
      */
     _onCreate: function () {
         this.createRecord();
+    },
+    /**
+     * Deletes the current record
+     *
+     * @private
+     */
+    _onDeleteRecord: function () {
+        this._deleteRecords([this.handle]);
     },
     /**
      * Called when the user wants to discard the changes made to the current

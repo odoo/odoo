@@ -13,6 +13,7 @@ odoo.define('web.test_utils', function (require) {
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
@@ -172,7 +173,14 @@ function createAsyncView(params) {
             widget.destroy();
             $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
-        return view.appendTo($view_manager).then(function () {
+        // render the view in a fragment as they must be able to render correctly
+        // without being in the DOM
+        var fragment = document.createDocumentFragment();
+        return view.appendTo(fragment).then(function () {
+            dom.append($view_manager, fragment, {
+                callbacks: [{widget: view}],
+                in_DOM: true,
+            });
             view.$el.on('click', 'a', function (ev) {
                 ev.preventDefault();
             });
@@ -244,52 +252,53 @@ function addMockEnvironment(widget, params) {
         logLevel: params.logLevel,
         currentDate: params.currentDate,
     });
-    var widgetDestroy;
-
     // make sure the debounce value for input fields is set to 0
     var initialDebounce = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
-
+    var initialSession, initialConfig, initialParameters;
     if ('session' in params) {
-        var initialSession = _.extend({}, session);
+        initialSession = _.extend({}, session);
         _.extend(session, params.session);
-        widgetDestroy = widget.destroy;
-        widget.destroy = function () {
-            for (var key in session) {
+    }
+    if ('config' in params) {
+        initialConfig = _.extend({}, config);
+        _.extend(config, params.config);
+    }
+    if ('translateParameters' in params) {
+        initialParameters = _.extend({}, core._t.database.parameters);
+        _.extend(core._t.database.parameters, params.translateParameters);
+    }
+
+    var widgetDestroy = widget.destroy;
+    widget.destroy = function () {
+        // clear the caches (e.g. data_manager, ModelFieldSelector) when the
+        // widget is destroyed, at the end of each test to avoid collisions
+        core.bus.trigger('clear_cache');
+
+        DebouncedField.prototype.DEBOUNCE = initialDebounce;
+
+        var key;
+        if ('session' in params) {
+            for (key in session) {
                 delete session[key];
             }
             _.extend(session, initialSession);
-            widgetDestroy.call(this);
-        };
-    }
-
-    if ('config' in params) {
-        var initialConfig = _.extend({}, config);
-        _.extend(config, params.config);
-        widgetDestroy = widget.destroy;
-        widget.destroy = function () {
-            for (var key in config) {
+        }
+        if ('config' in params) {
+            for (key in config) {
                 delete config[key];
             }
             _.extend(config, initialConfig);
-            DebouncedField.prototype.DEBOUNCE = initialDebounce;
-            widgetDestroy.call(this);
-        };
-    }
-
-    if ('translateParameters' in params) {
-        var initialParameters = _.extend({}, core._t.database.parameters);
-        _.extend(core._t.database.parameters, params.translateParameters);
-        var oldDestroy = widget.destroy;
-        widget.destroy = function () {
-            for (var key in core._t.database.parameters) {
+        }
+        if ('translateParameters' in params) {
+            for (key in core._t.database.parameters) {
                 delete core._t.database.parameters[key];
             }
             _.extend(core._t.database.parameters, initialParameters);
-            oldDestroy.call(this);
-        };
-    }
+        }
 
+        widgetDestroy.call(this);
+    };
 
     intercept(widget, 'call_service', function (event) {
         if (event.data.service === 'ajax') {

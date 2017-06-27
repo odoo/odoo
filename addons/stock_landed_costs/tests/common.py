@@ -59,6 +59,9 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.brokerage_quantity = self._create_services('Brokerage Cost')
         self.transportation_weight = self._create_services('Transportation Cost')
         self.packaging_volume = self._create_services('Packaging Cost')
+        # Ensure the account properties exists.
+        self.ensure_account_property('property_stock_account_input')
+        self.ensure_account_property('property_stock_account_output')
 
     def _create_services(self, name):
         return self.Product.create({

@@ -50,6 +50,19 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 from . import tools
 from .tools.func import frame_codeinfo
+
+from .tools import parse_version as pv
+if pv(psycopg2.__version__) < pv('2.7'):
+    from psycopg2._psycopg import QuotedString
+    def adapt_string(adapted):
+        """Python implementation of psycopg/psycopg2#459 from v2.7"""
+        if '\x00' in adapted:
+            raise ValueError("A string literal cannot contain NUL (0x00) characters.")
+        return QuotedString(adapted)
+
+    psycopg2.extensions.register_adapter(str, adapt_string)
+    psycopg2.extensions.register_adapter(unicode, adapt_string)
+
 from datetime import timedelta
 import threading
 from inspect import currentframe
@@ -629,15 +642,9 @@ class Connection(object):
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
 
-    def __nonzero__(self):
-        """Check if connection is possible"""
-        try:
-            _logger.info("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
-            cr = self.cursor()
-            cr.close()
-            return True
-        except Exception:
-            return False
+    def __bool__(self):
+        raise NotImplementedError()
+    __nonzero__ = __bool__
 
 def connection_info_for(db_or_uri):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)

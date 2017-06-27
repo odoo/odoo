@@ -42,6 +42,8 @@ class SaleOrderLine(models.Model):
 
     @api.model
     def create(self, vals):
+        vals.update(self._prepare_add_missing_fields(vals))
+
         # Calculation of the margin for programmatic creation of a SO line. It is therefore not
         # necessary to call product_id_change_margin manually
         if 'purchase_price' not in vals:

@@ -26,6 +26,29 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Focuses the field having attribute 'default_focus' set, if any, or the
+     * first focusable field otherwise.
+     */
+    autofocus: function () {
+        if (this.mode === 'readonly') {
+            return;
+        }
+        var focusWidget = this.defaultFocusField;
+        if (!focusWidget || !focusWidget.isFocusable()) {
+            var widgets = this.allFieldWidgets[this.state.id];
+            for (var i = 0; i < (widgets ? widgets.length : 0); i++) {
+                var widget = widgets[i];
+                if (widget.isFocusable()) {
+                    focusWidget = widget;
+                    break;
+                }
+            }
+        }
+        if (focusWidget) {
+            focusWidget.activate({noselect: true});
+        }
+    },
+    /**
      * Extend the method so that labels also receive the 'o_field_invalid' class
      * if necessary.
      *
@@ -183,7 +206,7 @@ var FormRenderer = BasicRenderer.extend({
             self.trigger_up('button_clicked', {
                 attrs: node.attrs,
                 record: self.state,
-                show_wow: self.$el.hasClass('o_wow'),  // TODO: implement this (in view)
+                showWow: $el.hasClass('o_wow'),
             });
         });
     },
@@ -709,7 +732,10 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagSeparator: function (node) {
-        return $('<div/>').addClass('o_horizontal_separator').text(node.attrs.string);
+        var $separator = $('<div/>').addClass('o_horizontal_separator').text(node.attrs.string);
+        this._handleAttributes($separator, node);
+        this._registerModifiers(node, this.state, $separator);
+        return $separator;
     },
     /**
      * @private
@@ -769,20 +795,16 @@ var FormRenderer = BasicRenderer.extend({
         core.bus.trigger('DOM_updated');
 
         // Attach the tooltips on the fields' label
-        var focusWidget = this.defaultFocusField;
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
-            if (!focusWidget) {
-                focusWidget = widget;
-            }
             if (core.debug || widget.attrs.help || widget.field.help) {
                 var idForLabel = self.idsForLabels[widget.name];
                 var $label = idForLabel ? self.$('label[for=' + idForLabel + ']') : $();
                 self._addFieldTooltip(widget, $label);
             }
         });
-        if (focusWidget) {
-            focusWidget.activate({noselect: true});
-        }
+
+        // Focus the default field (in edit mode)
+        self.autofocus();
     },
     /**
      * Sets id attribute of given widget to idForLabel

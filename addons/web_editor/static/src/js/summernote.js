@@ -1872,23 +1872,51 @@ $.summernote.pluginEvents.removeFormat = function (event, editor, layoutInfo, va
 var fn_boutton_updateRecentColor = eventHandler.modules.toolbar.button.updateRecentColor;
 eventHandler.modules.toolbar.button.updateRecentColor = function (elBtn, sEvent, sValue) {
     fn_boutton_updateRecentColor.call(this, elBtn, sEvent, sValue);
-    var font = $(elBtn).closest('.note-color').find('.note-recent-color i')[0];
+    var $recentcolor = $.find('.note-recent-color i');
+    var $recentcolorbtn = $.find('.note-recent-color');
 
-    if (sEvent === "foreColor") {
-        if (sValue.indexOf('text-') !== -1) {
-            font.className += ' ' + sValue;
-            font.style.color = '';
+    //find last used color for fonts or for icons 
+    //set this color into recentcolor button of both font and icon
+    for (var i in $recentcolor) {
+        var $font = $recentcolor[i];
+        var $button = $($recentcolorbtn[i]);
+        var className = $font.className.split(/\s+/);
+        if (sEvent === "foreColor") {
+            //set class for forecolor to recentcolor button font-icon
+            for (var k=2; k<className.length; k++) {
+                if (className[k].length && className[k].slice(0,5) === "text-") {
+                  className.splice(k,1);
+                  k--;
+                }
+            }
+            if (sValue.indexOf('text-') !== -1) {
+                $font.className = className.join(' ') + ' ' + sValue;
+                $font.style.color = '';
+            } else {
+                $font.className = $font.className.replace(/(^|\s+)text-\S+/, '');
+                $font.style.color = sValue !== 'inherit' ? sValue : "";
+            }
         } else {
-            font.className = font.className.replace(/(^|\s+)text-\S+/);
-            font.style.color = sValue !== 'inherit' ? sValue : "";
+            //set class for backcolor to recentcolor button font-icon
+            for (var k=2; k<className.length; k++) {
+                if (className[k].length && className[k].slice(0,3) === "bg-") {
+                  className.splice(k,1);
+                  k--;
+                }
+            }
+            if (sValue.indexOf('bg-') !== -1) {
+                $font.className =className.join(' ') + ' ' + sValue;
+                $font.style.backgroundColor = "";
+            } else {
+                $font.className = $font.className.replace(/(^|\s+)bg-\S+/, '');
+                $font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
+            }
         }
-    } else {
-        if (sValue.indexOf('bg-') !== -1) {
-            font.className += ' ' + sValue;
-            font.style.backgroundColor = "";
-        } else {
-            font.className = font.className.replace(/(^|\s+)bg-\S+/, '');
-            font.style.backgroundColor = sValue !== 'inherit' ? sValue : "";
+        if (sValue !== 'inherit') {
+            //set attribute for color to the recentcolor button
+            var colorInfo = JSON.parse($button.attr('data-value'));
+            colorInfo[sEvent] = sValue;
+            $button.attr('data-value', JSON.stringify(colorInfo));
         }
     }
     return false;
@@ -2089,8 +2117,9 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
     }
 
     // remove node without attributes (move content), and merge the same nodes
-    var className2, style, style2, $prev;
-    for (var i=0; i<nodes.length; i++) {
+    if (!dom.isImgFont(node)) {
+     var className2, style, style2, $prev;
+     for (var i=0; i<nodes.length; i++) {
       node = nodes[i];
 
       if ((dom.isText(node) || dom.isBR(node)) && !dom.isVisibleText(node)) {
@@ -2128,6 +2157,7 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
           continue;
         }
       }
+     }
     }
 
     range.create(startPoint.node, startPoint.offset, endPoint.node, endPoint.offset).select();

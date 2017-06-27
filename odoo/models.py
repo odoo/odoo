@@ -22,6 +22,8 @@
 """
 
 import datetime
+
+import collections
 import dateutil
 import functools
 import itertools
@@ -167,8 +169,9 @@ class MetaModel(api.Meta):
 
 class NewId(object):
     """ Pseudo-ids for new records. """
-    def __nonzero__(self):
+    def __bool__(self):
         return False
+    __nonzero__ = __bool__
 
 IdType = pycompat.integer_types + (str, unicode, NewId)
 
@@ -425,7 +428,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_original_module': cls._module,
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
-                '_fields': {},                          # populated in _setup_base()
+                '_fields': OrderedDict(),               # populated in _setup_base()
             })
             check_parent = cls._build_model_check_parent
 
@@ -2272,7 +2275,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # therefore two registries are never set up at the same time.
 
             # remove fields that are not proper to cls
-            for name in set(cls._fields) - cls0._proper_fields:
+            for name in OrderedSet(cls._fields) - cls0._proper_fields:
                 delattr(cls, name)
                 cls._fields.pop(name, None)
             # collect proper fields on cls0, and add them on cls
@@ -2283,20 +2286,20 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     self._add_field(name, field)
                 else:
                     self._add_field(name, field.new(**field.args))
-            cls._proper_fields = set(cls._fields)
+            cls._proper_fields = OrderedSet(cls._fields)
 
         else:
             # retrieve fields from parent classes, and duplicate them on cls to
             # avoid clashes with inheritance between different models
             for name in cls._fields:
                 delattr(cls, name)
-            cls._fields = {}
-            for name, field in getmembers(cls, Field.__instancecheck__):
+            cls._fields = OrderedDict()
+            for name, field in sorted(getmembers(cls, Field.__instancecheck__), key=lambda f: f[1]._sequence):
                 # do not retrieve magic, custom and inherited fields
                 if not any(field.args.get(k) for k in ('automatic', 'manual', 'inherited')):
                     self._add_field(name, field.new())
             self._add_magic_fields()
-            cls._proper_fields = set(cls._fields)
+            cls._proper_fields = OrderedSet(cls._fields)
 
         cls.pool.model_cache[cls._model_cache_key] = cls
 
@@ -3423,7 +3426,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                            if not key.startswith('default_')}
 
             # call the 'write' method of fields which are not columns
-            for name in upd_todo:
+            for name in sorted(upd_todo, key=lambda name: self._fields[name]._sequence):
                 field = self._fields[name]
                 field.write(self.with_context(rel_context), vals[name])
 
@@ -3802,16 +3805,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # for translatable fields we copy their translations
                 trans_name, source_id, target_id = get_trans(field, old, new)
                 domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
+                new_val = new_wo_lang[name]
+                if old.env.lang:
+                    # the new value *without lang* must be the old value without lang
+                    new_wo_lang[name] = old_wo_lang[name]
                 for vals in Translation.search_read(domain):
                     del vals['id']
                     del vals['source']      # remove source to avoid triggering _set_src
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        # 'source' to force the call to _set_src
-                        # 'value' needed if value is changed in copy(), want to see the new_value
-                        vals['source'] = old_wo_lang[name]
-                        vals['value'] = new_wo_lang[name]
+                        # the value should be the new value (given by copy())
+                        vals['value'] = new_val
                     Translation.create(vals)
 
     @api.multi
@@ -4497,9 +4502,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     # "Dunder" methods
     #
 
-    def __nonzero__(self):
+    def __bool__(self):
         """ Test whether ``self`` is nonempty. """
         return bool(getattr(self, '_ids', True))
+    __nonzero__ = __bool__
 
     def __len__(self):
         """ Return the size of ``self``. """
@@ -4950,7 +4956,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
         return result
-
+collections.Set.register(BaseModel)
+# not exactly true as BaseModel doesn't have __reversed__, index or count
+collections.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
     """ Implements a proxy dictionary to read/update the cache of a record.

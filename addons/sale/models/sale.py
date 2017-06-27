@@ -95,7 +95,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _default_note(self):
-        return self.env.user.company_id.sale_note
+        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
 
     @api.model
     def _get_default_team(self):
@@ -225,7 +225,7 @@ class SaleOrder(models.Model):
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
         }
-        if self.env.user.company_id.sale_note:
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
         if self.partner_id.user_id:
@@ -492,7 +492,7 @@ class SaleOrder(models.Model):
             if self.env.context.get('send_email'):
                 self.force_quotation_send()
             order.order_line._action_procurement_create()
-        if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
+        if self.env['ir.config_parameter'].get_param('sale.auto_done_setting'):
             self.action_done()
         return True
 
@@ -712,14 +712,21 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.model
-    def create(self, values):
+    def _prepare_add_missing_fields(self, values):
+        """ Deduce missing required fields from the onchange """
+        res = {}
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.product_id_change()
             for field in onchange_fields:
                 if field not in values:
-                    values[field] = line._fields[field].convert_to_write(line[field], line)
+                    res[field] = line._fields[field].convert_to_write(line[field], line)
+        return res
+
+    @api.model
+    def create(self, values):
+        values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             line._action_procurement_create()

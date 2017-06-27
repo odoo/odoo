@@ -55,6 +55,7 @@ QUnit.module('Views', {
             limit: 40,
             modelName: 'partner',
             openGroupByDefault: true,
+            viewType: 'kanban',
         };
     }
 }, function () {

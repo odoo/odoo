@@ -837,6 +837,28 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible attrs on separators', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<separator string="Geolocation" attrs=\'{"invisible": [["bar", "=", True]]}\'/>'+
+                            '<field name="bar"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.strictEqual(form.$('div.o_horizontal_separator').hasClass('o_invisible_modifier'), true,
+                "separator div should be hidden");
+        form.destroy();
+    });
+
     QUnit.test('buttons in form view', function (assert) {
         assert.expect(7);
 
@@ -1396,6 +1418,33 @@ QUnit.module('Views', {
             "should have duplicated the record");
 
         assert.strictEqual(form.mode, "edit", 'should be in edit mode');
+        form.destroy();
+    });
+
+    QUnit.test('cannot duplicate a record', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners" duplicate="false">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.get('title'), 'first record',
+            "should have the display name of the record as  title");
+        assert.ok(form.sidebar.$('a:contains(Duplicate)').length === 0,
+            "should not contains a 'Duplicate' action");
         form.destroy();
     });
 
@@ -3770,7 +3819,7 @@ QUnit.module('Views', {
         });
         form.$buttons.find('.o_form_button_edit').click();
 
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
         assert.strictEqual(form.$('input[name="foo"]')[0].selectionStart, 3,
             "cursor should be at the end");
@@ -3792,7 +3841,25 @@ QUnit.module('Views', {
             res_id: 1,
         });
         form.$buttons.find('.o_form_button_edit').click();
-        assert.strictEqual(form.$('input[name="foo"]')[0], document.activeElement,
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
+
+        form.destroy();
+    });
+
+    QUnit.test('in create mode, autofocus fields are focused', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="foo" default_focus="1"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "foo field should have focus");
 
         form.destroy();
@@ -3817,6 +3884,24 @@ QUnit.module('Views', {
         });
 
         form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus first visible field', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field" invisible="1"/>' +
+                        '<field name="foo"/>' +
+                '</form>',
+        });
+        assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
+            "foo field should have focus");
 
         form.destroy();
     });
@@ -4893,5 +4978,182 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('wow effect', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+
+        var clickCount = 0;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<button name="test" string="Mark Won" type="object" class="o_wow"/>' +
+                '</form>',
+            intercepts: {
+                execute_action: function (event) {
+                    if (clickCount === 0) {
+                        event.data.on_success();
+                    } else {
+                        event.data.on_fail();
+                    }
+                    clickCount++;
+                },
+                show_wow: function () {
+                    assert.step('wow');
+                },
+            },
+        });
+
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+        form.$('button.o_wow').click();
+        assert.verifySteps(['wow']);
+
+        form.destroy();
+    });
+
+    QUnit.test('readonly fields are not sent when saving', function (assert) {
+        assert.expect(6);
+
+        // define an onchange on display_name to check that the value of readonly
+        // fields is correctly sent for onchanges
+        this.data.partner.onchanges = {
+            display_name: function () {},
+            p: function () {},
+        };
+        var checkOnchange = false;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                            '<field name="foo" attrs="{\'readonly\': [[\'display_name\', \'=\', \'readonly\']]}"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (checkOnchange && args.method === 'onchange') {
+                    if (args.args[2] === 'display_name') { // onchange on field display_name
+                        assert.strictEqual(args.args[1].foo, 'foo value',
+                            "readonly fields value should be sent for onchanges");
+                    } else { // onchange on field p
+                        assert.deepEqual(args.args[1].p, [
+                            [0, false, {display_name: 'readonly', foo: 'foo value'}]
+                        ], "readonly fields value should be sent for onchanges");
+                    }
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, false, {display_name: 'readonly'}]]
+                    }, "should not have sent the value of the readonly field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal input.o_field_widget[name=foo]').length, 1,
+            'foo should be editable');
+        checkOnchange = true;
+        $('.modal .o_field_widget[name=foo]').val('foo value').trigger('input');
+        $('.modal .o_field_widget[name=display_name]').val('readonly').trigger('input');
+        assert.strictEqual($('.modal span.o_field_widget[name=foo]').length, 1,
+            'foo should be readonly');
+        $('.modal .modal-footer .btn-primary').click(); // close the modal
+        checkOnchange = false;
+
+        form.$('.o_data_row').click(); // re-open previous record
+        assert.strictEqual($('.modal .o_field_widget[name=foo]').text(), 'foo value',
+            "the edited value should have been kept");
+        $('.modal .modal-footer .btn-primary').click(); // close the modal
+
+        form.$buttons.find('.o_form_button_save').click(); // save the record
+
+        form.destroy();
+    });
+
+    QUnit.test('id is False in evalContext for new records', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="id"/>' +
+                        '<field name="foo" attrs="{\'readonly\': [[\'id\', \'=\', False]]}"/>' +
+                '</form>',
+        });
+
+        assert.ok(form.$('.o_field_widget[name=foo]').hasClass('o_readonly_modifier'),
+            "foo should be readonly in 'Create' mode");
+
+        form.$buttons.find('.o_form_button_save').click();
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.notOk(form.$('.o_field_widget[name=foo]').hasClass('o_readonly_modifier'),
+            "foo should not be readonly anymore");
+
+        form.destroy();
+    });
+
+    QUnit.test('delete a duplicated record', function (assert) {
+        assert.expect(5);
+
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="display_name"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    // rpcs done by the sidebar
+                    return $.when([]);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'copy') {
+                    return result.then(function (id) {
+                        newRecordID = id;
+                        return id;
+                    });
+                }
+                if (args.method === 'unlink') {
+                    assert.deepEqual(args.args[0], [newRecordID],
+                        "should delete the newly created record");
+                }
+                return result;
+            },
+        });
+
+        form.sidebar.$('a:contains(Duplicate)').click(); // duplicate record 1
+        assert.strictEqual(form.$('.o_form_editable').length, 1,
+            "form should be in edit mode");
+        assert.strictEqual(form.$('.o_field_widget').val(), 'first record (copy)',
+            "duplicated record should have correct name");
+        form.$buttons.find('.o_form_button_save').click(); // save duplicated record
+
+        form.sidebar.$('a:contains(Delete)').click(); // delete duplicated record
+        assert.strictEqual($('.modal').length, 1, "should have opened a confirm dialog");
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'first record',
+            "should have come back to previous record");
+
+        form.destroy();
+    });
 });
 });

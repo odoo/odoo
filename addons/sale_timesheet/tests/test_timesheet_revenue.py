@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.tools import float_compare
 
 
 class TestSaleTimesheet(TestSale):
@@ -280,10 +281,10 @@ class TestSaleTimesheet(TestSale):
         invoice.action_invoice_open()
 
         # check concrete revenue
-        self.assertEquals(timesheet1.timesheet_revenue, 385.85, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet2.timesheet_revenue, 154.35, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet3.timesheet_revenue, 114.5, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet4.timesheet_revenue, 152.68, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet1.timesheet_revenue, 385.85, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet2.timesheet_revenue, 154.35, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet3.timesheet_revenue, 114.5, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet4.timesheet_revenue, 152.68, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
 
         # check the invoice is well set
         self.assertEquals(timesheet1.timesheet_invoice_id, invoice)

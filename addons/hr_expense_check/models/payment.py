@@ -29,8 +29,8 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
             super(HrExpenseRegisterPaymentWizard, self)._onchange_amount()
         self.check_amount_in_words = self.env['account.payment']._get_check_amount_in_words(self.amount)
 
-    def get_payment_vals(self):
-        res = super(HrExpenseRegisterPaymentWizard, self).get_payment_vals()
+    def _get_payment_vals(self):
+        res = super(HrExpenseRegisterPaymentWizard, self)._get_payment_vals()
         if self.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
             res.update({
                 'check_amount_in_words': self.check_amount_in_words,

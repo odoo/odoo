@@ -1503,6 +1503,43 @@ QUnit.module('Views', {
             "Create button should now be highlighted");
         kanban.destroy();
     });
+
+    QUnit.test('group_by_tooltip option when grouping on a many2one', function (assert) {
+        assert.expect(5);
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban default_group_by="bar">' +
+                    '<field name="bar"/>' +
+                    '<field name="product_id" '+
+                        'options=\'{"group_by_tooltip": {"name": "Kikou"}}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/read') {
+                    assert.strictEqual(args.args[0].length, 2,
+                        "read on two groups");
+                    assert.deepEqual(args.args[1], ['display_name', 'name'],
+                        "should read on specified fields on the group by relation");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have " + 2 + " columns");
+
+        // simulate an update coming from the searchview, with another groupby given
+        kanban.update({groupBy: ['product_id']});
+        assert.ok(kanban.$('.o_kanban_group:first span.o_column_title:contains(hello)').length,
+            "first column should have a title with a value from the many2one");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_header').data('original-title'),
+            "<p>2 records</p><div>Kikou<br>hello</div>",
+            "first column should have a tooltip with the number of records, the group_by_tooltip title and many2one field value");
+
+        kanban.destroy();
+    });
 });
 
 });

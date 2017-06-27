@@ -14,14 +14,15 @@ class BaseConfigSettings(models.TransientModel):
              " * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies.")
 
     @api.model
-    def get_default_company_share_product(self, fields):
+    def get_values(self):
+        res = super(BaseConfigSettings, self).get_values()
         product_rule = self.env.ref('product.product_comp_rule')
-        return {
-            'company_share_product': not bool(product_rule.active)
-        }
+        res.update(
+            company_share_product=not bool(product_rule.active),
+        )
+        return res
 
-    @api.multi
-    def set_auth_company_share_product(self):
-        self.ensure_one()
+    def set_values(self):
+        super(BaseConfigSettings, self).set_values()
         product_rule = self.env.ref('product.product_comp_rule')
         product_rule.write({'active': not bool(self.company_share_product)})
