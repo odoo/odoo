@@ -30,6 +30,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as the partner is correct, the discount is not created")
 
         order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
@@ -47,6 +48,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied, the discount is created")
 
     def test_program_rules_minimum_purchased_amount(self):
@@ -72,6 +74,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied as the purchased amount is not enough")
 
         order = self.env['sale.order'].create({'partner_id': self.steve.id})
@@ -89,6 +92,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as the purchased amount is enough")
 
     def test_program_rules_validity_dates_and_uses(self):
@@ -115,6 +119,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied we're not between the validity dates")
 
         self.immediate_promotion_program.write({
@@ -136,6 +141,7 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 3, "The promo offert should have been applied as we're between the validity dates")
         order = self.env['sale.order'].create({'partner_id': self.env.ref('base.res_partner_1').id})
         order.write({'order_line': [
@@ -152,4 +158,5 @@ class TestProgramRules(TestSaleCouponCommon):
                 'product_uom_qty': 1.0,
             })
         ]})
+        order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "The promo offert shouldn't have been applied as the number of uses is exceeded")

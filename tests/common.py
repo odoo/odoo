@@ -9,6 +9,9 @@ class TestSaleCouponCommon(common.TransactionCase):
     def setUp(self):
         super(TestSaleCouponCommon, self).setUp()
 
+        # Set all the existing programs to active=False to avoid interference
+        self.env['sale.coupon.program'].search([]).write({'active': False})
+
         # create partner for sale order.
         self.steve = self.env['res.partner'].create({
             'name': 'Steve Bucknor',
