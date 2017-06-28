@@ -2263,6 +2263,7 @@ return {
     UrlWidget: UrlWidget,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
+    TranslatableFieldMixin: TranslatableFieldMixin,
 };
 
 });

@@ -11,6 +11,7 @@ var field_registry = require('web.field_registry');
 var transcoder = require('web_editor.transcoder');
 
 var QWeb = core.qweb;
+var _t = core._t;
 
 
 /**
@@ -18,11 +19,8 @@ var QWeb = core.qweb;
  * Intended to display HTML content. This widget uses the summernote editor
  * improved by odoo.
  *
- * FIXME: this field has a custom handling of the translation feature, which
- * hasn't been re-introduced yet (because this feature hasn't been introduced
- * yet in the fields in general)
  */
-var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
+var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(basic_fields.TranslatableFieldMixin, {
     className: 'oe_form_field oe_form_field_html_text',
     supportedFieldTypes: ['html'],
 
@@ -133,6 +131,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
         if (history) {
             history.reset();
         }
+        this.$('.note-toolbar').append(this._renderTranslateButton());
     },
     /**
      * @override
@@ -187,6 +186,21 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend({
         }
         return value;
     },
+    /**
+     * @override
+     * @private
+     * @returns {jQuery}
+     */
+    _renderTranslateButton: function() {
+        if (_t.database.multi_lang && this.field.translate && this.res_id) {
+            return $(QWeb.render('web_editor.FieldTextHtml.button.translate', {
+                    'widget': this
+                }))
+                .on('click', this._onTranslate.bind(this));
+        }
+        return $();
+    },
+
 });
 
 var FieldTextHtml = AbstractField.extend({
@@ -207,7 +221,6 @@ var FieldTextHtml = AbstractField.extend({
         };
         window.odoo[this.callback+"_updown"] = null;
         window.odoo[this.callback+"_downup"] = function (value) {
-            self._setValue(value);
             self.resize();
         };
 
@@ -261,7 +274,7 @@ var FieldTextHtml = AbstractField.extend({
         if (this.nodeOptions.template) {
             attr.template = this.nodeOptions.template;
         }
-        if (this. mode === "edit") {
+        if (this.mode === "edit") {
             attr.enable_editor = 1;
         }
         if (this.field.translate) {
@@ -309,21 +322,20 @@ var FieldTextHtml = AbstractField.extend({
         // this._toggle_label();
         this.lang = this.$iframe.attr('src').match(/[?&]lang=([^&]+)/);
         this.lang = this.lang ? this.lang[1] : session.user_context.lang;
-        this._dirty_flag = false;
         this.render();
         setTimeout(function () {
-            self.trigger_up('perform_model_rpc', {
+            self._rpc({
                 model: 'res.lang',
                 method: 'search_read',
                 args: [
                     [['code', '!=', 'en_US']],
                     ["name", "code"]
-                ],
-                on_success: function (res) {
-                    self.languages = res;
-                    self.add_button();
-                    setTimeout(self.resize,0);
-                }
+                ]
+            })
+            .then(function(res) {
+                self.languages = res;
+                self.add_button();
+                setTimeout(self.resize,0);
             });
         }, 0);
     },
@@ -341,11 +353,11 @@ var FieldTextHtml = AbstractField.extend({
         var self = this;
         var $to = this.$body.find("#web_editor-top-edit, #wrapwrap").first();
 
-        $(QWeb.render('FieldTextHtml.translate', {'widget': this}))
+        $(QWeb.render('web_editor.FieldTextHtml.translate', {'widget': this}))
             .appendTo($to)
             .on('change', 'select', function () {
                 var lang = $(this).val();
-                var edit = self. mode === "edit";
+                var edit = self.mode === "edit";
                 var trans = lang !== 'en_US';
                 self.$iframe.attr("src", self.get_url({
                     'edit_translations': edit && trans,
@@ -392,17 +404,22 @@ var FieldTextHtml = AbstractField.extend({
     has_no_value: function () {
         return this.value === false || !this.$content.html() || !this.$content.html().match(/\S/);
     },
-    // FIXME: not sure what this is supposed to do that is still relevant now
-    // commit_value: function () {
-    //     if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
-    //         this.internal_set_value( this.view.datarecord[this.name] );
-    //          this._dirty_flag = false;
-    //          return this.editor.save();
-    //      } else if (this._dirty_flag && this.editor && this.editor.buildingBlock) {
-    //          this.editor.buildingBlock.clean_for_save();
-    //          this.internal_set_value( this.$content.html() );
-    //      }
-    // },
+    /**
+     * We override commitChanges to update only translation terms when lang != en_US
+     * Without updating the original value of fields
+     * Updating a field value only when lang = en_US
+     *
+     * @override
+     */
+    commitChanges: function() {
+        if (this.lang !== 'en_US' && this.$body.find('.o_dirty').length) {
+            this.editor.save();
+        } else {
+            this.editor.buildingBlock.clean_for_save();
+            this._setValue(this.$content.html());
+        }
+        this._super.apply(this, arguments);
+    },
     destroy: function () {
         $(window).off('resize', this.resize);
         delete window.odoo[this.callback+"_editor"];
