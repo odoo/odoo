@@ -1546,7 +1546,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({}, record.context, {bin_size: true}),
+                context: _.extend({}, record.getContext(), {bin_size: true}),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2505,8 +2505,13 @@ var BasicModel = AbstractModel.extend({
                 continue;
             }
             if (field.type === 'one2many' || field.type === 'many2many') {
-                relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
-                var ids = relDataPoint.res_ids.slice(0);
+                var ids;
+                if (!context[fieldName] || _.isArray(context[fieldName])) { // no dataPoint created yet
+                    ids = context[fieldName] || [];
+                } else {
+                    relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
+                    ids = relDataPoint.res_ids.slice(0);
+                }
                 if (!forDomain) {
                     // when sent to the server, the x2manys values must be a list
                     // of commands in a context, but the list of ids in a domain
@@ -3159,7 +3164,7 @@ var BasicModel = AbstractModel.extend({
                     model: list.model,
                     method: 'read',
                     args: [missingIds, fieldNames],
-                    context: {} // FIXME
+                    context: list.getContext(),
                 });
             } else {
                 def = $.when(_.map(missingIds, function (id) {
@@ -3177,6 +3182,7 @@ var BasicModel = AbstractModel.extend({
                     dataPoint = self.localData[list._cache[id]];
                 } else {
                     dataPoint = self._makeDataPoint({
+                        context: list.context,
                         data: _.findWhere(records, {id: id}),
                         fieldsInfo: list.fieldsInfo,
                         fields: list.fields,
@@ -3233,7 +3239,7 @@ var BasicModel = AbstractModel.extend({
             route: '/web/dataset/search_read',
             model: list.model,
             fields: fieldNames,
-            context: list.context,
+            context: list.getContext(),
             domain: list.domain || [],
             limit: list.limit,
             offset: list.loadMoreOffset + list.offset,
@@ -3244,6 +3250,7 @@ var BasicModel = AbstractModel.extend({
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
                 var dataPoint = self._makeDataPoint({
+                    context: list.context,
                     data: record,
                     fields: list.fields,
                     fieldsInfo: list.fieldsInfo,

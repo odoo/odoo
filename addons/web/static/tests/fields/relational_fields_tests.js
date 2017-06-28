@@ -4658,6 +4658,61 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('editable list: contexts are correctly sent', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records[0].timmy = [12];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="timmy" context="{\'key\': parent.foo}">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read' && args.model === 'partner') {
+                    assert.deepEqual(args.kwargs.context, {
+                        active_field: 2,
+                        bin_size: true,
+                        someKey: 'some value',
+                    }, "sent context should be correct");
+                }
+                if (args.method === 'read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.kwargs.context, {
+                        key: 'yop',
+                        someKey: 'some value',
+                    }, "sent context should be correct");
+                }
+                if (args.method === 'write') {
+                    assert.deepEqual(args.kwargs.context, {
+                        active_field: 2,
+                        someKey: 'some value',
+                    }, "sent context should be correct");
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
+            },
+            viewOptions: {
+                mode: 'edit',
+                context: {active_field: 2},
+            },
+            res_id: 1,
+        });
+
+        form.$('.o_data_cell:first').click();
+        form.$('.o_field_widget[name=display_name]').val('abc').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {

@@ -72,9 +72,15 @@ QUnit.module('Views', {
             Model: BasicModel,
             data: this.data,
             mockRPC: function (route, args) {
-                assert.strictEqual(args.kwargs.context.active_field, 2,
-                    "should have sent the correct context");
+                assert.deepEqual(args.kwargs.context, {
+                    active_field: 2,
+                    bin_size: true,
+                    someKey: 'some value',
+                }, "should have sent the correct context");
                 return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
             }
         });
 
@@ -1790,9 +1796,23 @@ QUnit.module('Views', {
 
         this.data.partner.records[0].product_ids = [37, 41];
         this.params.fieldNames = Object.keys(this.data.partner.fields);
+        this.params.fieldsInfo = {
+            form: {
+                qux: {
+                    context: "{'category': category, 'product_ids': product_ids}",
+                    domain: "[['id', 'in', category], ['id', 'in', product_ids]]",
+                    relatedFields: this.data.partner.fields,
+                },
+                category: {
+                    relatedFields: this.data.partner_type.fields,
+                },
+                product_ids: {
+                    relatedFields: this.data.product.fields,
+                },
+            },
+        };
+        this.params.viewType = 'form';
         this.params.res_id = 1;
-        this.params.context = "{'category': category, 'product_ids': product_ids}";
-        this.params.domain = "[['id', 'in', category], ['id', 'in', product_ids]]";
 
         var model = createModel({
             Model: BasicModel,
@@ -1801,8 +1821,8 @@ QUnit.module('Views', {
 
         model.load(this.params).then(function (resultID) {
             var record = model.get(resultID);
-            var context = record.getContext();
-            var domain = record.getDomain();
+            var context = record.getContext({fieldName: 'qux'});
+            var domain = record.getDomain({fieldName: 'qux'});
 
             assert.deepEqual(context, {
                 category: [12],
