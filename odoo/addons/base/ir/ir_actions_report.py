@@ -28,7 +28,7 @@ _logger = logging.getLogger(__name__)
 
 
 WkhtmltopdfObj = namedtuple('WkhtmltopdfObj',
-                            ['header', 'content', 'footer', 'res_id', 'attachment_id', 'attachment_name'])
+                            ['header', 'content', 'footer', 'res_id', 'attachment_id', 'attachment_name', 'attachment_use'])
 
 
 # A lock occurs when the user wants to print a report having multiple barcode while the server is
@@ -209,17 +209,20 @@ class IrActionsReport(models.Model):
         :return: A new instance of WkhtmltopdfObj.
         '''
         attachment_id = attachment_name = None
-        if res_id and len(self._ids) == 1 and self.attachment_use and self.attachment:
+        attachment_use = False
+        if res_id and len(self._ids) == 1 and self.attachment:
             record_id = self.env[self.model].browse(res_id)
             attachment_name = safe_eval(self.attachment, {'object': record_id, 'time': time})
             attachment_id = self.retrieve_attachment(record_id, attachment_name)
+            attachment_use = self.attachment_use
         return WkhtmltopdfObj(
             header=header,
             content=content,
             footer=footer,
             res_id=res_id,
             attachment_id=attachment_id,
-            attachment_name=attachment_name
+            attachment_name=attachment_name,
+            attachment_use=attachment_use
         )
 
     @api.model
@@ -449,7 +452,7 @@ class IrActionsReport(models.Model):
             temporary_files.append(pdfreport_path)
 
             # Directly load the document if we already have it
-            if wkhtmltopdf_obj.attachment_id:
+            if wkhtmltopdf_obj.attachment_id and wkhtmltopdf_obj.attachment_use:
                 with closing(os.fdopen(pdfreport_fd, 'w')) as pdfreport:
                     pdfreport.write(base64.decodestring(wkhtmltopdf_obj.attachment_id.datas))
                 pdfdocuments.append(pdfreport_path)
@@ -495,7 +498,7 @@ class IrActionsReport(models.Model):
                 raise
 
             # Call the postprocess method on the ir.actions.report.
-            if wkhtmltopdf_obj.res_id and wkhtmltopdf_obj.attachment_name:
+            if wkhtmltopdf_obj.res_id and wkhtmltopdf_obj.attachment_name and not wkhtmltopdf_obj.attachment_id:
                 self.postprocess_pdf_report(wkhtmltopdf_obj.res_id, pdfreport_path, wkhtmltopdf_obj.attachment_name)
 
         # Return the entire document
