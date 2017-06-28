@@ -192,6 +192,8 @@
                     <field name="tag_ids"/>
                     <field name="user_id"/>
                     <field name="message_needaction_counter"/>
+                    <field name="activity_ids"/>
+                    <field name="activity_state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
@@ -211,6 +213,9 @@
                                     </t>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
+                                    <div class="o_kanban_inline_block">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                 </div>
                             </div>
