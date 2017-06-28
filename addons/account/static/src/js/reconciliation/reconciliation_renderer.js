@@ -6,7 +6,6 @@ var FieldManagerMixin = require('web.FieldManagerMixin');
 var relational_fields = require('web.relational_fields');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
-var RainbowMan = require('web.rainbow_man');
 var time = require('web.time');
 var qweb = core.qweb;
 var _t = core._t;
@@ -112,12 +111,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             }));
             this.$el.children().hide();
             // display rainbowman after fully reconcilation
-            new RainbowMan({
-                fadeout: 'no',
-                message: $done,
-                click_close: false,
-            }).appendTo(this.$el);
-            this.$el.first().css('min-height', '450px');
+            this.trigger_up('rainbow_man', {fadeout: 'no', message: $done, click_close: false});
+            this.$el.css('min-height', '450px');
         }
 
         if (state.notifications) {

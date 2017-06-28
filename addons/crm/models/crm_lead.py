@@ -362,6 +362,10 @@ class Lead(models.Model):
                         MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
                     FROM crm_lead
                     WHERE
+                        type = 'opportunity'
+                    AND
+                        active = True
+                    AND
                         probability = 100
                     AND
                         DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)

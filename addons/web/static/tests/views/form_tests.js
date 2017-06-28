@@ -5239,7 +5239,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('rainbowman attributes correctly passed on button click', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -5253,10 +5253,8 @@ QUnit.module('Views', {
             intercepts: {
                 execute_action: function (event) {
                     var rainbow_data = pyeval.py_eval(event.data.action_data.rainbow);
-                    new RainbowMan(rainbow_data).appendTo($('body'))
-                    .then( function () {
-                        assert.ok(_.isEqual($('.o_reward_msg_content').text(), "Congrats!"), "should have displayed rainbowman, with correct message.");
-                    });
+                    assert.strictEqual(_.size(rainbow_data), 1, "should have only one key");
+                    assert.strictEqual(rainbow_data.message, 'Congrats!', "should have passed correct message");
                 }
             }
         });

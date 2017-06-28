@@ -20,7 +20,6 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var framework = require('web.framework');
 var pyeval = require('web.pyeval');
-var RainbowMan = require('web.rainbow_man');
 var session = require('web.session');
 var ViewManager = require('web.ViewManager');
 var Widget = require('web.Widget');
@@ -865,7 +864,7 @@ var ActionManager = Widget.extend({
         this.dialog_stop();
         // Display rainbowman on appropriate actions
         if (action.rainbow) {
-            new RainbowMan(action.rainbow).appendTo(this.$el);
+            this.trigger_up('rainbow_man', action.rainbow);
         }
 
         return $.when();

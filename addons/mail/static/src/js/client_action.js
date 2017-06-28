@@ -14,7 +14,6 @@ var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 
 var pyeval = require('web.pyeval');
-var RainbowMan = require('web.rainbow_man');
 var SearchView = require('web.SearchView');
 var Widget = require('web.Widget');
 
@@ -517,9 +516,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             // Display Rainbowman when all inbox messages are read through
             // 'MARK ALL READ' or marking last inbox message as read
             if (disabled && type === 'mark_as_read') {
-                new RainbowMan({
-                    message: _t('Congratulations, your inbox is empty!'),
-                }).appendTo(this.$el);
+                this.trigger_up('rainbow_man', {message: _t('Congratulations, your inbox is empty!')});
             }
         }
         if (this.channel.id === "channel_starred") {
@@ -613,6 +610,10 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.channels_scrolltop = _.omit(this.channels_scrolltop, message.channel_ids);
     },
     on_update_message: function (message, type) {
+        // To identify 'update_button_status' method is called from from 'Mark as read / Mark all read'
+        // button, we are passing type to this method so that rainbowman will only appear on marking all
+        // messages as read (because the same method is also called from 'fetch_and_render_thread' when
+        // clicking @inbox, and we don't want rainbowman to appear everytime on empty inbox)
         var self = this;
         var current_channel_id = this.channel.id;
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||

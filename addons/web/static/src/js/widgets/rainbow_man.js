@@ -7,11 +7,10 @@ var core = require('web.core');
 var qweb = core.qweb;
 var _t = core._t;
 
-ajax.loadXML("/web/static/src/xml/rainbow_man.xml", qweb);
-
 var RainbowMan = Widget.extend({
     template: 'rainbow_man.notification',
     /**
+     * @override
      * @constructor
      * @param {Object} [options] - key-value options to decide rainbowman behavior / appearance
      * @param {string} [options.message] - Message to be displayed on rainbowman card
@@ -34,7 +33,23 @@ var RainbowMan = Widget.extend({
         });
         this.delay = rainbowDelay[this.options.fadeout];
         this._super.apply(this, arguments);
+        core.bus.on('clear_uncommitted_changes', this, this.destroy);
     },
+    /**
+     * @override
+     */
+    willStart: function () {
+        var def;
+        if (!qweb.has_template(this.template)) {
+            // we need to manually load the templates when the rainbon_man is used in
+            // the frontend, for example, it may be displayed at the end of a tour.
+            def = ajax.loadXML("/web/static/src/xml/rainbow_man.xml", qweb);
+        }
+        return $.when(this._super.apply(this, arguments), def);
+    },
+    /**
+     * @override
+     */
     start: function () {
         var self = this;
         if (this.options.click_close) {
