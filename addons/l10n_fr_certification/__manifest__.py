@@ -9,7 +9,8 @@
 """,
     'depends': ['l10n_fr'],
     'installable': True,
-    'auto_install': True,
+    # According to http://proxy-pubminefi.diffusion.finances.gouv.fr/pub/document/18/22503.pdf dated June 15th 2017, the certification will only be required for POS software, not for accounting software. So only shops with POS will need the certification, not all French companies. So we switch auto_install to False.
+    'auto_install': False,
     'application': True,
     'data': [
         'views/no_cancel.xml',
