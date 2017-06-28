@@ -125,8 +125,8 @@ var Apps = Widget.extend({
                     type: 'ir.actions.client',
                     tag: this.remote_action_tag,
                     params: _.extend({}, this.params, {
-                        db: session.db,
-                        origin: session.origin,
+                        db: this.db,
+                        origin: this.origin,
                     })
                 };
                 w.postMessage({type:'action', action: act}, client.origin);
