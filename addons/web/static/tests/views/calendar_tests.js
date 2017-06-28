@@ -747,9 +747,11 @@ QUnit.module('Views', {
     });
 
     QUnit.test('rendering, with many2many', function (assert) {
-        assert.expect(1);
+        assert.expect(5);
 
         this.data.event.fields.partner_ids.type = 'many2many';
+        this.data.event.records[0].partner_ids = [1,2,3,4,5];
+        this.data.partner.records.push({id: 5, display_name: "partner 5", image: 'EEE'});
 
         var calendar = createView({
             View: CalendarView,
@@ -772,6 +774,15 @@ QUnit.module('Views', {
         assert.strictEqual(calendar.$('.o_calendar_filter_items .o_cal_avatar').length, 3,
             "should have 3 avatars in the side bar");
 
+        var $event1Avatars = calendar.$('.fc-event .o_calendar_avatars').first();
+        assert.strictEqual($event1Avatars.find('img').length, 1, "should have 1 avatar");
+        assert.strictEqual($event1Avatars.find('span').length, 0,
+            "should not have a span for more attendees since there is only one");
+
+        var $event2Avatars = calendar.$('.fc-event:contains(All the day) .o_calendar_avatars');
+        assert.strictEqual($event2Avatars.find('img').length, 3, "should have 3 avatars");
+        assert.strictEqual($event2Avatars.find('span').text(), '+2',
+            "should indicate there are 2 more attendees that we don't show");
         calendar.destroy();
     });
 
