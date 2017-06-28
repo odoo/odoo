@@ -27,7 +27,7 @@ class Rating(http.Controller):
             'rate_name': rate_names[rate], 'rate': rate
         })
 
-    @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", method=['post'])
+    @http.route(['/rating/<string:token>/<int:rate>/submit_feedback'], type="http", auth="public", methods=['post'])
     def submit_rating(self, token, rate, **kwargs):
         rating = request.env['rating.rating'].sudo().search([('access_token', '=', token)])
         if not rating:
