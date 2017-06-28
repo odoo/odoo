@@ -20,7 +20,11 @@
                 <t t-foreach="widget.displayFields" t-as="name">
                     <div t-attf-class="o_field_#{name} o_field_type_#{fields[name].type}">
                         <t t-if="widget.displayFields[name].avatar_field">
-                            <t t-esc="fields[name].string"/>: <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,5)" t-as="image"><t t-raw="image"/></t>
+                            <t t-esc="fields[name].string"/>:
+                            <div class="o_calendar_avatars pull-right">
+                                 <t t-foreach="widget.getAvatars(record, name, widget.displayFields[name].avatar_field).slice(0,3)" t-as="image"><t t-raw="image"/></t>
+                                <span t-if="record[name].length - 3 > 0">+<t t-esc="record[name].length - 3"/></span>
+                            </div>
                         </t>
                         <t t-else="">
                             <t t-esc="format(record, name)"/>
