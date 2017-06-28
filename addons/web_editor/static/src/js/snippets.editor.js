@@ -250,9 +250,9 @@ data.Class = Widget.extend({
                     if (thumbnail) {
                         $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
                     }
-                    var module_id = $snippet.data("module_id");
-                    if(module_id) {
-                        var install_btn = _.str.sprintf('<div class="o_snippet_btn"><a class="btn btn-primary btn-sm o_install_btn" target="_blank" href="/web#id=%s&view_type=form&model=ir.module.module&action=base.open_module_tree">%s</a> </div>', module_id, _t('Install'));
+                    var moduleId = $snippet.data('moduleId');
+                    if (moduleId) {
+                        var install_btn = _.str.sprintf('<div class="o_snippet_btn"><a class="btn btn-primary btn-sm o_install_btn" target="_blank" href="/web#id=%s&view_type=form&model=ir.module.module&action=base.open_module_tree">%s</a> </div>', moduleId, _t('Install'));
                         $div.prepend(install_btn);
                     }
                     // end
@@ -293,7 +293,13 @@ data.Class = Widget.extend({
 
         this.$el.html($html);
 
-        self.make_snippet_draggable(self.$snippets);
+        var $snippets = this.$snippets.filter(function () {
+            if (!$(this).data('moduleId')) {
+                return $(this);
+            }
+        });
+
+        self.make_snippet_draggable($snippets);
         this.associate_snippet_names(this.$snippets);
 
         this.show_blocks();
@@ -465,7 +471,7 @@ data.Class = Widget.extend({
         var top = $tumb.outerHeight()/2;
         var $toInsert, dropped, $snippet;
 
-        $snippets.not('.o_snippet_install').draggable({
+        $snippets.draggable({
             greedy: true,
             helper: 'clone',
             zIndex: '1000',

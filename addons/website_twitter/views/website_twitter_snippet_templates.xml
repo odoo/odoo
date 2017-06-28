@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="remove_website_twitter_snippet" inherit_id="website.external_snippets">
+        <xpath expr="//t[@t-install='website_twitter']" position="replace"/>
+    </template>
+
      <template id="website_twitter_snippet" inherit_id="website.snippets" name="Twitter snippet">
-        <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']/t[@t-title='Twitter Scroller']" position="replace"/>
 
         <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
             <div>

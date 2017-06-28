@@ -55,7 +55,7 @@ class QWeb(models.AbstractModel):
             name = el.attrib.get('t-title') or "Snippet"
             module = self.env['ir.module.module'].search([('name', '=', el.attrib.get('t-install'))])
             thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-            div = u'<div name="%s" data-oe-type="snippet" data-module_id="%s" class="o_snippet_install" data-oe-thumbnail="%s"><section></section></div>' % (escape(ir_qweb.unicodifier(name)), module and module.id, escape(ir_qweb.unicodifier(thumbnail)))
+            div = u'<div name="%s" data-oe-type="snippet" data-module-id="%s" class="o_snippet_install" data-oe-thumbnail="%s"><section/></div>' % (escape(ir_qweb.unicodifier(name)), module.id, escape(ir_qweb.unicodifier(thumbnail)))
             return [self._append(ast.Str(div))]
         else:
             return []

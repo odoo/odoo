@@ -700,7 +700,6 @@
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
                     <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_feature_grid.png"/>
-                    <t t-install="website_twitter" t-title="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
                 </div>
             </div>
 
@@ -723,9 +722,6 @@
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
-                    <t t-install="website_event" t-title="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
-                    <t t-install="website_mail_channel" t-title="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
-                    <t t-install="mass_mailing" t-title="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
                 </div>
             </div>
         </div>
@@ -733,6 +729,18 @@
 
     <xpath expr="//div[@id='snippet_options']/t" position="attributes">
         <attribute name="t-call">website.snippet_options</attribute>
+    </xpath>
+</template>
+
+<template id="external_snippets" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
+        <t t-install="website_twitter" t-title="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
+        <t t-install="website_event" t-title="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
+        <t t-install="website_mail_channel" t-title="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
+        <t t-install="mass_mailing" t-title="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
     </xpath>
 </template>
 
