@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import codecs
 import csv
 import fnmatch
 import inspect
+import io
 import locale
 import logging
 import os
@@ -474,7 +474,13 @@ def unquote(str):
 # class to handle po files
 class PoFile(object):
     def __init__(self, buffer):
-        self.buffer = buffer
+        # TextIOWrapper closes its underlying buffer on close *and* can't
+        # handle actual file objects (on python 2)
+        self.buffer = codecs.StreamReaderWriter(
+            stream=buffer,
+            Reader=codecs.getreader('utf-8'),
+            Writer=codecs.getwriter('utf-8')
+        )
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -489,7 +495,7 @@ class PoFile(object):
         lines = self.buffer.readlines()
         # remove the BOM (Byte Order Mark):
         if len(lines):
-            lines[0] = unicode(lines[0], 'utf8').lstrip(unicode( codecs.BOM_UTF8, "utf8"))
+            lines[0] = lines[0].lstrip(u"\ufeff")
 
         lines.append('') # ensure that the file ends with at least an empty line
         return lines
@@ -594,7 +600,7 @@ class PoFile(object):
 
     def write_infos(self, modules):
         import odoo.release as release
-        self.buffer.write("# Translation of %(project)s.\n" \
+        self.buffer.write(u"# Translation of %(project)s.\n" \
                           "# This file contains the translation of the following modules:\n" \
                           "%(modules)s" \
                           "#\n" \
@@ -622,30 +628,30 @@ class PoFile(object):
     def write(self, modules, tnrs, source, trad, comments=None):
 
         plurial = len(modules) > 1 and 's' or ''
-        self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
+        self.buffer.write(u"#. module%s: %s\n" % (plurial, ', '.join(modules)))
 
         if comments:
-            self.buffer.write(''.join(('#. %s\n' % c for c in comments)))
+            self.buffer.write(u''.join(('#. %s\n' % c for c in comments)))
 
         code = False
         for typy, name, res_id in tnrs:
-            self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
+            self.buffer.write(u"#: %s:%s:%s\n" % (typy, name, res_id))
             if typy == 'code':
                 code = True
 
         if code:
             # only strings in python code are python formated
-            self.buffer.write("#, python-format\n")
+            self.buffer.write(u"#, python-format\n")
 
         if not isinstance(trad, unicode):
             trad = unicode(trad, 'utf8')
         if not isinstance(source, unicode):
             source = unicode(source, 'utf8')
 
-        msg = "msgid %s\n"      \
-              "msgstr %s\n\n"   \
+        msg = u"msgid %s\n"      \
+              u"msgstr %s\n\n"   \
                   % (quote(source), quote(trad))
-        self.buffer.write(msg.encode('utf8'))
+        self.buffer.write(msg)
 
 
 # Methods to export the translation file
