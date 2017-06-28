@@ -535,6 +535,18 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     @api.multi
+    def button_uninstall_wizard(self):
+        """ Launch the wizard to uninstall the given module. """
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'name': _('Uninstall module'),
+            'view_mode': 'form',
+            'res_model': 'base.module.uninstall',
+            'context': {'default_module_id': self.id},
+        }
+
+    @api.multi
     def button_uninstall_cancel(self):
         self.write({'state': 'installed'})
         return True
