@@ -74,6 +74,15 @@
                 </form>
             </field>
         </record>
+        <record id="view_account_position_filter" model="ir.ui.view">
+            <field name="name">account.fiscal.position.filter</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <search string="Search Fiscal Positions">
+                    <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
         <record id="view_account_position_tree" model="ir.ui.view">
             <field name="name">account.fiscal.position.tree</field>
             <field name="model">account.fiscal.position</field>
@@ -169,6 +178,7 @@
             <field name="res_model">account.fiscal.position</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_position_filter"/>
         </record>
 
         <menuitem
