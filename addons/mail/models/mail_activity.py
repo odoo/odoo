@@ -3,7 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
-from odoo import api, fields, models
+from odoo import api, fields, models, SUPERUSER_ID
 
 
 class MailActivityType(models.Model):
@@ -141,6 +141,61 @@ class MailActivity(models.Model):
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
         return res
+
+    @api.multi
+    def check_access_rule(self, operation):
+        """ Override access rule on activities so that the following heuristic
+        is performed """
+        if self._uid == SUPERUSER_ID:
+            super(MailActivity, self).check_access_rule(operation)
+            return
+
+        from collections import defaultdict
+
+        self._cr.execute("""SELECT DISTINCT id, res_model, res_id FROM "%s" WHERE id = ANY (%%s)""" % self._table, (self.ids,))       
+        models = defaultdict()
+        for act_id, doc_model, doc_id in self._cr.fetchall():
+            models.setdefault(doc_model, defaultdict()).setdefault(doc_id, list()).append(act_id)
+
+        validated = self.env['mail.activity']
+        related_operation = 'read' if operation == 'read' else 'write'
+        for model, doc_to_activities in models.iteritems():
+            self.env[model].check_access_rights(related_operation)
+            self.env[model].browse(doc_to_activities.keys()).check_access_rule(related_operation)
+            validated |= validated.browse([activity_id for activity_ids_list in doc_to_activities.values() for activity_id in activity_ids_list])
+
+        super(MailActivity, (self - validated)).check_access_rule(operation)
+
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        # Rules do not apply to administrator
+        if self._uid == SUPERUSER_ID:
+            return super(MailActivity, self)._search(
+                args, offset=offset, limit=limit, order=order,
+                count=count, access_rights_uid=access_rights_uid)
+
+        # Perform a super with count as False, to have the ids, not a counter
+        ids = super(MailActivity, self)._search(
+            args, offset=offset, limit=limit, order=order,
+            count=False, access_rights_uid=access_rights_uid)
+        if not ids and count:
+            return 0
+        elif not ids:
+            return ids
+
+        self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+            FROM "%s" m
+            LEFT JOIN "mail_message_res_partner_rel" partner_rel
+            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+            LEFT JOIN "mail_message_mail_channel_rel" channel_rel
+            ON channel_rel.mail_message_id = m.id
+            LEFT JOIN "mail_channel" channel
+            ON channel.id = channel_rel.mail_channel_id
+            LEFT JOIN "mail_channel_partner" channel_partner
+            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
+            WHERE m.id = ANY (%%s)""" % self._table, (pid, pid, ids,))
+
+
 
     @api.multi
     def action_done(self, feedback=False):
