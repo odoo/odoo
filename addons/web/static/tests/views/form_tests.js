@@ -2883,7 +2883,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('onchanges that complete after discarding', function (assert) {
-        assert.expect(6);
+        assert.expect(4);
 
         var def1 = $.Deferred();
 
@@ -2922,16 +2922,12 @@ QUnit.module('Views', {
 
         // discard changes
         form.$buttons.find('.o_form_button_cancel').click();
-        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), "1234",
-            "field foo should still contain new value");
-        assert.strictEqual($('.modal').length, 0,
-            "Confirm dialog should not be displayed yet");
+        $('.modal .modal-footer .btn-primary').click();
+        assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
+            "field foo should still be displayed to initial value");
 
         // complete the onchange
         def1.resolve();
-        assert.strictEqual($('.modal').length, 1,
-            "Confirm dialog should be displayed");
-        $('.modal .modal-footer .btn-primary').click();
         assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
             "field foo should still be displayed to initial value");
 
