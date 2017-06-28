@@ -143,6 +143,10 @@ class MailActivity(models.Model):
         return res
 
     @api.multi
+    def button_action_done(self):
+        return self.action_done()
+
+    @api.multi
     def action_done(self, feedback=False):
         message = self.env['mail.message']
         if feedback:
