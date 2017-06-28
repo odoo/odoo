@@ -2,6 +2,7 @@ odoo.define('web.list_tests', function (require) {
 "use strict";
 
 var config = require('web.config');
+var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
@@ -2430,6 +2431,41 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: contexts are correctly sent', function (assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                var context;
+                if (route === '/web/dataset/search_read') {
+                    context = args.context;
+                } else {
+                    context = args.kwargs.context;
+                }
+                assert.strictEqual(context.active_field, 2, "context should be correct");
+                assert.strictEqual(context.someKey, 'some value', "context should be correct");
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
+            },
+            viewOptions: {
+                context: {active_field: 2},
+            },
+        });
+
+        list.$('.o_data_cell:first').click();
+        list.$('.o_field_widget[name=foo]').val('abc').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        list.destroy();
+    });
 });
 
 });
