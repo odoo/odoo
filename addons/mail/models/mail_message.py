@@ -414,8 +414,8 @@ class Message(models.Model):
 
         # add subtype data (is_note flag, subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
-        subtypes = self.env['mail.message.subtype'].sudo().search(
-            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
+        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
