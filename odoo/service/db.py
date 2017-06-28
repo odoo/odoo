@@ -316,7 +316,12 @@ def exp_migrate_databases(databases):
 @odoo.tools.mute_logger('odoo.sql_db')
 def exp_db_exist(db_name):
     ## Not True: in fact, check if connection to database is possible. The database may exists
-    return bool(odoo.sql_db.db_connect(db_name))
+    try:
+        db = odoo.sql_db.db_connect(db_name)
+        with db.cursor():
+            return True
+    except Exception:
+        return False
 
 def list_dbs(force=False):
     if not odoo.tools.config['list_db'] and not force:
