@@ -17,8 +17,8 @@
                              <field name="name"/>
                              <field name="user_type_id" widget="selection"/>
                              <field name="tax_ids" widget="many2many_tags"/>
-                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="
-                             {'no_create_edit': True}"/>
+                             <field name="tag_ids" widget="many2many_tags" domain="[('applicability', '!=', 'taxes')]" context="{'default_applicability': 'accounts'}" options="{'no_create_edit': True}"/>
+                             <field name="group_id"/>
                              <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                              <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                              <field name="internal_type" invisible="1" readonly="1"/>
@@ -2167,5 +2167,41 @@
         </record>
 
         <menuitem id="menu_action_manual_reconciliation" parent="menu_finance_entries" action="action_manual_reconciliation" sequence="25"/>
+
+        <record id="view_account_group_form" model="ir.ui.view">
+            <field name="name">account.group.form</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <form string="Account Group">
+                    <group>
+                        <field name="name"/>
+                        <field name="code_prefix"/>
+                        <field name="parent_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_group_tree" model="ir.ui.view">
+            <field name="name">account.group.tree</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <tree string="Account Group">
+                    <field name="code_prefix"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_group_tree" model="ir.actions.act_window">
+            <field name="name">Account Group</field>
+            <field name="res_model">account.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_account_group" name="Groups"
+            parent="account.account_account_menu"
+            action="account.action_account_group_tree" sequence="110"/>
     </data>
 </odoo>
