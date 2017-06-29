@@ -12,6 +12,6 @@ class ProductTemplate(models.Model):
         ('always', 'Show inventory'),
         ('threshold', 'Only show below a threshold'),
         ('custom', 'Custom message'),
-    ], string='Inventory Availability', default=lambda self: self.env['ir.values'].get_default('website.config.settings', 'inventory_availability'), help='Adds an inventory availability status on the web product page.')
-    available_threshold = fields.Float(string='Available Threshold', default=lambda self: 5 if self.env['ir.values'].get_default('website.config.settings', 'inventory_availability') == 'threshold' else None)
-    custom_message = fields.Text(string='Custom Message')
+    ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
+    available_threshold = fields.Float(string='Available Threshold', default=5.0)
+    custom_message = fields.Text(string='Custom Message', default='')

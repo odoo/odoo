@@ -8,7 +8,7 @@
             <field name="website_style_ids" position="before">
                 <field name="inventory_availability" widget="selection" attrs="{'invisible':[('type', 'in', ['service', 'consu'])]}"/>
                 <field name="available_threshold" attrs="{'invisible': ['|', ('type', 'in', ['service', 'consu']), ('inventory_availability', '!=', 'threshold')], 'required': [('inventory_availability', '=', 'threshold'), ('type', '=', 'product')]}"/>
-                <field name="custom_message" attrs="{'invisible': ['|', ('type', 'in', ['service', 'consu']), ('inventory_availability', '!=', 'custom')], 'required': [('inventory_availability', '=', 'custom'), ('type', '=', 'product')]}"/>
+                <field name="custom_message" attrs="{'invisible': ['|', ('type', 'in', ['service', 'consu']), ('inventory_availability', '!=', 'custom')]}"/>
             </field>
         </field>
     </record>

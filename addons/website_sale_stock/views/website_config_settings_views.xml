@@ -16,7 +16,11 @@
                         <div class="content-group">
                             <div class="row mt16">
                                 <label for="inventory_availability" string="Inventory Availability" class="col-md-3 o_light_label" />
-                                <field name="inventory_availability" class="oe_inline" />
+                                <field name="inventory_availability" />
+                            </div>
+                            <div class="row" attrs="{'invisible': [('inventory_availability', '!=', 'threshold')]}">
+                                <label for="available_threshold" string="Default threshold" class="col-md-3 o_light_label" />
+                                <field name="available_threshold" class="oe_inline" attrs="{'required': [('inventory_availability', '=', 'threshold')]}"/>
                             </div>
                         </div>
                     </div>
