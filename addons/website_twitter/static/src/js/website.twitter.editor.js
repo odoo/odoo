@@ -48,7 +48,7 @@ options.registry.twitter = options.registry.marginAndResize.extend({
             $configuration.hide();
         });
     },
-    clean_for_save: function () {
+    cleanForSave: function () {
         this.$target.find(".twitter_timeline").empty();
     },
 });

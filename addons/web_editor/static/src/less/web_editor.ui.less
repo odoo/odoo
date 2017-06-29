@@ -166,7 +166,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                 }
 
-                &.disable {
+                &.o_disabled {
                     .oe_snippet_thumbnail {
                         background-color: rgba(255, 0, 0, 0.75);
                     }
@@ -301,6 +301,8 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 #oe_manipulators {
     @odoo-handle-edge-size: 1px;
     @odoo-handle-border-width: 1px;
+
+    position: relative;
 
     // SNIPPET MANIPULATORS
     .oe_overlay {

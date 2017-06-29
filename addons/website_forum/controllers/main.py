@@ -83,7 +83,7 @@ class WebsiteForum(http.Controller):
         forums = request.env['forum.forum'].search([])
         return request.render("website_forum.forum_all", {'forums': forums})
 
-    @http.route('/forum/new', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
     def forum_create(self, forum_name="New Forum", add_menu=False):
         forum_id = request.env['forum.forum'].create({'name': forum_name})
         if add_menu:
@@ -93,7 +93,7 @@ class WebsiteForum(http.Controller):
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
             })
-        return request.redirect("/forum/%s" % slug(forum_id))
+        return "/forum/%s" % slug(forum_id)
 
     @http.route('/forum/notification_read', type='json', auth="user", methods=['POST'], website=True)
     def notification_read(self, **kwargs):

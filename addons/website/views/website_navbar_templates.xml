@@ -30,9 +30,9 @@
 
                 <ul class="o_menu_sections" groups="website.group_website_designer">
                     <!-- Content -->
-                    <li class="dropdown content" t-if="editable">
+                    <li t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle waves" data-toggle="dropdown" href="#">Content</a>
-                        <ul class="dropdown-menu oe_content_menu" role="menu">
+                        <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a data-action="edit_menu" href="#" title="Edit Top Menu">Edit Menu</a>
                             </li>
@@ -43,17 +43,17 @@
                     </li>
                     <!-- Customize -->
                     <li class="dropdown" id="customize-menu">
-                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="customize-menu-button">Customize</a>
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#">Customize</a>
                         <ul class="dropdown-menu" role="menu">
-                            <li id="theme_customize"><a href="#">Customize Theme</a></li>
-                            <li id="html_editor"><a data-action="ace" href="#advanced-view-editor">HTML/CSS Editor</a></li>
+                            <li id="theme_customize"><a href="#" data-action="customize_theme">Customize Theme</a></li>
+                            <li id="html_editor"><a href="#" data-action="ace">HTML/CSS Editor</a></li>
                             <li id="install_apps"><a href="/web#action=website.action_website_configuration">Add Features</a></li>
                             <li class="divider"/>
                         </ul>
                     </li>
                     <!-- Promote -->
-                    <li class="dropdown">
-                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#" id="promote-menu-button">Promote</a>
+                    <li class="dropdown" id="promote-menu">
+                        <a class="dropdown-toggle waves" data-toggle="dropdown" href="#">Promote</a>
                         <ul class="dropdown-menu oe_promote_menu" role="menu">
                             <li><a data-action="promote-current-page" href="#" title="Promote page on the web">Optimize SEO</a></li>
                         </ul>
@@ -62,14 +62,19 @@
 
                 <ul class="o_menu_systray hidden-xs" groups="website.group_website_publisher">
                     <!-- Mobile preview -->
-                    <li class="o_mobile_preview">
+                    <li class="o_mobile_preview" id="mobile-menu">
                         <a data-action="show-mobile-preview" href="#"><span title="Mobile preview" class="fa fa-mobile"/></a>
                     </li>
                     <!-- Page Edition -->
-                    <li>
-                        <a data-action="new_page" href="#" data-toggle="modal" data-target="#o_website_add_page_modal"><span class="fa fa-plus"/>New</a>
+                    <li class="o_new_content_menu" id="new-content-menu">
+                        <a href="#"><span class="fa fa-plus"/>New</a>
+                        <div id="o_new_content_menu_choices" class="o_hidden">
+                            <ul>
+                                <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
+                            </ul>
+                        </div>
                     </li>
-                    <li t-if="not translatable">
+                    <li t-if="not translatable" id="edit-page-menu">
                         <a data-action="edit" href="#"><span class="fa fa-pencil"/>Edit</a>
                     </li>
                     <li t-if="translatable">
@@ -80,17 +85,6 @@
                     </li>
                 </ul>
             </nav>
-        </xpath>
-
-        <!-- Add new page/content modal -->
-        <xpath expr="//div[@id='wrapwrap']" position="after">
-            <div groups="website.group_website_publisher" class="modal" id="o_website_add_page_modal">
-                <div class="modal-dialog modal-lg">
-                    <ul>
-                        <li groups="website.group_website_designer"><a href="#" data-action="new_page"><i class="fa fa-file-o"/><p>New Page</p></a></li>
-                    </ul>
-                </div>
-            </div>
         </xpath>
     </template>
 </odoo>

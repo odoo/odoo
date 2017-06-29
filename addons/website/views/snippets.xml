@@ -747,8 +747,8 @@
     <t t-call="web_editor.snippet_options"/>
 
     <div data-js='gallery' data-selector=".o_gallery">
-        <li data-images_add="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
-        <li data-images_rm="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
+        <li data-add-images="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add images</a></li>
+        <li data-remove-all-images="true" data-no-preview="true"><a href="#"><i class="fa fa-trash"/>Remove all images</a></li>
         <li class="separator"/>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-magic"/>Mode</a>
@@ -785,10 +785,10 @@
             <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
 
             <ul class="dropdown-menu">
-                <li data-select_class="o_spc-none"><a href="#">None</a></li>
-                <li data-select_class="o_spc-small"><a href="#">Small</a></li>
-                <li data-select_class="o_spc-medium"><a href="#">Medium</a></li>
-                <li data-select_class="o_spc-big"><a href="#">Big</a></li>
+                <li data-select-class="o_spc-none"><a href="#">None</a></li>
+                <li data-select-class="o_spc-small"><a href="#">Small</a></li>
+                <li data-select-class="o_spc-medium"><a href="#">Medium</a></li>
+                <li data-select-class="o_spc-big"><a href="#">Big</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
@@ -809,7 +809,7 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-picture-o"/>Background Image</a>
             <ul class="dropdown-menu">
-                <li data-choose_image="choose_image"><a href="#"><b>Set Custom Image...</b></a></li>
+                <li data-choose-image="true" data-no-preview="true"><a href="#"><b>Set Custom Image...</b></a></li>
                 <li class="divider"></li>
                 <li data-background="" class="none"><a href="#">None</a></li>
                 <li class="divider"></li>
@@ -828,13 +828,14 @@
 
     <div data-js='background_position'
         data-selector="section, :not(.o_gallery > .container) > .carousel, .s_banner .carousel-content">
-        <li class="background_position_li" data-background_position="background_position">
+        <li class="background_position_li" data-background-position="true" data-no-preview="true">
             <a tabindex="-1" href="#"><i class="fa fa-arrows"/>Background Image Sizing</a>
         </li>
     </div>
 
     <div data-js="colorpicker"
-        data-selector="section:not(.parallax), :not(.o_gallery > .container) > .carousel">
+        data-selector="section, :not(.o_gallery > .container) > .carousel"
+        data-exclude=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
             <ul class="dropdown-menu">
@@ -858,7 +859,7 @@
     <div data-js='gallery_img' data-selector=".o_gallery img">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-refresh"/>Re-order</a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" data-no-preview="true">
                 <li data-position="first"><a href="#">Move to first</a></li>
                 <li data-position="prev"><a href="#">Move to previous</a></li>
                 <li data-position="next"><a href="#">Move to next</a></li>
@@ -881,8 +882,8 @@
                  <li data-interval="0"><a href="#">Disable autoplay</a></li>
             </ul>
         </li>
-        <li data-add_slide="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
-        <li data-remove_slide="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
+        <li data-add-slide="true" data-no-preview="true"><a href="#"><i class="fa fa-plus-circle"/>Add Slide</a></li>
+        <li data-remove-slide="true" data-no-preview="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Slide</a></li>
     </div>
 
     <div data-js='margin-y'
@@ -914,11 +915,11 @@
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-expand"/>Margin</a>
             <ul class="dropdown-menu">
-                <li data-select_class="o_margin_xl"><a href="#">Extra-Large</a></li>
-                <li data-select_class="o_margin_l"><a href="#">Large</a></li>
-                <li data-select_class="o_margin_m"><a href="#">Medium</a></li>
-                <li data-select_class="o_margin_s"><a href="#">Small</a></li>
-                <li data-select_class=""><a href="#">None</a></li>
+                <li data-select-class="o_margin_xl"><a href="#">Extra-Large</a></li>
+                <li data-select-class="o_margin_l"><a href="#">Large</a></li>
+                <li data-select-class="o_margin_m"><a href="#">Medium</a></li>
+                <li data-select-class="o_margin_s"><a href="#">Small</a></li>
+                <li data-select-class=""><a href="#">None</a></li>
             </ul>
         </li>
     </div>
@@ -926,9 +927,9 @@
     <div data-selector=".o_image_floating">
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-magnet"/>Float</a>
-            <ul class="dropdown-menu">
-                <li data-select_class="pull-left" data-only="click"><a href="#">Left</a></li>
-                <li data-select_class="pull-right" data-only="click"><a href="#">Right</a></li>
+            <ul class="dropdown-menu" data-no-preview="true">
+                <li data-select-class="pull-left"><a href="#">Left</a></li>
+                <li data-select-class="pull-right"><a href="#">Right</a></li>
             </ul>
         </li>
     </div>
@@ -951,7 +952,7 @@
 
     <div data-js='ul'
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
-        <li data-toggle_class="o_ul_folded"><a href="#">Folded list</a></li>
+        <li data-toggle-class="o_ul_folded"><a href="#">Folded list</a></li>
     </div>
 
     <div data-js='collapse'
@@ -960,7 +961,8 @@
     </div>
 
     <div data-js="menu_data"
-         data-selector="#top_menu li > a:not(.dropdown-toggle)"
+         data-selector="#top_menu li > a"
+         data-exclude=".dropdown-toggle"
          data-no-check="true"/>
 
     <div data-js="company_data"

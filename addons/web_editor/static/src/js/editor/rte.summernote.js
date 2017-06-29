@@ -3,39 +3,32 @@ odoo.define('web_editor.rte.summernote', function (require) {
 
 var core = require('web.core');
 var ajax = require('web.ajax');
-var base = require('web_editor.base');
+var weContext = require('web_editor.context');
 var widgets = require('web_editor.widget');
 var rte = require('web_editor.rte');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 ajax.jsonRpc('/web/dataset/call', 'call', {
     'model': 'ir.ui.view',
     'method': 'read_template',
-    'args': ['web_editor.colorpicker', base.get_context()]
+    'args': ['web_editor.colorpicker', weContext.get()]
 }).done(function (data) {
     QWeb.add_template(data);
 });
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Summernote Lib (neek change to make accessible: method and object) */
-
+// Summernote Lib (neek change to make accessible: method and object)
 var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
-// var options = $.summernote.options;
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
 var tplDropdown = renderer.getTemplate().dropdown;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* update and change the popovers content, and add history button */
-
+// Update and change the popovers content, and add history button
 var fn_createPalette = renderer.createPalette;
 renderer.createPalette = function ($container, options) {
     fn_createPalette.call(this, $container, options);
@@ -322,10 +315,8 @@ eventHandler.modules.handle.update = function ($handle, oStyle, isAirMode) {
     }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* hack for image and link editor */
-
-function getImgTarget ($editable) {
+// Hack for image and link editor
+function getImgTarget($editable) {
     var $handle = $editable ? dom.makeLayoutInfo($editable).handle() : undefined;
     return $(".note-control-selection", $handle).data('target');
 }
@@ -375,18 +366,18 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     $editable.data('range').select();
     $editable.data('NoteHistory').recordUndo();
 
-    var editor = new widgets.LinkDialog(null, {}, $editable, linkInfo).open();
-
     var def = new $.Deferred();
-    editor.on("save", this, function (linkInfo) {
-        linkInfo.range.select();
-        $editable.data('range', linkInfo.range);
-        def.resolve(linkInfo);
-        $editable.trigger('keyup');
-        $('.note-popover .note-link-popover').show();
-    });
-    editor.on("cancel", this, function () {
-        def.reject();
+    core.bus.trigger('link_dialog_demand', {
+        $editable: $editable,
+        linkInfo: linkInfo,
+        onSave: function (linkInfo) {
+            linkInfo.range.select();
+            $editable.data('range', linkInfo.range);
+            def.resolve(linkInfo);
+            $editable.trigger('keyup');
+            $('.note-popover .note-link-popover').show();
+        },
+        onCancel: def.reject.bind(def),
     });
     return def;
 };
@@ -395,18 +386,22 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
     }
-    new widgets.MediaDialog(null, {}, $editable, dom.isImg(r.sc) ? r.sc : null).open();
+    core.bus.trigger('media_dialog_demand', {
+        $editable: $editable,
+        media: dom.isImg(r.sc) ? r.sc : null,
+    });
     return new $.Deferred().reject();
 };
 $.summernote.pluginEvents.alt = function (event, editor, layoutInfo, sorted) {
     var $editable = layoutInfo.editable();
     var $selection = layoutInfo.handle().find('.note-control-selection');
-    var media = $selection.data('target');
-    new widgets.alt(null, {}, $editable, media).open();
+    core.bus.trigger('alt_dialog_demand', {
+        $editable: $editable,
+        media: $selection.data('target'),
+    });
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// Utils
 var fn_is_void = dom.isVoid || function () {};
 dom.isVoid = function (node) {
     return fn_is_void(node) || dom.isImgFont(node) || (node && node.className && node.className.match(/(^|\s)media_iframe_video(\s|$)/i));
@@ -440,13 +435,11 @@ dom.isFont = function (node) {
     return fn_is_font(node) || dom.isImgFont(node);
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 var fn_visible = $.summernote.pluginEvents.visible;
 $.summernote.pluginEvents.visible = function (event, editor, layoutInfo) {
     var res = fn_visible.apply(this, arguments);
     var rng = range.create();
-    if(!rng) return res;
+    if (!rng) return res;
     var $node = $(dom.node(rng.sc));
     if (($node.is('[data-oe-type="html"]') || $node.is('[data-oe-field="arch"]')) &&
         $node.hasClass("o_editable") &&
@@ -582,11 +575,12 @@ $.summernote.pluginEvents.codeview = function (event, editor, layoutInfo, enable
     }
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* fix ie and re-range to don't break snippet*/
-
+// Fix ie and re-range to don't break snippet
+var last_div;
+var last_div_change;
+var last_editable;
 var initial_data = {};
-function reRangeSelectKey (event) {
+function reRangeSelectKey(event) {
     initial_data.range = null;
     if (event.shiftKey && event.keyCode >= 37 && event.keyCode <= 40 && !$(event.target).is("input, textarea, select")) {
         var r = range.create();
@@ -598,7 +592,7 @@ function reRangeSelectKey (event) {
         }
     }
 }
-function reRangeSelect (event, dx, dy) {
+function reRangeSelect(event, dx, dy) {
     var r = range.create();
     if (!r || r.isCollapsed()) return;
 
@@ -615,7 +609,7 @@ function reRangeSelect (event, dx, dy) {
     $(data.sc).closest('.o_editable').data('range', r);
     return r;
 }
-function summernote_mouseup (event) {
+function summernote_mouseup(event) {
     if ($(event.target).closest("#web_editor-top-navbar, .note-popover").length) {
         return;
     }
@@ -638,7 +632,7 @@ function summernote_mouseup (event) {
     }
 }
 var remember_selection;
-function summernote_mousedown (event) {
+function summernote_mousedown(event) {
     rte.history.splitNext();
 
     var $editable = $(event.target).closest(".o_editable, .note-editor");
@@ -663,19 +657,19 @@ function summernote_mousedown (event) {
     var r_editable = editables.has((r||{}).sc);
     if (!r_editable.closest('.note-editor').is($editable) && !r_editable.filter('.o_editable').is(editables)) {
         var saved_editable = editables.has((remember_selection||{}).sc);
-        if($editable.length && !saved_editable.closest('.o_editable, .note-editor').is($editable)) {
+        if ($editable.length && !saved_editable.closest('.o_editable, .note-editor').is($editable)) {
             remember_selection = range.create(dom.firstChild($editable[0]), 0);
-        } else if(!saved_editable.length) {
+        } else if (!saved_editable.length) {
             remember_selection = undefined;
         }
-        if(remember_selection) {
+        if (remember_selection) {
             try {
                 remember_selection.select();
             } catch (e) {
                 console.warn(e);
             }
         }
-    } else if(r_editable.length) {
+    } else if (r_editable.length) {
         remember_selection = r;
     }
 
@@ -691,18 +685,15 @@ function summernote_mousedown (event) {
     }
 }
 
-var last_div;
-var last_div_change;
-var last_editable;
-function summernote_ie_fix (event, pred) {
+function summernote_ie_fix(event, pred) {
     var editable;
     var div;
     var node = event.target;
-    while(node.parentNode) {
+    while (node.parentNode) {
         if (!div && pred(node)) {
             div = node;
         }
-        if(last_div !== node && (node.getAttribute('contentEditable')==='false' || node.className && (node.className.indexOf('o_not_editable') !== -1))) {
+        if (last_div !== node && (node.getAttribute('contentEditable')==='false' || node.className && (node.className.indexOf('o_not_editable') !== -1))) {
             break;
         }
         if (node.className && node.className.indexOf('o_editable') !== -1) {
@@ -772,13 +763,13 @@ eventHandler.attach = function (oLayoutInfo, options) {
         eventHandler.modules.linkDialog.show(oLayoutInfo);
     });
 
-    if(oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
+    if (oLayoutInfo.editor().is('[data-oe-model][data-oe-type="image"]')) {
         oLayoutInfo.editor().on('click', 'img', function (event) {
             $(event.target).trigger("dblclick");
         });
     }
     oLayoutInfo.editable().on('mousedown', function (e) {
-        if(dom.isImg(e.target)) {
+        if (dom.isImg(e.target)) {
             range.createFromNode(e.target).select();
         }
     });
@@ -875,9 +866,7 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $(document).off("keyup", reRangeSelectKey);
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/* Translation for odoo */
-
+// Translation for odoo
 $.summernote.lang.odoo = {
     font: {
       bold: _t('Bold'),

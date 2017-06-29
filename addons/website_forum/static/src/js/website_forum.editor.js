@@ -2,14 +2,29 @@ odoo.define('website_forum.editor', function (require) {
 "use strict";
 
 var core = require('web.core');
-var contentMenu = require('website.contentMenu');
-var website = require('website.website');
+var wUtils = require('website.utils');
+var WebsiteNewMenu = require("website.newMenu");
 
 var _t = core._t;
 
-contentMenu.TopBar.include({
-    new_forum: function() {
-        website.prompt({
+WebsiteNewMenu.include({
+    actions: _.extend({}, WebsiteNewMenu.prototype.actions || {}, {
+        new_forum: '_createNewForum',
+    }),
+
+    //----------------------------------------------------------------------
+    // Actions
+    //----------------------------------------------------------------------
+
+    /**
+     * Asks the user information about a new forum to create, then creates it
+     * and redirects the user to this new forum.
+     *
+     * @private
+     */
+    _createNewForum: function () {
+        var self = this;
+        wUtils.prompt({
             id: "editor_new_forum",
             window_title: _t("New Forum"),
             input: "Forum Name",init: function () {
@@ -27,12 +42,16 @@ contentMenu.TopBar.include({
             }
         }).then(function (forum_name, field, $dialog) {
             var add_menu = ($dialog.find('input[type="checkbox"]').is(':checked'));
-            website.form('/forum/new', 'POST', {
-                forum_name: forum_name,
-                add_menu: add_menu || ""
+            self._rpc({
+                route: '/forum/new',
+                params: {
+                    forum_name: forum_name,
+                    add_menu: add_menu || "",
+                },
+            }).then(function (url) {
+                window.location.href = url;
             });
         });
     },
 });
-
 });

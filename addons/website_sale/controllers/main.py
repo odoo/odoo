@@ -914,14 +914,13 @@ class WebsiteSale(http.Controller):
     # Edit
     # ------------------------------------------------------
 
-    @http.route(['/shop/add_product'], type='http', auth="user", methods=['POST'], website=True)
+    @http.route(['/shop/add_product'], type='json', auth="user", methods=['POST'], website=True)
     def add_product(self, name=None, category=0, **post):
         product = request.env['product.product'].create({
             'name': name or _("New Product"),
             'public_categ_ids': category
         })
-
-        return request.redirect("/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id))
+        return "/shop/product/%s?enable_editor=1" % slug(product.product_tmpl_id)
 
     @http.route(['/shop/change_styles'], type='json', auth="public")
     def change_styles(self, id, style_id):

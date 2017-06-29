@@ -3,14 +3,14 @@
 <template id="website_blog" inherit_id="website.snippets" name="Snippet Blog">
     <xpath expr="//div[@id='snippet_options']" position="inside">
         <div data-js="blog_cover" data-selector=".website_blog .o_blog_cover_container" data-no-check="true">
-            <li data-change="true"><a href="#">Change Cover</a></li>
-            <li data-clear="true"><a href="#" >No Cover</a></li>
+            <li data-change="true" data-no-preview="true"><a href="#">Change Cover</a></li>
+            <li data-clear="true" data-no-preview="true"><a href="#" >No Cover</a></li>
             <li class="dropdown-submenu">
                 <a href="#">Size</a>
                 <ul class="dropdown-menu">
-                    <li data-select_class="cover container-fluid cover_full"><a href="#">Full Screen</a></li>
-                    <li data-select_class="cover container-fluid cover_narrow"><a href="#">Mid screen</a></li>
-                    <li data-select_class="cover container cover_narrow"><a href="#">Narrow</a></li>
+                    <li data-select-class="cover container-fluid cover_full"><a href="#">Full Screen</a></li>
+                    <li data-select-class="cover container-fluid cover_narrow"><a href="#">Mid screen</a></li>
+                    <li data-select-class="cover container cover_narrow"><a href="#">Narrow</a></li>
                 </ul>
             </li>
             <li class="dropdown-submenu">

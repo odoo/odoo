@@ -7,7 +7,6 @@ var config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 var field_registry = require('web.field_registry');
-
 var transcoder = require('web_editor.transcoder');
 
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
@@ -107,8 +106,8 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     _getValue: function () {
         if (this.nodeOptions['style-inline']) {
-            transcoder.class_to_style(this.$content);
-            transcoder.font_to_img(this.$content);
+            transcoder.classToStyle(this.$content);
+            transcoder.fontToImg(this.$content);
         }
         return this.$content.html();
     },
@@ -125,7 +124,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
-            transcoder.style_to_class(this.$content);
+            transcoder.styleToClass(this.$content);
         }
         // reset the history (otherwise clicking on undo before editing the
         // value will empty the editor)
@@ -352,7 +351,7 @@ var FieldTextHtml = AbstractField.extend({
             return;
         }
         if (this.mode === "edit") {
-            if(window.odoo[this.callback+"_updown"]) {
+            if (window.odoo[this.callback+"_updown"]) {
                 // FIXME
                 // window.odoo[this.callback+"_updown"](value, this.view.get_fields_values(), this.name);
                 this.resize();
@@ -391,7 +390,7 @@ var FieldTextHtml = AbstractField.extend({
             var layoutInfo = this.editor.rte.editable().data('layoutInfo');
             $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
         }
-        this.editor.buildingBlock.clean_for_save();
+        this.editor.snippetsMenu.cleanForSave();
         this._setValue(this.$content.html());
         return this._super.apply(this, arguments);
     },
@@ -405,5 +404,4 @@ return {
     FieldTextHtmlSimple: FieldTextHtmlSimple,
     FieldTextHtml: FieldTextHtml,
 };
-
 });

@@ -3,17 +3,16 @@ odoo.define('website_mail_channel.editor', function (require) {
 
 var core = require('web.core');
 var rpc = require('web.rpc');
-var base = require('web_editor.base');
+var weContext = require('web_editor.context');
 var options = require('web_editor.snippets.options');
-var website = require('website.website');
+var wUtils = require('website.utils');
 
 var _t = core._t;
 
 options.registry.subscribe = options.Class.extend({
-    select_mailing_list: function (type, value) {
+    select_mailing_list: function (previewMode, value) {
         var self = this;
-        if (type !== "click") return;
-        return website.prompt({
+        return wUtils.prompt({
             id: "editor_new_subscribe_button",
             window_title: _t("Add a Subscribe Button"),
             select: _t("Discussion List"),
@@ -22,23 +21,22 @@ options.registry.subscribe = options.Class.extend({
                         model: 'mail.channel',
                         method: 'name_search',
                         args: ['', [['public','=','public']]],
-                        context: base.get_context(),
+                        context: weContext.get(),
                     });
             },
         }).then(function (mail_channel_id) {
             self.$target.attr("data-id", mail_channel_id);
         });
     },
-    drop_and_build_snippet: function() {
+    onBuilt: function () {
         var self = this;
         this._super();
         this.select_mailing_list("click").fail(function () {
-            self.editor.on_remove();
+            self.getParent()._removeSnippet();
         });
     },
-    clean_for_save: function () {
+    cleanForSave: function () {
         this.$target.addClass("hidden");
     },
 });
-
 });

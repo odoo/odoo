@@ -2,11 +2,9 @@ odoo.define('web_editor.widget', function (require) {
 'use strict';
 
 var core = require('web.core');
-var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var rte = require('web_editor.rte');
+var weContext = require("web_editor.context");
 
 var QWeb = core.qweb;
 var range = $.summernote.core.range;
@@ -48,6 +46,10 @@ Dialog = Dialog.extend({
  */
 var alt = Dialog.extend({
     template: 'web_editor.dialog.alt',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/web_editor/static/src/xml/editor.xml']
+    ),
+
     init: function (parent, options, $editable, media) {
         this._super(parent, _.extend({}, {
             title: _t("Change media description and tooltip")
@@ -70,158 +72,11 @@ var alt = Dialog.extend({
     },
 });
 
-var click_event = function (el, type) {
+function click_event(el, type) {
     var evt = document.createEvent("MouseEvents");
     evt.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
     el.dispatchEvent(evt);
-};
-
-/**
- * MediaDialog widget. Lets users change a media, including uploading a
- * new image, font awsome or video and can change a media into an other
- * media
- *
- * options: select_images: allow the selection of more of one image
- */
-var MediaDialog = Dialog.extend({
-    template: 'web_editor.dialog.media',
-    events : _.extend({}, Dialog.prototype.events, {
-        'input input#icon-search': 'search',
-    }),
-    init: function (parent, options, $editable, media) {
-        this._super(parent, _.extend({}, {
-            title: _t("Select a Media"),
-        }, options));
-        if ($editable) {
-            this.$editable = $editable;
-            this.rte = this.$editable.rte || this.$editable.data('rte');
-        }
-        this.options = options || {};
-        this.old_media = media;
-        this.media = media;
-        this.isNewMedia = !media;
-        this.range = range.create();
-    },
-    start: function () {
-        var self = this;
-
-        this.$modal.addClass('note-image-dialog');
-        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
-
-        this.only_images = this.options.only_images || this.options.select_images || (this.media && ($(this.media).parent().data("oe-field") === "image" || $(this.media).parent().data("oe-type") === "image"));
-        if (this.only_images) {
-            this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
-        }
-
-        this.opened((function () {
-            if (this.media) {
-                if (this.media.nodeName === "IMG") {
-                    this.$('[href="#editor-media-image"]').tab('show');
-                } else if ($(this.media).is('a.o_image')) {
-                    this.$('[href="#editor-media-document"]').tab('show');
-                } else if (this.media.className.match(/(^|\s)media_iframe_video($|\s)/)) {
-                    this.$('[href="#editor-media-video"]').tab('show');
-                } else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
-                    this.media = this.media.parentNode;
-                    this.$('[href="#editor-media-video"]').tab('show');
-                } else if (this.media.className.match(/(^|\s)fa($|\s)/)) {
-                    this.$('[href="#editor-media-icon"]').tab('show');
-                }
-            }
-        }).bind(this));
-
-        this.imageDialog = new ImageDialog(this, this.media, this.options);
-        this.imageDialog.appendTo(this.$("#editor-media-image"));
-        this.documentDialog = new ImageDialog(this, this.media, _.extend({'document': true}, this.options));
-        this.documentDialog.appendTo(this.$("#editor-media-document"));
-        if (!this.only_images) {
-            this.iconDialog = new fontIconsDialog(this, this.media, this.options);
-            this.iconDialog.appendTo(this.$("#editor-media-icon"));
-            this.videoDialog = new VideoDialog(this, this.media, this.options);
-            this.videoDialog.appendTo(this.$("#editor-media-video"));
-        }
-
-        this.active = this.imageDialog;
-
-        this.$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
-            if ($(event.target).is('[href="#editor-media-image"]')) {
-                self.active = self.imageDialog;
-                self.$('li.search, li.previous, li.next').removeClass("hidden");
-            } else if ($(event.target).is('[href="#editor-media-document"]')) {
-                self.active = self.documentDialog;
-                self.$('li.search, li.previous, li.next').removeClass("hidden");
-            } else if ($(event.target).is('[href="#editor-media-icon"]')) {
-                self.active = self.iconDialog;
-                self.$('li.search, li.previous, li.next').removeClass("hidden");
-                self.$('.nav-tabs li.previous, .nav-tabs li.next').addClass("hidden");
-            } else if ($(event.target).is('[href="#editor-media-video"]')) {
-                self.active = self.videoDialog;
-                self.$('.nav-tabs li.search').addClass("hidden");
-            }
-        });
-
-        return this._super.apply(this, arguments);
-    },
-    save: function () {
-        if (this.options.select_images) {
-            this.final_data = this.active.save();
-            this._super.apply(this, arguments);
-            return;
-        }
-        if(this.rte) {
-            this.range.select();
-            this.rte.historyRecordUndo(this.media);
-        }
-
-        var self = this;
-        if (self.media) {
-            this.media.innerHTML = "";
-            if (this.active !== this.imageDialog && this.active !== this.documentDialog) {
-                this.imageDialog.clear();
-            }
-            // if not mode only_images
-            if (this.iconDialog && this.active !== this.iconDialog) {
-                this.iconDialog.clear();
-            }
-            if (this.videoDialog && this.active !== this.videoDialog) {
-                this.videoDialog.clear();
-            }
-        } else {
-            this.media = document.createElement("img");
-            this.range.insertNode(this.media, true);
-            this.active.media = this.media;
-        }
-        this.active.save();
-
-        if (this.active.add_class) {
-            $(this.active.media).addClass(this.active.add_class);
-        }
-        var media = this.active.media;
-
-        this.final_data = [media, self.old_media];
-        $(document.body).trigger("media-saved", this.final_data);
-        $(self.old_media).trigger("save", this.final_data);
-
-        // Update editor bar after image edition (in case the image change to icon or other)
-        _.defer(function () {
-            if (!media.parentNode) return;
-            range.createFromNode(media).select();
-            click_event(media, "mousedown");
-            click_event(media, "mouseup");
-        });
-
-        this._super.apply(this, arguments);
-    },
-    searchTimer: null,
-    search: function () {
-        var self = this;
-        var needle = this.$("input#icon-search").val();
-        clearTimeout(this.searchTimer);
-        this.searchTimer = setTimeout(function () {
-            self.active.search(needle || "");
-        },250);
-    }
-});
+}
 
 /**
  * ImageDialog widget. Let users change an image, including uploading a
@@ -230,6 +85,7 @@ var MediaDialog = Dialog.extend({
  */
 var ImageDialog = Widget.extend({
     template: 'web_editor.dialog.image',
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     IMAGES_PER_ROW: 6,
     IMAGES_ROWS: 2,
     events: _.extend({}, Dialog.prototype.events, {
@@ -284,7 +140,7 @@ var ImageDialog = Widget.extend({
             o.id = +o.url.match(/\/web\/content\/([0-9]*)/, '')[1];
         }
         this.parent.$(".pager > li").click(function (e) {
-            if(!self.$el.is(':visible')) {
+            if (!self.$el.is(':visible')) {
                 return;
             }
             e.preventDefault();
@@ -331,7 +187,7 @@ var ImageDialog = Widget.extend({
                 this.add_class = "pull-left";
                 this.style = {"width": "100%"};
             }
-            if(this.media.tagName !== "IMG") {
+            if (this.media.tagName !== "IMG") {
                 media = document.createElement('img');
                 $(this.media).replaceWith(media);
                 this.media = media;
@@ -431,15 +287,15 @@ var ImageDialog = Widget.extend({
         if (needle && needle.length) {
             domain.push('|', ['datas_fname', 'ilike', needle], ['name', 'ilike', needle]);
         }
-        return ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        return this._rpc({
             model: 'ir.attachment',
             method: 'search_read',
             args: [],
             kwargs: {
                 domain: domain,
                 fields: ['name', 'mimetype', 'checksum', 'url', 'type'],
-                order: 'id desc',
-                context: base.get_context()
+                order: [{name: 'id', asc: false}],
+                context: weContext.get(),
             }
         }).then(this.proxy('fetched_existing'));
     },
@@ -516,7 +372,12 @@ var ImageDialog = Widget.extend({
 
         $both.css({borderWidth: "5px", borderColor: "#f00"});
 
-        return ajax.jsonRpc('/web_editor/attachment/remove', 'call', {'ids': [id]}).then(function (prevented) {
+        return this._rpc({
+            route: '/web_editor/attachment/remove',
+            params: {
+                ids: [id],
+            },
+        }).then(function (prevented) {
             if (_.isEmpty(prevented)) {
                 self.records = _.without(self.records, attachment);
                 self.display_attachments();
@@ -545,7 +406,7 @@ var getCssSelectors = function (filter) {
         return cacheCssSelectors[filter];
     }
     var sheets = document.styleSheets;
-    for(var i = 0; i < sheets.length; i++) {
+    for (var i = 0; i < sheets.length; i++) {
         var rules;
         if (sheets[i].rules) {
             rules = sheets[i].rules;
@@ -553,18 +414,18 @@ var getCssSelectors = function (filter) {
             //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
             try {
                 rules = sheets[i].cssRules;
-            } catch(e) {
+            } catch (e) {
                 console.warn("Can't read the css rules of: " + sheets[i].href, e);
                 continue;
             }
         }
         if (rules) {
-            for(var r = 0; r < rules.length; r++) {
+            for (var r = 0; r < rules.length; r++) {
                 var selectorText = rules[r].selectorText;
                 if (selectorText) {
                     selectorText = selectorText.split(/\s*,\s*/);
                     var data = null;
-                    for(var s = 0; s < selectorText.length; s++) {
+                    for (var s = 0; s < selectorText.length; s++) {
                         var match = selectorText[s].match(filter);
                         if (match) {
                             var clean = match[1].slice(1).replace(/::?before$/, '');
@@ -596,28 +457,13 @@ var computeFonts = _.once(function () {
     });
 });
 
-rte.Class.include({
-    init: function () {
-        this._super.apply(this, arguments);
-        computeFonts();
-    },
-    onEnableEditableArea: function ($editable) {
-        if ($editable.data('oe-type') === "monetary") {
-            $editable.attr('contenteditable', false);
-            $editable.find('.oe_currency_value').attr('contenteditable', true);
-        }
-        if ($editable.is('[data-oe-model]') && !$editable.is('[data-oe-model="ir.ui.view"]') && !$editable.is('[data-oe-type="html"]')) {
-            $editable.data('layoutInfo').popover().find('.btn-group:not(.note-history)').remove();
-        }
-    },
-});
-
 /**
  * FontIconsDialog widget. Lets users change a font awesome, support all
  * font awesome loaded in the css files.
  */
 var fontIconsDialog = Widget.extend({
     template: 'web_editor.dialog.font-icons',
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     events : _.extend({}, Dialog.prototype.events, {
         'click .font-icons-icon': function (e) {
             e.preventDefault();
@@ -863,6 +709,7 @@ function createVideoNode(url, options) {
  */
 var VideoDialog = Widget.extend({
     template: 'web_editor.dialog.video',
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     events : _.extend({}, Dialog.prototype.events, {
         'click input#urlvideo ~ button': 'get_video',
         'click input#embedvideo ~ button': 'get_embed_video',
@@ -936,7 +783,7 @@ var VideoDialog = Widget.extend({
         if (this.media.dataset.src) {
             try {
                 delete this.media.dataset.src;
-            } catch(e) {
+            } catch (e) {
                 this.media.dataset.src = undefined;
             }
         }
@@ -945,10 +792,163 @@ var VideoDialog = Widget.extend({
 });
 
 /**
+ * MediaDialog widget. Lets users change a media, including uploading a
+ * new image, font awsome or video and can change a media into an other
+ * media
+ *
+ * options: select_images: allow the selection of more of one image
+ */
+var MediaDialog = Dialog.extend({
+    template: 'web_editor.dialog.media',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/web_editor/static/src/xml/editor.xml']
+    ),
+    events : _.extend({}, Dialog.prototype.events, {
+        'input input#icon-search': 'search',
+    }),
+    init: function (parent, options, $editable, media) {
+        this._super(parent, _.extend({}, {
+            title: _t("Select a Media"),
+        }, options));
+        if ($editable) {
+            this.$editable = $editable;
+            this.rte = this.$editable.rte || this.$editable.data('rte');
+        }
+        this.options = options || {};
+        this.old_media = media;
+        this.media = media;
+        this.isNewMedia = !media;
+        this.range = range.create();
+    },
+    start: function () {
+        var self = this;
+
+        this.$modal.addClass('note-image-dialog');
+        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
+
+        this.only_images = this.options.only_images || this.options.select_images || (this.media && ($(this.media).parent().data("oe-field") === "image" || $(this.media).parent().data("oe-type") === "image"));
+        if (this.only_images) {
+            this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');
+        }
+
+        this.opened((function () {
+            if (this.media) {
+                if (this.media.nodeName === "IMG") {
+                    this.$('[href="#editor-media-image"]').tab('show');
+                } else if ($(this.media).is('a.o_image')) {
+                    this.$('[href="#editor-media-document"]').tab('show');
+                } else if (this.media.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+                    this.$('[href="#editor-media-video"]').tab('show');
+                } else if (this.media.parentNode.className.match(/(^|\s)media_iframe_video($|\s)/)) {
+                    this.media = this.media.parentNode;
+                    this.$('[href="#editor-media-video"]').tab('show');
+                } else if (this.media.className.match(/(^|\s)fa($|\s)/)) {
+                    this.$('[href="#editor-media-icon"]').tab('show');
+                }
+            }
+        }).bind(this));
+
+        this.imageDialog = new ImageDialog(this, this.media, this.options);
+        this.imageDialog.appendTo(this.$("#editor-media-image"));
+        this.documentDialog = new ImageDialog(this, this.media, _.extend({'document': true}, this.options));
+        this.documentDialog.appendTo(this.$("#editor-media-document"));
+        if (!this.only_images) {
+            this.iconDialog = new fontIconsDialog(this, this.media, this.options);
+            this.iconDialog.appendTo(this.$("#editor-media-icon"));
+            this.videoDialog = new VideoDialog(this, this.media, this.options);
+            this.videoDialog.appendTo(this.$("#editor-media-video"));
+        }
+
+        this.active = this.imageDialog;
+
+        this.$('a[data-toggle="tab"]').on('shown.bs.tab', function (event) {
+            if ($(event.target).is('[href="#editor-media-image"]')) {
+                self.active = self.imageDialog;
+                self.$('li.search, li.previous, li.next').removeClass("hidden");
+            } else if ($(event.target).is('[href="#editor-media-document"]')) {
+                self.active = self.documentDialog;
+                self.$('li.search, li.previous, li.next').removeClass("hidden");
+            } else if ($(event.target).is('[href="#editor-media-icon"]')) {
+                self.active = self.iconDialog;
+                self.$('li.search, li.previous, li.next').removeClass("hidden");
+                self.$('.nav-tabs li.previous, .nav-tabs li.next').addClass("hidden");
+            } else if ($(event.target).is('[href="#editor-media-video"]')) {
+                self.active = self.videoDialog;
+                self.$('.nav-tabs li.search').addClass("hidden");
+            }
+        });
+
+        return this._super.apply(this, arguments);
+    },
+    save: function () {
+        if (this.options.select_images) {
+            this.final_data = this.active.save();
+            this._super.apply(this, arguments);
+            return;
+        }
+        if (this.rte) {
+            this.range.select();
+            this.rte.historyRecordUndo(this.media);
+        }
+
+        var self = this;
+        if (self.media) {
+            this.media.innerHTML = "";
+            if (this.active !== this.imageDialog && this.active !== this.documentDialog) {
+                this.imageDialog.clear();
+            }
+            // if not mode only_images
+            if (this.iconDialog && this.active !== this.iconDialog) {
+                this.iconDialog.clear();
+            }
+            if (this.videoDialog && this.active !== this.videoDialog) {
+                this.videoDialog.clear();
+            }
+        } else {
+            this.media = document.createElement("img");
+            this.range.insertNode(this.media, true);
+            this.active.media = this.media;
+        }
+        this.active.save();
+
+        if (this.active.add_class) {
+            $(this.active.media).addClass(this.active.add_class);
+        }
+        var media = this.active.media;
+
+        this.final_data = [media, self.old_media];
+        $(document.body).trigger("media-saved", this.final_data);
+        $(self.old_media).trigger("save", this.final_data);
+
+        // Update editor bar after image edition (in case the image change to icon or other)
+        _.defer(function () {
+            if (!media.parentNode) return;
+            range.createFromNode(media).select();
+            click_event(media, "mousedown");
+            click_event(media, "mouseup");
+        });
+
+        this._super.apply(this, arguments);
+    },
+    searchTimer: null,
+    search: function () {
+        var self = this;
+        var needle = this.$("input#icon-search").val();
+        clearTimeout(this.searchTimer);
+        this.searchTimer = setTimeout(function () {
+            self.active.search(needle || "");
+        },250);
+    }
+});
+
+/**
  * The Link Dialog allows to customize link content and style.
  */
 var LinkDialog = Dialog.extend({
     template: 'web_editor.dialog.link',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/web_editor/static/src/xml/editor.xml']
+    ),
     events: _.extend({}, Dialog.prototype.events, {
         'change :input.url-source': 'changed',
         'keyup :input.url': 'onkeyup',
@@ -1064,7 +1064,7 @@ var LinkDialog = Dialog.extend({
         var label = this.$('#o_link_dialog_label_input').val() || val;
 
         if (label && this.data.images) {
-            for(var i=0; i<this.data.images.length; i++) {
+            for (var i=0; i<this.data.images.length; i++) {
                 label = label.replace(/</, "&lt;").replace(/>/, "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
             }
         }
@@ -1173,5 +1173,6 @@ return {
     LinkDialog: LinkDialog,
     getCssSelectors: getCssSelectors,
     fontIcons: fontIcons,
+    computeFonts: computeFonts,
 };
 });

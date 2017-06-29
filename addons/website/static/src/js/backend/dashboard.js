@@ -1,8 +1,6 @@
-odoo.define('website.backendDashboard', function (require) {
-"use strict";
+odoo.define('website.backend.dashboard', function (require) {
+'use strict';
 
-
-var ajax = require('web.ajax');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -17,7 +15,7 @@ var _t = core._t;
 var QWeb = core.qweb;
 
 var Dashboard = Widget.extend(ControlPanelMixin, {
-    template: "website.WebsiteDashboardMain",
+    template: 'website.WebsiteDashboardMain',
     events: {
         'click .js_link_analytics_settings': 'on_link_analytics_settings',
         'click .o_dashboard_action': 'on_dashboard_action',
@@ -58,9 +56,12 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
     fetch_data: function() {
         var self = this;
-        return ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
-            'date_from': this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
-            'date_to': this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
+        return this._rpc({
+            route: '/website/fetch_dashboard_data',
+            params: {
+                date_from: this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
+                date_to: this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
+            },
         }).done(function(result) {
             self.data = result;
             self.dashboards_data = result.dashboards;
@@ -235,11 +236,11 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         var $action = $(ev.currentTarget);
         var additional_context = {};
         if (this.date_range === 'week') {
-            additional_context = {'search_default_week': true}
+            additional_context = {search_default_week: true};
         } else if (this.date_range === 'month') {
-            additional_context = {'search_default_month': true}
+            additional_context = {search_default_month: true};
         } else if (this.date_range === 'year') {
-            additional_context = {'search_default_year': true}
+            additional_context = {search_default_year: true};
         }
         this.do_action($action.attr('name'), {
             additional_context: additional_context,
@@ -597,7 +598,5 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
 
 core.action_registry.add('backend_dashboard', Dashboard);
 
-
 return Dashboard;
-
 });

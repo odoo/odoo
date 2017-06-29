@@ -2,11 +2,13 @@
 <odoo>
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
-    <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/backend/button.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"></script>
+    <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
+        <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
     </xpath>
 </template>
 
@@ -23,10 +25,16 @@
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/content/share.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/utils.js"/>
+        <script type="text/javascript" src="/website/static/src/js/website.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
     </xpath>
 </template>
 
@@ -35,21 +43,26 @@
 
     <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
 
-    <script type="text/javascript" src="/website/static/src/js/tours/rte.js"></script>
+    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"></script>
-    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/menu/content.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/planner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
+    <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"/>
 </template>
 
 <!-- Layout -->
@@ -127,6 +140,10 @@
             </t>
 
             <script type="text/javascript">
+                <t groups="website.group_website_publisher">
+                    odoo.snippetsURL = '/website/snippets';
+                </t>
+
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,

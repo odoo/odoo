@@ -1,7 +1,6 @@
 odoo.define('point_of_sale.editor', function (require) {
     'use strict';
 
-    var Editor = require('web_editor.snippet.editor').Editor;
     var s_options = require('web_editor.snippets.options');
 
     var core = require('web.core');
@@ -34,7 +33,7 @@ odoo.define('point_of_sale.editor', function (require) {
             this.$('.pos-adv').append($('<div class="pos_adv_onsave_remove text-center" style="color:#666666; padding:10px;">' + _t('Set your customized advertisement here') + '</span>'));
         },
 
-        clean_for_save: function() {
+        cleanForSave: function () {
             this.$('.pos_adv_onsave_remove').remove();
         }
     });
