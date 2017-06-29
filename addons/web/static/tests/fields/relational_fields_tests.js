@@ -1250,6 +1250,55 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('many2one: domain updated by an onchange', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            int_field: function () {},
+        };
+
+        var domain = [];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field"/>' +
+                    '<field name="trululu"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    domain = [['id', 'in', [10]]];
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        }
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, domain,
+                        "sent domain should be correct");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // trigger a name_search (domain should be [])
+        form.$('.o_field_widget[name=trululu] input').click();
+        // close the dropdown
+        form.$('.o_field_widget[name=trululu] input').click();
+        // trigger an onchange that will update the domain
+        form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
+        // trigger a name_search (domain should be [['id', 'in', [10]]])
+        form.$('.o_field_widget[name=trululu] input').click();
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
@@ -5884,6 +5933,55 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget selection on a many2one: domain updated by an onchange', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            int_field: function () {},
+        };
+
+        var domain = [];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field"/>' +
+                    '<field name="trululu" widget="selection"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    domain = [['id', 'in', [10]]];
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        }
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.args[1], domain,
+                        "sent domain should be correct");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] option').length, 4,
+            "should be 4 options in the selection");
+
+        // trigger an onchange that will update the domain
+        form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] option').length, 1,
+            "should be 1 option in the selection");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2ManyTags');
 
     QUnit.test('fieldmany2many tags: rendering and edition', function (assert) {
@@ -6294,6 +6392,58 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_radio_input[data-index=1]:checked').length, 1,
             "'Black' should be checked");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget radio on a many2one: domain updated by an onchange', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.onchanges = {
+            int_field: function () {},
+        };
+
+        var domain = [];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="int_field"/>' +
+                    '<field name="trululu" widget="radio"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    domain = [['id', 'in', [10]]];
+                    return $.when({
+                        value: {
+                            trululu: false,
+                        },
+                        domain: {
+                            trululu: domain,
+                        },
+                    });
+                }
+                if (args.method === 'search_read') {
+                    assert.deepEqual(args.kwargs.domain, domain,
+                        "sent domain should be correct");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] .o_radio_item').length, 3,
+            "should be 3 radio buttons");
+
+        // trigger an onchange that will update the domain
+        form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] .o_radio_item').length, 0,
+            "should be no more radio button");
 
         form.destroy();
     });

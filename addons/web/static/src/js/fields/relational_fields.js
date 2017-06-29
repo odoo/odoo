@@ -1785,15 +1785,7 @@ var FieldSelection = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'many2one') {
-            this.values = this.record.specialData[this.name];
-            this.formatType = 'many2one';
-        } else {
-            this.values = _.reject(this.field.selection, function (v) {
-                return v[0] === false && v[1] === '';
-            });
-        }
-        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        this._setValues();
     },
 
     //--------------------------------------------------------------------------
@@ -1823,13 +1815,12 @@ var FieldSelection = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (!this.$el.children().length) {
-            for (var i = 0 ; i < this.values.length ; i++) {
-                this.$el.append($('<option/>', {
-                    value: JSON.stringify(this.values[i][0]),
-                    html: this.values[i][1]
-                }));
-            }
+        this.$el.empty();
+        for (var i = 0 ; i < this.values.length ; i++) {
+            this.$el.append($('<option/>', {
+                value: JSON.stringify(this.values[i][0]),
+                html: this.values[i][1]
+            }));
         }
         var value = this.value;
         if (this.field.type === 'many2one' && value) {
@@ -1843,6 +1834,31 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'many2one') {
+            this.values = this.record.specialData[this.name];
+            this.formatType = 'many2one';
+        } else {
+            this.values = _.reject(this.field.selection, function (v) {
+                return v[0] === false && v[1] === '';
+            });
+        }
+        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
     },
 
     //--------------------------------------------------------------------------
@@ -1869,7 +1885,9 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
-    template: 'FieldRadio',
+    template: null,
+    className: 'o_field_radio',
+    tagName: 'span',
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
@@ -1880,14 +1898,12 @@ var FieldRadio = FieldSelection.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'selection') {
-            this.values = this.field.selection || [];
-        } else if (this.field.type === 'many2one') {
-            this.values = _.map(this.record.specialData[this.name], function (val) {
-                return [val.id, val.display_name];
-            });
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += this.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical';
         }
         this.unique_id = _.uniqueId("radio");
+        this._setValues();
     },
 
     //--------------------------------------------------------------------------
@@ -1911,17 +1927,45 @@ var FieldRadio = FieldSelection.extend({
      * @override
      */
     _renderEdit: function () {
-        var value;
+        var self = this;
+        var currentValue;
         if (this.field.type === 'many2one') {
-            value = this.value && this.value.data.id;
+            currentValue = this.value && this.value.data.id;
         } else {
-            value = this.value;
+            currentValue = this.value;
         }
-        var index = _.findIndex(this.values, function (option) {
-            return option[0] === value;
+        this.$el.empty();
+        _.each(this.values, function (value, index) {
+            self.$el.append(qweb.render('FieldRadio.button', {
+                checked: value[0] === currentValue,
+                id: self.unique_id + '_' + value[0],
+                index: index,
+                value: value,
+            }));
         });
-        this.$("input").prop("checked", false);
-        this.$('input[data-index="' + index + '"]').prop('checked', true);
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'selection') {
+            this.values = this.field.selection || [];
+        } else if (this.field.type === 'many2one') {
+            this.values = _.map(this.record.specialData[this.name], function (val) {
+                return [val.id, val.display_name];
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
