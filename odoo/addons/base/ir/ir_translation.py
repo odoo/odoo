@@ -55,9 +55,6 @@ class IrTranslationImport(object):
 
     def push(self, trans_dict):
         """ Feed a translation, as a dictionary, into the cursor """
-        if not trans_dict['value']:
-            return
-
         params = dict(trans_dict, state="translated")
 
         if params['type'] == 'view':
@@ -371,7 +368,7 @@ class IrTranslation(models.Model):
         res = self._cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:
-            return tools.ustr(source)
+            return tools.ustr('')
         return trad
 
     @api.model

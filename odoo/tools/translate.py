@@ -670,7 +670,7 @@ def trans_export(lang, modules, buffer, format, cr):
             for module, type, name, res_id, src, trad, comments in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
-                if not row.get('translation') and trad != src:
+                if not row.get('translation'):
                     row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
@@ -680,7 +680,7 @@ def trans_export(lang, modules, buffer, format, cr):
                     # translation template, so no translation value
                     row['translation'] = ''
                 elif not row.get('translation'):
-                    row['translation'] = src
+                    row['translation'] = ''
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
