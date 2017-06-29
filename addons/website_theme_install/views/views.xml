@@ -22,7 +22,7 @@
                         <div class="o_theme_preview_top">
                             <div class="o_browser_bar"/>
                             <div t-attf-class="#{has_screenshot? 'o_theme_screenshot' : (has_image ? 'o_theme_cover' : 'o_theme_logo')}" t-attf-style="background-image: url(#{image_url});"/>
-                            <div states="uninstalled" t-attf-class="o_button_area #{has_screenshot? 'o_has_screenshot' : ''}">
+                            <div states="uninstalled" class="o_button_area">
                                 <button type="object" name="button_choose_theme" class="btn btn-primary">Use this theme</button>
                                 <hr t-if="record.url.value"/>
                                 <a t-if="record.url.value" class="btn btn-default btn-sm" t-att-href="record.url.value" target="_blank">Live Preview</a>
