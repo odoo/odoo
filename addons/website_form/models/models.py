@@ -20,12 +20,6 @@ class website_form_model(models.Model):
     website_form_default_field_id = fields.Many2one('ir.model.fields', 'Field for custom form data', domain="[('model', '=', model), ('ttype', '=', 'text')]", help="Specify the field which will contain meta and custom form fields datas.")
     website_form_label = fields.Char("Label for form action", help="Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'.")
 
-    def _all_inherited_model_ids(self):
-        return list(itertools.chain(
-            [self.id],
-            *(m._all_inherited_model_ids() for m in self.inherited_model_ids)
-        ))
-
     def _get_form_writable_fields(self):
         """
         Restriction of "authorized fields" (fields which can be used in the
@@ -33,16 +27,16 @@ class website_form_model(models.Model):
         builders and are writable. By default no field is writable by the
         form builder.
         """
-        excluded = {
+        included = {
             field.name
             for field in self.env['ir.model.fields'].sudo().search([
-                ('model_id', 'in', self._all_inherited_model_ids()),
-                ('website_form_blacklisted', '=', True)
+                ('model_id', '=', self.id),
+                ('website_form_blacklisted', '=', False)
             ])
         }
         return {
             k: v for k, v in self.get_authorized_fields().iteritems()
-            if k not in excluded
+            if k in included
         }
 
     @api.multi
