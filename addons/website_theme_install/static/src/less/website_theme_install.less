@@ -5,16 +5,16 @@
 
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
-        .o-justify-content(center);
+        .o-justify-content(space-between);
+        margin: 0 -@grid-gutter-width;
 
         .o_kanban_record {
-            .o-flex(0, 1, auto);
-            width: 250px;
+            .o-flex(1, 0, 220px);
         }
     }
 
     .o_kanban_record {
-        margin: 20px 15px;
+        padding: 0;
         box-shadow: none;
         background: none;
         border: none;
@@ -31,27 +31,16 @@
         &.o_theme_installed .o_theme_preview_top {
             border-color: @odoo-brand-optional;
 
-            &::after {
+            > .fa-check-circle {
                 .o-position-absolute(10px, 10px);
                 .square(20px);
-                display: block;
-                line-height: 20px;
-                text-align: center;
-                background-color: @odoo-brand-optional;
-                border-radius: 100%;
-                font-family: 'FontAwesome';
-                color: white;
-                content: "\f00c";
+                font-size: 20px;
             }
         }
 
         .o_theme_preview_top {
-            background: white;
             border: 1px solid darken(@o-theme-kanban-gray, 20%);
             border-radius: 2px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 5px;
             .o-transform-origin(center, bottom);
             .o-transition(all, .1s);
 
@@ -60,9 +49,7 @@
                 padding-bottom: 127%;
                 background-repeat: no-repeat;
                 background-position: center center;
-                background-color: @gray-lighter;
                 background-size: 40% 32%;
-                .o-transition(opacity, 100ms);
             }
 
             .o_theme_cover {
@@ -81,26 +68,22 @@
         }
 
         .o_button_area {
-            .o-position-absolute(20%, 20%, 10%, 20%);
+            .o-position-absolute(20px, -1px, -1px, -1px);
             .o-transition(opacity, 100ms);
             .o-flex-display();
             .o-flex-flow(column, wrap);
             .o-justify-content(center);
-            text-align: right;
+            .translate3d(0,0,0);
+            .o-linear-gradient(0deg, fade(black, 60%), fade(black, 30%));
+            padding: 10% 20%;
             opacity: 0;
             visibility: hidden;
 
-            > .btn.btn-default {
-                border: 1px solid @gray-light;
-                color: @gray-light;
-
-                &:hover, &:focus, &:active {
-                    background-color: @o-theme-kanban-gray;
-                }
+            > .btn {
+                padding: @padding-large-vertical @padding-large-horizontal;
             }
 
             hr {
-                border-color: lighten(@gray-light, 25%);
                 width: 100%;
             }
         }
@@ -108,18 +91,13 @@
         &:not(.o_theme_installed) {
             .o_theme_preview_top:hover {
                 .o-transition(all, .3s);
-                .o-transform(scale(1.0125));
-                border-color: darken(@o-theme-kanban-gray, 16%);
-                box-shadow: 0 10px 9px -8px rgba(0, 0, 0, .3);
+                .o-transform(scale(1.0125) translateY(-5px));
+                border-color: darken(@o-theme-kanban-gray, 26%);
+                box-shadow: 0 15px 12px -8px rgba(0, 0, 0, .4);
 
                 .o_button_area {
                     opacity: 1;
                     visibility: visible;
-                    .o-transition(opacity, 0.2s, ease, 0.1s);
-                }
-
-                .o_theme_cover, .o_theme_logo, .o_theme_screenshot {
-                    opacity: 0.1;
                     .o-transition(opacity, 0.2s, ease, 0.1s);
                 }
             }
