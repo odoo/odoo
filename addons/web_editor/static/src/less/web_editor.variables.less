@@ -159,6 +159,31 @@
     }
 }
 
+.o-w-preserve-tabs() {
+    .nav-tabs {
+        border-bottom: 1px solid @gray-lighter;
+
+        > li  {
+            > a {
+                line-height: 1.42857143;
+                color: @o-we-color-light;
+                &:hover {
+                    border-color: @gray-lighter;
+                }
+            }
+
+            &.active > a {
+                &, &:hover, &:focus {
+                    color: @o-we-color-normal;
+                    background-color: @o-we-color-paper;
+                    border-color: @gray-lighter;
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+    }
+}
+
 .o-w-preserve-btn() {
     .btn:not(.o_btn_preview) {
         border-width: 1px;
