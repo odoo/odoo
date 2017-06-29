@@ -103,3 +103,44 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         #I cancel the account move which is in posted state and verifies that it gives warning message
         with self.assertRaises(Warning):
             invoice.move_id.button_cancel()
+
+    def test_supplier_invoice3(self):
+        # given an invoice with lines with receivable accounts have been made
+        invoice_account = self.env['account.account'].search([
+            ('user_type_id', '=',
+                self.env.ref('account.data_account_type_payable').id)],
+                limit=1).id
+
+        invoice_line_account = self.env['account.account'].search([
+            ('user_type_id', '=',
+                self.env.ref('account.data_account_type_receivable').id)],
+                limit=1).id
+
+        invoice = self.env['account.invoice'].create(
+            {'partner_id': self.env.ref('base.res_partner_2').id,
+                'account_id': invoice_account,
+                'type': 'in_invoice'})
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'test account',
+        })
+
+        invoice_line = self.env['account.invoice.line'].create({
+            'product_id': self.env.ref('product.product_product_0').id,
+            'quantity': 1.0,
+            'price_unit': 90.0,
+            'invoice_id': invoice.id,
+            'name': 'Advance Payment to Supplier for Consulting Services',
+            'account_id': invoice_line_account,
+            'account_analytic_id': analytic_account.id,
+        })
+
+        self.assertEqual('draft', invoice.state)
+
+        # when the invoice is validated
+        invoice.signal_workflow('invoice_open')
+
+        # then the invoice will be in open state and unreconciled
+        self.assertEqual('open', invoice.state)
+        self.assertEqual(90.0, invoice.residual)
+        self.assertEqual(True, invoice.reconciled)
