@@ -393,16 +393,19 @@ return AbstractModel.extend({
         this.data.fc_options = this._getFullCalendarOptions();
 
         var defs = _.map(this.data.filters, this._loadFilter.bind(this));
-
         return $.when.apply($, defs).then(function () {
-            return self._rpc({
+            var eventsDef = $.Deferred().resolve([]);
+            var filterDomain = self._getFilterDomain();
+            if (filterDomain.length || _.isEmpty(self.data.filters)) {
+                eventsDef = self._rpc({
                     model: self.modelName,
                     method: 'search_read',
                     context: self.data.context,
                     fields: self.fieldNames,
-                    domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain())
-                })
-                .then(function (events) {
+                    domain: self.data.domain.concat(self._getRangeDomain()).concat(filterDomain)
+                });
+            }
+            return eventsDef.then(function (events) {
                     self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
                     return $.when(
                         self._loadColors(self.data, self.data.data),
