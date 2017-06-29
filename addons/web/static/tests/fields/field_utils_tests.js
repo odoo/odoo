@@ -2,6 +2,7 @@ odoo.define('web.field_utils_tests', function (require) {
 "use strict";
 
 var core = require('web.core');
+var session = require('web.session');
 var fieldUtils = require('web.field_utils');
 
 QUnit.module('fields', {}, function () {
@@ -122,7 +123,20 @@ QUnit.test('parse float', function(assert) {
 });
 
 QUnit.test('parse monetary', function(assert) {
-    assert.expect(6);
+    assert.expect(11);
+    var originalCurrencies = session.currencies;
+    session.currencies = {
+        1: {
+            digits: [69, 2],
+            position: "after",
+            symbol: "€"
+        },
+        3: {
+            digits: [69, 2],
+            position: "before",
+            symbol: "$"
+        }
+    };
 
     assert.strictEqual(fieldUtils.parse.monetary(""), 0);
     assert.strictEqual(fieldUtils.parse.monetary("0"), 0);
@@ -130,6 +144,13 @@ QUnit.test('parse monetary', function(assert) {
     assert.strictEqual(fieldUtils.parse.monetary("-100.00"), -100);
     assert.strictEqual(fieldUtils.parse.monetary("1,000.00"), 1000);
     assert.strictEqual(fieldUtils.parse.monetary("1,000,000.00"), 1000000);
+    assert.strictEqual(fieldUtils.parse.monetary("$&nbsp;125.00", {}, {currency_id: 3}), 125);
+    assert.strictEqual(fieldUtils.parse.monetary("1,000.00&nbsp;€", {}, {currency_id: 1}), 1000);
+    assert.throws(function() {fieldUtils.parse.monetary("$ 12.00", {}, {currency_id: 3})}, /is not a correct/);
+    assert.throws(function() {fieldUtils.parse.monetary("$&nbsp;12.00", {}, {currency_id: 1})}, /is not a correct/);
+    assert.throws(function() {fieldUtils.parse.monetary("$&nbsp;12.00&nbsp;34", {}, {currency_id: 3})}, /is not a correct/);
+
+    session.currencies = originalCurrencies;
 });
 });
 });
