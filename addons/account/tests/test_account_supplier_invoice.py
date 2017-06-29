@@ -137,7 +137,7 @@ class TestAccountSupplierInvoice(AccountingTestCase):
 
         self.assertEqual(invoice.state, 'draft')
 
-        # when the invoice is validated
+        # when the supplier invoice is validated
         invoice.signal_workflow('invoice_open')
 
         # then the invoice will be in open state and unreconciled
