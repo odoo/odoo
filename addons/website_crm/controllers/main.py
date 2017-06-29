@@ -4,7 +4,7 @@
 import babel
 from datetime import datetime, timedelta
 
-from odoo import http
+from odoo import http, _
 from odoo.http import request
 
 from odoo.addons.website.controllers.backend import WebsiteBackend
