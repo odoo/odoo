@@ -1,86 +1,80 @@
 odoo.define('web_editor.editor', function (require) {
-"use strict";
+'use strict';
 
-var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var core = require('web.core');
-var base = require('web_editor.base');
 var rte = require('web_editor.rte');
+var snippetsEditor = require('web_editor.snippet.editor');
 
-var qweb = core.qweb;
 var _t = core._t;
-var editor = {};
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-editor.dummy = function () {return true;}; // used for snippets, options...
-
-editor.editable = !!($('html').data('editable') || $("[data-oe-model]").length); // temporary hack, this should be done in python
-
-ajax.loadXML('/web_editor/static/src/xml/editor.xml', qweb);
-
-$(document).on('click', '.note-editable', function (ev) {
-    ev.preventDefault();
-});
-
-$(document).on('submit', '.note-editable form .btn', function (ev) {
-    ev.preventDefault(); // Disable form submition in editable mode
-});
-
-$(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
-    // Prevent dropdown closing when a contenteditable children is focused
-    if (ev.originalEvent
-            && $(ev.target).has(ev.originalEvent.target).length
-            && $(ev.originalEvent.target).is('[contenteditable]')) {
-        ev.preventDefault();
-    }
-});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-editor.reload = function () {
-    location.hash = "scrollTop=" + window.document.body.scrollTop;
-    if (location.search.indexOf("enable_editor") > -1) {
-        window.location.href = window.location.href.replace(/&?enable_editor(=[^&]*)?/g, '');
-    } else {
-        window.location.reload(true);
-    }
-};
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* ----- TOP EDITOR BAR FOR ADMIN ---- */
-
-base.ready().then(function () {
-    if (editor.editable && location.search.indexOf("enable_editor") >= 0) {
-        editor.editor_bar = new editor.Class();
-        editor.editor_bar.prependTo(document.body);
-    }
-});
-
-editor.Class = Widget.extend({
+var EditorMenuBar = Widget.extend({
     template: 'web_editor.editorbar',
+    xmlDependencies: ['/web_editor/static/src/xml/editor.xml'],
     events: {
-        'click button[data-action=save]': 'save',
-        'click button[data-action=cancel]': 'cancel',
+        'click button[data-action=save]': '_onSaveClick',
+        'click button[data-action=cancel]': '_onCancelClick',
     },
+    custom_events: {
+        request_history_undo_record: '_onHistoryUndoRecordRequest',
+        request_save: '_onSaveRequest',
+    },
+
+    /**
+     * Initializes RTE and snippets menu.
+     *
+     * @constructor
+     */
     init: function (parent) {
         var self = this;
         var res = this._super.apply(this, arguments);
-        this.parent = parent;
         this.rte = new rte.Class(this);
         this.rte.on('rte:start', this, function () {
             self.trigger('rte:start');
         });
+
+        // Snippets edition
+        var $editable = this.rte.editable();
+        this.snippetsMenu = new snippetsEditor.Class(this, $editable);
+
         return res;
     },
+    /**
+     * @override
+     */
     start: function () {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+
+        core.bus.on('editor_save_request', this, this._onSaveRequest);
+        core.bus.on('editor_discard_request', this, this._onDiscardRequest);
+
         $('.dropdown-toggle').dropdown();
 
-        this.display_placeholder();
+        $(document).on('keyup', function (event) {
+            if ((event.keyCode === 8 || event.keyCode === 46)) {
+                var $target = $(event.target).closest('.o_editable');
+                if (!$target.is(':has(*:not(p):not(br))') && !$target.text().match(/\S/)) {
+                    $target.empty();
+                }
+            }
+        });
+        $(document).on('click', '.note-editable', function (ev) {
+            ev.preventDefault();
+        });
+        $(document).on('submit', '.note-editable form .btn', function (ev) {
+            ev.preventDefault(); // Disable form submition in editable mode
+        });
+        $(document).on('hide.bs.dropdown', '.dropdown', function (ev) {
+            // Prevent dropdown closing when a contenteditable children is focused
+            if (ev.originalEvent
+                    && $(ev.target).has(ev.originalEvent.target).length
+                    && $(ev.originalEvent.target).is('[contenteditable]')) {
+                ev.preventDefault();
+            }
+        });
 
-        this.rte.on('change', this, this.proxy('rte_changed'));
         this.rte.start();
 
         var flag = false;
@@ -92,58 +86,144 @@ editor.Class = Widget.extend({
             }
         };
 
-        return this._super.apply(this, arguments);
-    },
-    display_placeholder: function () {
-        var $area = $("#wrapwrap").find("[data-oe-model] .oe_structure.oe_empty, [data-oe-model].oe_structure.oe_empty, [data-oe-type=html]")
-            .filter(".oe_not_editable")
-            .filter(".oe_no_empty");
+        // Snippets menu
+        defs.push(this.snippetsMenu.insertAfter(this.$el));
+        this.rte.editable().find('*').off('mousedown mouseup click');
 
-        this.on('rte:start', this, function () {
-            $area.attr("data-oe-placeholder", _t("Write Your Text Here"));
-        });
-        this.on("snippets:ready", this, function () {
-            if ($("body").hasClass("editor_has_snippets")) {
-                $area.attr("data-oe-placeholder", _t("Write Your Text or Drag a Block Here"));
-            }
-        });
-
-        $(document).on("keyup", function (event) {
-            if((event.keyCode === 8 || event.keyCode === 46)) {
-                var $target = $(event.target).closest(".o_editable");
-                if(!$target.is(":has(*:not(p):not(br))") && !$target.text().match(/\S/)) {
-                    $target.empty();
-                }
-            }
-        });
-    },
-    rte_changed: function () {},
-    save: function () {
-        return this.rte.save().then(function () {
-            editor.reload();
+        return $.when.apply($, defs).then(function () {
+            self.trigger_up('edit_mode');
         });
     },
     /**
-     * Saves an RTE content, which always corresponds to a view section (?).
+     * @override
      */
-    save_without_reload: function () {
-        return this.rte.save();
+    destroy: function () {
+        this._super.apply(this, arguments);
+        core.bus.off('editor_save_request', this, this._onSaveRequest);
+        core.bus.off('editor_discard_request', this, this._onDiscardRequest);
     },
-    cancel: function () {
-        return new $.Deferred(function (d) {
-            if (!rte.history.getEditableHasUndo().length) {
-                return d.resolve();
-            }
-            var confirm = Dialog.confirm(null, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
-                confirm_callback: d.resolve.bind(d)
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Asks the user if he really wants to discard its changes (if there are
+     * some of them), then simply reload the page if he wants to.
+     *
+     * @param {boolean} [reload=true]
+     *        true if the page has to be reloaded when the user answers yes
+     *        (do nothing otherwise but add this to allow class extension)
+     * @returns {Deferred}
+     */
+    cancel: function (reload) {
+        var self = this;
+        var def = $.Deferred();
+        if (!rte.history.getEditableHasUndo().length) {
+            def.resolve();
+        } else {
+            var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
+                confirm_callback: def.resolve.bind(def),
             });
-            confirm.on("closed", d, d.reject);
-        }).then(function () {
-            window.onbeforeunload = null;
-            editor.reload();
+            confirm.on('closed', def, def.reject);
+        }
+        return def.then(function () {
+            if (reload !== false) {
+                window.onbeforeunload = null;
+                return self._reload();
+            }
         });
+    },
+    /**
+     * Asks the snippets to clean themself, then saves the page, then reloads it
+     * if asked to.
+     *
+     * @param {boolean} [reload=true]
+     *        true if the page has to be reloaded after the save
+     * @returns {Deferred}
+     */
+    save: function (reload) {
+        var self = this;
+        this.snippetsMenu.cleanForSave();
+        return this.rte.save().then(function () {
+            if (reload !== false) {
+                return self._reload();
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reloads the page in non-editable mode, with the right scrolling.
+     *
+     * @private
+     * @returns {Deferred} (never resolved, the page is reloading anyway)
+     */
+    _reload: function () {
+        window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
+        if (window.location.search.indexOf('enable_editor') >= 0) {
+            window.location.href = window.location.href.replace(/&?enable_editor(=[^&]*)?/g, '');
+        } else {
+            window.location.reload(true);
+        }
+        return $.Deferred();
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when the "Discard" button is clicked -> discards the changes.
+     *
+     * @private
+     */
+    _onCancelClick: function () {
+        this.cancel();
+    },
+    /**
+     * Called when an element askes to record an history undo -> records it.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onHistoryUndoRecordRequest: function (ev) {
+        this.rte.historyRecordUndo(ev.data.$target, ev.data.event);
+    },
+    /**
+     * Called when the "Save" button is clicked -> saves the changes.
+     *
+     * @private
+     */
+    _onSaveClick: function () {
+        this.save();
+    },
+    /**
+     * Called when a discard request is received -> discard the page content
+     * changes.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onDiscardRequest: function (ev) {
+        this.cancel(ev.data.reload).then(ev.data.onSuccess, ev.data.onFailure);
+    },
+    /**
+     * Called when a save request is received -> saves the page content.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSaveRequest: function (ev) {
+        ev.stopPropagation();
+        this.save(ev.data.reload).then(ev.data.onSuccess, ev.data.onFailure);
     },
 });
 
-return editor;
+return {
+    Class: EditorMenuBar,
+};
 });

@@ -1,6 +1,7 @@
 odoo.define('survey.survey', function (require) {
 'use strict';
 
+require('web.dom_ready');
 var core = require('web.core');
 var time = require('web.time');
 var ajax = require('web.ajax');

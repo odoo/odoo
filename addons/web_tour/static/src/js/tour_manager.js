@@ -487,7 +487,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         },
 
         WEBSITE_NEW_PAGE: {
-            trigger: "#oe_main_menu_navbar a[data-action=new_page]",
+            trigger: "#new-content-menu > a",
             auto: true,
             position: "bottom",
         },

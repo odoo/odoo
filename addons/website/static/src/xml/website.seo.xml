@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-
-    <t t-name="website.TopBar.menu.promote">
-        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
-    </t>
-
     <t t-name="Configurator.language_promote">
         <t t-foreach="language" t-as="lang">
             <option t-att-value="lang[0]" t-att-selected="lang[0] == def_lang ? 'selected' : null"><t t-esc="lang[1]" /></option>
@@ -118,13 +113,6 @@
         </li>
     </t>
 
-    <t t-name="website.seo_image">
-        <div class="col-sm-6 col-md-3 oe_seo_image_preview">
-            <img t-att-src="widget.src" class="img-rounded thumbnail"/>
-            <input type="text" class="form-control" t-att-src="widget.src" t-att-value="widget.alt" placeholder="Description..."/>
-        </div>
-    </t>
-
     <t t-name="website.seo_preview">
         <li class="oe_seo_preview_g">
             <div class="rc">
@@ -136,5 +124,4 @@
             </div>
         </li>
     </t>
-
 </templates>

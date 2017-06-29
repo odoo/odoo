@@ -2,24 +2,19 @@ odoo.define('website.seo', function (require) {
 'use strict';
 
 var core = require('web.core');
-var ajax = require('web.ajax');
 var Class = require('web.Class');
 var Dialog = require('web.Dialog');
 var mixins = require('web.mixins');
-var rpc = require("web.rpc");
+var rpc = require('web.rpc');
 var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var website = require('website.website');
+var weContext = require('web_editor.context');
+var websiteNavbarData = require('website.navbar');
 
 var _t = core._t;
 
-var qweb = core.qweb;
-
-ajax.loadXML('/website/static/src/xml/website.seo.xml', qweb);
-
-    // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
-    // Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
-    var WORD_SEPARATORS_REGEX = '([\\u2000-\\u206F\\u2E00-\\u2E7F\'!"#\\$%&\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?¿¡@\\[\\]\\^_`\\{\\|\\}~\\s]+|^|$)';
+// This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
+// Javascript \b is not unicode aware, and words beginning or ending by accents won't match \b
+var WORD_SEPARATORS_REGEX = '([\\u2000-\\u206F\\u2E00-\\u2E7F\'!"#\\$%&\\(\\)\\*\\+,\\-\\.\\/:;<=>\\?¿¡@\\[\\]\\^_`\\{\\|\\}~\\s]+|^|$)';
 
 function analyzeKeyword(htmlPage, keyword) {
     return  htmlPage.isInTitle(keyword) ? {
@@ -39,9 +34,11 @@ function analyzeKeyword(htmlPage, keyword) {
 
 var Suggestion = Widget.extend({
     template: 'website.seo_suggestion',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     events: {
         'click .js_seo_suggestion': 'select',
     },
+
     init: function (parent, options) {
         this.root = options.root;
         this.keyword = options.keyword;
@@ -69,6 +66,8 @@ var Suggestion = Widget.extend({
 
 var SuggestionList = Widget.extend({
     template: 'website.seo_suggestion_list',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+
     init: function (parent, options) {
         this.root = options.root;
         this.language = options.language;
@@ -81,10 +80,13 @@ var SuggestionList = Widget.extend({
     refresh: function () {
         var self = this;
         self.$el.append(_t("Loading..."));
-        var language = self.language || base.get_context().lang.toLowerCase();
-        ajax.jsonRpc('/website/seo_suggest', 'call', {
-            'keywords': self.root,
-            'lang': language,
+        var language = self.language || weContext.get().lang.toLowerCase();
+        this._rpc({
+            route: '/website/seo_suggest',
+            params: {
+                keywords: self.root,
+                lang: language,
+            },
         }).then(function (keyword_list) {
             self.addSuggestions(JSON.parse(keyword_list));
         });
@@ -93,9 +95,9 @@ var SuggestionList = Widget.extend({
         var self = this;
         self.$el.empty();
         // TODO Improve algorithm + Ajust based on custom user keywords
-        var regex = new RegExp(self.root, "gi");
-        var keywords = _.map(_.uniq(keywords), function (word) {
-            return word.replace(regex, "").trim();
+        var regex = new RegExp(self.root, 'gi');
+        keywords = _.map(_.uniq(keywords), function (word) {
+            return word.replace(regex, '').trim();
         });
         // TODO Order properly ?
         _.each(keywords, function (keyword) {
@@ -117,10 +119,12 @@ var SuggestionList = Widget.extend({
 
 var Keyword = Widget.extend({
     template: 'website.seo_keyword',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     events: {
         'click a[data-action=remove-keyword]': 'destroy',
     },
     maxWordsPerKeyword: 4, // TODO Check
+
     init: function (parent, options) {
         this.keyword = options.word;
         this.language = options.language;
@@ -150,9 +154,9 @@ var Keyword = Widget.extend({
         return this.analyze().description;
     },
     updateLabel: function () {
-        var cssClass = "oe_seo_keyword js_seo_keyword " + this.highlight();
-        this.$(".js_seo_keyword").attr('class', cssClass);
-        this.$(".js_seo_keyword").attr('title', this.tooltip());
+        var cssClass = 'oe_seo_keyword js_seo_keyword ' + this.highlight();
+        this.$('.js_seo_keyword').attr('class', cssClass);
+        this.$('.js_seo_keyword').attr('title', this.tooltip());
     },
     destroy: function () {
         this.trigger('removed');
@@ -162,7 +166,9 @@ var Keyword = Widget.extend({
 
 var KeywordList = Widget.extend({
     template: 'website.seo_list',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     maxKeywords: 10,
+
     init: function (parent, options) {
         this.htmlPage = options.page;
         this._super(parent);
@@ -192,7 +198,7 @@ var KeywordList = Widget.extend({
     add: function (candidate, language) {
         var self = this;
         // TODO Refine
-        var word = candidate ? candidate.replace(/[,;.:<>]+/g, " ").replace(/ +/g, " ").trim().toLowerCase() : "";
+        var word = candidate ? candidate.replace(/[,;.:<>]+/g, ' ').replace(/ +/g, ' ').trim().toLowerCase() : '';
         if (word && !self.isFull() && !self.exists(word)) {
             var keyword = new Keyword(self, {
                 word: word,
@@ -216,44 +222,10 @@ var KeywordList = Widget.extend({
     },
 });
 
-var Image = Widget.extend({
-    template: 'website.seo_image',
-    init: function (parent, options) {
-        this.src = options.src;
-        this.alt = options.alt;
-        this._super(parent);
-    },
-});
-
-var ImageList = Widget.extend({
-    init: function (parent, options) {
-        this.htmlPage = options.page;
-        this._super(parent);
-    },
-    start: function () {
-        var self = this;
-        this.htmlPage.images().each(function (index, image) {
-            new Image(self, image).appendTo(self.$el);
-        });
-    },
-    images: function () {
-        var result = [];
-        this.$('input').each(function () {
-           var $input = $(this);
-           result.push({
-               src: $input.attr('src'),
-               alt: $input.val(),
-           });
-        });
-        return result;
-    },
-    add: function (image) {
-        new Image(this, image).appendTo(this.$el);
-    },
-});
-
 var Preview = Widget.extend({
     template: 'website.seo_preview',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
+
     init: function (parent, options) {
         this.title = options.title;
         this.url = options.url;
@@ -288,12 +260,12 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
     },
     keywords: function () {
         var $keywords = $('meta[name=keywords]');
-        var parsed = ($keywords.length > 0) && $keywords.attr('content') && $keywords.attr('content').split(",");
+        var parsed = ($keywords.length > 0) && $keywords.attr('content') && $keywords.attr('content').split(',');
         return (parsed && parsed[0]) ? parsed: [];
     },
     changeKeywords: function (keywords) {
         // TODO create tag if missing
-        $('meta[name=keywords]').attr('content', keywords.join(","));
+        $('meta[name=keywords]').attr('content', keywords.join(','));
         this.trigger('keywords-changed', keywords);
     },
     headers: function (tag) {
@@ -317,21 +289,23 @@ var HtmlPage = Class.extend(mixins.PropertiesMixin, {
         return $('body').children().not('.js_seo_configuration').text();
     },
     isInBody: function (text) {
-        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, "gi").test(this.bodyText());
+        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, 'gi').test(this.bodyText());
     },
     isInTitle: function (text) {
-        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, "gi").test(this.title());
+        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, 'gi').test(this.title());
     },
     isInDescription: function (text) {
-        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, "gi").test(this.description());
+        return new RegExp(WORD_SEPARATORS_REGEX+text+WORD_SEPARATORS_REGEX, 'gi').test(this.description());
     },
 });
 
 var Tip = Widget.extend({
     template: 'website.seo_tip',
+    xmlDependencies: ['/website/static/src/xml/website.seo.xml'],
     events: {
         'closed.bs.alert': 'destroy',
     },
+
     init: function (parent, options) {
         this.message = options.message;
         // cf. http://getbootstrap.com/components/#alerts
@@ -341,8 +315,11 @@ var Tip = Widget.extend({
     },
 });
 
-var Configurator = Dialog.extend({
+var SeoConfigurator = Dialog.extend({
     template: 'website.seo_configuration',
+    xmlDependencies: Dialog.prototype.xmlDependencies.concat(
+        ['/website/static/src/xml/website.seo.xml']
+    ),
     events: {
         'keyup input[name=seo_page_keywords]': 'confirmKeyword',
         'blur input[name=seo_page_title]': 'titleChanged',
@@ -382,7 +359,7 @@ var Configurator = Dialog.extend({
         this.keywordList = new KeywordList(self, { page: this.htmlPage });
         this.keywordList.on('list-full', self, function () {
             self.$('input[name=seo_page_keywords]').attr({
-                readonly: "readonly",
+                readonly: 'readonly',
                 placeholder: "Remove a keyword first"
             });
             self.$('button[data-action=add]').prop('disabled', true).addClass('disabled');
@@ -405,15 +382,15 @@ var Configurator = Dialog.extend({
     },
     getLanguages: function () {
         var self = this;
-        ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        this._rpc({
             model: 'website',
             method: 'get_languages',
-            args: [[base.get_context().website_id]],
-            kwargs: {context: base.get_context()}
+            args: [[weContext.get().website_id]],
+            context: weContext.get(),
         }).then( function (data) {
             self.$('#language-box').html(core.qweb.render('Configurator.language_promote', {
                 'language': data,
-                'def_lang': base.get_context().lang
+                'def_lang': weContext.get().lang
             }));
         });
     },
@@ -449,7 +426,7 @@ var Configurator = Dialog.extend({
         }
     },
     confirmKeyword: function (e) {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             this.addKeyword();
         }
     },
@@ -459,7 +436,7 @@ var Configurator = Dialog.extend({
         var keyword = _.isString(word) ? word : $input.val();
         var language = $language.val().toLowerCase();
         this.keywordList.add(keyword, language);
-        $input.val("").focus();
+        $input.val('').focus();
     },
     update: function () {
         var self = this;
@@ -471,7 +448,7 @@ var Configurator = Dialog.extend({
             data.website_meta_description = this.htmlPage.description();
         }
         if (this.canEditKeywords) {
-            data.website_meta_keywords = this.keywordList.keywords().join(", ");
+            data.website_meta_keywords = this.keywordList.keywords().join(', ');
         }
         this.saveMetaData(data).then(function () {
            self.close();
@@ -500,7 +477,7 @@ var Configurator = Dialog.extend({
             rpc.query({
                 model: obj.model,
                 method: 'read',
-                args: [[obj.id], fields, base.get_context()],
+                args: [[obj.id], fields, weContext.get()],
             }).then(function (data) {
                 if (data.length) {
                     var meta = data[0];
@@ -523,7 +500,7 @@ var Configurator = Dialog.extend({
             return rpc.query({
                 model: obj.model,
                 method: 'write',
-                args: [[obj.id], data, base.get_context()],
+                args: [[obj.id], data, weContext.get()],
             });
         }
     },
@@ -565,18 +542,29 @@ var Configurator = Dialog.extend({
     },
 });
 
-website.TopBar.include({
-    start: function () {
-        var self = this;
-        this.$el.on('click', 'a[data-action=promote-current-page]', function () {
-            new Configurator(self).open();
-        });
-        return this._super();
-    }
+var SeoMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
+    actions: _.extend({}, websiteNavbarData.WebsiteNavbarActionWidget.prototype.actions || {}, {
+        'promote-current-page': '_promoteCurrentPage',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Actions
+    //--------------------------------------------------------------------------
+
+    /**
+     * Opens the SEO configurator dialog.
+     *
+     * @private
+     */
+    _promoteCurrentPage: function () {
+        new SeoConfigurator(this).open();
+    },
 });
 
-return {
-    Configurator: Configurator,
-};
+websiteNavbarData.websiteNavbarRegistry.add(SeoMenu, '#promote-menu');
 
+return {
+    SeoConfigurator: SeoConfigurator,
+    SeoMenu: SeoMenu,
+};
 });

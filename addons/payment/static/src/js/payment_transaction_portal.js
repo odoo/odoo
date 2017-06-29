@@ -1,11 +1,10 @@
 odoo.define('payment.website_payment', function (require) {
 "use strict";
 
+require('web.dom_ready');
 var ajax = require('web.ajax');
 
-$(document).ready(function () {
-
-    if(!$('.o_website_payment').length) {
+    if (!$('.o_website_payment').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_website_payment'");
     }
 
@@ -22,5 +21,4 @@ $(document).ready(function () {
             $form.submit();
         });
     });
-});
 });

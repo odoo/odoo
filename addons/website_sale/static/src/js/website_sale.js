@@ -1,7 +1,7 @@
 odoo.define('website_sale.cart', function (require) {
     "use strict";
 
-    var base = require('web_editor.base');
+    require('web.dom_ready');
     var core = require('web.core');
     var _t = core._t;
 
@@ -49,7 +49,7 @@ odoo.define('website_sale.cart', function (require) {
 odoo.define('website_sale.website_sale_category', function (require) {
     "use strict";
 
-    var base = require('web_editor.base');
+    require('web.dom_ready');
 
     if(!$('#o_shop_collapse_category').length) {
         return $.Deferred().reject("DOM doesn't contain '#o_shop_collapse_category'");
@@ -70,11 +70,13 @@ odoo.define('website_sale.website_sale_category', function (require) {
 odoo.define('website_sale.website_sale', function (require) {
     "use strict";
 
-    var base = require('web_editor.base');
+    require('web.dom_ready');
+    var base = require("web_editor.base");
     var ajax = require('web.ajax');
     var utils = require('web.utils');
     var core = require('web.core');
     var config = require('web.config');
+    require("website.content.zoomodoo");
     var _t = core._t;
 
     if(!$('.oe_website_sale').length) {
@@ -262,8 +264,9 @@ odoo.define('website_sale.website_sale', function (require) {
         }
 
         function update_product_image(event_source, product_id) {
+            var $img;
             if ($('#o-carousel-product').length) {
-                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img');
+                $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('img.js_variant_img');
                 $img.attr("src", "/web/image/product.product/" + product_id + "/image");
                 $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                     .data('oe-model', 'product.product').data('oe-id', product_id);
@@ -275,7 +278,7 @@ odoo.define('website_sale.website_sale', function (require) {
                 }
             }
             else {
-                var $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
+                $img = $(event_source).closest('tr.js_product, .oe_website_sale').find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
                 $img.attr("src", "/web/image/product.product/" + product_id + "/image");
                 $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
                     .data('oe-model', 'product.product').data('oe-id', product_id);

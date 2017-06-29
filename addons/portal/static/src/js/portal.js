@@ -1,10 +1,10 @@
-
-odoo.define('portal.portal', function(require) {
+odoo.define('portal.portal', function (require) {
 'use strict';
 
-$(document).ready(function () {
+    require('web.dom_ready');
 
-    if(!$('.o_portal').length) {
+
+    if (!$('.o_portal').length) {
         return $.Deferred().reject("DOM doesn't contain '.o_portal'");
     }
 
@@ -21,14 +21,14 @@ $(document).ready(function () {
     }
 
     if ($('.o_portal_search_panel').length) {
-        $('.o_portal_search_panel .search-submit').click(function() {
+        $('.o_portal_search_panel .search-submit').click(function () {
             var search = $.deparam(window.location.search.substring(1));
             search.search_in = $(".o_portal_search_panel li.active a").attr("href").replace("#","");
             search.search = $(".o_portal_search_panel input[name='search']").val();
             window.location.search = $.param(search);
         });
 
-        $('.o_portal_search_panel .dropdown-menu').find('a').click(function(e) {
+        $('.o_portal_search_panel .dropdown-menu').find('a').click(function (e) {
             e.preventDefault();
             $(this).parents('.dropdown-menu').find('li').removeClass('active');
             $(this).parent('li').addClass('active');
@@ -45,5 +45,4 @@ $(document).ready(function () {
             }
         });
     }
-});
 });

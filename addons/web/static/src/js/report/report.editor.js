@@ -1,7 +1,6 @@
 odoo.define('report.editor', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 var utils = require('report.utils');
 var editor = require('web_editor.editor');
@@ -16,23 +15,18 @@ var trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
 if (window.self !== window.top) {
     $(document.body).addClass('o_in_iframe'); //  in order to apply css rules
 
-    // As `reload` is called after `save` and `cancel`, we nullify this function
-    // if the editor in order to be able to chain some deferred to `save` and
-    // `cancel`.
-    editor.reload = function () {
-        return $.when();
-    };
-
     // And now we chain some deferred to `save` and `cancel` in order to inform
     // the report's client action that the actions are done.
     editor.Class.include({
         save: function () {
-            return this._super.apply(this, arguments).then(function () {
+            // Force to not reload
+            return this._super(false).then(function () {
                 window.parent.postMessage('report.editor:save_ok', trusted_origin);
             });
         },
         cancel: function () {
-            return this._super.apply(this, arguments).then(function () {
+            // Force to not reload
+            return this._super(false).then(function () {
                 window.parent.postMessage('report.editor:discard_ok', trusted_origin);
             });
         },
@@ -54,12 +48,12 @@ if (window.self !== window.top) {
                 return;
             }
 
-            switch(message) {
+            switch (message) {
                 case 'report.editor:ask_save':
-                    editor.editor_bar.save();
+                    core.bus.trigger('editor_save_request');
                     break;
                 case 'report.editor:ask_discard':
-                    editor.editor_bar.cancel();
+                    core.bus.trigger('editor_discard_request');
                     break;
                 default:
             }
@@ -91,16 +85,19 @@ if (window.self !== window.top) {
 }
 
 options.registry.many2one.include({
-    select_record: function (li) {
-        var self = this;
-        this._super(li);
-        if (this.$target.data('oe-field') === "partner_id") {
-            var $img = $('.header .row img:first');
-            var css = window.getComputedStyle($img[0]);
-            $img.css("max-height", css.height+'px');
-            $img.attr("src", "/web/image/res.partner/"+self.ID+"/image");
-            setTimeout(function () { $img.removeClass('o_dirty'); },0);
+    _selectRecord: function ($li) {
+        this._super.apply(this, arguments);
+        if (this.$target.data('oe-field') !== 'partner_id') {
+            return;
         }
+
+        var $img = $('.header .row img:first');
+        var css = window.getComputedStyle($img[0]);
+        $img.css('max-height', css.height+'px');
+        $img.attr('src', '/web/image/res.partner/' + this.ID + '/image');
+        _.defer(function () {
+            $img.removeClass('o_dirty');
+        });
     }
 });
 

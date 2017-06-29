@@ -1,3 +1,13 @@
+odoo.define('web.dom_ready', function (require) {
+'use strict';
+
+var def = $.Deferred();
+$(def.resolve.bind(def));
+return def;
+});
+
+//==============================================================================
+
 odoo.define('web.dom', function (require) {
 "use strict";
 
@@ -245,5 +255,4 @@ return {
         return $container;
     },
 };
-
 });

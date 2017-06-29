@@ -1,38 +1,45 @@
-odoo.define('website.translator', function (require) {
+odoo.define('website.translateMenu', function (require) {
 'use strict';
 
-var core = require('web.core');
-var ajax = require('web.ajax');
-var Widget = require('web.Widget');
-var base = require('web_editor.base');
-var translate = require('web_editor.translate');
-var website = require('website.website');
-var local_storage = require('web.local_storage');
 var utils = require('web.utils');
+var weContext = require('web_editor.context');
+var translate = require('web_editor.translate');
+var websiteNavbarData = require('website.navbar');
 
-var qweb = core.qweb;
-
-if (!translate.translatable) {
+var ctx = weContext.getExtra();
+if (!ctx.translatable) {
     return;
 }
 
-
-website.TopBar.include({
-    events: _.extend({}, website.TopBar.prototype.events, {
-        'click [data-action="edit_master"]': 'edit_master',
-        'click [data-action="translate"]': 'translate',
+var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
+    actions: _.extend({}, websiteNavbarData.WebsiteNavbar.prototype.actions || {}, {
+        edit_master: '_goToMasterPage',
+        translate: '_startTranslateMode',
     }),
-    translate: function (ev) {
-        ev.preventDefault();
-        if (translate.edit_translations) {
-            translate.instance.edit();
-        } else {
-            location.search += '&edit_translations';
-        }
-    },
-    edit_master: function (ev) {
-        ev.preventDefault();
 
+    /**
+     * @override
+     */
+    start: function () {
+        var defs = [this._super.apply(this, arguments)];
+        if (ctx.edit_translations) {
+            defs.push(this._startTranslateMode());
+        }
+        return $.when.apply($, defs);
+    },
+
+    //--------------------------------------------------------------------------
+    // Actions
+    //--------------------------------------------------------------------------
+
+    /**
+     * Redirects the user to the same page but in the original language and in
+     * edit mode.
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _goToMasterPage: function () {
         var lang = '/' + utils.get_cookie('frontend_lang');
 
         var current = document.createElement('a');
@@ -47,58 +54,24 @@ website.TopBar.include({
         link.search += (link.search ? '&' : '?') + 'r=' + encodeURIComponent(current.pathname + current.search + current.hash);
 
         window.location = link.href;
+        return $.Deferred();
     },
-});
-
-
-if (!translate.edit_translations) {
-    return;
-}
-
-ajax.loadXML('/website/static/src/xml/website.translator.xml', qweb);
-
-var nodialog = 'website_translator_nodialog';
-
-var Translate = translate.Class.include({
-    onTranslateReady: function () {
-        if(this.gengo_translate) {
-            this.translation_gengo_display();
+    /**
+     * Redirects the user to the same page in translation mode (or start the
+     * translator is translation mode is already enabled).
+     *
+     * @private
+     * @returns {Deferred}
+     */
+    _startTranslateMode: function () {
+        if (!ctx.edit_translations) {
+            window.location.search += '&edit_translations';
+            return $.Deferred();
         }
-        this._super();
-    },
-    edit: function () {
-        $("#oe_main_menu_navbar").hide();
-        if (!local_storage.getItem(nodialog)) {
-            var dialog = new TranslatorDialog();
-            dialog.appendTo($(document.body));
-            dialog.on('activate', this, function () {
-                if (dialog.$('input[name=do_not_show]').prop('checked')) {
-                    local_storage.removeItem(nodialog);
-                } else {
-                    local_storage.setItem(nodialog, true);
-                }
-                dialog.$el.modal('hide');
-            });
-        }
-        return this._super();
-    },
-    cancel: function () {
-        $("#oe_main_menu_navbar").show();
-        return this._super();
-    }
-});
-
-var TranslatorDialog = Widget.extend({
-    events: _.extend({}, website.TopBar.prototype.events, {
-        'hidden.bs.modal': 'destroy',
-        'click button[data-action=activate]': function (ev) {
-            this.trigger('activate');
-        },
-    }),
-    template: 'website.TranslatorDialog',
-    start: function () {
-        this.$el.modal();
+        var translator = new (translate.Class)(this, $('#wrapwrap'));
+        return translator.prependTo(document.body);
     },
 });
 
+websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray');
 });

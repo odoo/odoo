@@ -1,14 +1,14 @@
 odoo.define('mass_mailing.editor', function (require) {
 "use strict";
 
-var ajax = require("web.ajax");
-var core = require("web.core");
+require('web.dom_ready');
+var ajax = require('web.ajax');
+var core = require('web.core');
 var rte = require('web_editor.rte');
-var web_editor = require('web_editor.editor');
 var options = require('web_editor.snippets.options');
 var snippets_editor = require('web_editor.snippet.editor');
 
-var $editable_area = $("#editable_area");
+var $editable_area = $('#editable_area');
 var odoo_top = window.top.odoo;
 
 // Snippet option for resizing  image and column width inline like excel
@@ -34,11 +34,10 @@ options.registry["width-x"] = options.Class.extend({
             var $handle = $(this);
             var compass = false;
 
-            _.each(['n', 's', 'e', 'w' ], function(handler) {
+            _.each(['n', 's', 'e', 'w' ], function (handler) {
                 if ($handle.hasClass(handler)) { compass = handler; }
             });
             if (self.is_image) { compass = "image"; }
-            self.buildingBlock.editor_busy = true;
 
             $body.on("mousemove.mass_mailing_width_x", function (event) {
                 event.preventDefault();
@@ -60,16 +59,11 @@ options.registry["width-x"] = options.Class.extend({
                     self.change_width(event, self.$target, target_width, offset, true);
                 }
             });
-            $body.on("mouseup.mass_mailing_width_x", function () {
-                $body.off('.mass_mailing_width_x');
-                self.buildingBlock.editor_busy = false;
-                self.$target.removeClass("resize_editor_busy");
-            });
         });
     },
     change_width: function (event, target, target_width, offset, grow) {
         target.css("width", grow ? (event.pageX - offset) : (offset + target_width - event.pageX));
-        this.buildingBlock.cover_target(this.$overlay, this.$target);
+        this.trigger_up('cover_update');
     },
     get_int_width: function (el) {
         return parseInt($(el).css("width"), 10);
@@ -77,7 +71,7 @@ options.registry["width-x"] = options.Class.extend({
     get_max_width: function ($el) {
         return this.container_width - _.reduce(_.map($el.siblings(), this.get_int_width), function (memo, w) { return memo + w; });
     },
-    on_focus: function () {
+    onFocus: function () {
         this._super.apply(this, arguments);
 
         if (this.$target.is("td, th")) {
@@ -87,34 +81,34 @@ options.registry["width-x"] = options.Class.extend({
 });
 
 options.registry.table_item = options.Class.extend({
-    on_clone: function ($clone) {
+    onClone: function () {
         this._super.apply(this, arguments);
 
         // If we cloned a td or th element...
         if (this.$target.is("td, th")) {
             // ... and that the td or th element was alone on its row ...
             if (this.$target.siblings().length === 1) {
-                var $tr = $clone.parent();
-                $tr.clone().empty().insertAfter($tr).append($clone); // ... move the clone in a new row instead
+                var $tr = this.$target.parent();
+                $tr.clone().empty().insertAfter($tr).append(this.$target); // ... move the clone in a new row instead
                 return;
             }
 
             // ... if not, if the clone neighbor is an empty cell, remove this empty cell (like if the clone content had been put in that cell)
-            var $next = $clone.next();
+            var $next = this.$target.next();
             if ($next.length && $next.text().trim() === "") {
                 $next.remove();
                 return;
             }
 
             // ... if not, insert an empty col in each other row, at the index of the clone
-            var width = $clone.width();
+            var width = this.$target.width();
             var $trs = this.$target.closest("table").children("thead, tbody, tfoot").addBack().children("tr").not(this.$target.parent());
             _.each($trs.children(":nth-child(" + this.$target.index() + ")"), function (col) {
                 $(col).after($("<td/>", {style: "width: " + width + "px;"}));
             });
         }
     },
-    on_remove: function () {
+    onRemove: function () {
         this._super.apply(this, arguments);
 
         // If we are removing a td or th element which was not alone on its row ...
@@ -141,11 +135,7 @@ $.summernote.eventHandler.modules.popover.update = function ($popover, oStyle, i
 ajax.loadXML("/mass_mailing/static/src/xml/mass_mailing.xml", core.qweb);
 
 snippets_editor.Class.include({
-    _get_snippet_url: function () {
-        var url = (typeof snippets_url !== "undefined" ? window["snippets_url"] : this._super.apply(this, arguments));
-        return url;
-    },
-    compute_snippet_templates: function (html) {
+    _computeSnippetTemplates: function (html) {
         var self = this;
         var ret = this._super.apply(this, arguments);
 
@@ -362,9 +352,9 @@ snippets_editor.Class.include({
             $old_layout.remove();
 
             if (first_choice) {
-                self.add_default_snippet_text_classes($new_wrapper_content);
+                self._registerDefaultTexts($new_wrapper_content);
             }
-            self.show_blocks();
+            self._disableUndroppableSnippets();
         }
     },
 });
@@ -381,12 +371,12 @@ odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
     var editor_enable = $('body').hasClass('editor_enable');
     value = value || "";
 
-    if(value !==_val) {
+    if (value !==_val) {
         if (editor_enable) {
             if (value !== fields_values[field_name]) {
                 rte.history.recordUndo($editable);
             }
-            snippets_editor.instance.make_active(false);
+            core.bus.trigger('deactivate_snippet');
         }
 
         if (value.indexOf('on_change_model_and_list') === -1) {
@@ -400,7 +390,7 @@ odoo_top[callback+"_updown"] = function (value, fields_values, field_name) {
         }
     }
 
-    if (fields_values.mailing_model && web_editor.editor_bar) {
+    if (fields_values.mailing_model && editor_enable) {
         if (value.indexOf('on_change_model_and_list') !== -1) {
             odoo_top[callback+"_downup"](_val);
         }

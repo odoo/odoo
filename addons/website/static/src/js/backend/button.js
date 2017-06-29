@@ -1,5 +1,5 @@
-odoo.define('website.backend', function (require) {
-"use strict";
+odoo.define('website.backend.button', function (require) {
+'use strict';
 
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
@@ -33,19 +33,12 @@ var WidgetWebsiteButton = AbstractField.extend({
         this._super.apply(this, arguments);
 
         var $value = this.$('.o_value');
-
-        if (this.value === true) {
-            $value.html(_t('Published'))
-                  .removeClass('text-danger')
-                  .addClass('text-success');
-        } else {
-            $value.html(_t('Unpublished'))
-                  .removeClass('text-success')
-                  .addClass('text-danger');
-        }
+        var published = (this.value === true);
+        $value.html(published ? _t("Published") : _t("Unpublished"))
+              .toggleClass('text-danger', !published)
+              .toggleClass('text-success', published);
     },
 });
 
 field_registry.add('website_button', WidgetWebsiteButton);
-
 });

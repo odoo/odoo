@@ -174,10 +174,10 @@ class WebsiteEventController(http.Controller):
         }
         return request.render("website_event.event_description_full", values)
 
-    @http.route('/event/add_event', type='http', auth="user", methods=['POST'], website=True)
+    @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
         event = self._add_event(event_name, request.context)
-        return request.redirect("/event/%s/register?enable_editor=1" % slug(event))
+        return "/event/%s/register?enable_editor=1" % slug(event)
 
     def _add_event(self, event_name=None, context=None, **kwargs):
         if not event_name:
@@ -197,7 +197,7 @@ class WebsiteEventController(http.Controller):
         month = babel.dates.get_month_names('abbreviated', locale=event.env.context.get('lang', 'en_US'))[start_date.month]
         return ('%s %s%s') % (month, start_date.strftime("%e"), (end_date != start_date and ("-" + end_date.strftime("%e")) or ""))
 
-    @http.route('/event/get_country_event_list', type='http', auth='public', website=True)
+    @http.route('/event/get_country_event_list', type='json', auth='public', website=True)
     def get_country_events(self, **post):
         Event = request.env['event.event']
         country_code = request.session['geoip'].get('country_code')
@@ -215,7 +215,7 @@ class WebsiteEventController(http.Controller):
                 "date": self.get_formated_date(event),
                 "event": event,
                 "url": event.website_url})
-        return request.render("website_event.country_events_list", result)
+        return request.env['ir.ui.view'].render_template("website_event.country_events_list", result)
 
     def _process_tickets_details(self, data):
         nb_register = int(data.get('nb_register-0', 0))
