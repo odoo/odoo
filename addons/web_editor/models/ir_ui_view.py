@@ -48,7 +48,7 @@ class IrUiView(models.Model):
 
         if value is not None:
             # TODO: batch writes?
-            if self.get_default_lang_code() and field != 'arch' and not isinstance(Model._fields[field], fields.Html):
+            if not self.env.context.get('lang') and self.get_default_lang_code():
                 Model.browse(int(el.get('data-oe-id'))).with_context(lang=self.get_default_lang_code()).write({field: value})
             else:
                 Model.browse(int(el.get('data-oe-id'))).write({field: value})
