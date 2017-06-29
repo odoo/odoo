@@ -517,7 +517,7 @@ class PurchaseOrderLine(models.Model):
                 'price_subtotal': taxes['total_excluded'],
             })
 
-    @api.depends('invoice_lines.invoice_id.state')
+    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced(self):
         for line in self:
             qty = 0.0
