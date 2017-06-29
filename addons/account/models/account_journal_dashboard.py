@@ -50,15 +50,15 @@ class account_journal(models.Model):
         # Query to optimize loading of data for bank statement graphs
         # Return a list containing the latest bank statement balance per day for the
         # last 30 days for current journal
-        query = """SELECT a.date, a.balance_end 
-                        FROM account_bank_statement AS a, 
-                            (SELECT c.date, max(c.id) AS stmt_id 
-                                FROM account_bank_statement AS c 
-                                WHERE c.journal_id = %s 
-                                    AND c.date > %s 
-                                    AND c.date <= %s 
-                                    GROUP BY date, id 
-                                    ORDER BY date, id) AS b 
+        query = """SELECT a.date, a.balance_end
+                        FROM account_bank_statement AS a,
+                            (SELECT c.date, max(c.id) AS stmt_id
+                                FROM account_bank_statement AS c
+                                WHERE c.journal_id = %s
+                                    AND c.date > %s
+                                    AND c.date <= %s
+                                    GROUP BY date, id
+                                    ORDER BY date, id) AS b
                         WHERE a.id = b.stmt_id;"""
 
         self.env.cr.execute(query, (self.id, last_month, today))
@@ -124,7 +124,7 @@ class account_journal(models.Model):
             data.append({'label':label,'value':0.0, 'type': 'past' if i<0 else 'future'})
 
         # Build SQL query to find amount aggregated by week
-        select_sql_clause = """SELECT sum(residual_company_signed) as total, min(date) as aggr_date from account_invoice where journal_id = %(journal_id)s and state = 'open'"""
+        (select_sql_clause, query_args) = self._get_bar_graph_select_query()
         query = ''
         start_date = (first_day_of_week + timedelta(days=-7))
         for i in range(0,6):
@@ -137,7 +137,7 @@ class account_journal(models.Model):
                 query += " UNION ALL ("+select_sql_clause+" and date >= '"+start_date.strftime(DF)+"' and date < '"+next_date.strftime(DF)+"')"
                 start_date = next_date
 
-        self.env.cr.execute(query, {'journal_id':self.id})
+        self.env.cr.execute(query, query_args)
         query_results = self.env.cr.dictfetchall()
         for index in range(0, len(query_results)):
             if query_results[index].get('aggr_date') != None:
@@ -145,6 +145,16 @@ class account_journal(models.Model):
 
         [graph_title, graph_key] = self._graph_title_and_key()
         return [{'values': data, 'title': graph_title, 'key': graph_key}]
+
+    def _get_bar_graph_select_query(self):
+        """
+        Returns a tuple containing the base SELECT SQL query used to gather
+        the bar graph's data as its first element, and the arguments dictionary
+        for it as its second.
+        """
+        return ("""SELECT sum(residual_company_signed) as total, min(date) as aggr_date
+               FROM account_invoice
+               WHERE journal_id = %(journal_id)s and state = 'open'""", {'journal_id':self.id})
 
     @api.multi
     def get_journal_dashboard_datas(self):
@@ -177,34 +187,22 @@ class account_journal(models.Model):
         #TODO need to check if all invoices are in the same currency than the journal!!!!
         elif self.type in ['sale', 'purchase']:
             title = _('Bills to pay') if self.type == 'purchase' else _('Invoices owed to you')
-            # optimization to find total and sum of invoice that are in draft, open state
-            query = """SELECT state, amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND state NOT IN ('paid', 'cancel');"""
-            self.env.cr.execute(query, (self.id,))
-            query_results = self.env.cr.dictfetchall()
+
+            (query, query_args) = self._get_open_bills_to_pay_query()
+            self.env.cr.execute(query, query_args)
+            query_results_to_pay = self.env.cr.dictfetchall()
+
+            (query, query_args) = self._get_draft_bills_query()
+            self.env.cr.execute(query, query_args)
+            query_results_drafts = self.env.cr.dictfetchall()
+
             today = datetime.today()
             query = """SELECT amount_total, currency_id AS currency, type FROM account_invoice WHERE journal_id = %s AND date < %s AND state = 'open';"""
             self.env.cr.execute(query, (self.id, today))
             late_query_results = self.env.cr.dictfetchall()
-            for result in query_results:
-                if result['type'] in ['in_refund', 'out_refund']:
-                    factor = -1
-                else:
-                    factor = 1
-                cur = self.env['res.currency'].browse(result.get('currency'))
-                if result.get('state') == 'draft':
-                    number_draft += 1
-                    sum_draft += cur.compute(result.get('amount_total'), currency) * factor
-                elif result.get('state') == 'open':
-                    number_waiting += 1
-                    sum_waiting += cur.compute(result.get('amount_total'), currency) * factor
-            for result in late_query_results:
-                if result['type'] in ['in_refund', 'out_refund']:
-                    factor = -1
-                else:
-                    factor = 1
-                cur = self.env['res.currency'].browse(result.get('currency'))
-                number_late += 1
-                sum_late += cur.compute(result.get('amount_total'), currency) * factor
+            (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay, currency)
+            (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
+            (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
 
         return {
             'number_to_reconcile': number_to_reconcile,
@@ -219,8 +217,40 @@ class account_journal(models.Model):
             'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
             'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
             'bank_statements_source': self.bank_statements_source,
-            'title': title, 
+            'title': title,
         }
+
+    def _get_open_bills_to_pay_query(self):
+        """
+        Returns a tuple contaning the SQL query used to gather the open bills
+        data as its first element, and the arguments dictionary to use to run
+        it as its second.
+        """
+        return ("""SELECT state, amount_total, currency_id AS currency
+                  FROM account_invoice
+                  WHERE journal_id = %(journal_id)s AND state = 'open';""", {'journal_id':self.id})
+
+    def _get_draft_bills_query(self):
+        """
+        Returns a tuple containing as its first element the SQL query used to
+        gather the bills in draft state data, and the arguments
+        dictionary to use to run it as its second.
+        """
+        return ("""SELECT state, amount_total, currency_id AS currency
+                  FROM account_invoice
+                  WHERE journal_id = %(journal_id)s AND state = 'draft';""", {'journal_id':self.id})
+
+    def _count_results_and_sum_amounts(self, results_dict, target_currency):
+        """ Loops on a query result to count the total number of invoices and sum
+        their amount_total field (expressed in the given target currency).
+        """
+        rslt_count = 0
+        rslt_sum = 0.0
+        for result in results_dict:
+            cur = self.env['res.currency'].browse(result.get('currency'))
+            rslt_count += 1
+            rslt_sum += cur.compute(result.get('amount_total'), target_currency)
+        return (rslt_count, rslt_sum)
 
     @api.multi
     def action_create_new(self):

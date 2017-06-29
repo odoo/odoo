@@ -262,7 +262,7 @@
                             </div>
                         </div>
                     </t>
-                    <t t-name="JournalBodySalePurchase">
+                    <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
                         <div class="col-xs-6 o_kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
                                 <button type="object" name="action_create_new" class="btn btn-primary btn-sm o_invoice_new">
@@ -288,10 +288,15 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <a type="object" name="open_action" context="{'search_default_unpaid': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Awaiting payments"><t t-esc="dashboard.number_waiting"/>  Awaiting payments</span>
-                                        <span t-if="journal_type == 'purchase'" title="Payments to do"><t t-esc="dashboard.number_waiting"/> Payments to do</span>
+                                <div class="col-xs-6">                                    
+                                    <a type="object" t-if="journal_type == 'sale'" name="open_action" 
+                                    context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
+                                        <t t-esc="dashboard.number_waiting"/> Awaiting payments 
+                                    </a>
+                                    
+                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action" 
+                                    context="{'search_default_unpaid':1}" id="account_dashboard_purchase_pay_link">
+                                        <t t-esc="dashboard.number_waiting"/> Payments to do
                                     </a>
                                 </div>
                                 <div class="col-xs-6 text-right">
