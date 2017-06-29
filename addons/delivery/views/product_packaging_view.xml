@@ -17,7 +17,11 @@
                     <field name="height"/>
                     <field name="width"/>
                     <field name="length"/>
-                    <field name="max_weight"/>
+                    <label for="max_weight"/>
+                    <div class="o_row">
+                        <field name="max_weight"/>
+                        <field name="weight_uom_id" options="{'no_open': True}"/>
+                    </div>
                     <field name="barcode"/>
                     <field name="shipper_package_code" groups="base.group_no_one"/>
                 </group>

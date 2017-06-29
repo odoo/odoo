@@ -217,11 +217,15 @@
                     </group>
                     <group>
                         <label for="weight" string="Weight"/>
-                        <div>
-                            <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        <div class="o_row">
+                            <field name="weight"/>
+                            <field name="weight_uom_id" options="{'no_open': True}"/>
                         </div>
-                        <field name="shipping_weight"/>
+                        <label for="shipping_weight"/>
+                        <div class="o_row">
+                            <field name="shipping_weight"/>
+                            <field name="weight_uom_id" options="{'no_open': True}"/>
+                        </div>
                         <field name="number_of_packages" attrs="{'readonly': [('state', '=', 'done')]}"/>
                     </group>
                 </group>
@@ -249,7 +253,11 @@
             <field name="inherit_id" ref="stock.view_move_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date_expected']" position="after">
-                    <field name="weight"/>
+                    <label for="weight"/>
+                    <div class="o_row">
+                        <field name="weight"/>
+                        <field name="weight_uom_id" options="{'no_open': True}"/>
+                    </div>
                 </xpath>
             </field>
         </record>
@@ -261,8 +269,16 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
                     <field name="packaging_id"/>
-                    <field name="weight"/>
-                    <field name="shipping_weight"/>
+                    <label for="weight"/>
+                    <div class="o_row">
+                        <field name="weight"/>
+                        <field name="weight_uom_id" options="{'no_open': True}"/>
+                    </div>
+                    <label for="shipping_weight"/>
+                    <div class="o_row">
+                        <field name="shipping_weight"/>
+                        <field name="weight_uom_id" options="{'no_open': True}"/>
+                    </div>
                 </field>
             </field>
         </record>
@@ -275,9 +291,9 @@
                 <xpath expr="//group[@name='main_grp']" position="inside">
                     <group>
                         <label for="weight"/>
-                        <div>
-                            <field name="weight" nolabel="1" class="oe_inline"/>
-                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        <div class="o_row">
+                            <field name="weight"/>
+                            <field name="weight_uom_id" options="{'no_open': True}"/>
                         </div>
                     </group>
                 </xpath>

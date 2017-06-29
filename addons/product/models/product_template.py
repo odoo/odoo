@@ -83,10 +83,12 @@ class ProductTemplate(models.Model):
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
         help="The volume of this product.", store=True)
+    volume_uom_id = fields.Many2one('product.uom', string='Volume Unit of Measure', compute='_compute_volume_uom_id', readonly=1)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents, not including any packaging, etc.")
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id', readonly=1)
 
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
@@ -221,6 +223,11 @@ class ProductTemplate(models.Model):
         if len(self.product_variant_ids) == 1:
             self.product_variant_ids.volume = self.volume
 
+    def _compute_volume_uom_id(self):
+        volume_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_volume_uom_id'))
+        for p in self:
+            p.volume_uom_id = volume_uom_id
+
     @api.depends('product_variant_ids', 'product_variant_ids.weight')
     def _compute_weight(self):
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
@@ -233,6 +240,11 @@ class ProductTemplate(models.Model):
     def _set_weight(self):
         if len(self.product_variant_ids) == 1:
             self.product_variant_ids.weight = self.weight
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_weight_uom_id'))
+        for p in self:
+            p.weight_uom_id = weight_uom_id
 
     @api.one
     @api.depends('product_variant_ids.product_tmpl_id')

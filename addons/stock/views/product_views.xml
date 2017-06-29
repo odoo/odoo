@@ -97,12 +97,12 @@
                             <label for="weight"/>
                             <div class="o_row" name="weight">
                                 <field name="weight"/>
-                                <span>kg</span>
+                                <field name="weight_uom_id" options="{'no_open': True}"/>
                             </div>
                             <label for="volume"/>
                             <div class="o_row" name="volume">
                                 <field name="volume" string="Volume"/>
-                                <span>m³</span>
+                                <field name="volume_uom_id" options="{'no_open': True}"/>
                             </div>
                         </group>
                         <group string="Traceability" name="traceability" groups="stock.group_production_lot">

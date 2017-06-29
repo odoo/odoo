@@ -20,6 +20,12 @@ class StockQuantPackage(models.Model):
 
     weight = fields.Float(compute='_compute_weight')
     shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id', readonly=1)
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_weight_uom_id'))
+        for p in self:
+            p.weight_uom_id = weight_uom_id
 
 
 class StockMoveLine(models.Model):
@@ -40,19 +46,12 @@ class StockMoveLine(models.Model):
             'context': {
                 'default_stock_quant_package_id': self.result_package_id.id,
                 'current_package_carrier_type': self.picking_id.carrier_id.delivery_type if self.picking_id.carrier_id.delivery_type not in ['base_on_rule', 'fixed'] else 'none',
-                }
+            }
         }
 
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
-
-    def _default_uom(self):
-        weight_uom_id = self.env.ref('product.product_uom_kgm', raise_if_not_found=False)
-        if not weight_uom_id:
-            uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
-            weight_uom_id = self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
-        return weight_uom_id
 
     @api.one
     @api.depends('move_line_ids')
@@ -78,6 +77,11 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         self.shipping_weight = self.weight_bulk + sum([pack.shipping_weight for pack in self.package_ids])
 
+    def _compute_weight_uom_id(self):
+        weight_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_weight_uom_id'))
+        for p in self:
+            p.weight_uom_id = weight_uom_id
+
     carrier_price = fields.Float(string="Shipping Cost")
     delivery_type = fields.Selection(related='carrier_id.delivery_type', readonly=True)
     carrier_id = fields.Many2one("delivery.carrier", string="Carrier")
@@ -86,10 +90,10 @@ class StockPicking(models.Model):
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     number_of_packages = fields.Integer(string='Number of Packages', copy=False)
-    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id', readonly=1)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+    shipping_weight = fields.Float("Weight for Shipping", digits=dp.get_precision('Stock Weight'), compute='_compute_shipping_weight')
 
     @api.depends('carrier_id', 'carrier_tracking_ref')
     def _compute_carrier_tracking_url(self):

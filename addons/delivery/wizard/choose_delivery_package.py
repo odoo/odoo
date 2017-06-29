@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import fields, models
 
 
 class ChooseDeliveryPackage(models.TransientModel):
@@ -11,7 +11,7 @@ class ChooseDeliveryPackage(models.TransientModel):
     stock_quant_package_id = fields.Many2one(
         'stock.quant.package',
         default=lambda self: self._default_stock_quant_package_id()
-    ) 
+    )
     delivery_packaging_id = fields.Many2one(
         'product.packaging',
         default=lambda self: self._default_delivery_packaging_id()
@@ -20,6 +20,7 @@ class ChooseDeliveryPackage(models.TransientModel):
         string='Shipping Weight',
         default=lambda self: self._default_shipping_weight()
     )
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id', readonly=1)
 
     def _default_stock_quant_package_id(self):
         if self.env.context.get('default_stock_quant_package_id'):
@@ -43,6 +44,11 @@ class ChooseDeliveryPackage(models.TransientModel):
             move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
             total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
             return total_weight
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = int(self.env['ir.config_parameter'].sudo().get_param('database_weight_uom_id'))
+        for p in self:
+            p.weight_uom_id = weight_uom_id
 
     def put_in_pack(self):
         picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
