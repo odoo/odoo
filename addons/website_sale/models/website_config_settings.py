@@ -175,7 +175,7 @@ class WebsiteConfigSettings(models.TransientModel):
     def _onchange_group_discount_per_so_line(self):
         if self.group_discount_per_so_line:
             self.update({
-                'sale_pricelist_setting_split_1': True,
+                'multi_sales_price': True,
             })
 
     @api.onchange('sale_show_tax')
