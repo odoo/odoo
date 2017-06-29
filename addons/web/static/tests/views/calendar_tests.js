@@ -143,7 +143,7 @@ QUnit.module('Views', {
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
-        assert.expect(19);
+        assert.expect(22);
 
         var calendar = createView({
             View: CalendarView,
@@ -200,6 +200,13 @@ QUnit.module('Views', {
         assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
         assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
+        assert.strictEqual(calendar.$('.fc-event').length, 6,
+            "should display 6 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
+        calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
+        calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
+        assert.strictEqual(calendar.$('.fc-event').length, 0, "should not display any event anymore");
+
         // test search bar in filter
 
         $sidebar.find('input[type="text"]').trigger('click');
@@ -208,7 +215,7 @@ QUnit.module('Views', {
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
         $sidebar.find('input[type="text"]').trigger('click');
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
-        $sidebar.find('.o_calendar_filter_item[data-id="1"] .o_remove').trigger('click');
+        $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
         assert.ok($('.modal button.btn:contains(Ok)').length, "should display the confirm message");
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
