@@ -31,6 +31,10 @@ var Printer = core.Class.extend(mixins.PropertiesMixin,{
                         send_printing_job();
                     },function(){
                         self.receipt_queue.unshift(r);
+                        posmodel.gui.show_popup('error',{
+                           'title': 'Printer not accessible',
+                            'body':  'Printer "' + self.config.name + '" cannot be reached!',
+                        });
                     });
             }
         }
