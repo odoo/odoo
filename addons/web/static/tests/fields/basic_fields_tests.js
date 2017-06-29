@@ -2115,7 +2115,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('integer field in form view with virtual id', function (assert) {
-        assert.expect(2);
+        assert.expect(1);
         var params = {
             View: FormView,
             model: 'partner',
@@ -2127,15 +2127,7 @@ QUnit.module('basic_fields', {
         var form = createView(params);
         assert.strictEqual(form.$('.o_field_widget').text(), "2-20170808020000",
             "Should display virtual id");
-        form.destroy();
 
-        params.res_id = this.data.partner.records[1].id = "2.65-20170808020000";
-        try {
-            form = createView(params);
-        } catch (error) {
-            assert.strictEqual(error.message, '"2.65-20170808020000" is not an integer or a virtual id',
-                "Should throw an exception because it's a wrong value");
-        }
         form.destroy();
     });
 
