@@ -143,4 +143,4 @@ class TestAccountSupplierInvoice(AccountingTestCase):
         # then the invoice will be in open state and unreconciled
         self.assertEqual('open', invoice.state)
         self.assertEqual(90.0, invoice.residual)
-        self.assertEqual(True, invoice.reconciled)
+        self.assertEqual(False, invoice.reconciled)
