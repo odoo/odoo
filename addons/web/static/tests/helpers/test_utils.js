@@ -356,6 +356,15 @@ function createModel(params) {
 
     addMockEnvironment(widget, params);
 
+    // override the model's 'destroy' so that it calls 'destroy' on the widget
+    // instead, as the widget is the parent of the model and the mockServer.
+    model.destroy = function () {
+        // remove the override to properly destroy the model when it will be
+        // called the second time (by its parent)
+        delete model.destroy;
+        widget.destroy();
+    };
+
     return model;
 }
 

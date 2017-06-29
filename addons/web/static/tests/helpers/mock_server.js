@@ -567,8 +567,10 @@ var MockServer = Class.extend({
                     } else {
                         result[fields[i]] = false;
                     }
+                } else if (field.type === 'one2many' || field.type === 'many2many') {
+                    result[fields[i]] = record[fields[i]] || [];
                 } else {
-                    result[fields[i]] = record[fields[i]];
+                    result[fields[i]] = record[fields[i]] || false;
                 }
             }
             return result;
