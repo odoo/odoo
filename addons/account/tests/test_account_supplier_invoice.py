@@ -135,12 +135,12 @@ class TestAccountSupplierInvoice(AccountingTestCase):
             'account_analytic_id': analytic_account.id,
         })
 
-        self.assertEqual('draft', invoice.state)
+        self.assertEqual(invoice.state, 'draft')
 
         # when the invoice is validated
         invoice.signal_workflow('invoice_open')
 
         # then the invoice will be in open state and unreconciled
-        self.assertEqual('open', invoice.state)
-        self.assertEqual(90.0, invoice.residual)
-        self.assertEqual(False, invoice.reconciled)
+        self.assertEqual(invoice.state, 'open')
+        self.assertEqual(invoice.residual, 90.0)
+        self.assertEqual(invoice.reconciled, False)
