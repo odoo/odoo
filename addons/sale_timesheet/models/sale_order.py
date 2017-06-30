@@ -19,10 +19,10 @@ class SaleOrder(models.Model):
     project_project_id = fields.Many2one('project.project', compute='_compute_project_project_id', string='Project associated to this sale')
 
     @api.multi
-    @api.depends('project_id.line_ids')
+    @api.depends('analytic_account_id.line_ids')
     def _compute_timesheet_ids(self):
         for order in self:
-            if order.project_id:
+            if order.analytic_account_id:
                 order.timesheet_ids = self.env['account.analytic.line'].search(
                     [('so_line', 'in', order.order_line.ids),
                         ('amount', '<=', 0.0),
@@ -39,10 +39,10 @@ class SaleOrder(models.Model):
             order.tasks_count = len(order.tasks_ids)
 
     @api.multi
-    @api.depends('project_id.project_ids')
+    @api.depends('analytic_account_id.project_ids')
     def _compute_project_project_id(self):
         for order in self:
-            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.project_id.id)])
+            order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.analytic_account_id.id)])
 
     @api.multi
     @api.constrains('order_line')
@@ -175,10 +175,10 @@ class SaleOrderLine(models.Model):
         project = self.product_id.with_context(force_company=self.company_id.id).project_id
         if not project:
             # find the project corresponding to the analytic account of the sales order
-            account = self.order_id.project_id
+            account = self.order_id.analytic_account_id
             if not account:
                 self.order_id._create_analytic_account(prefix=self.product_id.default_code or None)
-                account = self.order_id.project_id
+                account = self.order_id.analytic_account_id
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
                 project_id = account.sudo().project_create({'name': account.name})

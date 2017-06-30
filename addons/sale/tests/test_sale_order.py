@@ -127,7 +127,7 @@ class TestSaleOrder(TestSale):
             'name': '',
             'type': 'in_invoice',
             'partner_id': inv_partner.id,
-            'invoice_line_ids': [(0, 0, {'name': serv_cost.name, 'product_id': serv_cost.id, 'quantity': 2, 'uom_id': serv_cost.uom_id.id, 'price_unit': serv_cost.standard_price, 'account_analytic_id': so.project_id.id, 'account_id': account_income.id})],
+            'invoice_line_ids': [(0, 0, {'name': serv_cost.name, 'product_id': serv_cost.id, 'quantity': 2, 'uom_id': serv_cost.uom_id.id, 'price_unit': serv_cost.standard_price, 'account_analytic_id': so.analytic_account_id.id, 'account_id': account_income.id})],
             'account_id': account_payable.id,
             'journal_id': journal.id,
             'currency_id': company.currency_id.id,

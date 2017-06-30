@@ -135,7 +135,7 @@ class SaleOrder(models.Model):
 
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order.")
     currency_id = fields.Many2one("res.currency", related='pricelist_id.currency_id', string="Currency", readonly=True, required=True)
-    project_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False)
+    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order.", copy=False, oldname='project_id')
 
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
@@ -509,7 +509,7 @@ class SaleOrder(models.Model):
                 'company_id': order.company_id.id,
                 'partner_id': order.partner_id.id
             })
-            order.project_id = analytic
+            order.analytic_account_id = analytic
 
     @api.multi
     def order_lines_layouted(self):
@@ -891,7 +891,7 @@ class SaleOrderLine(models.Model):
             'product_id': self.product_id.id or False,
             'layout_category_id': self.layout_category_id and self.layout_category_id.id or False,
             'invoice_line_tax_ids': [(6, 0, self.tax_id.ids)],
-            'account_analytic_id': self.order_id.project_id.id,
+            'account_analytic_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
         }
         return res
