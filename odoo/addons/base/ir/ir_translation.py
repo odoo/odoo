@@ -106,8 +106,8 @@ class IrTranslationImport(object):
 
         # Step 1: resolve ir.model.data references to res_ids
         cr.execute(""" UPDATE %s AS ti
-                       SET res_id = imd.res_id,
-                           noupdate = imd.noupdate
+                          SET res_id = imd.res_id,
+                              noupdate = imd.noupdate
                        FROM ir_model_data AS imd
                        WHERE ti.res_id IS NULL
                        AND ti.module IS NOT NULL AND ti.imd_name IS NOT NULL
@@ -153,10 +153,10 @@ class IrTranslationImport(object):
                                src = ti.src,
                                state = 'translated'
                            FROM %s AS ti
-                           WHERE %s
-                           AND ti.value IS NOT NULL
-                           AND ti.value != ''
-                           AND noupdate IS NOT TRUE
+                          WHERE %s
+                            AND ti.value IS NOT NULL
+                            AND ti.value != ''
+                            AND noupdate IS NOT TRUE
                        """ % (self._model_table, self._table, find_expr),
                        (tuple(src_relevant_fields), tuple(src_relevant_fields)))
 
@@ -544,13 +544,18 @@ class IrTranslation(models.Model):
                 record = trans.env[mname].browse(trans.res_id)
                 field = record._fields[fname]
                 if callable(field.translate):
-                    # check whether applying (trans.src -> trans.value) then
-                    # (trans.value -> trans.src) gives the original value back
+                    src = trans.src
+                    val = trans.value.strip()
+                    # check whether applying (src -> val) then (val -> src)
+                    # gives the original value back
                     value0 = field.translate(lambda term: None, record[fname])
-                    value1 = field.translate({trans.src: trans.value}.get, value0)
-                    value2 = field.translate({trans.value: trans.src}.get, value1)
+                    value1 = field.translate({src: val}.get, value0)
+                    # don't check the reverse if no translation happened
+                    if value0 == value1:
+                        continue
+                    value2 = field.translate({val: src}.get, value1)
                     if value2 != value0:
-                        raise ValidationError(_("Translation is not valid:\n%s") % trans.value)
+                        raise ValidationError(_("Translation is not valid:\n%s") % val)
 
     @api.model
     def create(self, vals):

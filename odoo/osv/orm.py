@@ -129,32 +129,30 @@ def test_modifiers(what, expected):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)
-        dump = json.dumps(modifiers)
-        assert dump == expected, "%s != %s" % (dump, expected)
+        assert modifiers == expected, "%s != %s" % (modifiers, expected)
     elif isinstance(what, dict):
         transfer_field_to_modifiers(what, modifiers)
         simplify_modifiers(modifiers)
-        dump = json.dumps(modifiers)
-        assert dump == expected, "%s != %s" % (dump, expected)
+        assert modifiers == expected, "%s != %s" % (modifiers, expected)
 
 
 # To use this test:
 # import odoo
 # odoo.osv.orm.modifiers_tests()
 def modifiers_tests():
-    test_modifiers('<field name="a"/>', '{}')
-    test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" readonly="1"/>', '{"readonly": true}')
-    test_modifiers('<field name="a" required="1"/>', '{"required": true}')
-    test_modifiers('<field name="a" invisible="0"/>', '{}')
-    test_modifiers('<field name="a" readonly="0"/>', '{}')
-    test_modifiers('<field name="a" required="0"/>', '{}')
-    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}') # TODO order is not guaranteed
-    test_modifiers('<field name="a" invisible="1" required="0"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" invisible="0" required="1"/>', '{"required": true}')
-    test_modifiers("""<field name="a" attrs="{'invisible': [('b', '=', 'c')]}"/>""", '{"invisible": [["b", "=", "c"]]}')
+    test_modifiers('<field name="a"/>', {})
+    test_modifiers('<field name="a" invisible="1"/>', {"invisible": True})
+    test_modifiers('<field name="a" readonly="1"/>', {"readonly": True})
+    test_modifiers('<field name="a" required="1"/>', {"required": True})
+    test_modifiers('<field name="a" invisible="0"/>', {})
+    test_modifiers('<field name="a" readonly="0"/>', {})
+    test_modifiers('<field name="a" required="0"/>', {})
+    test_modifiers('<field name="a" invisible="1" required="1"/>', {"invisible": True, "required": True}) # TODO order is not guaranteed
+    test_modifiers('<field name="a" invisible="1" required="0"/>', {"invisible": True})
+    test_modifiers('<field name="a" invisible="0" required="1"/>', {"required": True})
+    test_modifiers("""<field name="a" attrs="{'invisible': [['b', '=', 'c']]}"/>""", {"invisible": [["b", "=", "c"]]})
 
     # The dictionary is supposed to be the result of fields_get().
-    test_modifiers({}, '{}')
-    test_modifiers({"invisible": True}, '{"invisible": true}')
-    test_modifiers({"invisible": False}, '{}')
+    test_modifiers({}, {})
+    test_modifiers({"invisible": True}, {"invisible": True})
+    test_modifiers({"invisible": False}, {})

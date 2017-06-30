@@ -146,47 +146,62 @@ class AccountInvoice(models.Model):
                 self.outstanding_credits_debits_widget = json.dumps(info)
                 self.has_outstanding = True
 
+    @api.model
+    def _get_payments_vals(self):
+        if not self.payment_move_line_ids:
+            return []
+        payment_vals = []
+        currency_id = self.currency_id
+        for payment in self.payment_move_line_ids:
+            payment_currency_id = False
+            if self.type in ('out_invoice', 'in_refund'):
+                amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
+                amount_currency = sum(
+                    [p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
+                if payment.matched_debit_ids:
+                    payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in
+                                               payment.matched_debit_ids]) and payment.matched_debit_ids[
+                                              0].currency_id or False
+            elif self.type in ('in_invoice', 'out_refund'):
+                amount = sum(
+                    [p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
+                amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if
+                                       p.credit_move_id in self.move_id.line_ids])
+                if payment.matched_credit_ids:
+                    payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in
+                                               payment.matched_credit_ids]) and payment.matched_credit_ids[
+                                              0].currency_id or False
+            # get the payment value in invoice currency
+            if payment_currency_id and payment_currency_id == self.currency_id:
+                amount_to_show = amount_currency
+            else:
+                amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount,
+                                                                                                        self.currency_id)
+            if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
+                continue
+            payment_ref = payment.move_id.name
+            if payment.move_id.ref:
+                payment_ref += ' (' + payment.move_id.ref + ')'
+            payment_vals.append({
+                'name': payment.name,
+                'journal_name': payment.journal_id.name,
+                'amount': amount_to_show,
+                'currency': currency_id.symbol,
+                'digits': [69, currency_id.decimal_places],
+                'position': currency_id.position,
+                'date': payment.date,
+                'payment_id': payment.id,
+                'move_id': payment.move_id.id,
+                'ref': payment_ref,
+            })
+        return payment_vals
+
     @api.one
     @api.depends('payment_move_line_ids.amount_residual')
     def _get_payment_info_JSON(self):
         self.payments_widget = json.dumps(False)
         if self.payment_move_line_ids:
-            info = {'title': _('Less Payment'), 'outstanding': False, 'content': []}
-            currency_id = self.currency_id
-            for payment in self.payment_move_line_ids:
-                payment_currency_id = False
-                if self.type in ('out_invoice', 'in_refund'):
-                    amount = sum([p.amount for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                    amount_currency = sum([p.amount_currency for p in payment.matched_debit_ids if p.debit_move_id in self.move_id.line_ids])
-                    if payment.matched_debit_ids:
-                        payment_currency_id = all([p.currency_id == payment.matched_debit_ids[0].currency_id for p in payment.matched_debit_ids]) and payment.matched_debit_ids[0].currency_id or False
-                elif self.type in ('in_invoice', 'out_refund'):
-                    amount = sum([p.amount for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                    amount_currency = sum([p.amount_currency for p in payment.matched_credit_ids if p.credit_move_id in self.move_id.line_ids])
-                    if payment.matched_credit_ids:
-                        payment_currency_id = all([p.currency_id == payment.matched_credit_ids[0].currency_id for p in payment.matched_credit_ids]) and payment.matched_credit_ids[0].currency_id or False
-                # get the payment value in invoice currency
-                if payment_currency_id and payment_currency_id == self.currency_id:
-                    amount_to_show = amount_currency
-                else:
-                    amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount, self.currency_id)
-                if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
-                    continue
-                payment_ref = payment.move_id.name
-                if payment.move_id.ref:
-                    payment_ref += ' (' + payment.move_id.ref + ')'
-                info['content'].append({
-                    'name': payment.name,
-                    'journal_name': payment.journal_id.name,
-                    'amount': amount_to_show,
-                    'currency': currency_id.symbol,
-                    'digits': [69, currency_id.decimal_places],
-                    'position': currency_id.position,
-                    'date': payment.date,
-                    'payment_id': payment.id,
-                    'move_id': payment.move_id.id,
-                    'ref': payment_ref,
-                })
+            info = {'title': _('Less Payment'), 'outstanding': False, 'content': self._get_payments_vals()}
             self.payments_widget = json.dumps(info)
 
     @api.one
@@ -486,6 +501,8 @@ class AccountInvoice(models.Model):
         payment_term_id = False
         fiscal_position = False
         bank_id = False
+        warning = {}
+        domain = {}
         company_id = self.company_id.id
         p = self.partner_id if not company_id else self.partner_id.with_context(force_company=company_id)
         type = self.type
@@ -520,7 +537,6 @@ class AccountInvoice(models.Model):
                     }
                 if p.invoice_warn == 'block':
                     self.partner_id = False
-                return {'warning': warning}
 
         self.account_id = account_id
         self.payment_term_id = payment_term_id
@@ -530,8 +546,14 @@ class AccountInvoice(models.Model):
             bank_ids = p.commercial_partner_id.bank_ids
             bank_id = bank_ids[0].id if bank_ids else False
             self.partner_bank_id = bank_id
-            return {'domain': {'partner_bank_id': [('id', 'in', bank_ids.ids)]}}
-        return {}
+            domain = {'partner_bank_id': [('id', 'in', bank_ids.ids)]}
+
+        res = {}
+        if warning:
+            res['warning'] = warning
+        if domain:
+            res['domain'] = domain
+        return res
 
     @api.multi
     def get_delivery_partner_id(self):
@@ -571,7 +593,7 @@ class AccountInvoice(models.Model):
             for invoice in self:
                 with invoice.env.do_in_draft():
                     invoice.number, invoice.state = invoice.move_name, 'open'
-                attachment = self.env['ir.actions.report'].retrieve_attachment(invoice.id)
+                    attachment = self.env.ref('account.account_invoices').retrieve_attachment(invoice)
                 if attachment:
                     attachment.unlink()
         return True
@@ -1029,6 +1051,39 @@ class AccountInvoice(models.Model):
             result.append((0, 0, values))
         return result
 
+    def _get_refund_common_fields(self):
+        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
+
+    def _get_refund_prepare_fields(self):
+        return ['name', 'reference', 'comment', 'date_due']
+
+    def _get_refund_modify_read_fields(self):
+        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids', 'date']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
+
+    def _get_refund_copy_fields(self):
+        copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
+
+    @api.model
+    def _get_refund_common_fields(self):
+        return ['partner_id', 'payment_term_id', 'account_id', 'currency_id', 'journal_id']
+
+    @api.model
+    def _get_refund_prepare_fields(self):
+        return ['name', 'reference', 'comment', 'date_due']
+
+    @api.model
+    def _get_refund_modify_read_fields(self):
+        read_fields = ['type', 'number', 'invoice_line_ids', 'tax_line_ids',
+                       'date', 'partner_insite', 'partner_contact', 'partner_ref']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + read_fields
+
+    @api.model
+    def _get_refund_copy_fields(self):
+        copy_fields = ['company_id', 'user_id', 'fiscal_position_id']
+        return self._get_refund_common_fields() + self._get_refund_prepare_fields() + copy_fields
+
     @api.model
     def _prepare_refund(self, invoice, date_invoice=None, date=None, description=None, journal_id=None):
         """ Prepare the dict of values to create the new credit note from the invoice.
@@ -1044,8 +1099,7 @@ class AccountInvoice(models.Model):
             :return: dict of value to create() the credit note
         """
         values = {}
-        for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
-                'account_id', 'currency_id', 'payment_term_id', 'user_id', 'fiscal_position_id']:
+        for field in self._get_refund_copy_fields():
             if invoice._fields[field].type == 'many2one':
                 values[field] = invoice[field].id
             else:
@@ -1378,6 +1432,12 @@ class AccountInvoiceLine(models.Model):
             :rtype line : account.invoice.line record
         """
         pass
+
+    @api.multi
+    def unlink(self):
+        if self.filtered(lambda r: r.invoice_id and r.invoice_id.state != 'draft'):
+            raise UserError(_('You can only delete an invoice line if the invoice is in draft state.'))
+        return super(AccountInvoiceLine, self).unlink()
 
 class AccountInvoiceTax(models.Model):
     _name = "account.invoice.tax"

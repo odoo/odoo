@@ -97,6 +97,8 @@ class IrModel(models.Model):
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(compute='_in_modules', string='In Apps', help='List of modules in which the object is defined or inherited')
     view_ids = fields.One2many('ir.ui.view', compute='_view_ids', string='Views')
+    count = fields.Integer(compute='_compute_count', string="Count (incl. archived)",
+                           help="Total number of records in this model")
 
     @api.depends()
     def _inherited_models(self):
@@ -118,6 +120,15 @@ class IrModel(models.Model):
     def _view_ids(self):
         for model in self:
             model.view_ids = self.env['ir.ui.view'].search([('model', '=', model.model)])
+
+    @api.depends()
+    def _compute_count(self):
+        cr = self.env.cr
+        for model in self:
+            records = self.env[model.model]
+            if not records._abstract:
+                cr.execute('SELECT COUNT(*) FROM "%s"' % records._table)
+                model.count = cr.fetchone()[0]
 
     @api.constrains('model')
     def _check_model_name(self):
@@ -814,7 +825,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['ondelete'] = field_data['on_delete']
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'one2many':
             if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
@@ -824,7 +835,7 @@ class IrModelFields(models.Model):
                 return
             attrs['comodel_name'] = field_data['relation']
             attrs['inverse_name'] = field_data['relation_field']
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         elif field_data['ttype'] == 'many2many':
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
@@ -833,7 +844,7 @@ class IrModelFields(models.Model):
             attrs['relation'] = field_data['relation_table'] or rel
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
-            attrs['domain'] = safe_eval(field_data['domain']) if field_data['domain'] else None
+            attrs['domain'] = safe_eval(field_data['domain'] or '[]')
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])

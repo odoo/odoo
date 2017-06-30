@@ -342,7 +342,7 @@
                               <!-- begin website_sale code -->
                               <div t-if="acquirers" id="payment_method" class="row text-left">
                                 <div class="col-md-6">
-                                  <h4>Payment Method:</h4>
+                                  <h4>Payment Acquirer:</h4>
                                   <ul class="list-unstyled">
                                     <t t-set="payment_methods_available" t-value="False"/>
                                     <li t-foreach="acquirers or []" t-as="acquirer">
@@ -366,9 +366,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <t t-foreach="acquirers or []" t-as="acquirer">
-                                        <div t-att-data-id="acquirer.id" class="oe_quote_acquirer_button hidden pull-right">
-                                          <div t-raw="buttons.get(acquirer.id)"/>
-                                          <div t-field="acquirer.pre_msg"/>
+                                        <div class="o_payment_acquirer_button hidden pull-right"
+                                                t-att-data-id="acquirer.id"
+                                                t-att-data-access-token="token or ''"
+                                                t-att-data-tx-type="form"
+                                                t-att-data-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
+                                            <div t-raw="buttons.get(acquirer.id)"/>
+                                            <div t-field="acquirer.pre_msg"/>
                                         </div>
                                     </t>
                                     <button type="button" class="btn btn-link" data-dismiss="modal" style="padding: 0">Cancel</button>
@@ -434,15 +438,12 @@
 
   <template id="chatter" name="Allow Comments &amp; History" customize_show="True" inherit_id="website_quote.so_quotation">
       <xpath expr="//div[@id='quote_content']" position="inside">
-          <section id="discussion" class="hidden-print">
-              <h1 class="page-header">History</h1>
-              <!-- Options:Quotation Chatter: user can reply -->
-              <t t-call="website_mail.message_thread">
-                <t t-set="object" t-value="quotation"/>
-                <t t-set="token_field" t-value="'access_token'"/>
-                <t t-set="chatter_mode" t-value="'json'"/>
-              </t>
-          </section>
+          <h1 class="page-header">History</h1>
+          <!-- Options:Quotation Chatter: user can reply -->
+          <t t-call="website_mail.message_thread">
+            <t t-set="object" t-value="quotation"/>
+            <t t-set="token_field" t-value="'access_token'"/>
+          </t>
       </xpath>
       <xpath expr="//a[@data-target='#modaldecline']" position="before">
           <a type="submit" href="#discussion">

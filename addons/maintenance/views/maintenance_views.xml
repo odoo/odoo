@@ -39,7 +39,7 @@
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Archived" name="inactive" domain="[('archive','=',True)]"/>
                 <group  expand='0' string='Group by...'>
                     <filter string='Assigned' domain="[]" context="{'group_by': 'technician_user_id'}"/>
                     <filter string='Category' domain="[]" context="{'group_by' : 'category_id'}"/>

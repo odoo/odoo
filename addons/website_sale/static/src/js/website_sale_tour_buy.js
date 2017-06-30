@@ -71,7 +71,7 @@ tour.register('shop_buy_product', {
         {
             content: "Pay Now",
             extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            trigger: '.o_payment_acquirer_button .btn[type="submit"]:visible',
         },
         {
             content: "finish",

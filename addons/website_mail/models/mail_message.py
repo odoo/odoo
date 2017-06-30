@@ -56,3 +56,15 @@ class MailMessage(models.Model):
             if self.env.cr.fetchall():
                 raise AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation))
         return super(MailMessage, self).check_access_rule(operation=operation)
+
+    @api.multi
+    def website_message_format(self):
+        message_values = self.read([
+            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
+            'message_type', 'subtype_id', 'subject',  # message specific
+            'model', 'res_id', 'record_name',  # document related
+            'website_published',
+        ])
+        message_tree = dict((m.id, m) for m in self.sudo())
+        self._message_read_dict_postprocess(message_values, message_tree)
+        return message_values

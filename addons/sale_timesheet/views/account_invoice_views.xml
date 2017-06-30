@@ -17,7 +17,7 @@
         <field name="arch" type="xml">
             <xpath expr="//label" position="before">
                 <div class="oe_button_box" name="button_box" groups="base.group_user">
-                    <button name="%(sale_timesheet.action_timesheet_from_invoice)d" type="action" class="oe_stat_button" icon="fa-calendar">
+                    <button name="%(sale_timesheet.action_timesheet_from_invoice)d" type="action" class="oe_stat_button" icon="fa-calendar" attrs="{'invisible':[('timesheet_count','=', 0)]}">
                         <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
                     </button>
                 </div>

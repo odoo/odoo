@@ -5,6 +5,7 @@ from datetime import timedelta
 from functools import partial
 
 import psycopg2
+import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, pycompat
@@ -172,6 +173,33 @@ class PosOrder(models.Model):
             'user_id': self.env.uid,
         }
 
+    @api.model
+    def _get_account_move_line_group_data_type_key(self, data_type, values):
+        """
+        Return a tuple which will be used as a key for grouping account
+        move lines in _create_account_move_line method.
+        :param data_type: 'product', 'tax', ....
+        :param values: account move line values
+        :return: tuple() representing the data_type key
+        """
+        if data_type == 'product':
+            return ('product',
+                    values['partner_id'],
+                    (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']),
+                    values['analytic_account_id'],
+                    values['debit'] > 0)
+        elif data_type == 'tax':
+            return ('tax',
+                    values['partner_id'],
+                    values['tax_line_id'],
+                    values['debit'] > 0)
+        elif data_type == 'counter_part':
+            return ('counter_part',
+                    values['partner_id'],
+                    values['account_id'],
+                    values['debit'] > 0)
+        return False
+
     def _action_create_invoice_line(self, line=False, invoice_id=False):
         InvoiceLine = self.env['account.invoice.line']
         inv_name = line.product_id.name_get()[0][1]
@@ -229,13 +257,8 @@ class PosOrder(models.Model):
                     'move_id': move.id,
                 })
 
-                if data_type == 'product':
-                    key = ('product', values['partner_id'], (values['product_id'], tuple(values['tax_ids'][0][2]), values['name']), values['analytic_account_id'], values['debit'] > 0)
-                elif data_type == 'tax':
-                    key = ('tax', values['partner_id'], values['tax_line_id'], values['debit'] > 0)
-                elif data_type == 'counter_part':
-                    key = ('counter_part', values['partner_id'], values['account_id'], values['debit'] > 0)
-                else:
+                key = self._get_account_move_line_group_data_type_key(data_type, values)
+                if not key:
                     return
 
                 grouped_data.setdefault(key, [])
@@ -294,7 +317,8 @@ class PosOrder(models.Model):
                 taxes = line.tax_ids_after_fiscal_position.filtered(lambda t: t.company_id.id == current_company.id)
                 if not taxes:
                     continue
-                for tax in taxes.compute_all(line.price_unit * (100.0 - line.discount) / 100.0, cur, line.qty)['taxes']:
+                price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                for tax in taxes.compute_all(price, cur, line.qty)['taxes']:
                     insert_data('tax', {
                         'name': _('Tax') + ' ' + tax['name'],
                         'product_id': line.product_id.id,
@@ -609,11 +633,11 @@ class PosOrder(models.Model):
                     'location_id': location_id,
                     'location_dest_id': destination_id,
                 }
-                pos_qty = any([x.qty > 0 for x in order.lines])
+                pos_qty = any([x.qty > 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if pos_qty:
                     order_picking = Picking.create(picking_vals.copy())
                     order_picking.message_post(body=message)
-                neg_qty = any([x.qty < 0 for x in order.lines])
+                neg_qty = any([x.qty < 0 for x in order.lines if x.product_id.type in ['product', 'consu']])
                 if neg_qty:
                     return_vals = picking_vals.copy()
                     return_vals.update({
@@ -700,7 +724,7 @@ class PosOrder(models.Model):
                 pack_operation.write({'pack_lot_ids': [(0, 0, x) for x in pack_lots], 'qty_done': qty_done})
         return has_wrong_lots
 
-    def add_payment(self, data):
+    def _prepare_bank_statement_line_payment_values(self, data):
         """Create a new payment for the order"""
         args = {
             'amount': data['amount'],
@@ -745,8 +769,16 @@ class PosOrder(models.Model):
             'journal_id': journal_id,
             'ref': self.session_id.name,
         })
+
+        return args
+
+    def add_payment(self, data):
+        """Create a new payment for the order"""
+        args = self._prepare_bank_statement_line_payment_values(data)
+        context = dict(self.env.context)
+        context.pop('pos_session_id', False)
         self.env['account.bank.statement.line'].with_context(context).create(args)
-        return statement_id
+        return args.get('statement_id', False)
 
     @api.multi
     def refund(self):
@@ -854,7 +886,8 @@ class PosOrderLine(models.Model):
             fiscal_position_id = line.order_id.fiscal_position_id
             if fiscal_position_id:
                 taxes = fiscal_position_id.map_tax(taxes, line.product_id, line.order_id.partner_id)
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            price = self.env['account.tax']._fix_tax_included_price(
+                line.price_unit * (1 - (line.discount or 0.0) / 100.0), line.product_id.taxes_id, taxes)
             line.price_subtotal = line.price_subtotal_incl = price * line.qty
             if taxes:
                 taxes = taxes.compute_all(price, currency, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)
@@ -919,7 +952,9 @@ class ReportSaleDetails(models.AbstractModel):
         if not configs:
             configs = self.env['pos.config'].search([])
 
-        today = fields.Datetime.from_string(fields.Date.context_today(self))
+        user_tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+        today = user_tz.localize(fields.Datetime.from_string(fields.Date.context_today(self)))
+        today = today.astimezone(pytz.timezone('UTC'))
         if date_start:
             date_start = fields.Datetime.from_string(date_start)
         else:

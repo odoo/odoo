@@ -272,10 +272,6 @@ class Users(models.Model):
         if self.login and tools.single_email_re.match(self.login):
             self.email = self.login
 
-    @api.onchange('state_id')
-    def onchange_state(self):
-        return self.mapped('partner_id').onchange_state()
-
     @api.onchange('parent_id')
     def onchange_parent_id(self):
         return self.mapped('partner_id').onchange_parent_id()
@@ -716,7 +712,7 @@ class GroupsView(models.Model):
         if view and view.exists() and view._name == 'ir.ui.view':
             group_no_one = view.env.ref('base.group_no_one')
             xml1, xml2 = [], []
-            xml1.append(E.separator(string=_('Application'), colspan="2"))
+            xml1.append(E.separator(string=_('Application Accesses'), colspan="2"))
             for app, kind, gs in self.get_groups_by_application():
                 # hide groups in categories 'Hidden' and 'Extra' (except for group_no_one)
                 attrs = {}

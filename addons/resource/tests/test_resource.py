@@ -278,6 +278,9 @@ class ResourceWorkingHours(TestResourceCommon):
             td += item[1] - item[0]
         self.assertEqual(td.total_seconds() / 3600.0, 40.0)
 
+        res = self.calendar.plan_hours(-40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 09:00:00'))
+
     def test_calendar_hours_scheduling_forward(self):
         res = self.calendar._schedule_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
         self.assertEqual(res[0][:2], (Datetime.from_string('2013-02-12 09:00:00'), Datetime.from_string('2013-02-12 16:00:00')))
@@ -292,6 +295,46 @@ class ResourceWorkingHours(TestResourceCommon):
         for item in res:
             td += item[1] - item[0]
         self.assertEqual(td.total_seconds() / 3600.0, 40.0)
+
+        res = self.calendar.plan_hours(40, day_dt=Datetime.from_string('2013-02-12 09:00:00'))
+        self.assertEqual(res, Datetime.from_string('2013-02-26 09:00:00'))
+
+    def test_calendar_hours_scheduling_timezone(self):
+        # user in timezone UTC-9 asks for work hours
+        self.env.user.tz = 'US/Alaska'
+        res = self.calendar.plan_hours(
+            42,
+            to_naive_utc(Datetime.from_string('2013-02-12 09:25:00'), self.env.user))
+        self.assertEqual(res, to_naive_utc(Datetime.from_string('2013-02-26 11:25:00'), self.env.user))
+
+    def test_calendar_hours_scheduling_timezone_2(self):
+        # Call schedule_hours for a user in Autralia, Sydney (GMT+10)
+        # Two cases:
+        # - start at 2013-02-15 08:00:00 => 2013-02-14 21:00:00 in UTC
+        # - start at 2013-02-15 11:00:00 => 2013-02-15 00:00:00 in UTC
+        self.env.user.tz = 'Australia/Sydney'
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 1',
+            'dayofweek': '3',
+            'hour_from': 8,
+            'hour_to': 12,
+            'calendar_id': self.calendar.id,
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 2',
+            'dayofweek': '3',
+            'hour_from': 13,
+            'hour_to': 17,
+            'calendar_id': self.calendar.id,
+        })
+        hours = 1.0/60.0
+        for test_date in ['2013-02-15 08:00:00', '2013-02-15 11:00:00']:
+            start_dt = Datetime.from_string(test_date)
+            start_dt_utc = to_naive_utc(start_dt, self.env.user)
+            res = self.calendar._schedule_hours(hours, start_dt_utc)
+            self.assertEqual(
+                [(start_dt_utc, start_dt_utc.replace(minute=1))], res,
+                'resource_calendar: wrong schedule_hours computation')
 
     def test_calendar_hours_scheduling_forward_leaves_resource(self):
         res = self.calendar._schedule_hours(
@@ -323,6 +366,11 @@ class ResourceWorkingHours(TestResourceCommon):
             5, Datetime.from_string('2013-02-12 09:08:07'),
             compute_leaves=True, resource_id=self.resource1_id)
         self.assertEqual(res.date(), Datetime.from_string('2013-03-01 00:00:00').date(), 'resource_calendar: wrong days scheduling')
+
+    def test_calendar_days_scheduling_timezone(self):
+        self.env.user.tz = 'US/Alaska'
+        res = self.calendar.plan_days(5, to_naive_utc(Datetime.from_string('2013-02-12 09:08:07'), self.env.user))
+        self.assertEqual(to_naive_user_tz(res, self.env.user).date(), Datetime.from_string('2013-02-26 00:00:00').date())
 
 
 WAR_START = date(1932, 11, 2)

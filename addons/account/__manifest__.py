@@ -54,7 +54,7 @@
         'views/report_agedpartnerbalance.xml',
         'views/tax_adjustments.xml',
         'wizard/wizard_tax_adjustments_view.xml',
-        'views/res_config_view.xml',
+        'views/account_config_settings_views.xml',
         'views/web_planner_data.xml',
         'views/account_journal_dashboard_view.xml',
         'report/account_report_payment_receipt_templates.xml',
@@ -69,7 +69,7 @@
         "static/src/xml/account_report_backend.xml",
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
     'post_init_hook': '_auto_install_l10n',
 }

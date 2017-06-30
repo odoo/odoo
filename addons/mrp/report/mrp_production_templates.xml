@@ -40,7 +40,8 @@
                         </div>
                         <div class="col-xs-3">
                             <strong>Printing date:</strong><br/>
-                            <span t-esc="time.strftime('%Y-%m-%d')"/>
+                            <span t-esc="time.strftime('%Y-%m-%d')"
+                                  t-options='{"widget": "date"}'/>
                         </div>
                         <div class="col-xs-3" t-if="'sale_ref' in o">
                             <strong>Partner Ref:</strong><br/>

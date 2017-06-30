@@ -246,7 +246,9 @@ class WebsiteSale(http.Controller):
 
         ProductAttribute = request.env['product.attribute']
         if products:
-            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', products.ids)])
+            # get all products without limit
+            selected_products = Product.search(domain, limit=False)
+            attributes = ProductAttribute.search([('attribute_line_ids.product_tmpl_id', 'in', selected_products.ids)])
         else:
             attributes = ProductAttribute.browse(attributes_ids)
 
@@ -275,7 +277,6 @@ class WebsiteSale(http.Controller):
     def product(self, product, category='', search='', **kwargs):
         product_context = dict(request.env.context, active_id=product.id)
         ProductCategory = request.env['product.public.category']
-        Rating = request.env['rating.rating']
 
         if category:
             category = ProductCategory.browse(int(category)).exists()
@@ -294,11 +295,6 @@ class WebsiteSale(http.Controller):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: from_currency.compute(price, to_currency)
 
-        # get the rating attached to a mail.message, and the rating stats of the product
-        ratings = Rating.search([('message_id', 'in', product.website_message_ids.ids)])
-        rating_message_values = dict([(record.message_id.id, record.rating) for record in ratings])
-        rating_product = product.rating_get_stats([('website_published', '=', True)])
-
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
             product = product.with_context(product_context)
@@ -315,14 +311,13 @@ class WebsiteSale(http.Controller):
             'main_object': product,
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids,
-            'rating_message_values': rating_message_values,
-            'rating_product': rating_product
         }
         return request.render("website_sale.product", values)
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
-        if request.website.is_pricelist_available(pl_id.id):
+        if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
+                and request.website.is_pricelist_available(pl_id.id):
             request.session['website_sale_current_pl'] = pl_id.id
             request.website.sale_get_order(force_pricelist=pl_id.id)
         return request.redirect(request.httprequest.referrer or '/shop')
@@ -463,8 +458,9 @@ class WebsiteSale(http.Controller):
         # Required fields from mandatory field function
         required_fields += mode[1] == 'shipping' and self._get_mandatory_shipping_fields() or self._get_mandatory_billing_fields()
         # Check if state required
+        country = request.env['res.country']
         if data.get('country_id'):
-            country = request.env['res.country'].browse(int(data.get('country_id')))
+            country = country.browse(int(data.get('country_id')))
             if 'state_code' in country.get_address_fields() and country.state_ids:
                 required_fields += ['state_id']
 
@@ -481,9 +477,14 @@ class WebsiteSale(http.Controller):
         # vat validation
         Partner = request.env['res.partner']
         if data.get("vat") and hasattr(Partner, "check_vat"):
-            check_func = request.website.company_id.vat_check_vies and Partner.vies_vat_check or Partner.simple_vat_check
-            vat_country, vat_number = Partner._split_vat(data.get("vat"))
-            if not check_func(vat_country, vat_number):
+            partner_dummy = Partner.new({
+                'vat': data['vat'],
+                'country_id': (int(data['country_id'])
+                               if data.get('country_id') else False),
+            })
+            try:
+                partner_dummy.check_vat()
+            except ValidationError:
                 error["vat"] = 'error'
 
         if [err for err in pycompat.items(error) if err == 'missing']:
@@ -757,23 +758,12 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/payment/transaction_token/confirm'], type='json', auth="public", website=True)
     def payment_transaction_token_confirm(self, tx, **kwargs):
         tx = request.env['payment.transaction'].sudo().browse(int(tx))
-        if (tx and request.website.sale_get_transaction() and
-                tx.id == request.website.sale_get_transaction().id and
-                tx.payment_token_id and
-                tx.partner_id == tx.sale_order_id.partner_id):
-            try:
-                s2s_result = tx.s2s_do_transaction()
-                valid_state = 'authorized' if tx.acquirer_id.auto_confirm == 'authorize' else 'done'
-                if not s2s_result or tx.state != valid_state:
-                    return dict(success=False, error=_("Payment transaction failed (%s)") % tx.state_message)
-                else:
-                    # Auto-confirm SO if necessary
-                    tx._confirm_so()
-                    return dict(success=True, url='/shop/payment/validate')
-            except Exception as e:
-                _logger.warning(_("Payment transaction (%s) failed : <%s>") % (tx.id, str(e)))
-                return dict(success=False, error=_("Payment transaction failed (Contact Administrator)"))
-        return dict(success=False, error='Tx missmatch')
+        if not tx or not request.website.sale_get_transaction() or tx != request.website.sale_get_transaction():
+            return dict(success=False, error='Tx missmatch')
+        res = tx.confirm_sale_token()
+        if res is not True:
+            return dict(success=False, error=res)
+        return dict(success=True, url='/shop/payment/validate')
 
     @http.route(['/shop/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
     def payment_transaction_token(self, tx_id, **kwargs):
@@ -796,13 +786,12 @@ class WebsiteSale(http.Controller):
         :param int acquirer_id: id of a payment.acquirer record. If not set the
                                 user is redirected to the checkout page
         """
-        Transaction = request.env['payment.transaction'].sudo()
 
         # In case the route is called directly from the JS (as done in Stripe payment method)
         so_id = kwargs.get('so_id')
-        so_token = kwargs.get('so_token')
-        if so_id and so_token:
-            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', so_token)])
+        access_token = kwargs.get('access_token')
+        if so_id and access_token:
+            order = request.env['sale.order'].sudo().search([('id', '=', so_id), ('access_token', '=', access_token)])
         elif so_id:
             order = request.env['sale.order'].search([('id', '=', so_id)])
         else:
@@ -812,51 +801,17 @@ class WebsiteSale(http.Controller):
 
         assert order.partner_id.id != request.website.partner_id.id
 
-        # find an already existing transaction
-        tx = request.website.sale_get_transaction()
-        if tx:
-            if tx.sale_order_id.id != order.id or tx.state in ['error', 'cancel'] or tx.acquirer_id.id != acquirer_id:
-                tx = False
-            elif token and tx.payment_token_id and token != tx.payment_token_id.id:
-                # new or distinct token
-                tx = False
-            elif tx.state == 'draft':  # button cliked but no more info -> rewrite on tx or create a new one ?
-                tx.write(dict(Transaction.on_change_partner_id(order.partner_id.id).get('value', {}), amount=order.amount_total, type=tx_type))
-        if not tx:
-            tx_values = {
-                'acquirer_id': acquirer_id,
-                'type': tx_type,
-                'amount': order.amount_total,
-                'currency_id': order.pricelist_id.currency_id.id,
-                'partner_id': order.partner_id.id,
-                'partner_country_id': order.partner_id.country_id.id,
-                'reference': Transaction.get_next_reference(order.name),
-                'sale_order_id': order.id,
-            }
-            if token and request.env['payment.token'].sudo().browse(int(token)).partner_id == order.partner_id:
-                tx_values['payment_token_id'] = token
+        # find or create transaction
+        tx = request.website.sale_get_transaction() or request.env['payment.transaction'].sudo()
+        acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+        payment_token = request.env['payment.token'].sudo().browse(int(token)) if token else None
+        tx = tx.check_or_create_sale_tx(order, acquirer, payment_token=payment_token, tx_type=tx_type)
+        request.session['sale_transaction_id'] = tx.id
 
-            tx = Transaction.create(tx_values)
-            request.session['sale_transaction_id'] = tx.id
-
-        # update quotation
-        order.write({
-            'payment_acquirer_id': acquirer_id,
-            'payment_tx_id': request.session['sale_transaction_id']
-        })
         if token:
             return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 
-        return tx.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-            tx.reference,
-            order.amount_total,
-            order.pricelist_id.currency_id.id,
-            values={
-                'return_url': '/shop/payment/validate',
-                'partner_id': order.partner_shipping_id.id or order.partner_invoice_id.id,
-                'billing_partner_id': order.partner_invoice_id.id,
-            },
-        )
+        return tx.render_sale_button(order, '/shop/payment/validate')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):

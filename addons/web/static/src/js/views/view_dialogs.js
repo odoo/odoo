@@ -4,6 +4,7 @@ odoo.define('web.view_dialogs', function (require) {
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var ListController = require('web.ListController');
 var ListView = require('web.ListView');
 var pyeval = require('web.pyeval');
@@ -133,7 +134,7 @@ var FormViewDialog = ViewDialog.extend({
                         text: _t("Save & New"),
                         classes: "btn-primary",
                         click: function () {
-                            this._save().then(self.form_view.createRecord.bind(self.form_view));
+                            this._save().then(self.form_view.createRecord.bind(self.form_view, self.parentID));
                         },
                     });
                 }
@@ -194,8 +195,10 @@ var FormViewDialog = ViewDialog.extend({
                     if ($buttons.children().length) {
                         self.$footer.empty().append($buttons.contents());
                     }
-                    _super().$el.append(fragment);
-                    self.form_view.autofocus();
+                    dom.append(_super().$el, fragment, {
+                        callbacks: [{widget: self.form_view}],
+                        in_DOM: true,
+                    });
                 });
         });
 
@@ -219,6 +222,7 @@ var FormViewDialog = ViewDialog.extend({
                 stayInEdit: true,
                 reload: false,
                 savePoint: this.shouldSaveLocally,
+                viewType: 'form',
             });
         }
         return $.when(def).then(function () {
@@ -281,6 +285,7 @@ var SelectCreateDialog = ViewDialog.extend({
         if(this.options.initial_view !== "search") {
             return this.create_edit_record();
         }
+        var self = this;
         var user_context = this.getSession().user_context;
 
         var _super = this._super.bind(this);
@@ -298,7 +303,10 @@ var SelectCreateDialog = ViewDialog.extend({
         this.loadViews(this.dataset.model, this.dataset.get_context(), [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this, search_defaults))
             .then(function (fragment) {
-                _super().$el.append(fragment);
+                dom.append(_super().$el, fragment, {
+                    callbacks: [{widget: self.list_controller}],
+                    in_DOM: true,
+                });
             });
         return this;
     },
@@ -319,7 +327,6 @@ var SelectCreateDialog = ViewDialog.extend({
         var searchview = new SearchView(this, this.dataset, fields_views.search, options);
         searchview.prependTo($header).done(function () {
             var d = searchview.build_search_data();
-            d.domains = d.domains.concat([self.domain]);
             if (self.initial_ids) {
                 d.domains.push([["id", "in", self.initial_ids]]);
                 self.initial_ids = undefined;
@@ -375,15 +382,14 @@ var SelectCreateDialog = ViewDialog.extend({
         });
     },
     _process_search_data: function (domains, contexts, groupbys) {
-        var user_context = this.getSession().user_context;
-        contexts = [user_context].concat(contexts);
         var results = pyeval.eval_domains_and_contexts({
-            domains: domains || [],
-            contexts: contexts || [],
+            domains: [this.domain].concat(domains),
+            contexts: [this.context].concat(contexts),
             group_by_seq: groupbys || []
         });
+        var context = _.omit(results.context, function (value, key) { return key.indexOf('search_default_') === 0; });
         return {
-            context: results.context,
+            context: context,
             domain: results.domain,
             groupBy: results.group_by,
         };

@@ -33,7 +33,14 @@ class PurchaseRequisition(models.Model):
     _order = "id desc"
 
     def _get_picking_in(self):
-        return self.env.ref('stock.picking_type_in')
+        pick_in = self.env.ref('stock.picking_type_in')
+        if not pick_in:
+            company = self.env['res.company']._company_default_get('purchase.requisition')
+            pick_in = self.env['stock.picking.type'].search(
+                [('warehouse_id.company_id', '=', company.id), ('code', '=', 'incoming')],
+                limit=1,
+            )
+        return pick_in
 
     def _get_type_id(self):
         return self.env['purchase.requisition.type'].search([], limit=1)
@@ -138,6 +145,22 @@ class PurchaseRequisitionLine(models.Model):
         if not self.schedule_date:
             self.schedule_date = self.requisition_id.schedule_date
 
+    @api.multi
+    def _prepare_purchase_order_line(self, name, product_qty=0.0, price_unit=0.0, taxes_ids=False):
+        self.ensure_one()
+        requisition = self.requisition_id
+        return {
+            'name': name,
+            'product_id': self.product_id.id,
+            'product_uom': self.product_id.uom_po_id.id,
+            'product_qty': product_qty,
+            'price_unit': price_unit,
+            'taxes_id': [(6, 0, taxes_ids)],
+            'date_planned': requisition.schedule_date or fields.Date.today(),
+            'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
+            'account_analytic_id': self.account_analytic_id.id,
+        }
+
 
 class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -189,7 +212,7 @@ class PurchaseOrder(models.Model):
 
             # Compute taxes
             if fpos:
-                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id))
+                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
             else:
                 taxes_ids = line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id).ids
 
@@ -209,17 +232,10 @@ class PurchaseOrder(models.Model):
                 price_unit = requisition.company_id.currency_id.compute(price_unit, currency)
 
             # Create PO line
-            order_lines.append((0, 0, {
-                'name': name,
-                'product_id': line.product_id.id,
-                'product_uom': line.product_id.uom_po_id.id,
-                'product_qty': product_qty,
-                'price_unit': price_unit,
-                'taxes_id': [(6, 0, taxes_ids)],
-                'date_planned': requisition.schedule_date or fields.Date.today(),
-                'procurement_ids': [(6, 0, [requisition.procurement_id.id])] if requisition.procurement_id else False,
-                'account_analytic_id': line.account_analytic_id.id,
-            }))
+            order_line_values = line._prepare_purchase_order_line(
+                name=name, product_qty=product_qty, price_unit=price_unit,
+                taxes_ids=taxes_ids)
+            order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
     @api.multi

@@ -3,6 +3,7 @@
 
 import unittest
 
+from odoo.tools import pycompat
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
 from odoo.tests.common import TransactionCase
 
@@ -205,10 +206,16 @@ class TranslationToolsTestCase(unittest.TestCase):
         self.assertEquals(result, expect)
 
     def test_translate_html(self):
+        """ Test html_translate(). """
+        source = """<blockquote>A <h2>B</h2> C</blockquote>"""
+        result = html_translate(lambda term: term, source)
+        self.assertEquals(result, source)
+
+    def test_translate_html_i(self):
         """ Test xml_translate() and html_translate() with <i> elements. """
-        source = """<i class="fa-check"></i>"""
+        source = """<p>A <i class="fa-check"></i> B</p>"""
         result = xml_translate(lambda term: term, source)
-        self.assertEquals(result, """<i class="fa-check"/>""")
+        self.assertEquals(result, """<p>A <i class="fa-check"/> B</p>""")
         result = html_translate(lambda term: term, source)
         self.assertEquals(result, source)
 
@@ -264,3 +271,72 @@ class TestTranslation(TransactionCase):
         categories = padawans_fr.search([('id', 'in', [self.customers.id, padawans.id])], order='name')
         self.assertEqual(categories.ids, [padawans.id, self.customers.id],
             "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
+
+
+class TestXMLTranslation(TransactionCase):
+    def setUp(self):
+        super(TestXMLTranslation, self).setUp()
+        self.env['ir.translation'].load_module_terms(['base'], ['fr_FR'])
+
+    def test_copy(self):
+        """ Create a simple view, fill in translations, and copy it. """
+        env_en = self.env(context={})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        terms_fr = ('Couteau', 'Fourchette', 'Cuiller')
+        view0 = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms_en,
+        })
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
+            self.env['ir.translation'].create({
+                'type': 'model',
+                'name': 'ir.ui.view,arch_db',
+                'lang': 'fr_FR',
+                'res_id': view0.id,
+                'src': src,
+                'value': value,
+            })
+
+        # check translated field
+        self.assertEqual(view0.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view0.with_env(env_fr).arch_db, archf % terms_fr)
+
+        # copy without lang
+        view1 = view0.with_env(env_en).copy({})
+        self.assertEqual(view1.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view1.with_env(env_fr).arch_db, archf % terms_fr)
+
+        # copy with lang='fr_FR'
+        view2 = view0.with_env(env_fr).copy({})
+        self.assertEqual(view2.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view2.with_env(env_fr).arch_db, archf % terms_fr)
+
+        # copy with lang='fr_FR' and translate=html_translate
+        self.patch(type(self.env['ir.ui.view']).arch_db, 'translate', html_translate)
+        view3 = view0.with_env(env_fr).copy({})
+        self.assertEqual(view3.with_env(env_en).arch_db, archf % terms_en)
+        self.assertEqual(view3.with_env(env_fr).arch_db, archf % terms_fr)
+
+    def test_spaces(self):
+        """ Create translations where value has surrounding spaces. """
+        archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
+        terms_en = ('Knife', 'Fork', 'Spoon')
+        terms_fr = (' Couteau', 'Fourchette ', ' Cuiller ')
+        view0 = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms_en,
+        })
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
+            self.env['ir.translation'].create({
+                'type': 'model',
+                'name': 'ir.ui.view,arch_db',
+                'lang': 'fr_FR',
+                'res_id': view0.id,
+                'src': src,
+                'value': value,
+            })

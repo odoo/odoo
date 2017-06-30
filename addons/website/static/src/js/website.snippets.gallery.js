@@ -36,6 +36,12 @@ options.registry.gallery = options.Class.extend({
 
         this._temp_mode = this.$el.find("data-mode").data("mode");
         this._temp_col = this.$el.find("data-columns").data("columns");
+
+        var self = this;
+        this.$target.on('click', '.o_add_images', function (e) {
+            e.stopImmediatePropagation();
+            self.images_add('click');
+        });
     },
     drop_and_build_snippet: function () {
         var uuid = new Date().getTime();
@@ -70,13 +76,13 @@ options.registry.gallery = options.Class.extend({
         return this.$target.find("img").off('save').on('save', function (event, img) {
                 var $parent = $(img).parent();
                 $parent.addClass("saved_active");
-                var index = self.$target.find(".item.saved_active").index();
+                var index = self.$target.find(".item.active").index();
                 $parent.removeClass("saved_active");
                 self.$target.find(".carousel:first li[data-target]:eq("+index+")").css("background-image", "url("+$(img).attr("src")+")");
             });
     },
     get_imgs: function () {
-        var imgs = this.$target.find("img").addClass("img img-thumbnail img-responsive mb8 mt8").detach().get();
+        var imgs = this.$target.find("img").addClass("img img-responsive mb8 mt8").detach().get();
         imgs.sort(function (a,b) { return $(a).data('index')-$(b).data('index'); });
         return imgs;
     },
@@ -174,7 +180,6 @@ options.registry.gallery = options.Class.extend({
         $imgs.each(function (index) { // 0 based index
             $img = $(this);
             $col = $img.wrap('<div>').parent();
-            self.img_preserve_styles($img);
             self.img_responsive($img);
             $col.addClass(colClass);
             $col.appendTo($row);
@@ -186,6 +191,7 @@ options.registry.gallery = options.Class.extend({
         this.$target.css("height", "");
     },
     slideshow :function (type) {
+        var imgStyle = this.$el.find('li.active[data-styling]').data('styling') || '';
         if (type !== "reapply" && this.$target.hasClass('o_slideshow')) return;
 
         var self = this,
@@ -196,12 +202,13 @@ options.registry.gallery = options.Class.extend({
                 index: 0,
                 title: "",
                 interval : this.$target.data("interval") || false,
-                id: "slideshow_" + new Date().getTime()
+                id: "slideshow_" + new Date().getTime(),
+                userStyle: imgStyle,
             },
             $slideshow = $(qweb.render('website.gallery.slideshow', params));
         this.replace($slideshow);
         this.$target.find(".item img").each(function (index) {
-            $(this).attr('data-index', index).data('index', index);
+            $(this).attr({'data-index': index, 'contenteditable': true});
         });
         this.$target.css("height", Math.round(window.innerHeight*0.7));
 
@@ -244,30 +251,24 @@ options.registry.gallery = options.Class.extend({
     },
     images_rm   : function (type) {
         if(type !== "click") return;
-        this.replace($('<div class="alert alert-info css_editable_mode_display"/>').text(_t("Add Images from the 'Customize' menu")));
+        var $addImg = $('<div>', {
+            class: 'alert alert-info css_editable_mode_display text-center',
+        });
+        var $text = $('<span>', {
+            class: 'o_add_images',
+            style: 'cursor: pointer;',
+            text: _t(" Add Images"),
+        });
+        var $icon = $('<i>', {
+            class: ' fa fa-plus-circle',
+        });
+        this.replace($addImg.append($icon).append($text));
     },
     sizing : function () { // done via css, keep it to avoid undefined error
     },
     /*
      *  helpers
      */
-    styles_to_preserve : function ($img) {
-        var styles = [ 'img-rounded', 'img-thumbnail', 'img-circle', 'shadow', 'fa-spin' ];
-        var preserved = [];
-
-        for (var style in styles) {
-            if ($img.hasClass(style)) {
-                preserved.push(style);
-            }
-        }
-        return preserved.join(' ');
-    },
-    img_preserve_styles : function ($img) {
-        var classes = this.styles_to_preserve($img);
-        $img.removeAttr("class");
-        $img.addClass(classes);
-        return $img;
-    },
     img_responsive : function (img) {
         img.addClass("img img-responsive");
         return img;

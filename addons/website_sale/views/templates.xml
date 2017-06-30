@@ -17,7 +17,6 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
-            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_rating.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         </xpath>
     </template>
@@ -33,7 +32,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_shop.js"></script>
         </xpath>
     </template>
-    
+
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
@@ -480,7 +479,7 @@
                                 <span t-field="product.availability_warning" />
                             </div>
                             <hr t-if="product.description_sale" />
-                            <div>
+                            <div class="o_not_editable">
                                 <p t-field="product.description_sale" class="text-muted" />
                             </div>
                             <hr />
@@ -552,32 +551,20 @@
 
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
-        <xpath expr="//div[@id='product_details']" position="inside">
-            <t t-call="rating.rating_card">
-                <t t-set="rating_stat" t-value="rating_product"/>
-                <t t-set="max_rate" t-value="5"/>
-                <t t-set="min_rate" t-value="1"/>
-            </t>
-        </xpath>
         <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <hr class="mb32"/>
-            <section class="container">
-                <div class="row col-md-10 col-md-offset-1">
-                    <div class="text-muted">
-                        <h3 class="fa fa-comment-o">
-                            <a id="comments">
-                                <t t-if="len(product.website_message_ids) &lt;= 1" ><t t-esc="len(product.website_message_ids)"/> comment</t>
-                                <t t-if="len(product.website_message_ids) > 1"><t t-esc="len(product.website_message_ids)"/> comments</t>
-                            </a>
-                        </h3>
+            <div class="o_shop_discussion_rating">
+                <section class="container mt16 mb16">
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <t t-call="website_mail.message_thread">
+                                <t t-set="object" t-value="product"/>
+                                <t t-set="display_rating" t-value="True"/>
+                            </t>
+                        </div>
                     </div>
-                    <t t-call="website_mail.message_thread">
-                        <t t-set="object" t-value="product"/>
-                        <t t-set="chatter_mode" t-value="'json'"/>
-                        <t t-set="rating_enable" t-value="True"/>
-                    </t>
-                </div>
-            </section>
+                </section>
+            </div>
         </xpath>
     </template>
 
@@ -605,7 +592,7 @@
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(product.currency_id.decimal_places)">
             <span t-field="product.lst_price"
                 t-options='{
                    "widget": "monetary",
@@ -704,56 +691,25 @@
       </ul>
     </template>
 
-    <!-- extend the generic mail thread message template to add rating widget -->
-    <template id="message_thread_rating" inherit_id="website_mail.message_thread" name="Chatter with rating">
-        <xpath expr="//section[contains(@class, 'o_website_mail_thread')]" position="attributes">
-            <attribute name="t-att-data-rating-enabled">rating_message_values and 1 or 0</attribute>
-        </xpath>
-        <xpath expr="//textarea[@name='message']" position="before">
-            <t t-if="rating_enable">
-                <t t-call="rating.rating_star_card">
-                    <t t-set="rating_input_name" t-value="'rating'" />
-                </t>
-            </t>
-        </xpath>
-        <xpath expr="//ul[contains(@class, 'o_website_comments')]//h5" position="after">
-            <t t-if="rating_enable">
-                <div t-if="rating_message_values.get(message.id)">
-                    <t t-call="rating.rating_star_card">
-                        <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)" />
-                        <t t-set="rating_disabled" t-value="True" />
-                    </t>
-                </div>
-            </t>
-        </xpath>
-    </template>
-
     <template id="wizard_checkout" name="Wizard Checkout">
         <ul class="wizard pull-right hidden-xs">
             <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
-                <t t-if="step&gt;10 and step&lt;50">
-                    <a href="/shop/cart" class="text-success">
-                        Review Order<span class="chevron"></span>
-                    </a>
-                </t>
-                <t t-if="not (step&gt;10 and step&lt;50)">
-                    Review Order<span class="chevron"></span>
-                </t>
+                <t t-set="step_review_order" t-value="step&gt;10 and step&lt;50"/>
+                <a t-att-href="step_review_order and '/shop/cart' or '#'" t-att-class="step_review_order and 'text-success' or 'o_link_disable'">
+                    <span>Review Order</span>
+                </a>
+                <span class="chevron"/>
             </li>
             <li t-att-class="(step==20 and 'text-primary') or 'text-muted'" id="step20">
-                <t t-if="step&gt;20 and step&lt;50">
-                    <a href="/shop/checkout" class="text-success">
-                        <!-- billing if not loggedin - TODO -->
-                        <t>Billing</t>
-                        <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
-                        <span class="chevron"/>
-                    </a>
-                </t>
-                <t t-if="not (step&gt;20 and step&lt;50)">
-                    <t>Billing</t>
-                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services" groups="sale.group_delivery_invoice_address"> &amp; Shipping</t>
+                <!-- why website_sale_order is not set here ? -->
+                <t t-set="step_billing" t-value="step&gt;20 and step&lt;50"/>
+                <a t-att-href="step_billing and '/shop/checkout' or '#'" t-att-class="step_billing and 'text-success' or ('o_link_disable' + ('' if step == 20 else ' text-muted'))">
+                    <!-- billing if not loggedin - TODO -->
+                    <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+                    <span>Billing</span>
+                    <t t-if="not website_sale_order or not website_sale_order.website_order_line or not website_sale_order.only_services"><span> &amp; Shipping</span></t>
                     <span class="chevron"/>
-                </t>
+                </a>
             </li>
             <li t-att-class="(step==40 and 'text-primary') or 'text-muted'" id="step40">
                 Payment<span class="chevron"></span>
@@ -782,37 +738,37 @@
                 </div>
                 <div class="oe_structure row">
                     <div class='col-md-6 col-md-offset-3'>
-                        <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid  text-right-not-xs" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
+                        <form action="/website_form/" method="post" class="s_website_form form-horizontal container-fluid" enctype="multipart/form-data" data-force_action="shop.sale.order" data-model_name="sale.order" data-success_page="/shop/payment">
                             <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-3 col-sm-4 text-right-not-xs">
                                     <label class="control-label" for="client_order_ref">Your Reference</label>
                                 </div>
-                                <div class="col-md-8 col-sm-7">
+                                <div class="col-md-7 col-sm-8">
                                     <input type="text" class="form-control o_website_form_input" name="client_order_ref"/>
                                 </div>
                             </div>
                             <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-3 col-sm-4 text-right-not-xs">
                                     <label class="control-label" for="Give us your feedback...">Give us your feedback...</label>
                                 </div>
-                                <div class="col-md-8 col-sm-7">
+                                <div class="col-md-7 col-sm-8">
                                     <textarea class="form-control o_website_form_input" name="Give us your feedback..." />
                                 </div>
                             </div>
                             <div class="form-group form-field o_website_form_custom">
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-3 col-sm-4 text-right-not-xs">
                                     <label class="control-label" for="a_document">A document to provide ? </label>
                                 </div>
-                                <div class="col-md-8 col-sm-7">
+                                <div class="col-md-7 col-sm-8">
                                     <input type="file" class="form-control o_website_form_input" name="a_document" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-4 col-sm-5">
+                                <div class="col-md-3 col-sm-4">
                                 </div>
-                                <div class="col-md-8 col-sm-7">
+                                <div class="col-md-7 col-sm-8">
                                     <a href="/shop/checkout" class="btn btn-default mb32 pull-left"><span class="fa fa-long-arrow-left" /> Previous</a>
-                                    <a class="btn btn-default btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
+                                    <a class="btn btn-primary pull-right mb32 o_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-long-arrow-right" /></a>
                                 </div>
                             </div>
                         </form>
@@ -1123,7 +1079,7 @@
                             <div>
                                 <a href="/shop/cart" class="btn btn-default mb32">
                                     <span class="fa fa-long-arrow-left" /> Return to Cart</a>
-                                <a class="btn btn-default btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-long-arrow-right" /></a>
+                                <a class="btn btn-primary pull-right mb32 " href="/shop/confirm_order">Confirm <span class="fa fa-long-arrow-right" /></a>
                             </div>
                         </div>
                     </div>
@@ -1280,7 +1236,7 @@
                                         <a t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-default mb32">
                                             <span class="fa fa-long-arrow-left" /> Back
                                         </a>
-                                        <a class="btn btn-default btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
+                                        <a class="btn btn-primary pull-right mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next </span><span class="fa fa-long-arrow-right" />
                                         </a>
                                     </div>
@@ -1294,7 +1250,7 @@
     </template>
     <template id="payment" name="Payment">
         <t t-call="website.layout">
-            <t t-set="additional_title">Shop - Select Payment Method</t>
+            <t t-set="additional_title">Shop - Select Payment Acquirer</t>
             <t t-set="no_footer">1</t>
 
             <div id="wrap">
@@ -1375,7 +1331,7 @@
                             <div class="oe_structure" />
                             <div class="js_payment mb64 col-md-12 row" t-if="acquirers and website_sale_order.amount_total" id="payment_method">
                                 <div class="col-lg-7 col-sm-8">
-                                    <h4>Choose a payment method</h4>
+                                    <h4>Choose a payment acquirer</h4>
                                     <ul class="list-unstyled">
                                         <t t-set="payment_methods_available" t-value="False"/>
                                         <t t-set="partner_country" t-value="website_sale_order and website_sale_order.partner_invoice_id.country_id"/>
@@ -1417,13 +1373,16 @@
                                         </li>
                                     </ul>
                                     <a class="btn btn-default btn-block"
+                                            groups="base.group_system"
                                             t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Setup payment methods
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Setup payment acquirers
                                     </a>
                                 </div>
                                 <div class="col-lg-5 col-sm-4 text-right">
                                     <t t-foreach="acquirers or []" t-as="acquirer" id="acquirers_list">
-                                        <div t-att-data-id="acquirer.id" class="oe_sale_acquirer_button hidden pull-right">
+                                        <div class="o_payment_acquirer_button hidden pull-right"
+                                                t-att-data-id="acquirer.id"
+                                                t-att-data-call-url="'/shop/payment/transaction/%s' % (acquirer.id)">
                                             <div t-raw="acquirer.button" />
                                             <div class="token_hide">
                                                 <div t-if="acquirer.save_token == 'ask'">
@@ -1477,7 +1436,7 @@
                 <div class="container oe_website_sale">
                     <div class="row">
                         <div class="col-md-9">
-                            <h1 class="mb32">Order <em t-field="order.name" /> <t t-if="order.state == 'sale'">Confirmed</t></h1>
+                            <h1 class="mb32"><span>Order</span> <em t-field="order.name" /> <t t-if="order.state == 'sale'"><span>Confirmed</span></t></h1>
                             <div class="thanks_msg">
                                 <h2>Thank you for your order.
                                     <a class="btn btn-primary pull-right hidden-xs" href="/shop/print" target="_blank"><i class="fa fa-print"></i> Print</a>

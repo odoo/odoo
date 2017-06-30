@@ -48,7 +48,7 @@
                     <button name="button_plan" attrs="{'invisible': ['|', ('state', '!=', 'confirmed'), ('routing_id', '=', False)]}" type="object" string="Create Workorders" class="oe_highlight"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', 'not in', ['partially_available', 'assigned']), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object" class="oe_highlight"/>
                     <button name="open_produce_product" attrs="{'invisible': ['|', '|', '|', ('check_to_done', '=', True), ('availability', '!=', 'waiting'), ('state', 'not in', ('confirmed','progress')), ('routing_id', '!=', False)]}" string="Produce" type="object"/>
-                    <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}"/>
+                    <button name="post_inventory" string="Post Inventory" type="object" attrs="{'invisible': [('post_visible', '=', False)]}" groups="base.group_no_one"/>
                     <button name="action_cancel" type="object" string="Cancel" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('check_to_done', '=', True)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', ('availability', '=', 'none'), ('state', 'in', ('cancel'))]}"/>
                     <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
@@ -302,14 +302,13 @@
             <field name="context">{'search_default_todo': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a manufacturing order.
+                Click here to create a Manufacturing Order.
               </p><p>
-                A manufacturing order, based on a bill of materials, will
-                consume raw materials and produce finished products.
+                Based on a Bill of Material, a Manufacturing Order will consume raw materials
+                and produce finished products.
               </p><p>
-                Manufacturing orders are usually proposed automatically based
-                on customer requirements or automated rules like the minimum
-                stock rule.
+                Manufacturing Orders can be generated automatically based on customer
+                requirements or reordering rules.
               </p>
             </field>
         </record>

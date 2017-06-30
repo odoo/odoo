@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import uuid
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
@@ -52,9 +51,6 @@ class SaleOrder(models.Model):
             if so.state not in ['sale', 'done']:
                 so.website_url = '/quote/%s' % (so.id)
 
-    access_token = fields.Char(
-        'Security Token', copy=False, default=lambda self: str(uuid.uuid4()),
-        required=True)
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
@@ -71,7 +67,14 @@ class SaleOrder(models.Model):
         (0, 'Not mandatory on website quote validation'),
         (1, 'Immediate after website order validation'),
         (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
+    ], 'Payment', default=0, help="Require immediate payment by the customer when validating the order from the website quote")
+
+    @api.multi
+    def copy(self, default=None):
+        if self.template_id and self.template_id.number_of_days > 0:
+            default = dict(default or {})
+            default['validity_date'] = fields.Date.to_string(datetime.now() + timedelta(self.template_id.number_of_days))
+        return super(SaleOrder, self).copy(default=default)
 
     @api.one
     def _compute_amount_undiscounted(self):

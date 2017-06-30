@@ -5,7 +5,9 @@ from StringIO import StringIO
 from xml.etree import ElementTree as ET
 from uuid import uuid4
 
+from odoo import _
 from odoo.exceptions import ValidationError, UserError
+from odoo import _
 
 XMLNS = 'AnetApi/xml/v1/schema/AnetApiSchema.xsd'
 
@@ -62,7 +64,7 @@ class AuthorizeAPI():
         response = strip_ns(r.content, XMLNS)
         if response.find('messages/resultCode').text == 'Error':
             messages = [m.text for m in response.findall('messages/message/text')]
-            raise ValidationError('Authorize.net Error Message(s):\n %s' % '\n'.join(messages))
+            raise ValidationError(_('Authorize.net Error Message(s):\n %s') % '\n'.join(messages))
         return response
 
     def _base_tree(self, requestType):

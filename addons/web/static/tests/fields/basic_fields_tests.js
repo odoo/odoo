@@ -1,6 +1,7 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
+var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var FormView = require('web.FormView');
@@ -10,6 +11,7 @@ var session = require('web.session');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
+var DebouncedField = basicFields.DebouncedField;
 var _t = core._t;
 
 QUnit.module('fields', {}, function () {
@@ -119,6 +121,66 @@ QUnit.module('basic_fields', {
         };
     }
 }, function () {
+
+    QUnit.module('DebouncedField');
+
+    QUnit.test('debounced fields do not trigger call _setValue once destroyed', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var def = $.Deferred();
+        var _doAction = DebouncedField.prototype._doAction;
+        DebouncedField.prototype._doAction = function () {
+            _doAction.apply(this, arguments);
+            def.resolve();
+        };
+        var _setValue = DebouncedField.prototype._setValue;
+        DebouncedField.prototype._setValue = function () {
+            assert.step('_setValue');
+            _setValue.apply(this, arguments);
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            fieldDebounce: 3,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // change the value
+        form.$('input').val('new value').trigger('input');
+        assert.verifySteps([], "_setValue shouldn't have been called yet");
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.verifySteps(['_setValue'], "_setValue should have been called once");
+
+        // destroy the form view
+        def = $.Deferred();
+        form.destroy();
+
+        // wait for the debounced callback to be called
+        def.then(function () {
+            assert.verifySteps(['_setValue'],
+                "_setValue should not have been called after widget destruction");
+
+            DebouncedField.prototype._doAction = _doAction;
+            DebouncedField.prototype._setValue = _setValue;
+            done();
+        });
+
+    });
 
     QUnit.module('FieldBoolean');
 
@@ -332,7 +394,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -346,8 +408,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-        'Non-set float field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+        'Non-set float field should be considered as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0.000",
+        'Non-set float field should be considered as 0.');
 
         form.destroy();
     });
@@ -470,6 +534,35 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
 
         assert.verifySteps(['read']); // should not have save as nothing changed
+
+        form.destroy();
+    });
+
+    QUnit.test('float widget on monetary field', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.monetary = {string: "Monetary", type: 'monetary'};
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="monetary" widget="float"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=monetary]').text(), '9.99',
+            'value should be correctly formatted (with the float formatter)');
 
         form.destroy();
     });
@@ -710,6 +803,33 @@ QUnit.module('basic_fields', {
         _t.database.multi_lang = multiLang;
     });
 
+    QUnit.test('char field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val('<script>throw Error();</script>').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text(), '<script>throw Error();</script>',
+            'the value should have been properly escaped');
+
+        form.destroy();
+    });
 
     QUnit.module('UrlWidget');
 
@@ -926,7 +1046,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBinary');
 
     QUnit.test('binary fields are correctly rendered', function (assert) {
-        assert.expect(9);
+        assert.expect(16);
 
         // save the session function
         var oldGetFile = session.get_file;
@@ -939,18 +1059,24 @@ QUnit.module('basic_fields', {
             return $.when();
         };
 
+        this.data.partner.records[0].foo = 'coucou.txt';
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
-                    '<field name="document"/>' +
+                    '<field name="document" filename="foo"/>' +
+                    '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
         });
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 1,
             "the binary field should be rendered as a downloadable link in readonly");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), 'coucou.txt',
+            "the binary field should display the name of the file in the link");
+        assert.strictEqual(form.$('.o_field_char').text(), 'coucou.txt',
+            "the filename field should have the file name as value");
 
         form.$('a.o_field_widget[name="document"]').click();
 
@@ -958,12 +1084,15 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
             "the binary field should not be rendered as a downloadable link in edit");
-        assert.strictEqual(form.$('div.o_field_binary_file[name="document"]').length, 1,
-            "the binary field should be correctly rendered in edit");
+        assert.strictEqual(form.$('div.o_field_binary_file[name="document"] > input').val(), 'coucou.txt',
+            "the binary field should display the file name in the input edit mode");
         assert.strictEqual(form.$('.o_field_binary_file > input').attr('readonly'), 'readonly',
             "the input should be readonly");
         assert.strictEqual(form.$('.o_field_binary_file > .o_clear_file_button').length, 1,
             "there shoud be a button to clear the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), 'coucou.txt',
+            "the filename field should have the file name as value");
+
 
         form.$('.o_field_binary_file > .o_clear_file_button').click();
 
@@ -971,6 +1100,16 @@ QUnit.module('basic_fields', {
             "the input should be hidden");
         assert.strictEqual(form.$('.o_field_binary_file > .o_select_file_button:not(.o_hidden)').length, 1,
             "there shoud be a button to upload the file");
+        assert.strictEqual(form.$('input.o_field_char').val(), '',
+            "the filename field should be empty since we removed the file");
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('a.o_field_widget[name="document"] > .fa-download').length, 0,
+            "the binary field should not render as a downloadable link since we removed the file");
+        assert.strictEqual(form.$('a.o_field_widget[name="document"]').text().trim(), '',
+            "the binary field should not display a filename in the link since we removed the file");
+        assert.strictEqual(form.$('.o_field_char').text().trim(), '',
+            "the filename field should be empty since we removed the file");
 
         form.destroy();
 
@@ -1289,14 +1428,14 @@ QUnit.module('basic_fields', {
 
         // click on the input and select another value
         form.$('.o_datepicker_input').click();
-        assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        assert.strictEqual(form.$('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        form.$('.day:contains(22)').click(); // select the 22 February
-        assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        assert.strictEqual($('.day.active').data('day'), '02/03/2017', 'datepicker should be highlight February 3');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
         assert.strictEqual(form.$('.o_datepicker_input').val(), '02/22/2017',
             'the selected date should be displayed in the input');
 
@@ -1341,13 +1480,13 @@ QUnit.module('basic_fields', {
 
         // click on the input and select another value
         list.$('input.o_datepicker_input').click();
-        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        list.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        list.$('.day:contains(22)').click(); // select the 22 February
-        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
         assert.strictEqual(list.$('.o_datepicker_input').val(), '02/22/2017',
             'the selected date should be displayed in the input');
 
@@ -1424,21 +1563,21 @@ QUnit.module('basic_fields', {
             'the datetime should be correct in edit mode');
         // click on the input and select 22 February at 8:23:33
         form.$('.o_datepicker_input').click();
-        assert.ok(form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
-        form.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
-        form.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
-        form.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
-        form.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
-        form.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
-        form.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
-        form.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
-        assert.ok(!form.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        $('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        $('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        $('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        $('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        $('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        $('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
 
         var newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(form.$('.o_datepicker_input').val(), newExpectedDateString,
@@ -1489,21 +1628,21 @@ QUnit.module('basic_fields', {
 
         // click on the input and select 22 February at 8:23:33
         list.$('input.o_datepicker_input').click();
-        assert.ok(list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        list.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        list.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        list.$('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
-        list.$('.bootstrap-datetimepicker-widget .day:contains(22)').click();
-        list.$('.bootstrap-datetimepicker-widget .fa-clock-o').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-hour').click();
-        list.$('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-minute').click();
-        list.$('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
-        list.$('.bootstrap-datetimepicker-widget .timepicker-second').click();
-        list.$('.bootstrap-datetimepicker-widget .second:contains(35)').click();
-        list.$('.bootstrap-datetimepicker-widget .fa-times').click();  // close
-        assert.ok(!list.$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
+        assert.ok($('.bootstrap-datetimepicker-widget').length, 'datepicker should be open');
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(3).click();  // April
+        $('.bootstrap-datetimepicker-widget .day:contains(22)').click();
+        $('.bootstrap-datetimepicker-widget .fa-clock-o').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-hour').click();
+        $('.bootstrap-datetimepicker-widget .hour:contains(08)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-minute').click();
+        $('.bootstrap-datetimepicker-widget .minute:contains(25)').click();
+        $('.bootstrap-datetimepicker-widget .timepicker-second').click();
+        $('.bootstrap-datetimepicker-widget .second:contains(35)').click();
+        $('.bootstrap-datetimepicker-widget .fa-times').click();  // close
+        assert.ok(!$('.bootstrap-datetimepicker-widget').length, 'datepicker should be closed');
 
         var newExpectedDateString = "04/22/2017 08:25:35";
         assert.strictEqual(list.$('.o_datepicker_input').val(), newExpectedDateString,
@@ -1742,6 +1881,37 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with monetary field given in options', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.company_currency_id = {
+            string: "Company Currency", type: "many2one", relation: "currency",
+        };
+        this.data.partner.records[4].company_currency_id = 2;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" options="{\'currency_field\': \'company_currency_id\'}"/>' +
+                        '<field name="company_currency_id"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 5,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_monetary').html(), "9.10&nbsp;€",
+            "field monetary should be formatted with correct currency");
+
+        form.destroy();
+    });
+
     QUnit.test('should keep the focus when being edited in x2many lists', function (assert) {
         assert.expect(6);
 
@@ -1806,7 +1976,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -1816,8 +1986,10 @@ QUnit.module('basic_fields', {
             res_id: 4,
         });
 
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
-            'Non-set integer field should be recognized as unset.');
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+            'Non-set integer field should be recognized as 0.');
+        assert.strictEqual(form.$('.o_field_widget').text(), "0",
+            'Non-set integer field should be recognized as 0.');
 
         form.destroy();
     });
@@ -2166,6 +2338,42 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('phone field does not allow html injections', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="phone"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            config: {
+                device: {
+                    size_class: 0,
+                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
+                }
+            },
+        });
+
+        var val = '<script>throw Error();</script><script>throw Error();</script>';
+        form.$('input').val(val).trigger('input');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget').text().split('\u00AD').join(''), val,
+            "value should have been correctly escaped");
+
+        form.destroy();
+    });
 
     QUnit.module('PriorityWidget');
 

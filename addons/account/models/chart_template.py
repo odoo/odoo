@@ -71,6 +71,7 @@ class AccountAccountTemplate(models.Model):
         help="This optional field allow you to link an account template to a specific chart template that may differ from the one its root parent belongs to. This allow you "
             "to define chart templates that extend another and complete it with few new accounts (You don't need to define the whole structure that is common to both several times).")
     tag_ids = fields.Many2many('account.account.tag', 'account_account_template_account_tag', string='Account tag', help="Optional tags you may want to assign for custom reporting")
+    group_id = fields.Many2one('account.group')
 
     @api.multi
     @api.depends('name', 'code')
@@ -147,7 +148,7 @@ class AccountChartTemplate(models.Model):
             todo = self.env['ir.actions.todo']
             action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_wizard_multi_chart')
             if action_rec:
-                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template'), 'type': 'automatic'})
+                todo.create({'action_id': action_rec.id, 'name': _('Choose Accounting Template')})
         return True
 
     @api.model

@@ -75,7 +75,7 @@ tour.register('event_buy_tickets', {
             trigger: 'a[href="/shop/confirm_order"]:contains("Confirm")',
         },
         {
-            content: "Check that the subtotal is 5,500.00",
+            content: "Check that the subtotal is 5,500.00 USD", // this test will fail if the currency of the main company is not USD
             trigger: '#order_total_untaxed .oe_currency_value:contains("5,500.00")',
             run: function () {}, // it's a check
         },
@@ -86,7 +86,7 @@ tour.register('event_buy_tickets', {
         {
             content: "Pay",
             extra_trigger: '#payment_method label:contains(Wire Transfer) input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            trigger: '.o_payment_acquirer_button .btn[type="submit"]:visible',
         },
         {
             content: "Last step",

@@ -26,7 +26,15 @@ try:
 
         return phone_nbr
 
-    def phone_format(number, country_code, always_international=True, raise_exception=True):
+    def phone_format(number, country_code, country_phone_code, always_international=True, raise_exception=True):
+        """ Format the given phone number according to the localisation and international options.
+            :param number: number to convert
+            :param country_code: the ISO country code in two chars
+            :type country_code: str
+            :param country_phone_code: country dial in codes, defined by the ITU-T (Ex: 32 for Belgium)
+            :type country_phone_code: int
+            :rtype: str
+        """
         try:
             phone_nbr = phone_parse(number, country_code)
         except (phonenumbers.phonenumberutil.NumberParseException, UserError) as e:
@@ -35,8 +43,7 @@ try:
             else:
                 _logger.warning(_('Unable to format %s:\n%s') % number, e)
                 return number
-
-        if always_international and phone_nbr.country_code != country_code:
+        if always_international and phone_nbr.country_code != country_phone_code:
             phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
         else:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
@@ -48,7 +55,7 @@ except ImportError:
     def phone_parse(number, country_code):
         return False
 
-    def phone_format(number, country_code, always_international=True, raise_exception=True):
+    def phone_format(number, country_code, country_phone_code, always_international=True, raise_exception=True):
         global _phonenumbers_lib_warning
         if not _phonenumbers_lib_warning:
             _logger.warning(

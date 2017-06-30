@@ -6,6 +6,7 @@ odoo.define('web.upgrade_widgets', function (require) {
  *  When checked, an upgrade popup is showed to the user.
  */
 
+var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
@@ -58,6 +59,7 @@ var AbstractFieldUpgrade = {
      * Opens the Upgrade dialog.
      *
      * @private
+     * @returns {Dialog} the instance of the opened Dialog
      */
     _openDialog: function () {
         var message = $(QWeb.render('EnterpriseUpgrade'));
@@ -75,7 +77,7 @@ var AbstractFieldUpgrade = {
             },
         ];
 
-        new Dialog(this, {
+        return new Dialog(this, {
             size: 'medium',
             buttons: buttons,
             $content: $('<div>', {
@@ -122,7 +124,7 @@ var AbstractFieldUpgrade = {
 
 var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
     supportedFieldTypes: [],
-    events: _.extend({}, FieldBoolean.prototype.events, {
+    events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClicked',
     }),
 

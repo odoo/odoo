@@ -15,7 +15,6 @@ var FormController = BasicController.extend({
         open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
-        discard_x2m_changes: '_onDiscardX2MChanges',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
     }),
@@ -40,20 +39,20 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * This method is supposed to focus the first active control, I think. It
-     * is currently only called by the FormViewDialog.
-     *
-     * @todo To be implemented
+     * Calls autofocus on the renderer
      */
     autofocus: function () {
+        this.renderer.autofocus();
     },
     /**
      * This method switches the form view in edit mode, with a new record.
      *
      * @todo make record creation a basic controller feature
+     * @param {string} [parentID] if given, the parentID will be used as parent
+     *                            for the new record.
      * @returns {Deferred}
      */
-    createRecord: function () {
+    createRecord: function (parentID) {
         var self = this;
         var record = this.model.get(this.handle, {raw: true});
         return this.model.load({
@@ -61,6 +60,7 @@ var FormController = BasicController.extend({
             fields: record.fields,
             fieldsInfo: record.fieldsInfo,
             modelName: this.modelName,
+            parentID: parentID,
             res_ids: record.res_ids,
             type: 'record',
             viewType: 'form',
@@ -89,6 +89,14 @@ var FormController = BasicController.extend({
     getTitle: function () {
         var dataPoint = this.model.get(this.handle, {raw: true});
         return dataPoint.data.display_name || _t('New');
+    },
+    /**
+     * Called each time the form view is attached into the DOM
+     *
+     * @todo convert to new style
+     */
+    on_attach_callback: function () {
+        this.autofocus();
     },
     /**
      * Render buttons for the control panel.  The form view can be rendered in
@@ -143,10 +151,10 @@ var FormController = BasicController.extend({
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
                     label: _t('Delete'),
-                    callback: this._deleteRecords.bind(this, [this.handle]),
+                    callback: this._onDeleteRecord.bind(this),
                 });
             }
-            if (this.is_action_enabled('create')) {
+            if (this.is_action_enabled('create') && this.is_action_enabled('duplicate')) {
                 otherItems.push({
                     label: _t('Duplicate'),
                     callback: this._onDuplicateRecord.bind(this),
@@ -231,6 +239,26 @@ var FormController = BasicController.extend({
         }
     },
     /**
+     * Override to disable buttons in the renderer.
+     *
+     * @override
+     * @private
+     */
+    _disableButtons: function () {
+        this._super.apply(this, arguments);
+        this.renderer.disableButtons();
+    },
+    /**
+     * Override to enable buttons in the renderer.
+     *
+     * @override
+     * @private
+     */
+    _enableButtons: function () {
+        this._super.apply(this, arguments);
+        this.renderer.enableButtons();
+    },
+    /**
      * Hook method, called when record(s) has been deleted.
      *
      * @override
@@ -311,7 +339,7 @@ var FormController = BasicController.extend({
      */
     _onBounceEdit: function () {
         if (this.$buttons) {
-            this.$buttons.find('.o_form_button_edit').openerpBounce();
+            this.$buttons.find('.o_form_button_edit').odooBounce();
         }
     },
     /**
@@ -325,6 +353,8 @@ var FormController = BasicController.extend({
         var self = this;
         var def;
 
+        this._disableButtons();
+
         var attrs = event.data.attrs;
         if (attrs.confirm) {
             var d = $.Deferred();
@@ -334,9 +364,9 @@ var FormController = BasicController.extend({
                 d.resolve();
             });
             def = d.promise();
-        } else if (attrs.special) {
+        } else if (attrs.special === 'cancel') {
             def = this._callButtonAction(attrs, event.data.record);
-        } else {
+        } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
             def = this.saveRecord(this.handle, {
                 stayInEdit: true,
@@ -349,15 +379,12 @@ var FormController = BasicController.extend({
                 return self._callButtonAction(attrs, record);
             });
         }
-        def.then(function () {
-            self.reload();
-        });
 
-        if (event.data.show_wow) {
-            def.then(function () {
-                self.show_wow();
-            });
+        if (event.data.showWow) {
+            def.then(this.trigger_up.bind(this, 'show_wow'));
         }
+
+        def.always(this._enableButtons.bind(this));
     },
     /**
      * Called when the user wants to create a new record -> @see createRecord
@@ -368,6 +395,14 @@ var FormController = BasicController.extend({
         this.createRecord();
     },
     /**
+     * Deletes the current record
+     *
+     * @private
+     */
+    _onDeleteRecord: function () {
+        this._deleteRecords([this.handle]);
+    },
+    /**
      * Called when the user wants to discard the changes made to the current
      * record -> @see discardChanges
      *
@@ -375,32 +410,6 @@ var FormController = BasicController.extend({
      */
     _onDiscard: function () {
         this.discardChanges();
-    },
-    /**
-     * Called when a x2m asks to discard the changes made to one of its row.
-     *
-     * @todo find a better way to handle this... this could also be used outside
-     * of form views
-     *
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onDiscardX2MChanges: function (ev) {
-        var self = this;
-        ev.stopPropagation();
-        var recordID = ev.data.recordID;
-        this.discardChanges(recordID)
-            .done(function () {
-                if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
-                }
-                // TODO this will tell the renderer to rerender the widget that
-                // asked for the discard but will unfortunately lose the click
-                // made on another row if any
-                self._confirmChange(self.handle, [ev.target.name], ev)
-                    .always(ev.data.onSuccess);
-            })
-            .fail(ev.data.onFailure);
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar

@@ -91,6 +91,14 @@ class Location(models.Model):
             ret_list.append((orig_location.id, name))
         return ret_list
 
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        """ search full name and barcode """
+        if args is None:
+            args = []
+        recs = self.search(['|', ('barcode', operator, name), ('complete_name', operator, name)] + args, limit=limit)
+        return recs.name_get()
+
     def get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
         current_location = self

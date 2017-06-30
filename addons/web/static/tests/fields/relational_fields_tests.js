@@ -1,8 +1,10 @@
 odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
+var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -20,7 +22,7 @@ QUnit.module('relational_fields', {
                     int_field: {string: "int_field", type: "integer", sortable: true},
                     qux: {string: "Qux", type: "float", digits: [16,1] },
                     p: {string: "one2many field", type: "one2many", relation: 'partner', relation_field: 'trululu'},
-                    turtles: {string: "one2many turtle field", type: "one2many", relation: 'turtle'},
+                    turtles: {string: "one2many turtle field", type: "one2many", relation: 'turtle', relation_field: 'turtle_trululu'},
                     trululu: {string: "Trululu", type: "many2one", relation: 'partner'},
                     timmy: { string: "pokemon", type: "many2many", relation: 'partner_type'},
                     product_id: {string: "Product", type: "many2one", relation: 'product'},
@@ -125,7 +127,7 @@ QUnit.module('relational_fields', {
             },
             user: {
                 fields: {
-                    name: {string: "Name", type: "char"}
+                    name: {string: "Name", type: "char"},
                 },
                 records: [{
                     id: 17,
@@ -196,6 +198,165 @@ QUnit.module('relational_fields', {
         // updated on close
         form.destroy();
     });
+
+    QUnit.test('many2ones in form views with show_adress', function (assert) {
+        assert.expect(4);
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field ' +
+                                'name="trululu" ' +
+                                'string="custom label" ' +
+                                'context="{\'search_default_customer\':1, \'show_address\': 1}" ' +
+                                'options="{\'always_reload\': True}"' +
+                            '/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    return this._super(route, args).then(function (result) {
+                        result[0][1] += '\nStreet\nCity ZIP';
+                        return result;
+                    });
+                }
+                return this._super(route, args);
+            },
+            res_id: 1,
+        });
+
+        assert.strictEqual($('a.o_form_uri').html(), 'aaa<br>Street<br>City ZIP',
+            "input should have a multi-line content in readonly due to show_address");
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should have an open record button");
+
+        form.$('input.o_input').click();
+        form.$('input.o_input').trigger($.Event('keyup', {
+            which: $.ui.keyCode.ESC,
+            keyCode: $.ui.keyCode.ESC,
+        }));
+
+        assert.strictEqual(form.$('button.o_external_button:visible').length, 1,
+            "should still have an open record button");
+        form.$('input.o_input').trigger('focusout');
+        assert.strictEqual($('.modal button:contains(Create and edit)').length, 0,
+            "there should not be a quick create modal");
+
+        form.destroy();
+    });
+
+    QUnit.test('many2ones in form views with search more', function (assert) {
+        assert.expect(3);
+        this.data.partner.records.push({
+            id: 5,
+            display_name: "Partner 4",
+        }, {
+            id: 6,
+            display_name: "Partner 5",
+        }, {
+            id: 7,
+            display_name: "Partner 6",
+        }, {
+            id: 8,
+            display_name: "Partner 7",
+        }, {
+            id: 9,
+            display_name: "Partner 8",
+        }, {
+            id: 10,
+            display_name: "Partner 9",
+        });
+        this.data.partner.fields.datetime.searchable = true;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="trululu"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner,false,search': '<search><field name="datetime"/></search>',
+            },
+            res_id: 1,
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').click();
+        $dropdown.find('.o_m2o_dropdown_option:contains(Search)').mouseenter().click();  // Open Search More
+
+        assert.strictEqual($('tr.o_data_row').length, 9, "should display 9 records");
+
+        $('.o_searchview_more').click();  // Magnifying class for more filters
+        $('button:contains(Filters)').click();
+        $('.o_add_filter').click();  // Add a custom filter, datetime field is selected
+        assert.strictEqual($('li.o_filter_condition select.o_searchview_extended_prop_field').val(), 'datetime',
+            "datetime field should be selected");
+        $('.o_apply_filter').click();
+
+        assert.strictEqual($('tr.o_data_row').length, 0, "should display 0 records");
+        form.destroy();
+    });
+
+    QUnit.test('onchanges on many2ones trigger when editing record in form view', function (assert) {
+        assert.expect(9);
+
+        this.data.partner.onchanges.user_id = function () {};
+        this.data.user.fields.other_field = {string: "Other Field", type: "char"};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="user_id"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                'user,false,form': '<form string="Users"><field name="other_field"/></form>',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                if (args.method === 'get_formview_id') {
+                    return $.when(false);
+                }
+                if (args.method === 'onchange') {
+                    assert.strictEqual(args.args[1].user_id, 17,
+                        "onchange is triggered with correct user_id");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // open the many2one in form view and change something
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_external_button').click();
+        $('.modal-body input[name="other_field"]').val('wood').trigger('input');
+
+        // save the modal and make sure an onchange is triggered
+        $('.modal .modal-footer .btn-primary').first().click();
+        assert.verifySteps(['read', 'get_formview_id', 'read', 'write', 'onchange', 'read']);
+
+        // save the main record, and check that no extra rpcs are done (record
+        // is not dirty, only a related record was modified)
+        form.$buttons.find('.o_form_button_save').click();
+        assert.verifySteps(['read', 'get_formview_id', 'read', 'write', 'onchange', 'read']);
+        form.destroy();
+    });
+
 
     QUnit.test('many2one readonly fields with option "no_open"', function (assert) {
         assert.expect(1);
@@ -311,6 +472,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one searches with correct value', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="trululu"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'name_search') {
+                    assert.step('search: ' + args.kwargs.name);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_many2one input').val(), 'aaa',
+            "should be initially set to 'aaa'");
+
+        form.$('.o_field_many2one input').click(); // should search with ''
+        // unset the many2one -> should search again with ''
+        form.$('.o_field_many2one input').val('').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            // write 'p' -> should search with 'p'
+            form.$('.o_field_many2one input').val('p').trigger('keydown').trigger('keyup');
+
+            return concurrency.delay(0);
+        }).then(function () {
+            // close and re-open the dropdown -> should search with 'p' again
+            form.$('.o_field_many2one input').click();
+            form.$('.o_field_many2one input').click();
+
+            assert.verifySteps(['search: ', 'search: ', 'search: p', 'search: p']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
     QUnit.test('many2one field with option always_reload', function (assert) {
         assert.expect(4);
         var count = 0;
@@ -377,6 +590,264 @@ QUnit.module('relational_fields', {
 
     //     assert.strictEqual(form.$('input').eq(1).val(), 'xphone', "onchange should have been applied");
     // });
+
+    QUnit.test('form: quick create then save directly', function (assert) {
+        var done = assert.async();
+        assert.expect(5);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var def = $.Deferred();
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="trululu"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    assert.step('name_create');
+                    return def.then(_.constant(result)).then(function (nameGet) {
+                        newRecordID = nameGet[0];
+                        return nameGet;
+                    });
+                }
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.args[0].trululu, newRecordID,
+                        "should create with the correct m2o id");
+                }
+                return result;
+            },
+        });
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').val('b').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'b'
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.verifySteps(['name_create'],
+                "should wait for the name_create before creating the record");
+
+            def.resolve();
+
+            assert.verifySteps(['name_create', 'create']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('list: quick create then save directly', function (assert) {
+        var done = assert.async();
+        assert.expect(8);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var def = $.Deferred();
+        var newRecordID;
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="trululu"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    assert.step('name_create');
+                    return def.then(_.constant(result)).then(function (nameGet) {
+                        newRecordID = nameGet[0];
+                        return nameGet;
+                    });
+                }
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.args[0].trululu, newRecordID,
+                        "should create with the correct m2o id");
+                }
+                return result;
+            },
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        var $dropdown = list.$('.o_field_many2one input').autocomplete('widget');
+        list.$('.o_field_many2one input').val('b').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'b'
+            list.$buttons.find('.o_list_button_add').click();
+
+            assert.verifySteps(['name_create'],
+                "should wait for the name_create before creating the record");
+            assert.strictEqual(list.$('.o_data_row').length, 4,
+                "should wait for the name_create before adding the new row");
+
+            def.resolve();
+
+            assert.verifySteps(['name_create', 'create']);
+            assert.strictEqual(list.$('.o_data_row:nth(1) .o_data_cell').text(), 'b',
+                "created row should have the correct m2o value");
+            assert.strictEqual(list.$('.o_data_row').length, 5,
+                "should have added the fifth row");
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            list.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('list in form: quick create then save directly', function (assert) {
+        var done = assert.async();
+        assert.expect(6);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var def = $.Deferred();
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    assert.step('name_create');
+                    return def.then(_.constant(result)).then(function (nameGet) {
+                        newRecordID = nameGet[0];
+                        return nameGet;
+                    });
+                }
+                if (args.method === 'create') {
+                    assert.step('create');
+                    assert.strictEqual(args.args[0].p[0][2].trululu, newRecordID,
+                        "should create with the correct m2o id");
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').val('b').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'b'
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.verifySteps(['name_create'],
+                "should wait for the name_create before creating the record");
+
+            def.resolve();
+
+            assert.verifySteps(['name_create', 'create']);
+            assert.strictEqual(form.$('.o_data_row:first .o_data_cell').text(), 'b',
+                "first row should have the correct m2o value");
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
+    QUnit.test('list in form: quick create then add a new line directly', function (assert) {
+        // required many2one inside a one2many list: directly after quick creating
+        // a new many2one value (before the name_create returns), click on add an item:
+        // at this moment, the many2one has still no value, and as it is required,
+        // the row is discarded if a saveLine is requested. However, it should
+        // wait for the name_create to return before trying to save the line.
+        var done = assert.async();
+        assert.expect(8);
+
+        this.data.partner.onchanges = {
+            trululu: function () {},
+        };
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var def = $.Deferred();
+        var newRecordID;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="trululu" required="1"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    return def.then(_.constant(result)).then(function (nameGet) {
+                        newRecordID = nameGet[0];
+                        return nameGet;
+                    });
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0].p[0][2].trululu, newRecordID);
+                }
+                return result;
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        form.$('.o_field_many2one input').val('b').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'b'
+            form.$('.o_field_x2many_list_row_add a').click();
+
+            assert.strictEqual(form.$('.o_data_row').length, 1,
+                "there should still be only one row");
+            assert.ok(form.$('.o_data_row').hasClass('o_selected_row'),
+                "the row should still be in edition");
+
+            def.resolve();
+
+            assert.strictEqual(form.$('.o_data_row:first .o_data_cell').text(), 'b',
+                "first row should have the correct m2o value");
+            assert.strictEqual(form.$('.o_data_row').length, 2,
+                "there should now be 2 rows");
+            assert.ok(form.$('.o_data_row:nth(1)').hasClass('o_selected_row'),
+                "the second row should be in edition");
+
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.strictEqual(form.$('.o_data_row').length, 1,
+                "there should be 1 row saved (the second one was empty and invalid)");
+            assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'b',
+                "should have the correct m2o value");
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
 
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
@@ -579,6 +1050,191 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('pressing enter in a m2o in an editable list', function (assert) {
+        assert.expect(9);
+        var done = assert.async();
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="product_id"/></tree>',
+        });
+
+        list.$('td.o_data_cell:first').click();
+        assert.strictEqual(list.$('.o_selected_row').length, 1,
+            "should have a row in edit mode");
+
+        // we now write 'a' and press enter to check that the selection is
+        // working, and prevent the navigation
+        list.$('td.o_data_cell input:first').val('a').trigger('input');
+        concurrency.delay(0).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            var $dropdown = $input.autocomplete('widget');
+            assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
+
+            // we now trigger ENTER to select first choice
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            assert.strictEqual($input[0], document.activeElement,
+                "input should still be focused");
+
+            // we now trigger again ENTER to make sure we can move to next line
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+
+            assert.notOk(document.contains($input[0]),
+                "input should no longer be in dom");
+            assert.ok(list.$('tr.o_data_row:eq(1)').hasClass('o_selected_row'),
+                "second row should now be selected");
+
+            // we now write again 'a' in the cell to select xpad. We will now
+            // test with the tab key
+            list.$('td.o_data_cell input:first').val('a').trigger('input');
+            return concurrency.delay(0);
+        }).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            var $dropdown = $input.autocomplete('widget');
+            assert.ok($dropdown.is(':visible'), "autocomplete dropdown should be visible");
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.TAB,
+                keyCode: $.ui.keyCode.TAB,
+            }));
+            assert.strictEqual($input[0], document.activeElement,
+                "input should still be focused");
+
+            // we now trigger again ENTER to make sure we can move to next line
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.TAB,
+                keyCode: $.ui.keyCode.TAB,
+            }));
+
+            assert.notOk(document.contains($input[0]),
+                "input should no longer be in dom");
+            assert.ok(list.$('tr.o_data_row:eq(2)').hasClass('o_selected_row'),
+                "third row should now be selected");
+            list.destroy();
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+        });
+    });
+
+    QUnit.test('many2one in editable list + onchange, with enter [REQUIRE FOCUS]', function (assert) {
+        assert.expect(6);
+        var done = assert.async();
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges.product_id = function (obj) {
+            obj.int_field = obj.product_id || 0;
+        };
+
+        var def = $.Deferred();
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="product_id"/><field name="int_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        list.$('td.o_data_cell:first').click();
+        list.$('td.o_data_cell input:first').val('a').trigger('input');
+        concurrency.delay(0).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keyup', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            def.resolve();
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            assert.strictEqual($('div.modal').length, 0, "should not have any modal in DOM");
+            assert.verifySteps(['name_search', 'onchange', 'write', 'read']);
+            list.destroy();
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+        });
+    });
+
+    QUnit.test('many2one in editable list + onchange, with enter, part 2 [REQUIRE FOCUS]', function (assert) {
+        // this is the same test as the previous one, but the onchange is just
+        // resolved slightly later
+        assert.expect(6);
+        var done = assert.async();
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        this.data.partner.onchanges.product_id = function (obj) {
+            obj.int_field = obj.product_id || 0;
+        };
+
+        var def = $.Deferred();
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom"><field name="product_id"/><field name="int_field"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        list.$('td.o_data_cell:first').click();
+        list.$('td.o_data_cell input:first').val('a').trigger('input');
+        concurrency.delay(0).then(function () {
+            var $input = list.$('td.o_data_cell input:first');
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keyup', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            def.resolve();
+            assert.strictEqual($('div.modal').length, 0, "should not have any modal in DOM");
+            assert.verifySteps(['name_search', 'onchange', 'write', 'read']);
+            list.destroy();
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            done();
+        });
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
@@ -718,6 +1374,62 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(form.$('span.o_row_handle').length, 1, "should have 1 handles");
+        form.destroy();
+    });
+
+    QUnit.test('embedded one2many with handle widget', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.records[0].p = [1, 2, 4];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<notebook>' +
+                            '<page string="P page">' +
+                                '<field name="p">' +
+                                    '<tree default_order="int_field">' +
+                                        '<field name="int_field" widget="handle"/>' +
+                                        '<field name="foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+
+        testUtils.intercept(form, "field_changed", function (event) {
+            assert.step(event.data.changes.p.data.int_field.toString());
+        }, true);
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should have the 3 rows in the correct order")
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
+            "should still have the 3 rows in the correct order")
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            form.$('.ui-sortable-handle').eq(1),
+            form.$('tbody tr').first(),
+            {position: 'top'}
+        );
+
+        assert.verifySteps(["0", "1", "2"],
+            "sequences values should be incremental starting from the previous minimum one");
+
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should have the 3 rows in the new order")
+
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
+            "should still have the 3 rows in the new order")
+
         form.destroy();
     });
 
@@ -1336,12 +2048,14 @@ QUnit.module('relational_fields', {
 
     QUnit.test('one2many list (editable): edition, part 4', function (assert) {
         assert.expect(3);
+        var i = 0;
 
         this.data.turtle.onchanges = {
             turtle_trululu: function (obj) {
-                if (obj.turtle_trululu) {
+                if (i) {
                     obj.turtle_description = "Some Description";
                 }
+                i++;
             },
         };
 
@@ -1481,6 +2195,44 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('pressing enter in a o2m with a required empty m2o', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="top">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // edit mode, then click on Add an item, then click elsewhere
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+        assert.ok(form.$('input[name="turtle_foo"]').hasClass('o_field_invalid'),
+            "input should be marked invalid");
+        assert.verifySteps(['read', 'default_get']);
+        form.destroy();
+    });
+
     QUnit.test('editing a o2m, with required field and onchange', function (assert) {
         assert.expect(12);
 
@@ -1534,6 +2286,74 @@ QUnit.module('relational_fields', {
             "should have one row with turtle_int value");
 
         assert.verifySteps(['read', 'default_get', 'onchange', 'onchange', 'write', 'read', 'read']);
+        form.destroy();
+    });
+
+    QUnit.test('editable o2m, pressing ESC discard current changes', function (assert) {
+        assert.expect(5);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "there should be one data row");
+
+        form.$('input[name="turtle_foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "data row should have been discarded");
+        assert.verifySteps(['read', 'default_get']);
+        form.destroy();
+    });
+
+    QUnit.test('editable o2m with required field, pressing ESC discard current changes', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.fields.turtle_foo.required = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('tr.o_data_row').length, 1,
+            "there should be one data row");
+
+        form.$('input[name="turtle_foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(form.$('tr.o_data_row').length, 0,
+            "data row should have been discarded");
+        assert.verifySteps(['read', 'default_get']);
         form.destroy();
     });
 
@@ -1655,7 +2475,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('one2many and onchange (with date)', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
 
         this.data.partner.onchanges = {
             date: function (obj) {}
@@ -1683,15 +2503,15 @@ QUnit.module('relational_fields', {
 
         form.$('td:contains(01/25/2017)').click();
         form.$('.o_datepicker_input').click();
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
-        form.$('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
-        form.$('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
-        form.$('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
-        form.$('.day:contains(22)').click(); // select the 22 February
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Month selection
+        $('.bootstrap-datetimepicker-widget .picker-switch').first().click();  // Year selection
+        $('.bootstrap-datetimepicker-widget .year:contains(2017)').click();
+        $('.bootstrap-datetimepicker-widget .month').eq(1).click();  // February
+        $('.day:contains(22)').click(); // select the 22 February
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read']);
+        assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
         form.destroy();
     });
 
@@ -2036,6 +2856,45 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many field with context', function (assert) {
+        assert.expect(2);
+
+        var counter = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles" context="{\'turtles\':turtles}">' +
+                            '<tree editable="bottom">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    var expected = counter === 0 ?
+                        [[4, 2, false]] :
+                        [[4, 2, false], [0, false, {display_name: false, turtle_foo: 'hammer'}]];
+                    assert.deepEqual(args.kwargs.context.turtles, expected,
+                        "should have properly evaluated turtles key in context");
+                    counter++;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('input[name="turtle_foo"]').val('hammer').trigger('input');
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.destroy();
+    });
+
     QUnit.test('one2many list edition, some basic functionality', function (assert) {
         assert.expect(3);
 
@@ -2177,8 +3036,8 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual(form.$('.o_data_row').length, 3,
             "sould have 3 records in one2many list");
-        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.5tototo1.550xphone",
-            "sould display the record values in one2many list");
+        assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
+            "should display the record values in one2many list");
 
         $('.o_form_button_save').click();
 
@@ -2334,25 +3193,26 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('parent data is properly sent on an onchange rpc, new record', function (assert) {
-        assert.expect(1);
+        assert.expect(6);
 
-        this.data.partner.onchanges = {bar: function () {}};
+        this.data.turtle.onchanges = {turtle_bar: function () {}};
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="foo"/>' +
-                    '<field name="p">' +
+                    '<field name="turtles">' +
                         '<tree editable="top">' +
-                            '<field name="bar"/>' +
+                            '<field name="turtle_bar"/>' +
                         '</tree>' +
                     '</field>' +
                 '</form>',
             mockRPC: function (route, args) {
-                if (args.method === 'onchange') {
+                assert.step(args.method);
+                if (args.method === 'onchange' && args.model === 'turtle') {
                     var fieldValues = args.args[1];
-                    assert.strictEqual(fieldValues.trululu.foo, "My little Foo Value",
+                    assert.strictEqual(fieldValues.turtle_trululu.foo, "My little Foo Value",
                         "should have properly sent the parent foo value");
                 }
                 return this._super.apply(this, arguments);
@@ -2361,6 +3221,7 @@ QUnit.module('relational_fields', {
 
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_field_x2many_list_row_add a').click();
+        assert.verifySteps(['default_get', 'onchange', 'default_get', 'onchange']);
         form.destroy();
     });
 
@@ -2417,7 +3278,7 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.strictEqual(event.data.record_id, 2,
+                    assert.deepEqual(event.data.res_ids, [2],
                         'should call with correct id');
                     assert.strictEqual(event.data.model, 'partner',
                         'should call with correct model');
@@ -2461,7 +3322,7 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.strictEqual(event.data.record_id, 2,
+                    assert.deepEqual(event.data.res_ids, [2],
                         'should call with correct id');
                     assert.strictEqual(event.data.model, 'partner',
                         'should call with correct model');
@@ -2478,7 +3339,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('one2many kanban with edit type action and domain widget (widget wich use SpecialData)', function (assert) {
+    QUnit.test('one2many kanban with edit type action and domain widget (widget using SpecialData)', function (assert) {
         assert.expect(1);
 
         this.data.turtle.fields.model_name = {string: "Domain Condition Model", type: "char"};
@@ -2500,6 +3361,8 @@ QUnit.module('relational_fields', {
                                     '<t t-name="kanban-box">' +
                                         '<div><field name="display_name"/></div>' +
                                         '<div><field name="turtle_foo"/></div>' +
+                                        // field without Widget in the list
+                                        '<div><field name="condition"/></div>' +
                                         '<div> <a type="edit"> Edit </a> </div>' +
                                     '</t>' +
                                 '</templates>' +
@@ -2507,6 +3370,7 @@ QUnit.module('relational_fields', {
                             '<form>' +
                                 '<field name="product_id" widget="statusbar"/>' +
                                 '<field name="model_name"/>' +
+                                // field with Widget requiring specialData in the form
                                 '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
                             '</form>' +
                         '</field>' +
@@ -2710,6 +3574,63 @@ QUnit.module('relational_fields', {
 
         assert.strictEqual($('.modal .o_field_widget[name="turtle_foo"]').text(), 'blip',
             'should open the modal and display the form field');
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many with x2many in form view (but not in list view)', function (assert) {
+        assert.expect(1);
+
+        // avoid error when saving the edited related record (because the
+        // related x2m field is unknown in the inline list view)
+        // also ensure that the changes are correctly saved
+
+        this.data.turtle.fields.o2m = {string: "o2m", type: "one2many", relation: 'user'};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree>' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                "turtle,false,form": '<form string="Turtles">' +
+                        '<field name="partner_ids" widget="many2many_tags"/>' +
+                    '</form>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1].turtles, [[1, 2, {
+                        partner_ids: [[6, false, [2, 4, 1]]],
+                    }]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('.o_data_row:first').click(); // edit first record
+
+        var $input = $('.modal .o_field_many2manytags input');
+        $input.click(); // opens the dropdown
+        $input.autocomplete('widget').find('li').click(); // add 'first record'
+
+        // add a many2many tag and save
+        $('.modal .o_field_x2many_list_row_add a').click();
+        $('.modal .o_field_widget[name=name]').val('test').trigger('input');
+        $('.modal .modal-footer .btn-primary').click(); // save
+
+        form.$buttons.find('.o_form_button_save').click();
 
         form.destroy();
     });
@@ -3099,6 +4020,310 @@ QUnit.module('relational_fields', {
         $m2mInput.autocomplete('widget').find('li:first()').click();
         assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
             "int_field should now be 1 (the onchange should have been done");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable: \'required\' modifiers is properly working', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_foo" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should start with value 10");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should still be 10 (no onchange, because line is not valid)");
+
+        // fill turtle_foo field
+        form.$('.o_field_widget[name="turtle_foo"]').val("some text").trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
+            "int_field should be 1 (onchange triggered, because line is now valid)");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable: \'required\' modifiers is properly working, part 2', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            turtles: function (obj) {
+                obj.int_field = obj.turtles.length;
+            },
+        };
+
+        this.data.partner.records[0].turtles = [];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="int_field"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="turtle_int"/>' +
+                            '<field name="turtle_foo" attrs=\'{"required": [["turtle_int", "=", 0]]}\'/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should start with value 10");
+
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "10",
+            "int_field should still be 10 (no onchange, because line is not valid)");
+
+        // fill turtle_int field
+        form.$('.o_field_widget[name="turtle_int"]').val("1").trigger('input');
+
+        assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "1",
+            "int_field should be 1 (onchange triggered, because line is now valid)");
+
+        form.destroy();
+    });
+
+    QUnit.test('one2many list editable: add new line before onchange returns', function (assert) {
+        // If the user adds a new row (with a required field with onchange), selects
+        // a value for that field, then adds another row before the onchange returns,
+        // the editable list must wait for the onchange to return before trying to
+        // unselect the first row, otherwise it will be detected as invalid.
+        assert.expect(7);
+
+        this.data.turtle.onchanges = {
+            turtle_trululu: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // add a first line but hold the onchange back
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have created the first row immediately");
+        def = $.Deferred();
+        form.$('.o_field_many2one input').click();
+        form.$('.o_field_many2one input').autocomplete('widget').find('a').first().click();
+
+        // try to add a second line and check that it is correctly waiting
+        // for the onchange to return
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal').length, 0, "no modal should be displayed");
+        assert.strictEqual($('.o_field_invalid').length, 0,
+            "no field should be marked as invalid");
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should wait for the onchange to create the second row");
+        assert.ok(form.$('.o_data_row').hasClass('o_selected_row'),
+            "first row should still be in edition");
+
+        // resolve the onchange def
+        def.resolve();
+        assert.strictEqual(form.$('.o_data_row').length, 2,
+            "second row should now have been created");
+        assert.notOk(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            "first row should no more be in edition");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: multiple clicks on Add an item do not create invalid rows', function (assert) {
+        assert.expect(3);
+
+        this.data.turtle.onchanges = {
+            turtle_trululu: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="turtle_trululu" required="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // click twice to add a new line
+        def = $.Deferred();
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('.o_data_row').length, 0,
+            "no row should have been created yet (waiting for the onchange)");
+
+        // resolve the onchange def
+        def.resolve();
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "only one row should have been created");
+        assert.ok(form.$('.o_data_row:first').hasClass('o_selected_row'),
+            "the created row should be in edition");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: value reset by an onchange', function (assert) {
+        // this test reproduces a subtle behavior that may occur in a form view:
+        // the user adds a record in a one2many field, and directly clicks on a
+        // datetime field of the form view which has an onchange, which totally
+        // overrides the value of the one2many (commands 5 and 0). The handler
+        // that switches the edited row to readonly is then called after the
+        // new value of the one2many field is applied (the one returned by the
+        // onchange), so the row that must go to readonly doesn't exist anymore.
+        assert.expect(2);
+
+        this.data.partner.onchanges = {
+            datetime: function (obj) {
+                obj.turtles = [[5], [0, 0, {display_name: 'new'}]];
+            },
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="datetime"/>' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // trigger the two onchanges
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_data_row .o_field_widget').val('a name').trigger('input');
+        def = $.Deferred();
+        form.$('.o_datepicker_input').click(); // focusout o2m and set value to today
+
+        // resolve the onchange def
+        def.resolve();
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "should have one record in the o2m");
+        assert.strictEqual(form.$('.o_data_row .o_data_cell').text(), 'new',
+            "should be the record created by the onchange");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list: onchange that returns a warning', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.onchanges = {
+            display_name: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="bottom">' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    assert.step(args.method);
+                    return $.when({
+                        value: {},
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner"
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+            intercepts: {
+                warning: function () {
+                    assert.step('warning');
+                },
+            },
+        });
+
+        // add a line (this should trigger an onchange and a warning)
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        // check if 'Add an item' still works (this should trigger an onchange
+        // and a warning again)
+        form.$('.o_field_x2many_list_row_add a').click();
+
+        assert.verifySteps(['onchange', 'warning', 'onchange', 'warning']);
 
         form.destroy();
     });
@@ -3579,6 +4804,31 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many list: list of id as default value', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.turtles.default = [2, 3];
+        this.data.partner.fields.turtles.type = "many2many";
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('td.o_data_cell').text(), "blipkawa",
+            "should have loaded default data");
+
+        form.destroy();
+    });
+
     QUnit.test('many2many list with x2many: add a record', function (assert) {
         assert.expect(18);
 
@@ -3647,6 +4897,91 @@ QUnit.module('relational_fields', {
             'read on partner_type',
             'read on turtle',
             [2, 3],
+        ]);
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many with a domain', function (assert) {
+        // The domain specified on the field should not be replaced by the potential
+        // domain the user writes in the dialog, they should rather be concatenated
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" domain="[[\'display_name\', \'=\', \'gold\']]"/>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner_type,false,list': '<tree>' +
+                        '<field name="display_name"/>' +
+                    '</tree>',
+                'partner_type,false,search': '<search>' +
+                        '<field name="display_name" string="Name"/>' +
+                    '</search>',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual($('.modal .o_data_row').length, 1,
+            "should contain only one row (gold)");
+
+        $('.modal .o_searchview_input').trigger({type: 'keypress', which: 115}); // s
+        $('.modal .o_searchview_input').trigger({type: 'keydown', which: 13}); // enter
+
+        assert.strictEqual($('.modal .o_data_row').length, 0, "should contain no row");
+
+        form.destroy();
+    });
+
+    QUnit.test('many2many list with onchange and edition of a record', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.turtles.type = "many2many";
+        this.data.partner.onchanges.turtles = function () {};
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'turtle,false,form': '<form string="Turtle Power"><field name="turtle_bar"/></form>',
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('td.o_data_cell:first').click();
+
+        $('.modal-body input[type="checkbox"]').click();
+        $('.modal .modal-footer .btn-primary').first().click();
+
+        // there is nothing left to save -> should not do a 'write' RPC
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps([
+            'read', // read initial record (on partner)
+            'read', // read many2many turtles
+            'read', // read missing field when opening record in modal form view
+            'write', // when saving the modal
+            'onchange', // onchange should be triggered on partner
+            'read', // reload many2many
         ]);
 
         form.destroy();
@@ -3927,7 +5262,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('widget selection,  edition and on many2one field', function (assert) {
-        assert.expect(15);
+        assert.expect(18);
 
         this.data.partner.onchanges = {product_id: function () {}};
         this.data.partner.records[0].product_id = 37;
@@ -3952,6 +5287,13 @@ QUnit.module('relational_fields', {
         });
 
         assert.ok(!form.$('select').length, "should not have a select tag in dom");
+        assert.strictEqual(form.$('.o_field_widget[name=product_id]').text(), 'xphone',
+            "should have rendered the many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=trululu]').text(), '',
+            "should have rendered the unset many2one field correctly");
+        assert.strictEqual(form.$('.o_field_widget[name=color]').text(), 'Red',
+            "should have rendered the selection field correctly");
+
         form.$buttons.find('.o_form_button_edit').click();
 
         assert.strictEqual(form.$('select').length, 3,
@@ -3976,6 +5318,65 @@ QUnit.module('relational_fields', {
         count = 0;
         form.reload();
         assert.strictEqual(count, 1, "should not reload product_id relation");
+        form.destroy();
+    });
+
+    QUnit.test('unset selection field with 0 as key', function (assert) {
+        // The server doesn't make a distinction between false value (the field
+        // is unset), and selection 0, as in that case the value it returns is
+        // false. So the client must convert false to value 0 if it exists.
+        assert.expect(2);
+
+        this.data.partner.fields.selection = {
+            type: "selection",
+            selection: [[0, "Value O"], [1, "Value 1"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="selection"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Value O',
+            "the displayed value should be 'Value O'");
+        assert.notOk(form.$('.o_field_widget').hasClass('o_field_empty'),
+            "should not have class o_field_empty");
+
+        form.destroy();
+    });
+
+    QUnit.test('unset selection field with string keys', function (assert) {
+        // The server doesn't make a distinction between false value (the field
+        // is unset), and selection 0, as in that case the value it returns is
+        // false. So the client must convert false to value 0 if it exists. In
+        // this test, it doesn't exist as keys are strings.
+        assert.expect(2);
+
+        this.data.partner.fields.selection = {
+            type: "selection",
+            selection: [['0', "Value O"], ['1', "Value 1"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="selection"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget').text(), '',
+            "there should be no displayed value");
+        assert.ok(form.$('.o_field_widget').hasClass('o_field_empty'),
+            "should have class o_field_empty");
+
         form.destroy();
     });
 
@@ -4317,7 +5718,6 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
     QUnit.test('fieldradio widget on a selection in a new record', function (assert) {
         assert.expect(4);
 
@@ -4342,6 +5742,55 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('fieldradio widget with numerical keys encoded as strings', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.selection = {
+            type: 'selection',
+            selection: [['0', "Red"], ['1', "Black"]],
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="selection" widget="radio"/>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.strictEqual(args.args[1].selection, '1',
+                        "should write correct value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        assert.strictEqual(form.$('.o_field_widget').text(), '',
+            "field should be unset");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_radio_input:checked').length, 0,
+            "no value should be checked");
+
+        form.$("input.o_radio_input:nth(1)").click(); // click on 2nd option
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_field_widget').text(), 'Black',
+            "value should be 'Black'");
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('.o_radio_input[data-index=1]:checked').length, 1,
+            "'Black' should be checked");
+
         form.destroy();
     });
 
@@ -4377,7 +5826,7 @@ QUnit.module('relational_fields', {
         assert.notOk(form.$('div.o_field_widget div.o_checkbox input').prop('disabled'),
             "the checkboxes should not be disabled");
 
-        // add a m2m value
+        // add a m2m value by clicking on input
         form.$('div.o_field_widget div.o_checkbox input').eq(1).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [12, 14],
@@ -4385,9 +5834,9 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('input:checked').length, 2,
             "both checkboxes should be checked");
 
-        // remove a m2m value
+        // remove a m2m value by clinking on label
         form.$buttons.find('.o_form_button_edit').click();
-        form.$('div.o_field_widget div.o_checkbox input').eq(0).click();
+        form.$('div.o_field_widget div.o_checkbox + label').eq(0).click();
         form.$buttons.find('.o_form_button_save').click();
         assert.deepEqual(this.data.partner.records[0].timmy, [14],
             "should have removed the first element to the many2many");
@@ -4478,6 +5927,52 @@ QUnit.module('relational_fields', {
 
         form.destroy();
     });
+
+    QUnit.test('name_create in form dialog', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="bar"/>' +
+                            '</tree>' +
+                            '<form>' +
+                                '<field name="product_id"/>' +
+                            '</form>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_create') {
+                    assert.step('name_create');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_x2many_list_row_add a').click();
+        var $dropdown = $('.modal .o_field_many2one input').autocomplete('widget');
+        $('.modal input').val('new record').trigger('keydown');
+        concurrency.delay(0).then(function () {
+            $dropdown.find('li:first()').click(); // quick create 'new record'
+            assert.verifySteps(['name_create']);
+
+            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            form.destroy();
+            done();
+        });
+    });
+
 });
 });
 });

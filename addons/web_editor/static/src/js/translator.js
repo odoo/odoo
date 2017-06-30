@@ -13,21 +13,6 @@ var _t = core._t;
 var translatable = !!$('html').data('translatable');
 var edit_translations = !!$('html').data('edit_translations');
 
-$.fn.extend({
-  prependEvent: function (events, selector, data, handler) {
-    this.on(events, selector, data, handler);
-    events = events.split(' ');
-    this.each(function () {
-        var el = this;
-        _.each(events, function (event) {
-            var handler = $._data(el, 'events')[event].pop();
-            $._data(el, 'events')[event].unshift(handler);
-        });
-    });
-    return this;
-  }
-});
-
 var RTE_Translate = rte.Class.extend({
     saveElement: function ($el, context) {
         // remove multi edition

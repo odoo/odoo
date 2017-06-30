@@ -224,7 +224,7 @@
                                     <field name="qty_invoiced" invisible="not context.get('show_purchase', True)"/>
                                     <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}"/>
                                     <field name="price_unit"/>
-                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase'}" options="{'no_create': True'}"/>
                                     <field name="price_subtotal" widget="monetary"/>
                                 </tree>
                                 <form string="Purchase Order Line">
@@ -242,7 +242,7 @@
                                                 <field name="price_unit"/>
                                             </group>
                                             <group>
-                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]"/>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True'}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -267,7 +267,7 @@
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <field name="notes" class="oe_inline" placeholder="An administrator can set up default Terms and conditions in your Company settings."/>
+                            <field name="notes" class="oe_inline" placeholder="Define your terms and conditions ..."/>
                             <div class="oe_clear"/>
                         </page>
                         <page string="Deliveries &amp; Invoices">
@@ -321,7 +321,7 @@
                     <separator/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status','=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
                     <filter name="invoiced" string="Bills Received" domain="[('invoice_status','=', 'invoiced')]" help="Purchase orders that have been invoiced."/>
-                    <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>

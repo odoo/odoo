@@ -83,10 +83,10 @@ var DebouncedField = AbstractField.extend({
     init: function () {
         this._super.apply(this, arguments);
 
-        // _debouncedStarted is used to detect that the user interacted at least
+        // _isDirty is used to detect that the user interacted at least
         // once with the widget, so that we can prevent it from triggering a
         // field_changed in commitChanges if the user didn't change anything
-        this._debouncedStarted = false;
+        this._isDirty = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
                 this._doDebouncedAction = _.debounce(this._doAction, this.DEBOUNCE);
@@ -97,7 +97,7 @@ var DebouncedField = AbstractField.extend({
             var self = this;
             var debouncedFunction = this._doDebouncedAction;
             this._doDebouncedAction = function () {
-                self._debouncedStarted = true;
+                self._isDirty = true;
                 debouncedFunction.apply(self, arguments);
             };
         }
@@ -115,7 +115,7 @@ var DebouncedField = AbstractField.extend({
      * @override
      */
     commitChanges: function () {
-        if (this._debouncedStarted && this.mode === 'edit') {
+        if (this._isDirty && this.mode === 'edit') {
             this._doAction();
         }
     },
@@ -132,7 +132,13 @@ var DebouncedField = AbstractField.extend({
      * @private
      */
     _doAction: function () {
-        this._setValue(this._getValue());
+        // as _doAction may be debounced, it may happen that it is called after
+        // the widget has been destroyed, and in this case, we don't want it to
+        // do anything (commitChanges ensures that if it has local changes, they
+        // are triggered up before the widget is destroyed, if necessary).
+        if (!this.isDestroyed()) {
+            this._setValue(this._getValue());
+        }
     },
     /**
      * Should return the current value of the field, in the DOM (for example,
@@ -159,6 +165,7 @@ var InputField = DebouncedField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.nodeOptions.isPassword = 'password' in this.attrs;
         if (this.mode === 'edit') {
             this.tagName = 'input';
         }
@@ -216,8 +223,11 @@ var InputField = DebouncedField.extend({
         this.$input = $input || $("<input/>");
         this.$input.addClass('o_input');
         this.$input.attr({
-            type: 'text',
+            type: this.nodeOptions.isPassword ? 'password' : 'text',
             placeholder: this.attrs.placeholder || "",
+            autocomplete: this.nodeOptions.isPassword ?
+                'new-password' :
+                this.attrs.autocomplete,
         });
         this.$input.val(this._formatValue(this.value));
         return this.$input;
@@ -240,7 +250,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.html(this._formatValue(this.value));
+        this.$el.text(this._formatValue(this.value));
     },
 
     //--------------------------------------------------------------------------
@@ -275,11 +285,15 @@ var InputField = DebouncedField.extend({
      */
     _onNavigationMove: function (ev) {
         this._super.apply(this, arguments);
-        var input = this.$input[0];
-        var selecting = (input.selectionEnd !== input.selectionStart);
-        if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-         || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
-            ev.stopPropagation();
+
+        // the following code only makes sense in edit mode, with an input
+        if (this.mode === 'edit') {
+            var input = this.$input[0];
+            var selecting = (input.selectionEnd !== input.selectionStart);
+            if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
+             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                ev.stopPropagation();
+            }
         }
     },
 });
@@ -311,6 +325,14 @@ var FieldDate = InputField.extend({
     tagName: "span",
     supportedFieldTypes: ['date'],
 
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        // use the session timezone when formatting dates
+        this.formatOptions.timezone = true;
+    },
     /**
      * In edit mode, instantiates a DateWidget datepicker and listen to changes.
      *
@@ -386,17 +408,6 @@ var FieldDate = InputField.extend({
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.date(value, {timezone: true});
-    },
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -438,17 +449,6 @@ var FieldDateTime = FieldDate.extend({
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
-
-    /**
-     * FieldDateTime overrides _formatValue to use the session timezone
-     *
-     * @override
-     * @private
-     * @param {Moment} value
-     */
-    _formatValue: function (value) {
-        return field_utils.format.datetime(value, {timezone: true});
-    },
 });
 
 var FieldMonetary = InputField.extend({
@@ -480,6 +480,13 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
         }
+
+        // use the formatFloat function in edit
+        if (this.mode === 'edit') {
+            this.formatType = 'float';
+        }
+        this.formatOptions.currency = this.currency;
+        this.formatOptions.digits = [16, 2];
     },
 
     //--------------------------------------------------------------------------
@@ -524,6 +531,13 @@ var FieldMonetary = InputField.extend({
         }
     },
     /**
+     * @override
+     * @private
+     */
+    _renderReadonly: function () {
+        this.$el.html(this._formatValue(this.value));
+    },
+    /**
      * Re-gets the currency as its value may have changed.
      * @see FieldMonetary.resetOnAnyFieldChange
      *
@@ -541,25 +555,9 @@ var FieldMonetary = InputField.extend({
      * @private
      */
     _setCurrency: function () {
-        var currencyField = this.attrs.currency_field || this.field.currency_field || 'currency_id';
+        var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
-    },
-    /**
-     * FieldMonetary overrides _formatValue to use the format monetary method
-     * in readonly.
-     *
-     * @override
-     * @private
-     * @param {float} value
-     * @returns {string}
-     */
-    _formatValue: function (value) {
-        var format = field_utils.format[this.mode === 'edit' ? "float" : "monetary"];
-        return format(value, this.field, {
-            digits: [16, 2],
-            currency: this.currency,
-        });
     },
 });
 
@@ -669,6 +667,11 @@ var FieldBoolean = AbstractField.extend({
                 this.$input.prop('checked', !this.value);
                 this._setValue(!this.value);
                 return;
+            case $.ui.keyCode.UP:
+            case $.ui.keyCode.RIGHT:
+            case $.ui.keyCode.DOWN:
+            case $.ui.keyCode.LEFT:
+                ev.preventDefault();
         }
         this._super.apply(this, arguments);
     },
@@ -717,7 +720,7 @@ var FieldInteger = InputField.extend({
             }
             return value;
         }
-        return field_utils.format.integer(value, this.field);
+        return this._super.apply(this, arguments);
     },
 });
 
@@ -754,31 +757,11 @@ var FieldFloat = InputField.extend({
 });
 
 var FieldFloatTime = FieldFloat.extend({
-    supportedFieldTypes: ['float'],
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Format the float time value into a human-readable time format.
-     *
-     * @override
-     * @private
-     */
-    _formatValue: function (value) {
-        return field_utils.format.float_time(value);
-    },
-
-    /**
-     * Parse the human-readable formatted time value into a float.
-     *
-     * @override
-     * @private
-     */
-    _parseValue: function (value) {
-        return field_utils.parse.float_time(value);
-    },
+    // this is not strictly necessary, as for this widget to be used, the 'widget'
+    // attrs must be set to 'float_time', so the formatType is automatically
+    // 'float_time', but for the sake of clarity, we explicitely define a
+    // FieldFloatTime widget with formatType = 'float_time'.
+    formatType: 'float_time',
 });
 
 var FieldText = InputField.extend(TranslatableFieldMixin, {
@@ -836,6 +819,19 @@ var FieldEmail = InputField.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -870,6 +866,17 @@ var FieldPhone = FieldEmail.extend({
             this.tagName = 'span';
         }
     },
+    /**
+     * Returns the associated link only if there is one.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        if (this._canCall()) {
+            return this._super.apply(this, arguments);
+        }
+        return $();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -885,8 +892,8 @@ var FieldPhone = FieldEmail.extend({
     _renderReadonly: function () {
         this._super();
         if (this._canCall()) {
-            var text = this.$el.text();
             // Split phone number into two to prevent Skype app from finding it
+            var text = this.$el.text();
             var part1 = _.escape(text.substr(0, text.length/2));
             var part2 = _.escape(text.substr(text.length/2));
             this.$el.html(part1 + "&shy;" + part2);
@@ -921,6 +928,19 @@ var UrlWidget = InputField.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the associated link.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.mode === 'readonly' ? this.$el : this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -1024,7 +1044,13 @@ var AbstractFieldBinary = AbstractField.extend({
     set_filename: function (value) {
         var filename = this.attrs.filename;
         if (filename && filename in this.fields) {
-            this.trigger_up('update_field', { name: filename, value: value });
+            var changes = {};
+            changes[filename] = value;
+            this.trigger_up('field_changed', {
+                dataPointID: this.dataPointID,
+                changes: changes,
+                viewType: this.viewType,
+            });
         }
     },
     on_clear: function () {
@@ -1264,8 +1290,26 @@ var PriorityWidget = AbstractField.extend({
     },
 });
 
-var AttachmentImage =  AbstractField.extend({
-    template: 'AttachmentImage',
+var AttachmentImage = AbstractField.extend({
+    className: 'o_attachment_image',
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Reset cover image when widget value change
+     *
+     * @private
+     */
+    _render: function () {
+        if (this.value) {
+            this.$el.empty().append($('<img>/', {
+                src: "/web/image/" + this.value.data.id + "?unique=1",
+                title: this.value.data.display_name
+            }));
+        }
+    }
 });
 
 var StateSelectionWidget = AbstractField.extend({
@@ -1543,7 +1587,7 @@ var FieldPercentPie = AbstractField.extend({
         this.$leftMask.css({transform: leftDeg, msTransform: leftDeg, mozTransform: leftDeg, webkitTransform: leftDeg});
         this.$rightMask.css({transform: rightDeg, msTransform: rightDeg, mozTransform: rightDeg, webkitTransform: rightDeg});
 
-        this.$pieValue.html(Math.round(value) + '%');
+        this.$pieValue.text(Math.round(value) + '%');
     },
 });
 
@@ -1684,9 +1728,9 @@ var FieldProgressBar = AbstractField.extend({
 
         if (!this.write_mode) {
             if (max_value !== 100) {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + " / " + utils.human_number(max_value));
+                this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
             } else {
-                this.$('.o_progressbar_value').html(utils.human_number(value) + "%");
+                this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
             }
         } else if (isNaN(v)) {
             this.$('.o_progressbar_value').val(this.edit_max_value ? max_value : value);

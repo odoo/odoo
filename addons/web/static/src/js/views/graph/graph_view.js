@@ -27,11 +27,11 @@ var GraphView = AbstractView.extend({
     /**
      * @override
      */
-    init: function (viewInfo) {
+    init: function (viewInfo, params) {
         this._super.apply(this, arguments);
 
-        var initialMeasure = '__count__';
-        var initialGroupBys = [];
+        var measure;
+        var groupBys = [];
         viewInfo.fields = _.defaults({__count__: {string: _t("Count"), type: "integer"}}, viewInfo.fields);
         viewInfo.arch.children.forEach(function (field) {
             var name = field.attrs.name;
@@ -39,9 +39,9 @@ var GraphView = AbstractView.extend({
                 name += ':' + field.attrs.interval;
             }
             if (field.attrs.type === 'measure') {
-                initialMeasure = name;
+                measure = name;
             } else {
-                initialGroupBys.push(name);
+                groupBys.push(name);
             }
         });
 
@@ -57,9 +57,9 @@ var GraphView = AbstractView.extend({
         this.controllerParams.measures = measures;
         this.rendererParams.stacked = viewInfo.arch.attrs.stacked !== "False";
 
-        this.loadParams.initialMode = viewInfo.arch.attrs.type || 'bar';
-        this.loadParams.initialMeasure = initialMeasure;
-        this.loadParams.initialGroupBys = initialGroupBys;
+        this.loadParams.mode = params.context.graph_mode || viewInfo.arch.attrs.type || 'bar';
+        this.loadParams.measure = params.context.graph_measure || measure || '__count__';
+        this.loadParams.groupBys = params.context.graph_groupbys || groupBys || [];
         this.loadParams.fields = viewInfo.fields;
     },
 });

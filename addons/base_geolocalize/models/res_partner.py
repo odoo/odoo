@@ -9,8 +9,9 @@ from odoo.exceptions import UserError
 
 
 def geo_find(addr):
+    if not addr:
+        return None
     url = 'https://maps.googleapis.com/maps/api/geocode/json'
-
     try:
         result = requests.get(url, params={'sensor': 'false', 'address': addr}).json()
     except Exception as e:

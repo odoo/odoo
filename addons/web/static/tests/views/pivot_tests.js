@@ -1,6 +1,7 @@
 odoo.define('web.pivot_tests', function (require) {
 "use strict";
 
+var Context = require('web.Context');
 var core = require('web.core');
 var PivotView = require('web.PivotView');
 var testUtils = require('web.test_utils');
@@ -81,7 +82,7 @@ QUnit.module('Views', {
     QUnit.module('PivotView');
 
     QUnit.test('simple pivot rendering', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var pivot = createView({
             View: PivotView,
@@ -97,6 +98,8 @@ QUnit.module('Views', {
             },
         });
 
+        assert.ok(pivot.$el.hasClass('o_enable_linking'),
+            "root node should have classname 'o_enable_linking'");
         assert.strictEqual(pivot.$('td.o_pivot_cell_value:contains(32)').length, 1,
                     "should contain a pivot cell with the sum of all records");
         pivot.destroy();
@@ -116,6 +119,77 @@ QUnit.module('Views', {
 
         // this is important for export functionality.
         assert.strictEqual(pivot.title, _t("Untitled"), "should have a valid title");
+        pivot.destroy();
+    });
+
+    QUnit.test('clicking on a cell triggers a do_action', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="product_id" type="row"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            intercepts: {
+                do_action: function (ev) {
+                    assert.deepEqual(ev.data.action, {
+                        context: {someKey: true, userContextKey: true},
+                        domain: [['product_id', '=', 37]],
+                        name: 'Partners',
+                        res_model: 'partner',
+                        target: 'current',
+                        type: 'ir.actions.act_window',
+                        view_mode: 'list',
+                        view_type: 'list',
+                        views: [[false, 'list'], [2, 'form']],
+                    }, "should trigger do_action with the correct args");
+                },
+            },
+            session: {
+                user_context: {userContextKey: true},
+            },
+            viewOptions: {
+                action: {
+                    views: [[2, 'form'], [5, 'kanban'], [false, 'list'], [false, 'pivot']],
+                },
+                context: {someKey: true, search_default_test: 3},
+                title: 'Partners',
+            }
+        });
+
+        assert.ok(pivot.$el.hasClass('o_enable_linking'),
+            "root node should have classname 'o_enable_linking'");
+        pivot.$('.o_pivot_cell_value:contains(12)').click(); // should trigger a do_action
+
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view with disable_linking="True"', function (assert) {
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot disable_linking="True">' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            intercepts: {
+                do_action: function () {
+                    assert.ok(false, "should not trigger do_action");
+                },
+            },
+        });
+
+        assert.notOk(pivot.$el.hasClass('o_enable_linking'),
+            "root node should not have classname 'o_enable_linking'");
+        assert.strictEqual(pivot.$('.o_pivot_cell_value').length, 1,
+            "should have one cell");
+        pivot.$('.o_pivot_cell_value').click(); // should not trigger a do_action
+
         pivot.destroy();
     });
 
@@ -551,11 +625,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('can expand all rows', function (assert) {
-        // FIXME: This test depends on an incomplete behavior of the mock server
-        //        and will need to be updated when read_group can group on
-        //        multiple field levels.
-        assert.expect(4);
+        assert.expect(7);
 
+        var nbReadGroups = 0;
         var pivot = createView({
             View: PivotView,
             model: "partner",
@@ -564,29 +636,191 @@ QUnit.module('Views', {
                         '<field name="foo" type="measure"/>' +
                         '<field name="product_id" type="row"/>' +
                 '</pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    nbReadGroups++;
+                }
+                return this._super.apply(this, arguments);
+            },
         });
 
+        assert.strictEqual(nbReadGroups, 2, "should have done 2 read_group RPCS");
         assert.strictEqual(pivot.$('td.o_pivot_cell_value').text(), "321220",
-            "should have proper values in cells (total, result 1, result 2");
+            "should have proper values in cells (total, result 1, result 2)");
 
         // expand on date:days, product
-        pivot.update({groupBy: ['date:days', 'product']});
+        nbReadGroups = 0;
+        pivot.update({groupBy: ['date:days', 'product_id']});
 
-        assert.strictEqual(pivot.$('tbody tr').length, 7,
-            "should have 7 rows (total + 2 for each category)");
+        assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 7 rows (total + 3 for December and 2 for October and April)");
 
         // collapse the last two rows
         pivot.$('.o_pivot_header_cell_opened').last().click();
         pivot.$('.o_pivot_header_cell_opened').last().click();
 
-        assert.strictEqual(pivot.$('tbody tr').length, 5,
-            "should have 5 rows now");
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows now");
 
         // expand all
-        $('.o_pivot_expand_button').click();
+        nbReadGroups = 0;
+        pivot.$buttons.find('.o_pivot_expand_button').click();
 
-        assert.strictEqual(pivot.$('tbody tr').length, 7,
-            "should have 7 rows again");
+        assert.strictEqual(nbReadGroups, 3, "should have done 3 read_group RPCS");
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 8 rows again");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('expand all with a delay', function (assert) {
+        assert.expect(3);
+
+        var def;
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="foo" type="measure"/>' +
+                        '<field name="product_id" type="row"/>' +
+                '</pivot>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'read_group') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        // expand on date:days, product
+        pivot.update({groupBy: ['date:days', 'product_id']});
+
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 7 rows (total + 3 for December and 2 for October and April)");
+
+        // collapse the last two rows
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+        pivot.$('.o_pivot_header_cell_opened').last().click();
+
+        assert.strictEqual(pivot.$('tbody tr').length, 6,
+            "should have 6 rows now");
+
+        // expand all
+        def = $.Deferred();
+        pivot.$buttons.find('.o_pivot_expand_button').click();
+        def.resolve();
+
+        assert.strictEqual(pivot.$('tbody tr').length, 8,
+            "should have 8 rows again");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('can download a file', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="month" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            session: {
+                get_file: function (args) {
+                    assert.strictEqual(args.url, '/web/pivot/export_xls',
+                        "should call get_file with correct parameters");
+                    args.complete();
+                },
+            },
+        });
+
+        $('.o_pivot_download').click();
+        pivot.destroy();
+    });
+
+    QUnit.test('getContext correctly returns measures and groupbys', function (assert) {
+        assert.expect(3);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="day" type="col"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: [],
+        }, "context should be correct");
+
+        // expand header on field customer
+        pivot.$('thead .o_pivot_header_cell_closed:nth(1)').click();
+        pivot.$('ul.o_pivot_field_menu > li[data-field="customer"] a').click();
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day', 'customer'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: [],
+        }, "context should be correct");
+
+        // expand row on field product_id
+        pivot.$('tbody .o_pivot_header_cell_closed').first().click();
+        pivot.$('ul.o_pivot_field_menu > li[data-field="product_id"] a').click();
+        assert.deepEqual(pivot.getContext(), {
+            pivot_column_groupby: ['date:day', 'customer'],
+            pivot_measures: ['foo'],
+            pivot_row_groupby: ['product_id'],
+        }, "context should be correct");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('correctly uses pivot_ keys from the context', function (assert) {
+        assert.expect(7);
+
+        this.data.partner.fields.amount = {string: "Amount", type: "float"};
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="day" type="col"/>' +
+                        '<field name="amount" type="measure"/>' +
+                '</pivot>',
+            viewOptions: {
+                context: {
+                    pivot_measures: ['foo'],
+                    pivot_column_groupby: ['customer'],
+                    pivot_row_groupby: ['product_id'],
+                },
+            },
+        });
+
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            "column: should have one opened header");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(First)').length, 1,
+            "column: should display one closed header with 'First'");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(Second)').length, 1,
+            "column: should display one closed header with 'Second'");
+
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            "row: should have one opened header");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xphone)').length, 1,
+            "row: should display one closed header with 'xphone'");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xpad)').length, 1,
+            "row: should display one closed header with 'xpad'");
+
+        assert.strictEqual(pivot.$('tbody tr:first td:nth(3)').text(), '32',
+            "selected measure should be foo, with total 32");
 
         pivot.destroy();
     });

@@ -67,21 +67,36 @@ var BasicView = AbstractView.extend({
             var viewType = this.viewType;
             var viewFields = Object.keys(record.fieldsInfo[viewType]);
             var fieldNames = _.difference(viewFields, Object.keys(record.data));
+            var fieldsInfo = record.fieldsInfo[viewType];
+
             // Suppose that in a form view, there is an x2many list view with
-            // an x2many field F of the related record, and that F is also
-            // displayed in the x2many form view (e.g. as a list or a kanban).
-            // In this case, F is represented in record.data
-            // (as it is known by the x2many list view), but its related fields
-            // (those displayed in the list or kanban) still need to be fetched.
+            // a field F, and that F is also displayed in the x2many form view.
+            // In this case, F is represented in record.data (as it is known by
+            // the x2many list view), but the loaded information may not suffice
+            // in the form view (e.g. if field is a many2many list in the form
+            // view, or if it is displayed by a widget requiring specialData).
             // So when this happens, F is added to the list of fieldNames to fetch.
             _.each(viewFields, function (name) {
                 if (!_.contains(fieldNames, name)) {
                     var fieldType = record.fields[name].type;
+                    var fieldInfo = fieldsInfo[name];
+
+                    // SpecialData case: field requires specialData that haven't
+                    // been fetched yet.
+                    if (fieldInfo.Widget) {
+                        var requiresSpecialData = fieldInfo.Widget.prototype.specialData;
+                        if (requiresSpecialData && !(name in record.specialData)) {
+                            fieldNames.push(name);
+                            return;
+                        }
+                    }
+
+                    // X2Many case: field is an x2many displayed as a list or
+                    // kanban view, but the related fields haven't been loaded yet.
                     if ((fieldType === 'one2many' || fieldType === 'many2many')) {
                         if (!('fieldsInfo' in record.data[name])) {
                             fieldNames.push(name);
                         } else {
-                            var fieldInfo = record.fieldsInfo[viewType][name];
                             var fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
                             var fieldViewTypes = Object.keys(fieldViews);
                             var recordViewTypes = Object.keys(record.data[name].fieldsInfo);

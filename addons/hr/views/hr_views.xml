@@ -354,6 +354,7 @@
                         </div>
                         <group>
                             <group string="Recruitment" name="recruitment">
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="department_id"/>
                                 <field name="no_of_recruitment"/>
                             </group>
@@ -521,7 +522,7 @@
                                 <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
-                                        <div class="o_secondary"><field name="company_id"/></div>
+                                        <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
                                     </div>
                                     <div class="o_kanban_manage_button_section">
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>

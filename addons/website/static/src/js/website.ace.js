@@ -3,17 +3,22 @@ odoo.define('website.ace', function (require) {
 
 var Widget = require('web.Widget');
 var website = require('website.website');
+var mixins = require('web.mixins');
 
 var ViewEditor = require('web_editor.ace');
 
 var hash = "#advanced-view-editor";
 
-var Ace = Widget.extend({
+var Ace = Widget.extend(mixins.ServiceProvider, {
     events: {
         "click a[data-action=ace]": function (e) {
             e.preventDefault();
             this.launchAce();
         },
+    },
+    init: function () {
+        mixins.ServiceProvider.init.apply(this, arguments);
+        this._super.apply(this, arguments);
     },
     start: function () {
         if (window.location.hash.substr(0, hash.length) === hash) {

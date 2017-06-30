@@ -15,7 +15,7 @@ class AccountInvoice(models.Model):
 
     def _default_comment(self):
         invoice_type = self.env.context.get('type', 'out_invoice')
-        if invoice_type == 'out_invoice':
+        if invoice_type == 'out_invoice' and self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
             return self.env.user.company_id.sale_note
 
     team_id = fields.Many2one('crm.team', string='Sales Channel', default=_get_default_team, oldname='section_id')
@@ -89,6 +89,9 @@ class AccountInvoice(models.Model):
     def get_delivery_partner_id(self):
         self.ensure_one()
         return self.partner_shipping_id.id or super(AccountInvoice, self).get_delivery_partner_id()
+
+    def _get_refund_common_fields(self):
+        return super(AccountInvoice, self)._get_refund_common_fields() + ['team_id', 'partner_shipping_id']
 
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'

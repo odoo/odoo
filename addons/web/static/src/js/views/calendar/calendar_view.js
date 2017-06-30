@@ -125,6 +125,7 @@ var CalendarView = AbstractView.extend({
         this.loadParams.fields = fields;
         this.loadParams.fieldsInfo = viewInfo.fieldsInfo;
         this.loadParams.editable = !fields[mapping.date_start].readonly;
+        this.loadParams.creatable = true;
         this.loadParams.eventLimit = eventLimit;
         this.loadParams.fieldColor = attrs.color;
 

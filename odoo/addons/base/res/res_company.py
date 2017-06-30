@@ -14,6 +14,19 @@ class Company(models.Model):
     _description = 'Companies'
     _order = 'sequence, name'
 
+    @api.multi
+    def copy(self, default=None):
+        """
+        Duplicating a company without specifying a partner duplicate the partner
+        """
+        self.ensure_one()
+        default = dict(default or {})
+        if not default.get('name') and not default.get('partner_id'):
+            copy_partner = self.partner_id.copy()
+            default['partner_id'] = copy_partner.id
+            default['name'] = copy_partner.name
+        return super(Company, self).copy(default)
+
     def _get_logo(self):
         return open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
@@ -27,6 +40,7 @@ class Company(models.Model):
         return currency_id or self._get_euro()
 
     name = fields.Char(related='partner_id.name', string='Company Name', required=True, store=True)
+    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     parent_id = fields.Many2one('res.company', string='Parent Company', index=True)
     child_ids = fields.One2many('res.company', 'parent_id', string='Child Companies')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
@@ -52,7 +66,6 @@ class Company(models.Model):
     website = fields.Char(related='partner_id.website')
     vat = fields.Char(related='partner_id.vat', string="TIN")
     company_registry = fields.Char()
-    sequence = fields.Integer(help='Used to order Companies in the company switcher', default=10)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('report.paperformat_euro', raise_if_not_found=False))
     external_report_layout = fields.Selection([
         ('background', 'Background'),

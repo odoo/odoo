@@ -25,7 +25,7 @@ actions(Check in/Check out) performed by them.
         'report/hr_employee_badge.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
-        'views/res_config_view.xml',
+        'views/attendance_config_settings_views.xml',
     ],
     'demo': [
         'data/hr_attendance_demo.xml'

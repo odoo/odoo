@@ -84,7 +84,7 @@ QUnit.module('Views', {
     QUnit.module('ListView');
 
     QUnit.test('simple readonly list', function (assert) {
-        assert.expect(9);
+        assert.expect(10);
 
         var list = createView({
             View: ListView,
@@ -92,6 +92,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
         });
+
+        assert.notOk(list.$el.hasClass('o_cannot_create'),
+            "should not have className 'o_cannot_create'");
 
         // 3 th (1 for checkbox, 2 for columns)
         assert.strictEqual(list.$('th').length, 3, "should have 3 columns");
@@ -114,8 +117,26 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list with create="0"', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree create="0"><field name="foo"/></tree>',
+        });
+
+        assert.ok(list.$el.hasClass('o_cannot_create'),
+            "should have className 'o_cannot_create'");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add').length, 0,
+            "should not have the 'Create' button");
+
+        list.destroy();
+    });
+
     QUnit.test('simple editable rendering', function (assert) {
-        assert.expect(9);
+        assert.expect(12);
 
         var list = createView({
             View: ListView,
@@ -143,6 +164,15 @@ QUnit.module('Views', {
             "should have a visible save button");
         assert.ok(list.$buttons.find('.o_list_button_discard').is(':visible'),
             "should have a visible discard button");
+
+        list.$buttons.find('.o_list_button_save').click();
+
+        assert.ok(list.$buttons.find('.o_list_button_add').is(':visible'),
+            "should have a visible Create button");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        assert.ok(!list.$buttons.find('.o_list_button_discard').is(':visible'),
+            "should not have a visible discard button");
         list.destroy();
     });
 
@@ -843,6 +873,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('support row decoration (with unset numeric values)', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.records = [];
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="bottom" decoration-danger="int_field &lt; 0">' +
+                    '<field name="int_field"/>' +
+                '</tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 0,
+            "the data row should not have .text-danger decoration (int_field is unset)");
+        list.$('input[name="int_field"]').val('-3').trigger('input');
+        assert.strictEqual(list.$('tr.o_data_row.text-danger').length, 1,
+            "the data row should have .text-danger decoration (int_field is negative)");
+        list.destroy();
+    });
+
     QUnit.test('support row decoration with date', function (assert) {
         assert.expect(3);
 
@@ -1001,6 +1055,24 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with a button without icon', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                    '<field name="foo"/>' +
+                    '<button string="abc" type="object" name="schedule_another_phonecall"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('table button').first().text(), 'abc',
+            "should have rendered a button with string attribute as label");
+        list.destroy();
+    });
+
     QUnit.test('list view, editable, can discard', function (assert) {
         assert.expect(5);
 
@@ -1087,7 +1159,7 @@ QUnit.module('Views', {
             },
             intercepts: {
                 execute_action: function (event) {
-                    assert.strictEqual(event.data.record_id, 1,
+                    assert.deepEqual(event.data.res_ids, [1],
                         'should call with correct id');
                     assert.strictEqual(event.data.model, 'foo',
                         'should call with correct model');
@@ -1432,7 +1504,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('edition: create new line, then discard', function (assert) {
-        assert.expect(2);
+        assert.expect(8);
 
         var list = createView({
             View: ListView,
@@ -1443,10 +1515,22 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden");
         list.$buttons.find('.o_list_button_add').click();
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 0,
+            "create button should be hidden");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 1,
+            "discard button should be visible");
         list.$buttons.find('.o_list_button_discard').click();
         assert.strictEqual(list.$('tr.o_data_row').length, 4,
             "should still have 4 records");
+        assert.strictEqual(list.$buttons.find('.o_list_button_add:visible').length, 1,
+            "create button should be visible again");
+        assert.strictEqual(list.$buttons.find('.o_list_button_discard:visible').length, 0,
+            "discard button should be hidden again");
         list.destroy();
     });
 
@@ -2166,6 +2250,156 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('field values are escaped', function (assert) {
+        assert.expect(1);
+        var value = '<script>throw Error();</script>';
+
+        this.data.foo.records[0].foo = value;
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_cell:first').text(), value,
+            "value should have been escaped");
+
+        list.destroy();
+    });
+
+    QUnit.test('pressing ESC discard the current line changes', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="foo"/></tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+
+        list.$('input[name="foo"]').trigger({type: 'keydown', which: $.ui.keyCode.ESCAPE});
+        assert.strictEqual(list.$('tr.o_data_row').length, 4,
+            "should have 4 data row in list");
+        assert.strictEqual(list.$('tr.o_data_row.o_selected_row').length, 0,
+            "no rows should be selected");
+        assert.ok(!list.$buttons.find('.o_list_button_save').is(':visible'),
+            "should not have a visible save button");
+        list.destroy();
+    });
+
+    QUnit.test('field with password attribute', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo" password="True"/></tree>',
+        });
+
+        assert.strictEqual(list.$('td.o_data_cell:eq(0)').text(), '***',
+            "should display string as password");
+        assert.strictEqual(list.$('td.o_data_cell:eq(1)').text(), '****',
+            "should display string as password");
+
+        list.destroy();
+    });
+
+    QUnit.test('list with handle widget', function (assert) {
+        assert.expect(11);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="int_field" widget="handle"/>' +
+                    '<field name="amount" widget="float" digits="[5,0]"/>' +
+                  '</tree>',
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/resequence') {
+                    assert.strictEqual(args.offset, -4,
+                        "should write the sequence starting from the lowest current one");
+                    assert.strictEqual(args.field, 'int_field',
+                        "should write the right field as sequence");
+                    assert.deepEqual(args.ids, [1, 4, 2 , 3],
+                        "should write the sequence in correct order");
+                    return $.when();
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '1200',
+            "default first record should have amount 1200");
+        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '500',
+            "default second record should have amount 500");
+        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '300',
+            "default third record should have amount 300");
+        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '0',
+            "default third record should have amount 0");
+
+        // Drag and drop the fourth line in second position
+        testUtils.dragAndDrop(
+            list.$('.ui-sortable-handle').eq(3),
+            list.$('tbody tr').first(),
+            {position: 'bottom'}
+        );
+
+        assert.strictEqual(list.$('tbody tr:eq(0) td:last').text(), '1200',
+            "new first record should have amount 1200");
+        assert.strictEqual(list.$('tbody tr:eq(1) td:last').text(), '0',
+            "new second record should have amount 0");
+        assert.strictEqual(list.$('tbody tr:eq(2) td:last').text(), '500',
+            "new third record should have amount 500");
+        assert.strictEqual(list.$('tbody tr:eq(3) td:last').text(), '300',
+            "new third record should have amount 300");
+
+        list.destroy();
+    });
+
+    QUnit.test('multiple clicks on Add do not create invalid rows', function (assert) {
+        assert.expect(2);
+
+        this.data.foo.onchanges = {
+            m2o: function () {},
+        };
+
+        var def = $.Deferred();
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top"><field name="m2o" required="1"/></tree>',
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'onchange') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(list.$('.o_data_row').length, 4,
+            "should contain 4 records");
+
+        // click on Add twice, and delay the onchange
+        list.$buttons.find('.o_list_button_add').click();
+        list.$buttons.find('.o_list_button_add').click();
+
+        def.resolve();
+
+        assert.strictEqual(list.$('.o_data_row').length, 5,
+            "only one record should have been created");
+
+        list.destroy();
+    });
+
 });
 
 });
