@@ -7,7 +7,7 @@
     'summary': 'Sales Channels',
     'description': """
 Using this application you can manage Sales Channels  with CRM and/or Sales
-=======================================================================
+===========================================================================
  """,
     'website': 'https://www.odoo.com/page/crm',
     'depends': ['base', 'mail'],
