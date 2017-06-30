@@ -335,6 +335,7 @@ class AccountBankStatement(models.Model):
             'st_lines_ids': st_lines_left.ids,
             'notifications': [],
             'statement_name': len(statements) == 1 and statements[0].name or False,
+            'journal_id': statements and statements[0].journal_id.id or False,
             'num_already_reconciled_lines': 0,
         }
 
@@ -470,7 +471,7 @@ class AccountBankStatementLine(models.Model):
                 'details': {
                     'name': _("Automatically reconciled items"),
                     'model': 'account.move',
-                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').ids
+                    'ids': automatic_reconciliation_entries.mapped('journal_entry_ids').mapped('move_id').ids
                 }
             }]
         return {
@@ -586,7 +587,7 @@ class AccountBankStatementLine(models.Model):
         if str:
             str_domain = self.env['account.move.line'].domain_move_lines_for_reconciliation(str=str)
             if not partner_id:
-                str_domain = expression.OR([str_domain, ('partner_id.name', 'ilike', str)])
+                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
             domain = expression.AND([domain, str_domain])
         if excluded_ids:
             domain = expression.AND([[('id', 'not in', excluded_ids)], domain])
