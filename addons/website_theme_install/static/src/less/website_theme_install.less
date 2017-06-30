@@ -6,7 +6,10 @@
     /// Un-grouped Layout (default)
     &.o_kanban_ungrouped {
         .o-justify-content(space-between);
-        margin: 0 -@grid-gutter-width;
+
+        @media (min-width: @screen-md-min ) {
+            margin: 0 -@grid-gutter-width;
+        }
 
         .o_kanban_record {
             .o-flex(1, 0, 220px);
@@ -14,6 +17,8 @@
     }
 
     .o_kanban_record {
+        margin-left: @grid-gutter-width;
+        margin-right: @grid-gutter-width;
         padding: 0;
         box-shadow: none;
         background: none;
@@ -108,10 +113,21 @@
     &.o_kanban_grouped {
         .o_kanban_group {
             background-color: @o-theme-kanban-gray;
+            padding: 0 20px;
 
-            .o_column_title {
-                padding: 0 3%;
-                color: @text-color;
+            .o_kanban_header {
+                height: 30px;
+
+                .o_column_title {
+                    padding: 0;
+                    color: @text-color;
+                }
+
+                &:hover, &.open {
+                    .o_kanban_config {
+                        display: none;
+                    }
+                }
             }
 
             .o_theme_preview_top {
@@ -128,6 +144,10 @@
         }
 
         .o_kanban_record {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+
             .o_theme_preview_top {
                 .o_theme_cover, .o_theme_logo {
                     padding-bottom: 50%;

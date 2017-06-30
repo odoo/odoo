@@ -14,7 +14,7 @@
                 <field name="category_id"/>
                 <field name="display_name"/>
                 <templates>
-                    <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 ml32 mr32 #{record.state.raw_value == 'installed'? 'o_theme_installed' : ''}">
+                    <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.state.raw_value == 'installed'? 'o_theme_installed' : ''}">
                         <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
                         <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
                         <t t-set="image_url" t-value="has_image ? 'web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
