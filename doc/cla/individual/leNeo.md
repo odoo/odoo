@@ -1,4 +1,4 @@
-Switzerland, 27/06/2017
+Switzerland, 30/06/2017
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
