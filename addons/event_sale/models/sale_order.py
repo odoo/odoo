@@ -15,6 +15,14 @@ class SaleOrder(models.Model):
             return self.env['ir.actions.act_window'].with_context(default_sale_order_id=self.id).for_xml_id('event_sale', 'action_sale_order_event_registration')
         return res
 
+    @api.multi
+    def action_cancel(self):
+        res = super(SaleOrder, self).action_cancel()
+        event_so_lines = self.order_line.filtered('event_id')
+        self.env['event.registration'].search(
+            [('sale_order_line_id', 'in', event_so_lines.ids), ('state', 'in', ['draft', 'open'])]).button_reg_cancel()
+        return res
+
 
 class SaleOrderLine(models.Model):
 
