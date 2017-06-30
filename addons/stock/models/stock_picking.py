@@ -325,11 +325,11 @@ class Picking(models.Model):
                 .filtered(lambda move: move.state not in ['cancel', 'done'])\
                 .sorted(key=lambda move: (move.state == 'assigned' and 2) or (move.state == 'waiting' and 1) or 0)
             if self.move_type == 'one':
-                self.state = moves_todo[0].state
+                self.state = moves_todo[0].state or 'draft'
             elif moves_todo[0].state != 'assigned' and any(x.partially_available or x.state == 'assigned' for x in moves_todo):
                 self.state = 'partially_available'
             else:
-                self.state = moves_todo[-1].state
+                self.state = moves_todo[-1].state or 'draft'
 
     @api.one
     @api.depends('move_lines.priority')
@@ -612,9 +612,13 @@ class Picking(models.Model):
                         forced_qties[move.product_id] = forced_qty
             for vals in picking._prepare_pack_ops(picking_quants, forced_qties):
                 vals['fresh_record'] = False
-                PackOperation.create(vals)
+                PackOperation |= PackOperation.create(vals)
         # recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities()
+        for pack in PackOperation:
+            pack.ordered_qty = sum(
+                pack.mapped('linked_move_operation_ids').mapped('move_id').filtered(lambda r: r.state != 'cancel').mapped('ordered_qty')
+            )
         self.write({'recompute_pack_op': False})
 
     @api.multi
@@ -784,6 +788,8 @@ class Picking(models.Model):
     @api.multi
     def do_new_transfer(self):
         for pick in self:
+            if pick.state == 'done':
+                raise UserError(_('The pick is already validated'))
             pack_operations_delete = self.env['stock.pack.operation']
             if not pick.move_lines and not pick.pack_operation_ids:
                 raise UserError(_('Please create some Initial Demand or Mark as Todo and create some Operations. '))

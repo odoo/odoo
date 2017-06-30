@@ -553,15 +553,18 @@ class Meeting(models.Model):
         if not event_date:
             event_date = datetime.now()
 
-        # Convert the event date to saved timezone (or context tz) as it'll
-        # define the correct hour/day asked by the user to repeat for recurrence.
-        event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
-        rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True)
+        if self.allday and self.rrule and 'UNTIL' in self.rrule and 'Z' not in self.rrule:
+            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date.replace(tzinfo=None), forceset=True, ignoretz=True)
+        else:
+            # Convert the event date to saved timezone (or context tz) as it'll
+            # define the correct hour/day asked by the user to repeat for recurrence.
+            event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
+            rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
         recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
 
         for meeting in recurring_meetings:
             rset1._exdate.append(todate(meeting.recurrent_id_date))
-        return [d.astimezone(pytz.UTC) for d in rset1]
+        return [d.astimezone(pytz.UTC) if d.tzinfo else d for d in rset1]
 
     @api.multi
     def _get_recurrency_end_date(self):

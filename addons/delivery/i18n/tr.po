@@ -80,6 +80,9 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"                    Daha fazla sağlayıcı almak için şimdi Odoo Enterprise'u satın alın.\n"
+"                </p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
@@ -135,6 +138,10 @@ msgid ""
 "A service is a non-material product you provide.\n"
 "A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
 msgstr ""
+"Stoklanabilir bir ürün, stok takip ettiğiniz bir üründür. \"Stok Yönetimi\" uygulaması yüklü olmalıdır.\n"
+"Sarf malzemesi, diğer taraftan, stok yönetimi altına alınmayan bir üründür.\n"
+"Hizmet, sağladığınız maddi olmayan bir üründür.\n"
+"Dijital içerik, çevrimiçi sattığınız maddi olmayan bir üründür. Ürünlere eklenen dosyalar e-ticarette e-kitap, müzik, resim gibi satılmaktadır ... \"Dijital Ürün\" modülü kurulmalıdır."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_needaction
@@ -275,7 +282,7 @@ msgstr "Satılabilir"
 msgid ""
 "Can be changed during the 'put in pack' to adjust the weight of the "
 "shipping."
-msgstr ""
+msgstr "Sevkiyatın ağırlığı 'Pakete Koy' sırasında değiştirilebilir."
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -383,6 +390,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Bu proje kapsamında, satış sipariş doğrulamasında bir görev oluşturun. Bu "
+"her şirket için ayarlanmalıdır."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -475,12 +484,12 @@ msgstr "Teslim"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Nakliyeci"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Teslimat Bilgisi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -632,6 +641,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"Bu formu doldurmak, nakliyecileri, müşterinizin teslimat adresine göre "
+"filtrelemenize olanak tanır."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -687,12 +698,12 @@ msgstr "Sipariş bu miktardan fazla ise Ücretsiz"
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "Oran Al"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "Oranı Alın ve Sevkiyatı Oluşturun"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_packaging_ids
@@ -717,7 +728,7 @@ msgstr "Grupla"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
-msgstr ""
+msgstr "GTIP Kodu"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_height
@@ -727,7 +738,7 @@ msgstr "Yükseklik"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Yükseklik artı (+) değerde olmalıdır"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -814,12 +825,12 @@ msgstr "Girişi Beklenen"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Daha fazla Hizmet Sağlayıcı Kurun"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Entegrasyon Seviyesi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -911,7 +922,7 @@ msgstr "Uzunluk"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Uzunluk artı (+) değerde olmalıdır"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -926,7 +937,7 @@ msgstr "Lojistik Birimleri"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr ""
+msgstr "Paket Türlerini Yönet"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -962,17 +973,17 @@ msgstr "Oran Tarihi Başı"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Kâr % -100'dan düşük olamaz"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Maksimum Ağırlık"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Maksimum Ağırlık artı (+) değerde olmalıdır"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -982,7 +993,7 @@ msgstr "En Çok Değer"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_packaging_max_weight
 msgid "Maximum weight shippable in this packaging"
-msgstr ""
+msgstr "Bu pakette maksimum ağırlık taşınabilir"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_medium
@@ -1034,7 +1045,7 @@ msgstr "Adı"
 #. module: delivery
 #: selection:product.packaging,package_carrier_type:0
 msgid "No carrier integration"
-msgstr ""
+msgstr "Taşıyıcı entegrasyonu yok"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:63
@@ -1091,6 +1102,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Sipariş edilen miktarlarda: Sipariş edilen miktarlara dayalı faturaları kontrol edin.\n"
+"Alınan miktarlarda: Alınan miktara dayalı faturaları kontrol edin."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_operator
@@ -1189,7 +1202,7 @@ msgstr "Fiyat Listesi Öğeleri"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
 msgid "Pricelist item ids"
-msgstr ""
+msgstr "Fiyatlistesi öğeleri ids"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1353,12 +1366,12 @@ msgstr "İhtiyaç Kuralları"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_max_qty
 msgid "Reordering max qty"
-msgstr ""
+msgstr "Yeniden tedarik maximum miktar"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reordering_min_qty
 msgid "Reordering min qty"
-msgstr ""
+msgstr "Yeniden tedarik minimum miktar"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
@@ -1456,7 +1469,7 @@ msgstr "Fiyat ayarla"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
+msgstr "Kimlik bilgileriniz üretim için onaylandıysa, True olarak ayarlayın."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:147
@@ -1465,6 +1478,7 @@ msgid ""
 "Shipment sent to carrier %s for expedition with tracking number %s<br/>Cost:"
 " %.2f %s"
 msgstr ""
+"Sevkiyat %s takip numarasıyla taşımaya %s gönderildi <br/> Maliyet: %.2f %s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
@@ -1474,7 +1488,7 @@ msgstr "Taşıma maliyeti"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Sevkiyat Ağırlığı"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1499,12 +1513,15 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Standart Fiyat: Maliyet fiyatı belirli bir dönemin sonunda elle güncellenir (genellikle her yıl). \n"
+"Ortalama Fiyat: Maliyet fiyatı her gelen sevkiyatta yeniden hesaplanır.\n"
+"Gerçek Fiyat: Görüntülenen maliyet fiyatı, son giden ürünün fiyatıdır (örneğin stok değer kaybı durumunda kullanılacaktır)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
-msgstr ""
+msgstr "Uluslararası nakliye ve mal beyannamesi için standartlaştırılmış kod"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_state_ids
@@ -1529,12 +1546,12 @@ msgstr "Stok Çıkış Hesabı"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_move_ids
 msgid "Stock move ids"
-msgstr ""
+msgstr "Stok hareketi ID"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Stock quant ids"
-msgstr ""
+msgstr "Stoklar ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_normal_cost
@@ -1576,19 +1593,21 @@ msgstr "Tedarikçi Faturalarındaki Miktarın Toplamı"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Teknik alan. Fiyat listelerinde arama yapmak için kullanılır, veritabanında "
+"saklanmaz."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Teknik: miktarları hesaplamak için kullanılır."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
 #: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
-msgstr ""
+msgstr "Post"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sale_delay
@@ -1613,6 +1632,8 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Satış fiyatı, ürün şablonundan yönetilir. Ekstra özellik fiyatlarını "
+"ayarlamak için 'Varyant Fiyatları' düğmesine tıklayın."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_volume
@@ -1686,7 +1707,7 @@ msgstr "Bu, tüm özelliklerin ekstra fiyat toplamıdır"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Bu yüzde gönderim bedeline eklenecektir."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1759,7 +1780,7 @@ msgstr "İzleme"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Takip Referansı"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1876,12 +1897,12 @@ msgstr "Ağırlık * Hacim"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_move_weight_uom_id
 msgid "Weight Unit of Measure"
-msgstr ""
+msgstr "Ağırlık Ölçü Birimi"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Nakliye Ağırlığı"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1963,7 +1984,7 @@ msgstr "Genişlik"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Genişlik artı (+) değerde olmalıdır"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -1972,6 +1993,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Aynı sevkiyatta farklı paketleme türleri kullanıyorsunuz.\n"
+"Paket Türleri:% s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163

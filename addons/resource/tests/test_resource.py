@@ -273,6 +273,9 @@ class TestResource(TestResourceCommon):
             td += item[1] - item[0]
         self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
 
+        res = self.calendar.schedule_hours_get_date(-40, day_dt=self.date1.replace(minute=0, second=0))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 09:00:00'))
+
         # --------------------------------------------------
         # Test2: schedule hours forward
         # --------------------------------------------------
@@ -298,6 +301,9 @@ class TestResource(TestResourceCommon):
         for item in res:
             td += item[1] - item[0]
         self.assertEqual(seconds(td) / 3600.0, 40.0, 'resource_calendar: wrong hours scheduling')
+
+        res = self.calendar.schedule_hours_get_date(40, day_dt=self.date1.replace(minute=0, second=0))
+        self.assertEqual(res, Datetime.from_string('2013-02-26 09:00:00'))
 
         res = self.calendar.schedule_hours(
             40, day_dt=self.date1.replace(minute=0, second=0),
@@ -401,6 +407,11 @@ class TestResource(TestResourceCommon):
         # 7h30 -> 12h30 = 5 / 13h -> 14h = 1 / -> 6h
         self.assertEqual(res, 6, 'resource_calendar: wrong get_working_hours computation')
 
+    def test_45_calendar_hours_scheduling_minutes(self):
+        """ Testing minutes computation in calendar hours scheduling """
+        res = self.calendar.schedule_hours_get_date(-39, day_dt=self.date1.replace(minute=25, second=20))
+        self.assertEqual(res, Datetime.from_string('2013-01-29 10:25:20'))
+
     def test_50_calendar_schedule_days(self):
         """ Testing calendar days scheduling """
 
@@ -466,6 +477,40 @@ class TestResource(TestResourceCommon):
         resource_id = self.env.ref('resource.resource_analyst').copy()
         self.assertTrue(resource_id, 'Unable to Duplicate Resource')
 
+    # FORWARD-PORT UP TO SAAS-14
+    # Test already in Saas-15
+    def test_80_resource_schedule_tz(self):
+        # Call schedule_hours for a user in Autralia, Sydney (GMT+10)
+        # Two cases:
+        # - start at 2013-02-15 08:00:00 => 2013-02-14 21:00:00 in UTC
+        # - start at 2013-02-15 11:00:00 => 2013-02-15 00:00:00 in UTC
+
+        tz_context = dict(tz='Australia/Sydney')
+        self.env.user.with_context(tz_context).write({'tz': 'Australia/Sydney'})
+        calendar = self.calendar.with_context(tz_context)
+
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 1',
+            'dayofweek': '3',
+            'hour_from': 8,
+            'hour_to': 12,
+            'calendar_id': calendar.id,
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Day3 - 2',
+            'dayofweek': '3',
+            'hour_from': 13,
+            'hour_to': 17,
+            'calendar_id': calendar.id,
+        })
+
+        hours = 1.0/60.0
+        start_dt = Datetime.from_string('2013-02-14 21:00:00')
+        res = calendar.schedule_hours(hours, start_dt)
+        self.assertEqual([(start_dt, start_dt.replace(minute=1))], res, 'resource_calendar: wrong schedule_hours computation')
+        start_dt = Datetime.from_string('2013-02-15 00:00:00')
+        res = calendar.schedule_hours(hours, start_dt)
+        self.assertEqual([(start_dt, start_dt.replace(minute=1))], res, 'resource_calendar: wrong schedule_hours computation')
 
 WAR_START = date(1932, 11, 2)
 WAR_END = date(1932, 12, 10)
