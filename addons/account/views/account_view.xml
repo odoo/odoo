@@ -2181,6 +2181,18 @@
             </field>
         </record>
 
+        <record id="view_account_group_search" model="ir.ui.view">
+            <field name="name">account.group.search</field>
+            <field name="model">account.group</field>
+            <field name="arch" type="xml">
+                <search string="Account groups">
+                    <field name="name"
+                           filter_domain="['|', ('code_prefix', '=like', str(self) + '%'), ('name', 'ilike', self)]"
+                           string="Account group"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_account_group_tree" model="ir.ui.view">
             <field name="name">account.group.tree</field>
             <field name="model">account.group</field>
@@ -2197,6 +2209,7 @@
             <field name="res_model">account.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_group_search"/>
         </record>
 
         <menuitem id="menu_account_group" name="Groups"
