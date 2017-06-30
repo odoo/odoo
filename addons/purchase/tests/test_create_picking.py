@@ -47,7 +47,6 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase')
         self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created')
         self.assertEqual(len(self.po.order_line.move_ids), 1, 'One move should be created')
-
         # Change purchase order line product quantity
         self.po.order_line.write({'product_qty': 7.0})
         self.assertEqual(len(self.po.order_line.move_ids), 2, 'Two move should be created')
@@ -55,9 +54,11 @@ class TestCreatePicking(common.TestProductCommon):
         # Validate first shipment
         self.picking = self.po.picking_ids[0]
         self.picking.force_assign()
-        self.picking.pack_operation_product_ids.write({'qty_done': 7.0})
-        self.picking.do_new_transfer()
+        for ml in self.picking.pack_operation_ids:
+            ml.qty_done = ml.product_uom_qty
+        self.picking.action_done()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [7.0], 'Purchase: all products should be received')
+        
 
         # create new order line
         self.po.write({'order_line': [
@@ -71,7 +72,7 @@ class TestCreatePicking(common.TestProductCommon):
                 })]})
         self.assertEqual(self.po.picking_count, 2, 'New picking should be created')
         moves = self.po.order_line.mapped('move_ids').filtered(lambda x: x.state not in ('done', 'cancel'))
-        self.assertEqual(len(moves), 1, 'One move should be created')
+        self.assertEqual(len(moves), 1, 'One moves should have been created')
 
     def test_01_check_double_validation(self):
 

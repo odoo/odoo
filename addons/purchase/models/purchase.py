@@ -552,40 +552,21 @@ class PurchaseOrderLine(models.Model):
     def create(self, values):
         line = super(PurchaseOrderLine, self).create(values)
         if line.order_id.state == 'purchase':
-            line.order_id._create_picking()
+            line._create_or_update_picking(values)
             msg = _("Extra line with %s ") % (line.product_id.display_name,)
             line.order_id.message_post(body=msg)
         return line
 
     @api.multi
     def write(self, values):
-        orders = False
         if 'product_qty' in values:
-            changed_lines = self.filtered(lambda x: x.order_id.state == 'purchase')
-            if changed_lines:
-                orders = changed_lines.mapped('order_id')
-                for order in orders:
-                    order_lines = changed_lines.filtered(lambda x: x.order_id == order)
-                    msg = ""
-                    if any([values['product_qty'] < x.product_qty for x in order_lines]):
-                        msg += "<b>" + _('The ordered quantity has been decreased. Do not forget to take it into account on your bills and receipts.') + '</b><br/>'
-                    msg += "<ul>"
-                    for line in order_lines:
-                        msg += "<li> %s:" % (line.product_id.display_name,)
-                        msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (line.product_qty, float(values['product_qty']),)
-                        if line.product_id.type in ('product', 'consu'):
-                            msg += _("Received Quantity") + ": %s <br/>" % (line.qty_received,)
-                        msg += _("Billed Quantity") + ": %s <br/></li>" % (line.qty_invoiced,)
-                    msg += "</ul>"
-                    order.message_post(body=msg)
+            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking(values)
+        result = super(PurchaseOrderLine, self).write(values)
         # Update expected date of corresponding moves
         if 'date_planned' in values:
             self.env['stock.move'].search([
                 ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
             ]).write({'date_expected': values['date_planned']})
-        result = super(PurchaseOrderLine, self).write(values)
-        if orders:
-            orders._create_picking()
         return result
 
     name = fields.Text(string='Description', required=True)
@@ -620,6 +601,59 @@ class PurchaseOrderLine(models.Model):
     procurement_ids = fields.One2many('procurement.order', 'purchase_line_id', string='Associated Procurements', copy=False)
 
     @api.multi
+    def _create_or_update_picking(self, vals):
+        for line in self:
+            if line.product_id.type in ('product', 'consu'):
+                if float_compare(vals['product_qty'], line.qty_invoiced, line.product_uom.rounding) == -1:
+                    # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
+                    # inviting the user to create a refund.
+                    activity = self.env['mail.activity'].sudo().create({
+                        'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                        'note': _('The quantities on your purchase order indicate less than billed. You should ask for a refund. '),
+                        'res_id': line.invoice_lines[0].invoice_id.id,
+                        'res_model_id': self.env.ref('account.model_account_invoice').id,
+                    })
+                    activity._onchange_activity_type_id()
+                diff_purchase_uom_qty = vals['product_qty'] - line.product_qty
+                diff_qty = line.product_uom._compute_quantity(diff_purchase_uom_qty, line.product_id.uom_id)
+                if diff_purchase_uom_qty > 0 or not line.move_ids:
+                    # If the user increased quantity of existing line or created a new line
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
+                    picking = pickings and pickings[0] or False
+                    if not picking:
+                        res = line.order_id._prepare_picking()
+                        picking = self.env['stock.picking'].create(res)
+                    move_vals = line._get_move_template(picking)
+                    if not line.move_ids:
+                        move_vals['product_uom_qty'] = vals['product_qty']
+                    else:
+                        move_vals['product_uom_qty'] = diff_purchase_uom_qty
+                    self.env['stock.move']\
+                        .create(move_vals)\
+                        .action_confirm()\
+                        .action_assign()
+                else:
+                    # Prevent decreasing below received quantity
+                    if float_compare(vals['product_qty'], line.qty_received, line.product_uom.rounding) >= 0:
+                        open_moves = line.move_ids.filtered(lambda m: m.state not in ('done', 'cancel')).sorted(lambda m: m.procurement_id.id)
+                        # We sort by procurement id to decrease first the moves without procurement id,
+                        # the idea is to get rid of the extra moves in priority
+                        for move in open_moves:
+                            if float_compare(move.product_qty, -diff_qty, line.product_id.uom_id.rounding) > 0:
+                                qty_for_move = line.product_uom._compute_quantity(diff_purchase_uom_qty, move.product_uom)
+                                move.product_uom_qty += qty_for_move
+                                move.action_assign()
+                                break
+                            else:
+                                diff_qty += move.product_qty
+                                move.do_unreserve()
+                                move.state = 'draft'
+                                move.unlink()
+                    else:
+                        raise UserError('You cannot decrease the ordered quantity below your receipt.\n'
+                                        'Create a return first.')
+
+    @api.multi
     def _get_stock_move_price_unit(self):
         self.ensure_one()
         line = self[0]
@@ -634,18 +668,8 @@ class PurchaseOrderLine(models.Model):
         return price_unit
 
     @api.multi
-    def _prepare_stock_moves(self, picking):
-        """ Prepare the stock moves data for one order line. This function returns a list of
-        dictionary ready to be used in stock.move's create()
-        """
+    def _get_move_template(self, picking):
         self.ensure_one()
-        res = []
-        if self.product_id.type not in ['product', 'consu']:
-            return res
-        qty = 0.0
-        price_unit = self._get_stock_move_price_unit()
-        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_qty
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
@@ -660,14 +684,30 @@ class PurchaseOrderLine(models.Model):
             'state': 'draft',
             'purchase_line_id': self.id,
             'company_id': self.order_id.company_id.id,
-            'price_unit': price_unit,
+            'price_unit': self._get_stock_move_price_unit(),
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'procurement_id': False,
             'origin': self.order_id.name,
-            'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
+            'route_ids': self.order_id.picking_type_id.warehouse_id and [
+                (6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
         }
+        return template
+
+    @api.multi
+    def _prepare_stock_moves(self, picking):
+        """ Prepare the stock moves data for one order line. This function returns a list of
+        dictionary ready to be used in stock.move's create()
+        """
+        self.ensure_one()
+        res = []
+        if self.product_id.type not in ['product', 'consu']:
+            return res
+        qty = 0.0
+        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
+            qty += move.product_qty
+        template = self._get_move_template(picking)
         # Fullfill all related procurements with this po line
         diff_quantity = self.product_qty - qty
         for procurement in self.procurement_ids.filtered(lambda p: p.state != 'cancel'):
@@ -805,15 +845,6 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
-
-    @api.onchange('product_qty')
-    def _onchange_product_qty(self):
-        if (self.state == 'purchase' or self.state == 'to approve') and self.product_id.type in ['product', 'consu'] and self.product_qty < self._origin.product_qty:
-            warning_mess = {
-                'title': _('Ordered quantity decreased!'),
-                'message' : _('You are decreasing the ordered quantity!\nYou must update the quantities on the reception and/or bills.'),
-            }
-            return {'warning': warning_mess}
 
     def _suggest_quantity(self):
         '''

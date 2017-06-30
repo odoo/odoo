@@ -811,6 +811,13 @@ class StockMove(models.Model):
         self.mapped('procurement_id').check()
         return True
 
+    def _prepare_extra_move_vals(self, qty):
+        vals = {
+            'product_uom_qty': qty,
+            'picking_id': self.picking_id.id
+        }
+        return vals
+
     @api.multi
     def _create_extra_move(self):
         """ If the quantity done on a move exceeds its quantity todo, this method will create an
@@ -830,9 +837,7 @@ class StockMove(models.Model):
                 self.quantity_done - self.product_uom_qty,
                 precision_rounding=self.product_uom.rounding,
                 rounding_method ='UP')
-            extra_move_vals = {
-                'product_uom_qty': extra_move_quantity,
-                'picking_id': self.picking_id.id}
+            extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals).action_confirm()
 
             # link it to some move lines
@@ -928,6 +933,17 @@ class StockMove(models.Model):
             raise UserError(_('You can only delete draft moves.'))
         return super(StockMove, self).unlink()
 
+    def _prepare_move_split_vals(self, uom_qty):
+        vals = {
+            'product_uom_qty': uom_qty,
+            'procure_method': 'make_to_stock',
+            'procurement_id': self.procurement_id.id,
+            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
+            'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
+            'origin_returned_move_id': self.origin_returned_move_id.id,
+        }
+        return vals
+
     @api.multi
     def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):
         """ Splits qty from move move into a new move
@@ -948,15 +964,7 @@ class StockMove(models.Model):
             return self.id
         # HALF-UP rounding as only rounding errors will be because of propagation of error from default UoM
         uom_qty = self.product_id.uom_id._compute_quantity(qty, self.product_uom, rounding_method='HALF-UP')
-        defaults = {
-            'product_uom_qty': uom_qty,
-            'procure_method': 'make_to_stock',
-            'restrict_lot_id': restrict_lot_id,
-            'procurement_id': self.procurement_id.id,
-            'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if x.state not in ('done', 'cancel')],
-            'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
-            'origin_returned_move_id': self.origin_returned_move_id.id,
-        }
+        defaults = self._prepare_move_split_vals(uom_qty)
         if restrict_partner_id:
             defaults['restrict_partner_id'] = restrict_partner_id
 

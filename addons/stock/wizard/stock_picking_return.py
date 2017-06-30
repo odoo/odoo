@@ -68,6 +68,21 @@ class ReturnPicking(models.TransientModel):
                 res['location_id'] = location_id
         return res
 
+    def _prepare_move_default_values(self, return_line, new_picking):
+        vals = {
+            'product_id': return_line.product_id.id,
+            'product_uom_qty': return_line.quantity,
+            'picking_id': new_picking.id,
+            'state': 'draft',
+            'location_id': return_line.move_id.location_dest_id.id,
+            'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
+            'picking_type_id': new_picking.picking_type_id.id,
+            'warehouse_id': self.picking_id.picking_type_id.warehouse_id.id,
+            'origin_returned_move_id': return_line.move_id.id,
+            'procure_method': 'make_to_stock',
+        }
+        return vals
+
     @api.multi
     def _create_returns(self):
         # TODO sle: the unreserve of the next moves could be less brutal
@@ -90,22 +105,11 @@ class ReturnPicking(models.TransientModel):
         for return_line in self.product_return_moves:
             if not return_line.move_id:
                 raise UserError(_("You have manually created product lines, please delete them to proceed"))
-            new_qty = return_line.quantity
             # TODO sle: float_is_zero?
-            if new_qty:
+            if return_line.quantity:
                 returned_lines += 1
-                r = return_line.move_id.copy({
-                    'product_id': return_line.product_id.id,
-                    'product_uom_qty': new_qty,
-                    'picking_id': new_picking.id,
-                    'state': 'draft',
-                    'location_id': return_line.move_id.location_dest_id.id,
-                    'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
-                    'picking_type_id': picking_type_id,
-                    'warehouse_id': self.picking_id.picking_type_id.warehouse_id.id,
-                    'origin_returned_move_id': return_line.move_id.id,
-                    'procure_method': 'make_to_stock',
-                })
+                vals = self._prepare_move_default_values(return_line, new_picking)
+                r = return_line.move_id.copy(vals)
                 r.write({'move_orig_ids': [(4, return_line.move_id.id, False)]})
 
         if not returned_lines:
