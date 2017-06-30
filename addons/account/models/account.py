@@ -215,6 +215,14 @@ class AccountGroup(models.Model):
             result.append((group.id, name))
         return result
 
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if not args:
+            args = []
+        criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
+        domain = criteria_operator + [('code_prefix', '=ilike', name + '%'), ('name', operator, name)]
+        return self.search(domain + args, limit=limit).name_get()
+
 class AccountJournal(models.Model):
     _name = "account.journal"
     _description = "Journal"
