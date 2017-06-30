@@ -29,6 +29,7 @@ var chat_unread_counter = 0;
 var unread_conversation_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
+var emoji_replace = {};
 var needaction_counter = 0;
 var starred_counter = 0;
 var mention_partner_suggestions = [];
@@ -664,8 +665,12 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             if (s.shortcode_type === 'text') {
                 canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
             } else {
-                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
+                emojis.push(_.pick(s, ['id', 'source', 'unicode_source', 'substitution', 'description']));
                 emoji_substitutions[_.escape(s.source)] = s.substitution;
+                if (s.unicode_source) {
+                    emoji_substitutions[_.escape(s.unicode_source)] = s.substitution;
+                    emoji_replace[_.escape(s.source)] = s.unicode_source
+                }
             }
         });
         bus.start_polling();
@@ -741,6 +746,13 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     post_message: function (data, options) {
         var self = this;
         options = options || {};
+
+        _.each(_.keys(emoji_replace), function (key) {
+            // message input is like :) or :( then message data will replace and message result should be like 😄 or 😞
+            var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+            var regexp = new RegExp("(\\s|^)(" + escaped_key + ")(?=\\s|$)", "g");
+            data.content = data.content.replace(regexp, "$1"+emoji_replace[key]);
+        });
 
         // This message will be received from the mail composer as html content subtype
         // but the urls will not be linkified. If the mail composer takes the responsibility
