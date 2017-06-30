@@ -277,7 +277,6 @@ class WebsiteSale(http.Controller):
     def product(self, product, category='', search='', **kwargs):
         product_context = dict(request.env.context, active_id=product.id)
         ProductCategory = request.env['product.public.category']
-        Rating = request.env['rating.rating']
 
         if category:
             category = ProductCategory.browse(int(category)).exists()
@@ -296,11 +295,6 @@ class WebsiteSale(http.Controller):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: from_currency.compute(price, to_currency)
 
-        # get the rating attached to a mail.message, and the rating stats of the product
-        ratings = Rating.search([('message_id', 'in', product.website_message_ids.ids)])
-        rating_message_values = dict([(record.message_id.id, record.rating) for record in ratings])
-        rating_product = product.rating_get_stats([('website_published', '=', True)])
-
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
             product = product.with_context(product_context)
@@ -317,8 +311,6 @@ class WebsiteSale(http.Controller):
             'main_object': product,
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids,
-            'rating_message_values': rating_message_values,
-            'rating_product': rating_product
         }
         return request.render("website_sale.product", values)
 
