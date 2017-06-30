@@ -20,4 +20,3 @@ class ProductTemplate(models.Model):
             self.track_service = 'timesheet'
         else:
             self.track_service = 'manual'
-
