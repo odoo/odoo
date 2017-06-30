@@ -9,6 +9,9 @@ var data = {
             image: {string: "image", type: 'integer'},
             customer: {string: "customer", type: 'boolean'},
             supplier: {string: "supplier", type: 'boolean'},
+            parent_id: {string: "Parent", type: 'boolean'},
+            property_account_receivable_id: {string: 'Account receivable', type: 'many2one', relation: 'account.account'},
+            property_account_payable_id: {string: 'Account payable', type: 'many2one', relation: 'account.account'},
         },
         records: [
             {id: 1, display_name: "partner 1", image: 'AAA', customer: true},
@@ -16,7 +19,7 @@ var data = {
             {id: 3, display_name: "partner 3", image: 'CCC', customer: true},
             {id: 4, display_name: "partner 4", image: 'DDD', customer: true},
             {id: 8, display_name: "Agrolait", image: 'EEE', customer: true},
-            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true},
+            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true, property_account_receivable_id: 287, property_account_payable_id: 287},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -339,7 +342,10 @@ var mv_lines = {
     '[]': [],
     '[5,"",0,6]': [
         {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0002", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 109, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
-        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 112, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false}
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 525.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 112, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 525.00", 'debit': 525.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-07", 'date': "2017-01-08", 'total_amount_str': "$ 650.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0012", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 134, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 650.00", 'debit': 650.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "receivable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 4,610.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 106, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 4,610.00", 'debit': 4610.0, 'account_id': [287, "101200 Account Receivable"], 'account_code': "101200", 'ref': "", 'already_paid': false},
+        {'account_type': "payable", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-28", 'date': "2017-01-01", 'total_amount_str': "$ 10,000.00", 'partner_id': 12, 'account_name': "Account Payable", 'name': "BILL/2017/0001", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 114, 'credit': 10000.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 10,000.00", 'debit': 0.0, 'account_id': [284, "101110 Stock Valuation Account"], 'account_code': "111100", 'ref': "", 'already_paid': false}
     ],
     '[5,"b",0,6]': [
         {'account_type': "liquidity", 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-01-23", 'date': "2017-01-23", 'total_amount_str': "$ 100.00", 'partner_id': 8, 'account_name': "Bank", 'name': "BNK1/2017/0003: CUST.IN/2017/0001", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 394, 'credit': 0.0, 'journal_id': "Bank", 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101401", 'ref': "", 'already_paid': true},
@@ -602,7 +608,19 @@ QUnit.module('account', {
 
         testUtils.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, counterpart_aml_dicts: [], payment_aml_ids: [109,112], new_aml_dicts: []}]],
+                [[5],[{partner_id: 8, counterpart_aml_dicts: [{
+                                                                  "counterpart_aml_id": 109,
+                                                                  "credit": 650,
+                                                                  "debit": 0,
+                                                                  "name": "INV/2017/0002"
+                                                                },
+                                                                {
+                                                                  "counterpart_aml_id": 112,
+                                                                  "credit": 525,
+                                                                  "debit": 0,
+                                                                  "name": "INV/2017/0003"
+                                                                }], 
+                                    payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_reconciliations with ids");
         });
 
@@ -625,13 +643,8 @@ QUnit.module('account', {
                         [6],
                         [{
                             partner_id: false,
-                            counterpart_aml_dicts:[{
-                                name: "BNK1/2017/0002: SUPP.OUT/2017/0002",
-                                debit: 32.58,
-                                credit: 0,
-                                counterpart_aml_id: 392
-                            }],
-                            payment_aml_ids: [],
+                            counterpart_aml_dicts:[],
+                            payment_aml_ids: [392],
                             new_aml_dicts: []
                         }]
                     ], "should call process_reconciliations with partial reconcile values");
@@ -652,14 +665,14 @@ QUnit.module('account', {
         assert.notOk( widget.$('.cell_left .line_info_button').length, "should not display the partial reconciliation alert");
         widget.$('.accounting_view thead td:first').trigger('click');
         widget.$('.match .cell_account_code:first').trigger('click');
-        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 1, "should display the partial reconciliation alert");
+        assert.equal( widget.$('.accounting_view tbody .cell_left .line_info_button').length, 0, "should not display the partial reconciliation alert");
         assert.ok( widget.$('button.btn-primary:not(hidden)').length, "should not display the reconcile button");
         assert.ok( widget.$('.text-danger:not(hidden)').length, "should display counterpart alert");
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
-        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 1, "should display a partial reconciliation alert");
-        assert.ok(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should display the partial reconciliation information");
+        assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
+        assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
         assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "inactive", "should be inactive mode");
+        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
         widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
@@ -722,6 +735,29 @@ QUnit.module('account', {
         clientAction.destroy();
     });
 
+    QUnit.test('Reconciliation change partner', function (assert) {
+        assert.expect(4);
+
+        var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
+
+        testUtils.addMockEnvironment(clientAction, {
+            data: this.params.data,
+        });
+
+        clientAction.appendTo($('#qunit-fixture'));
+        var widget = clientAction.widgets[0];
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
+        assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
+
+        // Simulate changing partner
+        widget.$('.o_input_dropdown input').trigger('click');
+        $('.ui-autocomplete .ui-menu-item a:contains(Camptocamp)').trigger('mouseenter').trigger('click');
+        clientAction._onAction({target: widget, name: 'change_partner', data: {data: {display_name: 'Camptocamp', id: 12}}, stopped: false});
+        assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
+        assert.strictEqual(widget.$('.match table tr').length, 3, "camptocamp should have 3 propositions for reconciliation");
+
+        clientAction.destroy();
+    });
 
     QUnit.test('Reconciliation create line', function (assert) {
         assert.expect(23);

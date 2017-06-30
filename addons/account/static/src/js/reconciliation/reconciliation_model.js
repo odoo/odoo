@@ -230,11 +230,31 @@ var StatementModel = BasicModel.extend({
         var line = this.getLine(handle);
         line.st_line.partner_id = partner && partner.id;
         line.st_line.partner_name = partner && partner.display_name || '';
-        return this._performMoveLine(handle).then(function () {
-            if (line.mode === 'create') {
-                return self.createProposition(handle);
-            }
-        });
+        return this._changePartner(handle, partner.id)
+                .then(function() {
+                    line.reconciliation_proposition = [];
+                    return self._performMoveLine(handle)
+                })
+                .then(function () {
+                    if (line.mode === 'create') {
+                        return self.createProposition(handle);
+                    }
+                });
+    },
+    /**
+     * close the statement
+     * @returns {Deferred<number>} resolves to the res_id of the closed statements
+     */
+    closeStatement: function () {
+        var self = this;
+        return this._rpc({
+                model: 'account.bank.statement',
+                method: 'button_confirm_bank',
+                args: [self.bank_statement_id.id],
+            })
+            .then(function () {
+                return self.bank_statement_id.id
+            });
     },
     /**
      *
@@ -255,6 +275,13 @@ var StatementModel = BasicModel.extend({
         line.reconciliation_proposition.push(prop);
         line.createForm = _.pick(prop, this.quickCreateFields);
         return this._computeLine(line);
+    },
+    /**
+     * Return context information and journal_id
+     * @returns {Object} context
+     */
+    getContext: function () {
+        return this.context;
     },
     /**
      * get the line data for this handle
@@ -282,6 +309,8 @@ var StatementModel = BasicModel.extend({
         if (!statement_ids) {
             return $.when();
         }
+        this.context = context;
+
         var def_statement = this._rpc({
                 model: 'account.bank.statement',
                 method: 'reconciliation_widget_preprocess',
@@ -292,6 +321,7 @@ var StatementModel = BasicModel.extend({
                 self.bank_statement_id = statement_ids.length === 1 ? {id: statement_ids[0], display_name: statement.statement_name} : false;
                 self.valuenow = 0;
                 self.valuemax = statement.st_lines_ids.length;
+                self.context.journal_id = statement.journal_id;
                 _.each(statement.st_lines_ids, function (id) {
                     self.lines[_.uniqueId('rline')] = {
                         'id': id,
@@ -484,14 +514,19 @@ var StatementModel = BasicModel.extend({
         _.each(handles, function (handle) {
             var line = self.getLine(handle);
             var props = _.filter(line.reconciliation_proposition, function (prop) {return !prop.is_tax && !prop.invalid;});
+            if (props.length === 0) {
+                props.push(self._formatQuickCreate(line, {
+                    account_id: [line.st_line.open_balance_account_id, self.accounts[line.st_line.open_balance_account_id]],
+                }));
+            }
             ids.push(line.id);
             values.push({
                 "partner_id": line.st_line.partner_id,
                 "counterpart_aml_dicts": _.map(_.filter(props, function (prop) {
-                    return !isNaN(prop.id) && prop.partial_reconcile;
+                    return !isNaN(prop.id) && !prop.already_paid;
                 }), self._formatToProcessReconciliation.bind(self, line)),
                 "payment_aml_ids": _.pluck(_.filter(props, function (prop) {
-                    return !isNaN(prop.id) && !prop.partial_reconcile;
+                    return !isNaN(prop.id) && prop.already_paid;
                 }), 'id'),
                 "new_aml_dicts": _.map(_.filter(props, function (prop) {
                     return isNaN(prop.id);
@@ -558,6 +593,29 @@ var StatementModel = BasicModel.extend({
         return this._computeLine(line);
     },
     /**
+     * When changing partner, read property_account_receivable and payable
+     * of that partner because the counterpart account might cahnge depending
+     * on the partner
+     *
+     * @private
+     * @param {string} handle
+     * @param {integer} partner_id
+     * @returns {Deferred}
+     */
+    _changePartner: function (handle, partner_id) {
+        var self = this;
+        return this._rpc({
+                model: 'res.partner',
+                method: 'read',
+                args: [partner_id, ["property_account_receivable_id", "property_account_payable_id"]],
+            }).then(function (result) {
+                if (result.length > 0) {
+                    var line = self.getLine(handle);
+                    self.lines[handle].st_line.open_balance_account_id = line.amount < 0 ? result[0]['property_account_payable_id'][0] : result[0]['property_account_receivable_id'][0];
+                }
+            });
+    },
+    /**
      * Calculates the balance; format each proposition amount_str and mark as
      * invalid the line with empty account_id, amount or label
      * Check the taxes server side for each updated propositions with tax_id
@@ -573,7 +631,7 @@ var StatementModel = BasicModel.extend({
         // compute taxes
         var tax_defs = [];
         var reconciliation_proposition = [];
-        var format_options = {
+        var formatOptions = {
             currency_id: line.st_line.currency_id,
         };
         _.each(line.reconciliation_proposition, function (prop) {
@@ -610,10 +668,10 @@ var StatementModel = BasicModel.extend({
                         });
 
                         prop.amount = tax.base;
-                        prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, format_options);
+                        prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                         prop.invalid = !self._isValid(prop);
 
-                        tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, format_options);
+                        tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
                         tax_prop.invalid = prop.invalid;
 
                         reconciliation_proposition.push(tax_prop);
@@ -644,7 +702,7 @@ var StatementModel = BasicModel.extend({
             total = Math.round(total*1000)/1000 || 0;
             line.balance = {
                 'amount': total,
-                'amount_str': field_utils.format.monetary(Math.abs(total), {}, format_options),
+                'amount_str': field_utils.format.monetary(Math.abs(total), {}, formatOptions),
                 'account_code': self.accounts[line.st_line.open_balance_account_id],
             };
             line.balance.type = line.balance.amount ? (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
@@ -759,6 +817,9 @@ var StatementModel = BasicModel.extend({
     _formatQuickCreate: function (line, values) {
         values = values || {};
         var account = this._formatNameGet(values.account_id);
+        var formatOptions = {
+            currency_id: line.st_line.currency_id,
+        };
         var prop = {
             'id': _.uniqueId('createLine'),
             'label': values.label || line.st_line.name,
@@ -771,7 +832,7 @@ var StatementModel = BasicModel.extend({
             'credit': 0,
             'base_amount': values.amount_type !== "percentage" ?
                 (values.amount || line.balance.amount) :
-                line.st_line.amount * values.amount / 100,
+                line.balance.amount * values.amount / 100,
             'percent': values.amount_type === "percentage" ? values.amount : null,
             'link': values.link,
             'display': true,
@@ -781,9 +842,10 @@ var StatementModel = BasicModel.extend({
             '__focus': '__focus' in values ? values.__focus : true,
         };
         if (prop.base_amount) {
+            // Call to format and parse needed to round the value to the currency precision
             var sign = prop.base_amount < 0 ? -1 : 1;
-            var amount = field_utils.format.monetary(Math.abs(prop.base_amount), {}, line);
-            prop.base_amount = sign * field_utils.parse.monetary(amount);
+            var amount = field_utils.format.monetary(Math.abs(prop.base_amount), {}, formatOptions);
+            prop.base_amount = sign * field_utils.parse.monetary(amount, {}, formatOptions);
         }
         prop.amount = prop.base_amount;
         return prop;
@@ -843,7 +905,10 @@ var StatementModel = BasicModel.extend({
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
-        var amount = prop.partial_reconcile ? -line.st_line.amount : prop.amount;
+        var amount = -prop.amount;
+        if (prop.partial_reconcile === true) {
+            amount = -line.st_line.amount;
+        }
         var result = {
             name : prop.label,
             debit : amount > 0 ? amount : 0,
@@ -854,7 +919,7 @@ var StatementModel = BasicModel.extend({
         } else {
             result.account_id = prop.account_id.id;
             if (prop.journal_id) {
-                result.journal_id = prop.account_id.id;
+                result.journal_id = prop.journal_id.id;
             }
         }
         if (!isNaN(prop.id)) result.counterpart_aml_id = prop.id;
