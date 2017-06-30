@@ -9,8 +9,6 @@
     'summary': 'Allow cashier to reprint receipts',
     'description': """
 
-=======================
-
 Allow cashier to reprint receipts
 
 """,

@@ -10,8 +10,6 @@
     'summary': 'Restaurant extensions for the Point of Sale ',
     'description': """
 
-=======================
-
 This module adds several restaurant features to the Point of Sale:
 - Bill Printing: Allows you to print a receipt before the order is paid
 - Bill Splitting: Allows you to split an order into different orders
