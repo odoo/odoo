@@ -29,6 +29,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         validate: '_onValidate',
         validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
+        close_statement: '_onCloseStatement',
     },
     config: {
         // used to instanciate the model
@@ -202,7 +203,26 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
         });
     },
-
+    /**
+     * call 'closeStatement' model method
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onCloseStatement: function (event) {
+        var self = this;
+        return this.model.closeStatement().then(function (result) {
+            self.do_action({
+                name: 'Bank Statements',
+                res_model: 'account.bank.statement',
+                res_id: result,
+                views: [[false, 'form']],
+                type: 'ir.actions.act_window',
+                view_type: 'form',
+                view_mode: 'form',
+            });
+        });
+    },
     /**
      * call 'validate' or 'autoReconciliation' model method then destroy the
      * validated lines and update the action renderer with the new status bar 
@@ -222,6 +242,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                 'title': self.title,
                 'time': Date.now()-self.time,
                 'notifications': result.notifications,
+                'context': self.model.getContext(),
             });
             _.each(result.handles, function (handle) {
                 self._getWidget(handle).destroy();
