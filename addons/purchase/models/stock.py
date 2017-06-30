@@ -12,15 +12,6 @@ class StockPicking(models.Model):
         string="Purchase Orders", readonly=True)
 
     @api.model
-    def _prepare_values_extra_move(self, op, product, remaining_qty):
-        res = super(StockPicking, self)._prepare_values_extra_move(op, product, remaining_qty)
-        for m in op.linked_move_operation_ids:
-            if m.move_id.purchase_line_id and m.move_id.product_id == product:
-                res['purchase_line_id'] = m.move_id.purchase_line_id.id
-                break
-        return res
-
-    @api.model
     def _create_backorder(self, backorder_moves=[]):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self:
@@ -36,7 +27,7 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     purchase_line_id = fields.Many2one('purchase.order.line',
-        'Purchase Order Line', ondelete='set null', index=True, readonly=True)
+        'Purchase Order Line', ondelete='set null', index=True, readonly=True, copy=False)
 
     @api.multi
     def get_price_unit(self):
@@ -56,17 +47,15 @@ class StockMove(models.Model):
             return self.price_unit
         return super(StockMove, self).get_price_unit()
 
-    @api.multi
-    def copy(self, default=None):
-        self.ensure_one()
-        default = default or {}
-        # we don't want to propagate the link to the purchase order line on the move copied,
-        # except when it's a split or a returned move
+    def _prepare_extra_move_vals(self, qty):
+        vals = super(StockMove, self)._prepare_extra_move_vals(qty)
+        vals['purchase_line_id'] = self.purchase_line_id.id
+        return vals
 
-        if not default.get('split_from') and not default.get('origin_returned_move_id'):
-            default['purchase_line_id'] = False
-        return super(StockMove, self).copy(default)
-
+    def _prepare_move_split_vals(self, uom_qty):
+        vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
+        vals['purchase_line_id'] = self.purchase_line_id.id
+        return vals
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -141,3 +130,11 @@ class StockWarehouse(models.Model):
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
                 warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
         return res
+
+class ReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    def _prepare_move_default_values(self, return_line, new_picking):
+        vals = super(ReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
+        vals['purchase_line_id'] = return_line.move_id.purchase_line_id.id
+        return vals
