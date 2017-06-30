@@ -12,7 +12,7 @@ class WebsiteConfigSettings(models.TransientModel):
         ('always', 'Show inventory'),
         ('threshold', 'Only show below a threshold'),
         ('custom', 'Show custom message'),
-    ], string='Default Inventory Visibility', default='never')
+    ], string='Inventory', default='never')
     available_threshold = fields.Float(string='Available Threshold')
 
     @api.multi
