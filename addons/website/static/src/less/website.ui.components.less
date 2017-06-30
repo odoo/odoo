@@ -2,24 +2,33 @@
 /// This file regroups the style of website UI components (edition modals, forms, ...).
 ///
 
-.o-w-close-icon(@size:12px, @opacity: 1, @opacity-hover: 1, @color:#000, @color-hover:#000) {
-    @tmp-color: @color;
-    @bg-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="@{size}" height="@{size}" fill="@{tmp-color}" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>');
-
+.o-w-close-icon(@size:12px, @color:#000, @color-hover:#000, @thickness: 1px, @opacity: 0.7, @opacity-hover: 1) {
     color: transparent;
-    text-shadow: none;
-
-    background: @bg-image;
-    width: @size;
-    height: @size;
+    position: relative;
+    display: inline-block;
     opacity: @opacity;
+    .square(@size);
 
     &:hover, &:focus {
-        @tmp-color: @color-hover;
-        background: @bg-image;
-
         outline: none;
         opacity: @opacity-hover;
+
+        &::after, &::before {
+            background: @color-hover;
+        }
+    }
+
+    &:after, &:before {
+        content: '';
+        margin-top: -1px;
+        background: @color;
+        .size(100%, @thickness);
+        .o-position-absolute(50%, @left:0);
+        .o-transform(rotate(45deg));
+    }
+
+    &:after {
+        .o-transform(rotate(-45deg));
     }
 }
 
@@ -37,7 +46,7 @@ body .modal {
         .o-w-preserve-tabs();
 
         button.close {
-            .o-w-close-icon(20px, 0.7, 1);
+            .o-w-close-icon(12px);
             margin-right: -2px;
         }
 
@@ -265,9 +274,9 @@ body .modal {
                     &:first-child {
                         width: 55%;
                         padding-right: 15px;
-                        border: 1px solid @gray-lighter;
+                        border: 1px solid @o-we-color-text-light;
                         text-align: right;
-                        background-color: lighten(@gray-lighter, 3%);
+                        background-color: @o-we-color-paper;
 
                         @media screen and (min-width: @screen-md-min) {
                             width: 38%;
@@ -301,8 +310,8 @@ body .modal {
                                 font-weight: normal;
 
                                 .oe_remove {
+                                    .o-w-close-icon(10px, white, @o-we-color-danger, 2px);
                                     .o-position-absolute(5px, 5px);
-                                    .o-w-close-icon(15px, 0.7, 1, white, white);
                                 }
                             }
                         }
@@ -335,15 +344,6 @@ body .modal {
                             td:first-child {
                                 padding-bottom: 10px;
                                 border-bottom-width: 1px;
-                            }
-                        }
-
-                        &:hover {
-                            td {
-                                background-color: @gray-lighter;
-                                &:last-child {
-                                    background-color: lighten(@gray-lighter, 3%);
-                                }
                             }
                         }
                     }
