@@ -29,6 +29,7 @@ var chat_unread_counter = 0;
 var unread_conversation_counter = 0;
 var emojis = [];
 var emoji_substitutions = {};
+var emoji_unicodes = {};
 var needaction_counter = 0;
 var starred_counter = 0;
 var mention_partner_suggestions = [];
@@ -670,8 +671,12 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             if (s.shortcode_type === 'text') {
                 canned_responses.push(_.pick(s, ['id', 'source', 'substitution']));
             } else {
-                emojis.push(_.pick(s, ['id', 'source', 'substitution', 'description']));
+                emojis.push(_.pick(s, ['id', 'source', 'unicode_source', 'substitution', 'description']));
                 emoji_substitutions[_.escape(s.source)] = s.substitution;
+                if (s.unicode_source) {
+                    emoji_substitutions[_.escape(s.unicode_source)] = s.substitution;
+                    emoji_unicodes[_.escape(s.source)] = s.unicode_source;
+                }
             }
         });
         bus.start_polling();
@@ -760,6 +765,14 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             body: body,
             attachment_ids: data.attachment_ids,
         };
+
+        // Replace emojis by their unicode character
+        _.each(_.keys(emoji_unicodes), function (key) {
+            var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+            var regexp = new RegExp("(\\s|^)(" + escaped_key + ")(?=\\s|$)", "g");
+            msg.body = msg.body.replace(regexp, "$1" + emoji_unicodes[key]);
+        });
+
         if ('subject' in data) {
             msg.subject = data.subject;
         }
