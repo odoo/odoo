@@ -140,14 +140,8 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: [
-            '&', '&', ('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)
-        ],
-        string='Website Messages',
-        help="Website communication history",
-    )
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)])
+
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
     published_date = fields.Datetime('Published Date')

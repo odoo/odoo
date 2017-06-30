@@ -261,6 +261,7 @@ class Slide(models.Model):
     _name = 'slide.slide'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
+    _mail_post_access = 'read'
 
     _PROMOTIONAL_FIELDS = [
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
@@ -326,10 +327,6 @@ class Slide(models.Model):
 
     # website
     date_published = fields.Datetime('Publish Date')
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')],
-        string='Website Messages', help="Website communication history")
     likes = fields.Integer('Likes')
     dislikes = fields.Integer('Dislikes')
     # views
