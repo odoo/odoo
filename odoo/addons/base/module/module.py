@@ -814,7 +814,7 @@ class Module(models.Model):
     @api.multi
     def check(self):
         for module in self:
-            if not module.description:
+            if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
 
     @api.model
