@@ -57,7 +57,7 @@ class AccountAnalyticLine(models.Model):
         """
         for timesheet in self.filtered(lambda aal: not aal.so_line):
             sol = self.env['sale.order.line'].search([
-                ('order_id.project_id', '=', timesheet.account_id.id),
+                ('order_id.analytic_account_id', '=', timesheet.account_id.id),
                 ('state', 'in', ('sale', 'done')),
                 ('product_id.track_service', '=', 'timesheet'),
                 ('product_id.type', '=', 'service')
