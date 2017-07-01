@@ -247,6 +247,21 @@ Data files have to be declared in the manifest file to be loaded, they can
 be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
 (only loaded in demonstration mode).
 
+
+Each time to aply changes from XML files you need to restart Odoo and update the module's 
+data (to install the templates) by going to :menuselection: `Settings --> Modules --> Modules -->
+Module of interest` and clicking :guilabel:`Upgrade`. 
+Also changes in py files (creating new models or fields) need restart of Odoo and module upgrade to be applied.
+
+.. tip::
+
+    Alternatively, Odoo can be restarted :option: and update modules at
+    the same time <odoo-bin -u>:
+
+    .. code-block:: console
+
+        $ odoo-bin --addons-path addons -d database-name -u module-name
+
 .. exercise:: Define demonstration data
 
     Create demonstration data filling the *Courses* model with a few
