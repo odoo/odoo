@@ -107,7 +107,7 @@
                         </h2>
                     </div>
                     <notebook>
-                        <page string="Meeting Details">
+                        <page name="page_details" string="Meeting Details">
                             <group attrs="{'invisible': [('recurrency','==',False)]}" class="oe_edit_only ">
                                 <p class='alert alert-warning'> This event is linked to a recurrence...<br/>
                                     <button type="object" name="action_detach_recurring_event"  string="Update only this instance"  help="Click here to update only this instance and not all recurrences. " class="oe_link"/>
@@ -142,7 +142,7 @@
                             <label for="description"/>
                             <field name="description"/>
                         </page>
-                        <page string="Options">
+                        <page name="page_options" string="Options">
                             <group>
                                 <div>
                                     <group>
@@ -197,7 +197,7 @@
                             </group>
                         </page>
 
-                        <page string="Invitations" groups="base.group_no_one">
+                        <page name="page_invitations" string="Invitations" groups="base.group_no_one">
                             <button name="action_sendmail" type="object" string="Send mail" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" >
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
@@ -211,7 +211,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Misc" groups="base.group_no_one">
+                        <page name="page_misc" string="Misc" groups="base.group_no_one">
                             <group>
                                 <label for="user_id" string="Owner"/>
                                 <field name="user_id" nolabel="1"/>
