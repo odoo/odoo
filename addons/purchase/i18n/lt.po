@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:07+0000\n"
-"PO-Revision-Date: 2016-12-05 08:39+0000\n"
+"PO-Revision-Date: 2017-06-19 08:59+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-8/language/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -190,7 +190,7 @@ msgstr "# eilučių"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "# pirkimo užsakymo"
 
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
@@ -200,7 +200,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase_done
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Užsakymas (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -437,7 +437,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_average_delivery_time
 msgid "Average Delivery Time"
-msgstr ""
+msgstr "Vidutinis pristatymo laikotarpis"
 
 #. module: purchase
 #: field:purchase.report,price_average:0
@@ -531,7 +531,7 @@ msgstr ""
 #: code:addons/purchase/stock.py:195
 #, python-format
 msgid "Can't find any generic Buy route."
-msgstr ""
+msgstr "Nėra susieto pirkimo maršruto"
 
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
@@ -551,7 +551,7 @@ msgstr "Atšauktas"
 #: code:addons/purchase/purchase.py:1016
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
-msgstr ""
+msgstr "Negalima ištrinti pirkimo užsakymo, kuris yra '%s' būsenos."
 
 #. module: purchase
 #: field:purchase.report,category_id:0
@@ -601,7 +601,7 @@ msgstr "Klaida nustatymuose!"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Configure Purchases"
-msgstr ""
+msgstr "Konfigūruoti pirkimus"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -729,12 +729,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,picking_type_id:0
 msgid "Deliver To"
-msgstr ""
+msgstr "Išsiųsta (kam)"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Deliveries & Invoices"
-msgstr ""
+msgstr "Pristatymai ir sąskaitos faktūros"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -864,7 +864,7 @@ msgstr "Grupuoti pagal"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr ""
+msgstr "Paslėpti atšauktas eilutes"
 
 #. module: purchase
 #: help:purchase.order,message_summary:0
@@ -894,7 +894,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:337
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Jei norite ištrinti savo pirkimo užsakymą, pirmiausia turite jį atšaukti."
 
 #. module: purchase
 #: help:purchase.config.settings,group_advance_purchase_requisition:0
@@ -1003,7 +1003,7 @@ msgstr "Sąskaitos faktūros"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form
 msgid "Invoices and Incoming Shipments"
-msgstr ""
+msgstr "Sąskaitos faktūros ir atvykstančios siuntos"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -1069,7 +1069,7 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: purchase
 #: view:purchase.config.settings:purchase.view_purchase_configuration
 msgid "Location & Warehouse"
-msgstr ""
+msgstr "Vieta ir sandėlis"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:159
@@ -1105,7 +1105,7 @@ msgstr "Vadovas"
 #. module: purchase
 #: view:purchase.order.line:purchase.purchase_order_line_form2
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Rankiniu būdu įvedamos sąskaitos faktūros"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1143,7 +1143,7 @@ msgstr "Žinučių ir pranešimų istorija"
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
 msgid "Monthly Purchases"
-msgstr ""
+msgstr "Mėnesiniai pirkimai"
 
 #. module: purchase
 #: view:website:purchase.report_purchaseorder_document
@@ -1153,7 +1153,7 @@ msgstr "Galutinė kaina"
 #. module: purchase
 #: view:purchase.order:purchase.view_purchase_order_filter
 msgid "New Mail"
-msgstr ""
+msgstr "Naujas paštas"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1222
@@ -1265,7 +1265,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Išeinantis paštas"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:1363
@@ -1276,7 +1276,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase_done
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "Pirkimo užsakymas_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1361,7 +1361,7 @@ msgstr "Kainoraščiai"
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr ""
+msgstr "Spausdinti pirkimo užklausą"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1371,7 +1371,7 @@ msgstr "Planinis užsakymas"
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_rule
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Planinio užsakymo taisyklė"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
@@ -1513,7 +1513,7 @@ msgstr "Pirkimų užsakymai"
 #. module: purchase
 #: view:purchase.report:purchase.view_purchase_order_graph
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "Pirkimo užsakymų statistika"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1555,7 +1555,7 @@ msgstr "Pirkimai"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "Pirkimo užsakymai"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -1611,7 +1611,7 @@ msgstr "RFQ patvirtinta"
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr ""
+msgstr "RFQ atlikta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:327 code:addons/purchase/purchase.py:945
@@ -1622,12 +1622,12 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "Pirkimo užklausos ir pirkimai"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1637,7 +1637,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Re-Send RFQ by Email"
-msgstr ""
+msgstr "Persiųsti pirkimo užklausą el. paštu"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -1713,7 +1713,7 @@ msgstr "Kainos paklausimas N°"
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Kainos paklausimas"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -1742,7 +1742,7 @@ msgstr "Suplanuota data"
 #: view:purchase.order:purchase.view_request_for_quotation_filter
 #: view:purchase.order.line:purchase.purchase_order_line_search
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Ieškoti pirkimo užsakymo"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:purchase.view_purchase_line_invoice
@@ -1760,12 +1760,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr ""
+msgstr "Siųsti PO el. paštu"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
 msgid "Send RFQ by Email"
-msgstr ""
+msgstr "Siųsti RFQ el. paštu"
 
 #. module: purchase
 #: view:purchase.order:purchase.purchase_order_form
@@ -2120,7 +2120,7 @@ msgstr "Interneto svetainės komunikacijos istorija"
 #. module: purchase
 #: help:stock.warehouse,buy_to_resupply:0
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr ""
+msgstr "Kai produktai yra nupirkti, jie gali būti pristatyti į šį sandėlį"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:538

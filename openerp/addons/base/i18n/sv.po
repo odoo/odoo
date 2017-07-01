@@ -5,14 +5,15 @@
 # Translators:
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2015
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Haojun Zou <apollo_zhj@msn.com>, 2017
 # lasch a <bmail440@gmail.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-19 06:31+0000\n"
-"PO-Revision-Date: 2017-03-07 10:25+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"PO-Revision-Date: 2017-06-28 09:59+0000\n"
+"Last-Translator: Haojun Zou <apollo_zhj@msn.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-8/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nÖversikt:\n---------\n\n* Mall för konton och skatter mall för företag i Japan.\n* Detta täcker förmodligen inte alla nödvändiga konton för ett bolag. Du förväntas lägga till / ta bort / ändra konton baserat på denna mall.\n\nNotera:-----\n* Fiscal positioner '内 税' och '外 税' har lagts till för att hantera speciella krav som kan uppstå genom POS-implementering. [1] Du kanske inte behöver använda dessa under normala förhållanden.\n\n[1] Se https://github.com/odoo/odoo/pull/6470 för detaljer."
 
 #. module: base
 #: code:addons/base/res/res_config.py:379
@@ -3890,7 +3891,7 @@ msgstr " (kopia)"
 #. module: base
 #: model:res.partner.bank.type,format_layout:base.bank_normal
 msgid "%(bank_name)s: %(acc_number)s"
-msgstr "%(bank_name): %(acc_number)s"
+msgstr "%(bank_name)s: %(acc_number)s"
 
 #. module: base
 #: view:res.lang:base.res_lang_form
@@ -4364,7 +4365,7 @@ msgstr "Åtkomst"
 #. module: base
 #: view:ir.model.access:base.ir_access_view_search
 msgid "Access Control"
-msgstr ""
+msgstr "Behörighets Kontroll"
 
 #. module: base
 #: view:ir.model.access:base.ir_access_view_form
@@ -4652,7 +4653,7 @@ msgstr "Adresstyp"
 #. module: base
 #: view:res.country:base.view_country_form
 msgid "Address format..."
-msgstr ""
+msgstr "Adress format..."
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -4746,7 +4747,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Avancerad Händelse"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_report_designer
@@ -4939,7 +4940,7 @@ msgstr "Verkställ"
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #, python-format
 msgid "Apply Schedule Upgrade"
-msgstr ""
+msgstr "Utför planerad uppgradering"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
@@ -5682,7 +5683,7 @@ msgstr "Kap Verde"
 #. module: base
 #: selection:ir.model.fields,on_delete:0
 msgid "Cascade"
-msgstr ""
+msgstr "Kaskad"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6098,7 +6099,7 @@ msgstr "Bolagets bankkonton"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "Company Contact"
-msgstr ""
+msgstr "Företag Kontakt"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_inventory_form
@@ -6115,7 +6116,7 @@ msgstr "Bolagsnamn"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Company Properties"
-msgstr ""
+msgstr "företag Egenskaper"
 
 #. module: base
 #: field:res.company,company_registry:0
@@ -6146,12 +6147,12 @@ msgstr "Bolagsstruktur"
 #. module: base
 #: field:res.partner,contact_address:0
 msgid "Complete Address"
-msgstr ""
+msgstr "Fullständig Adress"
 
 #. module: base
 #: field:ir.model.data,complete_name:0
 msgid "Complete ID"
-msgstr ""
+msgstr "Fullständigt ID"
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
@@ -6161,7 +6162,7 @@ msgstr "Fullständigt namn"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
 msgid "Components Buyer"
-msgstr ""
+msgstr "Komponent Köpare"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -6291,7 +6292,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_8
 msgid "Consultancy Services"
-msgstr ""
+msgstr "Konsult Service"
 
 #. module: base
 #: view:res.partner:base.view_partner_form
@@ -6366,7 +6367,7 @@ msgstr "Bidragsgivare"
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "Controller"
-msgstr ""
+msgstr "Kontroller"
 
 #. module: base
 #: model:res.country,name:base.ck
@@ -6376,7 +6377,7 @@ msgstr "Cooköarna"
 #. module: base
 #: selection:ir.actions.server,use_create:0
 msgid "Copy the current record"
-msgstr ""
+msgstr "Kopiera aktuell post"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
@@ -6445,7 +6446,7 @@ msgstr "Landsgrupp"
 #. module: base
 #: field:res.country,country_group_ids:0
 msgid "Country Groups"
-msgstr ""
+msgstr "Landsgrupp"
 
 #. module: base
 #: field:res.country,name:0
@@ -6807,7 +6808,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_customer
 msgid "Customer References"
-msgstr ""
+msgstr "Kundreferens"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
@@ -6880,7 +6881,7 @@ msgstr "Databas-anonymisering"
 #. module: base
 #: field:ir.attachment,db_datas:0
 msgid "Database Data"
-msgstr ""
+msgstr "Databas Data"
 
 #. module: base
 #: help:ir.actions.act_window,res_id:0
@@ -6990,7 +6991,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_decimal_precision
 msgid "Decimal Precision Configuration"
-msgstr ""
+msgstr "Decimal precision konfiguration"
 
 #. module: base
 #: field:res.lang,decimal_point:0
@@ -7015,7 +7016,7 @@ msgstr "Standardvärde"
 #. module: base
 #: field:ir.filters,is_default:0
 msgid "Default filter"
-msgstr ""
+msgstr "Förvalt filter"
 
 #. module: base
 #: help:ir.actions.act_window,limit:0
@@ -7170,7 +7171,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
 msgid "Discussions, Mailing Lists, News"
-msgstr ""
+msgstr "Diskussioner, E-post Listor, Nyheter"
 
 #. module: base
 #: view:res.currency:base.view_currency_form
@@ -7222,7 +7223,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Distributor"
-msgstr ""
+msgstr "Distributör"
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -7248,7 +7249,7 @@ msgstr "Dokumenthanteringssystem"
 #: code:addons/base/ir/ir_model.py:793 code:addons/base/ir/ir_model.py:796
 #, python-format
 msgid "Document model"
-msgstr ""
+msgstr "Dokument modell"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum_doc
@@ -7579,7 +7580,7 @@ msgstr "Evenemangsadministration"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
-msgstr ""
+msgstr "Evenemang Försäljning"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:215
@@ -7629,7 +7630,7 @@ msgstr "Exekvering"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expense Tracker"
-msgstr ""
+msgstr "Utgifts uppföljning"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
@@ -7772,7 +7773,7 @@ msgstr "Fed. State"
 #: model:ir.actions.act_window,name:base.action_country_state
 #: model:ir.ui.menu,name:base.menu_country_state_partner
 msgid "Fed. States"
-msgstr ""
+msgstr "Fed. Stater"
 
 #. module: base
 #: field:ir.actions.server,model_object_field:0
@@ -7880,7 +7881,7 @@ msgstr "Filternamn"
 #. module: base
 #: sql_constraint:ir.filters:0
 msgid "Filter names must be unique"
-msgstr ""
+msgstr "Filter namn måste vara unika"
 
 #. module: base
 #: view:ir.attachment:base.view_attachment_search
@@ -7900,17 +7901,17 @@ msgstr "Filter"
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr ""
+msgstr "Filter skapade av mig"
 
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr ""
+msgstr "Filter skapade av alla användare"
 
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search
 msgid "Filters visible only for one user"
-msgstr ""
+msgstr "Filter synligt endast för en användare"
 
 #. module: base
 #: help:ir.actions.server,copyvalue:0
@@ -7922,7 +7923,7 @@ msgstr "Slutlig platshållare uttryck, att kopieras till önskad mallfält."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant
 msgid "Financial and Analytic Accounting"
-msgstr ""
+msgstr "Finansiell och analytisk bokföring"
 
 #. module: base
 #: view:ir.actions.server:base.view_server_action_form
@@ -7953,7 +7954,7 @@ msgstr "Flyttal"
 #: view:workflow.activity:base.view_workflow_activity_search
 #: field:workflow.activity,flow_start:0
 msgid "Flow Start"
-msgstr ""
+msgstr "Flödes Start"
 
 #. module: base
 #: view:workflow.activity:base.view_workflow_activity_search
@@ -7985,7 +7986,7 @@ msgstr "Typsnittsfamilj"
 #. module: base
 #: model:ir.model,name:base.model_res_font
 msgid "Fonts available"
-msgstr ""
+msgstr "Typsnitt tillgängliga"
 
 #. module: base
 #: help:res.company,rml_footer:0
@@ -8071,7 +8072,7 @@ msgstr "Forum"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum_doc
 msgid "Forum, Documentation"
-msgstr ""
+msgstr "Forum, Dokumentation"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -8082,7 +8083,7 @@ msgstr ""
 #: code:addons/base/ir/ir_fields.py:344
 #, python-format
 msgid "Found multiple matches for field '%%(field)s' (%d matches)"
-msgstr ""
+msgstr "Hittade flera matchningar för fält '%%(field)s' (%d matches)"
 
 #. module: base
 #: model:res.country,name:base.fr
@@ -8142,7 +8143,7 @@ msgstr "Full åtkomst"
 #. module: base
 #: view:ir.rule:base.view_rule_search
 msgid "Full Access Right"
-msgstr ""
+msgstr "Full Åtkomst Rättighet"
 
 #. module: base
 #: field:res.partner.category,complete_name:0
@@ -8775,7 +8776,7 @@ msgstr ""
 #. module: base
 #: field:base.language.import,code:0
 msgid "ISO Code"
-msgstr ""
+msgstr "ISO Kod"
 
 #. module: base
 #: help:base.language.import,code:0
@@ -8805,7 +8806,7 @@ msgstr "Ikon"
 #. module: base
 #: field:ir.module.module,icon:0
 msgid "Icon URL"
-msgstr ""
+msgstr "Ikon URL"
 
 #. module: base
 #: help:ir.actions.act_window,multi:0
@@ -9412,7 +9413,7 @@ msgstr "Är ett bolag?"
 #. module: base
 #: model:res.country,name:base.im
 msgid "Isle of Man"
-msgstr ""
+msgstr "Isle of Man"
 
 #. module: base
 #: model:res.country,name:base.il
@@ -9661,7 +9662,7 @@ msgstr "Laos"
 #. module: base
 #: field:ir.ui.view,write_date:0
 msgid "Last Modification Date"
-msgstr ""
+msgstr "Senaste ändringsdatum"
 
 #. module: base
 #: field:ir.attachment,write_uid:0
@@ -9837,7 +9838,7 @@ msgstr "Kundämnen, affärsmöjligheter, telefonsamtal"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leave Management"
-msgstr ""
+msgstr "Semesterplanering"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -10302,7 +10303,7 @@ msgstr "Martinique (French)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
 msgid "Mass Mailing Campaigns"
-msgstr ""
+msgstr "Mass mail kampanj utskick"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -10750,7 +10751,7 @@ msgstr "Flerbolag"
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
 msgid "Multi Currencies"
-msgstr ""
+msgstr "Fler-valuta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
@@ -10785,7 +10786,7 @@ msgstr "Mina företag"
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search
 msgid "My filters"
-msgstr ""
+msgstr "Mina filter"
 
 #. module: base
 #: model:res.country,name:base.mm
@@ -10872,7 +10873,7 @@ msgstr ""
 #. module: base
 #: field:change.password.user,new_passwd:0
 msgid "New Password"
-msgstr ""
+msgstr "Nytt lösenord:"
 
 #. module: base
 #: selection:ir.actions.act_url,target:0
@@ -11147,7 +11148,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Office Supplies"
-msgstr ""
+msgstr "Kontors tillbehör"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_user
@@ -11414,7 +11415,7 @@ msgstr "Utgående e-postserver"
 #: view:ir.mail_server:base.view_ir_mail_server_search
 #: model:ir.ui.menu,name:base.menu_mail_servers
 msgid "Outgoing Mail Servers"
-msgstr ""
+msgstr "Utgående e-postservrar"
 
 #. module: base
 #: view:workflow.activity:base.view_workflow_activity_form
@@ -11631,7 +11632,7 @@ msgstr "Lösenord"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_crypt
 msgid "Password Encryption"
-msgstr ""
+msgstr "Lösenords kryptering"
 
 #. module: base
 #: field:ir.logging,path:0 field:res.font,path:0
@@ -11737,7 +11738,7 @@ msgstr ""
 #. module: base
 #: view:res.partner:base.view_res_partner_filter
 msgid "Persons"
-msgstr ""
+msgstr "Personer"
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -11837,7 +11838,7 @@ msgstr "Kassa"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "Kassa Rabatt"
 
 #. module: base
 #: model:res.country,name:base.pl
@@ -11889,12 +11890,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_sale
 msgid "Portal Sale"
-msgstr ""
+msgstr "Portal Försäljning"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_stock
 msgid "Portal Stock"
-msgstr ""
+msgstr "Portal Inventarie"
 
 #. module: base
 #: model:res.groups,comment:base.group_portal
@@ -11968,7 +11969,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_website_hr
 msgid "Present Your Team"
-msgstr ""
+msgstr "Presentera Ditt Team"
 
 #. module: base
 #: view:res.company:base.view_company_form
@@ -12019,7 +12020,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Produkter & Prislistor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
@@ -12530,7 +12531,7 @@ msgstr "Obligatorisk"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_crm_partner_assign
 msgid "Resellers"
-msgstr ""
+msgstr "Återförsäljare"
 
 #. module: base
 #: code:addons/models.py:1085
@@ -12571,7 +12572,7 @@ msgstr "Resursobjekt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_restaurant
 msgid "Restaurant"
-msgstr ""
+msgstr "Restaurang"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
@@ -12863,7 +12864,7 @@ msgstr ""
 #. module: base
 #: view:ir.cron:base.ir_cron_view_search
 msgid "Scheduled Action"
-msgstr ""
+msgstr "Schemalagd åtgärd"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -13147,7 +13148,7 @@ msgstr "Ange som 'att göra'"
 msgid ""
 "Set the font into the report header, it will be used as default font in the "
 "RML reports of the user company"
-msgstr ""
+msgstr "Ställ in teckensnittet i rapporthuvudet, det kommer att användas som standard font i RML-rapporterna för användarens bolag."
 
 #. module: base
 #: code:addons/base/res/res_users.py:536
@@ -13174,7 +13175,7 @@ msgstr ""
 #. module: base
 #: view:ir.filters:base.ir_filters_view_search
 msgid "Shared"
-msgstr ""
+msgstr "Delad"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -13216,7 +13217,7 @@ msgstr "Signatur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr ""
+msgstr "Registrera"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_5
@@ -13322,7 +13323,7 @@ msgstr "Somalia"
 #. module: base
 #: help:res.bank,bic:0
 msgid "Sometimes called BIC or Swift."
-msgstr ""
+msgstr "Ofta kallad BIC eller Swift"
 
 #. module: base
 #: code:addons/base/ir/ir_attachment.py:259
@@ -13600,7 +13601,7 @@ msgstr "Stop All"
 #. module: base
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
-msgstr ""
+msgstr "Sparat Filnamn"
 
 #. module: base
 #: field:res.bank,street:0 field:res.company,street:0
@@ -13766,7 +13767,7 @@ msgstr "Symbol"
 #. module: base
 #: field:res.currency,position:0
 msgid "Symbol Position"
-msgstr ""
+msgstr "Symbol Possition"
 
 #. module: base
 #: view:base.update.translations:base.wizard_update_translations
@@ -13807,7 +13808,7 @@ msgstr ""
 #. module: base
 #: view:ir.config_parameter:base.view_ir_config_search
 msgid "System Properties"
-msgstr ""
+msgstr "System Egenskaper"
 
 #. module: base
 #: view:base.module.upgrade:base.view_base_module_upgrade
@@ -13856,7 +13857,7 @@ msgstr "Etiketter"
 #: view:res.partner:base.view_partner_form
 #: view:res.partner:base.view_partner_simple_form
 msgid "Tags..."
-msgstr ""
+msgstr "Taggar..."
 
 #. module: base
 #: model:res.country,name:base.tw
@@ -13910,7 +13911,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr
 msgid "Team Page"
-msgstr ""
+msgstr "Team Sida"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -14359,7 +14360,7 @@ msgstr "Detta fönster"
 #: code:addons/base/ir/ir_model.py:353
 #, python-format
 msgid "This column contains module data and cannot be removed!"
-msgstr ""
+msgstr "Denna column innehåller modul data och kan inte tas bort!"
 
 #. module: base
 #: code:addons/base/ir/ir_cron.py:281
@@ -14502,7 +14503,7 @@ msgstr "Att göra"
 #. module: base
 #: selection:ir.translation,state:0
 msgid "To Translate"
-msgstr ""
+msgstr "Att Översätta"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -14593,18 +14594,18 @@ msgstr "Översätt"
 #. module: base
 #: selection:ir.translation,state:0
 msgid "Translated"
-msgstr ""
+msgstr "Översatt"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
 #: model:ir.ui.menu,name:base.menu_action_translation
 msgid "Translated Terms"
-msgstr ""
+msgstr "Översatta Termer"
 
 #. module: base
 #: field:ir.translation,name:0
 msgid "Translated field"
-msgstr ""
+msgstr "Översatt fält"
 
 #. module: base
 #: view:ir.translation:base.view_translation_form
@@ -14632,7 +14633,7 @@ msgstr ""
 #. module: base
 #: selection:ir.translation,state:0
 msgid "Translation in Progress"
-msgstr ""
+msgstr "Översättning pågår"
 
 #. module: base
 #: view:ir.translation:base.view_translation_form
@@ -14831,7 +14832,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
 msgid "Uncategorized"
-msgstr ""
+msgstr "Okategoriserad"
 
 #. module: base
 #: view:base.language.export:base.wizard_lang_export
@@ -14875,7 +14876,7 @@ msgstr ""
 #: code:addons/models.py:1083
 #, python-format
 msgid "Unknown error during import:"
-msgstr ""
+msgstr "Okänt fel under import: "
 
 #. module: base
 #: code:addons/report_sxw.py:392
@@ -14968,7 +14969,7 @@ msgstr ""
 #. module: base
 #: selection:ir.actions.server,use_write:0
 msgid "Update the current record"
-msgstr ""
+msgstr "Uppdatera aktuell post"
 
 #. module: base
 #: model:ir.actions.client,name:base.modules_updates_act_cl

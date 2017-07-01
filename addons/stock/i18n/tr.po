@@ -4,14 +4,15 @@
 # 
 # Translators:
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2015
-# Murat Kaplan <muratk@projetgrup.com>, 2015-2016
+# Murat Kaplan <muratk@projetgrup.com>, 2015-2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-01-14 12:26+0000\n"
-"PO-Revision-Date: 2016-06-22 03:22+0000\n"
+"PO-Revision-Date: 2017-06-28 08:41+0000\n"
 "Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -66,7 +67,7 @@ msgid ""
 "same product(%s), same location(%s), same package, same owner and same lot. "
 "Please first validate the first inventory adjustement with this product "
 "before creating another one."
-msgstr ""
+msgstr "Aynı ürün (%s), aynı konumda (%s), aynı pakette, aynı lot/seri numarası ile 'Devam Etmekte' durumunda olan iki envanter düzeltmesi yapamazsınız. Bu ürün ya başka bir 'Devam Etmekte' olan sayım evrakında mevcut ya da bu evrakta aynı ürünü birden fazla satıra girmiş olabilirsiniz, lütfen ilk önce oluşturulan diğer envanter düzeltmesi evraklarını veya bu sayım evrakının satırlarını kontrol edin."
 
 #. module: stock
 #: code:addons/stock/stock.py:3090
@@ -647,7 +648,7 @@ msgstr "Aktif alanın işaretini kaldırarak, bir konumuu silmeden gizleyebilirs
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
-msgstr "Aktif alanın işaretini kaldırarak, bir TESLİM ŞEKLİNİ silmeden gizleyebilirsiniz."
+msgstr "Aktif alanın işaretini kaldırarak, bir TESLİM KOŞULUNU silmeden gizleyebilirsiniz."
 
 #. module: stock
 #: view:stock.picking:stock.stock_picking_calendar
@@ -1199,7 +1200,7 @@ msgid ""
 "where to store the products. This method can be enforced at the product "
 "category level, and a fallback is made on the parent locations if none is "
 "set here."
-msgstr ""
+msgstr "Ürünleri saklamanın tam yerini (raf) önermek için kullanılan varsayılan yöntemi tanımlar. Bu yöntem, ürün kategorisi düzeyinde uygulanabilir ve burada hiçbiri ayarlanmamışsa üst konumlarda bir geri yükleme yapılır."
 
 #. module: stock
 #: help:stock.location,removal_strategy_id:0
@@ -1208,7 +1209,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr ""
+msgstr "Ürünleri saklamanın tam yerini (raf) önermek için kullanılan varsayılan yöntemi tanımlar, hangi lotu vs. Bu yöntem, ürün kategorisi düzeyinde uygulanabilir ve burada hiçbiri ayarlanmamışsa üst konumlarda bir geri yükleme yapılır."
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -1325,7 +1326,7 @@ msgid ""
 "Determines the procurement method of the stock move that will be generated: "
 "whether it will need to 'take from the available stock' in its source "
 "location or needs to ignore its stock and create a procurement over there."
-msgstr ""
+msgstr "Üretilecek stok hareketinin tedarik yöntemini belirler: kaynak konumunda kullanılabilir durumdaki stoktan mı alacak yada bu durumu yok sayıp yeni bir satınalma siparişimi oluşturacak."
 
 #. module: stock
 #: model:stock.location,name:stock.location_dispatch_zone
@@ -1341,7 +1342,7 @@ msgid ""
 "product is controlled at least once a year. This also lets you find out "
 "which products have seen little move lately and may deserve special measures"
 " (discounted sale, quality control...)"
-msgstr ""
+msgstr "Ürünlerinizde yapılan envanterleri ve Hareketleri görüntüleyin ve bunları belirli filtreleme ölçütleriyle kolayca sıralayın. Devamlı ve parçalı stoklar yaparsanız, her bir ürünün stoklarının yılda en az bir kez kontrol edilmesini sağlamak için bu rapora ihtiyacınız olacaktır. Bu, ayrıca, hangi ürünlerin son zamanlarda az hareket gördüğünü ve özel önlemler (indirimli satış, kalite kontrolü ...) almanız gerekeceğini bulmanızı sağlar."
 
 #. module: stock
 #: view:stock.move:stock.view_move_search view:stock.move:stock.view_move_tree
@@ -1610,7 +1611,7 @@ msgstr "Genel IT Tedarikçileri"
 msgid ""
 "Give to the more specialized category, a higher priority to have them in top"
 " of the list."
-msgstr ""
+msgstr "Daha özel kategoriler verin, bunları listenin başına getirmek için yüksek öncelik verebilirsiniz."
 
 #. module: stock
 #: help:stock.warehouse,default_resupply_wh_id:0
@@ -1729,7 +1730,7 @@ msgstr "Eğer seçilirse yeni mesajlar dikkat gerektirir."
 msgid ""
 "If checked, when the previous move is cancelled or split, the move generated"
 " by this move will too"
-msgstr ""
+msgstr "İşaretlenirse, önceki hareket iptal edilir veya bölünürse, Bu işlem tarafından üretilen hareket içinde geçerli olur"
 
 #. module: stock
 #: help:procurement.rule,propagate:0
@@ -1737,7 +1738,7 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr ""
+msgstr "İşaretlenirse, (bir sonraki tedarik tarafından üretilen) hareketin önceki hareketi iptal edilir veya bölünürse, bu işlem tarafından üretilen hareket içinde geçerli olur"
 
 #. module: stock
 #: help:stock.move,propagate:0
@@ -1747,12 +1748,12 @@ msgstr "Kontrol edildiyse, bu hareket iptal edildiğinde, ilgi hareketi de iptal
 #. module: stock
 #: help:procurement.rule,route_id:0
 msgid "If route_id is False, the rule is global"
-msgstr ""
+msgstr "route_id boş ise, kural geneldir"
 
 #. module: stock
 #: help:stock.pack.operation,result_package_id:0
 msgid "If set, the operations are packed into this package"
-msgstr ""
+msgstr "Eğer ayarlanırsa, operasyonlar bu pakete yerleştirilir"
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,active:0
@@ -1781,7 +1782,7 @@ msgstr ""
 msgid ""
 "If this is a negative quant, this will be the move that caused this negative"
 " quant."
-msgstr ""
+msgstr "Eğer bu eksi stoksa, bu stok hareket eksi stoğa neden olacaktır."
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1803,7 +1804,7 @@ msgid ""
 "  (e.g. Cycle Counting) you can choose 'Manual Selection of Products' and "
 "the system won't propose anything.  You can also let the system propose for "
 "a single product / lot /... "
-msgstr ""
+msgstr "Komple bir stok sayımı yapaksanız 'Tüm Ürünler'i seçebilirsiniz. Stokta bulunan tüm ürünler otomatik olarak gelecektir. Sadece bazı ürünlerin sayımını (örn: Döngü Sayım) yapacaksanız, 'Ürünlerin Manuel Seçimi'  opsiyonunu seçebilirsiniz burada sistem size herhangi bir ürün önerisi sunmaz. Ayrıca, sistemde ürünleri lot / seri numarasına göre sayabilirsiniz..."
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -1820,7 +1821,7 @@ msgstr "Türü"
 msgid ""
 "In case of dropshipping, we need to know the destination address more "
 "precisely"
-msgstr ""
+msgstr "Transit ticaret durumunda, hedef adresinin kesin olarak belirtilmesi gereklidir."
 
 #. module: stock
 #: field:product.product,incoming_qty:0 field:product.template,incoming_qty:0
@@ -2500,7 +2501,7 @@ msgstr "Metod"
 #: field:res.company,propagation_minimum_delta:0
 msgid ""
 "Minimum Delta for Propagation of a Date Change on moves linked together"
-msgstr ""
+msgstr "Birbirine bağlı hareketler üzerinde bir Tarih Değişimi Yayılması için Minimum Delta"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -2570,7 +2571,7 @@ msgstr "Hareket tarihi: hareket gerçekleştirilinceye kadar ayarlanan tarih, ge
 #. module: stock
 #: help:procurement.order,move_dest_id:0
 msgid "Move which caused (created) the procurement"
-msgstr ""
+msgstr "Bu stok hareketini oluşturan satınalma kuralı"
 
 #. module: stock
 #: view:stock.move:stock.view_move_form
@@ -2602,19 +2603,19 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by procurement rules will be grouped "
 "into one big picking."
-msgstr ""
+msgstr "Bu sipariş noktası üzerinden yaratılan hareketler bu satın alma grubuna konacaktır. Hiçbir şey verilmezse, satın alma kuralları tarafından üretilen hareketler büyük bir toplama olarak gruplandırılacaktır."
 
 #. module: stock
 #: help:stock.pack.operation,linked_move_operation_ids:0
 msgid ""
 "Moves impacted by this operation for the computation of the remaining "
 "quantities"
-msgstr ""
+msgstr "Kalan miktarların hesaplanması için bu işlemden etkilenen hareketler"
 
 #. module: stock
 #: help:stock.quant,history_ids:0
 msgid "Moves that operate(d) on this quant"
-msgstr ""
+msgstr "Bu stoklarda işlenen hareketler"
 
 #. module: stock
 #: view:procurement.rule:stock.view_procurement_rule_form_stock_inherit
@@ -2940,7 +2941,7 @@ msgstr "Sahibi "
 #. module: stock
 #: help:stock.location,partner_id:0
 msgid "Owner of the location if not internal"
-msgstr ""
+msgstr "Eğer iç konum değil ise konumun sahibi"
 
 #. module: stock
 #: help:stock.pack.operation,owner_id:0
@@ -2988,7 +2989,7 @@ msgstr "Paket BarCode"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.action_report_quant_package_barcode
 msgid "Package BarCode with Contents"
-msgstr ""
+msgstr "İçeriği ile birlikte paket barkodu"
 
 #. module: stock
 #: view:stock.quant.package:stock.quant_package_search_view
@@ -3171,7 +3172,7 @@ msgstr "Toplama Tür Adı"
 msgid ""
 "Picking Type determines the way the picking should be shown in the view, "
 "reports, ..."
-msgstr ""
+msgstr "Toplama Liste Türü, toplama işlemi görünümde ve raporlarda gösterilme biçimini belirler ..."
 
 #. module: stock
 #: field:stock.picking.type,return_picking_type_id:0
@@ -3262,14 +3263,14 @@ msgstr "Tercih Edilen Rotalar"
 #. module: stock
 #: help:stock.move,route_ids:0
 msgid "Preferred route to be followed by the procurement order"
-msgstr ""
+msgstr "Tedarik emrinin izlenmesi için tercih edilen rota"
 
 #. module: stock
 #: help:procurement.order,route_ids:0
 msgid ""
 "Preferred route to be followed by the procurement order. Usually copied from"
 " the generating document (SO) but could be set up manually."
-msgstr ""
+msgstr "Tedarik emirlerinin izlenmesi için tercih edilen rota. Genellikle, oluşturan dokümandan (SO) kopyalanır, ancak manuel olarak ayarlanabilir."
 
 #. module: stock
 #. openerp-web
@@ -3680,7 +3681,7 @@ msgstr "Bu miktar, ürünün Varsayılan Ölçü Biriminde tanımlanır."
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr ""
+msgstr "Varsayılan ölçü birimi cinsinden ürünün bu stoklardaki miktarı"
 
 #. module: stock
 #: help:product.product,incoming_qty:0
@@ -3706,7 +3707,7 @@ msgid ""
 "Quantity of products to consider when talking about the contribution of this"
 " pack operation towards the remaining quantity of the move (and inverse). "
 "Given in the product main uom."
-msgstr ""
+msgstr "Kalan paket miktarına (ve tersine) doğru bu paketleme işleminin katkısı hakkında konuşurken göz önüne alınması gereken ürün miktarı. Ürün ana ölçü biriminde verilmektedir."
 
 #. module: stock
 #: help:stock.move,reserved_availability:0
@@ -3870,12 +3871,12 @@ msgstr "Kalan Miktar"
 msgid ""
 "Remaining Quantity in default UoM according to operations matched with this "
 "move"
-msgstr ""
+msgstr "Bu hareketle eşleşen operasyonlara göre varsayılan UoM'da kalan Miktar"
 
 #. module: stock
 #: view:stock.picking:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr ""
+msgstr "Toplama işleminin kalan parçaları kısmen işlenmiş"
 
 #. module: stock
 #: help:stock.pack.operation,remaining_qty:0
@@ -4043,7 +4044,7 @@ msgstr "Rotalar"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr ""
+msgstr "Bu ikmal depolarına rotalar oluşturulacak ve bunları ürünler ve ürün kategorileri üzerinde seçebilirsiniz."
 
 #. module: stock
 #: field:product.template,loc_row:0
@@ -4109,7 +4110,7 @@ msgstr "Bu hareketin işlenmesi için zamanlanan tarih"
 msgid ""
 "Scheduled time for the first part of the shipment to be processed. Setting "
 "manually a value here would set it as expected date for all the stock moves."
-msgstr ""
+msgstr "Sevkiyatın ilk bölümü için planlanmış işlem çalışacak. Bir değeri manuel ayarlamak, tüm stok hareketlerini beklenen tarihe ayarlar."
 
 #. module: stock
 #: help:stock.picking,max_date:0
@@ -4233,7 +4234,7 @@ msgstr "Kullanılabilir Yap"
 msgid ""
 "Set a specific removal strategy that will be used regardless of the source "
 "location for this product category"
-msgstr ""
+msgstr "Bu ürün kategorisinin kaynak konumundan bağımsız olarak kullanılacak belirli bir kaldırma stratejisi belirleyin"
 
 #. module: stock
 #: view:stock.inventory:stock.view_inventory_form
@@ -4339,7 +4340,7 @@ msgstr "Kaynak paket"
 msgid ""
 "Specify Lot/Serial Number to focus your inventory on a particular Lot/Serial"
 " Number."
-msgstr ""
+msgstr "Stoklarınızda belirli bir Lot / Seri Numarasına odaklamak için Lot / Seri Numarasını belirtin."
 
 #. module: stock
 #: help:stock.inventory,partner_id:0
@@ -4349,7 +4350,7 @@ msgstr "Stok sorumlusu atamanızı sağlar."
 #. module: stock
 #: help:stock.inventory,package_id:0
 msgid "Specify Pack to focus your inventory on a particular Pack."
-msgstr ""
+msgstr "Stoklarınızda belirli bir Pakete odaklanmak için Paket'i belirtin."
 
 #. module: stock
 #: help:stock.inventory,product_id:0
@@ -4557,21 +4558,21 @@ msgid ""
 "Technical field containing the quant that created this link between an "
 "operation and a stock move. Used at the stock_move_obj.action_done() time to"
 " avoid seeking a matching quant again"
-msgstr ""
+msgstr "Bir operasyon ile stok hareketleri arasında bu bağlantıyı oluşturan stokları içeren teknik alan. Tekrar eşleşen bir stok aramayı önlemek için stock_move_obj.action_done() kullanılır"
 
 #. module: stock
 #: help:stock.move,warehouse_id:0
 msgid ""
 "Technical field depicting the warehouse to consider for the route selection "
 "on the next procurement (if any)."
-msgstr ""
+msgstr "Depoyu bir sonraki tedarik üzerinde rota seçimi için dikkate alan teknik alan."
 
 #. module: stock
 #: help:res.company,internal_transit_location_id:0
 msgid ""
 "Technical field used for resupply routes between warehouses that belong to "
 "this company"
-msgstr ""
+msgstr "Bu şirkete ait depolar arasındaki ikmal rotaları için kullanılan teknik alan"
 
 #. module: stock
 #: help:stock.move,restrict_lot_id:0
@@ -4585,7 +4586,7 @@ msgstr ""
 msgid ""
 "Technical field used to depict a restriction on the ownership of quants to "
 "consider when marking this move as 'done'"
-msgstr ""
+msgstr "Stokların üzerinde bir kısıtlamanın belirtilmesinde kullanılan teknik alan, bu hareketi 'bitmiş' olarak işaretlerken göz önüne alacaktır."
 
 #. module: stock
 #: help:stock.picking,picking_type_code:0
@@ -4604,7 +4605,7 @@ msgstr "Gerekmediği takdirde Teknik alan yardım araç ipucunu gizlemek için k
 msgid ""
 "Technical field used to record the destination location of a move that "
 "created a negative quant"
-msgstr ""
+msgstr "Eksi stok oluşturan bir hareketin hedef konumunu kaydetmek için kullanılan teknik alan"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -4612,14 +4613,14 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when costing method used is 'average price' or "
 "'real'). Value given in company currency and in product uom."
-msgstr ""
+msgstr "Toplama onayı sırasında kullanıcı tarafından belirlenen ürün maliyetinin kaydedilmesi için kullanılan teknik alan (kullanılan maliyetleme yöntemi 'ortalama fiyat' veya 'gerçek' ise). Şirketin para biriminde ve ürün cinsinden verilen değer."
 
 #. module: stock
 #: help:stock.move,split_from:0
 msgid ""
 "Technical field used to track the origin of a split move, which can be "
 "useful in case of debug"
-msgstr ""
+msgstr "Hata ayıklama durumunda yararlı olabilir bir bölünmüş hareket kökenini izlemek için kullanılan teknik alan"
 
 #. module: stock
 #: help:product.template,sale_delay:0
@@ -4657,14 +4658,14 @@ msgstr "Seri numarası, ürün kodu ve ürün benzersiz (unique) olmalı"
 #. module: stock
 #: help:stock.quant,company_id:0
 msgid "The company to which the quants belong"
-msgstr ""
+msgstr "Stoklar'ın ait olduğu şirket"
 
 #. module: stock
 #: help:stock.inventory,date:0
 msgid ""
 "The date that will be used for the stock level check of the products and the"
 " validation of the stock move related to this inventory."
-msgstr ""
+msgstr "Ürünlerin stok seviyesinde kontrolünde ve bu envantere ilişkin stok hareketinin geçerliliği için kullanılacak tarih."
 
 #. module: stock
 #: code:addons/stock/stock.py:3522
@@ -4672,21 +4673,21 @@ msgstr ""
 msgid ""
 "The default resupply warehouse should be different than the warehouse "
 "itself!"
-msgstr ""
+msgstr "Varsayılan ikmal deposu deponun kendisinden farklı olmalıdır!"
 
 #. module: stock
 #: code:addons/stock/stock.py:1067
 #, python-format
 msgid ""
 "The destination location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Tüm hareketler için hedef konumu aynı olmalıdır."
 
 #. module: stock
 #: view:product.category:stock.product_category_form_view_inherit
 msgid ""
 "The following routes will apply to the products in this category taking into"
 " account parent categories:"
-msgstr ""
+msgstr "Aşağıdaki kategoriler, ana kategorileri dikkate alarak bu kategorideki ürünler için geçerli olacaktır:"
 
 #. module: stock
 #: help:stock.quant,reservation_id:0
@@ -4741,7 +4742,7 @@ msgstr "Bu stok hareketini oluşturan itme kuralı"
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `product_qty` field instead of the `product_uom_qty`."
-msgstr ""
+msgstr "İstenen işlem, `product_uom_qty` yerine` product_qty` alanını ayarlayan bir programlama hatası nedeniyle çalışmıyor."
 
 #. module: stock
 #. openerp-web
@@ -4776,7 +4777,7 @@ msgstr "Seçili stok seçenekler tutarlı değildir."
 #: code:addons/stock/stock.py:1070
 #, python-format
 msgid "The source location must be the same for all the moves of the picking."
-msgstr ""
+msgstr "Tüm hareketler için kaynak konumu aynı olmalıdır."
 
 #. module: stock
 #: view:stock.transfer_details:stock.view_stock_enter_transfer_details
@@ -4823,7 +4824,7 @@ msgid ""
 "This allows to manipulate packages.  You can put something in, take "
 "something from a package, but also move entire packages and put them even in"
 " another package.  "
-msgstr ""
+msgstr "Bu paketleri elle çalıştırmayı sağlar. Bir şey koyabilir, bir paketten bir şeyler alabilir, aynı zamanda tüm paketleri hareket ettirip başka bir paketee bile koyabilirsiniz."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
@@ -4845,7 +4846,7 @@ msgstr "Bu analiz size mevcut stok durumunuzu ve güncel envanter değerlerinizi
 msgid ""
 "This field should be completed only if everything inside the package share "
 "the same product, otherwise it doesn't really makes sense."
-msgstr ""
+msgstr "Bu alan ancak paket içindeki her şey aynı ürünü paylaşıyorsa tamamlanmalıdır, aksi takdirde gerçekten mantıklı değildir."
 
 #. module: stock
 #: help:stock.quant,owner_id:0
@@ -4880,7 +4881,7 @@ msgstr "Bu, konum ağacında ürünün izlemesi gereken rotaları belirtmek içi
 msgid ""
 "This option supplements the warehouse application by effectively "
 "implementing Push and Pull inventory flows through Routes."
-msgstr ""
+msgstr "Bu seçenek, itme ve çekme stok akışlarını Rota'lar aracılığıyla etkin bir şekilde uygulayarak depo uygulamasını tamamlar."
 
 #. module: stock
 #: view:stock.return.picking:stock.view_stock_return_picking_form
@@ -4933,7 +4934,7 @@ msgstr "Bu stok konumu varsayılanın yerine envanter işlemi yaparken oluşturu
 #. module: stock
 #: help:stock.config.settings,group_stock_tracking_owner:0
 msgid "This way you can receive products attributed to a certain owner. "
-msgstr ""
+msgstr "Bu şekilde belirli bir sahibine atfedilen ürünleri alabilirsiniz."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_multiple_locations:0
@@ -5043,7 +5044,7 @@ msgstr "Transit Konumu"
 msgid ""
 "True if reserved quants changed, which mean we might need to recompute the "
 "package operations"
-msgstr ""
+msgstr "Rezerve stok hareketi değişirse, paket işlemlerini yeniden hesaplamamız gerekebilir demektir."
 
 #. module: stock
 #: field:stock.picking.type,code:0
@@ -5239,7 +5240,7 @@ msgstr "Görünüm"
 #. module: stock
 #: view:stock.quant.package:stock.view_quant_package_form
 msgid "View Contained Packages content"
-msgstr ""
+msgstr "Paket İçerikleri"
 
 #. module: stock
 #: field:stock.warehouse,view_location_id:0
@@ -5374,7 +5375,7 @@ msgstr "Uyarı: yanlış miktar!"
 #: help:product.putaway,fixed_location_ids:0
 msgid ""
 "When the method is fixed, this location will be used to store the products"
-msgstr ""
+msgstr "Method sabitlendiğinde, bu konum ürünlerin depolanması için kullanılacaktır."
 
 #. module: stock
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -5397,7 +5398,7 @@ msgstr "Kullanılabilir (Öngörülen) stok miktarı Minimum Miktar'ın altına 
 msgid ""
 "When you select a serial number (lot), the quantity is corrected with respect to\n"
 "                            the quantity of that serial number (lot) and not to the total quantity of the product."
-msgstr ""
+msgstr "Bir seri numarası (lot) seçtiğinizde, bu ürünün toplam miktarı değildir.\n                            İlgili seri numarasının (lot) miktarıdır."
 
 #. module: stock
 #: field:stock.return.picking.line,wizard_id:0
@@ -5427,13 +5428,13 @@ msgid ""
 "You can not change the unit of measure of a product that has already been "
 "used in a done stock move. If you need to change the unit of measure, you "
 "may deactivate this product."
-msgstr ""
+msgstr "Yapılmış bir stok hareketinde zaten kullanılan bir ürünün ölçü birimini değiştiremezsiniz. Ölçü birimini değiştirmeniz gerekiyorsa, bu ürünü devre dışı bırakabilirsiniz."
 
 #. module: stock
 #: code:addons/stock/stock.py:2846
 #, python-format
 msgid "You can not reserve a negative quantity or a negative quant."
-msgstr ""
+msgstr "Eksi (-) bir miktar veya eksi bir stok hareketi rezerve edemezsiniz."
 
 #. module: stock
 #: code:addons/stock/stock.py:2400
@@ -5459,7 +5460,7 @@ msgstr "%s görünüm türlü bir konuma taşıyamazsınız."
 msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
-msgstr ""
+msgstr "Bir envanter satırında negatif (-) ürün miktarı ayarlayamazsınız:\n%s - miktar:%s"
 
 #. module: stock
 #: code:addons/stock/stock.py:2465
