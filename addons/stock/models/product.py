@@ -85,8 +85,8 @@ class Product(models.Model):
             ('location_dest_id.usage', '=', 'internal'),
             ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
         res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.reception_count = res.get(move.id, 0)
+        for product in self:
+            product.reception_count = res.get(product.id, 0)
 
     def _compute_delivery_count(self):
         move_data = self.env['stock.move'].read_group([
@@ -95,8 +95,8 @@ class Product(models.Model):
             ('location_dest_id.usage', '!=', 'internal'),
             ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
         res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.delivery_count = res.get(move.id, 0)
+        for product in self:
+            product.delivery_count = res.get(product.id, 0)
 
     @api.depends('stock_quant_ids', 'stock_move_ids')
     def _compute_quantities(self):
