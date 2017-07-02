@@ -94,6 +94,7 @@ var MockServer = Class.extend({
         args = JSON.parse(JSON.stringify(args));
         if (logLevel === 2) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
+            args = JSON.parse(JSON.stringify(args));
         }
         return this._performRpc(route, args).then(function (result) {
             var resultString = JSON.stringify(result || false);
