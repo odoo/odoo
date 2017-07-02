@@ -5,6 +5,7 @@
 # Translators:
 # ExcaliberX <excaliberx@gmail.com>, 2017
 # Leonid Froenchenko <lfroen@gmail.com>, 2017
+# Moshe Flam <pashute@gmail.com>, 2017
 # Leandro Noijovich <eliel.sorcerer@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
@@ -1074,6 +1075,8 @@ msgid ""
 "                category, you can not sell it through the point of sale\n"
 "                interface."
 msgstr ""
+"אל תשכח להגדיר את המחיר ואת סוג הקופה שבו המחיר יופיע. אם לא הוגדר סוג קופה "
+"עבור מוצר, לא תוכלו למכור מוצר זה בממשק הקופה. "
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
@@ -1090,14 +1093,14 @@ msgstr "בוצע"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1314
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "הורד הזמנות ששולמו"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1316
 #, python-format
 msgid "Download Unpaid Orders"
-msgstr ""
+msgstr "הורד הזמנות שטרם שולמו"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1217,6 +1220,9 @@ msgid ""
 "administrator in a multi-company setup, with the administrator account set "
 "to the wrong company."
 msgstr ""
+"תקלה: על המשתמש הרשום בקופה להיות משוייך לאותה חברה שבה רשומה הקופה. ככל "
+"הנראה אתם מנסים לטעון את הקופה כמנהלן בסביבה מרובת חברות, כאשר חשבון המנהלן "
+"הוגדר בחברה שאינה נכונה."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2693,7 +2699,7 @@ msgstr "חיפוש לקוחות"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:199
 #, python-format
 msgid "Search Products"
-msgstr "חיפוש מוצרים"
+msgstr "חפש מוצרים"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
