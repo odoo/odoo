@@ -126,7 +126,7 @@ msgstr "Aantal decimalen"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -138,6 +138,7 @@ msgstr "${object.company_id.name} Factuur (Ref ${object.number or 'n/a'})"
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} Betalingsbewijs (Ref ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -4554,7 +4555,7 @@ msgstr "Beginnen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr ""
+msgstr "Krijg waarschuwingen wanneer u specifieke klanten factureert"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
@@ -4821,7 +4822,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid ""
 "If you check this box, you will be able to register your payment using SEPA."
-msgstr ""
+msgstr "Als u deze optie aanvinkt kan u uw betaling registreren met SEPA."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
@@ -6401,6 +6402,7 @@ msgstr "Verdichting"
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
 msgstr ""
+"Navigeer gemakkelijk doorheen rapporten en zie wat er achter de cijfers zit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_net
@@ -6437,7 +6439,7 @@ msgstr "Registreer vervolgens alle uitstaande betalingen:<br/>"
 #. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "No Feeds"
-msgstr ""
+msgstr "Geen feeds"
 
 #. module: account
 #: selection:accounting.report,filter_cmp:0
@@ -7152,7 +7154,7 @@ msgstr "Betaalregels"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "Payment Receipt:"
-msgstr ""
+msgstr "Betalingsbewijs:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
@@ -7179,7 +7181,7 @@ msgstr "Betalingscondities"
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Terms Line"
-msgstr ""
+msgstr "Betalingsconditie regel"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_payment_type
@@ -7207,7 +7209,7 @@ msgstr "Betalingsconditie: 30 dagen"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr ""
+msgstr "Betaaltermijn: directe betaling"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_payment_id
@@ -9374,7 +9376,7 @@ msgstr "Gefeliciteerd, u bent helemaal klaar!"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr ""
+msgstr "Deze belastingen worden ingesteld in elk nieuw aangemaakt product."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
@@ -9836,6 +9838,7 @@ msgstr "Totaal excl. belastingen"
 #: model:ir.model.fields,help:account.field_account_invoice_line_price_subtotal_signed
 msgid "Total amount in the currency of the company, negative for refunds."
 msgstr ""
+"Totaalbedrag in de valuta van het bedrijf, negatief bij terugbetalingen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
