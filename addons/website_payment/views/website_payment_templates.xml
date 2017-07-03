@@ -40,11 +40,11 @@
                     <h1>Payment Acquirers</h1>
                     <h4 t-if="acquirers">Add a new payment acquirer:</h4>
                     <div t-if="acquirers" class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-8">
                             <div t-if="error_message" class="alert alert-danger">
                               <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                             </div>
-                            <div t-if='len(acquirers)>1'>
+                            <div t-if='len(acquirers)&gt;1'>
                                 <label class="control-label" for="pm_acquirer_id">Acquirer</label>
                                 <select name="pm_acquirer_id" class="form-control">
                                     <t t-foreach="acquirers" t-as="acquirer">
@@ -57,22 +57,12 @@
                             </t>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <h4>Delete a payment acquirer:</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <form method="post" action="/website_payment/delete/">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <div class="form-group">
-                                    <select name="delete_pm_id" class="form-control" >
-                                        <t t-foreach="pms" t-as="pm">
-                                            <option t-att-value="pm.id" t-esc="pm.name"/>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="clearfix"></div>
-                                <button class="btn btn-primary">Delete <span class="fa fa-long-arrow-right"></span></button>
-                            </form>
+                    <div t-if="pms" class="clearfix">
+                    <h4>Your payment Methods</h4>
+                        <t t-set="show_delete" t-value="True"/>
+                        <t t-set="form_action" t-value="'/website_payment/delete/'"/>
+                        <div class="col-sm-8">
+                            <t t-call="payment.payment_tokens_list"/>
                         </div>
                     </div>
                 </div>
