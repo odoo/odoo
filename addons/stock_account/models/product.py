@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero
 from odoo.addons import decimal_precision as dp
 
@@ -272,3 +272,11 @@ class ProductCategory(models.Model):
         'account.account', 'Stock Valuation Account', company_dependent=True,
         domain=[('deprecated', '=', False)],
         help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",)
+
+    @api.constrains('property_stock_account_input_categ_id', 'property_stock_account_output_categ_id')
+    def check_anglosaxon_accounts(self):
+        current_company = self.env['res.company']._company_default_get('product.category')
+        if current_company.anglo_saxon_accounting:
+            for record in self:
+                if not record.property_account_creditor_price_difference_categ and (record.property_stock_account_input_categ_id or record.property_stock_account_output_categ_id):
+                    raise ValidationError("You must set a price difference account in order for your interim accounts to work properly.")
