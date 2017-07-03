@@ -197,7 +197,7 @@ class website_account(website_account):
         partner = request.env['res.users'].browse(request.uid).partner_id
         invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
         if invoices:
-            if 'vat' in partner and (data['vat'] or False) != (partner.vat or False):
+            if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
             if 'name' in data and (data['name'] or False) != (partner.name or False):
