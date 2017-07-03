@@ -410,6 +410,9 @@ class BaseModel(object):
                 'relation_field': f.inverse_name if hasattr(f, 'inverse_name') else '',
                 'serialization_field_id': None,
             }
+            on_delete = getattr(f, 'ondelete', False)
+            if on_delete:
+                vals['on_delete'] = on_delete
             if getattr(f, 'serialization_field', None):
                 # resolve link to serialization_field if specified by name
                 serialization_field_id = ir_model_fields_obj.search(cr, SUPERUSER_ID, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
@@ -3601,84 +3604,131 @@ class BaseModel(object):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        result_store = self._store_get_values(cr, uid, ids, self._fields.keys(), context)
-
         # for recomputing new-style fields
-        recs = self.browse(cr, uid, ids, context)
-        recs.modified(self._fields)
-
-        self._check_concurrency(cr, ids, context)
-
-        self.check_access_rights(cr, uid, 'unlink')
-
-        ir_property = self.pool.get('ir.property')
-
-        # Check if the records are used as default properties.
-        domain = [('res_id', '=', False),
-                  ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
-                 ]
-        if ir_property.search(cr, uid, domain, context=context):
-            raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
-
-        # Delete the records' properties.
-        property_ids = ir_property.search(cr, uid, [('res_id', 'in', ['%s,%s' % (self._name, i) for i in ids])], context=context)
-        ir_property.unlink(cr, uid, property_ids, context=context)
-
-        self.delete_workflow(cr, uid, ids, context=context)
-
-        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
-        pool_model_data = self.pool.get('ir.model.data')
-        ir_values_obj = self.pool.get('ir.values')
-        ir_attachment_obj = self.pool.get('ir.attachment')
+        to_recompute = self._check_to_unlink(cr, uid, ids, check_access=True, context=context)
         for sub_ids in cr.split_for_in_conditions(ids):
-            cr.execute('delete from ' + self._table + ' ' \
+            cr.execute('delete from ' + self._table + ' '
                        'where id IN %s', (sub_ids,))
+            self._remove_related(cr, uid, sub_ids, context=context)
 
-            # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
-            # as these are not connected with real database foreign keys, and would be dangling references.
-            # Note: following steps performed as admin to avoid access rights restrictions, and with no context
-            #       to avoid possible side-effects during admin calls.
-            # Step 1. Calling unlink of ir_model_data only for the affected IDS
-            reference_ids = pool_model_data.search(cr, SUPERUSER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
-            # Step 2. Marching towards the real deletion of referenced records
-            if reference_ids:
-                pool_model_data.unlink(cr, SUPERUSER_ID, reference_ids)
+        for recs, result_store in to_recompute:
+            recs._recompute_cascade(result_store)
+        return True
 
-            # For the same reason, removing the record relevant to ir_values
-            ir_value_ids = ir_values_obj.search(cr, uid,
-                    ['|',('value','in',['%s,%s' % (self._name, sid) for sid in sub_ids]),'&',('res_id','in',list(sub_ids)),('model','=',self._name)],
-                    context=context)
-            if ir_value_ids:
-                ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
+    @api.multi
+    def _check_to_unlink(self, check_access=False):
+        """ Check concurrency, and access for unlink action, get all affected
+        records and remove the record's property and workflows.
 
-            # For the same reason, removing the record relevant to ir_attachment
-            # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
-            cr.execute('select id from ir_attachment where res_model = %s and res_id in %s', (self._name, sub_ids))
-            ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
-            if ir_attachment_ids:
-                ir_attachment_obj.unlink(cr, uid, ir_attachment_ids, context=context)
+        :param check_access: True to check access for unlink 'self' records.
 
-        # invalidate the *whole* cache, since the orm does not handle all
-        # changes made in the database, like cascading delete!
-        recs.invalidate_cache()
+        :return: list of affected (recordsets, stored_values)
 
+        :raise AccessError: * if user has no unlink rights on the requested object
+                            * if user tries to bypass access rules for unlink on the requested object
+
+        :raise UserError: if the record is default property for other records
+
+        """
+        result = []
+        result_store = self._store_get_values(self._fields.keys())
+        result.append((self, result_store))
+        self.modified(self._fields)
+        self._check_concurrency(self._ids)
+        if check_access:
+            self.check_access_rights('unlink')
+
+        ir_property = self.env['ir.property']
+        # Check if the records are used as default properties.
+        domain = [
+            ('res_id', '=', False),
+            ('value_reference', 'in', ['%s,%s' % (self._name, i.id)
+                                       for i in self]),
+        ]
+        if ir_property.search(domain):
+            raise except_orm(
+                _('Error'),
+                _('Unable to delete this document because it is used as '
+                  'a default property')
+            )
+        # Delete the records' properties.
+        ir_property.search(
+            [('res_id', 'in', ['%s,%s' % (self._name, i.id) for i in self])]
+        ).unlink()
+
+        self.delete_workflow()
+
+        if check_access:
+            self.check_access_rule('unlink')
+
+        # Check if unlink `self` records affect others records by
+        # (# ondelete='cascade') way.
+        imf = self.env['ir.model.fields']
+        domain = [
+            ('relation', '=', self._name),
+            ('on_delete', '=', 'cascade')
+        ]
+        for f in imf.search(domain):
+            recs = self.env[f.model].search([(f.name, 'in', self.ids)])
+            if recs:
+                result.extend(recs._check_and_notify_cascade())
+        return result
+
+    @api.multi
+    def _remove_related(self):
+        """ Remove the record's ir.model.data, ir.values, ir.attachment.
+
+        """
+        cr = self._cr
+        Data = self.env['ir.model.data'].sudo().with_context({})
+        Values = self.env['ir.values']
+        Attachment = self.env['ir.attachment']
+        # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
+        # as these are not connected with real database foreign keys, and would be dangling references.
+        # Note: following steps performed as admin to avoid access rights restrictions, and with no context
+        #       to avoid possible side-effects during admin calls.
+        # Step 1. Calling unlink of ir_model_data only for the affected IDS
+        Data.search(
+            [('res_id', 'in', self.ids), ('model', '=', self._name)]
+        ).unlink()
+        # For the same reason, removing the record relevant to ir_values
+        Values.search(
+            ['|',
+             ('value', 'in', ['%s,%s' % (self._name, i.id) for i in self]),
+             '&', ('res_id', 'in', tuple(self.ids)), ('model','=',self._name)]
+        ).unlink()
+        # For the same reason, removing the record relevant to ir_attachment
+        # The search is performed with sql as the search method of ir_attachment is overridden to hide attachments of deleted records
+        cr.execute('select id from ir_attachment where res_model = %s and '
+                   'res_id in %s', (self._name, tuple(self.ids)))
+        ir_attachment_ids = [ir_attachment[0] for ir_attachment in cr.fetchall()]
+        if ir_attachment_ids:
+            Attachment.browse(ir_attachment_ids).unlink()
+
+    @api.multi
+    def _recompute_cascade(self, result_store):
+        """ Invalidate the cache, set the store values and recompute.
+
+        :param result_store: (priority, model_name, [record_ids,],
+                              [function_fields,])
+
+        """
+        self.invalidate_cache(ids=self.ids)
         for order, obj_name, store_ids, fields in result_store:
             if obj_name == self._name:
-                effective_store_ids = set(store_ids) - set(ids)
+                effective_store_ids = set(store_ids) - set(self.ids)
             else:
                 effective_store_ids = store_ids
             if effective_store_ids:
-                obj = self.pool[obj_name]
-                cr.execute('select id from '+obj._table+' where id IN %s', (tuple(effective_store_ids),))
-                rids = map(lambda x: x[0], cr.fetchall())
+                obj = self.env[obj_name]
+                self._cr.execute(
+                    'select id from ' + obj._table + ' where id IN %s',
+                    (tuple(effective_store_ids),)
+                )
+                rids = map(lambda x: x[0], self._cr.fetchall())
                 if rids:
-                    obj._store_set_values(cr, uid, rids, fields, context)
-
-        # recompute new-style fields
-        recs.recompute()
-
-        return True
-
+                    obj._store_set_values(fields)
+        self.recompute()
     #
     # TODO: Validate
     #
