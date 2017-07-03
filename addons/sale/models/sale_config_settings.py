@@ -81,7 +81,6 @@ class SaleConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
 
-    module_sale_timesheet = fields.Boolean("Timesheets")
     module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
     module_web_clearbit = fields.Boolean("Customer Autocomplete")
