@@ -77,7 +77,7 @@
                     <group>
                         <field name="function" placeholder="e.g. Sales Director"/>
                         <field name="user_ids" invisible="1"/>
-                        <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
+                        <field name="email" widget="email" context="{'gravatar_image': True}" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
                         <field name="phone" widget="phone"/>
                         <field name="mobile" widget="phone"/>
                     </group>
@@ -190,7 +190,7 @@
                             <field name="mobile" widget="phone"/>
                             <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
-                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang"/>
