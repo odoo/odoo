@@ -3,6 +3,7 @@ odoo.define('web.calendar_tests', function (require) {
 
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
+var fieldUtils = require('web.field_utils');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 
@@ -431,6 +432,7 @@ QUnit.module('Views', {
                 'mode="week" '+
                 'readonly_form_view_id="1">'+
                     '<field name="name"/>'+
+                    '<field name="start"/>'+
             '</calendar>',
             archs: archs,
             viewOptions: {
@@ -478,14 +480,14 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Create)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent",
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent12/13/201608:00:00",
             "should display the new event with time and title");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
                 display_name: "new event",
-                start: "2016-12-13 06:00:00",
-                stop: "2016-12-13 08:00:00",
+                start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
+                stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
                 id: 1
@@ -616,8 +618,8 @@ QUnit.module('Views', {
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
                 display_name: "new event",
-                start: "2016-12-13 06:00:00",
-                stop: "2016-12-13 08:00:00",
+                start: fieldUtils.parse.datetime("2016-12-13 06:00:00", this.data.event.fields.start, {isUTC: true}),
+                stop: fieldUtils.parse.datetime("2016-12-13 08:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: false,
                 name: "new event",
                 id: 1
@@ -691,8 +693,8 @@ QUnit.module('Views', {
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
                 display_name: "new event",
-                start: "2016-12-14 00:00:00",
-                stop: "2016-12-15 00:00:00",
+                start: fieldUtils.parse.datetime("2016-12-14 00:00:00", this.data.event.fields.start, {isUTC: true}),
+                stop: fieldUtils.parse.datetime("2016-12-15 00:00:00", this.data.event.fields.stop, {isUTC: true}),
                 allday: true,
                 name: "new event",
                 id: 1
