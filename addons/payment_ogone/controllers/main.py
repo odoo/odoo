@@ -38,11 +38,33 @@ class OgoneController(http.Controller):
         error = ''
         acq = request.env['payment.acquirer'].browse(int(post.get('acquirer_id')))
         try:
-            acq.s2s_process(post)
+            token = acq.s2s_process(post)
         except Exception as e:
             # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
             error = str(e).splitlines()[0].split('|')[-1] or ''
+
+        if token and post.get('verify_validity'):
+            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            params = {
+                'accept_url': baseurl + '/payment/ogone/validate/accept',
+                'decline_url': baseurl + '/payment/ogone/validate/decline',
+                'exception_url': baseurl + '/payment/ogone/validate/exception',
+                'return_url': post.get('return_url', baseurl)
+                }
+            tx = token.validate(**params)
+            if tx and tx.html_3ds:
+                return tx.html_3ds
         return werkzeug.utils.redirect(post.get('return_url', '/') + (error and '#error=%s' % werkzeug.url_quote(error) or ''))
+
+    @http.route([
+        '/payment/ogone/validate/accept',
+        '/payment/ogone/validate/decline',
+        '/payment/ogone/validate/exception',
+    ], type='http', auth='none')
+    def ogone_validation_form_feedback(self, **post):
+        """ Feedback from 3d secure for a bank card validation """
+        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        return werkzeug.utils.redirect(werkzeug.url_unquote(post.pop('return_url', '/')))
 
     @http.route(['/payment/ogone/s2s/feedback'], auth='none', csrf=False)
     def feedback(self, **kwargs):

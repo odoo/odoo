@@ -2,6 +2,7 @@
 import hashlib
 import hmac
 import logging
+import datetime
 
 from odoo import api, exceptions, fields, models, _
 from odoo.tools import consteq, float_round, image_resize_images, ustr, pycompat
@@ -428,6 +429,7 @@ class PaymentTransaction(models.Model):
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer', required=True)
     provider = fields.Selection(string='Provider', related='acquirer_id.provider')
     type = fields.Selection([
+        ('validation', 'Validation of the bank card'),
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
         ('form_save', 'Form with tokenization')], 'Type',
@@ -437,6 +439,8 @@ class PaymentTransaction(models.Model):
         ('pending', 'Pending'),
         ('authorized', 'Authorized'),
         ('done', 'Done'),
+        ('refunding', 'Refunding'),
+        ('refunded', 'Refunded'),
         ('error', 'Error'),
         ('cancel', 'Canceled')], 'Status',
         copy=False, default='draft', required=True, track_visibility='onchange')
@@ -644,6 +648,12 @@ class PaymentTransaction(models.Model):
             return getattr(self, custom_method_name)(**kwargs)
 
     @api.multi
+    def s2s_do_refund(self, **kwargs):
+        custom_method_name = '%s_s2s_do_refund' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            return getattr(self, custom_method_name)(**kwargs)
+
+    @api.multi
     def s2s_capture_transaction(self, **kwargs):
         custom_method_name = '%s_s2s_capture_transaction' % self.acquirer_id.provider
         if hasattr(self, custom_method_name):
@@ -711,6 +721,7 @@ class PaymentToken(models.Model):
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')
+    verified = fields.Boolean(string='Verified', default=False)
 
     @api.model
     def create(self, values):
@@ -726,9 +737,85 @@ class PaymentToken(models.Model):
                 fields_wl = set(self._fields) & set(values)
                 values = {field: values[field] for field in fields_wl}
         return super(PaymentToken, self).create(values)
+    """
+        @TBE: stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
+        Most of them are ~1.50€s
+        TODO: See this with @AL & @DBO
+    """
+    VALIDATION_AMOUNTS = {
+        'CAD': 2.45,
+        'EUR': 1.50,
+        'GBP': 1.00,
+        'JPY': 200,
+        'AUD': 2.00,
+        'NZD': 3.00,
+        'CHF': 3.00,
+        'HKD': 15.00,
+        'SEK': 15.00,
+        'DKK': 12.50,
+        'PLN': 6.50,
+        'NOK': 15.00,
+        'HUF': 400.00,
+        'CZK': 50.00,
+        'BRL': 4.00,
+        'MYR': 10.00,
+        'MXN': 20.00,
+        'ILS': 8.00,
+        'PHP': 100.00,
+        'TWD': 70.00,
+        'THB': 70.00
+        }
+
+    @api.model
+    def validate(self, **kwargs):
+        """
+            This method allow to verify if this payment method is valid or not.
+            It does this by withdrawing a certain amount and then refund it right after.
+        """
+        currency = self.partner_id.currency_id
+
+        if self.VALIDATION_AMOUNTS.get(currency.name):
+            amount = self.VALIDATION_AMOUNTS.get(currency.name)
+        else:
+            # If we don't find the user's currency, then we set the currency to EUR and the amount to 1€50.
+            currency = self.env['res.currency'].search([('name', '=', 'EUR')])
+            amount = 1.5
+
+        if len(currency) != 1:
+            _logger.error("Error 'EUR' currency not found for payment method validation!")
+            return False
+
+        reference = "VALIDATION-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
+        tx = self.env['payment.transaction'].create({
+            'amount': amount,
+            'acquirer_id': self.acquirer_id.id,
+            'type': 'validation',
+            'currency_id': currency.id,
+            'reference': reference,
+            'payment_token_id': self.id,
+            'partner_id': self.partner_id.id,
+            'partner_country_id': self.partner_id.country_id.id,
+        })
+
+        try:
+            kwargs.update({'3d_secure': True})
+            tx.s2s_do_transaction(**kwargs)
+            # if 3D secure is called, then we do not refund right now
+            if tx.html_3ds:
+                return tx
+        except:
+            _logger.error('Error while validating a payment method')
+        finally:
+            tx.s2s_do_refund()
+        return tx
 
     @api.multi
     @api.depends('name')
     def _compute_short_name(self):
         for token in self:
             token.short_name = token.name.replace('XXXXXXXXXXXX', '***')
+
+    @api.multi
+    def _get_linked_records(self):
+        """ Returns the list of records currently using the records in self as payment token. """
+        return {}
