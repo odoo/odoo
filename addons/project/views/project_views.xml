@@ -104,7 +104,7 @@
                         </div>
                     </div>
                     <notebook>
-                        <page string="Settings">
+                        <page name="settings" string="Settings">
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
@@ -120,7 +120,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <page name="emails" string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -379,7 +379,7 @@ action = model.activate_sample_project()
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Extra Info">
+                        <page name="extra_info" string="Extra Info">
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
