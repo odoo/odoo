@@ -747,13 +747,6 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         var self = this;
         options = options || {};
 
-        _.each(_.keys(emoji_replace), function (key) {
-            // message input is like :) or :( then message data will replace and message result should be like 😄 or 😞
-            var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
-            var regexp = new RegExp("(\\s|^)(" + escaped_key + ")(?=\\s|$)", "g");
-            data.content = data.content.replace(regexp, "$1"+emoji_replace[key]);
-        });
-
         // This message will be received from the mail composer as html content subtype
         // but the urls will not be linkified. If the mail composer takes the responsibility
         // to linkify the urls we end up with double linkification a bit everywhere.
@@ -766,6 +759,14 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             body: body,
             attachment_ids: data.attachment_ids,
         };
+
+        _.each(_.keys(emoji_replace), function (key) {
+            // message input is like :) or :( then message data will replace and message result should be like 😄 or 😞
+            var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
+            var regexp = new RegExp("(\\s|^)(" + escaped_key + ")(?=\\s|$)", "g");
+            msg.body = msg.body.replace(regexp, "$1"+emoji_replace[key]);
+        });
+
         if ('subject' in data) {
             msg.subject = data.subject;
         }
