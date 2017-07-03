@@ -44,7 +44,7 @@
                             <div t-if="error_message" class="alert alert-danger">
                               <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
                             </div>
-                            <div t-if='len(acquirers)>1'>
+                            <div t-if='len(acquirers)&gt;1'>
                                 <label class="control-label" for="pm_acquirer_id">Acquirer</label>
                                 <select name="pm_acquirer_id" class="form-control">
                                     <t t-foreach="acquirers" t-as="acquirer">
@@ -57,23 +57,41 @@
                             </t>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <h4>Delete a payment method:</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <form method="post" action="/website_payment/delete/">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                <div class="form-group">
-                                    <select name="delete_pm_id" class="form-control" >
-                                        <t t-foreach="pms" t-as="pm">
-                                            <option t-att-value="pm.id" t-esc="pm.name"/>
-                                        </t>
-                                    </select>
-                                </div>
-                                <div class="clearfix"></div>
-                                <button class="btn btn-primary">Delete <span class="fa fa-long-arrow-right"></span></button>
-                            </form>
-                        </div>
+                    <div t-if="pms" class="clearfix"></div>
+                    <h4 t-if="pms">Your payment Methods</h4>
+                    <div t-if="pms" class="row">
+                        <table id="payment_methods" class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Payment Methods</th>
+                                    <th>Payment Acquirer</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="pms" t-as="pm">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="pm.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="pm.acquirer_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="dict(pm.fields_get(allfields=['verification_status'])['verification_status']['selection'])[pm.verification_status]"/>
+                                        </td>
+                                        <td>
+                                            <form action="/website_payment/delete/" method="post">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="delete_pm_id" t-att-value="pm.id"/>
+                                                <button type="submit" class="btn btn-xs btn-primary"><i class="fa fa-trash"> Delete</i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

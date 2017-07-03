@@ -206,6 +206,12 @@ class PaymentAcquirerOgone(models.Model):
             'partner_id': int(data.get('partner_id'))
         }
         pm_id = self.env['payment.token'].sudo().create(values)
+
+        # if this payment method need to be validated
+        if data.get('verify_validity', False) != False:
+            pm_id.validate()
+
+
         return pm_id
 
 
@@ -333,7 +339,6 @@ class PaymentTxOgone(models.Model):
     # --------------------------------------------------
     # S2S RELATED METHODS
     # --------------------------------------------------
-
     def ogone_s2s_do_transaction(self, **kwargs):
         # TODO: create tx with s2s type
         account = self.acquirer_id
@@ -529,3 +534,156 @@ class PaymentToken(models.Model):
                 'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name'])
             }
         return {}
+
+    def ogone_validate(self):
+        self.verification_status = 'pending'
+        try:
+            if self._ogone_do_validation_payment():
+                self.verification_status = 'verified'
+                self._ogone_do_validation_refund()
+                return True
+            else:
+                self.verification_status = 'invalid'
+        except Exception as e:
+            _logger.exception('ogone payment validation exception for partner %d' % self.partner_id.id)
+
+        return False
+
+    def _ogone_do_validation_payment(self):
+        account = self.acquirer_id
+        reference = "ODOO-VALIDATION-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
+
+        currency_name = self.partner_id.currency_id.name
+        amount = 0
+        if self.get_validation_amounts().get(currency_name):
+            amount = self.get_validation_amounts().get(currency_name)
+        else:
+            currency_name = 'EUR'
+            amount = 1.0
+
+        data = {
+            'PSPID': account.ogone_pspid,
+            'USERID': account.ogone_userid,
+            'PSWD': account.ogone_password,
+            'ORDERID': reference,
+            'AMOUNT': long(amount * 100),
+            'CURRENCY': currency_name,
+            'OPERATION': 'SAL',
+            'ECI': 2,   # Recurring (from MOTO)
+            'ALIAS': self.acquirer_ref,
+            'RTIMEOUT': 30,
+        }
+
+        data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
+
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+
+        _logger.debug("Ogone data %s", pformat(data))
+        request = urllib2.Request(direct_order_url, urlencode(data))
+        result = urllib2.urlopen(request).read()
+        _logger.debug('Ogone response = %s', result)
+
+        try:
+            tree = objectify.fromstring(result)
+        except etree.XMLSyntaxError:
+            # invalid response from ogone
+            _logger.exception('Invalid xml response from ogone')
+            raise
+
+        return self._ogone_s2s_validate_tree(tree)
+
+    def _ogone_do_validation_refund(self):
+        import pudb
+        pu.db
+        account = self.acquirer_id
+        reference = "ODOO-VALIDATION-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
+
+        currency_name = self.partner_id.currency_id.name
+        amount = 0
+        if self.get_validation_amounts().get(currency_name):
+            amount = self.get_validation_amounts().get(currency_name)
+        else:
+            currency_name = 'EUR'
+            amount = 1.0
+
+        data = {
+            'PSPID': account.ogone_pspid,
+            'USERID': account.ogone_userid,
+            'PSWD': account.ogone_password,
+            'ORDERID': reference,
+            'AMOUNT': long(amount * 100),
+            'CURRENCY': currency_name,
+            'OPERATION': 'RFD',
+            'ALIAS': self.acquirer_ref,
+            'RTIMEOUT': 30,
+        }
+
+
+        data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+
+        _logger.debug("Ogone data %s", pformat(data))
+        request = urllib2.Request(direct_order_url, urlencode(data))
+        result = urllib2.urlopen(request).read()
+        _logger.debug('Ogone response = %s', result)
+
+        try:
+            tree = objectify.fromstring(result)
+        except etree.XMLSyntaxError:
+            # invalid response from ogone
+            _logger.exception('Invalid xml response from ogone')
+            raise
+        return self._ogone_s2s_validate_tree(tree)
+
+    def _ogone_s2s_get_tx_status(self, payid):
+        account = self.acquirer_id
+
+        data = {
+            'PAYID': payid,
+            'PSPID': account.ogone_pspid,
+            'USERID': account.ogone_userid,
+            'PSWD': account.ogone_password,
+        }
+
+        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
+
+        _logger.debug("Ogone data %s", pformat(data))
+        request = urllib2.Request(query_direct_url, urlencode(data))
+        result = urllib2.urlopen(request).read()
+        _logger.debug('Ogone response = %s', result)
+
+        try:
+            tree = objectify.fromstring(result)
+        except etree.XMLSyntaxError:
+            # invalid response from ogone
+            _logger.exception('Invalid xml response from ogone')
+            raise
+
+        return tree
+
+    # ogone status
+    _ogone_valid_tx_status = [5, 9]
+    _ogone_wait_tx_status = [41, 50, 51, 52, 55, 56, 91, 92, 99]
+    _ogone_pending_tx_status = [46]   # 3DS HTML response
+    _ogone_cancel_tx_status = [1]
+    def _ogone_s2s_validate_tree(self, tree, tries=2):
+        status = int(tree.get('STATUS') or 0)
+        if status in self._ogone_valid_tx_status:
+            return True
+        elif status in self._ogone_cancel_tx_status:
+            return False
+        elif status in self._ogone_pending_tx_status:
+            # we shouldn't get a 3DS authentication since we didn't specify that we support 3DS for bank cards validation
+            return False
+        elif status in self._ogone_wait_tx_status and tries > 0:
+            time.sleep(0.5)
+            tree = self._ogone_s2s_get_tx_status(tree.get('PAYID'))
+            return self._ogone_s2s_validate_tree(tree, tries - 1)
+        else:
+            error = 'Ogone: feedback error: %(error_str)s\n\n%(error_code)s: %(error_msg)s' % {
+                'error_str': tree.get('NCERRORPLUS'),
+                'error_code': tree.get('NCERROR'),
+                'error_msg': ogone.OGONE_ERROR_MAP.get(tree.get('NCERROR')),
+            }
+            _logger.info(error)
+            return False

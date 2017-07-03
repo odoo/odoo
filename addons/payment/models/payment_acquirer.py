@@ -684,6 +684,16 @@ class PaymentToken(models.Model):
     acquirer_ref = fields.Char('Acquirer Ref.', required=True)
     active = fields.Boolean('Active', default=True)
     payment_ids = fields.One2many('payment.transaction', 'payment_token_id', 'Payment Transactions')
+    verification_status = fields.Selection([
+        ('none', 'Unverified'),
+        ('pending', 'Pending'),
+        ('invalid', 'Invalid'),
+        ('verified', 'Verified')], default='none', string='Verification Status', help="""Status of the payment methods.
+        Unverified - The payment method hasn't been validated yet.
+        Pending - The payment method is being validated.
+        Invalid - The payment method couldn't be validated.
+        Verified - The payment method is valid and has been verified.
+        """)
 
     @api.model
     def create(self, values):
@@ -699,6 +709,45 @@ class PaymentToken(models.Model):
                 fields_wl = set(self._fields.keys()) & set(values.keys())
                 values = {field: values[field] for field in fields_wl}
         return super(PaymentToken, self).create(values)
+
+    @api.model
+    def validate(self):
+        """ This method allow to verify if this payment method is valid or not.
+            It calls a method named %provider_name%_validate which should do check
+        """
+        custom_method_name = '%s_validate' % self.acquirer_id.provider
+        if hasattr(self, custom_method_name):
+            getattr(self, custom_method_name)()
+
+    def get_validation_amounts(self):
+        """
+            stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
+            Most of them are ~1.50€s
+            TODO: See this with @AL & @DBO
+        """
+        return {
+            'CAD': 2.45,
+            'EUR': 1.50,
+            'GBP': 1.00,
+            'JPY': 200,
+            'AUD': 2.00,
+            'NZD': 3.00,
+            'CHF': 3.00,
+            'HKD': 15.00,
+            'SEK': 15.00,
+            'DKK': 12.50,
+            'PLN': 6.50,
+            'NOK': 15.00,
+            'HUF': 400.00,
+            'CZK': 50.00,
+            'BRL': 4.00,
+            'MYR': 10.00,
+            'MXN': 20.00,
+            'ILS': 8.00,
+            'PHP': 100.00,
+            'TWD': 70.00,
+            'THB': 70.00
+        }
 
     @api.multi
     @api.depends('name')

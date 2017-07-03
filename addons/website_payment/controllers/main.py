@@ -18,7 +18,7 @@ class WebsitePayment(http.Controller):
         }
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
-            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True})
+            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True, 'verify_validity': True})
         return request.render("website_payment.pay_methods", values)
 
     @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
