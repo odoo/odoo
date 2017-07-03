@@ -174,23 +174,16 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 }
 
                 &.o_snippet_install {
-                    cursor: initial;
+                    cursor: pointer;
                     .oe_snippet_thumbnail_img {
                         opacity: 0.5;
                     }
-                    .o_snippet_btn {
+                    .btn.o-install-btn {
                         position: absolute;
-                        text-align: center;
-                        height: 100%;
-                        width: 100%;
+                        margin: 17px 0px 0px 17px;
                         display: none;
-                        background: rgba(0, 0, 0, 0.35);
-                        .btn.o_install_btn {
-                            margin: 17px auto;
-                            padding: 5px 10px;
-                        }
                     }
-                    &:hover .o_snippet_btn {
+                    &:hover .btn.o-install-btn {
                         display: block;
                     }
                     &:hover .oe_snippet_thumbnail_img {

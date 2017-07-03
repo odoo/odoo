@@ -250,12 +250,12 @@ data.Class = Widget.extend({
                     if (thumbnail) {
                         $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
                     }
-                    var moduleId = $snippet.data('moduleId');
-                    if (moduleId) {
-                        var install_btn = _.str.sprintf('<div class="o_snippet_btn"><a class="btn btn-primary btn-sm o_install_btn" target="_blank" href="/web#id=%s&view_type=form&model=ir.module.module&action=base.open_module_tree">%s</a> </div>', moduleId, _t('Install'));
-                        $div.prepend(install_btn);
-                    }
                     // end
+                    var moduleID = $snippet.data('moduleId');
+                    if (moduleID) {
+                        var installBtn = _.str.sprintf('<a class="btn btn-primary btn-sm o-install-btn" target="_blank" href="/web#id=%s&view_type=form&model=ir.module.module&action=base.open_module_tree">%s</a>', moduleID, _t('Install'));
+                        $div.prepend(installBtn);
+                    }
                 }
                 if (!$snippet.data("selector")) {
                     $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
