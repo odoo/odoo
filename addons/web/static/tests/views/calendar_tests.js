@@ -433,6 +433,7 @@ QUnit.module('Views', {
                 'readonly_form_view_id="1">'+
                     '<field name="name"/>'+
                     '<field name="start"/>'+
+                    '<field name="allday"/>'+
             '</calendar>',
             archs: archs,
             viewOptions: {
@@ -480,8 +481,8 @@ QUnit.module('Views', {
         $('.modal button.btn:contains(Create)').trigger('click');
         var $newevent = calendar.$('.fc-event:contains(new event)');
 
-        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent12/13/201608:00:00",
-            "should display the new event with time and title");
+        assert.strictEqual($newevent.text().replace(/[\s\n\r]+/g, ''), "08:00-10:00newevent12/13/201608:00:00False",
+            "should display the new event with time, title and additional fields");
 
         assert.deepEqual($newevent.data('fcSeg').event.record,
             {
