@@ -13,6 +13,7 @@ class SaleConfigSettings(models.TransientModel):
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_phone_validation = fields.Boolean("Phone Validation")
     module_crm_voip = fields.Boolean("Asterisk (VoIP)")
+    module_web_clearbit = fields.Boolean("Customer Autocomplete")
 
     def _find_default_lead_alias_id(self):
         alias = self.env.ref('crm.mail_alias_lead_info', False)
