@@ -67,9 +67,9 @@ def format_amount(env, amount, currency):
 
     pre = post = u''
     if currency.position == 'before':
-        pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency.symbol or '')
+        pre = u'{symbol}'.format(symbol=currency.symbol or '')
     else:
-        post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
+        post = u'{symbol}'.format(symbol=currency.symbol or '')
 
     return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
 

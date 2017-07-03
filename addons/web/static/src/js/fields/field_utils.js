@@ -294,9 +294,9 @@ function formatMonetary(value, field, options) {
         return formatted_value;
     }
     if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
+        return formatted_value += currency.symbol;
     } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
+        return currency.symbol + formatted_value;
     }
 }
 
@@ -475,7 +475,7 @@ function parseFloat(value) {
  * @throws {Error} if no float is found or if parameter does not respect monetary condition
  */
 function parseMonetary(value, field, options) {
-    var values = value.split('&nbsp;');
+    var values = _.filter(value.split(/(\p{Sc})|([-?.\d,'\s+]+)|(\p{Sc})/), function(x) { return x !== undefined && x.trim()});
     if (values.length === 1) {
         return parseFloat(value);
     }

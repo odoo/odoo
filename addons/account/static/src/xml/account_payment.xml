@@ -31,11 +31,10 @@
                         <td style="text-align:right;">
                             <span class="oe_form_field oe_form_field_float oe_form_field_monetary" style="margin-left: -10px;">
                                 <t t-if="line.position === 'before'">
-                                    <t t-esc="line.currency"/>
+                                    <t t-esc="line.currency"/><t t-esc="line.amount"/>
                                 </t>
-                                <t t-esc="line.amount"></t> 
                                 <t t-if="line.position === 'after'">
-                                    <t t-esc="line.currency"/>
+                                    <t t-esc="line.amount"/><t t-esc="line.currency"/>
                                 </t>
                             </span>
                         </td>
@@ -68,11 +67,10 @@
                     <td><strong>Amount: </strong></td>
                     <td style="text-align:right;">
                         <t t-if="position === 'before'">
-                            <t t-esc="currency"/>
+                            <t t-esc="currency"/><t t-esc="amount"/>
                         </t>
-                        <t t-esc="amount"></t> 
                         <t t-if="position === 'after'">
-                            <t t-esc="currency"/>
+                            <t t-esc="amount"/><t t-esc="currency"/>
                         </t>
                     </td>
                 </tr>

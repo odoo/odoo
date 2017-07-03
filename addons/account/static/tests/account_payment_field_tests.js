@@ -63,13 +63,13 @@ QUnit.module('account', {
         });
 
         assert.strictEqual(form.$('.o_field_widget[name="payments_widget"]').text().replace(/[\s\n\r]+/g, ' '),
-            " Paid on 04/25/2017 $ 555.00 ",
+            " Paid on 04/25/2017 $555.00 ",
             "should display payment information");
 
         form.$('.o_field_widget[name="outstanding_credits_debits_widget"] .outstanding_credit_assign').trigger('click');
 
         assert.strictEqual(form.$('.o_field_widget[name="outstanding_credits_debits_widget"]').text().replace(/[\s\n\r]+/g, ' '),
-            " Outstanding credits Add INV/2017/0004 $ 100.00 ",
+            " Outstanding credits Add INV/2017/0004 $100.00 ",
             "should display outstanding information");
 
         form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');

@@ -1571,9 +1571,9 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody tr:first td').length, 3,
             "currency_id column should not be in the table");
         assert.strictEqual(list.$('tbody tr:first td:nth(2)').text().replace(/\s/g, ' '),
-            '1200.00 €', "currency_id column should not be in the table");
+            '1200.00€', "currency_id column should not be in the table");
         assert.strictEqual(list.$('tbody tr:nth(1) td:nth(2)').text().replace(/\s/g, ' '),
-            '$ 500.00', "currency_id column should not be in the table");
+            '$500.00', "currency_id column should not be in the table");
 
         list.destroy();
     });
