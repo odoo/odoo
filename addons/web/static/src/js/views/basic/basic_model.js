@@ -2115,6 +2115,10 @@ var BasicModel = AbstractModel.extend({
         if (options && options.fieldName) {
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
+
+            if (element._onchnage_domain && element._onchnage_domain[options.fieldName]) {
+                return element._onchnage_domain[options.fieldName];
+            }
             if (fieldInfo && fieldInfo.domain) {
                 return Domain.prototype.stringToArray(
                     fieldInfo.domain,
@@ -2683,6 +2687,9 @@ var BasicModel = AbstractModel.extend({
                     // to onchange. So, in that case, the proper response is to
                     // ignore the onchange.
                     return;
+                }
+                if (result.domain) {
+                    record._onchnage_domain = result.domain;
                 }
                 if (result.warning) {
                     self.trigger_up('warning', {
