@@ -351,7 +351,7 @@ odoo.define('web_editor.snippets.options', function (require) {
                         $fixed_size.addClass("active");
                         $auto_size.removeClass("active");
                     } else {
-                        self._highlight_margins_preview(400);
+                        self._highlight_margins_preview(300);
                     }
                 };
                 $body.mousemove(body_mousemove);
@@ -378,7 +378,6 @@ odoo.define('web_editor.snippets.options', function (require) {
             this._super();
             this.change_cursor();
             this.adapt_margin_preview_size();
-            this._highlight_margins_preview(300);
         },
 
         change_cursor : function () {
