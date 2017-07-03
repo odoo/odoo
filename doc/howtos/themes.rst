@@ -512,7 +512,11 @@ The final result won't be pretty, but will provide you with enough information t
 Let’s start by creating an empty file called **style.less** and place it in a folder called **less** in your static folder.
 The following rules will style our *Services* page. Copy and paste it, then save the file.
 
-.. code-block:: css
+.. as of Pygments 2.2, the Less lexer can't handle inline comments or nested
+   rules so use scss instead, it's not quite perfect but it doesn't trigger
+   warnings/errors
+
+.. code-block:: scss
 
    .services {
        background: #EAEAEA;
@@ -727,7 +731,7 @@ Dropping our snippet onto the page, you will notice that our new options are aut
 
 Let’s create some css rules in order to provide a visual feedback for our options. Open our **style.less** file and add the following
 
-.. code-block:: css
+.. code-block:: scss
 
    .snippet_testimonial {
      border: 1px solid #EAEAEA;

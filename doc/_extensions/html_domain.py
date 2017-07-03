@@ -24,7 +24,7 @@ def setup(app):
     app.add_node(address, html=(
         lambda self, node: self.body.append(self.starttag(node, 'address')),
         lambda self, node: self.body.append('</address>\n')
-    ))
+    ), override=True) # docutils.nodes.address exists and is a bibliographic element
     app.add_node(cite, html=(visit_cite, depart_cite))
     for name, node in [('mark', mark), ('ins', insert), ('del', delete),
                        ('s', strikethrough), ('u', underline), ('small', small),
