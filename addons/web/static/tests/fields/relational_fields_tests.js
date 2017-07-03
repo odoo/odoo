@@ -1273,6 +1273,7 @@ QUnit.module('relational_fields', {
                     return $.when({
                         domain: {
                             trululu: domain,
+                            unexisting_field: domain,
                         }
                     });
                 }
