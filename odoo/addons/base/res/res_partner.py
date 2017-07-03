@@ -361,7 +361,7 @@ class Partner(models.Model):
 
     @api.onchange('email')
     def onchange_email(self):
-        if not self.image and not self._context.get('yaml_onchange') and self.email:
+        if not self.image and self._context.get('gravatar_image') and self.email:
             self.image = self._get_gravatar_image(self.email)
 
     @api.depends('name', 'email')

@@ -991,12 +991,16 @@ calendar view are:
   declares fields to aggregate or to use in kanban *logic*. If the field is
   simply displayed in the calendar cards.
 
-On each field can have additional attributes:
-  ``invisible``: use "True" to hide the value in the cards
-  ``avatar_field``: only for x2many field, to display the avatar instead the
-      display_name in the cards
-  ``write_model`` and ``write_field``: you can add a filter and save the result
-      in the defined model, the filter is added in the sidebar
+  Fields can have additional attributes:
+
+    ``invisible``
+        use "True" to hide the value in the cards
+    ``avatar_field``
+        only for x2many field, to display the avatar instead the display_name
+        in the cards
+    ``write_model`` and ``write_field``
+        you can add a filter and save the result in the defined model, the
+        filter is added in the sidebar
 
 ``templates``
   defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
