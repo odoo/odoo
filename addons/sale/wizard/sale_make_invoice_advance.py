@@ -28,7 +28,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.model
     def _default_product_id(self):
         product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
-        return self.env['product.product'].browse(product_id)
+        return self.env['product.product'].browse(int(product_id))
 
     @api.model
     def _default_deposit_account_id(self):
