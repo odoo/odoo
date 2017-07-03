@@ -317,14 +317,13 @@ class Website(Home):
 
     def get_view_ids(self, xml_ids):
         ids = []
-        View = request.env["ir.ui.view"]
+        View = request.env["ir.ui.view"].with_context(active_test=False)
         for xml_id in xml_ids:
             if "." in xml_id:
                 # Get website-specific view if possible
                 record_id = View.search([
                     ("website_id", "=", request.website.id),
                     ("key", "=", xml_id),
-                    "|", ("active", "=", True), ("active", "=", False)
                 ]).id or request.env.ref(xml_id).id
             else:
                 record_id = int(xml_id)
