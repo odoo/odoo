@@ -2996,7 +2996,9 @@ var BasicModel = AbstractModel.extend({
                 if (result.domain) {
                     var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
                     for (var fieldName in result.domain) {
-                        fieldsInfo[fieldName].domain = result.domain[fieldName];
+                        if (fieldsInfo[fieldName]) {
+                            fieldsInfo[fieldName].domain = result.domain[fieldName];
+                        }
                     }
                 }
                 return self._applyOnChange(result.value, record).then(function () {
