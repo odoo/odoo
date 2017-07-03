@@ -73,7 +73,6 @@ class SaleConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
-    module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
