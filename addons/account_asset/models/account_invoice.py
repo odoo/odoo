@@ -80,8 +80,6 @@ class AccountInvoiceLine(models.Model):
 
     @api.onchange('asset_category_id')
     def onchange_asset_category_id(self):
-        if not self.asset_category_id:
-            self.account_id = self.get_invoice_line_account(self.invoice_id.type, self.product_id, self.invoice_id.fiscal_position_id, self.invoice_id.company_id)
         if self.invoice_id.type == 'out_invoice' and self.asset_category_id:
             self.account_id = self.asset_category_id.account_asset_id.id
         elif self.invoice_id.type == 'in_invoice' and self.asset_category_id:

@@ -334,11 +334,14 @@ class Quant(models.Model):
                 # price update + accounting entries adjustments
                 solved_quants._price_update(solving_quant.cost)
                 # merge history (and cost?)
-                solved_quants.write({
-                    'history_ids': [(4, history_move.id) for history_move in solving_quant.history_ids]
-                })
+                solved_quants.write(solving_quant._prepare_history())
             solving_quant.with_context(force_unlink=True).unlink()
             solving_quant = remaining_solving_quant
+
+    def _prepare_history(self):
+        return {
+            'history_ids': [(4, history_move.id) for history_move in self.history_ids],
+        }
 
     @api.multi
     def _price_update(self, newprice):
@@ -537,7 +540,7 @@ class Quant(models.Model):
                 if any(quant not in self for quant in package.get_content()):
                     all_in = False
                 if all_in:
-                    destinations = [product_to_location[product] for product in package.get_content().mapped('product_id')]
+                    destinations = set([product_to_location[product] for product in package.get_content().mapped('product_id')])
                     if len(destinations) > 1:
                         all_in = False
                 if all_in:

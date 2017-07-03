@@ -34,8 +34,8 @@ accessible Odoo needs a rule to know which one it should use.
 That is one of the purposes of :option:`--db-filter <odoo-bin --db-filter>`:
 it specifies how the database should be selected based on the hostname (domain)
 that is being requested. The value is a `regular expression`_, possibly
-including the dynamically injected hostname (`%h`) or the first subdomain (`%d`)
-through which the system is being accessed.
+including the dynamically injected hostname (``%h``) or the first subdomain
+(``%d``) through which the system is being accessed.
 
 For servers hosting multiple databases in production, especially if ``website``
 is used, dbfilter **must** be set, otherwise a number of features will not work
@@ -70,7 +70,7 @@ in ``/etc/odoo.conf`` set:
   of securing your deployment.
   Once it is correctly working and only matching a single database per hostname, it
   is strongly recommended to block access to the database manager screens,
-  and to use the `--no-database-list` startup paramater to prevent listing
+  and to use the ``--no-database-list`` startup paramater to prevent listing
   your databases. See also security_.
 
 

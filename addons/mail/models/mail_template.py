@@ -20,6 +20,8 @@ _logger = logging.getLogger(__name__)
 
 
 def format_date(env, date, pattern=False):
+    if not date:
+        return ''
     date = datetime.datetime.strptime(date[:10], tools.DEFAULT_SERVER_DATE_FORMAT)
     lang_code = env.context.get('lang') or 'en_US'
     if not pattern:
@@ -62,6 +64,21 @@ def format_tz(env, dt, tz=False, format=False):
         fdate = ts.strftime(format_date).decode('utf-8')
         ftime = ts.strftime(format_time).decode('utf-8')
         return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+
+def format_amount(env, amount, currency):
+    fmt = "%.{0}f".format(currency.decimal_places)
+    lang = env['res.lang']._lang_get(env.context.get('lang') or 'en_US')
+
+    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
+        .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
+
+    pre = post = u''
+    if currency.position == 'before':
+        pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=currency.symbol or '')
+    else:
+        post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
+
+    return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
 
 try:
     # We use a jinja2 sandboxed environment to render mako templates.
@@ -367,6 +384,7 @@ class MailTemplate(models.Model):
         variables = {
             'format_date': lambda date, format=False, context=self._context: format_date(self.env, date, format),
             'format_tz': lambda dt, tz=False, format=False, context=self._context: format_tz(self.env, dt, tz, format),
+            'format_amount': lambda amount, currency, context=self._context: format_amount(self.env, amount, currency),
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }

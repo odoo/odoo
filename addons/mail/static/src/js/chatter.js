@@ -457,11 +457,12 @@ var Chatter = form_common.AbstractField.extend({
             pyeval.eval('contexts', this.build_context())
         );
         this.context = _.extend({
-            default_res_id: this.view.datarecord.id || false,
+            // expect integer ID or false
+            default_res_id: parseInt(this.view.datarecord.id, 10) || false,
             default_model: this.view.model || false,
         }, context);
         this.thread_dataset = this.view.dataset;
-        this.res_id = this.view.datarecord.id;
+        this.res_id = this.context.default_res_id;
         this.record_name = this.view.datarecord.display_name;
         this.msg_ids = this.get_value() || [];
 

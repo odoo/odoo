@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-10 08:42+0000\n"
-"PO-Revision-Date: 2016-10-10 08:42+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -374,6 +374,8 @@ msgid ""
 "Average delay in days to produce this product. In the case of multi-level "
 "BOM, the manufacturing lead times of the components will be added."
 msgstr ""
+"Prosječno kašnjenje u danima za proizvodnju ovog proizvoda. U slučaju multi-"
+"level sastavnice dodat će se pripremno vrijeme proizvodnje komponenata."
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.action_report_bom_price
@@ -545,11 +547,6 @@ msgstr "Matica"
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
 msgid "By-Products"
 msgstr "Nusproizvodi"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_product_can_be_expensed
-msgid "Can be Expensed"
-msgstr "Može predstavljati trošak"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:36
@@ -1236,6 +1233,11 @@ msgstr "Skladišni prijenosi"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_post_visible
 msgid "Inventory Post Visible"
 msgstr "Vidljiv skladišni prijenos"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_unreserve_visible
+msgid "Inventory Unreserve Visible"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
@@ -2204,6 +2206,11 @@ msgid "Propagate cancel and split"
 msgstr "Propagiraj otkazivanje i razdiobu"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_location_path
+msgid "Pushed Flow"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_quality_mrp
 #: selection:mrp.workcenter.productivity.loss,loss_type:0
 msgid "Quality"
@@ -2614,11 +2621,6 @@ msgid "Source"
 msgstr "Izvor"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr "Navedite da li proizvod može biti odabran u HR trošak."
-
-#. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_bolt
 #: model:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
@@ -2715,6 +2717,11 @@ msgstr "Tehničko polje koje pokazuje radi li trenutni korisnik."
 #: model:ir.model.fields,help:mrp.field_mrp_production_post_visible
 msgid "Technical field to check when we can post"
 msgstr "Tehničko polje za provjeru možemo li objavljivati"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_production_unreserve_visible
+msgid "Technical field to check when we can unreserve"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_production_availability
@@ -2874,7 +2881,7 @@ msgstr "Vrijeme prije prod."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
 msgid "Time ids"
-msgstr ""
+msgstr "Vrijeme ids"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_stop
@@ -2933,6 +2940,11 @@ msgid ""
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
+"Za proizvodnju ili sastavljanje proizvoda i korištenje sirovina i\n"
+"gotovih proizvoda, trebate upravljati operacijama proizvodnje.\n"
+"Operacije proizvodnje često se nazivaju radnim nalozima. Različite\n"
+"operacije imat će različite utjecaje na troškove\n"
+"proizvodnje i plaćanja ovisno o dostupnom radnom opterećenju."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3070,6 +3082,7 @@ msgid ""
 "Use Master Production Schedule in order to create procurements based on "
 "forecasts"
 msgstr ""
+"Koristite Master Plan Proizvodnje za kreiranje nabava prema predviđanjima "
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
@@ -3247,6 +3260,10 @@ msgid ""
 "                considered as units for task assignation as well as capacity\n"
 "                and planning forecast."
 msgstr ""
+"Radni centri omogućavaju Vam kreiranje i upravljanje proizvodnim\n"
+"jedinicama. One se sastoje od radnika i/ili strojeva, koji se\n"
+"smatraju jedinicama za dodjelu zadataka kao i kapacitet i\n"
+"planiranje."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3442,9 +3459,21 @@ msgstr ""
 "Molimo prvo ih zatvorite ili otkažite."
 
 #. module: mrp
-#: code:addons/mrp/models/stock_move.py:123
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You can only produce 1.0 %s for products with unique serial number."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:135
 #, python-format
 msgid "You cannot cancel a move move having already consumed material"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
 msgstr ""
 
 #. module: mrp

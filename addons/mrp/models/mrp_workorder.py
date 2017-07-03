@@ -282,7 +282,7 @@ class MrpWorkorder(models.Model):
         for move_lot in self.active_move_lot_ids:
             # Check if move_lot already exists
             if move_lot.quantity_done <= 0:  # rounding...
-                move_lot.unlink()
+                move_lot.sudo().unlink()
                 continue
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
@@ -291,7 +291,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
-                move_lot.unlink()
+                move_lot.sudo().unlink()
             else:
                 move_lot.lot_produced_id = self.final_lot_id.id
                 move_lot.done_wo = True
@@ -342,6 +342,7 @@ class MrpWorkorder(models.Model):
         self.final_lot_id = False
         if self.qty_produced >= self.production_id.product_qty:
             self.button_finish()
+        return True
 
     @api.multi
     def button_start(self):
@@ -369,7 +370,7 @@ class MrpWorkorder(models.Model):
                 'date_start': datetime.now(),
                 'user_id': self.env.user.id
             })
-        self.write({'state': 'progress',
+        return self.write({'state': 'progress',
                     'date_start': datetime.now(),
         })
 
@@ -377,7 +378,7 @@ class MrpWorkorder(models.Model):
     def button_finish(self):
         self.ensure_one()
         self.end_all()
-        self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
+        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
 
     @api.multi
     def end_previous(self, doall=False):
@@ -390,9 +391,12 @@ class MrpWorkorder(models.Model):
         domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
         if not doall:
             domain.append(('user_id', '=', self.env.user.id))
+        not_productive_timelines = timeline_obj.browse()
         for timeline in timeline_obj.search(domain, limit=None if doall else 1):
             wo = timeline.workorder_id
-            if timeline.loss_type != 'productive':
+            if wo.duration_expected <= wo.duration:
+                if timeline.loss_type == 'productive':
+                    not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
                 maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wo.duration_expected - wo.duration)
@@ -401,10 +405,13 @@ class MrpWorkorder(models.Model):
                     timeline.write({'date_end': enddate})
                 else:
                     timeline.write({'date_end': maxdate})
-                    loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
-                    if not len(loss_id):
-                        raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-                    timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
+                    not_productive_timelines += timeline.copy({'date_start': maxdate, 'date_end': enddate})
+        if not_productive_timelines:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            not_productive_timelines.write({'loss_id': loss_id.id})
+        return True
 
     @api.multi
     def end_all(self):
@@ -413,22 +420,24 @@ class MrpWorkorder(models.Model):
     @api.multi
     def button_pending(self):
         self.end_previous()
+        return True
 
     @api.multi
     def button_unblock(self):
         for order in self:
             order.workcenter_id.unblock()
+        return True
 
     @api.multi
     def action_cancel(self):
-        self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel'})
 
     @api.multi
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
             raise UserError(_('A Manufacturing Order is already done or cancelled!'))
         self.end_all()
-        self.write({'state': 'done',
+        return self.write({'state': 'done',
                     'date_finished': datetime.now()})
 
     @api.multi

@@ -59,7 +59,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Guarantee Limit:</strong>"
-msgstr ""
+msgstr "<strong>Ograničenje jamstva:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -69,7 +69,7 @@ msgstr "<strong>Lot broj</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operation Line(s)</strong>"
-msgstr ""
+msgstr "<strong>Stavka(e) operacije</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -125,7 +125,7 @@ msgstr "Prije popravka"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Može se potvrditi samo prijedlog popravka."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -309,12 +309,12 @@ msgstr "Grupiraj po adresi računa"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit Month"
-msgstr ""
+msgstr "Ograničenje jamstva Mjesec"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Guarantee limit by Month"
-msgstr ""
+msgstr "Ograničenje jamstva po mjesecima"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -337,6 +337,9 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"U nalogu za popravak možete detaljno opisati komponente koje uklanjate,\n"
+"dodajete ili zamjenjujete i zabilježiti vrijeme koje ste potrošili na različite\n"
+"operacije."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_internal_notes
@@ -442,7 +445,7 @@ msgstr "Temeljnica"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "Prijenos koji je kreirao nalog za popravak"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -550,7 +553,7 @@ msgstr "Proizvodi za popravak"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "Svi popravljeni proizvodi pripadaju ovom lotu"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
@@ -632,7 +635,7 @@ msgstr "Nalozi za popravak"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Popravi ponudu #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
@@ -644,6 +647,7 @@ msgstr "Popravak br."
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
+"Popravak mora biti otkazan kako biste ga mogli ponovno postaviti u nacrt."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:343
@@ -656,12 +660,13 @@ msgstr "Popravak se mora potvrditi prije početka popravka."
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr ""
+"Popravak se mora popraviti kako bi se mogli napraviti skladišni prijenosi."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:354
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "Popravak mora biti pod popravkom kako bi se završilo popravljanje."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:223
@@ -684,7 +689,7 @@ msgstr "Popravljeno"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
 msgid "Repaired Lot"
-msgstr ""
+msgstr "Popravljeni lot"
 
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
@@ -717,7 +722,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
-msgstr ""
+msgstr "Serijski broj je potreban za stavku operacije s proizvodom '%s'"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -782,6 +787,9 @@ msgid ""
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
 msgstr ""
+"Nalog za popravak koristi datum jamstva na serijskom broju\n"
+"kako bi se znalo treba li kupcu napraviti račun ili\n"
+"ne."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
@@ -889,3 +897,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Morate odabrati cjenik u obrascu popravka!\n"
+"Molimo da  ga postavite prije odabira proizvoda."

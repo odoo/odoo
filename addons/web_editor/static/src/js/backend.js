@@ -138,7 +138,7 @@ var FieldTextHtmlSimple = widget.extend({
         }
     },
     resize: function() {
-        this.$('iframe').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
+        this.$('> iframe.o_readonly').css('height', '0px').css('height', Math.max(30, Math.min(this.$content[0] ? this.$content[0].scrollHeight : 0, 500)) + 'px');
     },
     render_value: function () {
         var value = this.get('value');
@@ -183,6 +183,11 @@ var FieldTextHtml = widget.extend({
     template: 'web_editor.FieldTextHtml',
     willStart: function () {
         var self = this;
+
+        if (this.field.translate === false) {
+            this.languages = [];
+            return $.when();
+        }
         return new Model('res.lang').call("search_read", [[['code', '!=', 'en_US']], ["name", "code"]]).then(function (res) {
             self.languages = res;
         });

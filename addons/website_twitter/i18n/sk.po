@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_twitter
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-05-19 05:51+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:58+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_twitter
@@ -72,17 +73,17 @@ msgstr "Vytvorte novú Twitter aplikáciu na"
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
@@ -150,8 +151,8 @@ msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
 "Settings (it does not have to be yours)"
 msgstr ""
-"Prosím nastavte názov Twitter obrazovky z ktorej sa budú načitávať obľúbené, "
-"v Nastavnie webstránky (nemusí byť vaša)"
+"Prosím nastavte názov Twitter obrazovky z ktorej sa budú načitávať obľúbené,"
+" v Nastavnie webstránky (nemusí byť vaša)"
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:23
@@ -194,12 +195,10 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.ui.view,arch_db:website_twitter.view_website_config_settings
 msgid ""
-"Set your Twitter API access below to be able to use the Twitter Scroller "
-"Website snippet.<br/>\n"
+"Set your Twitter API access below to be able to use the Twitter Scroller Website snippet.<br/>\n"
 "                             You can get your API credentials from"
 msgstr ""
-"Nastavte si Twitter API prístup nižšie, aby bolo možné použiť Twitter "
-"Scroller fragment webstránky..<br/>\n"
+"Nastavte si Twitter API prístup nižšie, aby bolo možné použiť Twitter Scroller fragment webstránky..<br/>\n"
 "\n"
 "Svoje prihlasovacie API údaje môžete dostať od"
 
@@ -235,11 +234,11 @@ msgstr ""
 #: code:addons/website_twitter/models/website_twitter_config.py:15
 #, python-format
 msgid ""
-"The request is understood, but it has been refused or access is not allowed. "
-"Please check your Twitter API Key and Secret."
+"The request is understood, but it has been refused or access is not allowed."
+" Please check your Twitter API Key and Secret."
 msgstr ""
-"Požiadavka je pochopená, ale bola zamietnutá, alebo prístup nie je povolený. "
-"Prosím skontrolujte vaše Twitter API kľúč a Tajomstvo."
+"Požiadavka je pochopená, ale bola zamietnutá, alebo prístup nie je povolený."
+" Prosím skontrolujte vaše Twitter API kľúč a Tajomstvo."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:13
@@ -248,8 +247,8 @@ msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
 "authentication are considered invalid and will yield this response."
 msgstr ""
-"Požiadavka je neplatná alebo nemôže byť inak vybavená. Žiadosti bez overenia "
-"sú považované za neplatné a prinesú túto odpoveď."
+"Požiadavka je neplatná alebo nemôže byť inak vybavená. Žiadosti bez overenia"
+" sú považované za neplatné a prinesú túto odpoveď."
 
 #. module: website_twitter
 #: code:addons/website_twitter/models/website_twitter_config.py:12
@@ -301,7 +300,8 @@ msgstr "Twitter API tajomstvo"
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
-msgid "Twitter API secret you can get it from https://apps.twitter.com/app/new"
+msgid ""
+"Twitter API secret you can get it from https://apps.twitter.com/app/new"
 msgstr ""
 "Twitter API tajomstvo, môžete ho získať z https://apps.twitter.com/app/new"
 
@@ -331,15 +331,15 @@ msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
 "on Twitter forums to get help."
 msgstr ""
-"Twitter sa zdá pokazený. Skúste to prosím neskôr. Môžete zvážiť publikovanie "
-"problému na Twitteri fórach pre získanie pomoci."
+"Twitter sa zdá pokazený. Skúste to prosím neskôr. Môžete zvážiť publikovanie"
+" problému na Twitteri fórach pre získanie pomoci."
 
 #. module: website_twitter
 #: code:addons/website_twitter/controllers/main.py:37
 #, python-format
 msgid ""
-"Twitter user @%(username)s has less than 12 favorite tweets. Please add more "
-"or choose a different screen name."
+"Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
+" or choose a different screen name."
 msgstr ""
 "Twitter používateľ @%(username)s má menej ako 12 obľúbených tweetov. Prosím "
 "pridajte viac alebo zvoľte iný názov obrazovky."

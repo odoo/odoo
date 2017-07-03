@@ -3,17 +3,6 @@
 # * website_crm_partner_assign
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2016
-# KingOPl Slav <87slava13@gmail.com>, 2016
-# Masha Koc <mariya.kos.ua@gmail.com>, 2016
-# Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# artur kov <arturlevinkov@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Max Belyanin <maxbelyanin@gmail.com>, 2016
-# Alex Puchkov <ap@alteco.co>, 2016
-# Viktor Pogrebniak <vp@aifil.ru>, 2016
-# Denis Trepalin <zekarious@gmail.com>, 2016
-# Gennady Marchenko <gennadym@gmail.com>, 2016
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2016
 msgid ""
 msgstr ""
@@ -56,9 +45,8 @@ msgid ""
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
 "% if not ctx['partner_id'].user_id:\n"
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
@@ -84,12 +72,12 @@ msgstr "&amp;times;"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
-msgstr ""
+msgstr "<i class=\"fa fa-file-text-o\"/>Мне интересно"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "<i class=\"fa fa-fw fa-times\"/> I'm not interested"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-times\"/> Мне не интересно"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:192
@@ -104,6 +92,8 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -113,6 +103,9 @@ msgid ""
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -139,7 +132,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span>at </span>"
-msgstr ""
+msgstr "<span>в </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -150,6 +143,7 @@ msgstr "<strong>История сообщений и обсуждений</stron
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -199,12 +193,12 @@ msgstr "Дата назначения"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_lead_assign_filter
 msgid "Assign Month"
-msgstr ""
+msgstr "Назначить месяц"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.server,name:website_crm_partner_assign.action_assign_salesman_according_assigned_partner
 msgid "Assign salesman of assigned partner"
-msgstr ""
+msgstr "Назначить продавца назначенного партнера"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_date_assign
@@ -309,7 +303,7 @@ msgstr "Содержание"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Countries..."
-msgstr ""
+msgstr "Страны..."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_country_id
@@ -342,7 +336,7 @@ msgstr "Создано"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opp"
-msgstr ""
+msgstr "Текущий этап пред."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
@@ -410,12 +404,12 @@ msgstr "Вы связались с клиентом?"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Contact"
-msgstr ""
+msgstr "Изменить контакт"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Edit Opportunity"
-msgstr ""
+msgstr "Редактировать возможность"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -435,7 +429,7 @@ msgstr "Ожидаемое закрытие"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Expected Closing:"
-msgstr ""
+msgstr "Ожидаемое закрытие:"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:107
@@ -499,6 +493,7 @@ msgstr "Геопозиционирование"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
@@ -531,13 +526,13 @@ msgstr "Высокий"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:203
 #, python-format
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr ""
+msgstr "Мне не интересен этот лид. Я связался с лидом."
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:205
 #, python-format
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr ""
+msgstr "Мне не интересен этот лид. Я не связался с лидом."
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_id
@@ -551,18 +546,20 @@ msgstr "ID"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
 msgid "Implementation References"
 msgstr "Рекомендации по реализации"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr "Реализовано"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date
 msgid "Invoice Account Date"
-msgstr ""
+msgstr "Дата счета"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation___last_update
@@ -598,6 +595,7 @@ msgstr "Последняя дата, когда этот вопрос был н�
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
 msgid "Latest Partner Review"
 msgstr "Последний обзор контрагента"
 
@@ -649,7 +647,8 @@ msgid "Leads Analysis"
 msgstr "Анализ инициатив"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9928
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Уровень"
@@ -657,13 +656,14 @@ msgstr "Уровень"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_name
 msgid "Level Name"
-msgstr ""
+msgstr "Имя Уровня"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
-msgstr ""
+msgstr "Уровень веса"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -700,7 +700,7 @@ msgstr "Мобильный"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 msgid "My Assigned Partners"
-msgstr ""
+msgstr "Мои назначенные партнеры"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -741,8 +741,14 @@ msgstr "Дата следующего мероприятия"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
 msgid "Next Partner Review"
 msgstr "Обзор следующего контрагента"
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
+msgid "No more partner available"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -793,7 +799,7 @@ msgstr "Предложение"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr ""
+msgstr "Возможности -"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.partner
@@ -848,7 +854,7 @@ msgstr "Уровень контрагента"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_partner_location
 msgid "Partner Location"
-msgstr ""
+msgstr "Месторасположение партнера"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_partner_assign_form
@@ -863,7 +869,7 @@ msgstr "Анализ назначений партнеру"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_declined_ids
 msgid "Partner not interested"
-msgstr ""
+msgstr "Партнер не заинтересован"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_crm_lead_partner_assigned_id
@@ -883,13 +889,14 @@ msgstr "Анализ сотрудничества"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
 msgid "Partnership Date"
 msgstr "Дата сотрудничества"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.menu,name:website_crm_partner_assign.menu_report_crm_partner_assign_tree
 msgid "Partnerships"
-msgstr ""
+msgstr "Партнерство"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -905,7 +912,7 @@ msgstr "Планируемая выручка"
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
 msgid "Platinum"
-msgstr ""
+msgstr "Платинум"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_priority
@@ -915,7 +922,7 @@ msgstr "Приоритет"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Priority:"
-msgstr ""
+msgstr "Приоритет:"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:108
@@ -993,18 +1000,23 @@ msgstr "Последовательность"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:72
 #, python-format
 msgid "Set an email address for the partner %s"
-msgstr ""
+msgstr "Задайте адрес электронной почты для партнера %s"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:70
 #, python-format
 msgid "Set an email address for the partner(s): %s"
-msgstr ""
+msgstr "Задайте адрес электронной почты для партнер(ов): %s"
 
 #. module: website_crm_partner_assign
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
 msgid "Silver"
 msgstr "Серебряный"
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
+msgid "Spam"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:109
@@ -1016,7 +1028,7 @@ msgstr "Этап"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "States..."
-msgstr ""
+msgstr "Состояния..."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1038,7 +1050,7 @@ msgstr "Теги"
 #: code:addons/website_crm_partner_assign/wizard/crm_forward_to_partner.py:60
 #, python-format
 msgid "The Forward Email Template is not in the database"
-msgstr ""
+msgstr "Шаблон направленой электронной почты отсутствует в базе данных"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1048,7 +1060,7 @@ msgstr "У аккаунта ещё нет инициатив."
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "There are currently no opportunities for your account."
-msgstr ""
+msgstr "В настоящее время у вас нет доступа к этой учетной записи."
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -1058,7 +1070,7 @@ msgstr "Нет инициатив."
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "There are no opportunities."
-msgstr ""
+msgstr "Нет возможностей."
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:96
@@ -1069,7 +1081,7 @@ msgstr "Мероприятия этой недели"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr ""
+msgstr "Этот лид является спамом"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:95
@@ -1111,7 +1123,7 @@ msgstr "Видимый на сайте"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "What is the next action? When? What is the expected revenue?"
-msgstr ""
+msgstr "Что такое действия? Когда? Каков ожидаемый доход?"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1132,7 +1144,7 @@ msgstr "Карта мира"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "YYYY-MM-DD"
-msgstr ""
+msgstr "ГГГГ-ММ-ДД"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1144,7 +1156,7 @@ msgstr "Ваши инициативы"
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Your Opportunities"
-msgstr ""
+msgstr "Ваши возможности"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1154,7 +1166,7 @@ msgstr "Индекс"
 #. module: website_crm_partner_assign
 #: selection:crm.lead.forward.to.partner,forward_type:0
 msgid "a single partner: manual selection of partner"
-msgstr ""
+msgstr "один партнер: ручной выбор партнера"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1175,7 +1187,7 @@ msgstr "crm.lead.forward.to.partner"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "Нап., Золотой партнер"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1214,3 +1226,5 @@ msgid ""
 "several partners: automatic assignation, using GPS coordinates and partner's"
 " grades"
 msgstr ""
+"несколько партнеров: автоматическое распределение, используя координаты GPS "
+"и оценки партнеров"

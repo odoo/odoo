@@ -51,7 +51,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Produktvarianter"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -71,11 +71,14 @@ msgid ""
 "                    Buy Odoo Enterprise now to get more providers.\n"
 "                </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent\">\n"
+"Køb Odoo Enterprise for at få flere udbydere.\n"
+"</p>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_quant_package_form_save
 msgid "<span>kg</span>"
-msgstr ""
+msgstr "<span>kg</span>"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
@@ -87,7 +90,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:delivery.report_delivery_document2
 #: model:ir.ui.view,arch_db:delivery.report_shipping2
 msgid "<strong>Weight</strong>"
-msgstr ""
+msgstr "<strong>Vægt</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
@@ -174,7 +177,7 @@ msgstr "Til rådighed"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_available_in_pos
 msgid "Available in the Point of Sale"
-msgstr ""
+msgstr "Fås i butikker"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_produce_delay
@@ -216,7 +219,7 @@ msgstr "Grundpris for beregning af kundens pris. Også kaldet Listeprisen."
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
 msgid "Based on Rules"
-msgstr ""
+msgstr "Baseret på regler"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image
@@ -285,23 +288,24 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership
 msgid "Check if the product is eligible for membership."
-msgstr ""
+msgstr "Tjek om produktet er berettiget for medlemsskabet. "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
 msgstr ""
+"Tjek om produktet burde blive vejet ved brug af hardvare vægt integrationen"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
+msgstr "Tjek om du vil have dette produkt ud i butikkerne"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr ""
+msgstr "Klik for at vælge en ny leveringsmetode."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -362,6 +366,8 @@ msgid ""
 "Create a task under this project on sale order validation. This setting must"
 " be set for each company."
 msgstr ""
+"Opret en opgave under dette projekt på salgsordre validering. Denne "
+"indstilling skal indstilles for hvert firma."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_create_uid
@@ -408,7 +414,7 @@ msgstr "Kunde moms"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Dato for hvornår medlemskabet bliver aktivt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -418,7 +424,7 @@ msgstr "Dato for sidste besked på denne post."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Datoen, indtil medlemskabet forbliver aktive."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
@@ -449,12 +455,12 @@ msgstr "Levering"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Leverings mand"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Leverings information"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -542,7 +548,7 @@ msgstr "Miljø"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
 msgid "Estimated Delivery Price"
-msgstr ""
+msgstr "Estimeret leveringspris"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ok
@@ -552,7 +558,7 @@ msgstr "Arrangements tilmelding"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_event_ticket_ids
 msgid "Event Tickets"
-msgstr ""
+msgstr "Arrangement billetter"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expected_margin
@@ -639,13 +645,14 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
-msgstr ""
+msgstr "Gratis levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
 msgid "Free if Order total is more than"
-msgstr ""
+msgstr "Gratis hvis den totale ordrer er på mere end"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
@@ -690,7 +697,7 @@ msgstr "Højde"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Height must be positive"
-msgstr ""
+msgstr "Højde skal være positiv"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_id
@@ -775,12 +782,12 @@ msgstr "Indkommende"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Install more Providers"
-msgstr ""
+msgstr "Installer flere udbydere"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Integrations niveau"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_categ_id
@@ -821,7 +828,7 @@ msgstr "Faktura stadie"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Fakturerings politik"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -870,7 +877,7 @@ msgstr "Længde"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Length must be positive"
-msgstr ""
+msgstr "Længde skal være positiv"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
@@ -918,17 +925,17 @@ msgstr "Margin Dato til"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "Margin kan ikke være lavere end -100%"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
 msgid "Max Weight"
-msgstr ""
+msgstr "Maksvægt"
 
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Max Weight must be positive"
-msgstr ""
+msgstr "Maksvægt skal være positiv"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_max_value
@@ -948,17 +955,17 @@ msgstr "Mellem størrelse billede"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Medlemskab"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Medlemskabets slutdato"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Medlemskabets startdato"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_line_warn_msg
@@ -1017,6 +1024,7 @@ msgstr "Normal kost - total kost"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr ""
 
@@ -1072,14 +1080,14 @@ msgstr "Pakke"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_shipper_package_code
 msgid "Package Code"
-msgstr ""
+msgstr "Pakke kode"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:35
 #: code:addons/delivery/models/stock_picking.py:128
 #, python-format
 msgid "Package Details"
-msgstr ""
+msgstr "Pakke detaljer"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_package_ids
@@ -1109,7 +1117,7 @@ msgstr "Fysiske pakker"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pos_categ_id
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "Butikskategori"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -1127,7 +1135,7 @@ msgstr "Lager regulering konto"
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr ""
+msgstr "Pris regler"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_id
@@ -1137,7 +1145,7 @@ msgstr "Prisliste"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_item_ids
 msgid "Pricelist Items"
-msgstr ""
+msgstr "Prisliste poster"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_pricelist_item_ids
@@ -1147,12 +1155,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Prisfastsættelse"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
 msgid "Pricing Rules"
-msgstr ""
+msgstr "Prisfastsættelses regler"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_procurement
@@ -1204,7 +1212,7 @@ msgstr "Produkt type"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_use_time
 msgid "Product Use Time"
-msgstr ""
+msgstr "Brugstid på produkt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_stock_production
@@ -1226,7 +1234,7 @@ msgstr "Projekt"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_delivery_type
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Provider"
-msgstr ""
+msgstr "Udbyder"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_description_purchase
@@ -1395,7 +1403,7 @@ msgstr "Rækkefølge"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Set price"
-msgstr ""
+msgstr "Fastsæt pris"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
@@ -1413,12 +1421,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_price
 msgid "Shipping Cost"
-msgstr ""
+msgstr "Leveringsomkostninger"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package_shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Forsendelses vægt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_image_small
@@ -1434,7 +1442,7 @@ msgstr "Angiv hvis varen kan vælges på en salgsordrelinier."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
+msgstr "Angiv om produktet kan blive valgt som en HR udgift."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_cost_method
@@ -1511,23 +1519,26 @@ msgstr "Samlet antal på kundefakturaer"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr ""
+msgstr "Sum af mængde for leverandør regninger"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pricelist_id
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Teknisk felt. Bruges til at søge på prislister, som ikke er gemt i "
+"databasen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_quant_ids
 msgid "Technical: used to compute quantities."
-msgstr ""
+msgstr "Teknisk: bruges til at beregne mængder."
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr ""
 
@@ -1561,7 +1572,7 @@ msgstr "Volumen i m3."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_weight
 msgid "The weight of the contents in Kg, not including any packaging, etc."
-msgstr ""
+msgstr "Vægten af indholdet i kg, emballage osv. er ikke medregnet."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -1577,6 +1588,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
 msgstr ""
+"Denne prisliste anvendes i stedet for standardprislisten ved salg til det "
+"aktuelle produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_income_id
@@ -1584,6 +1597,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
 msgstr ""
+"Denne prisliste anvendes i stedet for standardprislisten ved bedømmelse af "
+"salg til det aktuelle produkt."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_account_creditor_price_difference
@@ -1614,7 +1629,7 @@ msgstr "Dette er summen af ekstra pris på alle egenskaber"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Denne procentdel vil blive tilføjet til leveringsprisen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_production
@@ -1641,11 +1656,13 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
 msgstr ""
+"Disse kategorier er brugt til at gruppere lignende produkter til Point of "
+"Sale."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_to_weight
 msgid "To Weigh With Scale"
-msgstr ""
+msgstr "Vej med vægt"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_total_cost
@@ -1670,18 +1687,18 @@ msgstr "Total avance * 100/omsætning"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Sporings service"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Tracking"
-msgstr ""
+msgstr "Sporing"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Sporings reference"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1728,7 +1745,7 @@ msgstr "Ulæste besked tæller"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Vurdering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule_variable
@@ -1753,7 +1770,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr ""
+msgstr "Leverandør skatter"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_seller_ids
@@ -1803,7 +1820,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Vægt for afsendelse"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1878,7 +1895,7 @@ msgstr "Bredde"
 #. module: delivery
 #: sql_constraint:product.packaging:0
 msgid "Width must be positive"
-msgstr ""
+msgstr "Bredde skal være positiv"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:187
@@ -1887,6 +1904,8 @@ msgid ""
 "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
+"Du afsender mere end en type pakker i den samme forsendelse.\n"
+"Pakke typer: %s"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:163
@@ -1899,12 +1918,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr ""
+msgstr "Fra postnummer"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr ""
+msgstr "Til postnummer"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

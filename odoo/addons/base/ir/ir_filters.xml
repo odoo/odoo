@@ -24,7 +24,7 @@
         <record id="ir_filters_delete_own_rule" model="ir.rule">
             <field name="name">ir.filters.own.rule.delete</field>
             <field name="model_id" ref="model_ir_filters"/>
-            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="False"/>

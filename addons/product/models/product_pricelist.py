@@ -44,7 +44,7 @@ class Pricelist(models.Model):
         if name and operator == '=' and not args:
             # search on the name of the pricelist and its currency, opposite of name_get(),
             # Used by the magic context filter in the product search view.
-            query_args = {'name': name, 'limit': limit, 'lang': self._context.get('lang', 'en_US')}
+            query_args = {'name': name, 'limit': limit, 'lang': self._context.get('lang') or 'en_US'}
             query = """SELECT p.id
                        FROM ((
                                 SELECT pr.id, pr.name
@@ -335,7 +335,7 @@ class ResCountryGroup(models.Model):
 class PricelistItem(models.Model):
     _name = "product.pricelist.item"
     _description = "Pricelist item"
-    _order = "applied_on, min_quantity desc, categ_id desc"
+    _order = "applied_on, min_quantity desc, categ_id desc, id"
 
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template', ondelete='cascade',

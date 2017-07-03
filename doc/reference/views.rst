@@ -97,7 +97,7 @@ how the matched node should be altered:
     the content of the inheritance spec is appended to the matched node
 ``replace``
     the content of the inheritance spec replaces the matched node.
-    Any text node containing only `$0` within the contents of the spec will
+    Any text node containing only ``$0`` within the contents of the spec will
     be replaced  by a complete copy of the matched node, effectively wrapping
     the matched node.
 ``after``
@@ -241,6 +241,11 @@ Possible children elements of the list view are:
 
         Makes the button ``invisible`` if the record is *not* in one of the
         listed states
+
+        .. danger::
+
+            Using ``states`` in combination with ``attrs`` may lead to
+            unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
     ``confirm``
@@ -823,6 +828,12 @@ attributes:
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``group_create``
+  whether the "Add a new column" bar is visible or not. Default: true.
+``group_delete``
+  whether groups can be deleted via the context menu. Default: true.
+``group_edit``
+  whether groups can be edited via the context menu. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
@@ -934,11 +945,8 @@ Javascript API
                            caching entirely
       :returns: an image URL
 
-   .. js:function:: kanban_text_ellipsis(string[, size=160])
-
-      clips text beyond the specified size and appends an ellipsis to it. Can
-      be used to display the initial part of potentially very long fields
-      (e.g. descriptions) without the risk of unwieldy cards
+   .. warning::
+      ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
 
 .. _reference/views/calendar:
 

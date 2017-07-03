@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -85,6 +85,12 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
+
+#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
@@ -131,6 +137,14 @@ msgstr ""
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Strona WWW"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

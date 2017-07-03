@@ -51,9 +51,8 @@ msgid ""
 "\n"
 "<p>Thanks,</p>\n"
 "\n"
-"<pre>\n"
-"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature | safe or ''}\n"
-"</pre>\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
 "% if not ctx['partner_id'].user_id:\n"
 "PS: It looks like you do not have an account manager assigned to you, please contact us.\n"
 "% endif\n"
@@ -99,6 +98,8 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -108,6 +109,9 @@ msgid ""
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">E </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">O </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -139,6 +143,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_activation
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_activation
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_activation
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_form
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_tree
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_res_partner_filter_assign
@@ -488,6 +493,7 @@ msgstr "Geolocalització"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,help:website_crm_partner_assign.field_res_users_partner_weight
 msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignation.)"
@@ -541,11 +547,13 @@ msgstr "ID"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_implemented_partner_ids
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_implemented_partner_ids
 msgid "Implementation References"
 msgstr "Referències d'implementació"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_assigned_partner_id
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr "Implementat per"
 
@@ -589,6 +597,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review
 msgid "Latest Partner Review"
 msgstr "Última revisió d'empresa"
 
@@ -640,7 +649,8 @@ msgid "Leads Analysis"
 msgstr "Anàlisi d'iniciatives"
 
 #. module: website_crm_partner_assign
-#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9922
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_id_9928
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_grade_id
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "Level"
 msgstr "Nivell"
@@ -653,6 +663,7 @@ msgstr "Nom de nivell"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade_partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_partner_weight
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_partner_weight
 msgid "Level Weight"
 msgstr "Nivell de pes"
 
@@ -732,8 +743,14 @@ msgstr "Data de l'activitat següent"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_review_next
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_review_next
 msgid "Next Partner Review"
 msgstr "Següent revisió d'empresa"
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
+msgid "No more partner available"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -874,6 +891,7 @@ msgstr "Anàlisis de la col·laboració"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign_date_partnership
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_date_partnership
+#: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users_date_partnership
 msgid "Partnership Date"
 msgstr "Data d'associació"
 
@@ -996,6 +1014,11 @@ msgstr "Afegeix adreça de correu electrònic del(s) contacte(s) %s"
 #: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
 msgid "Silver"
 msgstr "Plata "
+
+#. module: website_crm_partner_assign
+#: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
+msgid "Spam"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:109
@@ -1157,17 +1180,17 @@ msgstr "a les"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "crm.lead.assignation"
-msgstr ""
+msgstr "crm.lead.assignation"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "crm.lead.forward.to.partner"
-msgstr ""
+msgstr "crm.lead.forward.to.partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
 msgid "e.g. Gold Partner"
-msgstr ""
+msgstr "e.x. Gold Partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1193,7 +1216,7 @@ msgstr "referència(s)"
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_activation
 msgid "res.partner.activation"
-msgstr ""
+msgstr "res.partner.activation"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade

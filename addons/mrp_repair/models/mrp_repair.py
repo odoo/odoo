@@ -453,7 +453,7 @@ class RepairLine(models.Model):
         if not self.to_invoice:
             self.price_subtotal = 0.0
         else:
-            taxes = self.env['account.tax'].compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
+            taxes = self.tax_id.compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
             self.price_subtotal = taxes['total_excluded']
 
     @api.onchange('type', 'repair_id')
@@ -490,7 +490,10 @@ class RepairLine(models.Model):
         if partner and self.product_id:
             self.tax_id = partner.property_account_position_id.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
-            self.name = self.product_id.display_name
+            if partner:
+                self.name = self.product_id.with_context(lang=partner.lang).display_name
+            else:
+                self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
 
         warning = False
@@ -521,7 +524,7 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     name = fields.Char('Description', index=True, required=True)
     product_id = fields.Many2one('product.product', 'Product')
-    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
+    product_uom_qty = fields.Float('Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True)
     product_uom = fields.Many2one('product.uom', 'Product Unit of Measure', required=True)
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', digits=0)
@@ -536,7 +539,7 @@ class RepairFee(models.Model):
         if not self.to_invoice:
             self.price_subtotal = 0.0
         else:
-            taxes = self.env['account.tax'].compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
+            taxes = self.tax_id.compute_all(self.price_unit, self.repair_id.pricelist_id.currency_id, self.product_uom_qty, self.product_id, self.repair_id.partner_id)
             self.price_subtotal = taxes['total_excluded']
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')

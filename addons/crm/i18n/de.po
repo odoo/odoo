@@ -9,10 +9,10 @@
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Mathias Neef <mn@copado.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # Magdalena Zimprich <magdalena.zimprich@camadeus.at>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
 # Patrick Belser <patrick.belser@camptocamp.com>, 2016
 # Nicolas Frei <nicolas.frei@braintec-group.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 13:41+0000\n"
-"PO-Revision-Date: 2016-12-14 13:41+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Niki Waibel <niki.waibel@gmail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -121,11 +121,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover\n"
-"                                how to get the best out of Odoo CRM with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -1388,7 +1387,7 @@ msgstr "Glückwunsch, Sie sind fertig !"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor7
 msgid "Consulting"
-msgstr ""
+msgstr "Beratung"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1515,6 +1514,7 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
 msgstr "Neuen Kunden anlegen"
@@ -1633,9 +1633,10 @@ msgid "Current Line"
 msgstr "Aktuelle Position"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1073
+#: code:addons/crm/models/crm_lead.py:1069
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1769,7 +1770,7 @@ msgstr ""
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "Design"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1815,6 +1816,7 @@ msgstr "Veröffentlichen Sie Broschüren, Produktblätter, Präsentationen etc."
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "Nicht mit einem Kunden verknüpfen"
@@ -2230,7 +2232,7 @@ msgstr "Versteckt"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_activity_hidden
 msgid "Hide the subtype in the follower options"
-msgstr "Verberge den Untertyp in den Beobachter Optionen"
+msgstr "Verberge den Untertyp in den Abonnenten Optionen"
 
 #. module: crm
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
@@ -2351,7 +2353,7 @@ msgstr "Eingehende E-Mails"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor4
 msgid "Information"
-msgstr ""
+msgstr "Information"
 
 #. module: crm
 #. openerp-web
@@ -2465,12 +2467,7 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:841
+#: code:addons/crm/models/crm_lead.py:837
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
@@ -2648,6 +2645,7 @@ msgstr "Positionen"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
 msgstr "Verknüpfe mit Bestandskunde"
@@ -2879,7 +2877,7 @@ msgstr "Zusammengefasster Interessent"
 #: code:addons/crm/wizard/base_partner_merge.py:331
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "Zusammengefasst mit diesen Partnern:"
+msgstr "Zusammengeführt mit diesen Partnern:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_subtype_id
@@ -2992,7 +2990,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:34
 #, python-format
 msgid "Negotiation"
-msgstr ""
+msgstr "Verhandlung"
 
 #. module: crm
 #. openerp-web
@@ -3367,12 +3365,17 @@ msgstr "Optionen"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "Andere"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
 msgstr "Überfällige Aktivitäten"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Overdue Opportunities"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
@@ -3665,7 +3668,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:26
 #, python-format
 msgid "Quotation sent"
-msgstr ""
+msgstr "Angebot gesendet"
 
 #. module: crm
 #. openerp-web
@@ -3728,6 +3731,7 @@ msgstr "Vermittelt durch"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_action
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_action
 msgid "Related Customer"
 msgstr "Zugehöriger Kunde"
@@ -3829,7 +3833,9 @@ msgstr "Verkäufer"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid ""
 "Save filters or add any report to your dashboard with the Favorites menu."
-msgstr "Filter speichern oder favorisierte Berichte zum Cockpit hinzufügen. "
+msgstr ""
+"Filter speichern oder beliebige Berichte über das Favoritenmenü zum "
+"Dashboard hinzufügen."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_log_view_form_schedule
@@ -3928,7 +3934,7 @@ msgstr "Reihenfolge"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "Dienstleistungen"
 
 #. module: crm
 #. openerp-web
@@ -3947,8 +3953,8 @@ msgstr "Team als Vertriebsteam konfigurieren"
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Set the sales manager as a follower of every opportunity above $20k"
 msgstr ""
-"Ergänzen Sie den Verkaufsmanager automatisch als Verfolger von Chancen mit "
-"einem prognostizierten Umsatz über 20K €. "
+"Fügen Sie den Verkaufsmanager automatisch als Abonnent von Chancen mit einem"
+" prognostizierten Umsatz über 20K € hinzu. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_on_change
@@ -3995,6 +4001,13 @@ msgid "Show all opportunities for which the next action date is before today"
 msgstr ""
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid ""
+"Show all opportunities with a deadline for which the next action date is "
+"before today"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
@@ -4019,7 +4032,7 @@ msgstr "Folien"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4456,7 +4469,7 @@ msgstr "Nachverfolgung"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "Training"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type

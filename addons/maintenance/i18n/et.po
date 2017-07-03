@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_equipment
-#
+# * maintenance
+# 
 # Translators:
-# Arma Gedonsky <armagedonsky@hot.ee>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Arma Gedonsky <armagedonsky@hot.ee>, 2017
+# Rivo Zängov <eraser@eraser.ee>, 2017
+# Wanradt Koell <wanradt@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:58+0000\n"
-"PO-Revision-Date: 2016-03-12 20:15+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>\n"
-"Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
-"Language: et\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
+"Last-Translator: Wanradt Koell <wanradt@gmail.com>, 2017\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: maintenance
@@ -46,7 +49,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "<span>Reports</span>"
-msgstr ""
+msgstr "<span>Raportid</span>"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -99,7 +102,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "All"
-msgstr ""
+msgstr "Kõik"
 
 #. module: maintenance
 #: sql_constraint:maintenance.equipment:0
@@ -114,7 +117,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Arhiveeritud"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
@@ -276,11 +279,28 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_dashboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Töölaud"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
 msgid "Date of the next preventive maintenance"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
+msgid "Date requested for the maintenance to happen"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
+msgid ""
+"Date the maintenance team plans the maintenance.  It should not differ much "
+"from the Request Date. "
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
+msgid "Date the maintenance was finished. "
 msgstr ""
 
 #. module: maintenance
@@ -318,12 +338,12 @@ msgstr "Näidatav nimi"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_duration
 msgid "Duration"
-msgstr ""
+msgstr "Kestvus"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_duration
@@ -448,8 +468,8 @@ msgstr "ID"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
 msgstr ""
 
 #. module: maintenance
@@ -707,8 +727,8 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 
@@ -723,8 +743,7 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
 
 #. module: maintenance
@@ -781,7 +800,7 @@ msgstr "Remonditud"
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr ""
+msgstr "Raporteerimine"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -830,12 +849,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
-msgstr ""
+msgstr "Planeeritud"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_schedule_date
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planeeritud kuupäev"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -856,7 +875,7 @@ msgstr "Otsi"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_sequence
 msgid "Sequence"
-msgstr "Jada"
+msgstr "Järjestus"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_serial_no
@@ -918,7 +937,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_team_id
 msgid "Team"
-msgstr ""
+msgstr "Meeskond"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -938,9 +957,9 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
 msgstr ""
 
 #. module: maintenance
@@ -968,10 +987,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to\n"
-"                an employee or departement. You will manage allocations, "
-"issues\n"
+"                Create some laptop, printer or phone and link each equipment to\n"
+"                an employee or departement. You will manage allocations, issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
@@ -979,16 +996,14 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of "
-"equipment."
+"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
-msgstr ""
+msgstr "Tegemiseks"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1078,14 +1093,14 @@ msgstr "Garantii"
 #: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance "
-"requests."
+"You cannot delete an equipment category containing equipments or maintenance"
+" requests."
 msgstr ""
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "days"
-msgstr ""
+msgstr "päevad"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form

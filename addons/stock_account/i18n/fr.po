@@ -15,13 +15,15 @@
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
+# Richard Mathot <rim@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Olivier Dony <odo@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +73,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"Impossible de trouver un compte d'entrée en stock pour le produit %s. Vous "
+"devez en définir un sur la catégorie de produit ou l'emplacement avant "
+"d'effectuer cette opération."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -120,13 +125,7 @@ msgid "Company"
 msgstr "Société"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr "Calculez le prix moyen"
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -471,6 +470,11 @@ msgid "Stock Accounting"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -577,7 +581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Valorisatio"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant

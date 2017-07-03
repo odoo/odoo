@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2016
-# dr&mx <dronmax@gmail.com>, 2016
+# Максим Дронь <dronmax@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Viktor Pogrebniak <vp@aifil.ru>, 2016
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2016\n"
+"Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +88,12 @@ msgid "Manage your payment methods"
 msgstr "Управление вашими способами оплаты"
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr "К сожалению! С вашей оплатой возникла проблема"
+
+#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
@@ -133,6 +140,16 @@ msgstr "Эта транзакция будет обрабатываться"
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
 msgstr "Сайт"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
+"Ваш платеж прошел успешно! Это может занять некоторое время, чтобы "
+"подтвердить с нашей стороны."
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

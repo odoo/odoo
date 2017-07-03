@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
-# Matus Krnac <matus.krnac@gmail.com>, 2015
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:54+0000\n"
-"PO-Revision-Date: 2016-02-10 11:02+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: base_import
@@ -82,7 +84,7 @@ msgstr "Čiarka"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import_create_date
@@ -100,7 +102,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_create_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:152
@@ -146,7 +148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: base_import
 #. openerp-web
@@ -235,7 +237,7 @@ msgstr "Získať všetky možné hodnoty"
 #: code:addons/base_import/static/src/xml/base_import.xml:11
 #, python-format
 msgid "Help"
-msgstr ""
+msgstr "Pomoc"
 
 #. module: base_import
 #. openerp-web
@@ -290,8 +292,8 @@ msgstr ""
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking                             "
-"will set up subscriptions and send notifications                             "
-"during the import, but lead to a slower import."
+"will set up subscriptions and send notifications"
+"                             during the import, but lead to a slower import."
 msgstr ""
 "Ak model používa openchatter, sledovanie histórie nastaví odbery a pošle "
 "notifikácie počas importu, ale vedie to k pomalšiemu importu."
@@ -425,7 +427,7 @@ msgstr "Iná premenná"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_parent_id
 msgid "Parent id"
-msgstr ""
+msgstr "Nadradené id"
 
 #. module: base_import
 #. openerp-web
@@ -466,7 +468,7 @@ msgstr "Oddeľovač:"
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:72
 #, python-format
-msgid "Show all fields for completion (advanced)"
+msgid "Show fields of relation fields (advanced)"
 msgstr ""
 
 #. module: base_import
@@ -521,10 +523,8 @@ msgstr "Sledovať históriu počas importu"
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:199
 #, python-format
-msgid ""
-"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
-"Nemožno načítať \"{extension}\" súbor: vyžaduje Python modul \"{modname}\""
+msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgstr "Nemožno načítať \"{extension}\" súbor: vyžaduje Python modul \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:200
@@ -532,14 +532,15 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Nepodporovaný formát súboru \"{}\", import podporuje iba CSV, ODS, XLS a XLSX"
+"Nepodporovaný formát súboru \"{}\", import podporuje iba CSV, ODS, XLS a "
+"XLSX"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:86
 #, python-format
 msgid "Validate"
-msgstr "Overenie"
+msgstr "Overiť"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_char_noreadonly_value
@@ -555,7 +556,7 @@ msgstr "Overenie"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child_value
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_value
 msgid "Value"
-msgstr ""
+msgstr "Hodnota"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:537

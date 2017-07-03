@@ -457,7 +457,7 @@
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr />
+                            <hr t-if="product.availability != 'empty'"/>
                             <div t-if="product.availability == 'in_stock'" class="alert alert-success">
                                 <span class="fa fa-check" />
                                 <span>In Stock</span>
@@ -574,7 +574,7 @@
             <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
                 <i class="fa fa-minus"></i>
             </a>
-            <input type="text" class="form-control" data-min="1" name="add_qty" value="1"/>
+            <input type="text" class="form-control quantity" data-min="1" name="add_qty" value="1"/>
             <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
                 <i class="fa fa-plus"></i>
             </a>
@@ -592,7 +592,7 @@
               <span itemprop="price" style="display:none;" t-esc="product.website_price"/>
               <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
           </h4>
-          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="product.currency_id.decimal_places">
+          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(product.currency_id.decimal_places)">
             <span t-field="product.lst_price"
                 t-options='{
                    "widget": "monetary",
@@ -874,7 +874,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json" data-no-instant="">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -1395,7 +1395,7 @@
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
-                                        <a style="width:127px;" class="btn btn-primary a-submit">
+                                        <a class="btn btn-primary a-submit">
                                             <span t-if="order.amount_total &gt; 0">Pay Now <span class="fa fa-long-arrow-right"></span></span>
                                             <span t-if="order.amount_total == 0">Confirm Order <span class="fa fa-long-arrow-right"></span></span>
                                         </a>

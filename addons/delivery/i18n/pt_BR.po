@@ -8,17 +8,18 @@
 # grazziano <gra.negocia@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # Adriel Kotviski <kotviski@gmail.com>, 2016
-# francisco alexandre bezerra da silva <falexandresilva@gmail.com>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
-# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # Ademílson F. Tonato <apraqueisso@gmail.com>, 2016
+# Silmar <pinheirosilmar@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Ademílson F. Tonato <apraqueisso@gmail.com>, 2016\n"
+"Last-Translator: Silmar <pinheirosilmar@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,7 +55,7 @@ msgstr "# Ordens de Produção"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# Variantes de Produto"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_purchase_count
@@ -679,6 +680,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr "Taxas de entrega grátis"
 
@@ -1068,6 +1070,7 @@ msgstr "Custo Normal - Custo Total"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Despesas de Entregas Normais"
 
@@ -1111,6 +1114,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"Quantidade pedida: Fatura baseada na quantidade que o cliente pediu.\n"
+"Quantidade entregue: Fatura baseada na quantidade que entregue pelo vendedor (tempo ou entregas)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_outgoing_qty
@@ -1589,6 +1594,8 @@ msgstr "Soma da Quantidade em Contas de Fornecedor"
 msgid ""
 "Technical field. Used for searching on pricelists, not stored in database."
 msgstr ""
+"Campo técnico. Usado para pesquisa em listas de preços, não armazenado no "
+"banco de dados."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_stock_move_ids
@@ -1599,6 +1606,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "O Correio"
 
@@ -1841,7 +1849,7 @@ msgstr "Imagem da Variante"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Preço Extra da Variante"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_supplier_taxes_id

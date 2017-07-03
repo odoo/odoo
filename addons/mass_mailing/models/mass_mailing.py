@@ -292,7 +292,7 @@ class MassMailing(models.Model):
     create_date = fields.Datetime(string='Creation Date')
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', translate=html_translate, sanitize_attributes=False)
+    body_html = fields.Html(string='Body', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -464,7 +464,7 @@ class MassMailing(models.Model):
             return super(MassMailing, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby)
 
     def update_opt_out(self, email, res_ids, value):
-        model = self.env[self.mailing_model]
+        model = self.env[self.mailing_model].with_context(active_test=False)
         if 'opt_out' in model._fields:
             email_fname = 'email_from'
             if 'email' in model._fields:

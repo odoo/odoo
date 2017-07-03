@@ -8,6 +8,7 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.misc import formatLang
 from odoo.tools import float_is_zero, float_compare
 from odoo.tools.safe_eval import safe_eval
+import odoo.addons.decimal_precision as dp
 from lxml import etree
 
 #----------------------------------------------------------
@@ -222,8 +223,8 @@ class AccountMove(models.Model):
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
             'ref': _('reversal of: ') + self.name})
-        for acm_line in reversed_move.line_ids:
-            acm_line.with_context(check_move_validity=False).write({
+        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+            acm_line.write({
                 'debit': acm_line.credit,
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency
@@ -357,7 +358,7 @@ class AccountMoveLine(models.Model):
         self.counterpart = ",".join(counterpart)
 
     name = fields.Char(required=True, string="Label")
-    quantity = fields.Float(digits=(16, 2),
+    quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
     product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
@@ -749,7 +750,7 @@ class AccountMoveLine(models.Model):
         """
         for datum in data:
             if len(datum['mv_line_ids']) >= 1 or len(datum['mv_line_ids']) + len(datum['new_mv_line_dicts']) >= 2:
-                self.process_reconciliation(datum['mv_line_ids'], datum['new_mv_line_dicts'])
+                self.env['account.move.line'].browse(datum['mv_line_ids']).process_reconciliation(datum['new_mv_line_dicts'])
 
             if datum['type'] == 'partner':
                 partners = self.env['res.partner'].browse(datum['id'])
@@ -869,6 +870,11 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+        if not self:
+            return True
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
@@ -961,7 +967,7 @@ class AccountMoveLine(models.Model):
             second_line_dict['amount_currency'] = -second_line_dict['amount_currency']
 
         # Create the move
-        writeoff_move = self.env['account.move'].create({
+        writeoff_move = self.env['account.move'].with_context(apply_taxes=True).create({
             'journal_id': vals['journal_id'],
             'date': vals['date'],
             'state': 'draft',
@@ -1245,9 +1251,8 @@ class AccountMoveLine(models.Model):
         """ Create analytic items upon validation of an account.move.line having an analytic account. This
             method first remove any existing analytic item related to the line before creating any new one.
         """
+        self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
-            if obj_line.analytic_line_ids:
-                obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
@@ -1358,9 +1363,9 @@ class AccountPartialReconcile(models.Model):
         for rec in self:
             if not rec.company_id.currency_exchange_journal_id:
                 raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.income_currency_exchange_account_id.id:
+            if not rec.company_id.income_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-            if not self.company_id.expense_currency_exchange_account_id.id:
+            if not rec.company_id.expense_currency_exchange_account_id.id:
                 raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
             move_vals = {'journal_id': rec.company_id.currency_exchange_journal_id.id}
 

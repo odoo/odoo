@@ -104,6 +104,9 @@ class TestSaleOrder(TestSale):
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
+        # force the pricelist to have the same currency as the company
+        self.env.ref('product.list0').currency_id = self.env.ref('base.main_company').currency_id
+
         serv_cost = self.env.ref('product.service_cost_01')
         prod_gap = self.env.ref('product.product_product_1')
         so = self.env['sale.order'].create({
@@ -133,4 +136,4 @@ class TestSaleOrder(TestSale):
         inv.action_invoice_open()
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
-        self.assertTrue(sol.price_unit == 160 and sol.qty_delivered == 2 and sol.product_uom_qty == sol.qty_invoiced == 0, 'Sale: line is wrong after confirming vendor invoice')
+        self.assertEquals((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')

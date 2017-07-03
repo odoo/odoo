@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Matus Krnac <matus.krnac@gmail.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-10 08:44+0000\n"
-"PO-Revision-Date: 2016-03-21 21:32+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-10-10 08:44+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: survey
@@ -25,9 +28,7 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#875A7B; text-align:center; text-decoration:none; color:"
-"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
@@ -143,9 +144,9 @@ msgstr "<span class=\"fa fa-filter\"/> Filtre"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-primary only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-default only_left_radius filter-all\">Všetky "
 "prieskumy</span><span class=\"label label-primary only_right_radius filter-"
@@ -174,9 +175,9 @@ msgstr "<span class=\"label label-default only_left_radius\">Súčet </span>"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-default only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 "<span class=\"label label-primary only_left_radius filter-all\">Všetky "
 "prieskumy</span><span class=\"label label-default only_right_radius filter-"
@@ -186,8 +187,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
 msgstr ""
@@ -212,8 +212,8 @@ msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
 msgstr ""
-"Kladné skóre indikuje správnu voľbu; záporné alebo nulové skóre indikuje zlú "
-"odpoveď"
+"Kladné skóre indikuje správnu voľbu; záporné alebo nulové skóre indikuje zlú"
+" odpoveď"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -240,6 +240,11 @@ msgstr "Token musí byť unikátny!"
 #: model:survey.page,title:survey.feedback_1
 msgid "About your Odoo usage"
 msgstr "O vašom Odoo používaní"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_active
+msgid "Active"
+msgstr "Aktívny"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -307,7 +312,7 @@ msgstr "Odpovede"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivovaný"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -433,7 +438,8 @@ msgstr "Obmedzenia"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
 msgstr ""
 "Skopírujte a vložte HTML kód dole pre pridanie tohto webového odkazu na "
 "akúkoľvek webstránku."
@@ -458,7 +464,7 @@ msgstr "Dátum vytvorenia"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_create_date
@@ -470,7 +476,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_create_date
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_date_create
@@ -506,8 +512,8 @@ msgstr "Uzávierka"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty,        the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty,        the invitation is still valid."
 msgstr ""
 
 #. module: survey
@@ -569,7 +575,7 @@ msgstr "Nesúhlasím"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
@@ -620,7 +626,7 @@ msgstr "Email"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_email_template_id
 msgid "Email Template"
-msgstr "Emailová šablóna"
+msgstr "Šablóna emailu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_mail_compose_message
@@ -678,12 +684,17 @@ msgstr "Voľno textová odpoveď"
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
 msgid "How do you contribute or plan to contribute to Odoo?"
 msgstr "Ako prispievate alebo máte v úmysle prispieť k Odoo?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Resources"
+msgstr "Ľudské zdroje"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -761,7 +772,27 @@ msgstr "Ak zaškrtnuté, používatelia sa môžu vrátiť na predchádzajúce s
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
 #: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
-msgstr "Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
+msgstr ""
+"Ak zatvorené, ľudia nebudú môcť odpovedať na prieskumy v tomto stĺpci."
+
+#. module: survey
+#: code:addons/survey/models/survey.py:473
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
+msgid "If other, please specify:"
+msgstr ""
 
 #. module: survey
 #: model:survey.page,description:survey.feedback_4
@@ -889,7 +920,7 @@ msgstr "Posledná zobrazená stránka"
 #. module: survey
 #: selection:survey.user_input,type:0
 msgid "Link"
-msgstr "Link"
+msgstr "Odkaz"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_multi_email
@@ -905,7 +936,7 @@ msgstr "Prihlásenie vyžadované"
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Manager"
-msgstr ""
+msgstr "Manažér"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -1386,7 +1417,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
 #: model:ir.model.fields,field_description:survey.field_survey_stage_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: survey
 #: sql_constraint:survey.stage:0
@@ -1436,8 +1467,8 @@ msgid ""
 "danger\">Your answers have probably not been recorded.</strong> Try "
 "refreshing."
 msgstr ""
-"Niečo sa pokazilo pri kontaktovaní prieskumového servera. <strong class="
-"\"text-danger\">Vaše odpovede pravdepodobne neboli zaznamenané</strong> "
+"Niečo sa pokazilo pri kontaktovaní prieskumového servera. <strong class"
+"=\"text-danger\">Vaše odpovede pravdepodobne neboli zaznamenané</strong> "
 "Skúste obnoviť."
 
 #. module: survey
@@ -1615,7 +1646,7 @@ msgstr "Ďakujeme Vám!"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
 msgid "Thanks Message"
-msgstr ""
+msgstr "Ďakovná správa"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1658,8 +1689,8 @@ msgstr "Odpoveď ktorú ste zadal má neplatný formát."
 #: code:addons/survey/wizard/survey_email_compose_message.py:138
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
 "Obsah textu neobsahujúci '__URL__'. __URL__ je automaticky prekonvertovaný "
 "na špeciálne url prieskumu."
@@ -1710,12 +1741,10 @@ msgstr "Príliš veľa menu ponúk, je to komplexné na pochopenie"
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
-"Tieto otázky sa týkajú ergonómie a jednoduchosti používania Odoo. Skúste si "
-"spomenúť na svoje prvé dni na Odoo a\n"
+"Tieto otázky sa týkajú ergonómie a jednoduchosti používania Odoo. Skúste si spomenúť na svoje prvé dni na Odoo a\n"
 "čo vám robilo problémy."
 
 #. module: survey
@@ -1870,7 +1899,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "Používateľ"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -1997,8 +2026,7 @@ msgstr "RRRR-MM-DD hh:mm:ss"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 "RRRR-MM-DD hh:mm:ss\n"
 "<i class=\"fa fa-calendar fa-2x\"/>"
@@ -2025,18 +2053,16 @@ msgid ""
 "feedback, recruitment interviews, employee's periodical evaluations, "
 "marketing campaigns, etc."
 msgstr ""
-"Môžete vytvárať prieskumy pre rôzne ciele: názor zákazníka, spätná väzba na "
-"služby,\n"
-"prijímacie pohovory, periodické vyhodnocovania zamestnancov, marketingové "
-"kampane, atď."
+"Môžete vytvárať prieskumy pre rôzne ciele: názor zákazníka, spätná väzba na služby,\n"
+"prijímacie pohovory, periodické vyhodnocovania zamestnancov, marketingové kampane, atď."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Login Required\" setting must "
-"be disabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Login Required\" setting "
+"must be disabled)."
 msgstr ""
 
 #. module: survey
@@ -2064,7 +2090,7 @@ msgstr "a"
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
 msgid "ir.autovacuum"
-msgstr ""
+msgstr "ir.autovacuum"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
@@ -2074,7 +2100,7 @@ msgstr "prihlásiť sa"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
 msgid "of"
-msgstr ""
+msgstr "z"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished

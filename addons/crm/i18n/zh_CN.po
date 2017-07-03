@@ -5,14 +5,17 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# 老窦 北京 <2662059195@qq.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 13:41+0000\n"
-"PO-Revision-Date: 2016-12-14 13:41+0000\n"
-"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,11 +106,10 @@ msgid ""
 "                                <span style=\"font-style:italic;\">You’re not alone</span>\n"
 "                            </p>\n"
 "                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>We would be delighted to assist you along the way. Contact us at\n"
-"                                <a href=\"mailto:help@odoo.com\"><span style=\"text-decoration:underline;\">\n"
-"                                help@odoo.com</span></a> if you have any question. You can also discover\n"
-"                                how to get the best out of Odoo CRM with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/9.0/crm.html\">\n"
+"                                <span>We would be delighted to assist you along the way. Contact us through our\n"
+"                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
+"                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a href=\"https://www.odoo.com/documentation\">\n"
@@ -136,6 +138,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Hello ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p>The opportunity <strong>${object.name}</strong> did not have any activity since at least 5 days.</p>\n"
+"%if object.description:\n"
+"<p>Here is the description about the opportunity : </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Thank you!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -171,7 +180,7 @@ msgstr ", 会计或采购模块是否安装"
 msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your"
 " sales cycle."
-msgstr ""
+msgstr "<b>拖拽商机</b>在你的商机漏斗中进行处理。"
 
 #. module: crm
 #. openerp-web
@@ -205,6 +214,8 @@ msgid ""
 "attached to this opportunity.</p><p class=\"mb0\">Type <i>'@'</i> to mention"
 " people - it's like cc-ing on emails.</p>"
 msgstr ""
+"<p><b>发送消息</b>给你的潜在客户，获得的回应字段附加到这个商机。</p><p class=\"mb0\">输入<i>'@'</i>通知某人-"
+"类似邮件的抄送功能。</p>"
 
 #. module: crm
 #: model:ir.actions.server,body_html:crm.action_email_reminder_lead
@@ -216,6 +227,12 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"<p>${object.user_id and object.user_id.name or ''}您好！</p>\n"
+"<p>商机 <strong>${object.name}</strong>已经5天没有任何跟进记录了。</p>\n"
+"%if object.description:\n"
+"<p>这是关于商机的说明： </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>谢谢！</p>\n"
 
 #. module: crm
 #. openerp-web
@@ -227,6 +244,8 @@ msgid ""
 "after</li><li>second call 3 days after, ...</li></ol><p "
 "class='mb0'><i>Select a standard activity for now on.</i></p>"
 msgstr ""
+"<p>你可以自定义你的跟进活动计划，例如：</p><ol><li>产品资料邮寄</li><li>10天后打电话</li><li>3天后再一次打电话，...</li></ol><p"
+" class='mb0'><i>现在可以选择一个标准的活动计划了。</i></p>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -397,6 +416,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"&#57408;\"/>\n"
+"                                        <strong>导入文件</strong><br/>\n"
+"                                        <span class=\"small\">如果多于50项，推荐</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1000,13 +1024,13 @@ msgstr "启用多币种"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Archive"
-msgstr "存档"
+msgstr "归档"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Archived"
-msgstr "已存档"
+msgstr "归档"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -1359,7 +1383,7 @@ msgstr "消费者,　零售商"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
-msgstr "合同信息"
+msgstr "联系信息"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_contact_name
@@ -1476,6 +1500,7 @@ msgstr ""
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Create a new customer"
 msgstr "创建新客户"
@@ -1588,9 +1613,10 @@ msgid "Current Line"
 msgstr "当前行"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1073
+#: code:addons/crm/models/crm_lead.py:1069
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_partner_id
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1719,7 +1745,7 @@ msgstr "将为该子模型的消息添加注解。如为空，则添加名称。
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor5
 msgid "Design"
-msgstr ""
+msgstr "设计"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1763,6 +1789,7 @@ msgstr "显示你的小册子，产品表单，展台等等"
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "不要链接到某个客户"
@@ -1814,8 +1841,10 @@ msgid ""
 "                                    can setup a generic email alias to create\n"
 "                                    incoming leads."
 msgstr ""
-"每一个销售团队都有一个邮件别名，它被设置在销售团队的表单，\n"
-"你可以设置一个通用的邮件别名来穿件入向线索"
+"每个销售团队都有一个电子邮件账号，\n"
+"                                    你可以在销售团队的表单里面设置。\n"
+"                                    你可以设置一个通用的电子邮件账号\n"
+"                                    来创建收到的线索。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2072,7 +2101,7 @@ msgstr "全局抄送"
 msgid ""
 "Good job! Your completed the tour of the CRM. You can continue with the "
 "<b>implementation guide</b> to help you setup the CRM in your company."
-msgstr ""
+msgstr "干得好！你完成了CRM的设置流程，你可以通过 <b>实施向导</b>继续来帮助你在你的公司设置CRM。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2142,6 +2171,8 @@ msgid ""
 "Here is the list of your next activities. Those are linked to your opportunities.\n"
 "                   To set a next activity, go on an opportunity and add one. It will then appear in this list."
 msgstr ""
+"这是你下一步活动的列表。他们链接到你的商机。\n"
+"                  设置下一步活动，去商机界面并添加一个，它将显示在该列表中。"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_hidden
@@ -2209,6 +2240,9 @@ msgid ""
 "                        the foundations to a strong process leading to\n"
 "                        continuous improvements of your sales teams."
 msgstr ""
+"如果你按照前面的步骤，你已经安装\n"
+"                   了强化流程的基础，可以\n"
+"                   不断改进你的销售团队。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2252,7 +2286,7 @@ msgstr "在Odoo里，有3种不同的方式来管理您的价格.<br/>"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
 msgid "Include archived"
-msgstr "包括已存档"
+msgstr "包括归档"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -2376,12 +2410,7 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: crm
-#: model:ir.model.fields,field_description:crm.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/models/crm_lead.py:841
+#: code:addons/crm/models/crm_lead.py:837
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_log_lead_id
@@ -2550,6 +2579,7 @@ msgstr "明细行"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2projectissue.wizard,action:0
 #: selection:crm.partner.binding,action:0
 msgid "Link to an existing customer"
 msgstr "链接到现有客户"
@@ -2887,7 +2917,7 @@ msgstr "需求评审"
 #: code:addons/crm/static/src/js/web_planner_crm.js:34
 #, python-format
 msgid "Negotiation"
-msgstr ""
+msgstr "谈判"
 
 #. module: crm
 #. openerp-web
@@ -3236,12 +3266,17 @@ msgstr "选项"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor8
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Activities"
 msgstr "逾期活动"
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid "Overdue Opportunities"
+msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_delay_expected
@@ -3464,7 +3499,7 @@ msgstr "可能的营业额"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor1
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: crm
 #. openerp-web
@@ -3523,7 +3558,7 @@ msgstr ""
 #: code:addons/crm/static/src/js/web_planner_crm.js:26
 #, python-format
 msgid "Quotation sent"
-msgstr ""
+msgstr "报价单送出"
 
 #. module: crm
 #. openerp-web
@@ -3586,6 +3621,7 @@ msgstr "引荐于"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_action
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_action
+#: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_action
 #: model:ir.model.fields,field_description:crm.field_crm_partner_binding_action
 msgid "Related Customer"
 msgstr "相关客户"
@@ -3785,7 +3821,7 @@ msgstr "序号"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor3
 msgid "Services"
-msgstr ""
+msgstr "服务"
 
 #. module: crm
 #. openerp-web
@@ -3844,6 +3880,13 @@ msgid "Show all opportunities for which the next action date is before today"
 msgstr "显示下一个操作日期在今天之前的所有商机"
 
 #. module: crm
+#: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
+msgid ""
+"Show all opportunities with a deadline for which the next action date is "
+"before today"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 msgid "Show only lead"
@@ -3868,7 +3911,7 @@ msgstr "幻灯片"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor2
 msgid "Software"
-msgstr ""
+msgstr "软件"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4086,7 +4129,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模块中新记录的创建(例如，一个新的项目任务)。"
+"相应于这个别名对应的模型(Odoo单据种类)。任何一封不属于对某个已存在的记录的到来邮件，将导致此模型中新记录的创建(例如，一个新的项目任务)。"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_alias_name
@@ -4152,6 +4195,14 @@ msgid ""
 "\n"
 "                        That's the easiest way to integrate Odoo with third party apps."
 msgstr ""
+"这里有几种使用系统生成线索的几种方法。\n"
+"其中一个是使用你的公司的通用邮箱地址作为触发器\n"
+"在系统中创建一个新的线索。在系统中，你的销售团队的每一个人\n"
+"链接到它自己的电子邮件地址，潜在客户可以联系到他们。\n"
+"例如，如果你的直销团队的个人电子邮件地址是\n"
+"direct@example.com，每封邮件发送时，一个新的潜在\n"
+"联系您时将自动创建一个新的商机到你的销售团队。\n"
+"这是集成第三方应用到系统的最简单的方法。"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.base_partner_merge_automatic_wizard_form
@@ -4267,7 +4318,7 @@ msgstr "追踪"
 #. module: crm
 #: model:crm.lead.tag,name:crm.categ_oppor6
 msgid "Training"
-msgstr ""
+msgstr "培训"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_type
@@ -4291,7 +4342,7 @@ msgstr "USD, EUR, GBP"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Unarchive"
-msgstr "取消存档"
+msgstr "取消归档"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4367,7 +4418,7 @@ msgstr "用商机来跟踪销售漏斗，跟进潜在的销售，并且更好的
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "Use our import templates to get your catalog ready in no time!"
-msgstr ""
+msgstr "使用我们的导入模块可以让你的目录立即生效！"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4704,7 +4755,7 @@ msgstr "邮政编码"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "additional 10% during summer sales"
-msgstr ""
+msgstr "夏季销售涨价10%"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

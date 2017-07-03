@@ -306,6 +306,13 @@ actual arch.
             if view.type == 'qweb' and view.groups_id:
                 raise ValidationError(_("Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
 
+    @api.constrains('inherit_id')
+    def _check_000_inheritance(self):
+        # NOTE: constraints methods are check alphabetically. Always ensure this method will be
+        #       called before other constraint metheods to avoid infinite loop in `read_combined`.
+        if not self._check_recursion(parent='inherit_id'):
+            raise ValidationError(_('You cannot create recursive inherited views.'))
+
     _sql_constraints = [
         ('inheritance_mode',
          "CHECK (mode != 'extension' OR inherit_id IS NOT NULL)",
@@ -334,6 +341,8 @@ actual arch.
             else:
 
                 try:
+                    if not values.get('arch') and not values.get('arch_base'):
+                        raise ValidationError(_('Missing view architecture.'))
                     values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
                 except LxmlError:
                     # don't raise here, the constraint that runs `self._check_xml` will
@@ -424,7 +433,8 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            views = self.search(conditions + [('model_ids.module', 'in', tuple(self.pool._init_modules))])
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
             views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + map(int, views))])
         else:
             views = self.search(conditions)

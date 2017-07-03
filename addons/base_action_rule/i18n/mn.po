@@ -1,21 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_action_rule
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Otgonbayar.A <gobi.mn@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2015-11-18 12:52+0000\n"
-"Last-Translator: Otgonbayar Agvaan <gobi.mn@gmail.com>\n"
-"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
-"mn/)\n"
-"Language: mn\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_action_rule
@@ -28,6 +29,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_tree
 msgid "Action Rule"
 msgstr "Үйл ажиллаагааны дүрэм"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule_line_test
+msgid "Action Rule Line Test"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
@@ -54,6 +60,11 @@ msgstr "Идэвхитэй"
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_act_followers
 msgid "Add Followers"
 msgstr "Дагагчид нэмэх"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -89,7 +100,7 @@ msgstr "Цуцлагдсан"
 #. module: base_action_rule
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Check this box if this contact is a customer."
-msgstr ""
+msgstr "Хэрэв холбогч нь захиалагч бол үүнийг тэмдэглэ"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -131,6 +142,11 @@ msgid "Days"
 msgstr "Өдөр"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_deadline
+msgid "Deadline"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid "Delay After Trigger Date"
 msgstr "Саатлын дараах гарааны огноо"
@@ -139,10 +155,8 @@ msgstr "Саатлын дараах гарааны огноо"
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you "
-"need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 "
-"minutes before a meeting."
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 
 #. module: base_action_rule
@@ -224,7 +238,8 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_domain
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_filter_pre_id
 msgid ""
-"If present, this condition must be satisfied before the update of the record."
+"If present, this condition must be satisfied before the update of the "
+"record."
 msgstr "Байгаа бол энэ нөхцөл нь бичлэгийг шинэчлэхийн биелж байх ёстой."
 
 #. module: base_action_rule
@@ -235,8 +250,8 @@ msgstr "Боловсруулагдаж буй"
 #. module: base_action_rule
 #: model:ir.ui.view,arch_db:base_action_rule.view_base_action_rule_form
 msgid ""
-"In this same \"Search\" view, select the menu \"Save Current Filter\", enter "
-"the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
 "users\""
 msgstr ""
 "Ижил \"Хайх\" харагдац дотор \"Идэхтэй шүүлтүүр хадгалах\" цэсийг сонго, "
@@ -246,7 +261,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_customer
 msgid "Is a Customer"
-msgstr ""
+msgstr "Захиалагч эсэх"
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_date_action_last
@@ -305,6 +320,11 @@ msgid "Months"
 msgstr "Сар"
 
 #. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_line_test_name
+msgid "Name"
+msgstr "Нэр"
+
+#. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "New"
 msgstr "Шинэ"
@@ -343,6 +363,11 @@ msgstr "Харилцагч"
 #: selection:base.action.rule.lead.test,state:0
 msgid "Pending"
 msgstr "Хүлээгдэж буй"
+
+#. module: base_action_rule
+#: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_lead_test_priority
+msgid "Priority"
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model.fields,field_description:base_action_rule.field_base_action_rule_model_id
@@ -403,6 +428,16 @@ msgid "Subject"
 msgstr "Сэдэв"
 
 #. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action
+msgid "Test Server Action"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.actions.server,name:base_action_rule.test_action_context
+msgid "Test Server Action Context"
+msgstr ""
+
+#. module: base_action_rule
 #: model:ir.filters,name:base_action_rule.test_filter_done
 msgid "Test lead in state 'done'"
 msgstr ""
@@ -431,11 +466,9 @@ msgstr "Цаглабар хэрэглэх"
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
 "Use automated actions to automatically trigger actions for\n"
-"                various screens. Example: a lead created by a specific user "
-"may\n"
+"                various screens. Example: a lead created by a specific user may\n"
 "                be automatically set to a specific sales team, or an\n"
-"                opportunity which still has status pending after 14 days "
-"might\n"
+"                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
 
@@ -457,8 +490,7 @@ msgstr ""
 #: model:ir.model.fields,help:base_action_rule.field_base_action_rule_trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the "
-"scheduler. If empty, will be checked at creation and update."
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 
 #. module: base_action_rule
