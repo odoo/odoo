@@ -10,9 +10,3 @@ class SaleConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
-    module_crm = fields.Boolean("CRM")
-    module_sale = fields.Boolean("Sales")
-    module_website_sign = fields.Boolean("eSign")
-    module_helpdesk = fields.Boolean("Helpdesk")
-    module_sale_subscription = fields.Boolean("Subscriptions")
-    module_account_accountant = fields.Boolean("Accounting")
