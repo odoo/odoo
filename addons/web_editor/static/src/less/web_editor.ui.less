@@ -173,6 +173,25 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                     }
                 }
 
+                &.o_snippet_install {
+                    cursor: pointer;
+                    .oe_snippet_thumbnail_img {
+                        opacity: 0.5;
+                    }
+                    .btn.o-install-btn {
+                        position: absolute;
+                        margin: 17px 0px 0px 17px;
+                        display: none;
+                    }
+                    &:hover .btn.o-install-btn {
+                        display: block;
+                    }
+                    &:hover .oe_snippet_thumbnail_img {
+                        transform: initial;
+                        opacity: 1;
+                    }
+                }
+
                 &:nth-child(2n+1) {
                     clear: left;
                 }

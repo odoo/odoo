@@ -251,6 +251,11 @@ data.Class = Widget.extend({
                         $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
                     }
                     // end
+                    var moduleID = $snippet.data('moduleId');
+                    if (moduleID) {
+                        var installBtn = _.str.sprintf('<a class="btn btn-primary btn-sm o-install-btn" target="_blank" href="/web#id=%s&view_type=form&model=ir.module.module&action=base.open_module_tree">%s</a>', moduleID, _t('Install'));
+                        $div.prepend(installBtn);
+                    }
                 }
                 if (!$snippet.data("selector")) {
                     $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
@@ -288,7 +293,13 @@ data.Class = Widget.extend({
 
         this.$el.html($html);
 
-        self.make_snippet_draggable(self.$snippets);
+        var $snippets = this.$snippets.filter(function () {
+            if (!$(this).data('moduleId')) {
+                return $(this);
+            }
+        });
+
+        self.make_snippet_draggable($snippets);
         this.associate_snippet_names(this.$snippets);
 
         this.show_blocks();

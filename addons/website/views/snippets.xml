@@ -732,6 +732,18 @@
     </xpath>
 </template>
 
+<template id="external_snippets" inherit_id="website.snippets">
+    <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
+        <t t-install="website_twitter" t-title="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']/t[@t-snippet][last()]" position="after">
+        <t t-install="website_event" t-title="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>
+        <t t-install="website_mail_channel" t-title="Discussion Group" t-thumbnail="/website/static/src/img/blocks/button_channel_subscribe.png"/>
+        <t t-install="mass_mailing" t-title="Newsletter" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
+    </xpath>
+</template>
+
 <template id="snippet_options">
     <t t-call="web_editor.snippet_options"/>
 
