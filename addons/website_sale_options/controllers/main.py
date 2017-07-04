@@ -13,7 +13,7 @@ class WebsiteSaleOptions(WebsiteSale):
         r.qcontext['optional_product_ids'] = map(lambda p: p.with_context({'active_id': p.id}), product.optional_product_ids)
         return r
 
-    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)
+    @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False, csrf=False)
     def cart_options_update_json(self, product_id, add_qty=1, set_qty=0, goto_shop=None, lang=None, **kw):
         if lang:
             request.website = request.website.with_context(lang=lang)
