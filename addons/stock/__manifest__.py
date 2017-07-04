@@ -19,6 +19,7 @@
         'data/stock_demo.yml',
         'data/stock_location_demo_cpu1.xml',
         'data/stock_location_demo_cpu3.yml',
+        'data/stock_quant_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',
