@@ -263,7 +263,7 @@ class AccountInvoice(models.Model):
              "now and 50% in one month, but if you want to force a due date, make sure that the payment "
              "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
              "means direct payment.")
-    partner_id = fields.Many2one('res.partner', string='Customer', change_default=True,
+    partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
         required=True, readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
