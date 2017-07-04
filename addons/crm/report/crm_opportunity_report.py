@@ -35,7 +35,7 @@ class OpportunityReport(models.Model):
     expected_revenue = fields.Float(string='Probable Turnover', digits=(16, 2), readonly=True)
     stage_id = fields.Many2one('crm.stage', string='Stage', readonly=True, domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
     stage_name = fields.Char(string='Stage Name', readonly=True)
-    partner_id = fields.Many2one('res.partner', string='Partner', readonly=True)
+    partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', group_operator="avg")
     type = fields.Selection([

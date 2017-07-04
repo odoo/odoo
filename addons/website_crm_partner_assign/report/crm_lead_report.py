@@ -12,7 +12,6 @@ class CrmLeadReportAssign(models.Model):
     _auto = False
     _description = "CRM Lead Report"
 
-    partner_assigned_id = fields.Many2one('res.partner', 'Partner', readonly=True)
     grade_id = fields.Many2one('res.partner.grade', 'Grade', readonly=True)
     user_id = fields.Many2one('res.users', 'User', readonly=True)
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
@@ -63,7 +62,6 @@ class CrmLeadReportAssign(models.Model):
                     c.partner_id,
                     c.country_id,
                     c.planned_revenue,
-                    c.partner_assigned_id,
                     p.grade_id,
                     p.date as partner_date,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
@@ -74,5 +72,5 @@ class CrmLeadReportAssign(models.Model):
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM
                     crm_lead c
-                    left join res_partner p on (c.partner_assigned_id=p.id)
+                    left join res_partner p on (c.partner_id=p.id)
             )""")
