@@ -78,6 +78,25 @@
     height: 16px!important;
 }
 
+/* ----- CONDITIONALLY HIDE ELEMENTS IF EMPTY---- */
+.editor_enable .o_has_content_show {
+    &, .o_has_content_show_children_empty {
+        min-width: 100px;
+        min-height: 14px;
+        display: block;
+    }
+
+    &:hover .o_has_content_show_children_empty {
+        outline: 1px solid @o-we-color-info;
+    }
+
+    &.css_non_editable_mode_hidden {
+        opacity: 0.5;
+        position: absolute;
+    }
+}
+
+
 // EDITOR BAR
 table.editorbar-panel {
     cursor: pointer;

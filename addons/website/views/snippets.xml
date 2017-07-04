@@ -57,7 +57,12 @@
                     </p>
                 </div>
                 <div class="col-md-6 mt32 mb32">
-                  <img class="img img-responsive pull-left mb16" src="/web/image/website.s_text_image_default_image" alt="Odoo text and image block"/>
+                    <figure>
+                        <img class="img img-responsive" src="/web/image/website.s_text_image_default_image" alt="Odoo text and image block"/>
+                        <figcaption class="o_has_content_show bg-gray-dark text-center">
+                            <small>Click to edit</small>
+                        </figcaption>
+                    </figure>
                 </div>
             </div>
         </div>
@@ -953,6 +958,9 @@
          data-selector=":not(li) > ul:has(ul,ol), :not(li) > ol:has(ul,ol)">
         <li data-toggle_class="o_ul_folded"><a href="#">Folded list</a></li>
     </div>
+
+    <div data-js='o_has_content_show'
+         data-selector=".o_has_content_show"/>
 
     <div data-js='collapse'
          data-selector='.panel-group > .panel:has(> .panel-collapse)'

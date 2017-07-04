@@ -362,6 +362,86 @@ options.registry.parallax = options.Class.extend({
     },
 });
 
+options.registry.o_has_content_show = options.Class.extend({
+    selector: '.o_has_content_show',
+
+    start: function () {
+        this._super.apply(this, arguments);
+        var self = this;
+        var customize = this.$target.data('show-customize') == true;
+
+        // Normally this kind of content don't need an overlay.
+        // Hide the overlay unless the data 'show-customize' is set.
+        this.$overlay.toggleClass('hidden', !customize);
+
+        // Attach the tooltip
+        this.$target.tooltip({
+            title: _t("Hidden unless has text"),
+            trigger: 'manual',
+            container: 'body',
+            placement: function () {
+                if (customize) {
+                    return 'bottom';
+                }
+                return 'top';
+            },
+        });
+
+        // Bind the tree modification observer
+        this.observer = new MutationObserver (function () {
+            self._checkEmpty();
+        });
+        this.observer.observe(
+            self.$target[0], {
+                childList: true,
+                subtree: true
+            }
+        );
+
+        // Perform a first check on start
+        this._checkEmpty();
+    },
+    _hasText: function ($el) {
+        if ($el.text().length > 0) {
+            return ($el.text().trim().length > 0);
+        }
+    },
+    _checkEmpty: function () {
+        var self = this;
+        var childs = this.$target.find('h1, h2, h3, h4, h5, h6, p, strong, b, em, i, span, small');
+
+        // Temporary unbind the observer
+        this.observer.disconnect();
+
+        _.each(childs, function (el) {
+            var $el = $(el);
+            // Apply a special class to empty children to allow editing
+            $el.toggleClass('o_has_content_show_children_empty', !self._hasText($el));
+        });
+
+        this.$target.toggleClass('css_non_editable_mode_hidden', !this._hasText(this.$target) );
+        this._hasText(this.$target) ? this.$target.tooltip('hide') : this.$target.tooltip('show');
+
+        // Re-bind the observer
+        this.observer.observe(
+            self.$target[0], {
+                childList: true,
+                subtree: true
+            }
+        );
+    },
+    on_focus: function () {
+        this._checkEmpty();
+    },
+    on_blur: function () {
+        this.$target.tooltip('hide');
+    },
+    clean_for_save: function () {
+        this.$target.find('.o_has_content_show_children_empty').removeClass('.o_has_content_show_children_empty');
+        this.$target.tooltip('destroy');
+    }
+});
+
 options.registry.ul = options.Class.extend({
     start: function () {
         var self = this;
