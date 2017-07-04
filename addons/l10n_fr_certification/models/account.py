@@ -102,7 +102,7 @@ class AccountMove(models.Model):
         """
         moves = self.search([('state', '=', 'posted'),
                              ('company_id', '=', company_id),
-                             ('l10n_fr_secure_sequence_number', '!=', False)],
+                             ('l10n_fr_secure_sequence_number', '!=', 0)],
                             order="l10n_fr_secure_sequence_number ASC")
 
         if not moves:
