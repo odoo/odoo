@@ -1263,8 +1263,6 @@
                 <search string="Search Journal Items">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
-                    <field name="tax_line_id"/>
-                    <field name="tax_ids" />
                     <separator/>
                     <filter string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
                     <filter name="posted" string="Posted" domain="[('move_id.state','=','posted')]" help="Posted Journal Items"/>
@@ -1274,10 +1272,12 @@
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
                     <separator/>
-                    <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
+                    <field name="move_id" string="Number (Move)"/>
+                    <field name="tax_line_id"/>
+                    <field name="tax_ids" />
                     <group expand="0" string="Group By">
                         <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" domain="[]" context="{'group_by':'journal_id'}"/>
