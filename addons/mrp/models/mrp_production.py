@@ -163,6 +163,34 @@ class MrpProduction(models.Model):
     is_locked = fields.Boolean('Is Locked', default=True)
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", related='product_id.property_stock_production')
+    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this manufacturing order')
+    delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+
+    @api.multi
+    @api.depends('procurement_group_id')
+    def _compute_picking_ids(self):
+        for order in self:
+            warehouse = order.location_src_id.get_warehouse()
+            order.picking_ids = self.env['stock.picking'].search([
+                ('group_id', '=', order.procurement_group_id.id),
+                ('picking_type_id', 'in', [warehouse.manu_pick_type_id.id, warehouse.manu_store_type_id.id])])
+            order.delivery_count = len(order.picking_ids)
+
+    @api.multi
+    def action_view_mo_delivery(self):
+        '''
+        This function returns an action that display picking related to
+        manufacturing order orders. It can either be a in a list or in a form
+        view, if there is only one picking to show.
+        '''
+        action = self.env.ref('stock.action_picking_tree_all').read()[0]
+        pickings = self.mapped('picking_ids')
+        if len(pickings) > 1:
+            action['domain'] = [('id', 'in', pickings.ids)]
+        elif pickings:
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            action['res_id'] = pickings.id
+        return action
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
@@ -347,7 +375,7 @@ class MrpProduction(models.Model):
             'production_id': self.id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
-            'propagate': self.propagate,
+            'propagate': self.propagate or self.location_src_id.get_warehouse().manufacture_steps == 'pick_manu_out',
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids],
         })
         move._action_confirm()
@@ -409,12 +437,12 @@ class MrpProduction(models.Model):
             mto_route = False
         for move in self.move_raw_ids:
             product = move.product_id
-            routes = product.route_ids + product.route_from_categ_ids
+            routes = product.route_ids + product.route_from_categ_ids + move.warehouse_id.route_ids
             # TODO: optimize with read_group?
             pull = self.env['procurement.rule'].search([('route_id', 'in', [x.id for x in routes]), ('location_src_id', '=', move.location_id.id),
                                                         ('location_id', '=', move.location_dest_id.id)], limit=1)
             if pull and (pull.procure_method == 'make_to_order'):
-                move.procure_method = pull.procure_method
+                move.procure_method = 'make_to_order'
             elif not pull: # If there is no make_to_stock rule either
                 if mto_route and mto_route.id in [x.id for x in routes]:
                     move.procure_method = 'make_to_order'

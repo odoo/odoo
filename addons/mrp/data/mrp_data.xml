@@ -38,11 +38,6 @@
             <field name="sequence">5</field>
         </record>
 
-        <!-- Enable the manufacturing in warehouse0 -->
-        <record id='stock.warehouse0' model='stock.warehouse'>
-            <field name='manufacture_to_resupply' eval='True'/>
-        </record>
-
         <!-- Reasons To Block Workcenter -->
         <record id="block_reason0" model="mrp.workcenter.productivity.loss">
             <field name="name">Material Availability</field>

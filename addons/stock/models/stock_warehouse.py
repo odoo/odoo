@@ -428,12 +428,12 @@ class Warehouse(models.Model):
             raise UserError(_('Can\'t find any customer or supplier location.'))
         return customer_loc, supplier_loc
 
-    def _get_route_name(self, route_type):
+    def _get_route_name(self):
         names = {'one_step': _('Receipt in 1 step'), 'two_steps': _('Receipt in 2 steps'),
                  'three_steps': _('Receipt in 3 steps'), 'crossdock': _('Cross-Dock'),
                  'ship_only': _('Ship Only'), 'pick_ship': _('Pick + Ship'),
                  'pick_pack_ship': _('Pick + Pack + Ship')}
-        return names[route_type]
+        return names
 
     def get_routes_dict(self):
         # TDE todo: rename me (was get_routes_dict)
@@ -687,7 +687,7 @@ class Warehouse(models.Model):
 
     def _format_routename(self, name=None, route_type=None):
         if route_type:
-            name = self._get_route_name(route_type)
+            name = self._get_route_name()[route_type]
         return '%s: %s' % (self.name, name)
 
     @api.returns('self')

@@ -43,6 +43,7 @@
         'report/mrp_bom_cost_report_templates.xml',
     ],
     'demo': [
+        'data/mrp_manufacture_demo.yml',
         'data/mrp_demo.xml',
         'data/mrp_lot_demo.yml'],
     'qweb': ['static/src/xml/mrp.xml'],

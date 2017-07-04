@@ -1,0 +1,5 @@
+-
+  !python {model: stock.warehouse, id: False}: |
+    # search warehouses for all companies.
+    warehouses = self.search([])
+    warehouses.write({'manufacture_to_resupply': True})
