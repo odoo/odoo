@@ -65,6 +65,7 @@ The Dashboard for the Sales Manager will include
         'data/sale_demo.xml',
         'data/product_product_demo.xml',
     ],
+    'uninstall_hook': "uninstall_hook",
     'css': ['static/src/css/sale.css'],
     'installable': True,
     'auto_install': False,

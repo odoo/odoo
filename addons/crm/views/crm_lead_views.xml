@@ -203,7 +203,7 @@
                         <group>
                             <group>
                                 <field name="name" string="Opportunity Title" placeholder="e.g. Customer Deal"/>
-                                <field name="partner_id"/>
+                                <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
                                 <field name="email_from" invisible="1"/>
                                 <field name="phone" invisible="1"/>
                                 <label for="planned_revenue"/>

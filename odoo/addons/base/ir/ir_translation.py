@@ -240,18 +240,19 @@ class IrTranslation(models.Model):
         ''' When changing source term of a translation, change its value in db
         for the associated object, and the src field.
         '''
-        for record in self:
-            if record.type == 'model':
-                model_name, field_name = record.name.split(',')
-                model = self.env[model_name]
-                field = model._fields[field_name]
-                if not callable(field.translate):
-                    # Make a context without language information, because we want
-                    # to write on the value stored in db and not on the one
-                    # associated with the current language. Also not removing lang
-                    # from context trigger an error when lang is different.
-                    model.browse(record.res_id).with_context(lang=None).write({field_name: record.source})
-        return self.write({'src': self.source})
+        self.ensure_one()
+        if self.type == 'model':
+            model_name, field_name = self.name.split(',')
+            model = self.env[model_name]
+            field = model._fields[field_name]
+            if not callable(field.translate):
+                # Make a context without language information, because we want
+                # to write on the value stored in db and not on the one
+                # associated with the current language. Also not removing lang
+                # from context trigger an error when lang is different.
+                model.browse(self.res_id).with_context(lang=None).write({field_name: self.source})
+        if self.src != self.source:
+            self.write({'src': self.source})
 
     def _search_source(self, operator, value):
         ''' the source term is stored on 'src' field '''
