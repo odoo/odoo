@@ -30,11 +30,11 @@ dictionary, where each key specifies module metadatum.
         """,
         # data files always loaded at installation
         'data': [
-            'mymodule_view.xml',
+            'views/mymodule_view.xml',
         ],
         # data files containing optionally loaded demonstration data
         'demo': [
-            'demo_data.xml',
+            'demo/demo_data.xml',
         ],
     }
 
