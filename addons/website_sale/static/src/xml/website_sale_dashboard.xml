@@ -65,25 +65,25 @@
                     <div class="col-md-12 col-xs-12">
                         <h4>AT A GLANCE</h4>
                         <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
-                            <div class="col-sm-4 o_link_enable" title="Orders">
-                                <div class="o_highlight">
-                                    <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
-                                </div>
-                                Orders
-                            </div>
-                        </a>
-                        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
-                            <div class="col-sm-4 o_link_enable" title="Untaxed Total Sold">
+                            <div class="col-sm-4 o_link_enable" title="Untaxed total of confirmed orders">
                                 <div class="o_highlight">
                                     <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
                                 </div>
-                                Sold
+                                Confirmed Orders
+                            </div>
+                        </a>
+                        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_abandon_carts">
+                            <div class="col-sm-4 o_link_enable" title="Untaxed total of abandoned carts">
+                                <div class="o_highlight">
+                                    <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.abandoned_amt_untaxed, widget.data.currency)"/>
+                                </div>
+                                Abandoned Carts
                             </div>
                         </a>
                         <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_carts">
-                            <div class="col-sm-4 o_link_enable o_invisible_border" title="Carts">
-                                <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
-                                Carts
+                            <div class="col-sm-4 o_link_enable o_invisible_border" title="Untaxed total of all the carts and orders">
+                                <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_untaxed_amt, widget.data.currency)"/></div>
+                                Carts &amp; Orders
                             </div>
                         </a>
                         <div class="col-sm-4 o_link_disable" title="Orders/Day">
@@ -94,9 +94,9 @@
                             <div class="o_highlight"><t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.order_sold_ratio, widget.data.currency)"/></div>
                             Average Order
                         </div>
-                        <div class="col-sm-4 o_link_disable o_invisible_border" title="Conversion">
-                            <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.order_convertion_pctg, 'float', [3, 2], '%')"/></div>
-                            Conversion
+                        <div class="col-sm-4 o_link_disable o_invisible_border" title="% of confirmed amount">
+                            <div class="o_highlight"><t t-esc="widget.format_number(widget.dashboards_data.sales.summary.carts_order_pctg, 'float', [3, 2], '%')"/></div>
+                            Carts -&gt; Orders
                         </div>
                     </div>
                 </div>

@@ -73,11 +73,54 @@
         <field name="act_window_id" ref="sale_report_action_dashboard"/>
     </record>
 
+    <record id="sale_report_view_pivot_website_abandon" model="ir.ui.view">
+        <field name="name">sale.report.view.pivot.website</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Sales Report">
+                <field name="date" type="row"/>
+                <field name="price_subtotal" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="sale_report_view_graph_website_abandon" model="ir.ui.view">
+        <field name="name">sale.report.view.graph.website</field>
+        <field name="model">sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Sales Report">
+                <field name="date"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="sale_report_action_abandon_carts" model="ir.actions.act_window">
+        <field name="name">Abandoned Carts</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('is_abandoned_cart', '=', True)]</field>
+        <field name="search_view_id" ref="sale_report_view_search_website"/>
+        <field name="help">You don't have any abandon order from the website.</field>
+    </record>
+
+    <record id="sale_report_action_view_pivot_website_abandon" model="ir.actions.act_window.view">
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_report_view_pivot_website_abandon"/>
+        <field name="act_window_id" ref="sale_report_action_abandon_carts"/>
+    </record>
+
+    <record id="sale_report_action_view_graph_website_abandon" model="ir.actions.act_window.view">
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="sale_report_view_graph_website_abandon"/>
+        <field name="act_window_id" ref="sale_report_action_abandon_carts"/>
+    </record>
+
     <record id="sale_report_action_carts" model="ir.actions.act_window">
         <field name="name">Sales</field>
         <field name="res_model">sale.report</field>
         <field name="view_mode">pivot,graph</field>
-        <field name="domain">[('team_id.team_type', '=', 'website')]</field>
+        <field name="domain">[('team_id.team_type', '=', 'website'), ('state', 'not in', ['cancel'])]</field>
         <field name="search_view_id" ref="sale_report_view_search_website"/>
         <field name="help">You don't have any order from the website.</field>
     </record>
