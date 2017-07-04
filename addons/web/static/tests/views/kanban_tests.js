@@ -445,7 +445,7 @@ QUnit.module('Views', {
             arch: '<kanban class="o_kanban_test">' +
                         '<templates><t t-name="kanban-box">' +
                             '<div>' +
-                                '<field name="category_ids"/>' +
+                                '<field name="category_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                                 '<field name="foo"/>' +
                                 '<field name="state" widget="priority"/>' +
                             '</div>' +

@@ -759,7 +759,7 @@
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown o_tag_color_#{el.color || 10}" t-att-data-color="el.color || 10" t-att-data-index="el_index" t-att-data-id="el.id">
+        <span t-attf-class="badge dropdown o_tag_color_#{el[colorField] || 10}" t-att-data-color="el[colorField] || 10" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text"><t t-raw="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>

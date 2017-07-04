@@ -1367,7 +1367,6 @@ var FieldMany2ManyTags = AbstractField.extend({
         'click .o_delete': '_onDeleteTag',
     }),
     fieldsToFetch: {
-        color: {type: 'integer'},
         display_name: {type: 'char'},
     },
 
@@ -1380,6 +1379,8 @@ var FieldMany2ManyTags = AbstractField.extend({
         if (this.mode === 'edit') {
             this.className += ' o_input';
         }
+
+        this.colorField = this.nodeOptions.color_field;
     },
 
     //--------------------------------------------------------------------------
@@ -1444,6 +1445,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     _getRenderTagsContext: function () {
         var elements = this.value ? _.pluck(this.value.data, 'data') : [];
         return {
+            colorField: this.colorField,
             elements: elements,
             readonly: this.mode === "readonly",
         };
@@ -1571,7 +1573,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _onOpenColorPicker: function (event) {
         var tag_id = $(event.currentTarget).data('id');
         var tag = _.findWhere(this.value.data, { res_id: tag_id });
-        if (tag && 'color' in tag.data) { // if there is a color field on the related model
+        if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
                 'widget': this,
                 'tag_id': tag_id,
@@ -1596,11 +1598,11 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
         if (color === current_color) { return; }
 
+        var changes = {};
+        changes[this.colorField] = color;
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
-            changes: {
-                color: color,
-            },
+            changes: changes,
             force_save: true,
         });
     },
@@ -1611,12 +1613,19 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var self = this;
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
-            // 10th color is invisible
-            if ('color' in m2m.data && m2m.data.color !== 10) {
-                $('<span>')
-                    .addClass('o_tag o_tag_color_' + m2m.data.color)
+            var $tag = $('<span>')
                     .attr('title', _.str.escapeHTML(m2m.data.display_name))
                     .appendTo(self.$el);
+            if (self.colorField in m2m.data) {
+                if (m2m.data[self.colorField] === 10) {
+                    // 10th color is invisible
+                    $tag.hide();
+                } else {
+                    $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
+                }
+            } else {
+                // display tags in grey by default
+                $tag.addClass('o_tag o_tag_color_0');
             }
         });
     },
