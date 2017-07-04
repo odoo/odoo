@@ -53,11 +53,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def check_reconciliation(self, invoice, sale_order):
         invoice_line = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',self.test_product.id), ('account_id','=',self.output_account.id)])
-        self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock input account")
+        self.assertEqual(len(invoice_line), 1, "Only one line should have been written by invoice in stock output account")
         self.assertNotEqual(float_utils.float_compare(invoice_line.amount_residual, invoice_line.credit, precision_digits=self.currency_one.decimal_places), 0, "The invoice's account move line should have been partly reconciled with stock valuation")
 
         valuation_line = self.env['stock.picking'].search([('sale_id','=',sale_order.id)]).move_lines.stock_account_valuation_account_move_id.line_ids.filtered(lambda x: x.account_id == self.output_account)
-        self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock input account")
+        self.assertEqual(len(valuation_line), 1, "Only one line should have been written for stock valuation in stock output account")
         self.assertTrue(valuation_line.reconciled or invoice_line.reconciled, "The valuation and invoice line should have been reconciled together.")
 
         self.assertEqual(float_utils.float_compare(invoice_line.credit + invoice_line.amount_residual,valuation_line.debit - valuation_line.amount_residual,self.currency_one.decimal_places), 0 , "The reconciled amount of invoice move line should match the stock valuation line.")

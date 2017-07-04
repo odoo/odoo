@@ -11,6 +11,16 @@ class ValuationReconciliationTestCase(AccountingTestCase):
     extended in both sale_stock and purchase modules to run the 'true' tests.
     """
 
+    def _create_product_category(self): #Done in a separate function to allow override in purchase module
+        return self.env['product.category'].create({
+            'name': 'Test category',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'real',
+            'property_stock_valuation_account_id': self.valuation_account.id,
+            'property_stock_account_input_categ_id': self.input_account.id,
+            'property_stock_account_output_categ_id': self.output_account.id,
+        })
+
     def setUp(self):
         super(ValuationReconciliationTestCase, self).setUp()
 
@@ -53,14 +63,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
             'company_id': self.company.id,
         })
 
-        test_product_category = self.env['product.category'].create({
-            'name': 'Test category',
-            'property_valuation': 'real_time',
-            'property_cost_method': 'real',
-            'property_stock_valuation_account_id': self.valuation_account.id,
-            'property_stock_account_input_categ_id': self.input_account.id,
-            'property_stock_account_output_categ_id': self.output_account.id,
-        })
+        test_product_category = self._create_product_category()
 
         uom = self.env['product.uom'].search([], limit=1)
         test_product_template = self.env['product.template'].create({

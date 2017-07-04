@@ -10,6 +10,25 @@ from odoo.addons.stock_account.tests.test_valuation_reconciliation_common import
 
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
+    def _create_product_category(self): #overridden to set a price difference account
+        self.price_dif_account = self.env['account.account'].create({
+            'name': 'Test price dif',
+            'code': 'purchase_account_TEST_42',
+            'user_type_id': self.env['account.account.type'].search([],limit=1).id,
+            'reconcile': True,
+            'company_id': self.company.id,
+        })
+
+        return self.env['product.category'].create({
+            'name': 'Test category',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'real',
+            'property_stock_valuation_account_id': self.valuation_account.id,
+            'property_stock_account_input_categ_id': self.input_account.id,
+            'property_stock_account_output_categ_id': self.output_account.id,
+            'property_account_creditor_price_difference_categ': self.price_dif_account.id,
+        })
+
     def create_purchase(self):
         rslt = self.env['purchase.order'].create({
             'partner_id': self.test_partner.id,
