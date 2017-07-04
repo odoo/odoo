@@ -282,7 +282,7 @@ class MrpWorkorder(models.Model):
         for move_lot in self.active_move_lot_ids:
             # Check if move_lot already exists
             if move_lot.quantity_done <= 0:  # rounding...
-                move_lot.unlink()
+                move_lot.sudo().unlink()
                 continue
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
@@ -291,7 +291,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
-                move_lot.unlink()
+                move_lot.sudo().unlink()
             else:
                 move_lot.lot_produced_id = self.final_lot_id.id
                 move_lot.done_wo = True

@@ -19,8 +19,9 @@
                 <field name="arch" type="xml">
                     <field name="payment_method_id" position="after">
                         <field name="payment_method_code" invisible="1"/>
-                        <field name="payment_token_id" attrs="{'invisible': [('payment_method_code', '!=', 'electronic')],
-                                                              'required': [('payment_method_code', '=', 'electronic')]}"/>
+                        <field name="payment_token_id" options="{'no_create': True}"
+                            attrs="{'invisible': [('payment_method_code', '!=', 'electronic')],
+                                    'required': [('payment_method_code', '=', 'electronic')]}"/>
                     </field>
                 </field>
         </record>

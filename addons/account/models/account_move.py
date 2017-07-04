@@ -685,7 +685,7 @@ class AccountMoveLine(models.Model):
             company_currency = line.account_id.company_id.currency_id
             ret_line = {
                 'id': line.id,
-                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
+                'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
                 'ref': line.move_id.ref or '',
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
