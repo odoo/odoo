@@ -15,14 +15,14 @@ class SaleOrder(models.Model):
         for order in self:
             warehouse = order.warehouse_id
             order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id),
-                                                                  ('picking_type_id', 'not in', [warehouse.manu_pick_type_id.id, warehouse.manu_store_type_id.id])]) if order.procurement_group_id else []
+                                                                  ('picking_type_id', '!=', warehouse.manu_pick_type_id.id)]) if order.procurement_group_id else []
             order.delivery_count = len(order.picking_ids)
 
     @api.multi
     def action_view_delivery(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
         pickings = self.env['stock.picking'].search([('group_id', '=', self.procurement_group_id.id),
-                                                      ('picking_type_id', 'not in', [self.warehouse_id.manu_pick_type_id.id, self.warehouse_id.manu_store_type_id.id])]) if self.procurement_group_id else []
+                                                      ('picking_type_id', '!=', self.warehouse_id.manu_pick_type_id.id)]) if self.procurement_group_id else []
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
         elif pickings:

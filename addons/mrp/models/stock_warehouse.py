@@ -18,8 +18,6 @@ class StockWarehouse(models.Model):
         domain=[('code', '=', 'mrp_operation')])
     manu_pick_type_id = fields.Many2one(
         'stock.picking.type', 'Manufacture Pick Type')
-    manu_store_type_id = fields.Many2one(
-        'stock.picking.type', 'Manufacture Store Type')
     manufacture_steps = fields.Selection([
         ('manu_only', 'Produce'),
         ('pick_manu', 'Pick / Produce'),
@@ -28,7 +26,6 @@ class StockWarehouse(models.Model):
         help="Produce : Move the raw materials to the production location directly and start the manufaturing process.\nPick / Produce : Unload the raw materials from the stock to Input location first, and then transfer it to the production location.\nPick / Produce / Store : Unload the raw materials from the stock to Input location, take it to the production location, move the finished product to the Store (output) location.")
     manu_mto_pull_id = fields.Many2one('procurement.rule', 'MTO rule')
     wh_input_manu_loc_id = fields.Many2one("stock.location", "Input Manufacture Location")
-    wh_output_manu_loc_id = fields.Many2one("stock.location", "Output Manufacture Location")
     multistep_manu_route_id = fields.Many2one('stock.location.route', 'Multistep Manufacturing Route', ondelete='restrict')
 
     def _get_manufacture_route_id(self):
@@ -65,7 +62,7 @@ class StockWarehouse(models.Model):
     def _get_location_data(self, manufacture_steps):
         """This method will return dictionary of source and destination location for different Manufacturing steps."""
         data = {'manu_type': (self.lot_stock_id.id if manufacture_steps == 'manu_only' else self.wh_input_manu_loc_id.id,
-            self.lot_stock_id.id if manufacture_steps != 'pick_manu_out' else self.wh_output_manu_loc_id.id)}
+            self.lot_stock_id.id)}
         return data
 
     def _get_picking_type_vals(self, pick_type, color, location_id, location_dest_id):
@@ -95,16 +92,14 @@ class StockWarehouse(models.Model):
         names = super(StockWarehouse, self)._get_route_name()
         names.update({
                  'manu_only': _('Produce'),
-                 'pick_manu': _('Pick/Produce'),
-                 'pick_manu_out': _('Pick/Produce/Store')
+                 'pick_manu': _('Pick/Produce')
                })
         return names
 
     def _get_sequence_data(self, pick_type):
         """This method will create sequence for different manufacturing steps."""
         code = {'manu_only': '/MO/',
-                'pick_manu': '/MO/PICK/',
-                'pick_manu_out': '/MO/STORE/'}
+                'pick_manu': '/MO/PICK/'}
         sequence = self.env['ir.sequence'].sudo().create({
                 'name': self.name + _(' Sequence ' + code[pick_type]),
                 'prefix': self.code + code[pick_type], 'padding': 5})
@@ -124,10 +119,9 @@ class StockWarehouse(models.Model):
 
     def _create_or_update_locations(self):
         self.ensure_one()
-        if not self.wh_input_manu_loc_id or not self.wh_output_manu_loc_id:
+        if not self.wh_input_manu_loc_id:
             sub_locations = {
                 'wh_input_manu_loc_id': {'name': _('PROD/IN'), 'usage': 'internal'},
-                'wh_output_manu_loc_id': {'name': _('PROD/OUT'), 'usage': 'internal'}
             }
             for field_name, values in sub_locations.items():
                 values['location_id'] = self.view_location_id.id
@@ -135,7 +129,6 @@ class StockWarehouse(models.Model):
                 sub_locations[field_name] = self.env['stock.location'].create(values).id
             self.write(sub_locations)
         self.wh_input_manu_loc_id.active = self.manufacture_to_resupply and self.manufacture_steps != 'manu_only'
-        self.wh_output_manu_loc_id.active = self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'
         return True
 
     def _create_or_update_manufacturing_picking_types(self):
@@ -148,7 +141,8 @@ class StockWarehouse(models.Model):
         # Create picking types if it does not exist.
         if not self.manu_type_id:
             vals = {'name': 'Manufacture', 'code': 'mrp_operation',
-                    'active': self.manufacture_to_resupply}
+                    'active': self.manufacture_to_resupply,
+                    'warehouse_id': self.id}
             seq_id = self.env['ir.sequence'].search([('code', '=', 'mrp.production')], limit=1).id
             if seq_id:
                 vals.update({'sequence_id': seq_id})
@@ -161,10 +155,6 @@ class StockWarehouse(models.Model):
             vals = self._get_picking_type_vals('pick_manu', color, self.lot_stock_id.id, self.wh_input_manu_loc_id.id)
             vals.update({'name': 'Manufacture Pick', 'active': self.manufacture_to_resupply and self.manufacture_steps != 'manu_only'})
             picking_types.update({'manu_pick_type_id': vals})
-        if not self.manu_store_type_id:
-            vals = self._get_picking_type_vals('pick_manu_out', color, self.wh_output_manu_loc_id.id, self.lot_stock_id.id)
-            vals.update({'name': 'Manufacture Store', 'active': self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'})
-            picking_types.update({'manu_store_type_id': vals})
         for field_name, values in picking_types.items():
             picking_types[field_name] = PickingType.create(values).id
         self.write(picking_types)
@@ -174,7 +164,6 @@ class StockWarehouse(models.Model):
             'default_location_dest_id': location_dest_id,
             'active': self.manufacture_to_resupply})
         self.manu_pick_type_id.active = self.manufacture_to_resupply and self.manufacture_steps != 'manu_only'
-        self.manu_store_type_id.active = self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'
         return True
 
     def _create_or_update_manufacturing_route(self):
@@ -182,15 +171,15 @@ class StockWarehouse(models.Model):
             exiting route of Manufacturing."""
         # Add new rules to rules..
         manufacture_route_id = self._get_manufacture_route_id()
-        pick_store_routings = [self.Routing(self.wh_output_manu_loc_id, self.lot_stock_id, self.manu_store_type_id)]
+        pick_routings = [self.Routing(self.wh_input_manu_loc_id, self.lot_stock_id, self.manu_pick_type_id)]
         push_vals_list, pull_rules_list = self._get_push_pull_rules_values(
-            pick_store_routings, values={'active': True, 'procure_method': 'make_to_order', 'route_id': manufacture_route_id})
+            pick_routings, values={'active': True, 'procure_method': 'make_to_order', 'route_id': manufacture_route_id})
         for push_vals in push_vals_list:
             existing_push = self._find_existing_push_rec(push_vals)
             if not existing_push:
                 vals = {
                     'name': push_vals['name'],
-                    'active': self.manufacture_steps == 'pick_manu_out',
+                    'active': False,
                     'location_from_id': push_vals['location_from_id'],
                     'location_dest_id': push_vals['location_dest_id'],
                     'picking_type_id': push_vals['picking_type_id'],
@@ -198,20 +187,16 @@ class StockWarehouse(models.Model):
                     'route_id': manufacture_route_id
                 }
                 self.env['stock.location.path'].create(vals)
-            else:
-                existing_push.write({'active': self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'})
         for pull_vals in pull_rules_list:
             existing_pull = self._find_existing_pull_rec(pull_vals)
             if not existing_pull:
-                pull_vals.update({'active': self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'})
+                pull_vals.update({'active': False})
                 self.env['procurement.rule'].create(pull_vals)
-            else:
-                existing_pull.write({'active': self.manufacture_to_resupply and self.manufacture_steps == 'pick_manu_out'})
         return True
 
     def _create_or_update_manufacture_pull(self):
         self.ensure_one()
-        location = self.lot_stock_id if self.manufacture_steps != 'pick_manu_out' else self.wh_output_manu_loc_id
+        location = self.lot_stock_id
         location_src = self.wh_input_manu_loc_id if self.manufacture_steps != 'manu_only' else self.lot_stock_id
         routings = [self.Routing(location, location_src, self.manu_type_id)]
         if self.manufacture_pull_id:
@@ -247,10 +232,10 @@ class StockWarehouse(models.Model):
         production_location = self.env.ref('stock.location_production')
         self._create_or_update_manufacturing_picking_types()
         dummy, pull_rules_list1 = self._get_push_pull_rules_values(
-            [self.Routing(self.lot_stock_id, self.wh_input_manu_loc_id, self.manu_pick_type_id)], values={'active': True, 'route_id': manufacture_route.id},
+            [self.Routing(self.lot_stock_id, self.wh_input_manu_loc_id, self.manu_pick_type_id)], values={'active': self.manufacture_steps != 'manu_only', 'route_id': manufacture_route.id},
             push_values=None, pull_values={'procure_method': 'make_to_stock'})
         dummy, pull_rules_list2 = self._get_push_pull_rules_values(
-            [self.Routing(self.wh_input_manu_loc_id, production_location, self.manu_pick_type_id)], values={'active': True, 'route_id': manufacture_route.id},
+            [self.Routing(self.wh_input_manu_loc_id, production_location, self.manu_pick_type_id)], values={'active': self.manufacture_steps != 'manu_only', 'route_id': manufacture_route.id},
             push_values=None, pull_values={'procure_method': 'make_to_order'})
         for pull_vals in pull_rules_list1 + pull_rules_list2:
             existing_pull = self._find_existing_pull_rec(pull_vals)

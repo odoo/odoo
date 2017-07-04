@@ -173,7 +173,7 @@ class MrpProduction(models.Model):
             warehouse = order.location_src_id.get_warehouse()
             order.picking_ids = self.env['stock.picking'].search([
                 ('group_id', '=', order.procurement_group_id.id),
-                ('picking_type_id', 'in', [warehouse.manu_pick_type_id.id, warehouse.manu_store_type_id.id])])
+                ('picking_type_id', '=', warehouse.manu_pick_type_id.id)])
             order.delivery_count = len(order.picking_ids)
 
     @api.multi
