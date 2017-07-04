@@ -205,7 +205,7 @@ class Http(models.AbstractModel):
                     path.pop(1)
                     request.context = context
                     return cls.reroute('/'.join(path) or '/')
-            if path[1] == request.website.default_lang_code:
+            if request.lang == request.website.default_lang_code:
                 context['edit_translations'] = False
             if not context.get('tz'):
                 context['tz'] = request.session.get('geoip', {}).get('time_zone')
