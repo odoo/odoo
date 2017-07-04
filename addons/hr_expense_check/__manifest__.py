@@ -6,7 +6,6 @@
     'description': """
         Print amount in words on checks issued for expenses
     """,
-    'category': 'Accounting &amp; Finance',
     'version': '1.0',
     'depends': ['account_check_printing', 'hr_expense'],
     'auto_install': True,

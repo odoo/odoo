@@ -218,20 +218,21 @@ class website_account(website_account):
         })
         return request.render("website_portal_sale.portal_my_invoices", values)
 
-    @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="user", website=True)
-    def portal_my_invoices_report(self, invoice_id, **kw):
-        invoice = request.env['account.invoice'].browse(invoice_id)
+    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="user", website=True)
+    def portal_get_invoice(self, invoice_id, **kw):
+        invoice = request.env['account.invoice'].browse([invoice_id])
         try:
             invoice.check_access_rights('read')
             invoice.check_access_rule('read')
         except AccessError:
             return request.render("website.403")
+
         # print report as sudo, since it require access to taxes, payment term, ... and portal
         # does not have those access rights.
         pdf = request.env['report'].sudo().get_pdf([invoice_id], 'account.report_invoice')
         pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
+            ('Content-Type', 'application/pdf'), ('Content-Length', len(pdf)),
+            ('Content-Disposition', 'attachment; filename=Invoice.pdf;')
         ]
         return request.make_response(pdf, headers=pdfhttpheaders)
 
@@ -241,7 +242,7 @@ class website_account(website_account):
         partner = request.env['res.users'].browse(request.uid).partner_id
         invoices = request.env['account.invoice'].sudo().search_count([('partner_id', '=', partner.id), ('state', 'not in', ['draft', 'cancel'])])
         if invoices:
-            if 'vat' in partner and (data['vat'] or False) != (partner.vat or False):
+            if 'vat' in data and (data['vat'] or False) != (partner.vat or False):
                 error['vat'] = 'error'
                 error_message.append(_('Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
             if 'name' in data and (data['name'] or False) != (partner.name or False):
