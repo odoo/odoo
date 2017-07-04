@@ -6017,8 +6017,37 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldMany2ManyTags');
 
-    QUnit.test('fieldmany2many tags: rendering and edition', function (assert) {
-        assert.expect(17);
+    QUnit.test('fieldmany2many tags without color', function (assert) {
+        assert.expect(4);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="timmy" widget="many2many_tags"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method ==='read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.args , [[12], ['display_name']], "should not read any color field");
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+        var $input = form.$('.o_field_many2manytags input');
+        $input.click(); // opens the dropdown
+        assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
+            "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
+        $input.autocomplete('widget').find('li:first()').click(); // adds a tag
+        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+            "should contain 1 tag");
+        assert.ok(form.$('.o_field_many2manytags > span:contains("gold")').length,
+            "should contain newly added tag 'gold'");
+        form.destroy();
+    });
+
+    QUnit.test('fieldmany2many tags with color: rendering and edition', function (assert) {
+        assert.expect(20);
 
         this.data.partner.records[0].timmy = [12, 14];
         this.data.partner_type.records.push({id: 13, display_name: "red", color: 8});
@@ -6027,7 +6056,7 @@ QUnit.module('relational_fields', {
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="timmy" widget="many2many_tags" options="{\'no_create_edit\': True}"/>' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\', \'no_create_edit\': True}"/>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
@@ -6037,6 +6066,9 @@ QUnit.module('relational_fields', {
                     assert.strictEqual(commands[0][0], 6, "generated command should be REPLACE WITH");
                     assert.ok(_.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), [12, 13]),
                         "new value should be [12, 13]");
+                }
+                if (args.method ==='read' && args.model === 'partner_type') {
+                    assert.deepEqual(args.args[1], ['display_name', 'color'], "should read the color field");
                 }
                 return this._super.apply(this, arguments);
             },
@@ -6183,7 +6215,7 @@ QUnit.module('relational_fields', {
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
-                    '<field name="timmy" widget="many2many_tags"/>' +
+                    '<field name="timmy" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                 '</form>',
             res_id: 1,
         });
