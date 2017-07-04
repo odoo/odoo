@@ -2116,8 +2116,8 @@ var BasicModel = AbstractModel.extend({
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
 
-            if (element._onchnage_domain && element._onchnage_domain[options.fieldName]) {
-                return element._onchnage_domain[options.fieldName];
+            if (element._onchange_domain && element._onchange_domain[options.fieldName]) {
+                return element._onchange_domain[options.fieldName];
             }
             if (fieldInfo && fieldInfo.domain) {
                 return Domain.prototype.stringToArray(
@@ -2689,7 +2689,7 @@ var BasicModel = AbstractModel.extend({
                     return;
                 }
                 if (result.domain) {
-                    record._onchnage_domain = result.domain;
+                    record._onchange_domain = _.extend(record._onchange_domain || {}, result.domain);
                 }
                 if (result.warning) {
                     self.trigger_up('warning', {
