@@ -8,8 +8,12 @@ from odoo.tools.float_utils import float_compare
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    purchase_id = fields.Many2one('purchase.order', string='Add Purchase Order',
-        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.')
+    purchase_id = fields.Many2one(
+        comodel_name='purchase.order',
+        string='Add Purchase Order',
+        readonly=True, states={'draft': [('readonly', False)]},
+        help='Encoding help. When selected, the associated purchase order lines are added to the vendor bill. Several PO can be selected.'
+    )
 
     @api.onchange('state', 'partner_id', 'invoice_line_ids')
     def _onchange_allowed_purchase_ids(self):
