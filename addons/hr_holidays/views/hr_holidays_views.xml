@@ -24,7 +24,7 @@
                     <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter string="Approved Leaves" domain="[('state', '=', 'validate')]" name="validated"/>
                     <separator/>
-                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations and requests that belong to an leave type that is 'active' (active field is True)"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
@@ -349,7 +349,7 @@
               </p><p>
                 Once you have recorded your leave request, it will be sent
                 to a manager for validation. Be sure to set the right leave
-                type (recuperation, legal holidays, sickness) and the exact
+                type (recuperation, legal leaves, sickness) and the exact
                 number of open days related to your leave.
               </p>
             </field>
