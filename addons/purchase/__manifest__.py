@@ -24,7 +24,7 @@
         'views/res_partner_views.xml',
         'report/purchase_report_views.xml',
         'data/mail_template_data.xml',
-        'views/res_config_views.xml',
+        'views/purchase_config_settings_views.xml',
         'views/account_config_settings_views.xml',
         'report/purchase_order_templates.xml',
         'report/purchase_quotation_templates.xml',

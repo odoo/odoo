@@ -479,6 +479,23 @@ class Module(models.Model):
             known_deps |= missing_mods.upstream_dependencies(known_deps, exclude_states)
         return known_deps
 
+    def next(self):
+        """
+        Return the action linked to an ir.actions.todo is there exists one that
+        should be executed. Otherwise, redirect to /web
+        """
+        Todos = self.env['ir.actions.todo']
+        _logger.info('getting next %s', Todos)
+        active_todo = Todos.search([('state', '=', 'open')], limit=1)
+        if active_todo:
+            _logger.info('next action is %s', active_todo)
+            return active_todo.action_launch()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': '/web',
+        }
+
     @api.multi
     def _button_immediate_function(self, function):
         function(self)
@@ -489,7 +506,7 @@ class Module(models.Model):
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)
-        config = env['res.config'].next() or {}
+        config = self.next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
@@ -516,6 +533,18 @@ class Module(models.Model):
         deps = self.downstream_dependencies()
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
+
+    @api.multi
+    def button_uninstall_wizard(self):
+        """ Launch the wizard to uninstall the given module. """
+        return {
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'name': _('Uninstall module'),
+            'view_mode': 'form',
+            'res_model': 'base.module.uninstall',
+            'context': {'default_module_id': self.id},
+        }
 
     @api.multi
     def button_uninstall_cancel(self):
@@ -785,7 +814,7 @@ class Module(models.Model):
     @api.multi
     def check(self):
         for module in self:
-            if not module.description:
+            if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
 
     @api.model

@@ -377,6 +377,8 @@ actual arch.
             else:
 
                 try:
+                    if not values.get('arch') and not values.get('arch_base'):
+                        raise ValidationError(_('Missing view architecture.'))
                     values['type'] = etree.fromstring(values.get('arch') or values.get('arch_base')).tag
                 except LxmlError:
                     # don't raise here, the constraint that runs `self._check_xml` will
@@ -459,7 +461,8 @@ actual arch.
             # cannot currently use relationships that are
             # not required. The root cause is the INNER JOIN
             # used to implement it.
-            views = self.search(conditions + [('model_ids.module', 'in', tuple(self.pool._init_modules))])
+            modules = tuple(self.pool._init_modules) + (self._context.get('install_mode_data', {}).get('module'),)
+            views = self.search(conditions + [('model_ids.module', 'in', modules)])
             views = self.search(conditions + [('id', 'in', list(self._context.get('check_view_ids') or (0,)) + views.ids)])
         else:
             views = self.search(conditions)

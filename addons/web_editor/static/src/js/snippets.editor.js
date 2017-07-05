@@ -18,15 +18,6 @@ var data = {};
 
 /* ----- SNIPPET SELECTOR ---- */
 
-$.extend($.expr[':'], {
-    hasData: function (node) {
-        return !!_.toArray(node.dataset).length;
-    },
-    data: function (node, i, m) {
-        return $(node).data(m[3]);
-    }
-});
-
 data.globalSelector = {
     closest: function () { return $(); },
     all: function () { return $(); },
@@ -107,7 +98,7 @@ data.Class = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? $from.find(selector) : $(selector);
+                    return $from ? cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -130,14 +121,30 @@ data.Class = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return ($from || self.$editable).find(selector);
+                    return cssFind($from || self.$editable, selector);
                 } : function ($from) {
-                    return $from ? $from.find(selector) : self.$editable.filter(selector).add(self.$editable.find(selector));
+                    $from = $from || self.$editable;
+                    return $from.filter(selector).add(cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
+        }
+
+        /**
+         * jQuery find function behavior is:
+         *      $('A').find('A B') <=> $('A A B')
+         * The searches behavior to find options' DOM needs to be
+         *      $('A').find('A B') <=> $('A B')
+         * This is what this function does.
+         *
+         * @param {jQuery} $from - the jQuery element(s) from which to search
+         * @param {string} selector - the CSS selector to match
+         * @returns {jQuery}
+         */
+        function cssFind($from, selector) {
+            return $from.find('*').filter(selector);
         }
     },
 
@@ -244,12 +251,25 @@ data.Class = Widget.extend({
                         $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
                     }
                     // end
+
+                    var moduleID = $snippet.data('moduleId');
+                    if (moduleID) {
+                        $snippet.addClass('o_snippet_install');
+                        var $installBtn = $('<a/>', {
+                            class: 'btn btn-primary btn-sm o_install_btn',
+                            target: '_blank',
+                            href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                            text: _t("Install"),
+                        });
+                        $div.append($installBtn);
+                    }
                 }
                 if (!$snippet.data("selector")) {
                     $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
                 }
                 number++;
-            });
+            })
+            .not('[data-module-id]');
 
         // hide scroll if no snippets defined
         if (!number) {
@@ -994,7 +1014,9 @@ data.Editor = Class.extend({
         this.$target.after($clone);
         this.buildingBlock.call_for_all_snippets($clone, function (editor, $snippet) {
             for (var i in editor.styles) {
-                editor.styles[i].on_clone($snippet);
+                editor.styles[i].on_clone($snippet, {
+                    isCurrent: ($snippet.is($clone)),
+                });
             }
         });
         return false;
@@ -1102,7 +1124,7 @@ data.Editor = Class.extend({
         }).bind(this));
 
         // Activate the overlay
-        $style_button.toggleClass("hidden", $ul.children(":not(.divider):not(.hidden)").length === 0);
+        $style_button.toggleClass("hidden", $ul.children(":not(.o_main_header):not(.divider):not(.hidden)").length === 0);
         this.$overlay.toggleClass("oe_active", !!focus);
 
         function _do_action_focus(style, $dest) {

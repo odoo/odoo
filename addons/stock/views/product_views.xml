@@ -118,6 +118,7 @@
             </field>
         </record>
 
+        <!-- view common to both template and product -->
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
@@ -133,14 +134,16 @@
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
                             </div>
                         </group>
-                        <group string="Logistics" name="group_lots_and_weight" attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}">
+                        <group string="Logistics" name="group_lots_and_weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}">
                             <label for="weight"/>
                             <div class="o_row" name="weight">
                                 <field name="weight"/>
+                                <span>kg</span>
                             </div>
                             <label for="volume"/>
                             <div class="o_row" name="volume">
                                 <field name="volume" string="Volume"/>
+                                <span>m³</span>
                             </div>
                         </group>
                         <group string="Traceability" name="traceability" groups="stock.group_production_lot">
@@ -260,6 +263,7 @@
             </field>
         </record>
 
+        <!-- view used for product.product only -->
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
@@ -330,6 +334,7 @@
             </field>
         </record>
         
+        <!-- view used for product.template only -->
         <record model="ir.ui.view" id="product_template_form_view_procurement_button">
             <field name="name">product.template_procurement</field>
             <field name="model">product.template</field>
@@ -391,6 +396,12 @@
                             class="oe_stat_button" icon="fa-cogs"
                             groups="stock.group_adv_location"/>
                     </button>
+
+                    <!-- change attrs of fields added in view_template_property_form
+                    to restrict the display for templates -->
+                    <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
+                        <attribute name="attrs">{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '&gt;', 1)]}</attribute>
+                    </xpath>
                 </data>
             </field>
         </record>

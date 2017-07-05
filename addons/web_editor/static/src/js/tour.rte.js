@@ -61,7 +61,7 @@ odoo.define('web_editor.tour', function (require) {
         trigger: ".note-color button.dropdown-toggle",
     }, {
         content: "change text color",
-        trigger: "button[data-event=foreColor]:first",
+        trigger: ".btn-group.open button[data-event=foreColor]:first",
     }, {
         content: "change selection to change text bg-color again",
         trigger: '#editable_area > section .row > div:first h1 font:eq(2)',
@@ -218,7 +218,7 @@ odoo.define('web_editor.tour', function (require) {
     }, {
         content: "add ul content",
         trigger: '#editable_area > section .row > div:first',
-        extra_trigger: 'body:not(:has(#editable_area > section .row > div:first p:eq(4), #editable_area > section .row > div:eq(3))) #editable_area > section .row > div:first p:eq(3)',
+        extra_trigger: 'body:not(:has(#editable_area > section .row > div:first p:eq(5), #editable_area > section .row > div:eq(3))) #editable_area > section .row > div:first p:eq(3)',
         run: function () {
             var html = '  <ul>     '+
                 '\n     <li>   <p>Batnae municipium.  </p></li>'+

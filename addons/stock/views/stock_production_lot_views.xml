@@ -71,7 +71,7 @@
                 <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
                 <field name="product_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by':'product_id'}"/>
                 </group>
             </search>
         </field>
@@ -84,7 +84,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="view_production_lot_tree"/>
         <field name="search_view_id" ref="search_product_lot_filter"/>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_group_by_product': 1}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to add a lot/serial number.

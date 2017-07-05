@@ -9,16 +9,16 @@
                 <div id="purchase_po_lead" position="replace">
                     <div class="col-xs-12 col-md-6 o_setting_box" title="Margin of error for vendor lead times. When the system generates Purchase Orders for reordering products,they will be scheduled that many days earlier to cope with unexpected vendor delays.">
                         <div class="o_setting_left_pane">
-                            <field name="default_new_po_lead"/>
+                            <field name="use_po_lead"/>
                         </div>
                         <div class="o_setting_right_pane">
-                            <label for="default_new_po_lead"/>
+                            <label for="use_po_lead"/>
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                             <div class="text-muted">
                                 Schedule receivings earlier to avoid delays
                             </div>
                             <div class="content-group">
-                                <div class="mt16" attrs="{'invisible': [('default_new_po_lead','=',False)]}">
+                                <div class="mt16" attrs="{'invisible': [('use_po_lead','=',False)]}">
                                     <span>Move forward expected delivery dates by <field name="po_lead" class="oe_inline"/> days</span>
                                 </div>
                             </div>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import uuid
+
 from itertools import groupby
 from datetime import datetime, timedelta
 
@@ -53,7 +55,7 @@ class SaleOrder(models.Model):
             # Search for invoices which have been 'cancelled' (filter_refund = 'modify' in
             # 'account.invoice.refund')
             # use like as origin may contains multiple references (e.g. 'SO01, SO02')
-            refunds = invoice_ids.search([('origin', 'like', order.name)])
+            refunds = invoice_ids.search([('origin', 'like', order.name)]).filtered(lambda r: r.type in ['out_invoice', 'out_refund'])
             invoice_ids |= refunds.filtered(lambda r: order.name in [origin.strip() for origin in r.origin.split(',')])
             # Search for refunds as well
             refund_ids = self.env['account.invoice'].browse()
@@ -88,9 +90,12 @@ class SaleOrder(models.Model):
             return '<p class=''oe_view_nocontent_create''">%s</p>' % (help)
         return super(SaleOrder, self).get_empty_list_help(help)
 
+    def _get_default_access_token(self):
+        return str(uuid.uuid4())
+
     @api.model
     def _default_note(self):
-        return self.env.user.company_id.sale_note
+        return self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note or ''
 
     @api.model
     def _get_default_team(self):
@@ -110,6 +115,9 @@ class SaleOrder(models.Model):
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
+    access_token = fields.Char(
+        'Security Token', copy=False,
+        default=_get_default_access_token)
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -119,7 +127,7 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
     date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now)
-    validity_date = fields.Date(string='Expiration Date', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+    validity_date = fields.Date(string='Expiration Date', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help="Manually set the expiration date of your quotation (offer), or it will set the date automatically based on the template if online quotation is installed.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
@@ -217,7 +225,7 @@ class SaleOrder(models.Model):
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
         }
-        if self.env.user.company_id.sale_note:
+        if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
         if self.partner_id.user_id:
@@ -259,7 +267,10 @@ class SaleOrder(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('name', _('New')) == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or _('New')
+            if 'company_id' in vals:
+                vals['name'] = self.env['ir.sequence'].with_context(force_company=vals['company_id']).next_by_code('sale.order') or _('New')
+            else:
+                vals['name'] = self.env['ir.sequence'].next_by_code('sale.order') or _('New')
 
         # Makes sure partner_invoice_id', 'partner_shipping_id' and 'pricelist_id' are defined
         if any(f not in vals for f in ['partner_invoice_id', 'partner_shipping_id', 'pricelist_id']):
@@ -278,6 +289,20 @@ class SaleOrder(models.Model):
         if 'order_line' not in default:
             default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
         return super(SaleOrder, self).copy_data(default)
+
+    @api.model_cr_context
+    def _init_column(self, column_name):
+        """ Initialize the value of the given column for existing rows.
+            Overridden here because we skip generating unique access tokens
+            for potentially tons of existing sale orders, should they be needed,
+            they will be generated on the fly.
+        """
+        if column_name != 'access_token':
+            super(SaleOrder, self)._init_column(column_name)
+
+    def _generate_access_token(self):
+        for order in self:
+            order.access_token = self._get_default_access_token()
 
     @api.multi
     def _prepare_invoice(self):
@@ -467,7 +492,7 @@ class SaleOrder(models.Model):
             if self.env.context.get('send_email'):
                 self.force_quotation_send()
             order.order_line._action_procurement_create()
-        if self.env['ir.values'].get_default('sale.config.settings', 'auto_done_setting'):
+        if self.env['ir.config_parameter'].get_param('sale.auto_done_setting'):
             self.action_done()
         return True
 
@@ -511,7 +536,6 @@ class SaleOrder(models.Model):
     def _get_tax_amount_by_group(self):
         self.ensure_one()
         res = {}
-        currency = self.currency_id or self.company_id.currency_id
         for line in self.order_line:
             base_tax = 0
             for tax in line.tax_id:
@@ -688,14 +712,21 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.model
-    def create(self, values):
+    def _prepare_add_missing_fields(self, values):
+        """ Deduce missing required fields from the onchange """
+        res = {}
         onchange_fields = ['name', 'price_unit', 'product_uom', 'tax_id']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.product_id_change()
             for field in onchange_fields:
                 if field not in values:
-                    values[field] = line._fields[field].convert_to_write(line[field], line)
+                    res[field] = line._fields[field].convert_to_write(line[field], line)
+        return res
+
+    @api.model
+    def create(self, values):
+        values.update(self._prepare_add_missing_fields(values))
         line = super(SaleOrderLine, self).create(values)
         if line.state == 'sale':
             line._action_procurement_create()

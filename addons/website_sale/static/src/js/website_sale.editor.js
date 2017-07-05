@@ -29,6 +29,10 @@ if(!$('.js_sale').length) {
     return $.Deferred().reject("DOM doesn't contain '.js_sale'");
 }
 
+$('.oe_website_sale').on('click', '.oe_currency_value:o_editable', function (ev) {
+    $(ev.currentTarget).selectContent();
+});
+
 options.registry.website_sale = options.Class.extend({
     start: function () {
         var self = this;

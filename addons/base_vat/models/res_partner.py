@@ -114,7 +114,7 @@ class ResPartner(models.Model):
                 country_code = partner.commercial_partner_id.country_id.code
                 if country_code:
                     if not check_func(country_code.lower(), partner.vat):
-                        msg = self._construct_constraint_msg(country_code.lower())
+                        msg = partner._construct_constraint_msg(country_code.lower())
                         raise ValidationError(msg)
 
     def _construct_constraint_msg(self, country_code):
@@ -223,10 +223,14 @@ class ResPartner(models.Model):
         return True
 
     # Norway VAT validation, contributed by Rolv Råen (adEgo) <rora@adego.no>
+    # Support for MVA suffix contributed by Bringsvor Consulting AS (bringsvor@bringsvor.com)
     def check_vat_no(self, vat):
-        '''
+        """
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
-        '''
+        """
+        if len(vat) == 12 and vat.upper().endswith('MVA'):
+            vat = vat[:-3] # Strictly speaking we should enforce the suffix MVA but...
+
         if len(vat) != 9:
             return False
         try:

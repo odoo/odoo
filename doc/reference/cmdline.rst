@@ -2,9 +2,9 @@
 
 .. _reference/cmdline:
 
-===============================
+================================
 Command-line interface: odoo-bin
-===============================
+================================
 
 .. _reference/cmdline/server:
 
@@ -166,6 +166,10 @@ database
     when creating new databases from the database-management screens, use the
     specified `template database`_. Defaults to ``template1``.
 
+.. option:: --no-database-list
+
+    Suppresses the ability to list databases available on the system
+
 built-in HTTP
 -------------
 
@@ -290,6 +294,38 @@ customize the amount of logging output
         In case of conflict between :option:`--log-level` and
         :option:`--log-handler`, the latter is used
 
+translations
+------------
+
+.. option:: --i18n-import
+
+.. option:: --i18n-export
+
+emails
+------
+
+.. option:: --email-from <address>
+
+    Email address used as <FROM> when Odoo needs to send mails
+
+.. option:: --smtp <server>
+
+    Address of the SMTP server to connect to in order to send mails
+
+.. option:: --smtp-port <port>
+
+.. option:: --smtp-ssl
+
+    If set, odoo should use SSL/STARTSSL SMTP connections
+
+.. option:: --smtp-user <name>
+
+    Username to connect to the SMTP server
+
+.. option:: --smtp-password <password>
+
+    Password to connect to the SMTP server
+
 
 .. _reference/cmdline/scaffold:
 
@@ -325,6 +361,8 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 Configuration file
 ==================
 
+.. program:: odoo-bin
+
 Most of the command-line options can also be specified via a configuration
 file. Most of the time, they use similar names with the prefix ``-`` removed
 and other ``-`` are replaced by ``_`` e.g. :option:`--db-template` becomes
@@ -339,7 +377,6 @@ Some conversions don't match the pattern:
   ``log_handler``, use that directly in the configuration file
 * :option:`--smtp` is stored as ``smtp_server``
 * :option:`--database` is stored as ``db_name``
-* :option:`--debug` is stored as ``debug_mode`` (a boolean)
 * :option:`--i18n-import` and :option:`--i18n-export` aren't available at all
   from configuration files
 

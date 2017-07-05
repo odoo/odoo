@@ -511,6 +511,7 @@ var ServicesMixin = {
             action: action,
             options: options,
             on_success: function (result) { def.resolve(result); },
+            on_fail: function (result) { def.reject(result); },
         });
         return def;
     },

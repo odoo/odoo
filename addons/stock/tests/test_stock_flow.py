@@ -1576,7 +1576,6 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
-
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
         self.assertEquals(picking_out.state, "confirmed")

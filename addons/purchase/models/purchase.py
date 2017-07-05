@@ -136,14 +136,14 @@ class PurchaseOrder(models.Model):
     invoice_status = fields.Selection([
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
-        ('invoiced', 'Bills Received'),
+        ('invoiced', 'No Bill to Receive'),
         ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     picking_count = fields.Integer(compute='_compute_picking', string='Receptions', default=0, store=True)
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
 
     # There is no inverse function on purpose since the date may be different on each line
-    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True, oldname='minimum_planned_date')
+    date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', track_visibility='always')
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
@@ -450,16 +450,15 @@ class PurchaseOrder(models.Model):
         result = action.read()[0]
 
         #override the context to get rid of the default filtering on operation type
-        result.pop('id', None)
         result['context'] = {}
-        pick_ids = sum([order.picking_ids.ids for order in self], [])
+        pick_ids = self.mapped('picking_ids')
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',[" + ','.join(str(id) for id in pick_ids) + "])]"
+            result['domain'] = "[('id','in',%s])]" % (pick_ids.ids)
         elif len(pick_ids) == 1:
             res = self.env.ref('stock.view_picking_form', False)
             result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = pick_ids and pick_ids[0] or False
+            result['res_id'] = pick_ids.id
         return result
 
     @api.multi
@@ -518,7 +517,7 @@ class PurchaseOrderLine(models.Model):
                 'price_subtotal': taxes['total_excluded'],
             })
 
-    @api.depends('invoice_lines.invoice_id.state')
+    @api.depends('invoice_lines.invoice_id.state', 'invoice_lines.quantity')
     def _compute_qty_invoiced(self):
         for line in self:
             qty = 0.0
@@ -579,6 +578,11 @@ class PurchaseOrderLine(models.Model):
                         msg += _("Billed Quantity") + ": %s <br/></li>" % (line.qty_invoiced,)
                     msg += "</ul>"
                     order.message_post(body=msg)
+        # Update expected date of corresponding moves
+        if 'date_planned' in values:
+            self.env['stock.move'].search([
+                ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
+            ]).write({'date_expected': values['date_planned']})
         result = super(PurchaseOrderLine, self).write(values)
         if orders:
             orders._create_picking()
@@ -666,7 +670,7 @@ class PurchaseOrderLine(models.Model):
         }
         # Fullfill all related procurements with this po line
         diff_quantity = self.product_qty - qty
-        for procurement in self.procurement_ids:
+        for procurement in self.procurement_ids.filtered(lambda p: p.state != 'cancel'):
             # If the procurement has some moves already, we should deduct their quantity
             sum_existing_moves = sum(x.product_qty for x in procurement.move_ids if x.state != 'cancel')
             existing_proc_qty = procurement.product_id.uom_id._compute_quantity(sum_existing_moves, procurement.product_uom)
@@ -987,6 +991,21 @@ class ProcurementOrder(models.Model):
         """
         return suppliers[0]
 
+    def _make_po_get_domain(self, partner):
+        gpo = self.rule_id.group_propagation_option
+        group = (gpo == 'fixed' and self.rule_id.group_id) or \
+                (gpo == 'propagate' and self.group_id) or False
+
+        domain = (
+            ('partner_id', '=', partner.id),
+            ('state', '=', 'draft'),
+            ('picking_type_id', '=', self.rule_id.picking_type_id.id),
+            ('company_id', '=', self.company_id.id),
+            ('dest_address_id', '=', self.partner_dest_id.id))
+        if group:
+            domain += (('group_id', '=', group.id),)
+        return domain
+
     @api.multi
     def make_po(self):
         cache = {}
@@ -1000,18 +1019,7 @@ class ProcurementOrder(models.Model):
             supplier = procurement._make_po_select_supplier(suppliers)
             partner = supplier.name
 
-            gpo = procurement.rule_id.group_propagation_option
-            group = (gpo == 'fixed' and procurement.rule_id.group_id) or \
-                    (gpo == 'propagate' and procurement.group_id) or False
-
-            domain = (
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'draft'),
-                ('picking_type_id', '=', procurement.rule_id.picking_type_id.id),
-                ('company_id', '=', procurement.company_id.id),
-                ('dest_address_id', '=', procurement.partner_dest_id.id))
-            if group:
-                domain += (('group_id', '=', group.id),)
+            domain = procurement._make_po_get_domain(partner)
 
             if domain in cache:
                 po = cache[domain]

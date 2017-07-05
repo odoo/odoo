@@ -30,7 +30,6 @@
     'demo': [
         'data/hr_recruitment_demo.xml',
     ],
-    'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
     'application': True,

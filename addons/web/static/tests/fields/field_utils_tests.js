@@ -101,7 +101,7 @@ QUnit.test('format one2many', function(assert) {
 });
 
 QUnit.test('parse float', function(assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     assert.strictEqual(fieldUtils.parse.float(""), 0);
     assert.strictEqual(fieldUtils.parse.float("0"), 0);
@@ -109,6 +109,16 @@ QUnit.test('parse float', function(assert) {
     assert.strictEqual(fieldUtils.parse.float("-100.00"), -100);
     assert.strictEqual(fieldUtils.parse.float("1,000.00"), 1000);
     assert.strictEqual(fieldUtils.parse.float("1,000,000.00"), 1000000);
+
+    var originalParameters = $.extend(true, {}, core._t.database.parameters);
+    _.extend(core._t.database.parameters, {
+        grouping: [3, 0],
+        decimal_point: ',',
+        thousands_sep: '.'
+    });
+    assert.strictEqual(fieldUtils.parse.float('1.234,567'), 1234.567);
+
+    core._t.database.parameters = originalParameters;
 });
 
 QUnit.test('parse monetary', function(assert) {

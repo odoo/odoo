@@ -22,6 +22,7 @@ var ListController = BasicController.extend({
         button_clicked: '_onButtonClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
+        resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
@@ -64,7 +65,10 @@ var ListController = BasicController.extend({
                 return $.when();
             }
         }
-        return this._super(recordID);
+        var self = this;
+        return this._super(recordID).then(function () {
+            self._updateButtons('readonly');
+        });
     },
     /**
      * Calculate the active domain of the list view. This should be done only
@@ -89,7 +93,8 @@ var ListController = BasicController.extend({
                 contexts: [userContext].concat(searchData.contexts),
                 group_by_seq: searchData.groupbys || []
             });
-            return $.when(self.dataset.domain.concat(results.domain || []));
+            var record = self.model.get(self.handle, {raw: true});
+            return $.when(record.getDomain().concat(results.domain || []));
         } else {
             return $.Deferred().resolve();
         }
@@ -190,19 +195,25 @@ var ListController = BasicController.extend({
         }
     },
     /**
-     * Add a record to the list
+     * Adds a record to the list.
+     * Disables the buttons to prevent concurrent record creation or edition.
      *
      * @todo make record creation a basic controller feature
      * @private
      */
     _addRecord: function () {
         var self = this;
-        this.model.addDefaultRecord(this.handle, {position: this.editable}).then(function (recordID) {
+        this._disableButtons();
+        return this.renderer.unselectRow().then(function () {
+            return self.model.addDefaultRecord(self.handle, {
+                position: self.editable,
+            });
+        }).then(function (recordID) {
             self._toggleNoContentHelper(false);
             var state = self.model.get(self.handle);
             self.renderer.updateState(state, {});
             self.renderer.editRecord(recordID);
-        });
+        }).always(this._enableButtons.bind(this));
     },
     /**
      * Archive the current selection
@@ -383,6 +394,32 @@ var ListController = BasicController.extend({
         this.saveRecord(recordID)
             .done(ev.data.onSuccess)
             .fail(ev.data.onFailure);
+    },
+    /**
+     * Force a resequence of the records curently on this page.
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onResequence: function (event) {
+        var data = this.model.get(this.handle);
+        var resIDs = _.map(event.data.rowIDs, function(rowID) {
+            return _.findWhere(data.data, {id: rowID}).res_id;
+        })
+        return this._rpc({
+            route: '/web/dataset/resequence',
+            params: {
+                model: this.modelName,
+                ids: resIDs,
+                offset: event.data.offset,
+                field: event.data.handleField,
+            },
+        }).then(function () {
+            data.data = _.sortBy(data.data, function (d) {
+                return _.indexOf(resIDs, d.res_id);
+            });
+            return this.handle;
+        });
     },
     /**
      * When the current selection changes (by clicking on the checkboxes on the

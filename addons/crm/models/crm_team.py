@@ -120,13 +120,6 @@ class Team(models.Model):
         if not self.use_opportunities and self.dashboard_graph_model == 'crm.opportunity.report':
             raise ValidationError(_("Dashboard graph content cannot be Pipeline if the sales channel doesn't use it. (Pipeline is unchecked.)"))
 
-    @api.model
-    def create(self, vals):
-        generate_alias_name = self.env['ir.values'].get_default('sale.config.settings', 'generate_sales_team_alias')
-        if generate_alias_name and not vals.get('alias_name'):
-            vals['alias_name'] = vals.get('name')
-        return super(Team, self).create(vals)
-
     @api.multi
     def write(self, vals):
         result = super(Team, self).write(vals)

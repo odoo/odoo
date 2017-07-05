@@ -228,8 +228,8 @@ class AccountMove(models.Model):
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
             'ref': _('reversal of: ') + self.name})
-        for acm_line in reversed_move.line_ids:
-            acm_line.with_context(check_move_validity=False).write({
+        for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
+            acm_line.write({
                 'debit': acm_line.credit,
                 'credit': acm_line.debit,
                 'amount_currency': -acm_line.amount_currency
@@ -359,6 +359,15 @@ class AccountMoveLine(models.Model):
                 move_line.credit_cash_basis = move_line.credit
             move_line.balance_cash_basis = move_line.debit_cash_basis - move_line.credit_cash_basis
 
+    @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
+    def _compute_tax_base_amount(self):
+        for move_line in self:
+            if move_line.tax_line_id:
+                base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids)
+                move_line.tax_base_amount = abs(sum(base_lines.mapped('balance')))
+            else:
+                move_line.tax_base_amount = 0
+
     @api.one
     @api.depends('move_id.line_ids')
     def _get_counterpart(self):
@@ -392,6 +401,7 @@ class AccountMoveLine(models.Model):
         help="The residual amount on a journal item expressed in the company currency.")
     amount_residual_currency = fields.Monetary(compute='_amount_residual', string='Residual Amount in Currency', store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
+    tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
     account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
         ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
     move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
@@ -897,6 +907,11 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
+        # Empty self can happen if the user tries to reconcile entries which are already reconciled.
+        # The calling method might have filtered out reconciled lines.
+        if not self:
+            return True
+
         #Perform all checks on lines
         company_ids = set()
         all_accounts = []
@@ -989,7 +1004,7 @@ class AccountMoveLine(models.Model):
             second_line_dict['amount_currency'] = -second_line_dict['amount_currency']
 
         # Create the move
-        writeoff_move = self.env['account.move'].create({
+        writeoff_move = self.env['account.move'].with_context(apply_taxes=True).create({
             'journal_id': vals['journal_id'],
             'date': vals['date'],
             'state': 'draft',
@@ -1322,9 +1337,8 @@ class AccountMoveLine(models.Model):
         """ Create analytic items upon validation of an account.move.line having an analytic account. This
             method first remove any existing analytic item related to the line before creating any new one.
         """
+        self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
-            if obj_line.analytic_line_ids:
-                obj_line.analytic_line_ids.unlink()
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
@@ -1426,7 +1440,7 @@ class AccountPartialReconcile(models.Model):
         help='Utility field to express amount currency')
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
-    max_date = fields.Datetime(string='Max Date of Matched Lines', compute='_compute_max_date',
+    max_date = fields.Date(string='Max Date of Matched Lines', compute='_compute_max_date',
         readonly=True, copy=False, stored=True,
         help='Technical field used to determine at which date this reconciliation needs to be shown on the aged receivable/payable reports.')
 

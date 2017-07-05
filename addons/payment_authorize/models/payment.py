@@ -8,7 +8,7 @@ import hmac
 import logging
 import time
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
 from odoo.tools.float_utils import float_compare
@@ -66,7 +66,7 @@ class PaymentAcquirerAuthorize(models.Model):
             'x_trans_key': self.authorize_transaction_key,
             'x_amount': str(values['amount']),
             'x_show_form': 'PAYMENT_FORM',
-            'x_type': 'AUTH_CAPTURE' if self.auto_confirm != 'authorize' else 'AUTH_ONLY',
+            'x_type': 'AUTH_CAPTURE' if not self.capture_manually else 'AUTH_ONLY',
             'x_method': 'CC',
             'x_fp_sequence': '%s%s' % (self.id, int(time.time())),
             'x_version': '3.1',
@@ -164,7 +164,7 @@ class TxAuthorize(models.Model):
         transaction record. """
         reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
-            error_msg = 'Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)' % (reference, trans_id, fingerprint)
+            error_msg = _('Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)') % (reference, trans_id, fingerprint)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
@@ -246,7 +246,7 @@ class TxAuthorize(models.Model):
     def authorize_s2s_do_transaction(self, **data):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        if self.acquirer_id.auto_confirm != "authorize":
+        if not self.acquirer_id.capture_manually:
             res = transaction.auth_and_capture(self.payment_token_id, self.amount, self.reference)
         else:
             res = transaction.authorize(self.payment_token_id, self.amount, self.reference)
@@ -343,6 +343,6 @@ class PaymentToken(models.Model):
                     'acquirer_ref': res.get('payment_profile_id'),
                 }
             else:
-                raise ValidationError('The Customer Profile creation in Authorize.NET failed.')
+                raise ValidationError(_('The Customer Profile creation in Authorize.NET failed.'))
         else:
             return values

@@ -2,6 +2,7 @@
 
 import time
 from odoo import api, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -196,6 +197,9 @@ class ReportAgedPartnerBalance(models.AbstractModel):
 
     @api.model
     def get_report_values(self, docids, data=None):
+        if not data.get('form') or not self.env.context.get('active_model') or not self.env.context.get('active_id'):
+            raise UserError(_("Some data are missing, this report cannot be printed."))
+
         total = []
         model = self.env.context.get('active_model')
         docs = self.env[model].browse(self.env.context.get('active_id'))

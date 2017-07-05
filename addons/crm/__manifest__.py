@@ -19,6 +19,7 @@
         'utm',
         'web_planner',
         'web_tour',
+        'contacts'
     ],
     'data': [
         'security/crm_security.xml',
@@ -26,7 +27,6 @@
 
         'data/crm_data.xml',
         'data/crm_stage_data.xml',
-        'data/sales_config_settings_data.xml',
         'data/crm_lead_data.xml',
         'data/web_planner_data.xml',
         'data/mail_template_data.xml',
@@ -46,7 +46,7 @@
         'views/crm_lead_views.xml',
         'views/calendar_views.xml',
         'views/res_partner_views.xml',
-        'views/res_config_views.xml',
+        'views/sale_config_settings_views.xml',
         'views/crm_team_views.xml',
     ],
     'demo': [

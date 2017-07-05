@@ -52,10 +52,23 @@ function formatBoolean(value) {
  * an empty string.
  *
  * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
+ *   instead of the formatted value
  * @returns {string}
  */
-function formatChar(value) {
-    return typeof value === 'string' ? value : '';
+function formatChar(value, field, options) {
+    value = typeof value === 'string' ? value : '';
+    if (options && options.isPassword) {
+        return _.str.repeat('*', value ? value.length : 0);
+    }
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
@@ -169,9 +182,16 @@ function formatFloatTime(value) {
  * return an empty string.
  *
  * @param {integer|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
  * @returns {string}
  */
-function formatInteger(value) {
+function formatInteger(value, field, options) {
+    if (options && options.isPassword) {
+        return _.str.repeat('*', String(value).length);
+    }
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
         // view, I want to display the concept of 'no value' with an empty
@@ -189,10 +209,18 @@ function formatInteger(value) {
  * case, we assume that it is a record from a BasicModel.
  *
  * @param {Array|Object|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */
-function formatMany2one(value) {
-    return value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+function formatMany2one(value, field, options) {
+    value = value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 /**
@@ -270,14 +298,27 @@ function formatMonetary(value, field, options) {
     }
 }
 
-function formatSelection(value, field) {
-    if (!value) {
-        return '';
-    }
+/**
+ * Returns a string representing the value of the selection.
+ *
+ * @param {string|false} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ */
+function formatSelection(value, field, options) {
     var val = _.find(field.selection, function (option) {
         return option[0] === value;
     });
-    return val[1];
+    if (!val) {
+        return '';
+    }
+    value = val[1];
+    if (options && options.escape) {
+        value = _.escape(value);
+    }
+    return value;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -318,7 +359,7 @@ function parseDate(value, field, options) {
         }
         if (date.year() >= 1900) {
             date.toJSON = function () {
-                return this.format('YYYY-MM-DD');
+                return this.clone().locale('en').format('YYYY-MM-DD');
             };
             return date;
         }
@@ -365,7 +406,7 @@ function parseDateTime(value, field, options) {
         }
         if (datetime.year() >= 1900) {
             datetime.toJSON = function () {
-                return this.format('YYYY-MM-DD HH:mm:ss');
+                return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
             };
             return datetime;
         }
@@ -374,7 +415,10 @@ function parseDateTime(value, field, options) {
 }
 
 function parseFloat(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
+    if (core._t.database.parameters.thousands_sep) {
+        var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+        value = value.replace(new RegExp(escapedSep, 'g'), '');
+    }
     value = value.replace(core._t.database.parameters.decimal_point, '.');
     var parsed = Number(value);
     if (isNaN(parsed)) {

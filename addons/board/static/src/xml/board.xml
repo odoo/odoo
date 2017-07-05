@@ -18,7 +18,7 @@
     </table>
 </t>
 <t t-name="DashBoard.action">
-    <div t-att-data-id="action.attrs.name" class="oe_action">
+    <div t-att-data-id="action.attrs.id" class="oe_action">
         <h2 t-attf-class="oe_header #{action.attrs.string ? '' : 'oe_header_empty'}">
             <span class="oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
             <input class = "oe_header_text" type="text"/>
@@ -27,8 +27,7 @@
             <span class='oe_icon oe_minimize oe_fold' t-if="!action.attrs.fold"></span>
             <span class='oe_icon oe_maximize oe_fold' t-if="action.attrs.fold"></span>
         </h2>
-        
-        <div t-attf-id="#{element_id}_action_#{column_index}_#{action_index}" class="oe_content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
+        <div t-att-class="'oe_content' + (action.attrs.fold ? ' oe_folded' : '')"/>
     </div>
 </t>
 <t t-name="DashBoard.layouts">

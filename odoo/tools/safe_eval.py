@@ -14,8 +14,8 @@ condition/math builtins.
 #  - http://code.activestate.com/recipes/286134/
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
 #  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
-
-from opcode import HAVE_ARGUMENT, opmap
+import dis
+from opcode import HAVE_ARGUMENT, opmap, opname
 
 import functools
 from psycopg2 import OperationalError
@@ -40,12 +40,40 @@ _ALLOWED_MODULES = ['_strptime', 'math', 'time']
 
 _UNSAFE_ATTRIBUTES = ['f_builtins', 'f_globals', 'f_locals', 'gi_frame',
                       'co_code', 'func_globals']
+_POSSIBLE_OPCODES_P3 = [
+    # opcodes for `with` statement cleanup process
+    'WITH_CLEANUP_START', 'WITH_CLEANUP_FINISH',
+    # f-strings
+    'FORMAT_VALUE', 'BUILD_STRING',
+    # extended iterable unpacking: LHS has * e.g. `a, *b, c = thing()`
+    'UNPACK_EX',
+    # collection literals with unpacking e.g. [*a, *b]
+    'BUILD_LIST_UNPACK', 'BUILD_TUPLE_UNPACK', 'BUILD_SET_UNPACK', 'BUILD_MAP_UNPACK',
+    # packs args/kwargs for calls with multiple unpacks e.g. foo(*a, *b, *c)
+    'BUILD_TUPLE_UNPACK_WITH_CALL', 'BUILD_MAP_UNPACK_WITH_CALL',
+    # ???
+    'GET_YIELD_FROM_ITER',
+    # matrix operator
+    'BINARY_MATRIX_MULTIPLY', 'INPLACE_MATRIX_MULTIPLY',
+]
 
+# opcodes necessary to build literal values
 _CONST_OPCODES = set(opmap[x] for x in [
+    # stack manipulations
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
-    'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
-    'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR', 'STORE_MAP'] if x in opmap)
+    'DUP_TOP_TWO',  # replaces DUP_TOPX in P3
+    'LOAD_CONST',
+    'RETURN_VALUE', # return the result of the literal/expr evaluation
+    # literal collections
+    'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
+    # 3.6: literal map with constant keys https://bugs.python.org/issue27140
+    'BUILD_CONST_KEY_MAP',
+    # until Python 3.5, literal maps are compiled to creating an empty map
+    # (pre-sized) then filling it key by key
+    'STORE_MAP',
+] if x in opmap)
 
+# operations on literal values
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT',
     'UNARY_INVERT', 'BINARY_POWER', 'BINARY_MULTIPLY',
@@ -55,43 +83,57 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'BINARY_OR', 'INPLACE_ADD', 'INPLACE_SUBTRACT', 'INPLACE_MULTIPLY',
     'INPLACE_DIVIDE', 'INPLACE_REMAINDER', 'INPLACE_POWER',
     'INPLACE_LEFTSHIFT', 'INPLACE_RIGHTSHIFT', 'INPLACE_AND',
-    'INPLACE_XOR','INPLACE_OR'
+    'INPLACE_XOR','INPLACE_OR', 'STORE_SUBSCR',
+    # slice operations (Python 3 only has BUILD_SLICE)
+    'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BUILD_SLICE',
+    # comprehensions
+    'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
+    'COMPARE_OP',
 ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
-    'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
-    'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
+    'POP_BLOCK', 'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
+    'SETUP_LOOP', 'BREAK_LOOP', 'CONTINUE_LOOP',
+    'MAKE_FUNCTION', 'CALL_FUNCTION',
+    # P3: https://bugs.python.org/issue27213
+    'CALL_FUNCTION_EX',
+    # Already in P2 but apparently the first one is used more aggressively in P3
+    'CALL_FUNCTION_KW', 'CALL_FUNCTION_VAR', 'CALL_FUNCTION_VAR_KW',
+    'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
-    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3', 'BREAK_LOOP',
-    'CONTINUE_LOOP', 'RAISE_VARARGS', 'YIELD_VALUE',
     # New in Python 2.7 - http://bugs.python.org/issue4715 :
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
-    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY',
+    'POP_JUMP_IF_TRUE', 'SETUP_EXCEPT', 'END_FINALLY', 'RAISE_VARARGS',
+    'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
 ] if x in opmap))
 
 _logger = logging.getLogger(__name__)
 
-def _get_opcodes(codeobj):
-    """_get_opcodes(codeobj) -> [opcodes]
+if hasattr(dis, 'get_instructions'):
+    def _get_opcodes(codeobj):
+        """_get_opcodes(codeobj) -> [opcodes]
 
-    Extract the actual opcodes as a list from a code object
+        Extract the actual opcodes as an iterator from a code object
 
-    >>> c = compile("[1 + 2, (1,2)]", "", "eval")
-    >>> _get_opcodes(c)
-    [100, 100, 23, 100, 100, 102, 103, 83]
-    """
-    i = 0
-    byte_codes = codeobj.co_code
-    while i < len(byte_codes):
-        code = ord(byte_codes[i])
-        yield code
+        >>> c = compile("[1 + 2, (1,2)]", "", "eval")
+        >>> list(_get_opcodes(c))
+        [100, 100, 23, 100, 100, 102, 103, 83]
+        """
+        return (i.opcode for i in dis.get_instructions(codeobj))
+else:
+    def _get_opcodes(codeobj):
+        i = 0
+        byte_codes = codeobj.co_code
+        while i < len(byte_codes):
+            code = ord(byte_codes[i:i+1])
+            yield code
 
-        if code >= HAVE_ARGUMENT:
-            i += 3
-        else:
-            i += 1
+            if code >= HAVE_ARGUMENT:
+                i += 3
+            else:
+                i += 1
 
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
@@ -138,8 +180,9 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
 
     # almost twice as fast as a manual iteration + condition when loading
     # /web according to line_profiler
-    if set(_get_opcodes(code_obj)) - allowed_codes:
-        raise ValueError("forbidden opcode(s) in %r" % expr)
+    codes = set(_get_opcodes(code_obj)) - allowed_codes
+    if codes:
+        raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in codes)))
 
     for const in code_obj.co_consts:
         if isinstance(const, CodeType):

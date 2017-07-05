@@ -2,12 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
+from odoo.tools import float_compare
 
 
 class TestSaleTimesheet(TestSale):
 
     def setUp(self):
         super(TestSaleTimesheet, self).setUp()
+
+        # NOTE JEM
+        # The tests below are based on the `base.rateUSD` currency rate. It
+        # is required to remove the `base.rateUSDbis` to avoid rounding error
+        # after the 6 june of current year.
+        self.env.ref('base.rateUSDbis').unlink()
+
         # create project
         self.project = self.env['project.project'].create({
             'name': 'Project for my timesheets',
@@ -273,10 +281,10 @@ class TestSaleTimesheet(TestSale):
         invoice.action_invoice_open()
 
         # check concrete revenue
-        self.assertEquals(timesheet1.timesheet_revenue, 385.85, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet2.timesheet_revenue, 154.35, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet3.timesheet_revenue, 114.5, "Revenue computation on invoice validation does not return the correct revenue !")
-        self.assertEquals(timesheet4.timesheet_revenue, 152.68, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet1.timesheet_revenue, 385.85, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet2.timesheet_revenue, 154.35, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet3.timesheet_revenue, 114.5, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
+        self.assertEquals(float_compare(timesheet4.timesheet_revenue, 152.68, precision_digits=2), 0, "Revenue computation on invoice validation does not return the correct revenue !")
 
         # check the invoice is well set
         self.assertEquals(timesheet1.timesheet_invoice_id, invoice)

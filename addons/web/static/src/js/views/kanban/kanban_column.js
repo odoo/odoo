@@ -40,12 +40,9 @@ var KanbanColumn = Widget.extend({
 
         var value = data.value;
         this.id = data.res_id || value;
-        // todo: handle group_by_m2o (nameget)
-        this.title = value === undefined ? _t('Undefined') : value;
         this.folded = !data.isOpen;
         this.has_active_field = 'active' in data.fields;
         this.size = data.count;
-        this.values = data.values;
         this.fields = data.fields;
         this.records = [];
         this.modelName = data.model;
@@ -63,13 +60,20 @@ var KanbanColumn = Widget.extend({
 
         this.record_options = _.clone(recordOptions);
 
-        if (data.options && data.options.group_by_tooltip) {
-            var self = this;
-            this.tooltip_info = _.map(data.options.group_by_tooltip, function (key, value) {
-                return (self.values && self.values[value] && "<div>" +key + "<br>" + self.values[value] + "</div>") || '';
+        if (options.grouped_by_m2o) {
+            // For many2one, a false value means that the field is not set.
+            this.title = value ? value : _t('Undefined');
+        } else {
+            // False and 0 might be valid values for these fields.
+            this.title = value === undefined ? _t('Undefined') : value;
+        }
+
+        if (options.group_by_tooltip) {
+            this.tooltipInfo = _.map(options.group_by_tooltip, function (help, field) {
+                return (data.tooltipData && data.tooltipData[field] && "<div>" + help + "<br>" + data.tooltipData[field] + "</div>") || '';
             }).join('');
         } else {
-            this.tooltip_info = "";
+            this.tooltipInfo = "";
         }
     },
     /**
@@ -141,14 +145,12 @@ var KanbanColumn = Widget.extend({
             return;
         }
         var self = this;
-        this.quickCreateWidget = new RecordQuickCreate(this, {
-            width: this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8,
-            defaultName: this.data.getContext().default_name,
-        });
+        var width = this.records.length ? this.records[0].$el.innerWidth() : this.$el.width() - 8;
+        this.quickCreateWidget = new RecordQuickCreate(this, width);
         this.quickCreateWidget.insertAfter(this.$header);
         this.quickCreateWidget.$el.focusout(function () {
-            var hasFocus = (self.quickCreateWidget.$(':focus').length > 0);
-            if (! hasFocus && self.quickCreateWidget) {
+            var taskName = self.quickCreateWidget.$('[type=text]')[0].value;
+            if (!taskName && self.quickCreateWidget) {
                 self._cancelQuickCreate();
             }
         });
@@ -219,7 +221,7 @@ var KanbanColumn = Widget.extend({
 
         this.$el.toggleClass('o_column_folded', this.folded);
         var tooltip = this.size + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltip_info;
+        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
         this.$header.tooltip({html: true}).attr('data-original-title', tooltip);
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();

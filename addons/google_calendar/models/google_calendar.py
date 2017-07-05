@@ -513,7 +513,7 @@ class GoogleCalendar(models.AbstractModel):
         if type == "write":
             res = CalendarEvent.browse(event['id']).write(result)
         elif type == "copy":
-            result['recurrence'] = True
+            result['recurrency'] = True
             res = CalendarEvent.browse([event['id']]).write(result)
         elif type == "create":
             res = CalendarEvent.create(result).id

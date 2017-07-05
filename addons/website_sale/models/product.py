@@ -21,7 +21,7 @@ class ProductPricelist(models.Model):
         return self.env['website'].search([], limit=1)
 
     website_id = fields.Many2one('website', string="website", default=_default_website)
-    code = fields.Char(string='E-commerce Promotional Code')
+    code = fields.Char(string='E-commerce Promotional Code', groups="base.group_user")
     selectable = fields.Boolean(help="Allow the end user to choose this price list")
 
     def clear_cache(self):
@@ -109,11 +109,6 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
-        string='Website Comments',
-    )
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Alternative Products', help='Suggest more expensive alternatives to '

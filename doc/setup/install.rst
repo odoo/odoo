@@ -335,9 +335,15 @@ For example:
   $ odoo-bin --addons-path=~/src/custom_modules,~/src/enterprise,~/src/odoo/addons
 
 .. warning:: The Enterprise git repository **does not contain the full Odoo
-    source code**. You need to clone both the Community and Enterprise repository to
-    have a working Odoo installation. The Download_ page contains the entire
-    source code but is not updateable as easily.
+    source code**. It is only a collection of extra add-ons. The main server
+    code is in the Community version.  Running the Enterprise version actually
+    means running the server from the Community version with the addons-path option
+    set to the folder with the Enterprise version.
+    
+    You need to clone both the Community and Enterprise repository to have a working
+    Odoo installation. The Download_ page contains the entire source code but is not
+    updateable as easily.
+
 
 
 Installing dependencies
@@ -433,7 +439,7 @@ Source installation requires manually installing dependencies:
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
         C:\> cd \YourOdooPath
         C:\YourOdooPath> C:\Python27\Scripts\pip.exe install -r requirements.txt
@@ -478,7 +484,7 @@ Source installation requires manually installing dependencies:
   - on Windows, `install nodejs <http://nodejs.org/download/>`_, reboot (to
     update the :envvar:`PATH`) and install less:
 
-    .. code-block:: ps1
+    .. code-block:: doscon
 
         C:\> npm install -g less
 
@@ -511,7 +517,7 @@ Common necessary configurations are:
 
 Under Windows a typical way to execute odoo would be:
 
-.. code-block:: ps1
+.. code-block:: doscon
 
     C:\YourOdooPath> python odoo-bin -w odoo -r odoo --addons-path=addons,../mymodules --db-filter=mydb$
 

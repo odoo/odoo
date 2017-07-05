@@ -326,4 +326,55 @@ QUnit.test('can drag and drop a view', function (assert) {
     form.destroy();
 });
 
+QUnit.test('twice the same action in a dashboard', function (assert) {
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                        '<action context="{}" view_mode="kanban" string="DEF" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        mockRPC: function (route) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                return $.when({
+                    res_model: 'partner',
+                    views: [[4, 'list'],[5, 'kanban']],
+                });
+            }
+            if (route === '/web/view/add_custom') {
+                assert.step('add custom');
+                return $.when(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+        archs: {
+            'partner,4,list':
+                '<tree string="Partner"><field name="foo"/></tree>',
+            'partner,5,kanban':
+                '<kanban><templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates></kanban>',
+        },
+    });
+
+    var $firstAction = form.$('.oe_action:contains(ABC)');
+    assert.strictEqual($firstAction.find('.o_list_view').length, 1,
+        "list view should be displayed in 'ABC' block");
+    var $secondAction = form.$('.oe_action:contains(DEF)');
+    assert.strictEqual($secondAction.find('.o_kanban_view').length, 1,
+        "kanban view should be displayed in 'DEF' block");
+
+    form.destroy();
+});
+
 });

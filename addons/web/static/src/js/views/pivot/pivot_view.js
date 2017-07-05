@@ -87,15 +87,26 @@ var PivotView = AbstractView.extend({
             activeMeasures.push('__count');
         }
 
-        this.loadParams.measures = activeMeasures;
-        this.loadParams.colGroupBys = colGroupBys;
-        this.loadParams.rowGroupBys = rowGroupBys;
+        this.loadParams.measures = params.context.pivot_measures || activeMeasures;
+        this.loadParams.colGroupBys = params.context.pivot_column_groupby || colGroupBys;
+        this.loadParams.rowGroupBys = params.context.pivot_row_groupby || rowGroupBys;
         this.loadParams.fields = fields;
 
         this.controllerParams.title = params.title || arch.attrs.string || _t("Untitled");
         this.controllerParams.enableLinking = !arch.attrs.disable_linking;
         this.controllerParams.measures = measures;
         this.controllerParams.groupableFields = groupableFields;
+        // retrieve form and list view ids from the action to open those views
+        // when a data cell of the pivot view is clicked
+        this.controllerParams.views = [
+            _findView(params.action && params.action.views, 'list'),
+            _findView(params.action && params.action.views, 'form'),
+        ];
+        function _findView(views, viewType) {
+            return _.find(views, function (view) {
+                return view[1] === viewType;
+            }) || [false, viewType];
+        }
     },
 });
 

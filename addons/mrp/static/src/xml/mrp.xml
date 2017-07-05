@@ -16,8 +16,10 @@
         </div>
     </t>
     <t t-extend="HiddenInputFile" t-name="HiddenInputPDFFile">
-        <t t-jquery="input[type='file']:first" t-operation="replace">
-            <input type="file" class="o_input_file" name="ufile" accept="application/pdf" />
+        <!-- remove the inputs and put a new one for pdf only -->
+        <t t-jquery="input[type='file']" t-operation="replace"/>
+        <t t-jquery="form" t-operation="append">
+            <input type="file" class="o_input_file" name="ufile" accept="application/pdf"/>
         </t>
     </t>
 </templates>

@@ -16,7 +16,7 @@ var scales = [
 ];
 
 function dateToServer (date) {
-    return date.clone().utc().format('YYYY-MM-DD HH:mm:ss');
+    return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
 
 return AbstractModel.extend({
@@ -181,7 +181,7 @@ return AbstractModel.extend({
         // Check whether the date field is editable (i.e. if the events can be
         // dragged and dropped)
         this.editable = params.editable;
-        this.creatable = this.editable;
+        this.creatable = params.creatable;
 
         // display more button when there are too much event on one day
         this.eventLimit = params.eventLimit;

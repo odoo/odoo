@@ -350,7 +350,13 @@ system. Available semantic components are:
 
 ``button``
   call into the Odoo system, similar to :ref:`list view buttons
-  <reference/views/list/button>`
+  <reference/views/list/button>`. In addition, the following attribute can be
+  specified:
+
+  ``special``
+    for form views opened in dialogs: ``save`` to save the record and close the
+    dialog, ``cancel`` to close the dialog without saving.
+
 ``field``
   renders (and allow edition of, possibly) a single field of the current
   record. Possible attributes are:
@@ -819,6 +825,12 @@ attributes:
   the list view)
 ``class``
   adds HTML classes to the root HTML element of the Kanban view
+``group_create``
+  whether the "Add a new column" bar is visible or not. Default: true.
+``group_delete``
+  whether groups can be deleted via the context menu. Default: true.
+``group_edit``
+  whether groups can be edited via the context menu. Default: true.
 ``quick_create``
   whether it should be possible to create records without switching to the
   form view. By default, ``quick_create`` is enabled when the Kanban view is
@@ -930,11 +942,8 @@ Javascript API
                            caching entirely
       :returns: an image URL
 
-   .. js:function:: kanban_text_ellipsis(string[, size=160])
-
-      clips text beyond the specified size and appends an ellipsis to it. Can
-      be used to display the initial part of potentially very long fields
-      (e.g. descriptions) without the risk of unwieldy cards
+   .. warning::
+      ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
 
 .. _reference/views/calendar:
 
@@ -982,12 +991,16 @@ calendar view are:
   declares fields to aggregate or to use in kanban *logic*. If the field is
   simply displayed in the calendar cards.
 
-On each field can have additional attributes:
-  ``invisible``: use "True" to hide the value in the cards
-  ``avatar_field``: only for x2many field, to display the avatar instead the
-      display_name in the cards
-  ``write_model`` and ``write_field``: you can add a filter and save the result
-      in the defined model, the filter is added in the sidebar
+  Fields can have additional attributes:
+
+    ``invisible``
+        use "True" to hide the value in the cards
+    ``avatar_field``
+        only for x2many field, to display the avatar instead the display_name
+        in the cards
+    ``write_model`` and ``write_field``
+        you can add a filter and save the result in the defined model, the
+        filter is added in the sidebar
 
 ``templates``
   defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition

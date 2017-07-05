@@ -24,7 +24,7 @@
 
 <div t-name="CrashManager.warning" class="o_dialog_warning">
     <t t-js="d">
-        var message = d.message ? d.message : d.error.data.message;
+        var message = (d.message !== undefined) ? d.message : d.error.data.message;
         d.html_error = context.engine.tools.html_escape(message).replace(/\n/g, '<br/>');
     </t>
     <t t-raw="html_error"/>
@@ -96,6 +96,7 @@
     <t t-foreach="views" t-as="view">
         <button type="button" t-att-accesskey="view.accesskey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
+            t-att-aria-label="view.type"
             t-att-data-view-type="view.type" t-att-title="view.label"/>
     </t>
 </t>
@@ -537,7 +538,7 @@
         </button>
         <span t-else="" class="text-warning"><i class="fa fa-exclamation-triangle"/> Invalid domain</span>
 
-        <button t-if="inDialogEdit" class="btn btn-xs btn-primary o_field_domain_dialog_button">Edit domain</button>
+        <button t-if="inDialogEdit" class="btn btn-xs btn-primary o_field_domain_dialog_button">Edit Domain</button>
     </div>
     <div t-else="">Select a model to add a filter.</div>
 </t>
@@ -603,7 +604,7 @@
     <div t-if="!widget.readonly" class="o_domain_leaf_edition">
         <!-- field selector will be instantiated here -->
         <div> <!-- used for flex stretching -->
-            <select class="o_domain_leaf_operator_select">
+            <select class="o_domain_leaf_operator_select o_input">
                 <option t-foreach="widget.operators" t-as="key"
                         t-att-value="key"
                         t-att-selected="widget.displayOperator === key ? 'selected' : None">
@@ -613,7 +614,7 @@
         </div>
         <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' hidden' : ''}">
             <t t-if="widget.selectionChoices !== null">
-                <select class="o_domain_leaf_value_input">
+                <select class="o_domain_leaf_value_input o_input">
                     <option t-foreach="widget.selectionChoices" t-as="val"
                             t-att-value="val[0]"
                             t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
@@ -629,12 +630,12 @@
                         </span>
                     </div>
                     <div class="o_domain_leaf_value_tags">
-                        <input placeholder="Add new value" type="text"/>
+                        <input placeholder="Add new value" type="text" class="o_input"/>
                         <button class="btn btn-xs btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"/>
                     </div>
                 </t>
                 <t t-else="">
-                    <input class="o_domain_leaf_value_input" type="text" t-att-value="widget.displayValue"/>
+                    <input class="o_domain_leaf_value_input o_input" type="text" t-att-value="widget.displayValue"/>
                 </t>
             </t>
         </div>
@@ -729,7 +730,8 @@
 
     <div t-if="widget.mode !== 'readonly'" t-attf-class="o_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
         <div t-foreach="widget.values" t-as="value" class="o_radio_item">
-            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]" t-att-name="widget.unique_id" t-att-data-value="value[0]"/>
+            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]"
+                   t-att-name="widget.unique_id" t-att-data-value="value[0]" t-att-data-index="value_index"/>
             <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
         </div>
     </div>
@@ -833,11 +835,6 @@
         t-att-name="widget.name"
         t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
         t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"/>
-</t>
-<t t-name="AttachmentImage">
-    <div class="o_attachment_image">
-        <img t-att-src="'/web/image/' + widget.value + '?unique=1'"/>
-    </div>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
@@ -964,7 +961,8 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <input type="text" size="15" t-att-name="attrs.name"
+        <input type="text" size="15" class="o_input"
+               t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -993,7 +991,9 @@
         <span t-if="attrs.help">?</span>
     </label>
     <div t-att-style="style">
-        <select t-att-name="attrs.name" t-att-id="element_id"
+        <select class="o_input"
+                t-att-name="attrs.name"
+                t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
@@ -1015,7 +1015,7 @@
     <li class="o_filter_condition">
         <span class="o_or_filter">or</span>
         <span>
-            <select class="o_searchview_extended_prop_field">
+            <select class="o_input o_searchview_extended_prop_field">
                 <t t-foreach="widget.attrs.fields" t-as="field">
                     <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
                             t-att-value="field.name">
@@ -1025,18 +1025,19 @@
             </select>
             <span class="o_searchview_extended_delete_prop fa fa-trash-o"/>
         </span>
-        <select class="o_searchview_extended_prop_op"/>
+        <select class="o_input o_searchview_extended_prop_op"/>
         <span class="o_searchview_extended_prop_value"/>
     </li>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
+    <input class="o_input"
+        t-att-type="widget.decimal_point === '.' ? 'number' : 'text'"
         t-attf-title="Number using #{widget.decimal_point  || '.' } as decimal separator."
         t-attf-pattern="[0-9]+([\\#{widget.decimal_point || '.' }][0-9]+)?"
         t-attf-value="0#{widget.decimal_point || '.' }0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
-    <select>
+    <select class="o_input">
         <option t-foreach="widget.field.selection" t-as="element" t-att-value="element[0]">
             <t t-esc="element[1]"/>
         </option>
@@ -1054,7 +1055,7 @@
     </ul>
 </div>
 <t t-name="GroupByMenuSelector">
-    <li><select class="o_add_group o_group_selector">
+    <li><select class="o_input o_add_group o_group_selector">
         <t t-foreach="groupableFields" t-as="field">
             <option t-att-data-name="field.name"><t t-esc="field.string"/></option>
         </t>
@@ -1179,11 +1180,12 @@
 <t t-name="FieldMany2ManyCheckBoxes">
     <div>
         <div t-foreach="widget.m2mValues" t-as="m2m_value">
+            <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
             <div class="o_checkbox">
-                <input type="checkbox" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <input type="checkbox" t-att-id="id_for_label" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
                 <span/>
             </div>
-            <label class="o_form_label"><t t-esc="m2m_value[1]"/></label>
+            <label t-att-for="id_for_label" class="o_form_label"><t t-esc="m2m_value[1]"/></label>
         </div>
     </div>
 </t>

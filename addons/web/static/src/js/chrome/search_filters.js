@@ -155,6 +155,7 @@ ExtendedSearchProposition.Field = Widget.extend({
 
 ExtendedSearchProposition.Char = ExtendedSearchProposition.Field.extend({
     tagName: 'input',
+    className: 'o_input',
     attributes: {
         type: 'text'
     },
@@ -186,7 +187,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
         {value: "∄", text: _lt("is not set")}
     ],
     get_value: function (index) {
-        return this["datewidget_" + (index || 0)].get_value();
+        return this["datewidget_" + (index || 0)].getValue();
     },
     get_domain: function (field, operator) {
         switch (operator.value) {
@@ -232,7 +233,7 @@ ExtendedSearchProposition.DateTime = ExtendedSearchProposition.Field.extend({
     _create_new_widget: function (name) {
         this[name] = new (this._get_widget_class())(this);
         return this[name].appendTo(this.$el).then((function () {
-            this[name].set_value(moment(new Date()));
+            this[name].setValue(moment(new Date()));
         }).bind(this));
     },
     _get_widget_class: function () {
@@ -251,6 +252,7 @@ ExtendedSearchProposition.Date = ExtendedSearchProposition.DateTime.extend({
 
 ExtendedSearchProposition.Integer = ExtendedSearchProposition.Field.extend({
     tagName: 'input',
+    className: 'o_input',
     attributes: {
         type: 'number',
         value: '0',

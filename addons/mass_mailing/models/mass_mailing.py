@@ -77,7 +77,7 @@ class MassMailingContact(models.Model):
         'contact_id', 'list_id', string='Mailing Lists')
     opt_out = fields.Boolean(string='Opt Out', help='The contact has chosen not to receive mails anymore from this list')
     unsubscription_date = fields.Datetime(string='Unsubscription Date')
-    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.')
+    message_bounce = fields.Integer(string='Bounced', help='Counter of the number of bounced emails for this contact.', default=0)
     country_id = fields.Many2one('res.country', string='Country')
     tag_ids = fields.Many2many('res.partner.category', string='Tags')
 
@@ -312,7 +312,7 @@ class MassMailing(models.Model):
     create_date = fields.Datetime(string='Creation Date')
     sent_date = fields.Datetime(string='Sent Date', oldname='date', copy=False)
     schedule_date = fields.Datetime(string='Schedule in the Future')
-    body_html = fields.Html(string='Body', translate=html_translate, sanitize_attributes=False)
+    body_html = fields.Html(string='Body', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -500,7 +500,7 @@ class MassMailing(models.Model):
                 res = [x for x in read_group_res if x['state'] == state_value]
                 if not res:
                     res = [x for x in read_group_all_states if x['state'] == state_value]
-                res[0]['state'] = [state_value, state_name]
+                res[0]['state'] = state_value
                 result.append(res[0])
             return result
         else:

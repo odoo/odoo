@@ -21,7 +21,7 @@ class Partner(models.Model):
     _mail_flat_thread = False
     _mail_mass_mailing = _('Customers')
 
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact")
+    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     opt_out = fields.Boolean(
         'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
                         "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
@@ -215,11 +215,12 @@ class Partner(models.Model):
                 (not self.pool._init or test_mode):
             email_ids = emails.ids
             dbname = self.env.cr.dbname
+            _context = self._context
 
             def send_notifications():
                 db_registry = registry(dbname)
                 with api.Environment.manage(), db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    env = api.Environment(cr, SUPERUSER_ID, _context)
                     env['mail.mail'].browse(email_ids).send()
 
             # unless asked specifically, send emails after the transaction to

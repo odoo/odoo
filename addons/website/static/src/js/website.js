@@ -23,6 +23,12 @@ odoo.define('website.website', function (require) {
     if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) browser += ",mobile";
     document.documentElement.setAttribute('data-browser', browser);
 
+    /* --- Add no-flex attr into the dom if flex is not supported for css selectors --- */
+    var htmlStyle = document.documentElement.style;
+    var isFlexSupported = (('flexWrap' in htmlStyle) || ('WebkitFlexWrap' in htmlStyle) || ('msFlexWrap' in htmlStyle));
+    if (!isFlexSupported) {
+        document.documentElement.setAttribute('data-no-flex', '');
+    }
 
     /* ----------------------------------------------------
        Helpers
