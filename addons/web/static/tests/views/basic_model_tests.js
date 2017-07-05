@@ -1418,7 +1418,14 @@ QUnit.module('Views', {
         this.data.partner.onchanges.foo = function (obj) {
             obj.bar = obj.foo.length;
         };
-        this.data.partner.fields.bar.readonly = true;
+        this.params.fieldsInfo = {
+            default: {
+                foo: {},
+                bar: {
+                    modifiers:"{\"readonly\": true}",
+                },
+            }
+        };
 
         var model = createModel({
             Model: BasicModel,

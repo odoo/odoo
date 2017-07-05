@@ -2539,15 +2539,12 @@ var BasicModel = AbstractModel.extend({
      */
     _isFieldReadonly: function (record, fieldName, viewType) {
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
-        var modifiers;
         if (fieldInfo) {
             var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
-            modifiers = this._evalModifiers(record, rawModifiers);
-        }
-        if (modifiers && 'readonly' in modifiers) {
+            var modifiers = this._evalModifiers(record, rawModifiers);
             return modifiers.readonly;
         } else {
-            return record.fields[fieldName].readonly;
+            return false;
         }
     },
     /**
