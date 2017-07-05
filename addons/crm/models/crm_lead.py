@@ -870,10 +870,6 @@ class Lead(models.Model):
         message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (html_time, meeting_subject, duration)
         return self.message_post(body=message)
 
-    @api.model
-    def get_activity_view_id(self):
-        return {'kanban_view_id': self.env.ref('crm.crm_case_kanban_view_leads').id}
-
     # ----------------------------------------
     # Sales Channel Dashboard
     # ----------------------------------------

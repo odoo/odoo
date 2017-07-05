@@ -132,23 +132,34 @@ class MailActivity(models.Model):
     def create(self, values):
         activity = super(MailActivity, self).create(values)
         self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
-        notification = {'type': 'activity_updated', 'activity_created': True}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', activity.user_id.partner_id.id), notification)
+        self.env['bus.bus'].sendone(
+            (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+            {'type': 'activity_updated', 'activity_created': True})
         return activity
 
     @api.multi
     def write(self, values):
-        partner_ids_before_write = self.mapped('user_id.partner_id')
         res = super(MailActivity, self).write(values)
         if values.get('user_id'):
-            n_notify = {'type': 'activity_updated', 'activity_created': True}
-            o_notify = {'type': 'activity_updated', 'activity_deleted': True}
+            pre_responsibles = self.mapped('user_id.partner_id')
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', activity.user_id.partner_id.id), n_notify)
-            for partner in partner_ids_before_write:
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), o_notify)
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    {'type': 'activity_updated', 'activity_created': True})
+            for partner in pre_responsibles:
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', partner.id),
+                    {'type': 'activity_updated', 'activity_deleted': True})
         return res
+
+    @api.multi
+    def unlink(self):
+        for activity in self:
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                {'type': 'activity_updated', 'activity_deleted': True})
+        return super(MailActivity, self).unlink()
 
     @api.multi
     def action_done(self, feedback=False):
@@ -172,12 +183,6 @@ class MailActivity(models.Model):
     def action_close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.multi
-    def unlink(self):
-        for activity in self:
-            notification = {'type': 'activity_updated', 'activity_deleted': True}
-            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', activity.user_id.partner_id.id), notification)
-        return super(MailActivity, self).unlink()
 
 class MailActivityMixin(models.AbstractModel):
     """ Mail Activity Mixin is a mixin class to use if you want to add activities
@@ -256,7 +261,3 @@ class MailActivityMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
-
-    @api.model
-    def get_activity_view_id(self):
-        return {}

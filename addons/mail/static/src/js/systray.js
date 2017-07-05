@@ -183,7 +183,7 @@ var ActivityMenu = Widget.extend({
 
         return self._rpc({
             model: 'res.users',
-            method: 'get_current_user_activities',
+            method: 'activity_user_count',
         }).then(function (data) {
             self.isCounterUpdated = false;
             self.activities = data;
@@ -255,20 +255,17 @@ var ActivityMenu = Widget.extend({
      */
     _onActivityFilterClick: function (event) {
         event.stopPropagation();
-        var self = this;
         var $target = $(event.currentTarget);
         var context = {};
         context['search_default_activities_' + $target.data('filter')] = 1;
-        this._getActivityModelViewID($target.data('res_model')).then(function(data) {
-            self.do_action({
-                type: 'ir.actions.act_window',
-                name: $target.data('model_name'),
-                res_model:  $target.data('res_model'),
-                views: [[data.kanban_view_id, 'kanban'], [data.form_view_id, 'form']],
-                search_view_id: [data.search_view_id],
-                domain: [['activity_user_id', '=', session.uid]],
-                context:context,
-            });
+        this.do_action({
+            type: 'ir.actions.act_window',
+            name: $target.data('model_name'),
+            res_model:  $target.data('res_model'),
+            views: [[false, 'kanban'], [false, 'form']],
+            search_view_id: [false],
+            domain: [['activity_user_id', '=', session.uid]],
+            context:context,
         });
     },
     /**

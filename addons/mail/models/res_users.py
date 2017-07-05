@@ -120,30 +120,34 @@ class Users(models.Model):
         return dict((res_id, list()) for res_id in self._ids)
 
     @api.model
-    def get_current_user_activities(self):
-        value = []
-        query = """SELECT m.name,count(*), a.res_model as model,
+    def activity_user_count(self):
+        query = """SELECT m.name, count(*), act.res_model as model,
                         CASE
-                            WHEN now()::date - a.date_deadline::date = 0 Then 'today'
-                            WHEN now()::date - a.date_deadline::date > 0 Then 'overdue'
-                            WHEN now()::date - a.date_deadline::date < 0 Then 'planned'
+                            WHEN now()::date - act.date_deadline::date = 0 Then 'today'
+                            WHEN now()::date - act.date_deadline::date > 0 Then 'overdue'
+                            WHEN now()::date - act.date_deadline::date < 0 Then 'planned'
                         END AS states
-                    FROM mail_activity AS a
-                    JOIN ir_model AS m ON a.res_model = m.model
+                    FROM mail_activity AS act
+                    JOIN ir_model AS m ON act.res_model_id = m.id
                     WHERE user_id = %s
-                    GROUP BY m.name,states,a.res_model;
+                    GROUP BY m.name, states, act.res_model;
                     """
-        self.env.cr.execute(query, (tuple([self.env.uid])))
+        self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
 
+        user_activities = {}
         for activity in activity_data:
-            if activity['name'] not in [val['name'] for val in value]:
-                activity['icon'] = modules.module.get_module_icon(self.env[activity['model']]._original_module)
-                for data in [x for x in activity_data if x['name'] == activity['name']]:
-                    activity["%s_count" % data['states']] = activity.get("%s_count" % data['states'], 0) + data['count']
-                activity['total_count'] = activity.get('planned_count', 0) + activity.get('overdue_count', 0) + activity.get('today_count', 0)
-                value.append(activity)
-        return value
+            if not user_activities.get(activity['model']):
+                user_activities[activity['model']] = {
+                    'name': activity['name'],
+                    'model': activity['model'],
+                    'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
+                    'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
+                }
+            user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
+            user_activities[activity['model']]['total_count'] += activity['count']
+
+        return user_activities.values()
 
 
 class res_groups_mail_channel(models.Model):

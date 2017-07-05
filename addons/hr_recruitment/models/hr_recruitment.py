@@ -435,10 +435,6 @@ class Applicant(models.Model):
         default_stage_id = self._default_stage_id()
         self.write({'active': True, 'stage_id': default_stage_id})
 
-    @api.model
-    def get_activity_view_id(self):
-        return {'search_view_id': self.env.ref('hr_recruitment.view_crm_case_jobs_filter', False).id}
-
 
 class ApplicantCategory(models.Model):
     _name = "hr.applicant.category"
