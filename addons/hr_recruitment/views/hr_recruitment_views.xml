@@ -212,6 +212,9 @@
                 <filter string="Overdue Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
+                <filter string="Upcoming Activities (All)" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
@@ -891,6 +894,7 @@
     <record id="hr_applicant_view_search" model="ir.ui.view">
         <field name="name">hr.applicant.search</field>
         <field name="model">hr.applicant</field>
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <field name="job_id"/>
