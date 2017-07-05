@@ -24,7 +24,7 @@
                             class="oe_stat_button" 
                             icon="fa-book" 
                             type="action"
-                            groups="base.group_hr_manager">
+                            groups="base.group_hr_user,base.group_hr_feeder">
                             <field name="contracts_count" widget="statinfo" string="Contracts"/>
                         </button>
                     </div>
@@ -45,7 +45,7 @@
                         <field name="place_of_birth"/>
                     </field>
                     <field name="bank_account_id" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True}"/>
+                        <field name="bank_account_id" context="{'display_partner':True}" invisible="1"/>
                     </field>
                 </data>
             </field>
@@ -94,12 +94,13 @@
                     </div>
                     <group>
                         <group>
-                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)" invisible="1"/>
                             <field name="job_id"/>
                         </group>
                         <group>
                             <field name="department_id"/>
                             <field name="type_id"/>
+                            <field name="scale_pay"/>
                         </group>
                     </group>
                     <notebook>
@@ -107,18 +108,22 @@
                             <group>
                                 <group name="salary_and_advantages" string="Salary and Advantages">
                                     <field name="wage"/>
-                                    <field name="advantages" nolabel="1" placeholder="Advantages..." colspan="2"/>
+                                    <field name="wagesix" invisible="1"/>
+                                </group>
+                                <group name="pay_inputs" string="6th pay inputs">
+                                    <field name="payband"/>
+                                    <field name="gradepay"/>
                                 </group>
                                 <group name="duration_group" string="Duration">
-                                    <label for="trial_date_start" string="Trial Period Duration"/>
+                                  <!--  <label for="trial_date_start" string="Trial Period Duration"/>
                                     <div>
                                         <field name="trial_date_start" class="oe_inline"/> - <field name="trial_date_end" class="oe_inline"/>
-                                    </div>
+                                    </div> -->
                                     <label for="date_start" string="Duration"/>
                                     <div>
                                         <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
                                     </div>
-                                    <field name="working_hours"/>
+                                    <field name="working_hours" invisible="1"/> 
                                 </group>
                             </group>
                             <separator string="Notes"/>
@@ -150,7 +155,7 @@
                     <field name="employee_id"/>
                     <field name="type_id"/>
                     <field name="job_id"/>
-                    <field name="working_hours"/>
+                    <field name="working_hours" invisible="1"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="wage" invisible="1"/>
@@ -173,7 +178,7 @@
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
             <field name="arch" type="xml">
-                <form string="Contract Type">
+                <form string="Employee Type">
                     <group col="4">
                         <field colspan="4" name="name"/>
                     </group>
@@ -185,7 +190,7 @@
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
             <field name="arch" type="xml">
-                <tree string="Contract Type">
+                <tree string="Employee Type">
                     <field colspan="4" name="name"/>
                 </tree>
             </field>
@@ -195,15 +200,15 @@
             <field name="name">hr.contract.type.view.search</field>
             <field name="model">hr.contract.type</field>
             <field name="arch" type="xml">
-                <search string="Search Contract Type">
-                    <field name="name" string="Contract Type"/>
+                <search string="Search Employee Type">
+                    <field name="name" string="Employee Type"/>
                     <field name="sequence" widget="handle" string="Sequence"/>
                </search>
             </field>
         </record>
 
         <record id="action_hr_contract_type" model="ir.actions.act_window">
-            <field name="name">Contract Types</field>
+            <field name="name">Employee Types</field>
             <field name="res_model">hr.contract.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
