@@ -51,9 +51,9 @@ class HolidaysType(models.Model):
         help="If the active field is set to false, it will allow you to hide the leave type without removing it.")
 
     max_leaves = fields.Float(compute='_compute_leaves', string='Maximum Allowed',
-        help='This value is given by the sum of all holidays requests with a positive value.')
+        help='This value is given by the sum of all leaves requests with a positive value.')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Leaves Already Taken',
-        help='This value is given by the sum of all holidays requests with a negative value.')
+        help='This value is given by the sum of all leaves requests with a negative value.')
     remaining_leaves = fields.Float(compute='_compute_leaves', string='Remaining Leaves',
         help='Maximum Leaves Allowed - Leaves Already Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Virtual Remaining Leaves',
@@ -164,10 +164,10 @@ class Holidays(models.Model):
         ('validate1', 'Second Approval'),
         ('validate', 'Approved')
         ], string='Status', readonly=True, track_visibility='onchange', copy=False, default='confirm',
-            help="The status is set to 'To Submit', when a holiday request is created." +
-            "\nThe status is 'To Approve', when holiday request is confirmed by user." +
-            "\nThe status is 'Refused', when holiday request is refused by manager." +
-            "\nThe status is 'Approved', when holiday request is approved by manager.")
+            help="The status is set to 'To Submit', when a leave request is created." +
+            "\nThe status is 'To Approve', when leave request is confirmed by user." +
+            "\nThe status is 'Refused', when leave request is refused by manager." +
+            "\nThe status is 'Approved', when leave request is approved by manager.")
     payslip_status = fields.Boolean('Reported in last payslips',
         help='Green this button when the leave has been taken into account in the payslip.')
     report_note = fields.Text('HR Comments')
