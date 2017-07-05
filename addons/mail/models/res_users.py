@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, exceptions, fields, models
+from odoo import _, api, exceptions, fields, models, modules
 from odoo.tools import pycompat
 
 
@@ -118,6 +118,32 @@ class Users(models.Model):
     @api.multi
     def message_get_suggested_recipients(self):
         return dict((res_id, list()) for res_id in self._ids)
+
+    @api.model
+    def get_current_user_activities(self):
+        value = []
+        query = """SELECT m.name,count(*), a.res_model as model,
+                        CASE
+                            WHEN now()::date - a.date_deadline::date = 0 Then 'today'
+                            WHEN now()::date - a.date_deadline::date > 0 Then 'overdue'
+                            WHEN now()::date - a.date_deadline::date < 0 Then 'planned'
+                        END AS states
+                    FROM mail_activity AS a
+                    JOIN ir_model AS m ON a.res_model = m.model
+                    WHERE user_id = %s
+                    GROUP BY m.name,states,a.res_model;
+                    """
+        self.env.cr.execute(query, (tuple([self.env.uid])))
+        activity_data = self.env.cr.dictfetchall()
+
+        for activity in activity_data:
+            if activity['name'] not in [val['name'] for val in value]:
+                activity['icon'] = modules.module.get_module_icon(self.env[activity['model']]._original_module)
+                for data in [x for x in activity_data if x['name'] == activity['name']]:
+                    activity["%s_count" % data['states']] = activity.get("%s_count" % data['states'], 0) + data['count']
+                activity['total_count'] = activity.get('planned_count', 0) + activity.get('overdue_count', 0) + activity.get('today_count', 0)
+                value.append(activity)
+        return value
 
 
 class res_groups_mail_channel(models.Model):

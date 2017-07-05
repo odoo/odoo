@@ -268,6 +268,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('update_starred', self, self.throttled_renderSidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_renderSidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_renderSidebar);
+                chat_manager.bus.on('activity_updated', self, self.throttled_renderSidebar);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
                         chat_manager.mark_channel_as_seen(self.channel);
