@@ -279,35 +279,6 @@ class Partner(models.Model):
             partner.commercial_company_name = p.is_company and p.name or partner.company_name
 
     @api.model
-    def _get_default_image(self, partner_type, is_company, parent_id):
-        if getattr(threading.currentThread(), 'testing', False) or self._context.get('install_mode'):
-            return False
-
-        colorize, img_path, image = False, False, False
-
-        if partner_type in ['other'] and parent_id:
-            parent_image = self.browse(parent_id).image
-            image = parent_image and parent_image.decode('base64') or None
-
-        if not image and partner_type == 'invoice':
-            img_path = get_module_resource('base', 'static/src/img', 'money.png')
-        elif not image and partner_type == 'delivery':
-            img_path = get_module_resource('base', 'static/src/img', 'truck.png')
-        elif not image and is_company:
-            img_path = get_module_resource('base', 'static/src/img', 'company_image.png')
-        elif not image:
-            img_path = get_module_resource('base', 'static/src/img', 'avatar.png')
-            colorize = True
-
-        if img_path:
-            with open(img_path, 'rb') as f:
-                image = f.read()
-        if image and colorize:
-            image = tools.image_colorize(image)
-
-        return tools.image_resize_image_big(image.encode('base64'))
-
-    @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
@@ -522,10 +493,6 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
-        # compute default image in create, because computing gravatar in the onchange
-        # cannot be easily performed if default images are in the way
-        if not vals.get('image'):
-            vals['image'] = self._get_default_image(vals.get('type'), vals.get('is_company'), vals.get('parent_id'))
         tools.image_resize_images(vals)
         partner = super(Partner, self).create(vals)
         partner._fields_sync(vals)
