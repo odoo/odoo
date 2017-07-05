@@ -1,4 +1,4 @@
-Belgium, 2015-02-06
+India, 2017-07-05
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,4 +8,5 @@ declaration.
 
 Signed,
 
-Olivier Dony odo@odoo.com https://github.com/odony
+Ganesh.M.C boss.gan@gmail.com https://github.com/ganeshcdac
+
