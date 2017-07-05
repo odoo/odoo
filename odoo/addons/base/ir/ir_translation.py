@@ -368,7 +368,7 @@ class IrTranslation(models.Model):
         res = self._cr.fetchone()
         trad = res and res[0] or u''
         if source and not trad:
-            return tools.ustr('')
+            return tools.ustr(source)
         return trad
 
     @api.model
