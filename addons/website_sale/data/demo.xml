@@ -1144,6 +1144,25 @@ Weight: 31 grams</field>
             <field name="price_unit">499.00</field>
         </record>
 
+        <record id="website_sale_order_60" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_25"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.salesteam_website_sales"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=14)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="website_sale_order_line_60" model="sale.order.line">
+            <field name="order_id" ref="website_sale_order_60"/>
+            <field name="name">iMac</field>
+            <field name="product_id" ref="product.product_product_8"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">349.00</field>
+        </record>
+
         <record id="website_sale_order_19" model="sale.order">
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_25"/>
@@ -1160,7 +1179,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">3</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
+            <field name="price_unit">549.0</field>
         </record>
 
         <record id="website_sale_order_20" model="sale.order">
@@ -1170,7 +1189,7 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="website_sale_order_line_21" model="sale.order.line">
@@ -1179,7 +1198,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
+            <field name="price_unit">1199.0</field>
         </record>
 
         <record id="website_sale_order_21" model="sale.order">
@@ -1189,7 +1208,7 @@ Weight: 31 grams</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
-            <field name="date_order" eval="(datetime.now()-relativedelta(days=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=8)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
         <record id="website_sale_order_line_22" model="sale.order.line">
@@ -1198,7 +1217,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
+            <field name="price_unit">749.0</field>
         </record>
 
         <record id="website_sale_order_22" model="sale.order">
@@ -1217,7 +1236,7 @@ Weight: 31 grams</field>
             <field name="product_id" ref="product.product_product_4"/>
             <field name="product_uom_qty">1</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">349.0</field>
+            <field name="price_unit">449.0</field>
         </record>
 
         <!-- Confirm the sales orders -->
@@ -1225,12 +1244,13 @@ Weight: 31 grams</field>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_16')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_17')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_18')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_21')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_20')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('website_sale_order_60')]]"/>
 
         <!-- Cancel the sales orders -->
         <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_19')]]"/>
         <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_15')]]"/>
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_20')]]"/>
-        <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_21')]]"/>
         <function model="sale.order" name="action_cancel" eval="[[ref('website_sale_order_22')]]"/>
 
         <!-- for last month -->
