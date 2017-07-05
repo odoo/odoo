@@ -60,3 +60,37 @@ $(document).ready(function () {
     });
 
 });
+
+
+odoo.define('website_payment.payment_acquirer', function (require) {
+"use strict";
+
+var website = require('website.website');
+var ajax = require('web.ajax');
+var Dialog = require('web.Dialog');
+
+    var payment_methods = $('table#payment_methods');
+
+    payment_methods.find('form').find('button[type="submit"]').on('click', function(ev){
+        ev.stopPropagation();
+        ev.preventDefault();
+
+        var Delete = function()
+        {
+            ev.currentTarget.parentElement.submit();
+        }
+
+        var content = $('<div>').html("<p>Be aware that if this credit card is linked to an ongoing contract, <b>it will prevent the payment of it.</b></p>" + 
+        "<p>Are you sure you want to proceed?</p>");
+        new Dialog(this, {
+            title: 'Warning!',
+            size: 'medium',
+            $content: content,
+            buttons: [
+            {text: 'Delete', classes: 'btn-primary', close: true, click: Delete},
+            {text: 'Cancel', close: true}]}).open();
+
+    });
+
+
+});
