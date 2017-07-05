@@ -26,9 +26,14 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Unit of Measure'), default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id', string='Taxes', states={'done': [('readonly', True)], 'post': [('readonly', True)]})
     untaxed_amount = fields.Float(string='Subtotal', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
-    total_amount = fields.Float(string='Total', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True,
+        help='Utility field to express amount currency')
+    total_amount = fields.Monetary(compute='_compute_amount', string='Total', store=True, currency_field='currency_id',
+        help="The total amount on an expense expressed in its currency (possibly not the company currency).")
+    total_amount_company_currency = fields.Monetary(compute='_compute_amount', string='Total in Company Currency', store=True, currency_field='company_currency_id',
+        help="The total amount on an expense expressed in the company currency.")
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
     account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=lambda self: self.env['ir.property'].get('property_account_expense_categ_id', 'product.category'))
     description = fields.Text()
@@ -60,7 +65,9 @@ class HrExpense(models.Model):
     def _compute_amount(self):
         for expense in self:
             expense.untaxed_amount = expense.unit_amount * expense.quantity
-            taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
+            taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.company_currency_id,
+                                                expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
+            expense.total_amount_company_currency = expense.currency_id.compute(taxes.get('total_included'), expense.company_currency_id)
             expense.total_amount = taxes.get('total_included')
 
     @api.multi
@@ -396,7 +403,7 @@ class HrExpenseSheet(models.Model):
     address_id = fields.Many2one('res.partner', string="Employee Home Address")
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Payment By")
     responsible_id = fields.Many2one('res.users', 'Validation By', readonly=True, copy=False, states={'submit': [('readonly', False)], 'submit': [('readonly', False)]})
-    total_amount = fields.Float(string='Total Amount', store=True, compute='_compute_amount', digits=dp.get_precision('Account'))
+    total_amount = fields.Float(string='Total Amount', store=True, compute='_compute_total_amount', digits=dp.get_precision('Account'))
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'submit': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'submit': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -407,6 +414,7 @@ class HrExpenseSheet(models.Model):
     accounting_date = fields.Date(string="Accounting Date")
     account_move_id = fields.Many2one('account.move', string='Journal Entry', ondelete='restrict', copy=False)
     department_id = fields.Many2one('hr.department', string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
+    total_amount_company_currency = fields.Monetary(compute='_compute_amount', string='Total', currency_field='currency_id',store='true')
 
     @api.multi
     def check_consistency(self):
@@ -474,12 +482,17 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.one
-    @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
+    @api.depends('expense_line_ids.total_amount')
+    def _compute_total_amount(self):
+        self.total_amount = sum(self.expense_line_ids.mapped(
+            'total_amount_company_currency'))
+
+    @api.one
+    @api.depends('expense_line_ids.total_amount_company_currency')
     def _compute_amount(self):
-        if len(self.expense_line_ids.mapped('currency_id')) < 2:
-            self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
-        else:
-            self.total_amount = 0.0
+        self.total_amount_company_currency = sum(
+            self.expense_line_ids.mapped('total_amount_company_currency'))
+
 
     # FIXME: A 4 command is missing to explicitly declare the one2many relation
     # between the sheet and the lines when using 'default_expense_line_ids':[ids]
