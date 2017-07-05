@@ -421,9 +421,8 @@
                             <label for="name" string="Category name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                         </div>
-                        <group name="first" col="4" string="Category Type">
-                            <field name="parent_id"/>
-                            <field name="type"/>
+                        <group name="first" col="2">
+                            <field name="parent_id" class="oe_inline"/>
                         </group>
                     </sheet>
                 </form>

@@ -21,14 +21,12 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        if category and category.type == 'normal':
-            return category.id
-        # fallback if no category "All" exists, because yes, users do delete default data!
-        category = self.env['product.category'].search([('type', '=', 'normal')], limit=1)
+        if not category:
+            category = self.env['product.category'].search([], limit=1)
         if category:
             return category.id
         else:
-            err_msg = _('You must define at least one product category (that is not a view) in order to be able to create products.')
+            err_msg = _('You must define at least one product category in order to be able to create products.')
             redir_msg = _('Go to Internal Categories')
             raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
@@ -59,7 +57,7 @@ class ProductTemplate(models.Model):
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Internal Category',
-        change_default=True, default=_get_default_category_id, domain="[('type','=','normal')]",
+        change_default=True, default=_get_default_category_id,
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(
@@ -264,11 +262,6 @@ class ProductTemplate(models.Model):
         for p in self:
             if len(p.product_variant_ids) == 1:
                 p.product_variant_ids.packaging_ids = p.packaging_ids
-
-    @api.constrains('categ_id')
-    def _check_category(self):
-        if self.categ_id.type == 'view':
-            raise ValidationError(_("You cannot create a product with an Internal Category set as View. Please change the category or the category type."))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
