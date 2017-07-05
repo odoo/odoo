@@ -1700,4 +1700,47 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('onchange with a many2one should apply domain', function (assert) {
+        assert.expect(4);
+        this.data.partner.onchanges.foo = function () {};
+
+        this.params.fieldNames = ['foo', 'product_id'];
+
+
+        var rpcCount = 0;
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    var def = $.Deferred();
+                    def.resolve({'domain': {'product_id': [['display_name', '=', "xphone"]]}});
+                    return def;
+                }
+                rpcCount++;
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.deepEqual(
+                    record.getDomain({fieldName: "product_id"}),
+                    [],
+                    "there should not set any domain");
+
+            model.notifyChanges(resultID, {foo: 'space lollipop'});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.foo, 'space lollipop', "onchange has been applied");
+            assert.strictEqual(rpcCount, 1, "should have onchange");
+            assert.deepEqual(
+                    record.getDomain({fieldName: "product_id"}),
+                    [['display_name', '=', "xphone"]],
+                    "the domain should set to display_name = xphone");
+        });
+        model.destroy();
+    });
+
 });});
