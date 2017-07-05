@@ -4,11 +4,7 @@
 {
     'name': 'Email Marketing',
     'summary': 'Design, send and track emails',
-    'description': """
-Easily send mass mailing to your leads, opportunities or customers. Track
-marketing campaigns performance to improve conversion rates. Design
-professional emails and reuse templates in a few clicks.
-    """,
+    'description': "",
     'version': '2.0',
     'sequence': 110,
     'website': 'https://www.odoo.com/page/mailing',
