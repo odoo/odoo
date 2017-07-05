@@ -8,6 +8,8 @@ from odoo import api, fields, models
 
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
+import logging
+_logger=logging.getLogger(__name__)
 
 class FinancialYearOpeningWizard(models.TransientModel):
     _name = 'account.financial.year.op'
@@ -50,8 +52,21 @@ class OpeningAccountMoveWizard(models.TransientModel):
     opening_move_line_ids = fields.One2many(string='Opening move lines', related="opening_move_id.line_ids")
     journal_id = fields.Many2one(string='Journal', comodel_name='account.journal', required=True, related='opening_move_id.journal_id')
     date = fields.Date(string='Opening Date', required=True, related='opening_move_id.date')
+    opening_move_balanced = fields.Boolean(string="Opening move balanced", compute="_compute_opening_move_balanced", help="Tells whether or not the opening move is balanced")
+
+    @api.depends('opening_move_line_ids.debit','opening_move_line_ids.credit')
+    def _compute_opening_move_balanced(self):
+        for record in self:
+            debits_sum = sum(line.debit for line in record.opening_move_line_ids)
+            credits_sum = sum(line.credit for line in record.opening_move_line_ids)
+            record.opening_move_balanced = float_compare(debits_sum, credits_sum, precision_rounding=record.opening_move_id.currency_id.rounding) == 0
 
     def validate(self):
         """ Called by this wizard's 'post' button.
         """
         self.opening_move_id.post() # This will raise an error if we don't have debit = credit
+
+    def auto_balance(self):
+        """ Auto-balances the opening move, using current year earnings account.
+        """
+        self.company_id.auto_balance_opening_move()

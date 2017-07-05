@@ -94,12 +94,14 @@
                     </group>
 
                     <field name="company_id" invisible="1"/>
+                    <field name="opening_move_balanced" invisible="1"/>
                     <field name="opening_move_line_ids" context="{'tree_view_ref': 'account.setup_opening_move_lines_tree'}"/>
 
                     <footer>
-                        <button string="Save" type="action" name="account.setup_wizard_close"/>
+                        <button string="Save" type="action" name="account.setup_wizard_close" attrs="{'invisible': [('opening_move_balanced','=',False)]}"/>
+                        <button string="Auto Balance" name="auto_balance" type="object" class="oe_highlight" attrs="{'invisible': [('opening_move_balanced','=',True)]}"/>
                         <button string="Discard" special="cancel"/>
-                        <button string="Post" name="validate" type="object" class="oe_highlight"/>
+                        <button string="Post" name="validate" type="object" class="oe_highlight" attrs="{'invisible': [('opening_move_balanced','=',False)]}"/>
                     </footer>
                 </form>
             </field>
@@ -123,7 +125,7 @@
             <field name="name">account.setup.opening.move.lines.tree</field>
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Journal Items">
+                <tree editable="bottom" string="Journal Items" decoration-info="is_unaffected_earnings_line == True">
                     <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
                     <field name="name"/>
                     <field name="amount_currency" groups="base.group_multi_currency"/>
@@ -131,6 +133,7 @@
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
                     <field name="company_id" invisible="True"/>
+                    <field name="is_unaffected_earnings_line" invisible="True"/>
                 </tree>
             </field>
         </record>

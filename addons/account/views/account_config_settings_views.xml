@@ -56,6 +56,20 @@
                                     </div>
                                 </div>
                             </div>
+                        <h2>Setup</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="account_hide_setup_bar" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label string='Hide Setup Bar'/>
+                                    <div class="text-muted">
+                                        Deactivate setup bar on the dashboard
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <h2>Taxes</h2>
                         <div class="row mt16 o_settings_container">
                             <div class="col-xs-12 col-md-6 o_setting_box" title="These taxes are set in any new product created.">
@@ -431,26 +445,6 @@
                                             Save this page and come back here to set up the feature.
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h2>Opening Entries</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane"/>
-                                <div class="o_setting_right_pane">
-                                    <field name="account_setup_opening_move_done" invisible="True"/>
-                                    <group attrs="{'invisible': [('account_setup_opening_move_done','=',True)]}">
-                                        <strong>No opening move has been posted yet</strong>
-                                        <button string="Create opening move" class="oe_highlight" type="object" name="define_opening_move_action"/>
-                                    </group>
-
-                                    <group attrs="{'invisible': [('account_setup_opening_move_done','=',False)]}">
-                                        <field name="account_opening_move_id" readonly="True"/>
-                                        <field name="account_opening_journal_id" readonly="True"/>
-                                        <field name="account_opening_date" readonly="True"/>
-                                    </group>
                                 </div>
                             </div>
                         </div>
