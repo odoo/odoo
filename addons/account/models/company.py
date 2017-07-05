@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round, float_is_zero
 
 
 class ResCompany(models.Model):
@@ -54,6 +55,7 @@ Best Regards,''')
     account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', help="The journal entry containing all the opening journal items of this company's accounting.")
     account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal when the opening moves of this company's accounting has been posted.")
     account_opening_date = fields.Date(string='Accounting opening date',default=_default_opening_date, related='account_opening_move_id.date', help="Date of the opening entries of this company's accounting.")
+    account_opening_move_balancing_line = fields.Many2one(string='Opening Move Balancing Line', comodel_name='account.move.line', help="The move line affecting the current year earnings account to balance this company's opening move, if such a line exists")
 
     #Fields marking the completion of a setup step
     account_setup_company_data_marked_done = fields.Boolean(string='Company setup marked as done', default=False, help="True iff the user has forced the completion of the company setup step.")
@@ -206,9 +208,17 @@ Best Regards,''')
         # Otherwise, we open a custom tree view allowing to edit opening balances of the account, to prepare the opening move
         self.create_op_move_if_non_existant()
 
-        # We return the name of the action to execute (to display the list of all the accounts,
-        # now we have created an opening move allowing to post initial balances through this view.
-        return 'account.action_accounts_setup_tree'
+        view_id = self.env.ref('account.init_accounts_tree').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Chart of Accounts',
+            'res_model': 'account.account',
+            'view_mode': 'tree',
+            'search_view_id': self.env.ref('account.view_account_search').id,
+            'views': [[view_id, 'list']],
+            'domain': [('user_type_id','!=',self.env.ref('account.data_unaffected_earnings').id)] # We hide the current year earnings account as they are automatically computed.
+        }
 
     @api.model
     def setting_opening_move_action(self):
@@ -287,3 +297,55 @@ Best Regards,''')
         and this move has been posted.
         """
         return bool(self.account_opening_move_id) and self.account_opening_move_id.state == 'posted'
+
+    def get_unaffected_earnings_account(self):
+       """ Returns the unaffected earnings account for this company, creating one
+       if none has yet been defined.
+       """
+       unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
+       rslt = self.env['account.account'].search([('company_id', '=', self.id), ('user_type_id', '=', unaffected_earnings_type.id)])
+       if not rslt:
+           rslt = self.env['account.account'].create({
+               'code': '999999',
+               'name': _('Undistributed Profits/Losses'),
+               'user_type_id': unaffected_earnings_type.id,
+               'company_id': self.id,
+           })
+       return rslt
+
+    def auto_balance_opening_move(self):
+        """ Checks the opening_move of this company. If it has not been posted yet
+        and is unbalanced, balances it with a automatic account.move.line in the
+        current year earnings account.
+        """
+        if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
+            currency = self.currency_id
+            balancing_move_line = self.account_opening_move_balancing_line
+
+            debits_sum = 0.0
+            credits_sum = 0.0
+            for line in self.account_opening_move_id.line_ids:
+                if line != balancing_move_line:
+                    debits_sum += line.debit
+                    credits_sum += line.credit
+
+            difference = abs(debits_sum - credits_sum)
+            debit_difference = (debits_sum > credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+            credit_difference = (debits_sum < credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+
+            if float_is_zero(difference, precision_rounding=currency.rounding):
+                if balancing_move_line: # zero difference and existing line : delete the line
+                    balancing_move_line.unlink()
+            else:
+                if balancing_move_line: # Non-zero difference and existing line : edit the line
+                    balancing_move_line.write({'debit': credit_difference, 'credit': debit_difference})
+                else: # Non-zero difference and no existing line : create a new line
+                    balancing_account = self.get_unaffected_earnings_account()
+                    self.account_opening_move_balancing_line = self.env['account.move.line'].create({
+                        'name': 'Opening Move Automatic Balancing Line',
+                        'move_id': self.account_opening_move_id.id,
+                        'account_id': balancing_account.id,
+                        'debit': credit_difference,
+                        'credit': debit_difference,
+                    })
+

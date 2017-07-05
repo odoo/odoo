@@ -113,7 +113,7 @@ class AccountAccount(models.Model):
             raise UserError("No opening move defined !")
 
         if opening_move.state == 'draft':
-            # We first check whether we should create a new move line of modify an existing one
+            # We first check whether we should create a new move line or modify an existing one
             opening_move_line = self.env['account.move.line'].search([('account_id','=',self.id), ('move_id','=',opening_move and opening_move.id or False), (field,'!=',0.0)])
 
             if opening_move_line:
@@ -131,7 +131,10 @@ class AccountAccount(models.Model):
                         'move_id': opening_move.id,
                         'account_id': self.id,
                 })
-            # Else, if opening_debit is zero, then nothing is to be done
+            # Else, if amount is zero, then nothing is to be done
+
+            # Then, we automatically balance the opening move, to make sure it stays valid
+            self.company_id.auto_balance_opening_move()
 
     @api.model
     def default_get(self, default_fields):

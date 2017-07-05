@@ -150,15 +150,6 @@
             </field>
         </record>
 
-        <record id="action_accounts_setup_tree" model="ir.actions.act_window">
-            <field name="name">Chart of Accounts</field>
-            <field name="res_model">account.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="search_view_id" ref="account.view_account_search"/>
-            <field name="view_id" ref="init_accounts_tree"/>
-        </record>
-
         <record id="setup_wizard_close" model="ir.actions.act_window_close">
             <field name="name">Close setup wizards</field>
         </record>
