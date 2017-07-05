@@ -185,7 +185,7 @@
                         <notebook colspan="4">
                             <page name="access_rights" string="Access Rights">
                                 <group string="Multi Companies" attrs="{'invisible': [('companies_count', '&lt;=', 1)]}">
-                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags"/>
+                                    <field string="Allowed Companies" name="company_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                     <field string="Current Company" name="company_id" context="{'user_preference': 0}"/>
                                     <field string="Companies count" name="companies_count" invisible="1"/>
                                 </group>

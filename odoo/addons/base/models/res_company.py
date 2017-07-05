@@ -227,6 +227,8 @@ class Company(models.Model):
         vals['partner_id'] = partner.id
         self.clear_caches()
         company = super(Company, self).create(vals)
+        # The write is made on the user to set it automatically in the multi company group.
+        self.env.user.write({'company_ids': [(4, company.id)]})
         partner.write({'company_id': company.id})
         return company
 
