@@ -6,19 +6,7 @@
     'category': 'Human Resources',
     'sequence': 38,
     'summary': 'Manage your employee payroll records',
-    'description': """
-Generic Payroll system.
-=======================
-
-    * Employee Details
-    * Employee Contracts
-    * Passport based Contract
-    * Allowances/Deductions
-    * Allow to configure Basic/Gross/Net Salary
-    * Employee Payslip
-    * Monthly Payroll Register
-    * Integrated with Holiday Management
-    """,
+    'description': "",
     'website': 'https://www.odoo.com/page/employees',
     'depends': [
         'hr_contract',
