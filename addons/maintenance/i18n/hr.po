@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * maintenance
-# 
+#
 # Translators:
 # Bole <bole@dajmi5.com>, 2017
 # Tina Milas <tina@uvid.hr>, 2017
@@ -20,11 +20,12 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Davor Bojkić <davor.bojkic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -67,8 +68,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python rječnik koji će se provjeravati za zadane postave kada se kreira novi"
-" zapis za ovaj alias."
+"Python rječnik koji će se provjeravati za zadane postave kada se kreira novi "
+"zapis za ovaj alias."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
@@ -451,8 +452,8 @@ msgstr "ID"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "ID matične evidencije sadrži pseudonim (na primjer : projekt sadrži "
 "pseudonim pod kojim djelatnik kreira zadatak)"
@@ -683,8 +684,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako"
-" oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
+"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako "
+"oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
 "stvaranje novih zapisa u potpunosti."
 
 #. module: maintenance
@@ -721,8 +722,8 @@ msgstr "ID zapisa nadređenog"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Matični model sadrži pseudonim. Model sadrži alias referencu ali nije nužno "
@@ -735,7 +736,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
 "- svatko: svatko može objaviti poruku\n"
@@ -938,12 +940,12 @@ msgstr "Tehničari"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni "
-"e-mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
+"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni e-"
+"mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
 "zapisa ovog modela (npr. projektni zadatak)"
 
 #. module: maintenance
@@ -952,8 +954,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu "
-"za<jobs@example.odoo.com>"
+"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu za<jobs@example."
+"odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -964,8 +966,8 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "Vlasnik zapisa kreiranih nakon primitka e-mailova na taj alias. Ako ovo "
-"polje nije postavljeno sustav će pokušati pronaći pravog vlasnika na temelju"
-" adrese pošiljatelja (od), ili će koristiti administratorski račun ako ne "
+"polje nije postavljeno sustav će pokušati pronaći pravog vlasnika na temelju "
+"adrese pošiljatelja (od), ili će koristiti administratorski račun ako ne "
 "pronađe sistemskog korisnika za tu adresu."
 
 #. module: maintenance
@@ -977,11 +979,14 @@ msgstr "Korisnik će moći upravljati opremom."
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
-"Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.  Kreirajte neki laptop, pisač ili telefon i povežite svu opremu sa\n"
+"Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.  Kreirajte "
+"neki laptop, pisač ili telefon i povežite svu opremu sa\n"
 "djelatnikom ili odjelom. Vi će upravljati raspodjelom, izdavanjem\n"
 "i održavanjem opreme."
 
@@ -989,11 +994,14 @@ msgstr ""
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
 "Ova aplikacija pomaže vam pratiti opremu koju koriste djelatnici.\n"
-"Kreirajte neki laptop, pisač ili telefon i povežite svu opremu s djelatnikom ili\n"
+"Kreirajte neki laptop, pisač ili telefon i povežite svu opremu s djelatnikom "
+"ili\n"
 "odjelom. \n"
 "Upravljat ćete raspodjelom, izdavanjem i održavanjem opreme."
 
@@ -1102,8 +1110,8 @@ msgstr "Jamstvo"
 #: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr ""
 "Ne možete izbrisati vrstu opreme jer postoji evidentirana oprema sa "
 "dodjeljenom vrstom ili zahtjevi za održavanje."

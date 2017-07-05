@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-03-25 11:36+0000\n"
 "Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -23,6 +23,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 msgid "Active"
 msgstr "Aktívny"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:369
+#, python-format
+msgid "Cancel"
+msgstr "Zrušiť"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_uid
@@ -51,17 +58,13 @@ msgstr "ID"
 
 #. module: web_planner
 #: model:ir.model.fields,help:web_planner.field_web_planner_active
-#, fuzzy
 msgid ""
 "If the active field is set to False, it will allow you to hide the planner. "
 "This change requires a refresh of your page."
 msgstr ""
-"Ak je aktívne pole nastavené na False, umožní vám schovať plánovač. Táto "
-"zmena vyžaduje znovu načítanie vašej stránky."
 
 #. module: web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
-#, fuzzy
 msgid "Inactive"
 msgstr "Neaktívne"
 
@@ -82,7 +85,7 @@ msgstr "Naposledy upravované"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:31
+#: code:addons/web_planner/static/src/js/web_planner_common.js:132
 #, python-format
 msgid "Mark As Done"
 msgstr "Označiť ako spravené"
@@ -99,10 +102,17 @@ msgstr "Meno"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:34
+#: code:addons/web_planner/static/src/js/web_planner_common.js:140
 #, python-format
-msgid "Next step"
-msgstr "Ďalší krok"
+msgid "Next Step"
+msgstr ""
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:378
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "Odoo Podnikanie"
 
 #. module: web_planner
 #: model:ir.model,name:web_planner.model_web_planner
@@ -136,3 +146,10 @@ msgstr "Percentá progresu"
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_view_id
 msgid "Template"
 msgstr "Šablóna"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:360
+#, python-format
+msgid "Upgrade now"
+msgstr "Aktualizovať teraz"

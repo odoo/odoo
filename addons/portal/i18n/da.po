@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-04-12 10:17+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -54,19 +54,9 @@ msgid "Access Groups"
 msgstr "Adgangsgrupper"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr ""
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Anvend"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Fakturering"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -107,6 +97,12 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr "Gruppe %s er ikke en portal"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_id
 msgid "ID"
@@ -115,17 +111,17 @@ msgstr "Id"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_res_groups_is_portal
 msgid "If checked, this group is usable as a portal."
-msgstr ""
+msgstr "Hvis krydset af, er denne gruppe brugbar som en portal."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_in_portal
 msgid "In Portal"
-msgstr ""
+msgstr "I portal"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_welcome_message
 msgid "Invitation Message"
-msgstr ""
+msgstr "invitation besked"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard___last_update
@@ -148,19 +144,18 @@ msgstr "Sidst opdateret den"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_user_id
 msgid "Login User"
-msgstr ""
+msgstr "Login bruger"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Non-Portal Groups"
-msgstr ""
+msgstr "Ikke-portal grupper"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
-msgstr ""
+msgstr "Portal"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
@@ -172,17 +167,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.group_search_view
 msgid "Portal Groups"
-msgstr ""
+msgstr "Portal grupper"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
-msgstr ""
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projekter"
+msgstr "Portal bruger konfiguration"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -195,32 +185,33 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr ""
+msgstr "Flere kontakter har samme email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr ""
+msgstr "Nogle kontakter har ikke en gyldig email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
-msgstr ""
+msgstr "Nogle kontakter har den samme email som en eksisterende portal bruger:"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
 msgid "The portal that users can be added in or removed from."
-msgstr ""
+msgstr "Portalen som brugere kan tilføjes eller flyttes fra."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
+"Denne tekst er inkluderet i den email som er sendt til nye portal brugere."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_welcome_message
@@ -228,7 +219,7 @@ msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -247,7 +238,7 @@ msgid "Wizard"
 msgstr "Guide"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
 msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-07 16:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -24,22 +24,12 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
-msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr ""
-"Se estiver marcado, os números Parceiros  do IVA serão totalmente validados "
-"contra o serviço UE VIES e não através de uma validação de formato simples "
-"(verificação)."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
 msgstr "Parceiro"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: code:addons/base_vat/models/res_partner.py:126
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -49,7 +39,7 @@ msgstr ""
 "Nota : o formato é esperado %s"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:125
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -59,14 +49,30 @@ msgstr ""
 "validação Contribuinte - VIES ou não respeitou o formato esperado %s."
 
 #. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid ""
+"Use VIES service to check VAT # of your customers rather than a simple "
+"format validation."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "VAT"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid "VAT # check with European VIES service"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_config_settings_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
 msgstr "Verifique o VIES IVA"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr "p.ex. BE0477472701"
-
-#~ msgid "Importing VAT Number [%s] is not valid !"
-#~ msgstr "Importando Número Contribuinte [%s] não é válido !"
+#: model:ir.model,name:base_vat.model_account_config_settings
+msgid "account.config.settings"
+msgstr ""

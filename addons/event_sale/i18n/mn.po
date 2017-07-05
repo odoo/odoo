@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-11-15 12:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,21 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:170
-#, python-format
-msgid " with ticket %s"
-msgstr ""
-
-#. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
 msgid "Apply"
 msgstr "Хэрэглэх"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_asset_category_id
-#, fuzzy
 msgid "Asset Type"
-msgstr "Үйл явдлын төрөл"
+msgstr "Хөрөнгийн Төрөл"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
@@ -72,12 +65,6 @@ msgstr ""
 "хэмжээнд бүртгэл үүсгэнэ."
 
 #. module: event_sale
-#: model:product.product,name:event_sale.event_2_product
-#: model:product.template,name:event_sale.event_2_product_product_template
-msgid "Conference on Business Applications"
-msgstr "Бизнес Аппликэшний чуулган"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_create_uid
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_create_uid
@@ -107,6 +94,7 @@ msgstr ""
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,help:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,help:event_sale.field_sale_order_line_event_ok
 msgid ""
 "Determine if a product needs to create automatically an event registration "
 "at the confirmation of a sales order line."
@@ -123,7 +111,7 @@ msgstr "Дэлгэцийн Нэр"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_editor_id
-msgid "Editor id"
+msgid "Editor"
 msgstr ""
 
 #. module: event_sale
@@ -140,17 +128,23 @@ msgid "Event"
 msgstr "Үйл явдал"
 
 #. module: event_sale
-#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
-msgid "Event Registrations"
-msgstr ""
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event Name"
+msgstr "Арга хэмжээний нэр"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product_event_ok
 #: model:ir.model.fields,field_description:event_sale.field_product_template_event_ok
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
 #: model:product.product,name:event_sale.product_product_event
 #: model:product.template,name:event_sale.product_product_event_product_template
-msgid "Event Subscription"
+msgid "Event Registration"
 msgstr "Үйл явдлын бүртгэл"
+
+#. module: event_sale
+#: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
+msgid "Event Registrations"
+msgstr ""
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_event_ticket
@@ -167,15 +161,9 @@ msgid "Event Tickets"
 msgstr "Үйл явдлын тасалбарууд"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_type_id
-msgid "Event Type"
-msgstr "Үйл явдлын төрөл"
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_1_product
-#: model:product.template,name:event_sale.event_1_product_product_template
-msgid "Functional Webinar"
-msgstr "Функционалийн вебинар"
+#: model:ir.ui.view,arch_db:event_sale.event_ticket_form_view
+msgid "Event's Ticket"
+msgstr ""
 
 #. module: event_sale
 #: model:event.type,name:event_sale.event_type
@@ -232,22 +220,16 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:131
+#: code:addons/event_sale/models/event.py:116
 #, python-format
 msgid "No more available seats for the ticket"
 msgstr ""
 
 #. module: event_sale
-#: code:addons/event_sale/models/event.py:153
+#: code:addons/event_sale/models/event.py:138
 #, python-format
 msgid "No more available seats for this ticket"
 msgstr ""
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_0_product
-#: model:product.template,name:event_sale.event_0_product_product_template
-msgid "Open Days in Los Angeles"
-msgstr "Лос Анжелосын нээлттэй өдөрлөг"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_ticket_form
@@ -275,6 +257,11 @@ msgid "Price Reduce"
 msgstr "Үнийг Бууруулах"
 
 #. module: event_sale
+#: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr ""
+
+#. module: event_sale
 #: model:ir.model,name:event_sale.model_product_product
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_product_id
 msgid "Product"
@@ -286,7 +273,9 @@ msgid "Product Template"
 msgstr "Барааны үлгэр"
 
 #. module: event_sale
+#: code:addons/event_sale/models/event.py:19
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
+#, python-format
 msgid "Registration"
 msgstr "Бүртгэл"
 
@@ -306,45 +295,27 @@ msgid "Reserved Seats"
 msgstr "Захиалагдсан суудлууд"
 
 #. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
-msgid "Sale Order"
-msgstr "Борлуулах захиалга"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
-#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
-msgid "Sale Order Line"
-msgstr "Борлуулалтын захиалгын шугам"
-
-#. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_deadline
 msgid "Sales End"
 msgstr "Борлуулалт дууссан"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_sale_order_id
 msgid "Sales Order"
 msgstr "Борлуулалтын захиалга"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order_line
+#: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_line_id
+#: model:ir.model.fields,field_description:event_sale.field_registration_editor_line_sale_order_line_id
 msgid "Sales Order Line"
 msgstr "Борлуулалтын Захиалгын Мөр"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_used
-msgid "Seats used"
+msgid "Seats Used"
 msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,help:event_sale.field_product_product_event_type_id
-#: model:ir.model.fields,help:event_sale.field_product_template_event_type_id
-msgid ""
-"Select event types so when we use this product in sales order lines, it will "
-"filter events of this type only."
-msgstr ""
-"Үйл явдлын төрлийг сонгоно уу, ингэснээр энэ барааг борлуулалтын захиалгын "
-"мөрөнд хэрэглэхэд зөвхөн эдгээр төрлийн үйл явдлыг шүүнэ."
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form
@@ -353,35 +324,7 @@ msgstr "Алгасах"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration_sale_order_id
-msgid "Source Sale Order"
-msgstr ""
-
-#. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_1
-#: model:event.event.ticket,name:event_sale.event_1_ticket_1
-#: model:event.event.ticket,name:event_sale.event_2_ticket_1
-#: model:event.event.ticket,name:event_sale.event_3_ticket_1
-msgid "Standard"
-msgstr "Стандарт"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:21
-#, python-format
-msgid "Subscription"
-msgstr "Захиалга"
-
-#. module: event_sale
-#: model:product.product,name:event_sale.event_3_product
-#: model:product.template,name:event_sale.event_3_product_product_template
-msgid "Technical Training"
-msgstr "Техникийн сургалт"
-
-#. module: event_sale
-#: code:addons/event_sale/models/event.py:168
-#, python-format
-msgid ""
-"The registration has been created for event %(event_name)s%(ticket)s from "
-"sale order %(order)s"
+msgid "Source Sales Order"
 msgstr ""
 
 #. module: event_sale
@@ -393,13 +336,7 @@ msgstr "Тасалбарын төрөл"
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_form_inherit_ticket
 msgid "Tickets"
-msgstr ""
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_product_product_event_type_id
-#: model:ir.model.fields,field_description:event_sale.field_product_template_event_type_id
-msgid "Type of Event"
-msgstr "Үйл явдлын төрөл"
+msgstr "Тасалбарууд"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_ticket_seats_unconfirmed
@@ -410,18 +347,6 @@ msgstr "Батлагдаагүй урьдчилж захиалсан сууда�
 #: selection:event.event.ticket,seats_availability:0
 msgid "Unlimited"
 msgstr "Хязгааргүй"
-
-#. module: event_sale
-#: model:event.event.ticket,name:event_sale.event_0_ticket_2
-#: model:event.event.ticket,name:event_sale.event_2_ticket_2
-#: model:event.event.ticket,name:event_sale.event_3_ticket_2
-msgid "VIP"
-msgstr "Тусгай үйлчилгээ"
-
-#. module: event_sale
-#: model:ir.model.fields,field_description:event_sale.field_sale_order_line_event_ok
-msgid "event_ok"
-msgstr "event_ok"
 
 #. module: event_sale
 #: model:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

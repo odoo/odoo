@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-03 15:14+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -56,13 +56,13 @@ msgid "Anonymized Fields"
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:197
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:284
+#: code:addons/anonymization/wizard/anonymize_wizard.py:72
 #, python-format
 msgid ""
 "Before executing the anonymization process, you should make a backup of your "
@@ -70,7 +70,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:430
+#: code:addons/anonymization/wizard/anonymize_wizard.py:194
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
@@ -102,7 +102,7 @@ msgstr "สร้างเมื่อ"
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Database Anonymization"
-msgstr ""
+msgstr "Anonymization ฐานข้อมูล"
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
@@ -133,8 +133,8 @@ msgid "Done"
 msgstr "เสร็จสมบูรณ์"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:142
+#: code:addons/anonymization/wizard/anonymize_wizard.py:266
 #, python-format
 msgid "Error !"
 msgstr "ผิดพลาด!"
@@ -190,7 +190,7 @@ msgid "Import"
 msgstr "นำเข้า"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:521
+#: code:addons/anonymization/wizard/anonymize_wizard.py:266
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
@@ -239,6 +239,12 @@ msgid "New"
 msgstr "ใหม่"
 
 #. module: anonymization
+#: code:addons/anonymization/wizard/anonymize_wizard.py:156
+#, python-format
+msgid "No fields are going to be anonymized."
+msgstr ""
+
+#. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "Not Existing"
 msgstr ""
@@ -276,6 +282,7 @@ msgstr "เริ่มแล้ว"
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
 msgstr "สถานะ"
@@ -291,7 +298,7 @@ msgid "Target Version"
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:75
+#: code:addons/anonymization/models/anonymization.py:55
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -300,7 +307,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:342
+#: code:addons/anonymization/wizard/anonymize_wizard.py:123
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -309,8 +316,8 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:375
-#: code:addons/anonymization/anonymization.py:514
+#: code:addons/anonymization/wizard/anonymize_wizard.py:146
+#: code:addons/anonymization/wizard/anonymize_wizard.py:262
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
@@ -319,13 +326,13 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/wizard/anonymize_wizard.py:144
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:73
+#: code:addons/anonymization/models/anonymization.py:53
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -333,7 +340,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:512
+#: code:addons/anonymization/wizard/anonymize_wizard.py:260
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -353,7 +360,7 @@ msgid "Unstable"
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:49
+#: code:addons/anonymization/models/anonymization.py:32
 #: sql_constraint:ir.model.fields.anonymization:0
 #, python-format
 msgid "You cannot have two fields with the same name on the same object!"
@@ -398,8 +405,3 @@ msgstr ""
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
 msgstr "sql"
-
-#. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
-msgid "unknown"
-msgstr "ไม่ทราบ"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -36,7 +36,7 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
 msgid "Intrastat code"
-msgstr ""
+msgstr "Intrastat kode"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -52,6 +52,12 @@ msgstr ""
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Produkt"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:61
+#, python-format
+msgid "Registration"
+msgstr "Registrering"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -84,13 +90,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Abonnement"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""

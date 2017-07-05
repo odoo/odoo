@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-07 16:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
@@ -23,21 +23,12 @@ msgid "Companies"
 msgstr "회사"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
-msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr ""
-"선택하면 파트너의 부가가치세(VAT) 번호는 간단한 형식의 유효성 검사(체크섬)를 "
-"통해 확인하기 보다 완전한 유럽연합(EU)의 VIES 서비스에 의해 검증됩니다."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
 msgstr "파트너"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: code:addons/base_vat/models/res_partner.py:126
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -47,7 +38,7 @@ msgstr ""
 "주의 : 관련 형식은 %s입니다"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:125
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -57,14 +48,30 @@ msgstr ""
 "형식 %s을(를) 사용하지 않았습니다."
 
 #. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid ""
+"Use VIES service to check VAT # of your customers rather than a simple "
+"format validation."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.company_form_vat
+#: model:ir.ui.view,arch_db:base_vat.view_partner_form
+msgid "VAT"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
+msgid "VAT # check with European VIES service"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_account_config_settings_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 msgid "VIES VAT Check"
 msgstr "VIES VAT 검사"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr "예. BE0477472701"
-
-#~ msgid "Importing VAT Number [%s] is not valid !"
-#~ msgstr "가져온 VAT 번호[%s]가 유효하지 않습니다 !"
+#: model:ir.model,name:base_vat.model_account_config_settings
+msgid "account.config.settings"
+msgstr ""

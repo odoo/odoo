@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-22 06:31+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -35,6 +35,12 @@ msgid ""
 "default method: based on the Product Lead Times and the Company's Security "
 "Delay."
 msgstr ""
+"Data oczekiwana przez klienta.\n"
+"Kiedy Zamówienie jest potwierdzone, to data przewidywana będzie obliczona na "
+"podstawie tej daty i liczby dni bezpieczeństwa.\n"
+"zostaw to pole puste, jeśli chcesz zaplanować dostawę jak najszybciej. Wtedy "
+"data przewidywana będzie obliczona domyślną metodą: na podstawie czasu "
+"dostawy produktu i liczby dni bezpieczeństwa."
 
 #. module: sale_order_dates
 #: model:ir.model.fields,help:sale_order_dates.field_sale_order_commitment_date
@@ -61,7 +67,7 @@ msgid "Requested Date"
 msgstr "Spodziewana data"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:51
+#: code:addons/sale_order_dates/models/sale_order.py:57
 #, python-format
 msgid "Requested date is too soon!"
 msgstr "Żądana data jest za wczesna!"
@@ -77,9 +83,11 @@ msgid "Sales Order Line"
 msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: sale_order_dates
-#: code:addons/sale_order_dates/sale_order_dates.py:52
+#: code:addons/sale_order_dates/models/sale_order.py:58
 #, python-format
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
 msgstr ""
+"Spodziewana data jest wcześniejsza niż data dostawy. Możesz nie spełnić "
+"oczekiwań klienta."

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-05-31 13:43+0000\n"
 "Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
 "Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -23,11 +23,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Проблеми"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Задачи"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -47,17 +42,14 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Член со кој сакате да го поврзете членството. Ќе се смета состојбата на "
-"членството на здружениот член."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
 msgid "Activation"
-msgstr "Цитат"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -70,8 +62,15 @@ msgid "Cancel Membership Date"
 msgstr "Откажи датум на членство"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:16
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
 msgstr ""
 
 #. module: sale_crm
@@ -117,6 +116,11 @@ msgid "Implementation References"
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
@@ -128,7 +132,7 @@ msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
+msgid "Invoiced in Sales Orders Target"
 msgstr ""
 
 #. module: sale_crm
@@ -161,6 +165,13 @@ msgstr ""
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Lead/Можност"
+
+#. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:20
+#, python-format
+msgid "Let's have a look at the quotations of this sales channel."
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
@@ -198,6 +209,16 @@ msgid "Membership Start Date"
 msgstr "Почетен датум на членство"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Нова понуда"
@@ -224,14 +245,19 @@ msgstr "Налози"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
 msgid "Partnership Date"
-msgstr "Откажи датум на членство"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Методи на плаќање"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -244,8 +270,14 @@ msgid "Quotations"
 msgstr "Понуди"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Налог за продажба"
 
@@ -253,6 +285,25 @@ msgstr "Налог за продажба"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Означете доколку сакате да дадетебесплатно членство."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -263,11 +314,6 @@ msgstr "Сума на нарачки"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Етикети"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Задачи"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -301,41 +347,3 @@ msgstr "Корисници"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Локација на добавувач"
-
-#~ msgid "# Claims"
-#~ msgstr "#Рекламации"
-
-#~ msgid "Campaign"
-#~ msgstr "Кампања"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Гео ширина"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Датум на Гео Локализација"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Гео должина"
-
-#~ msgid "Medium"
-#~ msgstr "Средно"
-
-#~ msgid "Source"
-#~ msgstr "Извор"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Ова е име што ви помага да следите резултати од различни кампањи пр. : "
-#~ "Fall_Drive, Christmas_Special"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Ова е начин на испорака. Пр. Честитка, Е-маил или онлајн реклама"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "ова е извор на врската пр. : пребарувач, друг домен или име од е-маил "
-#~ "листа"

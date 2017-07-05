@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-14 05:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -18,11 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
 "%100==4 ? 2 : 3);\n"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
-msgstr "Pravila aktivnosti"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
@@ -40,6 +35,11 @@ msgid "Basic Salary of the employee"
 msgstr "Osnovna plača zaposlenega"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Službeno vozilo"
@@ -52,7 +52,7 @@ msgstr "Referenca pogodbe"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -76,6 +76,12 @@ msgstr ""
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:87
+#, python-format
+msgid "Contract start date must be less than contract end date."
 msgstr ""
 
 #. module: hr_contract
@@ -144,19 +150,13 @@ msgstr "Kader"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Contract"
+msgstr "Pogodba zaposlenega"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Končni datum"
-
-#. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "Error! Contract start-date must be less than contract end-date."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -175,13 +175,17 @@ msgid "Group By"
 msgstr "Združeno po"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
+msgid "HR Contract: update to closed"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
+msgid "HR Contract: update to pending"
 msgstr ""
 
 #. module: hr_contract
@@ -194,6 +198,11 @@ msgstr "Delo od doma"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -270,11 +279,6 @@ msgid "Number of Children"
 msgstr "Število otrok"
 
 #. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
 msgstr "Kraj rojstva"
@@ -343,21 +347,6 @@ msgid "Trial Start Date"
 msgstr "Začetni datum preizkusa"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Neprebrana sporočila"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr "Uporabi delovni urnik kadra"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr "Uporabi delovni urnik uporabnika."
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr "Potek veljanosti vize"
@@ -386,57 +375,3 @@ msgstr "Št. dovoljenja za delo"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Delovni urnik"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Important Messages"
-#~ msgstr "Pomembna sporočila"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Komunikacije in kronologija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "Website Messages"
-#~ msgstr "Sporočila iz spletne strani"
-
-#~ msgid "Website communication history"
-#~ msgstr "Kronologija komunikacij spletne strani"

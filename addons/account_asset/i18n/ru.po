@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
@@ -21,11 +21,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:399
@@ -88,8 +90,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
-msgid ""
-"Account used to record the purchase of the asset at its original price."
+msgid "Account used to record the purchase of the asset at its original price."
 msgstr ""
 "Учетная запись, используемая для записи покупки актива в его первоначальной "
 "цены"
@@ -313,20 +314,27 @@ msgid ""
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
 "Выберите метод, используемый для расчета суммы линий амортизации.\n"
-"* Линейный: Рассчитано на основе: Валовая Стоимость / Количество отчислений на амортизацию\n"
-"* Дегрессивный: Рассчитано на основе: Остаточная Стоимость * Дегрессивный Фактор"
+"* Линейный: Рассчитано на основе: Валовая Стоимость / Количество отчислений "
+"на амортизацию\n"
+"* Дегрессивный: Рассчитано на основе: Остаточная Стоимость * Дегрессивный "
+"Фактор"
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
 "Выберите метод, используемый для расчета даты и числа линий амортизации.\n"
-"* Количество отчислений на амортизацию: Фиксированное количество амортизационных линий и время между 2 обесцениваниями.\n"
-"* Дата окончания: Выберите время между 2 обесцениваниями и дату обесценивания которая не будет выходить за рамки."
+"* Количество отчислений на амортизацию: Фиксированное количество "
+"амортизационных линий и время между 2 обесцениваниями.\n"
+"* Дата окончания: Выберите время между 2 обесцениваниями и дату "
+"обесценивания которая не будет выходить за рамки."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -602,10 +610,12 @@ msgstr "Расширенные фильтры..."
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
 msgstr ""
 "Из этого отчета вы можете иметь обзор всех амортизаций. \n"
-"Панель поиска можно также использовать, чтобы персонализировать свою отчетность амортизации активов."
+"Панель поиска можно также использовать, чтобы персонализировать свою "
+"отчетность амортизации активов."
 
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
@@ -993,11 +1003,15 @@ msgstr "Количество амортизаций необходимых дл�
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Этот мастер проведет строки взноса/обесценивания для выбранного  месяца.<br/>\n"
-"Это будет генерировать записи журнала для всех связанных линий рассрочки в этом периоде, также признание актива/дохода."
+"Этот мастер проведет строки взноса/обесценивания для выбранного  месяца.<br/"
+">\n"
+"Это будет генерировать записи журнала для всех связанных линий рассрочки в "
+"этом периоде, также признание актива/дохода."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1041,12 +1055,17 @@ msgstr "Поставщик"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
 "Когда актив создается, это статус 'Черновик'.\n"
-"Если актив будет подтвержден, статус переходит в \"Запущен \" и амортизация линий может быть учтена в бухгалтерском учете.\n"
-"Вы можете вручную закрыть актив, в случае если амортизация закончилась. Если последняя строка амортизация проводится, актив автоматически переходит в этот статус."
+"Если актив будет подтвержден, статус переходит в \"Запущен \" и амортизация "
+"линий может быть учтена в бухгалтерском учете.\n"
+"Вы можете вручную закрыть актив, в случае если амортизация закончилась. Если "
+"последняя строка амортизация проводится, актив автоматически переходит в "
+"этот статус."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name

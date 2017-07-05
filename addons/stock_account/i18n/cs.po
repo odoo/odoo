@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-23 14:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
@@ -32,20 +32,9 @@ msgid "Account Stock Properties"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Accounting"
-msgstr "Účetnictví"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Účetní informace"
-
-#. module: stock_account
-#: code:addons/stock_account/wizard/stock_change_standard_price.py:62
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "Aktivní ID není nastaveno v kontextu."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
@@ -54,15 +43,15 @@ msgid ""
 msgstr "Umožňuje nastavit ocenění zásob u výrobků a kategorií výrobků."
 
 #. module: stock_account
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "At a Specific Date"
+msgstr ""
+
+#. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Price"
 msgstr "Průměrná cena"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_can_be_expensed
-msgid "Can be expensed"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -71,7 +60,7 @@ msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:278
+#: code:addons/stock_account/models/stock.py:252
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
@@ -79,7 +68,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:280
+#: code:addons/stock_account/models/stock.py:254
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -100,8 +89,8 @@ msgid "Change Standard Price"
 msgstr "Změnit běžnou cenu"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Choose a date in the past to get the inventory at that date."
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_date
+msgid "Choose a date to get the inventory at that date"
 msgstr ""
 
 #. module: stock_account
@@ -112,15 +101,14 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Choose your date"
+#: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
+msgid ""
+"Choose to analyze the current inventory or from a specific date in the past."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_coeff
-msgid ""
-"Coefficient to convert default Unit of Measure to Unit of Sale uos = uom * "
-"coeff"
+#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
+msgid "Choose your date"
 msgstr ""
 
 #. module: stock_account
@@ -130,13 +118,18 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_compute_at_date
+msgid "Compute"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:351
+#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+msgid "Compute from average cost"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:327
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -149,6 +142,12 @@ msgid "Cost"
 msgstr "Náklad"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
+msgid "Cost Method"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
@@ -157,9 +156,8 @@ msgstr "Metoda nacenění"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
-#, fuzzy
 msgid "Counter-Part Account"
-msgstr "Výstupní účet zásob"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -174,9 +172,9 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
-msgid "Date"
-msgstr "Datum"
+#: selection:wizard.valuation.history,compute_at_date:0
+msgid "Current Inventory"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -255,7 +253,7 @@ msgstr "Inventář"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
 msgid "Inventory Locations"
-msgstr ""
+msgstr "Umístění (množ.) inventáře"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
@@ -267,14 +265,17 @@ msgid "Inventory Valuation"
 msgstr "Ocenění zásob"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
-msgid "Inventory Value"
+#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
+msgid "Inventory Valuation Report"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
-#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
-#: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
+msgid "Inventory Value"
+msgstr "Hodnota skladu"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_date
 msgid "Inventory at Date"
 msgstr ""
 
@@ -319,18 +320,18 @@ msgid "Location"
 msgstr "Umístění"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Move"
-msgstr "Přesunout"
-
-#. module: stock_account
-#: code:addons/stock_account/product.py:125
-#: code:addons/stock_account/product.py:187
+#: code:addons/stock_account/models/product.py:108
 #, python-format
 msgid "No difference between standard price and new price!"
 msgstr "Mezi standardní a novou cenou není žádný rozdíl!"
@@ -380,11 +381,6 @@ msgid "Product"
 msgstr "Výrobek"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Čas výstrahy výrobku"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_product_categ_id
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -392,19 +388,9 @@ msgid "Product Category"
 msgstr "Kategorie výrobku"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Životnost výrobku"
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_quantity
 msgid "Product Quantity"
 msgstr "Množství výrobků"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Čas odebrání výrobku"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -414,14 +400,9 @@ msgid "Product Template"
 msgstr "Šablona výrobku"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Čas použití výrobku"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Množství"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -435,39 +416,15 @@ msgid "Retrieve the Inventory Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
-msgid "Retrieve the curent stock valuation."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_history_serial_number
-#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
-msgid "Serial Number"
-msgstr "Sériové číslo"
-
-#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-#, fuzzy
-msgid "Set standard price"
-msgstr "Standardní cena"
+msgid "Set standard cost"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
 msgid "Source"
 msgstr "Zdroj"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_uos_id
-msgid ""
-"Specify a unit of measure here if invoicing is made in another unit of "
-"measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_can_be_expensed
-msgid "Specify whether the product can be selected in an HR expense."
-msgstr ""
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -476,10 +433,8 @@ msgid "Standard Price"
 msgstr "Standardní cena"
 
 #. module: stock_account
-#: code:addons/stock_account/product.py:138
-#: code:addons/stock_account/product.py:145
-#: code:addons/stock_account/product.py:199
-#: code:addons/stock_account/product.py:205
+#: code:addons/stock_account/models/product.py:125
+#: code:addons/stock_account/models/product.py:130
 #, python-format
 msgid "Standard Price changed"
 msgstr ""
@@ -490,9 +445,9 @@ msgstr ""
 msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific "
 "period (usually once a year).\n"
-"                    Average Price: The cost price is recomputed at each "
-"incoming shipment and used for the product valuation.\n"
-"                    Real Price: The cost price displayed is the price of the "
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
 "last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
 
@@ -508,6 +463,16 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Stock Accounting"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
@@ -515,7 +480,7 @@ msgid "Stock Input Account"
 msgstr "Vstupní účet zásob"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:464
+#: code:addons/stock_account/models/account_chart_template.py:15
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
 #, python-format
 msgid "Stock Journal"
@@ -524,6 +489,7 @@ msgstr "Skladový deník"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_move_id
+#: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
 msgid "Stock Move"
 msgstr "Pohyb zásob"
 
@@ -550,7 +516,7 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Účet oceňování zásob (výstupní)"
 
 #. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_history.py:31
+#: code:addons/stock_account/wizard/wizard_valuation_history.py:39
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_graph
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_pivot
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -565,7 +531,7 @@ msgid "Templates for Account Chart"
 msgstr "Šablona pro Účtový rozvrh"
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:306
+#: code:addons/stock_account/models/stock.py:281
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -577,16 +543,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
 msgid "Total Value"
 msgstr "Celková hodnota"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_coeff
-msgid "Unit of Measure -> UOS Coeff"
-msgstr "Koeficient MJ -> PJ"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_uos_id
-msgid "Unit of Sale"
-msgstr "Prodejní jednotka"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
@@ -609,45 +565,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+msgid "Valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
 msgid "Value"
 msgstr "Hodnota"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než "
-"bude uživatel upozorněn."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se "
-"zboží stane nebezpečným a nesmí být požíváno."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než by "
-"zboží mělo být odebráno ze zásob."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
-"Když je vytvořeno nové seriové číslo, udává toto počet dní před tím, než se "
-"zboží začne kazit avšak bez toho, aby bylo zatím nebezpečné."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -711,7 +637,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:276
+#: code:addons/stock_account/models/stock.py:250
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -719,7 +645,8 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/stock_account.py:282
+#: code:addons/stock_account/models/product.py:110
+#: code:addons/stock_account/models/stock.py:256
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category. "
@@ -740,11 +667,3 @@ msgstr "stock.config.settings"
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
 msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
-msgid "unknown"
-msgstr "neznámé"

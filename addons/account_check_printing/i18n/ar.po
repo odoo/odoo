@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -32,29 +32,29 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:56
+#: code:addons/account_check_printing/models/account_journal.py:58
 #, python-format
 msgid " : Check Number Sequence"
 msgstr "فحص تسلسل رقم:"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:35
-#: code:addons/account_check_printing/account_payment.py:72
+#: code:addons/account_check_printing/models/account_payment.py:37
+#: code:addons/account_check_printing/models/account_payment.py:74
 #, python-format
 msgid " and %s/100"
-msgstr ""
+msgstr "و %s/100"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:83
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
-msgstr ""
+msgstr "لا يمكن أن تزيد ملاحظات الشيك عن 60 رمزاً."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_amount_in_words
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_amount_in_words
 msgid "Amount in Words"
-msgstr ""
+msgstr "المبلغ بالحروف"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -62,58 +62,63 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: account_check_printing
+#: model:account.payment.method,name:account_check_printing.account_payment_method_check
+msgid "Check"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_number
 msgid "Check Number"
-msgstr ""
+msgstr "رقم الشيك"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
+msgstr "طباعة الشيك"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
+msgid "Check Printing Payment Method Selected"
 msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_sequence_id
 msgid "Check Sequence"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
-msgid "Check printing payment method selected"
-msgstr ""
+msgstr "مسلسل الشيك"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
+msgstr "حدد هذا الاختيار إذا كان دفتر شيكاتك غير مُسلسل."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
-msgstr ""
+msgstr "شيكات للطباعة"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 msgid "Checks To Print"
-msgstr ""
+msgstr "شيكات للطباعة"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_sequence_id
 msgid "Checks numbering sequence."
-msgstr ""
+msgstr "الأرقام المسلسلة للشيكات"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal_dashboard.py:23
+#: code:addons/account_check_printing/models/account_journal.py:97
 #, python-format
 msgid "Checks to Print"
-msgstr ""
+msgstr "شيكات للطباعة"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Checks to print"
-msgstr ""
+msgstr "شيكات للطباعة"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_create_uid
@@ -136,12 +141,14 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:103
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank "
 "journal."
 msgstr ""
+"لتتمكن من طباعة عدة شيكات دفعة واحدة، يجب أن تنتمي هذه الشيكات لدفتر يومية "
+"واحد."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -168,7 +175,7 @@ msgstr "آخر تحديث في"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_register_payments_check_manual_sequencing
 msgid "Manual Numbering"
-msgstr ""
+msgstr "ترقيم يدوي"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
@@ -183,6 +190,8 @@ msgid ""
 "are not already numbered, you can manage the numbering in the journal "
 "configuration page."
 msgstr ""
+"رقم الشيك المقترن بعملية السداد هذه. إذا كان دفتر الشيكات بدون أرقام مُسلسلة، "
+"فيمكنك إدارة هذه الأرقام المسلسلة في واجهة إعدادات دفتر اليومية."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
@@ -190,19 +199,21 @@ msgid "Payments"
 msgstr "مدفوعات"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:98
+#: code:addons/account_check_printing/models/account_payment.py:100
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
+"المدفوعات لطباعتها كشيك يجب ان يكون خيار الشيك محدد كطريقه دفع ولم يتم "
+"تسويته."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to "
 "print on."
-msgstr ""
+msgstr "الرجاء إدخال أول رقم مسلسل في دفتر الشيكات الذي ترغب في الطباعة عليه."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -217,25 +228,25 @@ msgstr "طباعة الشيك"
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr ""
+msgstr "طباعة الشيكات"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:114
+#: code:addons/account_check_printing/models/account_payment.py:113
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr ""
+msgstr "طباعة شيكات مُسلسلة"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_register_payments
 msgid "Register payments on multiple invoices"
-msgstr ""
+msgstr "تسجيل المدفوعات على عدة فواتير"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_next_number
 msgid "Sequence number of the next printed check."
-msgstr ""
+msgstr "الرقم المسلسل للشيك المطبوع التالي."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_printing_payment_method_selected
@@ -243,14 +254,17 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment "
 "method."
 msgstr ""
+"الحقل التقنى يستخدم لمعرفه ما اذا كان تم تمكين طباعه الشيكات كطريقه دفع."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:25
+#: code:addons/account_check_printing/models/account_journal.py:26
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
+"اخر رقم شيك هو %s. من أجل تجنب رفض الشيك من قبل البنك، يمكنك فقط استخدام عدد "
+"أكبر."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment_check_number
@@ -259,28 +273,29 @@ msgid ""
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
 msgstr ""
+"ان قيد اليومية المحدد تم ضبطته لطباعة أرقام الشيك. إذا كنت تعيد طباعة ورقه "
+"شيك لديه رقم أو إذا كان الترقيم الحالي خاطئا، فيمكنك تغييره في صفحة تهيئة "
+"قيد اليومية."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:135
+#: code:addons/account_check_printing/models/account_payment.py:136
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
 "Make sure the proper check printing module is installed and its "
 "configuration (in company settings > 'Configuration' tab) is correct."
 msgstr ""
+"لم يتم تهيئة تصميم الشيك .\n"
+"تأكد من تثبيت وحدة طباعة الشيكات الصحيحة وان تهيئتها (في إعدادات الشركة> "
+"علامة التبويب \"التهيئة\") صحيحة."
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "This will allow to save on payments the number of the corresponding check."
-msgstr ""
+msgstr "هذا سيسمح لحفظ رقم الشيك المطابق على امر الدفع"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "or"
-msgstr "أو"
+msgstr "الغاء تحديد الارسال"

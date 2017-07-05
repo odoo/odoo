@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-15 15:42+0000\n"
 "Last-Translator: Jens Metschkoll <jmetschkoll@snej-production.de>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -55,7 +55,14 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:98
+#: code:addons/google_account/models/google_service.py:169
+#, python-format
+msgid "Method not supported [%s] not in [GET, POST, PUT, PATCH or DELETE]!"
+msgstr ""
+"Methode nicht unterstützt [%s] nicht in [GET, POST, PUT, PATCH or DELETE]!"
+
+#. module: google_account
+#: code:addons/google_account/models/google_service.py:117
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -65,7 +72,7 @@ msgstr ""
 "Ihr Autorisierungscode ungültig."
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:37
+#: code:addons/google_account/models/google_service.py:52
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -75,7 +82,7 @@ msgstr ""
 "Ihr Autorisierungscode ungültig oder bereits abgelaufen."
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:128
+#: code:addons/google_account/models/google_service.py:144
 #, python-format
 msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
@@ -85,7 +92,7 @@ msgstr ""
 "Ihr Autorisierungscode ungültig oder bereits abgelaufen [%s]"
 
 #. module: google_account
-#: code:addons/google_account/google_account.py:173
+#: code:addons/google_account/models/google_service.py:193
 #, python-format
 msgid "Something went wrong with your request to google"
 msgstr "Etwas ging schief mit Ihrer Anfrage an Google"

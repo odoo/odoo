@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-01-06 08:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
@@ -44,11 +44,11 @@ msgid ""
 "valid during 24 hours:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Change password</a>\n"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\">Change password</a>\n"
 "    </div>\n"
 "    <p>If you do not expect this, you can safely ignore this email.</p>\n"
 "    <p>Best regards,</p>\n"
@@ -58,7 +58,7 @@ msgid ""
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -92,11 +92,11 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Accept invitation to \"${object."
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\">Accept invitation to \"${object."
 "company_id.name}\"</a>\n"
 "    </div>\n"
 "    <p>Best regards,</p>\n"
@@ -106,7 +106,7 @@ msgid ""
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -131,13 +131,13 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
+#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
+msgid "Allow external users to sign up"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
-msgid "Allow external users to sign up"
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Allow external users to sign up from Login page"
 msgstr ""
 
 #. module: auth_signup
@@ -153,7 +153,7 @@ msgid "Another user is already registered using this email address."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:110
 #, python-format
 msgid "Authentication Failed."
 msgstr ""
@@ -181,6 +181,11 @@ msgid "Confirm Password"
 msgstr ""
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Confirmed"
+msgstr "Apstiprināts"
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
@@ -193,17 +198,23 @@ msgid "Could not reset your password"
 msgstr ""
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Default Access Rights"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "Enable password reset from Login page"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "If unchecked, only invited users may sign up."
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:91
+#: code:addons/auth_signup/controllers/main.py:90
 #, python-format
 msgid "Invalid signup token"
 msgstr ""
@@ -224,6 +235,11 @@ msgid "Password"
 msgstr "Parole"
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Password Reset"
+msgstr ""
+
+#. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
 msgstr ""
@@ -240,11 +256,6 @@ msgid "Reset password: invalid username or email"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "Self"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send Reset Password Instructions"
 msgstr ""
@@ -258,6 +269,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup Token"
 msgstr ""
 
 #. module: auth_signup
@@ -279,18 +302,6 @@ msgid "Signup URL"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-msgid "Signup expiration"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-msgid "Signup token"
-msgstr ""
-
-#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Statuss"
@@ -303,11 +314,11 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "The full URL to access the document through the website."
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
-msgid "This allows users to trigger a password reset from the Login page."
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "User Signup"
 msgstr ""
 
 #. module: auth_signup
@@ -318,7 +329,7 @@ msgstr "Lietotāji"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "Visible in Website"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
@@ -333,22 +344,22 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "Website URL"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Website meta description"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Website meta keywords"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Website meta title"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields

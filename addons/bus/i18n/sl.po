@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-26 15:07+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -35,6 +35,18 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr "Datum nastanka"
@@ -51,18 +63,33 @@ msgid "Display Name"
 msgstr "Prikaz naziva"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geografska širina"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Zemljepisna širina"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
@@ -125,6 +152,11 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
 msgstr ""
@@ -139,6 +171,3 @@ msgstr "Uporabniki"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr ""
-
-#~ msgid "Created on"
-#~ msgstr "Ustvarjeno"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * portal
-# 
+#
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -14,10 +14,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: portal
@@ -28,21 +28,24 @@ msgid ""
 "    Dear ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    You have been given access to ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"    You have been given access to ${user.company_id.name}'s ${object."
+"wizard_id.portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Your login account data is:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Username: ${object.user_id.login or ''}</li>\n"
-"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
+"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
 "\tYou can set or change your password via the following url:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
+"</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
@@ -52,21 +55,25 @@ msgstr ""
 "    Tisztelt ${object.user_id.name or ''},\n"
 "</p>\n"
 "<p>\n"
-"    Hozzáférést kapott ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"    Hozzáférést kapott ${user.company_id.name}'s ${object.wizard_id."
+"portal_id.name}.\n"
 "</p>\n"
 "<p>\n"
 "    Belépési adatai:\n"
 "</p>\n"
 "<ul>\n"
 "    <li>Felhasználónév: ${object.user_id.login or ''}</li>\n"
-"    <li>Portál: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"    <li>Portál: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or "
+"''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "\t<li>Adatbázis: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "</ul>\n"
 "<p>\n"
-"\tBeállíthatja vagy megváltoztathatja a jelszavát a következő url elérési úton:\n"
+"\tBeállíthatja vagy megváltoztathatja a jelszavát a következő url elérési "
+"úton:\n"
 "</p>\n"
 "<ul>\n"
-"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}"
+"</a></li>\n"
 "</ul>\n"
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}\n"
@@ -119,6 +126,12 @@ msgstr "Megjelenített név"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
 msgstr "E-mail"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -196,12 +209,17 @@ msgstr "Portál felhasználó beállítás"
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
-"                        The email address of each selected contact must be valid and unique.\n"
-"                        If necessary, you can fix any contact's email address directly in the list."
+"                        The email address of each selected contact must be "
+"valid and unique.\n"
+"                        If necessary, you can fix any contact's email "
+"address directly in the list."
 msgstr ""
-"Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán felsorolt portálhoz.\n"
-"                        Minden kiválasztott kapcsolathoz tartozó e-mailnek érvényesnek és egyedinek kell lennie.\n"
-"                        Ha szükséges, kijavíthatja a kapcsolatok e-mail címeit a listában."
+"Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán "
+"felsorolt portálhoz.\n"
+"                        Minden kiválasztott kapcsolathoz tartozó e-mailnek "
+"érvényesnek és egyedinek kell lennie.\n"
+"                        Ha szükséges, kijavíthatja a kapcsolatok e-mail "
+"címeit a listában."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:106
@@ -249,7 +267,8 @@ msgid ""
 msgstr ""
 "Ennek a hibának az elhárításához, ezt teheti: \n"
 "- Javítsa ki az aktuális ügyfelek email címeit\n"
-"- Csak az egyéni email címekkel rendelkező ügyfeleknek engedélyezze a hozzáférést"
+"- Csak az egyéni email címekkel rendelkező ügyfeleknek engedélyezze a "
+"hozzáférést"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_ids
@@ -264,8 +283,7 @@ msgstr "Varázsló"
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
-msgid ""
-"You must have an email address in your User Preferences to send emails."
+msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
 "Kell lennie egy e-mail címének a felhasználói űrlapján az e-mail küldéséhez."
 

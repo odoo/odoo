@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mrp
-# 
+#
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
@@ -25,11 +25,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Mekan Bash <tmbashimov@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:43
@@ -73,7 +75,8 @@ msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                        Click to upload files to your product.\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -258,8 +261,8 @@ msgid ""
 "A manufacturing order, based on a bill of materials, will\n"
 "                consume raw materials and produce finished products."
 msgstr ""
-"Заявка на производство, основанная на ведомости материалов, будет потреблять"
-" сырьё, а в итоге произведёт готовый продукт."
+"Заявка на производство, основанная на ведомости материалов, будет потреблять "
+"сырьё, а в итоге произведёт готовый продукт."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_active
@@ -293,16 +296,19 @@ msgstr "Все компоненты в наличии"
 #: sql_constraint:mrp.bom.line:0
 msgid ""
 "All product quantities must be greater than 0.\n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs !"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
 "Все количества продукта должны быть больше 0.\n"
-"Вы должны установить модуль mrp_byproduct если хотите управлять дополнительными продуктами в ВМ!"
+"Вы должны установить модуль mrp_byproduct если хотите управлять "
+"дополнительными продуктами в ВМ!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid ""
 "An unbuild order will do a reverse bill of materials, unbuilding products\n"
-"            you produced, but you can also use it to unbuild products you purchased."
+"            you produced, but you can also use it to unbuild products you "
+"purchased."
 msgstr ""
 "Отмена заявки даст обратный ход ведомости материалов, отменит изготовленные "
 "продукты, а также может отменить производство уже проданных продуктов."
@@ -452,7 +458,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of Materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 "Ведомость материалов позволяют определять перечни необходимого сырья "
@@ -1163,8 +1170,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
-"Если значение активного поля — «Ложь», то это позволит вам скрыть ведомость"
-"  материалов не удаляя её."
+"Если значение активного поля — «Ложь», то это позволит вам скрыть ведомость  "
+"материалов не удаляя её."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_active
@@ -1172,8 +1179,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса,"
-" не удаляя ее."
+"Если значение активного поля — Ложь, это позволит вам скрыть запись ресурса, "
+"не удаляя ее."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_active
@@ -1181,8 +1188,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
-"Если значение активного поля — «Ложь», будет возможно скрыть карту не удаляя"
-" её."
+"Если значение активного поля — «Ложь», будет возможно скрыть карту не удаляя "
+"её."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1219,8 +1226,7 @@ msgstr "Видимость сообщений перемещения"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_move_lot_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
 "Перемещения, для которых нужно отсканировать номер партии для этого задания."
 
@@ -1232,7 +1238,7 @@ msgstr "Работа данного пользователя"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_is_produced
 msgid "Is Produced"
-msgstr ""
+msgstr "Производится"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss_manual
@@ -1248,9 +1254,9 @@ msgstr "Уже разблокировано."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_location_id
 msgid ""
-"Keep empty if you produce at the location where you find the raw "
-"materials.Set a location if you produce at a fixed location. This can be a "
-"partner location if you subcontract the manufacturing operations."
+"Keep empty if you produce at the location where you find the raw materials."
+"Set a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
 msgstr ""
 "Оставьте пустым если производите в том же месте, где находится сырьё. "
 "Укажите конкретное место обработки. Это может быть также место у "
@@ -1345,8 +1351,8 @@ msgid ""
 "Lines need to be deleted, but can not as you still have some quantities to "
 "consume in them. "
 msgstr ""
-"Строки нужно удалить, но это невозможно  сделать пока есть части, отмеченные"
-" к потреблению."
+"Строки нужно удалить, но это невозможно  сделать пока есть части, отмеченные "
+"к потреблению."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_location_id
@@ -1539,7 +1545,8 @@ msgstr "Производственная ссылка"
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_waiting
 msgid ""
 "Manufacturing orders are usually proposed automatically based\n"
-"                on customer requirements or automated rules like the minimum\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
 "                stock rule."
 msgstr ""
 "Производственные заказы обычно предлагаются автоматически\n"
@@ -1570,7 +1577,8 @@ msgstr "Сообщение"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Messages can be configured to appear during any operation: receptions, delivery orders,\n"
+"Messages can be configured to appear during any operation: receptions, "
+"delivery orders,\n"
 "                manufacturing orders, work orders, etc."
 msgstr ""
 "Сообщения можно настроить так, чтобы они появлялись в операциях: \n"
@@ -1739,8 +1747,7 @@ msgstr "Ничего"
 #. module: mrp
 #: selection:ir.attachment,priority:0
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: selection:mrp.production,priority:0
-#: selection:mrp.workcenter,working_state:0
+#: selection:mrp.production,priority:0 selection:mrp.workcenter,working_state:0
 msgid "Normal"
 msgstr "Нормальный"
 
@@ -1939,8 +1946,8 @@ msgstr "Планируемая дата"
 #: code:addons/mrp/models/mrp_workorder.py:269
 #, python-format
 msgid ""
-"Please set the quantity you produced in the Current Qty field. It can not be"
-" 0!"
+"Please set the quantity you produced in the Current Qty field. It can not be "
+"0!"
 msgstr "Укажите текущее произведённое кол-во. Не может быть 0! "
 
 #. module: mrp
@@ -2279,8 +2286,8 @@ msgid ""
 "Recursion error!  A product with a Bill of Material should not have itself "
 "in its BoM or child BoMs!"
 msgstr ""
-"Ошибка рекурсии! Продукт с ведомостью материалов не должен ссылаться на свою"
-" или дочернюю ВМ!"
+"Ошибка рекурсии! Продукт с ведомостью материалов не должен ссылаться на свою "
+"или дочернюю ВМ!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_code
@@ -2297,8 +2304,7 @@ msgstr "Ссылка должна быть уникальна для каждо�
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_origin
-msgid ""
-"Reference of the document that generated this production order request."
+msgid "Reference of the document that generated this production order request."
 msgstr "Ссылка на документ, который сгенерировал эту производственную заявку."
 
 #. module: mrp
@@ -2403,7 +2409,8 @@ msgstr "Технологические карты и планирование"
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
 "Routings allow you to create and manage the manufacturing\n"
-"                operations that should be followed within your work centers in\n"
+"                operations that should be followed within your work centers "
+"in\n"
 "                order to produce a product.  They are attached to bills of\n"
 "                materials that will define the required raw materials."
 msgstr ""
@@ -2545,7 +2552,7 @@ msgstr "Может иметь множество готовых продукто
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Показать все записи с просроченой датой следующего действия"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -2619,13 +2626,11 @@ msgstr "Поле для движения заказов"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
 msgid "Technical Field to see if we can show 'Mark as Done' button"
-msgstr ""
-"Поле для просмотра возможности работы кнопки, отмечающей как сделанное"
+msgstr "Поле для просмотра возможности работы кнопки, отмечающей как сделанное"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move_lots_done_wo
-msgid ""
-"Technical Field which is False when temporarily filled in in work order"
+msgid "Technical Field which is False when temporarily filled in in work order"
 msgstr "Поле, «ложь» если временно заполнены поля производственного задания "
 
 #. module: mrp
@@ -2663,8 +2668,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"Единицы измерения выбранного продукта имеют категорию, отличную от указанной"
-" в форме продукта."
+"Единицы измерения выбранного продукта имеют категорию, отличную от указанной "
+"в форме продукта."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workcenter.py:152
@@ -2739,8 +2744,8 @@ msgstr "Количество  для производства только по�
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_routing_id
 msgid ""
 "The routing contains all the Work Centers used and for how long. This will "
-"create work orders afterwardswhich alters the execution of the manufacturing"
-" order. "
+"create work orders afterwardswhich alters the execution of the manufacturing "
+"order. "
 msgstr ""
 "Технологическая карта содержит список и время используемых участков. Будут "
 "созданы сообщения о готовности производственных заявок."
@@ -2760,8 +2765,8 @@ msgstr "Этот год"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_time_efficiency
 msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
+"This field is used to calculate the the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
 "efficiency factor is 100%, then the expected duration will be one hour. If "
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
@@ -2811,8 +2816,8 @@ msgstr "Время в минутах для подготовки."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_time_cycle_manual
 msgid ""
-"Time in minutes. Is the time used in manual mode, or the first time supposed"
-" in real time when there are not any work orders yet."
+"Time in minutes. Is the time used in manual mode, or the first time supposed "
+"in real time when there are not any work orders yet."
 msgstr ""
 "Время в минутах. Время в ручном режиме или предположительное время до тех "
 "пор, пока не появятся задания."
@@ -2852,13 +2857,16 @@ msgstr ""
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 msgid ""
 "To manufacture or assemble products, and use raw materials and\n"
-"            finished products you must also handle manufacturing operations.\n"
-"            Manufacturing operations are often called Work Orders. The various\n"
+"            finished products you must also handle manufacturing "
+"operations.\n"
+"            Manufacturing operations are often called Work Orders. The "
+"various\n"
 "            operations will have different impacts on the costs of\n"
 "            manufacturing and planning depending on the available workload."
 msgstr ""
 "Для производимых или собираемых продуктов, сырья и готовых\n"
-"продуктов также требуются ручные производственные операции. Производственные операции часто называют производственные \n"
+"продуктов также требуются ручные производственные операции. Производственные "
+"операции часто называют производственные \n"
 "задания. Различные операции будут иметь различные последствия \n"
 "для стоимости производства и планирования в зависимости от \n"
 "имеющейся загрузки."
@@ -2979,7 +2987,7 @@ msgstr "Разрезервировать"
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Предстоящие события (7 дней)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3017,12 +3025,15 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
 msgid ""
-"Use messages to warn manufacturing or inventory people about any change in the\n"
-"                products, process, or actions to take care of. (e.g; Warning, the bill of material changed,\n"
+"Use messages to warn manufacturing or inventory people about any change in "
+"the\n"
+"                products, process, or actions to take care of. (e.g; "
+"Warning, the bill of material changed,\n"
 "                check the details in new worksheet)"
 msgstr ""
 "Отправлять предупреждающие сообщения на производство или склад о наличии\n"
-"изменений в продукте, процессе или операции. (напр.: Внимание! Ведомость материалов изменена, смотрите изменения в КД.)"
+"изменений в продукте, процессе или операции. (напр.: Внимание! Ведомость "
+"материалов изменена, смотрите изменения в КД.)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_user_id
@@ -3097,8 +3108,8 @@ msgstr "Предупреждение"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a picking type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" picking type. That allows to define procurement rules which trigger "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"picking type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
 "Когда закупка отправляется в производство с указанием типа копмлектации, "
@@ -3110,7 +3121,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "When processing a sales order for this product, the delivery order\n"
-"                                will contain the raw materials, instead of the finished product."
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 "При обработке заказа продаж для этого продукта, заказ на \n"
 "поставку будет содержать сырьё вместо готового продукта."
@@ -3124,8 +3136,8 @@ msgstr "Производящиеся продукты могут быть изг
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter_batch
 msgid ""
-"Will determine if the next work order will be planned after the previous one"
-" or after the first Quantity To Process of the previous one."
+"Will determine if the next work order will be planned after the previous one "
+"or after the first Quantity To Process of the previous one."
 msgstr ""
 "Будет ли следующее производственное задание запланировано после предыдущего "
 "или после первой части предыдущего."
@@ -3192,13 +3204,14 @@ msgstr "Панель управления  производственного у
 msgid ""
 "Work Centers allow you to create and manage manufacturing\n"
 "                units. They consist of workers and/or machines, which are\n"
-"                considered as units for task assignation as well as capacity\n"
+"                considered as units for task assignation as well as "
+"capacity\n"
 "                and planning forecast."
 msgstr ""
 "Производственные участки позволяют создавать и управлять единицами "
 "производства. Они состоят из работников и/или машин, которые  "
-"рассматриваются как единицы для задач, а также производительности и прогноза"
-" планирования."
+"рассматриваются как единицы для задач, а также производительности и прогноза "
+"планирования."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
@@ -3224,8 +3237,7 @@ msgid ""
 msgstr ""
 "Технологические операции помогут вам создавать и управлять операциями на "
 "производственных участках в соответствии с заданием на производство "
-"продукта. Их связывают с ведомостями операций, определяющими требуемое "
-"сырьё."
+"продукта. Их связывают с ведомостями операций, определяющими требуемое сырьё."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3272,7 +3284,8 @@ msgid ""
 "            manufacturing order. Once you start the first work order of a\n"
 "            manufacturing order, the manufacturing order is automatically\n"
 "            marked as started. Once you finish the latest operation of a\n"
-"            manufacturing order, the MO is automatically done and the related\n"
+"            manufacturing order, the MO is automatically done and the "
+"related\n"
 "            products are produced."
 msgstr ""
 "Производственные задания — список операций необходимых\n"
@@ -3373,8 +3386,7 @@ msgstr ""
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:464
 #, python-format
-msgid ""
-"You can not cancel production order, a work order is still in progress."
+msgid "You can not cancel production order, a work order is still in progress."
 msgstr ""
 "Нельзя отменить производственную заявку, т. к. задание всё ещё выполняется."
 
@@ -3401,6 +3413,13 @@ msgid "You cannot cancel a stock move having already consumed material"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/models/stock_move.py:40
+#, python-format
+msgid "You cannot use the same serial number in two different lines."
+msgstr ""
+"Вы не можете использовать один и тот же серийный номер в двух разных строках."
+
+#. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44
 #, python-format
 msgid "You have already processed %d. Please input a quantity higher than %d "
@@ -3423,8 +3442,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
 msgstr ""
 "Необходимо определить хотя бы одну потерю продуктивности в категории "
 "«Выполнение». Создайте её из меню производственного приложения: Настройки / "

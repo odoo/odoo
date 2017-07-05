@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
@@ -16,10 +16,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_stock
@@ -108,8 +108,8 @@ msgstr "Teslim Şekilleri"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 "Teslim şekilleri satış koşulları grubudur. İşlem maliyetlerini ve "
 "sorumluluklarını alıcı ve satıcı arasında paylaştırmak ve gelişmiş taşıma "
@@ -149,8 +149,8 @@ msgstr "Gelir Tahmini ve Faturalama"
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised"
-" date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Müşterilere söz verilen tarihlerin hata payı. Teadrik zincirinde umulmadık "
 "gecikmelerle karşılaşmamak için ürünlerin tedarik ve teslimatları için "
@@ -160,7 +160,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:145
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Yeterli stok yok!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
@@ -171,7 +171,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Sipariş edilen miktar azaldı!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -247,7 +247,7 @@ msgstr "Satış Siparişi İstatistikleri"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Güvenli Satış Günleri"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
@@ -292,17 +292,17 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
+msgstr "Bu ürün% .2f%s tarafından paketlenmiştir. % .2f%s satmalısınız."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
 msgid "To Refund"
-msgstr ""
+msgstr "İade"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
 msgid "To Refund in SO"
-msgstr ""
+msgstr "Satış Siparişinde İade"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -335,6 +335,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
+"Sipariş miktarını azaltıyorsunuz! Gerekirse, teslimat emrini manuel olarak "
+"güncellemeyi unutmayın."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:146
@@ -343,6 +345,8 @@ msgid ""
 "You plan to sell %s %s but you only have %s %s available!\n"
 "The stock on hand is %s %s."
 msgstr ""
+"%s %s satmayı planlıyorsunuz ama, kullanılabilir yalnızca %s %s var! "
+"Elindeki stok %s %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
@@ -352,4 +356,4 @@ msgstr "sale.config.settings"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking_line
 msgid "stock.return.picking.line"
-msgstr ""
+msgstr "stock.return.picking.line"

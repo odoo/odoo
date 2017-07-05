@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_asset
-# 
+#
 # Translators:
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
@@ -26,10 +26,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_asset
@@ -94,8 +94,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
-msgid ""
-"Account used to record the purchase of the asset at its original price."
+msgid "Account used to record the purchase of the asset at its original price."
 msgstr "Cuenta usada para registrar la compra de activos al precio original."
 
 #. module: account_asset
@@ -299,8 +298,8 @@ msgid ""
 "Check this if you want to automatically confirm the assets of this category "
 "when created by invoices."
 msgstr ""
-"Valide si desea confirmar automáticamente el activo de esta categoría cuando"
-" es creado desde una factura."
+"Valide si desea confirmar automáticamente el activo de esta categoría cuando "
+"es creado desde una factura."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
@@ -317,7 +316,8 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
-"Escoja el método a utilizar para calcular la cantidad de líneas de amortización:\n"
+"Escoja el método a utilizar para calcular la cantidad de líneas de "
+"amortización:\n"
 "  * Lineal: Calculado en base a: Valor bruto / número de amortizaciones\n"
 "  * Decreciente: Calculado en base a: Valor contable * Factor decreciente"
 
@@ -325,13 +325,19 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method_time
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_method_time
 msgid ""
-"Choose the method to use to compute the dates and number of depreciation lines.\n"
-"  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n"
-"  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+"  * Ending Date: Choose the time between 2 depreciations and the date the "
+"depreciations won't go beyond."
 msgstr ""
-"Escoja el método utilizado para calcular las fechas y número de las líneas de depreciación\n"
-"  * Número de depreciaciones: Establece el número de líneas de depreciación y el tiempo entre dos depreciaciones.\n"
-"  * Fecha fin: Seleccione el tiempo entre 2 depreciaciones y la fecha de la depreciación no irá más allá."
+"Escoja el método utilizado para calcular las fechas y número de las líneas "
+"de depreciación\n"
+"  * Número de depreciaciones: Establece el número de líneas de depreciación "
+"y el tiempo entre dos depreciaciones.\n"
+"  * Fecha fin: Seleccione el tiempo entre 2 depreciaciones y la fecha de la "
+"depreciación no irá más allá."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_asset_depreciation_confirmation_wizard_date
@@ -607,7 +613,8 @@ msgstr "Filtros extendidos..."
 #: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
 "From this report, you can have an overview on all depreciations. The\n"
-"            search bar can also be used to personalize your assets depreciation reporting."
+"            search bar can also be used to personalize your assets "
+"depreciation reporting."
 msgstr ""
 "Desde este informe puedes tener una vista global de todas las "
 "amortizaciones. Se puede usar las herramientas de búsquedas para "
@@ -998,8 +1005,10 @@ msgstr "El número de amortizaciones para amortizar el activo"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
 msgid ""
-"This wizard will post installment/depreciation lines for the selected month.<br/>\n"
-"                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
+"This wizard will post installment/depreciation lines for the selected month."
+"<br/>\n"
+"                        This will generate journal entries for all related "
+"installment lines on this period of asset/revenue recognition as well."
 msgstr ""
 "Este asistente asentara todos los apuntes de amortización para el año "
 "seleccionado.<br/> Generará asientos  para todos los registros relacionados "
@@ -1047,12 +1056,17 @@ msgstr "Proveedor"
 #: model:ir.model.fields,help:account_asset.field_account_asset_depreciation_line_parent_state
 msgid ""
 "When an asset is created, the status is 'Draft'.\n"
-"If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
 "Cuando crea un activo, su estado es 'Borrador'\n"
-"Si el activo es confirmado, su estado es 'en ejecución' y las líneas de amortización pueden ser insertadas en la contabilidad.\n"
-"Puede cerrar manualmente un activo cuando ha finalizado su amortización. Si la última línea de depreciación se inserta, el activo se cierra automáticamente."
+"Si el activo es confirmado, su estado es 'en ejecución' y las líneas de "
+"amortización pueden ser insertadas en la contabilidad.\n"
+"Puede cerrar manualmente un activo cuando ha finalizado su amortización. Si "
+"la última línea de depreciación se inserta, el activo se cierra "
+"automáticamente."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_name

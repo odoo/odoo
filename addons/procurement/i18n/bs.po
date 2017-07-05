@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-06 13:32+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
@@ -26,6 +26,10 @@ msgid ""
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
 msgstr ""
+"<b>Izuzetak u naručivanju</b> se pojavljuje kada sistem ne može da pornađe "
+"način da ispuni naručivanje. Neki izuzetci će se riješiti sami od sebe, dok "
+"drugi će zahtjevati ručnu intervenciju (oni su identifikovani putem posebne "
+"poruke o grešci u sistemu evidencije poruka)."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -39,6 +43,12 @@ msgid ""
 "rules or\n"
 "                minimum stock rules.</i>"
 msgstr ""
+"<b>Narudžba naručivanja</b> se koristi za evidenciju potreba određenih\n"
+"                proizvoda na specifičnoj lokaciji. Narudžbe naručivanja se "
+"obično\n"
+"                kreiraju automatski kroz <i>prodajne narudžbe, 'povuci' "
+"logističkih pravila ili\n"
+"                na osnovu minimalnih zaliha u sistemu.</i>"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_action
@@ -56,6 +66,11 @@ msgid "All at once"
 msgstr "Sve odjednom"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Otkaži"
@@ -71,15 +86,9 @@ msgid "Cancelled"
 msgstr "Otkazan"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Ne može se obrisati nalog naručivanja koji je u statusu  %s"
-
-#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Check Procurement"
-msgstr ""
+msgstr "Provjeri naručivanje"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_rule_id
@@ -87,13 +96,16 @@ msgid ""
 "Chosen rule for the procurement resolution. Usually chosen by the system but "
 "can be manually set by the procurement manager to force an unusual behavior."
 msgstr ""
+"Odabrano pravilo za razrješavanje naručivanja. Obično je odabrano od strane "
+"sistema ali se može i ručno postaviti od strane menadžera naručivanja da se "
+"forsira neobičnu situaciju naručivanja."
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Kliknite da kreirate narudžbu naručivanja."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -104,7 +116,7 @@ msgstr "Kompanija"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Compute all procurements in the background."
-msgstr ""
+msgstr "Izračunaj sva naručivanja u pozadini sistema."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
@@ -134,9 +146,8 @@ msgstr "Kreirano"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Način isporuke"
+msgstr "Tip isporuke"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -184,7 +195,7 @@ msgstr "Fiksno"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_id
 msgid "Fixed Procurement Group"
-msgstr ""
+msgstr "Fiksna grupa naručivanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
@@ -200,7 +211,7 @@ msgstr "Grupiši po"
 #: model:ir.actions.act_window,name:procurement.do_view_procurements
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Group's Procurements"
-msgstr ""
+msgstr "Naručivanja grupa"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_id
@@ -213,12 +224,13 @@ msgstr "ID"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Ako je ruta globalna"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
 msgid "If unchecked, it will allow you to hide the rule without removing it."
 msgstr ""
+"Ako nije zakačeno, dozvoliti će vam da sakrijete pravilo bez da ga uklanjate."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group___last_update
@@ -252,12 +264,7 @@ msgstr "Kasni"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Leave Empty"
-msgstr ""
-
-#. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistika"
+msgstr "Ostavi prazno"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
@@ -266,6 +273,9 @@ msgid ""
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Najčešći izuzetci su proizvodi za nabavku koji\n"
+"nemaju definisanog dobavljača, i proizvodi koji se \n"
+"proizvode a nemaju definisanu sastavnicu."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -273,10 +283,10 @@ msgid "Name"
 msgstr "Ime"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
-msgstr ""
+msgstr "Nijedno pravilo ne odgovara ovom naručivanju"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -320,7 +330,7 @@ msgstr "Izuzetak u naručivanju"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Grupa naručivanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -337,28 +347,40 @@ msgstr "Nalozi naručivanja"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_group
 msgid "Procurement Requisition"
-msgstr ""
+msgstr "Rekvizicija naručivanja"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_rule
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Procurement Rule"
-msgstr ""
+msgstr "Pravilo naručivanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Pravila naručivanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 msgid "Procurement group"
-msgstr ""
+msgstr "Grupa naručivanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
 msgstr "Naručivanje je zakasnilo"
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
@@ -382,17 +404,17 @@ msgstr "Jedinica mjere proizvoda"
 #. module: procurement
 #: selection:procurement.rule,group_propagation_option:0
 msgid "Propagate"
-msgstr ""
+msgstr "Proslijedi"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "Propagation Options"
-msgstr ""
+msgstr "Opcije prosljeđivanja"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_group_propagation_option
 msgid "Propagation of Procurement Group"
-msgstr ""
+msgstr "Prosljeđivanje grupe naručivanja"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_product_qty
@@ -402,7 +424,7 @@ msgstr "Količina"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Reconfirm Procurement"
-msgstr ""
+msgstr "Ponovno potvrdi naručivanje"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_name
@@ -412,9 +434,11 @@ msgstr "Referenca"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
+"Referenca dokumenta koji je kreirao ovo naručivanje. Ovo polje se automatski "
+"popunjava od strane sistema."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -425,11 +449,6 @@ msgstr "Pravilo"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Pokreni naručivanja"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -450,7 +469,7 @@ msgstr "Zakazani datum"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Scheduled Month"
-msgstr ""
+msgstr "Zakazani mijesec"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
@@ -460,7 +479,7 @@ msgstr "Parametri planera"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Scheduling"
-msgstr ""
+msgstr "Zakazivanje"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
@@ -487,7 +506,7 @@ msgstr "Status"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_name
 msgid "This field will fill the packing origin and the name of its moves"
-msgstr ""
+msgstr "Ovo polje će popuniti izvor pakovanja i naziv njegovih kretanja"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -514,6 +533,15 @@ msgid ""
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Kada je naručivanje potvrđeno, automatski kreira neophodne\n"
+"operacije da bi ispunio potrebe: prijedlog nabavne narudžbe,\n"
+"nalog proizvodnje, itd."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:158
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Ne možete da obrišete naručivanja koja su u statusu otkazan."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
@@ -524,48 +552,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "npr. PR005"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posljednje poruke ostavljene na unos."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno nove poruke će zahtjevati vašu pažnju."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratilac"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i istorija komunikacije"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nepročitane poruke"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke na website-u"

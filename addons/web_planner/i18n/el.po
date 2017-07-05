@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-02-16 10:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -23,6 +23,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 msgid "Active"
 msgstr "Ενεργό"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:369
+#, python-format
+msgid "Cancel"
+msgstr "Ακύρωση"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_uid
@@ -55,12 +62,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the planner. "
 "This change requires a refresh of your page."
 msgstr ""
+"Εάν το ενεργό πεδίο είναι Ψευδές, σας επιτρέπει να αποκρύψετε τον Σχεδιασμό. "
+"Αυτή η αλλαγή απαιτεί την ανανέωση στης σελίδας."
 
 #. module: web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
-#, fuzzy
 msgid "Inactive"
-msgstr "Ανενεργό"
+msgstr "Ανενεργή"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner___last_update
@@ -79,10 +87,10 @@ msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:31
+#: code:addons/web_planner/static/src/js/web_planner_common.js:132
 #, python-format
 msgid "Mark As Done"
-msgstr ""
+msgstr "Μάρκαρε Ως Ολοκληρωμένο"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_menu_id
@@ -96,10 +104,17 @@ msgstr "Όνομα"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:34
+#: code:addons/web_planner/static/src/js/web_planner_common.js:140
 #, python-format
-msgid "Next step"
+msgid "Next Step"
 msgstr ""
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:378
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "Odoo Enterprise"
 
 #. module: web_planner
 #: model:ir.model,name:web_planner.model_web_planner
@@ -111,25 +126,32 @@ msgstr "Σχεδιασμός"
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_planner_application
 msgid "Planner Application"
-msgstr ""
+msgstr "Εφαρμογή Σχεδιασμός"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_tooltip_planner
 msgid "Planner Tooltips"
-msgstr ""
+msgstr "Επεξηγήσεις Σχεδιασμού"
 
 #. module: web_planner
 #: model:ir.actions.act_window,name:web_planner.web_planner_action
 #: model:ir.ui.menu,name:web_planner.web_planner_menu
 msgid "Planners"
-msgstr ""
+msgstr "Σχεδιασμοί"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_progress
 msgid "Progress Percentage"
-msgstr ""
+msgstr "Ποσοστιαία Πρόοδος"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_view_id
 msgid "Template"
 msgstr "Πρότυπο"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:360
+#, python-format
+msgid "Upgrade now"
+msgstr "Αναβάθμιση τώρα"

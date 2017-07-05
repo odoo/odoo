@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-07-20 03:03+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -32,6 +32,11 @@ msgstr ""
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
+msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
 msgstr ""
 
 #. module: note
@@ -120,21 +125,19 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
 msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Mới"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -172,6 +175,11 @@ msgid "Notes"
 msgstr "Ghi chú"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -179,7 +187,7 @@ msgstr "Chủ sở hữu"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr ""
 
 #. module: note
@@ -187,6 +195,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Trình tự"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -229,29 +242,35 @@ msgstr ""
 #. module: note
 #: sql_constraint:note.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Nội dung này đã có rồi!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Tags"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Tuần này"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Hôm nay"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
 msgstr ""
 
 #. module: note
@@ -282,33 +301,3 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ngày của thông điệp gần nhất được ghi nhận trên một bản ghi"
-
-#~ msgid "Followers"
-#~ msgstr "Người dõi theo"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Người theo dõi (Các kênh)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Người theo dõi (Các đối tác)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Nếu đánh dấu kiểm, các thông điệp mới yêu cầu sự có mặt của bạn."
-
-#~ msgid "Is Follower"
-#~ msgstr "Trở thành người theo dõi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Ngày thông điệp cuối cùng"
-
-#~ msgid "Messages"
-#~ msgstr "Thông điệp"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Lịch sử trao đổi"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Thông điệp chưa đọc"

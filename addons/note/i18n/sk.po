@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-13 19:36+0000\n"
 "Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>\n"
 "Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
@@ -34,6 +34,11 @@ msgstr "Archív"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Podľa Sticky Note kategórie"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Kliknite pre zadanie novej menovky."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -121,21 +126,19 @@ msgid "Last Updated on"
 msgstr "Naposledy upravované"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Neskôr"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Nové"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Nová poznámka"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -173,6 +176,11 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -180,14 +188,19 @@ msgstr "Vlastník"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Vlastník etapy poznámky"
+msgid "Owner of the note stage"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Postupnosť"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -233,27 +246,33 @@ msgid "Tag name already exists !"
 msgstr "Názov visačky už existuje !"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Popisky"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Tento týždeň"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Dnes"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Zajtra"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -295,51 +314,3 @@ msgstr ""
 "Môžete si nastaviť ako spracujete vaše poznámky/úlohy pridaním,\n"
 "\n"
 "odstránením alebo úpravou stĺpcov."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebná akcia"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dátum poslednej správy záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Odberatelia"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Odberatelia (Kanály)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Odberatelia (Partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je odberateľ"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Dátum poslednej správy"
-
-#~ msgid "Messages"
-#~ msgstr "Správy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Správa a história komunikácie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Počet akcií"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Počet správ ktoré vyžadujú akciu"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Počet neprečítaných správ"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprečítané správy"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo neprečítaných správ"

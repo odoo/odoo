@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-12-29 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Vietnamese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (bản sao)"
@@ -90,11 +90,6 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "Khoảng thời gian"
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
 msgstr ""
@@ -106,7 +101,8 @@ msgid "End Date"
 msgstr "Ngày kết thúc"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:741
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
@@ -207,7 +203,7 @@ msgstr "Nguyên liệu"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Monday"
-msgstr ""
+msgstr "Thứ Hai"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -288,7 +284,7 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
-msgstr ""
+msgstr "Thứ Bảy"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -333,10 +329,11 @@ msgstr "Chủ nhật"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
 
 #. module: resource
@@ -347,7 +344,7 @@ msgstr "Thứ năm"
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
-msgstr ""
+msgstr "Thứ Ba"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search

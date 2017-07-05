@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-23 12:24+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Czech (http://www.transifex.com/odoo/odoo-9/language/cs/)\n"
@@ -18,11 +18,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
-msgstr "Pravidla akcí"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
 msgstr "Výhody"
@@ -30,12 +25,17 @@ msgstr "Výhody"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr ""
+msgstr "Výhody..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
 msgid "Basic Salary of the employee"
 msgstr "Základní plat zaměstnance"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
@@ -50,7 +50,7 @@ msgstr "Odkaz smlouvy"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -74,6 +74,12 @@ msgstr ""
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
+msgstr ""
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:87
+#, python-format
+msgid "Contract start date must be less than contract end date."
 msgstr ""
 
 #. module: hr_contract
@@ -142,19 +148,13 @@ msgstr "Zaměstnanec"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Smlouva"
+msgstr "Smlouva zaměstnance"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Datum ukončení"
-
-#. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -173,25 +173,34 @@ msgid "Group By"
 msgstr "Seskupit podle"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
+msgid "HR Contract: update to closed"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
+msgid "HR Contract: update to pending"
 msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
-msgstr ""
+msgstr "Vzdál. pro HomeWork"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -244,7 +253,7 @@ msgstr "Poslední smlouva zaměstnance"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr ""
+msgstr "Zdrav. prohlídka"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
@@ -268,11 +277,6 @@ msgid "Number of Children"
 msgstr "Počet dětí"
 
 #. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
 msgid "Place of Birth"
 msgstr "Místo narození"
@@ -285,7 +289,7 @@ msgstr "Spuštěno"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary and Advantages"
-msgstr ""
+msgstr "Plat a benefity"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -333,27 +337,12 @@ msgstr "Zkušební koncové datum"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Trial Period Duration"
-msgstr ""
+msgstr "Délka zkušební doby"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
 msgid "Trial Start Date"
 msgstr "Zkušební počáteční datum"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Nepřečtené zprávy"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
@@ -384,33 +373,3 @@ msgstr "Č. pracovního povolení"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Pracovní plán"
-
-#~ msgid "Action Needed"
-#~ msgstr "Vyžadována akce"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum posledního vzkazu u tohoto záznamu."
-
-#~ msgid "Followers"
-#~ msgstr "Sledující"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum posledního vzkazu"
-
-#~ msgid "Messages"
-#~ msgstr "Zprávy"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Zprávy a historie komunikace"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Počítadlo nepřečtených zpráv"
-
-#~ msgid "Website Messages"
-#~ msgstr "Zprávy Webové stránky"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historie komunikace Webové stránky"

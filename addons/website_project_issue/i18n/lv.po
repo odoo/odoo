@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
@@ -19,74 +19,114 @@ msgstr ""
 "2);\n"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr ""
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>Piešķirts</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Date:</strong>"
-msgstr ""
+msgstr "<strong>Datums:</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "<strong>Description</strong>"
+msgstr "<strong>Apraksts</strong>"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Message and communication history</strong>"
-msgstr ""
+msgstr "<strong>Ziņojumu un komunikācijas vēsture</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Reported by</strong>"
-msgstr ""
+msgstr "<strong>Ziņotājs</strong>"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: code:addons/website_project_issue/controllers/main.py:38
+#, python-format
+msgid "All"
+msgstr "Visi"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "Current stage of the issue"
+msgstr "Pieteikuma pašreizējais posms"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
-msgstr ""
+msgstr "Pieteikuma pašreizējais posms"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "Description"
 msgstr "Apraksts"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#, fuzzy
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Edit Issue"
-msgstr "Incidents"
+msgstr "Labot pieteikumu"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Issue"
 msgstr "Incidents"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-msgid "My Account"
-msgstr ""
+#: model:ir.ui.view,arch_db:website_project_issue.portal_layout
+msgid "Issues"
+msgstr "Pieteikumi"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Status"
-msgstr "Statuss"
+#: code:addons/website_project_issue/controllers/main.py:35
+#, python-format
+msgid "Last Stage Update"
+msgstr "Pēdējā posma atjaunināšana"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "There are currently no issues for your account."
-msgstr ""
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "My Issues"
+msgstr "Mani pieteikumi"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Your Issues"
-msgstr ""
+#: code:addons/website_project_issue/controllers/main.py:33
+#, python-format
+msgid "Name"
+msgstr "Nosaukums"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:32
+#, python-format
+msgid "Newest"
+msgstr "Jaunākais"
 
 #. module: website_project_issue
 #: model:ir.model,name:website_project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Projekta incidents"
+msgid "Project Issue"
+msgstr "Projekta pieteikums"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:34
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Stage"
+msgstr "Posms"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
+msgid "There are currently no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "There are no issues."
+msgstr "Pieteikumu nav."
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
+msgid "Your Issues"
+msgstr "Jūsu pieteikumi"

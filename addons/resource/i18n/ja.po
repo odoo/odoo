@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-14 08:55+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s（コピー）"
@@ -80,6 +80,7 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"プロジェクトメンバーにスケジュールすることができる勤務時間と時間表を定義"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -88,11 +89,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
 msgstr "表示名"
-
-#. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "期間"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
@@ -106,7 +102,8 @@ msgid "End Date"
 msgstr "終了日"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:741
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "エラー。休暇開始日は休暇終了日の前でなければいけません。"
 
@@ -196,7 +193,7 @@ msgstr "休暇の詳細"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "月ごとの休暇"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -319,7 +316,7 @@ msgstr "開始日"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance_hour_from
 msgid "Start and End time of working."
-msgstr ""
+msgstr "作業の開始時刻と終了時刻。"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_date_from
@@ -329,7 +326,7 @@ msgstr "開始日"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "月ごとの休暇開始日"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -339,10 +336,11 @@ msgstr "日曜"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
 
 #. module: resource

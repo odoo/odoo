@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-01-24 21:39+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -20,17 +20,29 @@ msgstr ""
 #. module: bus
 #: sql_constraint:bus.presence:0
 msgid "A user can only have one IM status."
-msgstr ""
+msgstr "Un usuari només pot tenir un estat de conversa."
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Away"
-msgstr ""
+msgstr "Absent"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
 msgstr "Canal"
+
+#. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -49,18 +61,33 @@ msgid "Display Name"
 msgstr "Mostra Nom"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geo latitud"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Longitud Geo"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr "Data de Geolocalització"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
@@ -74,7 +101,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:bus.field_res_partner_im_status
 #: model:ir.model.fields,field_description:bus.field_res_users_im_status
 msgid "IM Status"
-msgstr ""
+msgstr "Estat de la conversa"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
@@ -85,12 +112,12 @@ msgstr "Darrera modificació feta el"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "Última conversa"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "Última presencia"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
@@ -123,9 +150,14 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "Presència del usuari"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -136,7 +168,4 @@ msgstr "Usuaris"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
-msgstr ""
-
-#~ msgid "Created on"
-#~ msgstr "Creat el"
+msgstr "bus.bus"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-11-22 16:11+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,24 +20,9 @@ msgstr ""
 "%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: mrp_repair
-#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
-msgid ""
-" * The 'Draft' status is used when a user is encoding a new and unconfirmed "
-"repair order.             \n"
-"* The 'Confirmed' status is used when a user confirms the repair "
-"order.             \n"
-"* The 'Ready to Repair' status is used to start to repairing, user can start "
-"repairing only after repair order is confirmed.             \n"
-"* The 'To be Invoiced' status is used to generate the invoice before or "
-"after repairing done.             \n"
-"* The 'Done' status is set when repairing is completed.            \n"
-"* The 'Cancelled' status is used when user cancel repair order."
-msgstr ""
-
-#. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "(<i>Remove</i>)"
-msgstr ""
+msgstr "(<i>Pašalinti</i>)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -45,14 +30,28 @@ msgid "(update)"
 msgstr "(atnaujinti)"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "<i>(Add)</i>"
+#: model:ir.model.fields,help:mrp_repair.field_mrp_repair_state
+msgid ""
+"* The 'Draft' status is used when a user is encoding a new and unconfirmed "
+"repair order.\n"
+"* The 'Confirmed' status is used when a user confirms the repair order.\n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.\n"
+"* The 'To be Invoiced' status is used to generate the invoice before or "
+"after repairing done.\n"
+"* The 'Done' status is set when repairing is completed.\n"
+"* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "<i>(Add)</i>"
+msgstr "<i>(Pridėti)</i>"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Fees Line(s)</strong>"
-msgstr ""
+msgstr "<strong>Mokesčių eilutė(s)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -62,44 +61,37 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot Number</strong>"
-msgstr ""
+msgstr "<strong>Lot Numeris</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operation Line(s)</strong>"
-msgstr ""
+msgstr "<strong>Operacijos eilutė(s)</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr ""
+msgstr "<strong>Spausdinimo data:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr ""
+msgstr "<strong>Produktas taisymui:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-#, fuzzy
 msgid "<strong>Shipping address :</strong>"
-msgstr "Pristatymo adresas:"
+msgstr "<strong>Pristatymo adresas:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgstr "<strong>Suma be mokesčių</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Total</strong>"
-msgstr ""
-
-#. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:24
-#, python-format
-msgid "Active ID not Found"
-msgstr ""
+msgstr "<strong>Suma</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -109,22 +101,28 @@ msgstr "Pridėti"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr ""
+msgstr "Pridėti vidines pastabas..."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr ""
+msgstr "Pridėti pasiūlymo užrašus..."
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr ""
+msgstr "Po taisymo"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr ""
+msgstr "Prieš taisymą"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:206
+#, python-format
+msgid "Can only confirm draft repairs."
+msgstr "Gali patvirtinti tik juodraštinius taisymus."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -136,18 +134,24 @@ msgstr "Atšaukti"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr ""
+msgstr "Atšaukti taisymą"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Atšaukti taisymo užsakymą"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
 msgid "Cancelled"
 msgstr "Atšauktas"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:221
+#, python-format
+msgid "Cannot cancel completed repairs."
+msgstr "Negalima atšaukti atliktų taisymų."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -157,7 +161,7 @@ msgstr ""
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr ""
+msgstr "Paspauskite, norėdami sukurti taisymo užsakymą"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -168,7 +172,7 @@ msgstr "Įmonė"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr ""
+msgstr "Patvirtinti taisymą"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -177,7 +181,8 @@ msgid "Confirmed"
 msgstr "Patvirtinta"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:524
+#: code:addons/mrp_repair/models/mrp_repair.py:508
+#: code:addons/mrp_repair/models/mrp_repair.py:570
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -217,6 +222,11 @@ msgstr "Sukurta"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_id
 msgid "Current Location"
+msgstr "Einamoji vieta"
+
+#. module: mrp_repair
+#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
+msgid "Default Address"
 msgstr ""
 
 #. module: mrp_repair
@@ -227,7 +237,7 @@ msgstr "Pristatymo adresas"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
 msgid "Delivery Location"
-msgstr ""
+msgstr "Pristatymo vieta"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
@@ -268,7 +278,7 @@ msgstr "Juodraštis"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "End Repair"
-msgstr ""
+msgstr "Baigti taisymą"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -279,7 +289,7 @@ msgstr "Papildoma informacija"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fees_lines
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Fees"
-msgstr ""
+msgstr "Mokesčiai"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -340,11 +350,6 @@ msgid "Invoice"
 msgstr "Sąskaita-faktūra"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Invoice Corrected"
-msgstr ""
-
-#. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Invoice Exception"
 msgstr "Sąskaitos faktūros išimtis"
@@ -358,7 +363,7 @@ msgstr "Sąskaitos faktūros eilutė"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_invoice_method
 msgid "Invoice Method"
-msgstr ""
+msgstr "Faktūravimos metodas"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -386,7 +391,7 @@ msgstr "Apskaita"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_partner_invoice_id
 msgid "Invoicing Address"
-msgstr ""
+msgstr "Sąskaitos faktūros adresas"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair___last_update
@@ -423,7 +428,7 @@ msgstr "Partija"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 msgid "Make Invoice"
-msgstr ""
+msgstr "Sukurti sąskaitą faktūrą"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_move_id
@@ -436,37 +441,44 @@ msgid "Move created by the repair order"
 msgstr ""
 
 #. module: mrp_repair
-#: selection:mrp.repair,invoice_method:0
-msgid "No Invoice"
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "My Activities"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:511
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "Sąskaitos faktūros nėra"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:499
+#: code:addons/mrp_repair/models/mrp_repair.py:561
 #, python-format
 msgid "No Pricelist!"
 msgstr "Nėra kainos!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:322
+#: code:addons/mrp_repair/models/mrp_repair.py:260
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:350
-#: code:addons/mrp_repair/mrp_repair.py:379
+#: code:addons/mrp_repair/models/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:313
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:372
+#: code:addons/mrp_repair/models/mrp_repair.py:306
 #, python-format
 msgid "No product defined on Fees!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:522
+#: code:addons/mrp_repair/models/mrp_repair.py:506
+#: code:addons/mrp_repair/models/mrp_repair.py:568
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr ""
@@ -479,11 +491,16 @@ msgstr "Pastabos"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
 msgid "Operation Lines"
-msgstr ""
+msgstr "Operacijos eilutės"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Operations"
+msgstr "Operacija"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Overdue Activities"
 msgstr ""
 
 #. module: mrp_repair
@@ -534,7 +551,7 @@ msgstr "Matavimo vienetas"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
 msgid "Product to Repair"
-msgstr ""
+msgstr "Taisymo produktas"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
@@ -562,7 +579,7 @@ msgstr "Pasiūlymas / Užsakymas"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_quotation_notes
 msgid "Quotation Notes"
-msgstr ""
+msgstr "Pasiūlymo užrašai"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -572,17 +589,12 @@ msgstr "Komerciniai pasiūlymai"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Paruošta taisyti"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr ""
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
-msgid "Recreate Invoice"
-msgstr "Iš naujo išrašyti sąskaitą"
+msgstr "Paruošta taisyti"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -592,85 +604,109 @@ msgstr "Pašalinti"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr ""
+msgstr "Taisymo įkainių eilutė"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Repair Line"
-msgstr ""
+msgstr "Taisymo eilutė"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Repair Order"
-msgstr ""
+msgstr "Taisymo užsakymas"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr ""
+msgstr "Taisymo užsakymas #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Taisymo užsakymo numeris"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
-msgstr ""
+msgstr "Taisymo užsakymai"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "Taisymo pasiūlymas #:"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
 msgid "Repair Reference"
+msgstr "Taisymo numeris"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:194
+#, python-format
+msgid "Repair must be canceled in order to reset it to draft."
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:285
+#: code:addons/mrp_repair/models/mrp_repair.py:343
+#, python-format
+msgid "Repair must be confirmed before starting reparation."
+msgstr "Prieš pradedant taisymą, taisymas turi būti patvirtintas."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:371
+#, python-format
+msgid "Repair must be repaired in order to make the product moves."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:354
+#, python-format
+msgid "Repair must be under repair in order to end reparation."
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/models/mrp_repair.py:223
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr ""
+msgstr "Taisymo užsakymo sąskaita faktūra jau išrašyta."
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:32
+#: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr ""
+msgstr "Taisymo užsakymo sąskaita faktūra neišrašyta."
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
 #: selection:mrp.repair,state:0
 msgid "Repaired"
-msgstr ""
+msgstr "Sutaisyta"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_lot_id
 msgid "Repaired Lot"
-msgstr ""
+msgstr "Sutaisytas Lot"
 
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr ""
+msgstr "Taisymai"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr ""
+msgstr "Taisymų užsakymas"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Ieškoti taisymo užsakymų"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -681,7 +717,7 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:272
+#: code:addons/mrp_repair/models/mrp_repair.py:213
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
@@ -692,6 +728,11 @@ msgid "Set to Draft"
 msgstr "Atstatyti į juodraštį"
 
 #. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
 msgid "Source Location"
 msgstr "Šaltinio vieta"
@@ -699,7 +740,7 @@ msgstr "Šaltinio vieta"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Start Repair"
-msgstr ""
+msgstr "Pradėti taisymą"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
@@ -728,7 +769,7 @@ msgid "Taxes"
 msgstr "Mokesčiai"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
@@ -740,7 +781,7 @@ msgstr ""
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "Taisymo užsakymo pavadinimas turi būti unikalus!"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -774,6 +815,11 @@ msgstr "Neužpajamuota"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "To be Invoiced"
+msgstr "Turi būti išrašyta sąskaita faktūra"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Today Activities"
 msgstr ""
 
 #. module: mrp_repair
@@ -794,7 +840,7 @@ msgstr "Tipas"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr ""
+msgstr "Taisoma"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
@@ -816,6 +862,11 @@ msgstr "Suma be mokesčių"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Untaxed amount"
+msgstr "Suma be mokesčių"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
+msgid "Upcoming Activities (7 days)"
 msgstr ""
 
 #. module: mrp_repair
@@ -824,7 +875,7 @@ msgid "VAT:"
 msgstr "PVM:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:207
+#: code:addons/mrp_repair/models/mrp_repair.py:166
 #, python-format
 msgid "Warning"
 msgstr "Įspėjimas"
@@ -832,7 +883,7 @@ msgstr "Įspėjimas"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_guarantee_limit
 msgid "Warranty Expiration"
-msgstr ""
+msgstr "Garantijos galiojimo laiko pabaiga"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -840,56 +891,16 @@ msgid "Yes"
 msgstr "Taip"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:308
+#: code:addons/mrp_repair/models/mrp_repair.py:248
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:513
+#: code:addons/mrp_repair/models/mrp_repair.py:501
+#: code:addons/mrp_repair/models/mrp_repair.py:563
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
-"Please set one before choosing a product."
+" Please set one before choosing a product."
 msgstr ""
-
-#. module: mrp_repair
-#: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
-msgid "unknown"
-msgstr "nežinomas"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Paskutinė pranešimo publikavimo data šiame įraše."
-
-#~ msgid "Followers"
-#~ msgstr "Prenumeratoriai"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeigu pažymėta, nauji pranešimai reikalaus jūsų dėmesio."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Paskutinio pranešimo data"
-
-#~ msgid "Messages"
-#~ msgstr "Pranešimai"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Pranešimų ir komunikacijos istorija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Veiksmų skaičius"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Žinučių, kurių prireiks veiksmui skaičius"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Neperskaitytų žinučių skaičius"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neskaityti pranešimai"
-
-#~ msgid "Website Messages"
-#~ msgstr "Interneto svetainės pranešimai"
-
-#~ msgid "Website communication history"
-#~ msgstr "Interneto svetainės komunikacijos istorija"

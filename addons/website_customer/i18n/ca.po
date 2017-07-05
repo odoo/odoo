@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-01 09:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -20,7 +20,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> Tot"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
@@ -28,7 +28,7 @@ msgid "Active"
 msgstr "Actiu"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:64
 #, python-format
 msgid "All Countries"
 msgstr "Tots els Països"
@@ -36,7 +36,7 @@ msgstr "Tots els Països"
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
 msgid "Bootstrap class to customize the color"
-msgstr ""
+msgstr "Classe de Bootstrap per personalitzar el color"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
@@ -46,12 +46,12 @@ msgstr "Nom de categoria"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
 msgid "Class"
-msgstr ""
+msgstr "Classe"
 
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
-msgstr ""
+msgstr "Clica per crear una nova etiqueta d'empresa"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
@@ -76,7 +76,7 @@ msgstr "ID"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "Implemented By"
-msgstr ""
+msgstr "Implementat per"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
@@ -100,11 +100,14 @@ msgid ""
 "                    You can add the filter by tag on your website in the "
 "\"Customize\" menu."
 msgstr ""
+"Utilitzi les etiquetes d'empresa per classificar-les millor en el seu lloc "
+"web. Pot afegir un filtre per etiqueta al lloc web des del menú "
+"\"Personalitzar\"."
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "No result found"
-msgstr ""
+msgstr "No s'han trobat resultats"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.details
@@ -129,6 +132,8 @@ msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ... "
 msgstr ""
+"Etiquetes d'empresa - Es poden utilitzar al lloc web per localitzar clients "
+"per sector, ..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
@@ -143,12 +148,12 @@ msgstr "Referències"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
-msgstr ""
+msgstr "Referencies per país"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "References by Tag"
-msgstr ""
+msgstr "Referencies per etiqueta"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -158,7 +163,12 @@ msgstr "Cerca"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
-msgstr ""
+msgstr "Amb la confiança de milions de clients en tot el món"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr "Visible al lloc web"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -166,12 +176,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr ""
+msgstr "Etiquetes del lloc web"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
 msgid "Website tags"
-msgstr ""
+msgstr "Etiquetes del lloc web"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country
@@ -181,13 +191,4 @@ msgstr "Mapa del món"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
-msgstr ""
-
-#~ msgid "Partner Tags"
-#~ msgstr "Etiquetes d'empresa"
-
-#~ msgid "Tags"
-#~ msgstr "Etiquetes"
-
-#~ msgid "Website URL"
-#~ msgstr "URL del lloc web"
+msgstr "referencia(es))"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-03-10 13:16+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
@@ -26,6 +26,11 @@ msgid ""
 "automatically, but others require manual intervention (those are identified "
 "by a specific error message in the chatter)."
 msgstr ""
+"O <b>Excepția de aprovizionare</b> a apărut când sistemul nu a găsit o cale "
+"pentru a completa aprovizionarea.  Unele excepții se vor rezolva automat de "
+"la sine, dar pentru altele este necesară intervenția manuală \n"
+"occurs when the system cannot find a way to fulfill a procurement (mesajele "
+"de eroare se găsesc în partea de jos). "
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -56,6 +61,11 @@ msgid "All at once"
 msgstr "Toate deodata"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Arhivat"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Anulează"
@@ -69,12 +79,6 @@ msgstr "Anulați Aprovizionarea"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Nu se pit sterge Comenzile de Aprovizionare care sunt in starea %s."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -96,7 +100,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_product_stat
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_product_template_stat
 msgid "Click to create a procurement order."
-msgstr ""
+msgstr "Clic pentru a crea o comandă de aprovizionate."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_company_id
@@ -137,9 +141,8 @@ msgstr "Creat în"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Metodă de livrare"
+msgstr "Tip livrare"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -216,7 +219,7 @@ msgstr "ID"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
 msgid "If the route is global"
-msgstr ""
+msgstr "Dacă ruta este globală"
 
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_rule_active
@@ -258,17 +261,14 @@ msgid "Leave Empty"
 msgstr "Lasă gol"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistica"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
 "                having a vendor defined on the product, and products to\n"
 "                manufacture without having a bill of materials."
 msgstr ""
+"Majoritatea excepțiilor sunt datorate produselor de cumpărat care nu au "
+"definit furnizor și produselor de fabricat care nu au listă de materiale."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_rule_name
@@ -276,7 +276,7 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Regulă negăsită pentru această aprovizionare"
@@ -364,6 +364,18 @@ msgid "Procurement started late"
 msgstr "Aprovizionarea a inceput tarziu"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
+
+#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
@@ -415,11 +427,11 @@ msgstr "Referință"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
-"Referire la documentul care a creat acestă Aprovizionare.\n"
-"Aceasta este completată automat de Odoo."
+"Referința documentului care a creat această Aprovizionare. Aceasta e "
+"completată automat de către Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -430,11 +442,6 @@ msgstr "Regula"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Executati  Aprovizionarea"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -519,40 +526,22 @@ msgid ""
 "purchase\n"
 "                order proposition, manufacturing order, etc."
 msgstr ""
+"Când comanda de aprovizionare este confirmată, se crează automat \n"
+"operațiunile necesare pentru a acoperi nevoile: propunerea \n"
+"de comandă de aprovizionare, comanda de producție, etc."
+
+#. module: procurement
+#: code:addons/procurement/models/procurement.py:158
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr "Nu se por șterge aproviozionările cu starea Anulat."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
-msgstr ""
+msgstr " ex: Cumpără"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "de exemplu SO005"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ultimului mesaj postat pe înregistrare."
-
-#~ msgid "Followers"
-#~ msgstr "Urmări"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Dacă este selectat, mesajele noi necesită atenția dumneavoastră."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ultimului mesaj"
-
-#~ msgid "Messages"
-#~ msgstr "Mesaje"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Istoric mesaje și conversații"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Mesaje necitite"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-07 15:53+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -33,20 +33,20 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:56
+#: code:addons/account_check_printing/models/account_journal.py:58
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Brojevni krug čekova"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:35
-#: code:addons/account_check_printing/account_payment.py:72
+#: code:addons/account_check_printing/models/account_payment.py:37
+#: code:addons/account_check_printing/models/account_payment.py:74
 #, python-format
 msgid " and %s/100"
 msgstr "i %s/100"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:81
+#: code:addons/account_check_printing/models/account_payment.py:83
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Zabilješka ne može biti duža od 60 karaktera."
@@ -59,13 +59,13 @@ msgstr "Iznos riječima"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-#, fuzzy
 msgid "Cancel"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Poništi\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Otkaži"
+
+#. module: account_check_printing
+#: model:account.payment.method,name:account_check_printing.account_payment_method_check
+msgid "Check"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
@@ -79,14 +79,14 @@ msgid "Check Printing"
 msgstr "Štampanje"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
+msgid "Check Printing Payment Method Selected"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_sequence_id
 msgid "Check Sequence"
 msgstr "Brojevni krug"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_printing_payment_method_selected
-msgid "Check printing payment method selected"
-msgstr "Plaćanje štampanjem čeka odabrano"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal_check_manual_sequencing
@@ -111,7 +111,7 @@ msgid "Checks numbering sequence."
 msgstr "Brojevni krug za numerisanje čekova"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal_dashboard.py:23
+#: code:addons/account_check_printing/models/account_journal.py:97
 #, python-format
 msgid "Checks to Print"
 msgstr "Čekovi za ispis"
@@ -142,7 +142,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:101
+#: code:addons/account_check_printing/models/account_payment.py:103
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank "
@@ -196,16 +196,11 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
-#, fuzzy
 msgid "Payments"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plaćanja\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Placanja"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:98
+#: code:addons/account_check_printing/models/account_payment.py:100
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -235,7 +230,7 @@ msgid "Print Checks"
 msgstr "Štampaj čekove"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:114
+#: code:addons/account_check_printing/models/account_payment.py:113
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -260,7 +255,7 @@ msgid ""
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_journal.py:25
+#: code:addons/account_check_printing/models/account_journal.py:26
 #, python-format
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
@@ -276,7 +271,7 @@ msgid ""
 msgstr ""
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/account_payment.py:135
+#: code:addons/account_check_printing/models/account_payment.py:136
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
@@ -294,8 +289,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
 msgstr ""
-
-#. module: account_check_printing
-#: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid "or"
-msgstr "ili"

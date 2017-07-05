@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
@@ -19,11 +19,12 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_callback_eval
@@ -41,7 +42,8 @@ msgstr "3D Secure HTML"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "<span class=\"o_stat_text\">Okolina</span>"
@@ -50,7 +52,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 "<span class=\"text-success\">Proizvodnja</span>\n"
 "<span class=\"o_stat_text\">Okolina</span>"
@@ -101,8 +104,8 @@ msgstr ""
 msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but will not be paid. Do not "
-"hesitate to contact us if you have any questions on the status of your "
-"order.</span>"
+"hesitate to contact us if you have any questions on the status of your order."
+"</span>"
 msgstr ""
 "<span><i>Pogreška,</i> Imajte na umu da je došlo do pogreške tijekom "
 "transakcije. Nalog je potvrđen, ali nije plaćen. Ne ustručavajte se "
@@ -128,8 +131,7 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the "
-"payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
 msgstr ""
 
 #. module: payment
@@ -199,8 +201,8 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
-"Authorize & capture the amount, confirm the SO and auto-validate the invoice"
-" on acquirer confirmation"
+"Authorize & capture the amount, confirm the SO and auto-validate the invoice "
+"on acquirer confirmation"
 msgstr ""
 
 #. module: payment
@@ -577,14 +579,12 @@ msgstr "Poruka se prikazuje za objašnjavanje i pomoć u postupku plaćanja."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_error_msg
 msgid "Message displayed, if error is occur during the payment process."
-msgstr ""
-"Poruka se prikazuje ako se pojavi pogreška prilikom postupka plaćanja."
+msgstr "Poruka se prikazuje ako se pojavi pogreška prilikom postupka plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
-msgstr ""
-"Poruka se prikazuje ako se narudžba otkaže prilikom postupka plaćanja."
+msgstr "Poruka se prikazuje ako se narudžba otkaže prilikom postupka plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -601,8 +601,7 @@ msgid ""
 "Message displayed, if order is in pending state after having done the "
 "payment process."
 msgstr ""
-"Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka "
-"plaćanja."
+"Poruka se prikazuje ako je narudžba u stanju čekanja nakon postupka plaćanja."
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -831,9 +830,9 @@ msgstr "Slika male veličine"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Mala slika poslužitelja. Automatski je izmjenjena veličina na 64x64px sa "
 "očuvanim proporcijama. Koristitie ovo polje svuda gdje se traži mala slika."
@@ -892,7 +891,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is rendered with qWeb with the following evaluation context:"
+"                                            It is rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -968,20 +968,20 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment"
-" button."
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
 msgstr ""
-"Bit ćete preusmjereni na web stranicu Buckaroo nakon što kliknete na gumb za"
-" plaćanje."
+"Bit ćete preusmjereni na web stranicu Buckaroo nakon što kliknete na gumb za "
+"plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment"
-" button."
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
 msgstr ""
-"Bit ćete preusmjereni na web stranicu Ingenico nakon što kliknete na gumb za"
-" plaćanje."
+"Bit ćete preusmjereni na web stranicu Ingenico nakon što kliknete na gumb za "
+"plaćanje."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu

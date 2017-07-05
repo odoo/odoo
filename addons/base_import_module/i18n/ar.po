@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -34,6 +34,12 @@ msgid "Close"
 msgstr "إغلاق"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
@@ -49,13 +55,13 @@ msgid "Display Name"
 msgstr "اسم العرض"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:100
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "تتجاوز مساحة الملف %s الحد الأقصى المسموح به"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:92
 #, python-format
 msgid "File is not a zip file!"
 msgstr "الملف ليس ملف مضغوط(zip)!!"
@@ -80,6 +86,11 @@ msgstr "المعرف"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
+msgstr "ادخال التطبيقات"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
 msgstr ""
 
 #. module: base_import_module
@@ -91,11 +102,6 @@ msgid "Import Module"
 msgstr "استيراد موديول"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr "رسالة الاستيراد"
-
-#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "استيراد موديول"
@@ -103,7 +109,7 @@ msgstr "استيراد موديول"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "ادخال الموديول"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -131,6 +137,18 @@ msgid "Module .ZIP file"
 msgstr "ملف الموديول المضغوط ZIP"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:90
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "فتح الوحدات البرمجية"
@@ -146,7 +164,7 @@ msgid "Status"
 msgstr "الحالة"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "متطلبات الموديول غير محققة: %s"
@@ -160,3 +178,8 @@ msgstr "تمّ"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "إطلاق"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""

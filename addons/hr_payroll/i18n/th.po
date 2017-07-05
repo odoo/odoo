@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-04 07:04+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:59
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (สำเนา)"
@@ -27,10 +27,12 @@ msgstr "%s (สำเนา)"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is "
-"'Waiting'.             \n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
 
@@ -222,8 +224,14 @@ msgid "Cancel Payslip"
 msgstr "ยกเลิกสลิปเงินเดือน"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:240
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9052
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "หมวด"
@@ -243,7 +251,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_children_ids
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_children_ids
 msgid "Children"
-msgstr ""
+msgstr "ลูก"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -473,7 +481,6 @@ msgstr "รายละเอียดตามหมวดเกณฑ์เง
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
@@ -522,9 +529,8 @@ msgstr "บุคลากร"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "สัญญา"
+msgstr "สัญญาของบุคลากร"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
@@ -547,7 +553,8 @@ msgid "Employees"
 msgstr "บุคลากร"
 
 #. module: hr_payroll
-#: constraint:hr.payroll.structure:0
+#: code:addons/hr_payroll/models/hr_payroll.py:43
+#, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr ""
 
@@ -614,7 +621,6 @@ msgstr "จัดกลุ่มโดย"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
 msgid "ID"
 msgstr "รหัส"
@@ -665,7 +671,7 @@ msgstr "โน้ตภายใน"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
 msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
@@ -693,7 +699,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
 msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
@@ -750,6 +755,11 @@ msgid "Made Payment Order ? "
 msgstr "สร้างคำสั่งจ่าย"
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "ผู้จัดการ"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -785,7 +795,7 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:395
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "วันทำงานปกติ"
@@ -806,6 +816,11 @@ msgid "Number of Hours"
 msgstr "จำนวนชั่วโมง"
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "เจ้าหน้าที่ / \t ผู้ปฏิบัติงาน"
+
+#. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Other Inputs"
 msgstr "อินพุตอื่น"
@@ -814,7 +829,7 @@ msgstr "อินพุตอื่น"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
 msgid "Parent"
-msgstr ""
+msgstr "แม่"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
@@ -891,7 +906,8 @@ msgid "Payslip"
 msgstr "สลิปเงินเดือน"
 
 #. module: hr_payroll
-#: constraint:hr.payslip:0
+#: code:addons/hr_payroll/models/hr_payroll.py:226
+#, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "\"จากวันที่\" ต้องมาก่อน \"ถึงวันที่\" ในสลิปเงินเดือน"
 
@@ -945,9 +961,8 @@ msgstr "ชื่อสลิปเงินเดือน"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#, fuzzy
 msgid "Payslip Run"
-msgstr "รายการสลิปเงินเดือน"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1076,13 +1091,7 @@ msgid "Refund"
 msgstr "คืนเงิน"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:315
-#, python-format
-msgid "Refund Payslip"
-msgstr ""
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:306
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "คืนเงิน:"
@@ -1153,8 +1162,8 @@ msgid "Salary Rules"
 msgstr "กฎเงินเดือน"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:640
-#: code:addons/hr_payroll/hr_payroll.py:699
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "สลิปเงินเดือน %s (%s)"
@@ -1352,49 +1361,49 @@ msgid "Worked Days & Inputs"
 msgstr "วันทำงานและอินพุต"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:884
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:890
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:913
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:877
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:907
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:333
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:964
+#: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
@@ -1413,11 +1422,6 @@ msgstr "hr.salary.rule"
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "report.hr_payroll.report_contributionregister"
 msgstr "report.hr_payroll.report_contributionregister"
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
-msgid "report.hr_payroll.report_payslip"
-msgstr "report.hr_payroll.report_payslip"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails

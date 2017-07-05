@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-22 10:29+0000\n"
 "Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -21,10 +21,10 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:127
-#: code:addons/stock_landed_costs/stock_landed_costs.py:131
-#: code:addons/stock_landed_costs/stock_landed_costs.py:147
-#: code:addons/stock_landed_costs/stock_landed_costs.py:151
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr "już"
@@ -81,12 +81,12 @@ msgstr "Anulowano"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr ""
+msgstr "Kliknij, aby utworzyć nowy koszt nabycia"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr ""
+msgstr "Kliknij, by utworzyć nowy rodzaj kosztu nabycia."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -108,6 +108,14 @@ msgstr "Pozycja kosztowa"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Cost Lines"
 msgstr "Pozycje kosztowe"
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -133,14 +141,6 @@ msgstr "Data"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
 msgstr "Opis"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:18
-#, python-format
-msgid ""
-"Disabling the costing methods will prevent you to use the landed costs "
-"feature."
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -249,7 +249,7 @@ msgstr "Koszty nabycia"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Koszty nabycia są obliczane według jednostki miary w zakupie."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -289,10 +289,17 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:203
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#, python-format
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr ""
+msgstr "Tylko projekty kosztów nabycia mogą być zatwierdzane"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -300,7 +307,7 @@ msgid "Pickings"
 msgstr "Pobrania"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:90
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Skonfiguruj konto wydatków dla produktu: %s."
@@ -374,7 +381,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Pozycje korekty wyceny zapasu"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:52
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -394,7 +401,7 @@ msgid "Validate"
 msgstr "Zatwierdź"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:261
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -413,84 +420,11 @@ msgid "Volume"
 msgstr "Objętość"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:17
-#, python-format
-msgid "Warning!"
-msgstr "Ostrzeżenie!"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "Waga"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:205
-#, python-format
-msgid ""
-"You cannot validate a landed cost which has no valid valuation adjustments "
-"lines. Did you click on Compute?"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "opisuje produkt..."
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
-msgid "purchase.config.settings"
-msgstr "purchase.config.settings"
-
-#~ msgid "Action Needed"
-#~ msgstr "Wymagana akcja"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Data ostatniej wiadomości w rekordzie."
-
-#~ msgid "Followers"
-#~ msgstr "Obserwatorzy"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Obserwatorzy (kanały)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Obserwatorzy (partnerzy)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to wiadomość wymaga twojej uwagi"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
-
-#~ msgid "Is Follower"
-#~ msgstr "Jest obserwatorem"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Data ostatniej wiadomości"
-
-#~ msgid "Messages"
-#~ msgstr "Wiadomosći"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Wiadomości i historia komunikacji"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Liczba akcji"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Liczba wiadomości wymagających akcji"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Liczba nieprzeczytanych wiadomości"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Nieprzeczytane wiadomości"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Licznik nieprzeczytanych wiadomości"
-
-#~ msgid "Website Messages"
-#~ msgstr "Wiadomości"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historia rozmowy"

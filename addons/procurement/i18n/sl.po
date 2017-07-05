@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-03-27 20:58+0000\n"
 "Last-Translator: Dejan Sraka <dejan.sraka@picolabs.si>\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -58,6 +58,11 @@ msgid "All at once"
 msgstr "Vse naenkrat"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Preklic"
@@ -71,12 +76,6 @@ msgstr "Preklic oskrbe"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Preklicano"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Ni možno brisati naloga za oskrbo , ki ima status  %s."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -139,9 +138,8 @@ msgstr "Ustvarjeno"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Način dostave"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -262,11 +260,6 @@ msgid "Leave Empty"
 msgstr "Pustiti prazno"
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistika"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -280,7 +273,7 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr "Ni pravila, ki bi ustrezalo temu oskrbovanju"
@@ -368,6 +361,18 @@ msgid "Procurement started late"
 msgstr "Zamuda pri oskrbi"
 
 #. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
+
+#. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
 #: model:ir.ui.view,arch_db:procurement.product_product_view_form_procurement_button
@@ -419,11 +424,9 @@ msgstr "Sklic"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
-"Sklic dokumenta, ki je ustvaril to oskrbovanje.\n"
-"Samodejno dopolni Odoo."
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_rule_id
@@ -434,11 +437,6 @@ msgstr "Pravilo"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Izračun oskrbe"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -525,6 +523,12 @@ msgid ""
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:158
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr ""
@@ -533,64 +537,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr "npr. SO005"
-
-#~ msgid ""
-#~ "<b>Procurement Orders</b> represent the need for a certain quantity of "
-#~ "products, at a given time, in a given location."
-#~ msgstr ""
-#~ "<b>Oskrbvalni nalog</b> predstavlja potrebo po določeni količini "
-#~ "produktov v nekem času in na določeni lokaciji."
-
-#~ msgid "Action Needed"
-#~ msgstr "Potreben je ukrep"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnjega sporočila vpisanega pod to vknjižbo."
-
-#~ msgid "Followers"
-#~ msgstr "Sledilci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Sledilci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Sledilci (partnerji)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
-
-#~ msgid "Is Follower"
-#~ msgstr "Je sledilec"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnjega sporočila"
-
-#~ msgid "Messages"
-#~ msgstr "Sporočila"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Komunikacije in kronologija"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Število aktivnosti"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Število sporočil, ki zahtevajo dejavnost"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Število neprebranih sporočil"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Neprebrana sporočila"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Števec neprebranih sporočil"
-
-#~ msgid "Website Messages"
-#~ msgstr "Sporočila iz spletne strani"
-
-#~ msgid "Website communication history"
-#~ msgstr "Kronologija komunikacij spletne strani"

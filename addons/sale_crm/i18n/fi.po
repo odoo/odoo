@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-17 14:38+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -22,11 +22,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "Tapausten määrä"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Tehtävää"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -46,17 +41,14 @@ msgstr "<span class=\"o_stat_text\"> Tarjousta </span>"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Jäsen, johon haluat liittää jäsenyyden. Jäsenyydessä huomioidaan liittyvän "
-"jäsenen tila."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
 msgid "Activation"
-msgstr "Tarjous"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -69,8 +61,15 @@ msgid "Cancel Membership Date"
 msgstr "Jäsenyyden peruuttamispäivä"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:16
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
 msgstr ""
 
 #. module: sale_crm
@@ -116,6 +115,11 @@ msgid "Implementation References"
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
@@ -123,11 +127,11 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Lasku"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
+msgid "Invoiced in Sales Orders Target"
 msgstr ""
 
 #. module: sale_crm
@@ -159,6 +163,13 @@ msgstr ""
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Liidi/mahdollisuus"
+
+#. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:20
+#, python-format
+msgid "Let's have a look at the quotations of this sales channel."
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
@@ -196,6 +207,16 @@ msgid "Membership Start Date"
 msgstr "Jäsenyyden alkupäivä"
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Viesti myyntitilaukselle"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Varoitus varastokeräilylle"
+
+#. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "New Quotation"
 msgstr "Uusi tarjous"
@@ -222,14 +243,19 @@ msgstr "Tilaukset"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
 msgid "Partnership Date"
-msgstr "Jäsenyyden peruuttamispäivä"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Maksutavat"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -242,8 +268,14 @@ msgid "Quotations"
 msgstr "Myyntitarjoukset"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Myyntitilaus"
 
@@ -251,6 +283,30 @@ msgstr "Myyntitilaus"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Valitse jos haluat antaa ilmaisen jäsenyyden."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Valittaessa vaihtoehto:\n"
+"  \"Varoitusviesti\", käyttäjälle näytetään varoitusviesti\n"
+"  \"Estoviesti, käyttäjälle näytetään poikkeusviesti ja toimenpide "
+"estetään.\n"
+"Kirjoita näytettävä viesti seuraavaan kenttään."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Varatokeräily"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -261,11 +317,6 @@ msgstr "Tilausten summa"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Tunnisteet"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Tehtävät"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -299,41 +350,3 @@ msgstr "Käyttäjät"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Toimittajan paikka"
-
-#~ msgid "# Claims"
-#~ msgstr "# palautetta"
-
-#~ msgid "Campaign"
-#~ msgstr "Kampanja"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Maantieteellinen leveys"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Maantieteellisen sijainnin päiväys"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Maantieteellinen pituus"
-
-#~ msgid "Medium"
-#~ msgstr "Keskitaso"
-
-#~ msgid "Source"
-#~ msgstr "Lähde"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Nimi, joka auttaa luokittelemaan erilaiset kampanjatoimet, esim. "
-#~ "joulutervehdys, kesäkampanja"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Toimitustapa, esim. postikortti, sähköposti tai mainosbanneri"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Linkin lähde, esim. hakukone, toinen verkkotunnus tai sähköpostilistan "
-#~ "nimi"

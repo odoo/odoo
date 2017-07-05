@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-17 16:19+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -57,6 +57,11 @@ msgid "All at once"
 msgstr "Kaikki kerralla"
 
 #. module: procurement
+#: model:ir.ui.view,arch_db:procurement.view_procurement_rule_filter
+msgid "Archived"
+msgstr "Arkistoitu"
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_compute_schedulers_wizard
 msgid "Cancel"
 msgstr "Peruuta"
@@ -70,12 +75,6 @@ msgstr "Peruuta hankinta"
 #: selection:procurement.order,state:0
 msgid "Cancelled"
 msgstr "Peruttu"
-
-#. module: procurement
-#: code:addons/procurement/procurement.py:138
-#, python-format
-msgid "Cannot delete Procurement Order(s) which are in %s state."
-msgstr "Hankintatilausta joka on %s tilassa, ei voi poistaa."
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
@@ -135,9 +134,8 @@ msgstr "Luotu"
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_move_type
-#, fuzzy
 msgid "Delivery Type"
-msgstr "Toimitustapa"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_name
@@ -256,11 +254,6 @@ msgid "Leave Empty"
 msgstr ""
 
 #. module: procurement
-#: model:ir.ui.view,arch_db:procurement.mrp_company
-msgid "Logistics"
-msgstr "Logistiikka"
-
-#. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_order_action_exceptions
 msgid ""
 "Most common exceptions are products to purchase without\n"
@@ -274,7 +267,7 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:200
+#: code:addons/procurement/models/procurement.py:203
 #, python-format
 msgid "No rule matching this procurement"
 msgstr ""
@@ -321,7 +314,7 @@ msgstr "Hankinnan poikkeamat"
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_order_group_id
 msgid "Procurement Group"
-msgstr ""
+msgstr "Hankintaryhmä"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_tree_view
@@ -349,7 +342,7 @@ msgstr "Hankintasääntö"
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_tree
 msgid "Procurement Rules"
-msgstr ""
+msgstr "Hankintasääntö"
 
 #. module: procurement
 #: model:ir.ui.view,arch_db:procurement.procurement_group_form_view
@@ -360,6 +353,18 @@ msgstr "Hankintaryhmä"
 #: model:ir.ui.view,arch_db:procurement.view_procurement_filter
 msgid "Procurement started late"
 msgstr "Hankinta aloitettu myöhässä"
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.procurement_order_server_action
+msgid "Procurement: Run Procurements"
+msgstr ""
+
+#. module: procurement
+#: model:ir.actions.server,name:procurement.ir_cron_scheduler_action_ir_actions_server
+#: model:ir.cron,cron_name:procurement.ir_cron_scheduler_action
+#: model:ir.cron,name:procurement.ir_cron_scheduler_action
+msgid "Procurement: run MRP scheduler"
+msgstr ""
 
 #. module: procurement
 #: model:ir.model.fields,field_description:procurement.field_procurement_group_procurement_ids
@@ -413,8 +418,8 @@ msgstr "Viite"
 #. module: procurement
 #: model:ir.model.fields,help:procurement.field_procurement_order_origin
 msgid ""
-"Reference of the document that created this Procurement.\n"
-"This is automatically completed by Odoo."
+"Reference of the document that created this Procurement. This is "
+"automatically completed by Odoo."
 msgstr ""
 
 #. module: procurement
@@ -426,11 +431,6 @@ msgstr "Sääntö"
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "Run Procurement"
 msgstr "Suorita hankinta"
-
-#. module: procurement
-#: model:ir.actions.server,name:procurement.procurement_order_server_action
-msgid "Run Procurements"
-msgstr ""
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
@@ -517,6 +517,12 @@ msgid ""
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/models/procurement.py:158
+#, python-format
+msgid "You cannot delete procurements that are in cancel state."
+msgstr ""
+
+#. module: procurement
 #: model:ir.ui.view,arch_db:procurement.view_procurement_rule_form
 msgid "e.g. Buy"
 msgstr ""
@@ -525,57 +531,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:procurement.procurement_form_view
 msgid "e.g. SO005"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vaatii toimia"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Viimeisen viestin päivämäärä"
-
-#~ msgid "Followers"
-#~ msgstr "Seuraajat"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Seuraajat (kanavat)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Seuraajat (kumppanit)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Jos valittu, uudet viestit vaativat huomiosi."
-
-#~ msgid "Is Follower"
-#~ msgstr "on seuraaja"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Viimeinen viestipvm"
-
-#~ msgid "Messages"
-#~ msgstr "Viestit"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Viesti- ja kommunikointihistoria"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Toimenpiteiden määrä"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Toimenpiteitä vaativien viestien määrä"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Lukemattomien viestien määrä"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Lukemattomia viestejä"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Lukemattomien viestien laskuri"
-
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"

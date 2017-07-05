@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
-msgstr ""
+msgstr "<span>Ilmainen</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>Rajoittamaton</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
@@ -44,17 +44,23 @@ msgstr "Intrastat code"
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
-msgstr ""
+msgstr "Vain"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Order Now"
-msgstr ""
+msgstr "Tilaa nyt"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Tuote"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:61
+#, python-format
+msgid "Registration"
+msgstr "Rekisteröinti"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -87,13 +93,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Tilaus"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "Tiketti ei vastaa tätä tuotetta"

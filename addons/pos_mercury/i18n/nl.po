@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_mercury
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
@@ -13,10 +13,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_mercury
@@ -37,15 +37,21 @@ msgstr "128 bit CryptoAPI mislukt"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
-"                                configuration will enable you to allow payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
-"                                configuration you should associate it with a Point Of Sale payment method."
+"                                processing credit card transactions in the "
+"Point Of Sale. Setting up a Mercury\n"
+"                                configuration will enable you to allow "
+"payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American "
+"Express, ...). After setting up this\n"
+"                                configuration you should associate it with a "
+"Point Of Sale payment method."
 msgstr ""
-"<i>Mercury configuraties</i> definiëren welk Mercury account gebruikt wordt wanneer\n"
+"<i>Mercury configuraties</i> definiëren welk Mercury account gebruikt wordt "
+"wanneer\n"
 "de kaarttransactie verwerkt wordt in de kassa. Een Mercury configuratie\n"
 "opzetten staat u toe betalingen te ontvangen met verschillende kaarten\n"
-"(bv. Visa, MasterCard, Discovery, American Express, ...) Nadat u deze configuratie\n"
+"(bv. Visa, MasterCard, Discovery, American Express, ...) Nadat u deze "
+"configuratie\n"
 "heeft opgezet moet u deze associëren met de kassa betalingsmethode."
 
 #. module: pos_mercury
@@ -152,6 +158,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Kon reactie- aanvraag aanbieder niet encrypteren"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr "Kan kaart niet lezen"
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -205,6 +218,13 @@ msgstr "Lege commando string"
 
 #. module: pos_mercury
 #. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
+msgstr "Fout"
+
+#. module: pos_mercury
+#. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
 #, python-format
 msgid "Error Occurred While Decrypting Request"
@@ -220,12 +240,16 @@ msgstr "Mislukt om event thread te starten."
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment screen\n"
-"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment "
+"screen\n"
+"                                (without having pressed anything else) will "
+"charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Om snel orders af te handelen: swipe gewoon een creditcard wanneer u op het betaalscherm zit\n"
-"(zonder iets anders te hebben ingedrukt) dit rekent het volledige bedrag van de order af\n"
+"Om snel orders af te handelen: swipe gewoon een creditcard wanneer u op het "
+"betaalscherm zit\n"
+"(zonder iets anders te hebben ingedrukt) dit rekent het volledige bedrag van "
+"de order af\n"
 "van de kaart."
 
 #. module: pos_mercury
@@ -285,10 +309,12 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
+"If you don't already have a Mercury account, contact Mercury at +1 (800) "
+"846-4472\n"
 "                                to create one."
 msgstr ""
-"Als u nog geen Mercury account heeft kan u Mercury contacteren op +1 (800) 846-4472\n"
+"Als u nog geen Mercury account heeft kan u Mercury contacteren op +1 (800) "
+"846-4472\n"
 "om een account aan te maken."
 
 #. module: pos_mercury
@@ -610,6 +636,18 @@ msgid "Name of this Mercury configuration"
 msgstr "Naam van deze Mercury configuratie"
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr "Geen mercury configuratie geassocieerd met het dagboek."
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr "Geen geopende kassa sessie gevonden voor gebruiker %s"
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
@@ -912,13 +950,18 @@ msgstr "Niet herkend verzoekformaat"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the "
+"amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. "
+"Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
-"De Mercury integratie gebruiken in de kassa is gemakkelijk: druk gewoon op de\n"
-"geassocieerde betalingsmethode. Hierna kan het bedrag gewijzigd worden (bv. voor geld terug)\n"
-"net zoals een andere betalingsregel. Wanneer de betalingsregel is opzet kan een kaart\n"
+"De Mercury integratie gebruiken in de kassa is gemakkelijk: druk gewoon op "
+"de\n"
+"geassocieerde betalingsmethode. Hierna kan het bedrag gewijzigd worden (bv. "
+"voor geld terug)\n"
+"net zoals een andere betalingsregel. Wanneer de betalingsregel is opzet kan "
+"een kaart\n"
 "geswiped worden door de kaartlezer."
 
 #. module: pos_mercury
@@ -938,10 +981,13 @@ msgstr "WACHTEND OP SWIPEN"
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the POSBox."
+"We currently support the MagTek Dynamag card reader device. It can be "
+"connected\n"
+"                                directly to the Point Of Sale device or it "
+"can be connected to the POSBox."
 msgstr ""
-"Wij ondersteunen momenteel de MagTek Dynamag kaartlezer. Het kan direct geconnecteerd\n"
+"Wij ondersteunen momenteel de MagTek Dynamag kaartlezer. Het kan direct "
+"geconnecteerd\n"
 "worden met de kassa of het kan verbonden worden met de POSBox."
 
 #. module: pos_mercury

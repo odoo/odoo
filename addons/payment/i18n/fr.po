@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * payment
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -31,10 +31,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: payment
@@ -55,14 +55,16 @@ msgstr "3D Secure HTML"
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "<span class=\"text-success\">Production</span>\n"
-"                                    <span class=\"o_stat_text\">Environment</span>"
+"                                    <span class=\"o_stat_text\">Environment</"
+"span>"
 msgstr ""
 
 #. module: payment
@@ -111,8 +113,8 @@ msgstr ""
 msgid ""
 "<span><i>Error,</i> Please be aware that an error occurred during the "
 "transaction. The order has been confirmed but will not be paid. Do not "
-"hesitate to contact us if you have any questions on the status of your "
-"order.</span>"
+"hesitate to contact us if you have any questions on the status of your order."
+"</span>"
 msgstr ""
 "<span><i>Erreur,</i> une erreur est survenue lors de la transaction. La "
 "commande a été confirmée mais ne sera pas réglée. N'hésitez pas à nous "
@@ -138,8 +140,7 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
-"<span><i>Pending</i>... The order will be validated after the "
-"payment.</span>"
+"<span><i>Pending</i>... The order will be validated after the payment.</span>"
 msgstr ""
 
 #. module: payment
@@ -209,8 +210,8 @@ msgstr ""
 #. module: payment
 #: selection:payment.acquirer,auto_confirm:0
 msgid ""
-"Authorize & capture the amount, confirm the SO and auto-validate the invoice"
-" on acquirer confirmation"
+"Authorize & capture the amount, confirm the SO and auto-validate the invoice "
+"on acquirer confirmation"
 msgstr ""
 
 #. module: payment
@@ -434,8 +435,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
 msgid "Fees amount; set by the system because depends on the acquirer"
 msgstr ""
-"Montant des commissions; fixé par le système car dépendant de "
-"l'intermédiaire"
+"Montant des commissions; fixé par le système car dépendant de l'intermédiaire"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_state_message
@@ -571,8 +571,8 @@ msgid ""
 "or some kanban views."
 msgstr ""
 "Image de taille moyenne de ce fournisseur. C'est automatiquement "
-"redimensionné à 128x128px avec les proportions préservées. Utilisez ce champ"
-" dans la vue formulaire ou dans certaines vues kanban."
+"redimensionné à 128x128px avec les proportions préservées. Utilisez ce champ "
+"dans la vue formulaire ou dans certaines vues kanban."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_state_message
@@ -602,8 +602,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_acquirer_cancel_msg
 msgid "Message displayed, if order is cancel during the payment process."
 msgstr ""
-"Message affiché, si la commande est annulée pendant le processus de "
-"paiement."
+"Message affiché, si la commande est annulée pendant le processus de paiement."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_done_msg
@@ -738,7 +737,7 @@ msgstr "Transactions de paiement"
 #: code:addons/payment/models/account_payment.py:59
 #, python-format
 msgid "Payment transaction failed (%s)"
-msgstr ""
+msgstr "Le paiement a échoué (%s)"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -852,9 +851,9 @@ msgstr "Image de petite taille"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image_small
 msgid ""
-"Small-sized image of this provider. It is automatically resized as a 64x64px"
-" image, with aspect ratio preserved. Use this field anywhere a small image "
-"is required."
+"Small-sized image of this provider. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Image de petite taille de ce fournisseur. Elle est automatiquement "
 "redimensionnée pour une image de 64x64px avec les proportions conservées. "
@@ -915,7 +914,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
-"                                            It is rendered with qWeb with the following evaluation context:"
+"                                            It is rendered with qWeb with "
+"the following evaluation context:"
 msgstr ""
 
 #. module: payment
@@ -991,17 +991,17 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_buckaroo
 msgid ""
-"You will be redirected to the Buckaroo website after clicking on the payment"
-" button."
+"You will be redirected to the Buckaroo website after clicking on the payment "
+"button."
 msgstr ""
-"Vous serez redirigé sur le site Buckaroo après avoir cliqué sur le bouton de"
-" paiement."
+"Vous serez redirigé sur le site Buckaroo après avoir cliqué sur le bouton de "
+"paiement."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_ogone
 msgid ""
-"You will be redirected to the Ingenico website after clicking on the payment"
-" button."
+"You will be redirected to the Ingenico website after clicking on the payment "
+"button."
 msgstr ""
 
 #. module: payment
@@ -1056,8 +1056,7 @@ msgstr "context: le dictionnaire du contexte actuel"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr ""
-"devise : l'enregistrement de navigation de la devise de la transaction"
+msgstr "devise : l'enregistrement de navigation de la devise de la transaction"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

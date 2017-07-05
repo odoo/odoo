@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-01 14:48+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -35,6 +35,11 @@ msgstr "Archiv"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr "Kategorien nach Wichtigkeit"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Klicken Sie, um ein neues Tag hinzuzufügen."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -122,21 +127,19 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Später"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Neu"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Neue Notiz"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -174,6 +177,11 @@ msgid "Notes"
 msgstr "Notizen"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -181,7 +189,7 @@ msgstr "Besitzer"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr "Inhaber der Notizstufe"
 
 #. module: note
@@ -189,6 +197,11 @@ msgstr "Inhaber der Notizstufe"
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Reihenfolge"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -234,27 +247,33 @@ msgid "Tag name already exists !"
 msgstr "Schlagwort existiert bereits!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Tags"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Diese Woche"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Heute"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Morgen"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -291,51 +310,3 @@ msgid ""
 msgstr ""
 "Sie können anpassen, wie Sie Ihre Notizen / Aufgaben bearbeiten durch das "
 "Hinzufügen, Entfernen oder Ändern von Spalten."
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Messages"
-#~ msgstr "Mitteilungen"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Nachrichten und Kommunikations-Historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ungelesene Mitteilungen"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"

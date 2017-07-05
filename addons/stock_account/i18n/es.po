@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
@@ -23,10 +23,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Miguel Orueta <mo@landoo.es>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
@@ -73,8 +73,8 @@ msgstr "Cancelar"
 #: code:addons/stock_account/models/stock.py:252
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "No se puede encontrar una cuenta de entrada de stock para el producto %s. "
 "Debe definir una en la categoría de producto o en la ubicación antes de "
@@ -115,9 +115,9 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
-"Escriba la fecha de contabilidad en la que quiera valorar los movimientos de"
-" stock creados por el inventario en vez de la de por defecto (la fecha de "
-"fin de inventario)"
+"Escriba la fecha de contabilidad en la que quiera valorar los movimientos de "
+"stock creados por el inventario en vez de la de por defecto (la fecha de fin "
+"de inventario)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
@@ -224,11 +224,17 @@ msgstr "ID"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
 msgstr ""
-"Si el precio de coste se incrementa, la cuenta la variación de existencias irá al debe y la cuenta de salida de existencias irá al haber con el valor = (diferencia de cantidad * cantidad disponible).\n"
-"Si el precio de coste se reduce, la cuenta la variación de existencias irá al haber y la cuenta de entrada de existencias irá al debe."
+"Si el precio de coste se incrementa, la cuenta la variación de existencias "
+"irá al debe y la cuenta de salida de existencias irá al haber con el valor = "
+"(diferencia de cantidad * cantidad disponible).\n"
+"Si el precio de coste se reduce, la cuenta la variación de existencias irá "
+"al haber y la cuenta de entrada de existencias irá al debe."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -275,8 +281,8 @@ msgstr "Incluir costos de transporte en el cálculo del costo del producto"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split"
-" them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split "
+"them onto the different products."
 msgstr ""
 "Instala el módulo que permite imputar costes en destino en los albaranes, y "
 "separarlos entre los diferentes productos."
@@ -401,8 +407,7 @@ msgstr "Perpetuo (automatizado)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid ""
-"Perpetual inventory valuation (stock move generates accounting entries)"
+msgid "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
 "Valoración de inventario perpetuo (cada movimiento de stock genera entradas "
 "de contabilidad)"
@@ -482,24 +487,38 @@ msgstr "Precio estándar cambiado"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
-"Precio estándar: El precio de coste se actualiza manualmente al final de un período específico (generalmente una vez al año).\n"
-"                Precio medio: El precio de coste se recalcula con cada envío entrante y se utiliza para la valoración del producto.\n"
-"                Precio Real: El precio de coste es el precio del último producto saliente (se utilizará en caso de pérdida de inventario, por ejemplo)."
+"Precio estándar: El precio de coste se actualiza manualmente al final de un "
+"período específico (generalmente una vez al año).\n"
+"                Precio medio: El precio de coste se recalcula con cada envío "
+"entrante y se utiliza para la valoración del producto.\n"
+"                Precio Real: El precio de coste es el precio del último "
+"producto saliente (se utilizará en caso de pérdida de inventario, por "
+"ejemplo)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
 msgstr ""
-"Precio estándar: El precio de coste se actualiza manualmente al final de un período específico (generalmente una vez al año).\n"
-"                Precio medio: El precio de coste se recalcula con cada envío entrante y se utiliza para la valoración del producto.\n"
-"                Precio Real: El precio de coste es el precio del último producto saliente (se utilizará en caso de pérdida de inventario, por ejemplo)."
+"Precio estándar: El precio de coste se actualiza manualmente al final de un "
+"período específico (generalmente una vez al año).\n"
+"                Precio medio: El precio de coste se recalcula con cada envío "
+"entrante y se utiliza para la valoración del producto.\n"
+"                Precio Real: El precio de coste es el precio del último "
+"producto saliente (se utilizará en caso de pérdida de inventario, por "
+"ejemplo)."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
@@ -635,8 +654,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 "Cuando se realiza una valoración de inventario en tiempo real, la "
 "contrapartida para todos los movimientos de entrada serán imputados en esta "
@@ -666,8 +685,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
 "Cuando se realiza una valoración de inventario en tiempo real, la "
 "contrapartida para todos los movimientos de salida serán imputados en esta "
@@ -730,8 +749,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock.py:256
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "No tiene ninguna cuenta de valoración de stock definida en su categoría de "
 "producto. Debe definir uno antes de procesar esta operación."

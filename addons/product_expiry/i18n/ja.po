@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-17 11:07+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -17,6 +17,23 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
+msgid ""
+"<span class=\"label label-danger\" attrs=\"{'invisible': "
+"[('product_expiry_alert', '=', False)]}\">Expiration Alert</span>"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.report_delivery_document_inherit_product_expiry
+msgid "<span class=\"pull-right\">Expiry Date</span>"
+msgstr "<span class=\"pull-right\">消費期限</span>"
+
+#. module: product_expiry
+#: model:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
+msgid "<span>days</span>"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_alert_date
@@ -29,18 +46,6 @@ msgid "Best before Date"
 msgstr "賞味期限"
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_pain
-#: model:product.template,name:product_expiry.product_product_pain_product_template
-msgid "Bread"
-msgstr "パン"
-
-#. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_lait
-#: model:product.template,name:product_expiry.product_product_lait_product_template
-msgid "Cow milk"
-msgstr "牛乳"
-
-#. module: product_expiry
 #: model:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Dates"
 msgstr "日付"
@@ -51,26 +56,51 @@ msgid "End of Life Date"
 msgstr "消費期限"
 
 #. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_jambon
-#: model:product.template,name:product_expiry.product_product_jambon_product_template
-msgid "French cheese Camembert"
+#: model:ir.ui.view,arch_db:product_expiry.search_product_lot_filter_inherit_product_expiry
+msgid "Expiration alerts"
 msgstr ""
-
-#. module: product_expiry
-#: model:product.product,name:product_expiry.product_product_from
-#: model:product.template,name:product_expiry.product_product_from_product_template
-msgid "Ham"
-msgstr "ハム"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_production_lot
 msgid "Lot/Serial"
+msgstr "ロット/シリアル"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
+msgid ""
+"Number of days before an alert should be raised on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
+msgid ""
+"Number of days before the goods may become dangerous and must not be "
+"consumed. It will be computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
+msgid ""
+"Number of days before the goods should be removed from the stock. It will be "
+"computed on the lot/serial number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
+msgid ""
+"Number of days before the goods starts deteriorating, without being "
+"dangerous yet. It will be computed on the lot/serial number."
 msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_alert_time
 msgid "Product Alert Time"
 msgstr "製品警告時間"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "Product Expiry Alert"
+msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_template_life_time
@@ -104,11 +134,16 @@ msgid "Removal Date"
 msgstr "廃棄日"
 
 #. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_production_lot_product_expiry_alert
+msgid "The Alert Date has been reached."
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_alert_date
 msgid ""
 "This is the date on which an alert should be notified about the goods with "
 "this Serial Number."
-msgstr ""
+msgstr "これは、このシリアル番号を持つ商品についてアラートを通知する日付です。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_life_date
@@ -116,13 +151,16 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"これは、このシリアルナンバーの商品が危険になる可能性があり、消費してはならな"
+"い日付です。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_removal_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant_removal_date
 msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock."
-msgstr ""
+msgstr "これは、このシリアル番号を持つ商品を在庫から削除する日です。"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot_use_date
@@ -130,31 +168,5 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_alert_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before an "
-"alert should be notified."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_life_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods may become dangerous and must not be consumed."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_removal_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods should be removed from the stock."
-msgstr ""
-
-#. module: product_expiry
-#: model:ir.model.fields,help:product_expiry.field_product_template_use_time
-msgid ""
-"When a new a Serial Number is issued, this is the number of days before the "
-"goods starts deteriorating, without being dangerous yet."
-msgstr ""
+"これは、このシリアルナンバーの商品が危険にさらされることなく悪化し始める日付"
+"です。"

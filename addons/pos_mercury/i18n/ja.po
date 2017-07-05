@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-07-22 08:23+0000\n"
 "Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -46,6 +46,11 @@ msgid ""
 "                                configuration you should associate it with a "
 "Point Of Sale payment method."
 msgstr ""
+"<i>Mercury設定</i>はPOSでのクレジットカード取引処理時にどのMercuryアカウント"
+"を使用するか定義します。\n"
+"Mercury設定を行うと、各種クレジットカードでの支払を受け付けることができます "
+"(例: Visa、MasterCard、Discovery、American Express等)。\n"
+"ここでの設定後、POSの支払方法とリンクしてください。"
 
 #. module: pos_mercury
 #. openerp-web
@@ -89,7 +94,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "Card Brand"
-msgstr ""
+msgstr "カードブランド"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_number
@@ -149,6 +154,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr ""
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -161,7 +173,7 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:17
+#: code:addons/pos_mercury/models/pos_mercury.py:15
 #, python-format
 msgid "Credit Card"
 msgstr "クレジットカード"
@@ -184,7 +196,7 @@ msgstr "表示名"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:180
 #, python-format
 msgid "Duplicate Serial Number Detected"
-msgstr ""
+msgstr "シリアル番号の重複があります"
 
 #. module: pos_mercury
 #. openerp-web
@@ -198,6 +210,13 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Empty Command String"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: pos_mercury
@@ -347,7 +366,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
 #, python-format
 msgid "Invalid Batch Number"
-msgstr ""
+msgstr "無効なバッチ番号"
 
 #. module: pos_mercury
 #. openerp-web
@@ -515,7 +534,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
 #, python-format
 msgid "Invalid Transaction Type"
-msgstr ""
+msgstr "無効なトランザクションタイプ"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
@@ -553,7 +572,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "Merchant ID"
-msgstr ""
+msgstr "マーチャントID"
 
 #. module: pos_mercury
 #. openerp-web
@@ -565,18 +584,18 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "マーチャントパスワード"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "Mercury設定"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "Mercury configuration"
-msgstr ""
+msgstr "Mercury設定"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
@@ -601,6 +620,18 @@ msgstr "名称"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
 msgstr ""
 
 #. module: pos_mercury
@@ -649,7 +680,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
 #, python-format
 msgid "Password Failed (Client / Server)"
-msgstr ""
+msgstr "パスワードが正しくありません (クライアント/サーバ)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -811,7 +842,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "クレジットカードのブランド (Visa、AMEX等)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
@@ -831,7 +862,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "カード所有者の名前"
 
 #. module: pos_mercury
 #. openerp-web
@@ -959,6 +990,11 @@ msgid "barcode.rule"
 msgstr "barcode.rule"
 
 #. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
+
+#. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "pos_mercury.configuration"
 msgstr ""
@@ -966,4 +1002,4 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction
 msgid "pos_mercury.mercury_transaction"
-msgstr ""
+msgstr "pos_mercury.mercury_transaction"

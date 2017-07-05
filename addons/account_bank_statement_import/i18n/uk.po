@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-06 12:24+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -22,13 +22,13 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d транзакцій вже було імпортовано раніше тому вони пропущені"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 транзакцію вже було імпортовано раніше тому вона пропущена"
@@ -60,20 +60,20 @@ msgid "Allow Cancelling Entries"
 msgstr "Дозволити скасування записів"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:242
 #, python-format
 msgid "Already imported items"
 msgstr "Вже імпортовані рядки"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
-msgid "At least one inbound"
-msgstr "Що найменше одна вхідна"
+msgid "At Least One Inbound"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
-msgid "At least one outbound"
-msgstr "Що найменше одна вихідна"
+msgid "At Least One Outbound"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
@@ -215,15 +215,6 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
-msgid ""
-"Display this bank account on the footer of printed documents like invoices "
-"and sales orders."
-msgstr ""
-"Відображати цей банківський рахунок у нижньому колонтитулі на друкованих "
-"документах, наприклад, рахунок чи замовлення продаж"
-
-#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
@@ -312,6 +303,7 @@ msgstr "Використовується, як типовий дебетовий
 
 #. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_journal
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal"
 msgstr "Журнал"
 
@@ -328,11 +320,6 @@ msgid "Journal Name"
 msgstr "Назва журналу"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
-msgid "Journal id"
-msgstr "ID журналу"
-
-#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
@@ -343,13 +330,13 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
-msgid "Kanban dashboard"
-msgstr "Панель приладів канбан"
+msgid "Kanban Dashboard"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
-msgid "Kanban dashboard graph"
-msgstr "Графік на панелі канбан"
+msgid "Kanban Dashboard Graph"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -424,7 +411,6 @@ msgstr "Нумерація повернень"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
-#, fuzzy
 msgid ""
 "Select 'Sale' for customer invoices journals.\n"
 "Select 'Purchase' for vendor bills journals.\n"
@@ -432,12 +418,6 @@ msgid ""
 "payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"Оберіть \"Продаж\" для журналу реєстрації рахунків клієнтів.\n"
-"Оберіть \"Купівля\" для журналу реєстрації рахунків від постачальників.\n"
-"Оберіть \"Каса\" або \"Банк\" для обліку готівки та банківських рахунків.\n"
-"Оберіть \"Інші\" для журналу реєстрації загальних операцій.\n"
-"Оберіть \"Відкриття/закриття\" для проведень початкових залишків на початок "
-"періоду."
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
@@ -453,11 +433,6 @@ msgstr "Послідовність"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "Short Code"
 msgstr "Короткий код"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_display_on_footer
-msgid "Show in Invoices Footer"
-msgstr "Показувати на документах"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
@@ -562,10 +537,18 @@ msgstr ""
 "Визначає чи потрібно показувати цей журнал, як елемент на панелі приладів."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:232
 #, python-format
 msgid "You have already imported that file."
 msgstr "Ви вже імпортували цей файл."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
+#, python-format
+msgid ""
+"You have to set a Default Debit Account and a Default Credit Account for the "
+"journal: %s"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

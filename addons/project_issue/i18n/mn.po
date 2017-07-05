@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-11-21 09:40+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -29,25 +29,20 @@ msgid "# Issues"
 msgstr "# Асуудал"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_nbr_issues
 msgid "# of Issues"
 msgstr "Асуудлын #"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:215
+#: code:addons/project_issue/models/project_issue.py:146
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
-msgid "<b>Category:</b>"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>Төсөл:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
@@ -55,20 +50,9 @@ msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
-msgid ""
-"A Issue's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this issue\n"
-" * Ready for next stage indicates the issue is ready to be pulled to the "
-"next stage"
-msgstr ""
-"Асуудлын канбан харагдац нь нөлөөлж буй тодорхой нөхцөл байдлыг харуулдаг:\n"
-" * Хэвийн гэдэг нь анхны байдал\n"
-" * Хоригдсон гэдэг нь энэ асуудлын явц ахихад ямар нэг зүйл садаа болж "
-"байгааг илэрхийлнэ.\n"
-" * Дараагийн үед бэлэн гэдэг нь асуудлыг дараагийн үерүү татаж оруулахад "
-"бэлэн болохыг илэрхийлнэ."
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Activate timesheets on issues"
+msgstr "Асуудал дээр цагийн хуудсыг идэвхжүүлэх"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -81,6 +65,15 @@ msgid "Add an internal note..."
 msgstr "Дотоод тэмдэглэл нэмэх..."
 
 #. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_kanban_state
+msgid ""
+"An Issue's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this issue\n"
+" * Green indicates the issue is ready to be pulled to the next stage"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Шинжилгээний Данс"
@@ -88,7 +81,7 @@ msgstr "Шинжилгээний Данс"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Archived"
-msgstr ""
+msgstr "Архивласан"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_open
@@ -124,18 +117,12 @@ msgid "Avg. Working Hours to Open"
 msgstr "Нээх хүртэлх дундаж ажлын цаг"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-msgid "Blocked"
-msgstr "Хоригдсон"
-
-#. module: project_issue
 #: model:ir.filters,name:project_issue.filter_issue_report_responsible
 msgid "By Responsible"
 msgstr "Хариуцагчаар"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_channel
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_channel
 msgid "Channel"
 msgstr "Суваг"
 
@@ -143,11 +130,6 @@ msgstr "Суваг"
 #: model:ir.model.fields,help:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid "Click to create an issue."
 msgstr ""
 
 #. module: project_issue
@@ -159,11 +141,6 @@ msgstr "Хаалттай"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_color
 msgid "Color Index"
 msgstr "Өнгөний Индекс"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_report_channel
-msgid "Communication Channel."
-msgstr "Харилцааны суваг."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_channel
@@ -204,17 +181,27 @@ msgstr "Үүсгэгч"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_create_date
+msgid "Created on"
+msgstr "Үүсгэсэн"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_issue_tree_view
 msgid "Creation Date"
 msgstr "Үүсгэсэн огноо"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:384
+#: model:ir.actions.act_window,help:project_issue.project_issue_action_activity
+msgid "Currently there are not any activity scheduled."
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:267
 #, python-format
 msgid "Customer"
 msgstr "Захиалагч"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:386
+#: code:addons/project_issue/models/project_issue.py:269
 #, python-format
 msgid "Customer Email"
 msgstr "Захиалагчийн Эмэйл"
@@ -296,6 +283,11 @@ msgid "Display Name"
 msgstr "Дэлгэцийн Нэр"
 
 #. module: project_issue
+#: selection:project.config.settings,module_project_issue_sheet:0
+msgid "Do not track working hours on issues"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
 msgstr "Үргэлжлэх хугацаа"
@@ -303,7 +295,7 @@ msgstr "Үргэлжлэх хугацаа"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "Асуудлыг засварлах"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -326,10 +318,25 @@ msgid "Feature description"
 msgstr "Онцлогийн тайлбар"
 
 #. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Green"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Grey"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Group By"
 msgstr "Бүлэглэх"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Helpdesk & Support"
+msgstr "Тусламын төв & Дэмжлэг"
 
 #. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
@@ -337,10 +344,10 @@ msgid "High"
 msgstr "Өндөр"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:362
+#: code:addons/project_issue/models/project_issue.py:242
 #, python-format
 msgid "I take it"
-msgstr ""
+msgstr "Хүлээн зөвшөөрч байна"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_id
@@ -365,13 +372,13 @@ msgstr "Асуудал Хоригдсон"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Асуудал нээгдсэн"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Асуудал бэлэн"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -381,7 +388,7 @@ msgstr "Асуудлын Үе Өөрчлөгдсөн"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Асуудлын хураангуй..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -401,26 +408,22 @@ msgstr "Асуудал хоригдсон"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Асуудал нээгдсэн"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
-#, fuzzy
 msgid "Issue ready for next stage"
-msgstr "Дараагийн үед бэлэн"
+msgstr "Асуудал дараагийн үед бэлэн"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,name:project_issue.action_view_issues
-#: model:ir.actions.act_window,name:project_issue.open_view_issue
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_from_partner
 #: model:ir.actions.act_window,name:project_issue.project_issue_categ_act0
-#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_count
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_ids
 #: model:ir.model.fields,field_description:project_issue.field_project_project_issue_needaction_count
-#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 #: model:ir.ui.menu,name:project_issue.menu_project_issue_track
-#: model:ir.ui.menu,name:project_issue.portal_services_issues
 #: model:ir.ui.view,arch_db:project_issue.project_issue_calendar_view
 #: model:ir.ui.view,arch_db:project_issue.res_partner_issues_button_view
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
@@ -438,12 +441,12 @@ msgstr "Асуудлын Шинжилгээ"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_blocked
 msgid "Kanban Blocked Explanation"
-msgstr ""
+msgstr "Канбан Хаагдсан Тайлбар"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_normal
 msgid "Kanban Ongoing Explanation"
-msgstr ""
+msgstr "Канбан Үргэлжилж буй Тайлбар"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_kanban_state
@@ -453,7 +456,7 @@ msgstr "Канбан Төлөв"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_legend_done
 msgid "Kanban Valid Explanation"
-msgstr ""
+msgstr "Канбан Зөв Тайлбар"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_last
@@ -483,9 +486,19 @@ msgid "Last Updated by"
 msgstr "Сүүлийн засвар хийсэн"
 
 #. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
+msgid "Last Updated on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: project_issue
 #: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Low"
 msgstr "Бага"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "My Activities"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -493,16 +506,14 @@ msgid "My Issues"
 msgstr "Миний асуудлууд"
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
-#: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
-msgid "New"
-msgstr "Шинэ"
+#: model:ir.actions.act_window,name:project_issue.project_issue_action_activity
+msgid "My Next Issue Activities"
+msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:364
-#, python-format
-msgid "New Issue"
-msgstr ""
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "New"
+msgstr "Шинэ"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -510,14 +521,28 @@ msgid "Next Action"
 msgstr "Дараагийн үйлдэл"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:413
+#: model:ir.ui.view,arch_db:project_issue.project_issue_view_tree_activity
+msgid "Next Activities"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.menu,name:project_issue.project_issue_menu_activity
+msgid "Next Issue Activities"
+msgstr ""
+
+#. module: project_issue
+#: code:addons/project_issue/models/project_issue.py:293
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0 selection:project.issue,priority:0
-#: selection:project.issue.report,priority:0
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "No customer rating"
+msgstr "Харилцагчийн үнэлгээ хийгдээгүй"
+
+#. module: project_issue
+#: selection:project.issue,priority:0 selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Хэвийн"
 
@@ -532,12 +557,44 @@ msgid "Number of Days to open the project issue."
 msgstr "Асуудлыг нээх хүртэлэх хоногийн тоо"
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Overdue Activities"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_blocked
+msgid ""
+"Override the default value displayed for the blocked state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын хаагдсан "
+"төлөвт харуулсан анхны утгыг дарж бичих."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_done
+msgid ""
+"Override the default value displayed for the done state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын дууссан "
+"төлөвт харуулсан анхны утгыг дарж бичих."
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_issue_legend_normal
+msgid ""
+"Override the default value displayed for the normal state for kanban "
+"selection, when the task or issue is in that stage."
+msgstr ""
+"Даалгавар эсвэл асуудал тухайн шат дээр байх үед канбан сонголтын энгийн "
+"төлөвт харуулсан анхны утгыг дарж бичих."
+
+#. module: project_issue
 #: model:ir.model,name:project_issue.model_res_partner
 msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:530
+#: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
 "Please remove existing issues in the project linked to the accounts you want "
@@ -569,6 +626,7 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_graph
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_pivot
 msgid "Project Issue"
@@ -581,33 +639,33 @@ msgid "Project Issues"
 msgstr "Төслийн асуудлууд"
 
 #. module: project_issue
-#: selection:project.issue,kanban_state:0
-msgid "Ready for next stage"
-msgstr "Дараагийн үед бэлэн"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_team_id
-msgid "Sale Team"
-msgstr "Борлуулалтын Баг"
-
-#. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_team_id
-msgid "Sales Team"
-msgstr "Борлуулалтын баг"
-
-#. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_issue_team_id
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid ""
-"Sales team to which Case belongs to.                             Define "
-"Responsible user and Email account for mail gateway."
+"Provides timesheet support for the issues/bugs management in project.\n"
+"-This installs the module project_issue_sheet."
 msgstr ""
-"Хэрэг харъяалагдах Борлуулалтын Баг.                             Хариуцагч "
-"хэрэглэгч болон имэйл үүдийн имэйл хаягийг тодорхойлно."
+"Төсөлд асуудал/алдааны менежментэд цагийн хуудсыг дэмжих боломжийг олгоно.\n"
+"-Энэ нь project_issue_sheet модулийг суулгадаг."
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "Rating on issue"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.issue,kanban_state:0
+msgid "Red"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Search"
 msgstr "Хайх"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -634,7 +692,6 @@ msgid "Tags"
 msgstr "Пайзууд"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_report_task_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_task_id
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Task"
@@ -642,42 +699,37 @@ msgstr "Даалгавар"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_task_type
-#, fuzzy
 msgid "Task Stage"
-msgstr "Шат"
+msgstr "Даалгаврын үе"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.act_project_project_2_project_issue_all
 #: model:ir.actions.act_window,help:project_issue.action_view_issues
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
 msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
+"The Odoo issues tracker allows you to efficiently manage things\n"
 "                    like internal requests, software development bugs, "
 "customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"The Odoo issues tacker allows you to efficiently manage things\n"
-"                like internal requests, software development bugs, customer\n"
-"                complaints, project troubles, material breakdowns, etc."
-msgstr ""
-
-#. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
 msgid ""
-"These email addresses will be added to the CC field of all inbound and "
-"outbound emails for this record before being sent. Separate multiple email "
-"addresses with a comma"
+"These email addresses will be added to the CC field of all inbound\n"
+"        and outbound emails for this record before being sent. Separate "
+"multiple email addresses with a comma"
 msgstr ""
-"Эдгээр имэйл хаягууд нь тус бичлэгт хамаатай ирэх, явах бүх имэйлийн СС "
-"талбарт нэмэгдэнэ. Имэйл хаягуудыг таслалаар тусгаарлана уу."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
 msgid "These people will receive email."
 msgstr "Эдгээр хүмүүс и-мэйл хүлээж авна"
+
+#. module: project_issue
+#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
+msgid "This allows customers to give rating on issue"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -694,6 +746,26 @@ msgstr ""
 "зарцуулсан дундаж цаг зэрэгийг шинжлэх боломжтой."
 
 #. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Timesheets"
+msgstr "Цагийн Хуваарь"
+
+#. module: project_issue
+#: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
+msgid "Timesheets on Issues"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: project_issue
+#: selection:project.config.settings,module_rating_project_issue:0
+msgid "Track customer satisfaction on issues"
+msgstr ""
+
+#. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
 msgid "Unassigned"
@@ -706,12 +778,13 @@ msgid "Unread Messages"
 msgstr "Уншаагүй Зурвасууд"
 
 #. module: project_issue
-#: model:ir.model.fields,field_description:project_issue.field_project_issue_write_date
-msgid "Update Date"
-msgstr "Шинэчлэлийн огноо"
+#: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
+#: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
+#: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
 msgstr ""
 
@@ -748,81 +821,17 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.open_view_issue
-msgid ""
-"You can track your issues from this menu and the action we     \n"
-"                will take."
-msgstr ""
-
-#. module: project_issue
-#: code:addons/project_issue/project_issue.py:263
+#: code:addons/project_issue/models/project_issue.py:181
 #, python-format
 msgid "issues"
 msgstr "асуудлууд"
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
-msgstr "Төслийн Асуудал"
+#: model:ir.model,name:project_issue.model_project_config_settings
+msgid "project.config.settings"
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
 msgstr "project.issue.report"
-
-#~ msgid "Action Needed"
-#~ msgstr "Үйлдэл Шаардлагатай"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Бичлэгт хамгийн сүүлд илгээгдсэн зурвасын огноо."
-
-#~ msgid "Followers"
-#~ msgstr "Дагагчид"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Дагагчид (Сувагууд)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Дагагчид (Харилцагчид)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг "
-#~ "шаардана."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад анхаарал хандуулахыг шаардана."
-
-#~ msgid "Important Messages"
-#~ msgstr "Чухал зурвасууд"
-
-#~ msgid "Is Follower"
-#~ msgstr "Дагагч эсэх"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Сүүлийн зурвасын огноо"
-
-#~ msgid "Messages"
-#~ msgstr "Зурвасууд"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Зурвас болон харилцсан түүх"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Үйлдлийн тоо"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Үйлдэл шаардлагатай зурвасын тоо"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Уншаагүй зурвасын тоо"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Уншаагүй зурвасын тоолуур"
-
-#~ msgid "Website Messages"
-#~ msgstr "Вебсайтын зурвасууд"
-
-#~ msgid "Website communication history"
-#~ msgstr "Вебсайтын харилцааны түүх"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-20 03:26+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
@@ -32,6 +32,11 @@ msgstr "Arkiv"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
 msgstr ""
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Klicka för att lägga till en ny tagg"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -119,21 +124,19 @@ msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Senare"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Ny"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -171,6 +174,11 @@ msgid "Notes"
 msgstr "Anteckningar"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Overdue Activities"
+msgstr ""
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -178,7 +186,7 @@ msgstr "Ägare"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
+msgid "Owner of the note stage"
 msgstr ""
 
 #. module: note
@@ -186,6 +194,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Nummerserie"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -228,30 +241,36 @@ msgstr "Etikettnamn"
 #. module: note
 #: sql_constraint:note.tag:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Namntaggen existerar redan !"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiketter"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Denna vecka"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Idag"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "Imorgon"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr ""
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
@@ -281,45 +300,3 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Åtgärd krävs"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum för senast publicerade meddelandet i loggen."
-
-#~ msgid "Followers"
-#~ msgstr "Följare"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Följare (Kanaler)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Följare (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Om ikryssad nya meddelanden som kräver din uppmärksamhet"
-
-#~ msgid "Is Follower"
-#~ msgstr "Är följare"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Senast meddelandedatum"
-
-#~ msgid "Messages"
-#~ msgstr "Meddelanden"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meddelande- och kommunikationshistorik"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antalet åtgärder"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antal meddelanden som kräver en åtgärd"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antalet olästa meddelanden"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Olästa meddelanden"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-01-29 15:04+0000\n"
 "Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -28,6 +28,12 @@ msgid "Close"
 msgstr "Sulje"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr "Ei voi valita tietokantaa '%s'"
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Luonut"
@@ -43,13 +49,13 @@ msgid "Display Name"
 msgstr "Näytä nimi"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:100
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Tiedoston '%s' koko ylittää sallitun maksimikoon."
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:92
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Tiedosto ei ole zip tiedosto!"
@@ -74,6 +80,11 @@ msgstr "ID"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
+msgstr "Tuo App"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
 msgstr ""
 
 #. module: base_import_module
@@ -85,11 +96,6 @@ msgid "Import Module"
 msgstr "Tuonti moduuli"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr "Tuonnin viesti"
-
-#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
 msgstr "Tuo moduuli"
@@ -97,7 +103,7 @@ msgstr "Tuo moduuli"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "Tuotu moduuli"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -125,6 +131,18 @@ msgid "Module .ZIP file"
 msgstr "Moduuli .zip-tiedosto"
 
 #. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:90
+#, python-format
+msgid "No file sent."
+msgstr "Tiedostoa ei lähetetty."
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr "Vain pääkäyttäjä pystyy lataamaan modulin"
+
+#. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
 msgstr "Avaa moduuleja"
@@ -140,7 +158,7 @@ msgid "Status"
 msgstr "Tila"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Täyttymätön moduuli riippuvuus: %s"
@@ -154,3 +172,8 @@ msgstr "valmis"
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "alustus"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr ""

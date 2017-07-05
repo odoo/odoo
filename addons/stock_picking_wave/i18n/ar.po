@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-05-16 13:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -54,7 +54,7 @@ msgstr "ملغي"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid "Click to create a Picking Wave."
-msgstr ""
+msgstr "انقر لانشاء موجة تجهيز."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -112,27 +112,6 @@ msgid "ID"
 msgstr "المعرف"
 
 #. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
-msgid "Ice Cream Chocolate"
-msgstr "الآيس كريم الشوكولاته"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_choco
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
-#, fuzzy
-msgid "Ice Cream Chocolate with sticks"
-msgstr "آيس كريم الشوكولاته بالعصي"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.product,name:stock_picking_wave.product_product_ice_cream_vani
-#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
-#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
-msgid "Ice Cream Vanilla"
-msgstr "آيس كريم الفانيليا"
-
-#. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 msgid "In Progress"
 msgstr "قيد التقدم"
@@ -166,7 +145,7 @@ msgid "Name of the picking wave"
 msgstr "اسم موجة قطف"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:42
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:52
 #, python-format
 msgid "Nothing to print."
 msgstr "لا شيء للطباعة. "
@@ -177,10 +156,10 @@ msgid "Person responsible for this wave"
 msgstr "الشخص المسؤول عن هذه الموجة"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
 #: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_wave_id
-#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_id_10088
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
@@ -203,7 +182,7 @@ msgid "Picking Waves not finished"
 msgstr "اختيار موجات لم تنته "
 
 #. module: stock_picking_wave
-#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_9535
+#: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_id_10088
 msgid "Picking wave associated to this picking"
 msgstr "اختيار الموجة المرتبطة بهذا الالتقاط "
 
@@ -215,8 +194,8 @@ msgstr "الالتقاط"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
-msgid "Print all pickings"
-msgstr "طباعة جميع الالتقاطات"
+msgid "Print"
+msgstr "طباعة"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_user_id
@@ -239,7 +218,7 @@ msgid "Select a wave"
 msgstr "اختيار الموجه "
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:59
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
 #, python-format
 msgid ""
 "Some pickings are still waiting for goods. Please check or force their "
@@ -247,18 +226,6 @@ msgid ""
 msgstr ""
 "بعض الالتقاطات لا تزال تنتظر البضاعة. يرجى مراجعة أو إجبار توافرها قبل وضع "
 "هذه الموجة إلى القيام به."
-
-#. module: stock_picking_wave
-#: model:product.product,name:stock_picking_wave.product_product_dry_specu
-#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos"
-msgstr "سبيكولوس"
-
-#. module: stock_picking_wave
-#: model:product.product,description_sale:stock_picking_wave.product_product_dry_specu
-#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
-msgid "Speculoos - A belgian speciality"
-msgstr "سبيكولوس - تخصص البلجيكي "
 
 #. module: stock_picking_wave
 #: model:mail.message.subtype,description:stock_picking_wave.mt_wave_state
@@ -289,6 +256,10 @@ msgid ""
 "                help the timing management of operations (tasks to be done "
 "at 1pm)."
 msgstr ""
+"الهدف من موجات التجهيز هو لتجميع العمليات التي ربما\n"
+"(نحتاجها) لتعمل سوية من اجل زيادة كفائتها.\n"
+"وهي مفيد ربما كذلك لتعيين الاعمال (شخص واحد = موجة واحدة) أو\n"
+"المساعدة بإدارة الوقت للعمليات (المهام التي ستكتمل عند الساعة 1 بعد الظهر)."
 
 #. module: stock_picking_wave
 #: model:ir.model,name:stock_picking_wave.model_stock_picking
@@ -296,10 +267,10 @@ msgid "Transfer"
 msgstr "نقل"
 
 #. module: stock_picking_wave
-#: code:addons/stock_picking_wave/stock_picking_wave.py:60
+#: code:addons/stock_picking_wave/models/stock_picking_wave.py:63
 #, python-format
 msgid "Transferred by"
-msgstr ""
+msgstr "منقولة بواسطة"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
@@ -310,57 +281,3 @@ msgstr "المستخدم"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
 msgstr "موجه"
-
-#~ msgid "Action Needed"
-#~ msgstr "الاجراء المطلوب"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "تاريخ آخر رسالة في هذا السجل."
-
-#~ msgid "Followers"
-#~ msgstr "المتابعون"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "المتابعون (القنوات)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "المتابعون (الشرماء)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "إذا حددته، ستتطلب الرسائل الجديدة انتباهك"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "عند التفعيل، توجد رسالة جديدة"
-
-#~ msgid "Is Follower"
-#~ msgstr "متابع"
-
-#~ msgid "Last Message Date"
-#~ msgstr "تاريخ آخر رسالة"
-
-#~ msgid "Messages"
-#~ msgstr "الرسائل"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "الرسائل و سجل التواصل"
-
-#~ msgid "Number of Actions"
-#~ msgstr "عدد الاجراءات"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "عدد الرسائل الواجب اجراءها"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "عدد الرسائل غير المقروءة"
-
-#~ msgid "Unread Messages"
-#~ msgstr "رسائل غير مقروءة"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "عداد الرسائل الغير مقروءة"
-
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع"
-
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع"

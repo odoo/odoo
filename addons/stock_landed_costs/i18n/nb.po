@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-30 18:51+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -19,10 +19,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:127
-#: code:addons/stock_landed_costs/stock_landed_costs.py:131
-#: code:addons/stock_landed_costs/stock_landed_costs.py:147
-#: code:addons/stock_landed_costs/stock_landed_costs.py:151
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr ""
@@ -108,6 +108,14 @@ msgid "Cost Lines"
 msgstr ""
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -131,14 +139,6 @@ msgstr "Dato"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
 msgstr "Beskrivelse"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:18
-#, python-format
-msgid ""
-"Disabling the costing methods will prevent you to use the landed costs "
-"feature."
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -174,6 +174,12 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"Lik: Kostnad blir delt likt.\n"
+"Etter antall: Kostnad blir delt etter antall av produktet.\n"
+"Etter nåværende kostnad: Kostnaden blir forddelt etter produktet sin "
+"nåværende kostnad.\n"
+"Etter vekt: Kostnaden blir fordelt avhengig av vekt.\n"
+"Etter volum: Kostnaden blir fordelt avhengig av volum."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -242,7 +248,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr ""
+msgstr "Mottakskostnader"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -287,7 +293,14 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:203
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#, python-format
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -298,7 +311,7 @@ msgid "Pickings"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:90
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -339,7 +352,7 @@ msgstr "Antall"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
 msgid "Split Method"
-msgstr ""
+msgstr "Splittmetode"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_state
@@ -372,7 +385,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:52
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -392,7 +405,7 @@ msgid "Validate"
 msgstr "Valider."
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:261
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -411,69 +424,11 @@ msgid "Volume"
 msgstr "Mengde"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:17
-#, python-format
-msgid "Warning!"
-msgstr "Advarsel!"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "Vekt"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:205
-#, python-format
-msgid ""
-"You cannot validate a landed cost which has no valid valuation adjustments "
-"lines. Did you click on Compute?"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr ""
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
-msgid "purchase.config.settings"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Handling"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Dato for siste melding på denne posten."
-
-#~ msgid "Followers"
-#~ msgstr "Følgere."
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Hvis det er merket nye meldinger så krever dette din oppmerksomhet."
-
-#~ msgid "Last Message Date"
-#~ msgstr "Siste meldingsdato"
-
-#~ msgid "Messages"
-#~ msgstr "Meldinger."
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Meldinger og kommunikasjon historie."
-
-#~ msgid "Number of Actions"
-#~ msgstr "Antall handlinger"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Antall meldinger som krever handling"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Antall uleste meldinger"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Uleste meldinger."
-
-#~ msgid "Website Messages"
-#~ msgstr "Meldinger fra Nettsted"
-
-#~ msgid "Website communication history"
-#~ msgstr "Historikk for kommuniksjon på nettsted"

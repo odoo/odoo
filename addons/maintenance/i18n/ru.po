@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * maintenance
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
@@ -23,11 +23,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Alex Puchkov <ap@alteco.co>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -455,8 +457,8 @@ msgstr "Номер"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "Идентификатор записи родителя, содержащей алиас (например, проект содержит "
 "псевдоним для создания записи)"
@@ -725,12 +727,12 @@ msgstr "ID родительской цепочки записей"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Предок содержащий алиас. Модель, содержащая ссылку на алиас — не обязательно"
-" та, на которую ссылается alias_model_id (например, проект (parent_model) и "
+"Предок содержащий алиас. Модель, содержащая ссылку на алиас — не обязательно "
+"та, на которую ссылается alias_model_id (например, проект (parent_model) и "
 "задача (model))"
 
 #. module: maintenance
@@ -739,7 +741,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Политики для сообщений в документе с использованием почтового шлюза:\n"
 "— все: каждый может писать\n"
@@ -881,7 +884,7 @@ msgstr "Настройки"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Показать все записи с просроченой датой следующего действия"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
@@ -942,13 +945,13 @@ msgstr "Техники"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
 "Модель (тип документа Odoo) которой соответствует этот псевдоним. Любая "
-"входящая электронная почта, которая не отвечает существующей записи, вызовет"
-" создание новой записи этой модели (например, задача в проекте)"
+"входящая электронная почта, которая не отвечает существующей записи, вызовет "
+"создание новой записи этой модели (например, задача в проекте)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
@@ -968,8 +971,8 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "Владелец записей, созданных по письмам с этим псевдонимом. Если это поле не "
-"задано, система попытается найти подходящего владельца на основе отправителя"
-" или сделает владельцем администратора."
+"задано, система попытается найти подходящего владельца на основе отправителя "
+"или сделает владельцем администратора."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -980,25 +983,35 @@ msgstr "Пользователь сможет управлять оборудо�
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to\n"
-"                an employee or departement. You will manage allocations, issues\n"
+"                Create some laptop, printer or phone and link each equipment "
+"to\n"
+"                an employee or departement. You will manage allocations, "
+"issues\n"
 "                and maintenance of equipment."
 msgstr ""
-"Это приложение помогает отслеживать оборудование, используемое сотрудниками.\n"
-"                 Создайте ноутбук, принтер или телефон и привяжите каждое оборудование к\n"
-"                 сотрудника или департамента. Вы будете управлять распределением, проблемами\n"
+"Это приложение помогает отслеживать оборудование, используемое "
+"сотрудниками.\n"
+"                 Создайте ноутбук, принтер или телефон и привяжите каждое "
+"оборудование к\n"
+"                 сотрудника или департамента. Вы будете управлять "
+"распределением, проблемами\n"
 "                 и техническое обслуживание оборудования."
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of equipment."
+"                Create some laptop, printer or phone and link each equipment "
+"to an employee or departement.\n"
+"                You will manage allocations, issues and maintenance of "
+"equipment."
 msgstr ""
-"Это приложение помогает отслеживать оборудование, используемое сотрудниками.\n"
-"                 Создайте ноутбук, принтер или телефон и привяжите каждое оборудование к сотруднику или отделу.\n"
-"                 вы будете управлять распределением, проблемами и обслуживанием оборудования."
+"Это приложение помогает отслеживать оборудование, используемое "
+"сотрудниками.\n"
+"                 Создайте ноутбук, принтер или телефон и привяжите каждое "
+"оборудование к сотруднику или отделу.\n"
+"                 вы будете управлять распределением, проблемами и "
+"обслуживанием оборудования."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1073,7 +1086,7 @@ msgstr "Незапланированное обслуживание"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Предстоящие события (7 дней)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -1105,8 +1118,8 @@ msgstr "Гарантия"
 #: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance"
-" requests."
+"You cannot delete an equipment category containing equipments or maintenance "
+"requests."
 msgstr ""
 "Вы не можете удалить категорию оборудования, которая содержит оборудование "
 "или запрос на обслуживание."

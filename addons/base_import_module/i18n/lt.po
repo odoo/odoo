@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-11-11 12:14+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -30,6 +30,12 @@ msgid "Close"
 msgstr "Užverti"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr "Nepavyko pasirinkti duomenų bazės '%s'"
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
 msgstr "Sukūrė"
@@ -45,21 +51,21 @@ msgid "Display Name"
 msgstr "Vaizduojamas pavadinimas"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:100
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "Failas '%s' viršija maksimalų leistiną failo dydį"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:92
 #, python-format
 msgid "File is not a zip file!"
-msgstr ""
+msgstr "Failas nėra zip!"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_force
 msgid "Force init"
-msgstr ""
+msgstr "Priverstinis aktyvavimas"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
@@ -74,6 +80,11 @@ msgstr "ID"
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import App"
+msgstr "Importuoti aplikaciją"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
 msgstr ""
 
 #. module: base_import_module
@@ -82,22 +93,17 @@ msgstr ""
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
-msgstr ""
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr ""
+msgstr "Importuoti modulį"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import module"
-msgstr ""
+msgstr "Importuoti modulį"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module_imported
 msgid "Imported Module"
-msgstr ""
+msgstr "Importuotas modulis"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module___last_update
@@ -117,22 +123,34 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
-msgstr ""
+msgstr "Modulis"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
 msgid "Module .ZIP file"
-msgstr ""
+msgstr "Modulio .ZIP failas"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:90
+#, python-format
+msgid "No file sent."
+msgstr "Neišsiųstas joks failas."
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr "Tik administratoriai gali įkelti modulį"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Open Modules"
-msgstr ""
+msgstr "Atviri moduliai"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Select module package to import (.zip file):"
-msgstr ""
+msgstr "Pasirinkite modulio paketą, kurį norite importuoti (.zip failas)."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_state
@@ -140,7 +158,7 @@ msgid "Status"
 msgstr "Būsena"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:35
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr ""
@@ -153,4 +171,9 @@ msgstr "atlikta"
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
+msgstr "aktyvavimas"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
 msgstr ""

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-19 08:21+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -33,24 +33,9 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-#, fuzzy
-msgid "Action Rules"
-msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Pravila akcije\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Pravila Akcije"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
-#, fuzzy
 msgid "Advantages"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bonusi\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Prednosti"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -63,6 +48,11 @@ msgid "Basic Salary of the employee"
 msgstr "Osnovica plate zaposlenog"
 
 #. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Vozilo firme"
@@ -70,17 +60,12 @@ msgstr "Vozilo firme"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-#, fuzzy
 msgid "Contract Reference"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Broj ugovora\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Reference ugovora"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -92,13 +77,8 @@ msgstr "Tip ugovora"
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
-#, fuzzy
 msgid "Contract Types"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tipovi ugovora\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Tip ugovora"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -110,6 +90,12 @@ msgstr "Ugovor ubrzo ističe"
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
 msgstr "Ugovor istekao"
+
+#. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:87
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr ""
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -137,13 +123,8 @@ msgstr "Kreirao"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
-#, fuzzy
 msgid "Created on"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kreiran dana\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Kreiran"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
@@ -159,13 +140,8 @@ msgstr "Trenutni zaposleni"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
-#, fuzzy
 msgid "Department"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Sektor\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Odeljenje"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
@@ -182,34 +158,18 @@ msgstr "Trajanje"
 #: model:ir.model,name:hr_contract.model_hr_employee
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_employee_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-#, fuzzy
 msgid "Employee"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Zaposleni\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Zapošljeni"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Otvoreni ugovori"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
-#, fuzzy
 msgid "End Date"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum isteka\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Završni Datum"
-
-#. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
-msgstr "Greška! Početni datum mora biti manji od datuma isteka."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -228,13 +188,17 @@ msgid "Group By"
 msgstr "Grupisano po"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
+msgid "HR Contract: update to closed"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
+msgid "HR Contract: update to pending"
 msgstr ""
 
 #. module: hr_contract
@@ -247,6 +211,11 @@ msgstr "Udaljenost od posla do kuće"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id
 msgid "ID"
 msgstr "ID"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -265,23 +234,13 @@ msgstr "Je menadžer"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-#, fuzzy
 msgid "Job"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Radno mjesto\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Posao"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
-#, fuzzy
 msgid "Job Title"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Radno mjesto\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Naziv posla"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -313,13 +272,8 @@ msgstr "Ljekarski pregled"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
-#, fuzzy
 msgid "Medical Examination Date"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum ljekarskog pregleda\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum medicinskog pregleda"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -329,28 +283,13 @@ msgstr "Novo"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-#, fuzzy
 msgid "Notes"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Bilješke\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Beleške"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
-#, fuzzy
 msgid "Number of Children"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Broj djece\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Broj dece"
-
-#. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr "Otvoreni ugovori"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
@@ -407,13 +346,8 @@ msgstr "Za obnovu"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
-#, fuzzy
 msgid "Trial End Date"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum završetka probnog rada\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum završetka probe"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -422,28 +356,8 @@ msgstr "Trajanje probnog rada"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
-#, fuzzy
 msgid "Trial Start Date"
 msgstr ""
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum početka probnog rada\n"
-"#-#-#-#-#  sr@latin.po (Odoo 9.0)  #-#-#-#-#\n"
-"Datum početka Probnog Perioda"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Nepročitane poruke"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr "Koristi raspored zaposlenog"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr "Koristi raspored korisnika."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
@@ -474,60 +388,3 @@ msgstr "Broj radne dozvole"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
 msgid "Working Schedule"
 msgstr "Raspored rada"
-
-#~ msgid "Action Needed"
-#~ msgstr "Potrebna akcija"
-
-#~ msgid "Contract"
-#~ msgstr "Ugovor"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum zadnje poslate poruke na slog."
-
-#~ msgid "Followers"
-#~ msgstr "Pratioci"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Pratioci (kanali)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Pratioci (partneri)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Ako je označeno, nove poruke zahtjevaju pažnju"
-
-#~ msgid "Important Messages"
-#~ msgstr "Važne poruke"
-
-#~ msgid "Is Follower"
-#~ msgstr "Je pratioc"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum zadnje poruke"
-
-#~ msgid "Messages"
-#~ msgstr "Poruke"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Poruke i istorija komunikacije"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Broj akcija"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Broj poruka koje zahtjevaju akciju"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Broj nepročitanih poruka"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Brojač nepročitanih poruka"
-
-#~ msgid "Website Messages"
-#~ msgstr "Poruke sa web stranice"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istorija komunikacije sa web sajta"

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * mail
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Tina Milas <tina@uvid.hr>, 2017
@@ -22,11 +22,12 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: mail
 #: model:mail.template,body_html:mail.mail_template_data_notification_email_default
@@ -35,52 +36,65 @@ msgid ""
 "<div>\n"
 "% if ctx.get('has_button_access'):\n"
 "<div itemscope itemtype=\"http://schema.org/EmailMessage\">\n"
-"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\">\n"
+"    <div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/"
+"ViewAction\">\n"
 "        <link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/>\n"
 "        <meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/>\n"
 "    </div>\n"
 "</div>\n"
 "% endif\n"
-"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):\n"
+"% if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx."
+"get('has_button_access'):\n"
 "<div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\">\n"
-"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: "
+"600px; margin-top: 5px;\">\n"
 "<tbody><tr>\n"
 "    <td valign=\"center\">\n"
 "        % if ctx.get('has_button_access'):\n"
-"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">${ctx['button_access']['title']}</a>\n"
+"        <a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px "
+"12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; "
+"font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; "
+"border-radius:3px\">${ctx['button_access']['title']}</a>\n"
 "        % endif\n"
 "\n"
 "        % if ctx.get('has_button_follow'):\n"
 "        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
+"        <a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; "
+"text-decoration: none !important;\">${ctx['button_follow']['title']}</a>\n"
 "        % elif ctx.get('has_button_unfollow'):\n"
 "        % if ctx.get('has_button_access'):\n"
 "           |\n"
 "        % endif\n"
-"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
+"        <a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; "
+"text-decoration: none !important;\">${ctx['button_unfollow']['title']}</a>\n"
 "        % endif\n"
 "\n"
 "        % if ctx.get('actions'):\n"
 "        % for action in ctx['actions']:\n"
 "        |\n"
-"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\">${action['title']}</a>\n"
+"        <a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:"
+"none !important;\">${action['title']}</a>\n"
 "        % endfor\n"
 "        % endif\n"
 "    </td>\n"
 "    <td valign=\"center\" align=\"right\">\n"
-"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"        <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" alt=\"${user.company_id.name}\">\n"
 "    </td>\n"
 "</tr>\n"
 "<tr>\n"
 "    <td colspan=\"2\" style=\"text-align:center;\">\n"
 "        <hr width=\"100%\"\n"
-"            style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\">\n"
+"            style=\"background-color:rgb(204,204,204);border:medium none;"
+"clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin:10px 0;\">\n"
 "        % if ctx.get('subtype') and ctx.get('subtype').internal:\n"
 "        <span style=\"background-color: #f2dede; padding: 5px;\">\n"
-"            <strong>Internal note</strong>: replies are not sent to followers.\n"
+"            <strong>Internal note</strong>: replies are not sent to "
+"followers.\n"
 "        </span>\n"
 "        % endif\n"
 "    </td>\n"
@@ -104,14 +118,16 @@ msgid ""
 "<p style=\"color: #555555;\">\n"
 "    Sent by\n"
 "    % if ctx.get('website_url'):\n"
-"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\">\n"
+"    <a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: "
+"#875A7B;\">\n"
 "    % endif\n"
 "    ${ctx.get('company_name')}\n"
 "    % if ctx.get('website_url'):\n"
 "    </a>\n"
 "    % endif\n"
 "    using\n"
-"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a>.\n"
+"    <a href=\"https://www.odoo.com\" style=\"text-decoration:none; color: "
+"#875A7B;\">Odoo</a>.\n"
 "</p>\n"
 "</div>"
 msgstr ""
@@ -132,14 +148,14 @@ msgstr ""
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
 msgid ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
-"object.parent_id.subject) or (object.parent_id and "
-"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
+"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
+"'Re: %s' % object.parent_id.record_name)}"
 msgstr ""
 "${object.subject or (object.record_name and 'Re: %s' % object.record_name) "
-"or (object.parent_id and object.parent_id.subject and 'Re: %s' % "
-"object.parent_id.subject) or (object.parent_id and "
-"object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}"
+"or (object.parent_id and object.parent_id.subject and 'Re: %s' % object."
+"parent_id.subject) or (object.parent_id and object.parent_id.record_name and "
+"'Re: %s' % object.parent_id.record_name)}"
 
 #. module: mail
 #. openerp-web
@@ -201,47 +217,51 @@ msgstr "-------- Pokaži starije poruke --------"
 #, python-format
 msgid ""
 "<br><br>\n"
-"            You can mention someone by typing <b>@username</b>, this will grab its attention.<br>\n"
+"            You can mention someone by typing <b>@username</b>, this will "
+"grab its attention.<br>\n"
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
-"            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
+"            You can insert canned responses in your message by typing <b>:"
+"shortcut</b>.<br>"
 msgstr ""
 "<br><br>\n"
-"Možete spomenuti nekoga tako da utipkate <b>@korisničkoime</b>, to će im privući pažnju.<br>\n"
+"Možete spomenuti nekoga tako da utipkate <b>@korisničkoime</b>, to će im "
+"privući pažnju.<br>\n"
 "Možete spomenuti kanal tako da utipkate <b>#kanal</b>.<br>\n"
 "Možete izvršiti naredbu tako da utipkate <b>/naredba</b>.<br>\n"
-"Možete ubaciti gotove odgovore u svoje odgovore tako da utipkate <b>:prečac</b>.<br>"
+"Možete ubaciti gotove odgovore u svoje odgovore tako da utipkate <b>:prečac</"
+"b>.<br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:552
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">created <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">created <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">kreirano <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">kreirano <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:475
 #: code:addons/mail/models/mail_channel.py:528
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">joined <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">joined <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">se priključio <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">se priključio <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:168
 #, python-format
 msgid ""
-"<div class=\"o_mail_notification\">left <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">left <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">preostalo <a href=\"#\" "
-"class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
+"<div class=\"o_mail_notification\">preostalo <a href=\"#\" class="
+"\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:23
@@ -254,8 +274,7 @@ msgstr ""
 #. module: mail
 #: code:addons/mail/wizard/invite.py:26
 #, python-format
-msgid ""
-"<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
+msgid "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
 msgstr "<div><p>Bok,</p><p>%s te pozvao da pratiš novi dokument.</p></div>"
 
 #. module: mail
@@ -263,9 +282,8 @@ msgstr "<div><p>Bok,</p><p>%s te pozvao da pratiš novi dokument.</p></div>"
 #: code:addons/mail/static/src/js/tour.js:28
 #, python-format
 msgid ""
-"<p><b>Chat with coworkers</b> in real-time using direct "
-"messages.</p><p><i>You might need to invite users from the Settings app "
-"first.</i></p>"
+"<p><b>Chat with coworkers</b> in real-time using direct messages.</"
+"p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
 "<p><b>Čavrljajte sa suradnicima</b> u stvarnom vremenu koristeći direktne "
 "poruke.</p><p><i>Možda ćete prvo trebati pozvati korisnike iz aplikacije "
@@ -276,22 +294,22 @@ msgstr ""
 #: code:addons/mail/static/src/js/tour.js:15
 #, python-format
 msgid ""
-"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
-" notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
+"<p><b>Write a message</b> to the members of the channel here.</p> <p>You can "
+"notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Napišite poruku</b> za članove kanala ovdje.</p> <p>Možete "
-"obavijestiti nekoga sa <i>'@'</i> ili staviti link za drugi kanal sa "
-"<i>'#'</i>. Započnite svoju poruku sa <i>'/'</i> kako biste dobili popis "
-"mogućih naredbi.</p>"
+"obavijestiti nekoga sa <i>'@'</i> ili staviti link za drugi kanal sa <i>'#'</"
+"i>. Započnite svoju poruku sa <i>'/'</i> kako biste dobili popis mogućih "
+"naredbi.</p>"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/tour.js:11
 #, python-format
 msgid ""
-"<p>Channels make it easy to organize information across different topics and"
-" groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
+"<p>Channels make it easy to organize information across different topics and "
+"groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
 "<p>Kanali olakšavaju organizaciju informacija među različitim temama i "
@@ -303,26 +321,36 @@ msgstr ""
 msgid ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "                                <strong>Email mass mailing</strong> on\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">the selected records</span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', True)]}\">the selected records</span>\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', False)]}\">the current search filter</span>.\n"
 "                            </span>\n"
-"                            <span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
+"                            <span attrs=\"{'invisible':['|', ('model', '=', "
+"False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document "
+"and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
 "<strong>E-mail masovna pošta</strong> na\n"
-"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">odabrani zapisi</span>\n"
-"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">trenutni filter pretrage</span>.\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">odabrani "
+"zapisi</span>\n"
+"<span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">trenutni "
+"filter pretrage</span>.\n"
 "</span>\n"
-"<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Pratitelji dokumenta i</span>"
+"<span attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', "
+"'=', 'mass_mail')]}\">Pratitelji dokumenta i</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">\n"
-"                                    If you want to use all records according to you search criterion instead check this selection box :\n"
+"                                    If you want to use all records according "
+"to you search criterion instead check this selection box :\n"
 "                                </span>\n"
-"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">\n"
-"                                    If you want to use only selected records please uncheck this selection box :\n"
+"                                <span attrs=\"{'invisible': "
+"[('use_active_domain', '=', False)]}\">\n"
+"                                    If you want to use only selected records "
+"please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
 
@@ -330,36 +358,45 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Dodaj</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 msgstr ""
 "<span class=\"o_stat_text\">Ukloni</span>\n"
-"                                    <span class=\"o_stat_text\">Context Action</span>"
+"                                    <span class=\"o_stat_text\">Context "
+"Action</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>\n"
-"                                    All records matching your current search filter will be mailed,\n"
-"                                    not only the ids selected in the list view.\n"
+"                                    All records matching your current search "
+"filter will be mailed,\n"
+"                                    not only the ids selected in the list "
+"view.\n"
 "                                </strong><br/>\n"
-"                                If you want to send a lot of emails, we recommend you to use the mass mailing module.<br/>\n"
-"                                Confirming this wizard will probably take a few minutes blocking your browser."
+"                                If you want to send a lot of emails, we "
+"recommend you to use the mass mailing module.<br/>\n"
+"                                Confirming this wizard will probably take a "
+"few minutes blocking your browser."
 msgstr ""
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
-"                                If you want to send a lot of emails, we recommend you to use the mass mailing module."
+"                                If you want to send a lot of emails, we "
+"recommend you to use the mass mailing module."
 msgstr ""
 
 #. module: mail
@@ -370,8 +407,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Python rječnik koji će se provjeravati za zadane postave kada se kreira novi"
-" zapis za ovaj alias."
+"Python rječnik koji će se provjeravati za zadane postave kada se kreira novi "
+"zapis za ovaj alias."
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -656,8 +693,8 @@ msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
 msgstr ""
-"Odgovori ne idu u originalan okvir za raspravu u dokumentu. Ovo ima utjecaja"
-" na generirani id poruke."
+"Odgovori ne idu u originalan okvir za raspravu u dokumentu. Ovo ima utjecaja "
+"na generirani id poruke."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
@@ -738,11 +775,11 @@ msgstr "Potpis autora (samo za masovnu poštu)"
 #: model:ir.model.fields,help:mail.field_mail_message_author_id
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_id
 msgid ""
-"Author of the message. If not set, email_from may hold an email address that"
-" did not match any partner."
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
 msgstr ""
-"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte"
-" koja nije odgovarala niti jednom partneru."
+"Autor poruke. Ako nije postavljen, email_from može sadržavati adresu e-pošte "
+"koja nije odgovarala niti jednom partneru."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_author_avatar
@@ -980,8 +1017,7 @@ msgstr "Ids primatelja odvojeni zarezima"
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
-"Ids primatelja odvojeni zarezima (ovdje se mogu koristiti zamjenski "
-"tekstovi)"
+"Ids primatelja odvojeni zarezima (ovdje se mogu koristiti zamjenski tekstovi)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1555,8 +1591,7 @@ msgstr "Greška, partner ne može dva puta slijediti isti predmet."
 
 #. module: mail
 #: sql_constraint:mail.followers:0
-msgid ""
-"Error: A follower must be either a partner or a channel (but not both)."
+msgid "Error: A follower must be either a partner or a channel (but not both)."
 msgstr "Greška: Sljedbenik mora biti partner ili kanal (ali ne oboje)."
 
 #. module: mail
@@ -1636,8 +1671,8 @@ msgid ""
 "automatic subscription on a related document. The field is used to compute "
 "getattr(related_document.relation_field)."
 msgstr ""
-"Ovo polje se koristi za spajanje povezanog modela s podvrstom modela kada se"
-" koristi automatska pretplata na povezani dokument. Polje se koristi za "
+"Ovo polje se koristi za spajanje povezanog modela s podvrstom modela kada se "
+"koristi automatska pretplata na povezani dokument. Polje se koristi za "
 "račinanje getattr(related_document.relation_field). "
 
 #. module: mail
@@ -1980,8 +2015,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_thread_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
+"ID of the parent record holding the alias (example: project holding the task "
+"creation alias)"
 msgstr ""
 "ID matične evidencije sadrži pseudonim (na primjer : projekt sadrži "
 "pseudonim pod kojim djelatnik kreira zadatak)"
@@ -2148,8 +2183,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_email_template_preview_user_signature
 #: model:ir.model.fields,help:mail.field_mail_template_user_signature
 msgid ""
-"If checked, the user's signature will be appended to the text version of the"
-" message"
+"If checked, the user's signature will be appended to the text version of the "
+"message"
 msgstr "Ako je odabrano, potpis korisnika biti će dodan tekst verziji poruke."
 
 #. module: mail
@@ -2171,8 +2206,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible."
 msgstr ""
-"Ako je postavljeno, menadžer reda čekanja poslat će e-mail nakon datuma. Ako"
-" nije postavljeno, e-mail će biti poslan što prije moguće."
+"Ako je postavljeno, menadžer reda čekanja poslat će e-mail nakon datuma. Ako "
+"nije postavljeno, e-mail će biti poslan što prije moguće."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_scheduled_date
@@ -2181,8 +2216,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. Jinja2 placeholders may be used."
 msgstr ""
-"Ako je postavljeno, menadžer reda čekanja poslat će e-mail nakon datuma. Ako"
-" nije postavljeno, e-mail će biti poslan što prije moguće. Jinja2 zamjenski "
+"Ako je postavljeno, menadžer reda čekanja poslat će e-mail nakon datuma. Ako "
+"nije postavljeno, e-mail će biti poslan što prije moguće. Jinja2 zamjenski "
 "tekst se može koristiti."
 
 #. module: mail
@@ -2242,11 +2277,11 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:1774
 #, python-format
 msgid ""
-"Invalid record set: should be called as model (without records) or on "
-"single-record recordset"
+"Invalid record set: should be called as model (without records) or on single-"
+"record recordset"
 msgstr ""
-" Postavljen nevažeći zapis: trebao bi se zvati kao model (bez zapisa) ili na"
-" jednom zapisu"
+" Postavljen nevažeći zapis: trebao bi se zvati kao model (bez zapisa) ili na "
+"jednom zapisu"
 
 #. module: mail
 #: code:addons/mail/controllers/main.py:43
@@ -2642,10 +2677,12 @@ msgstr "Prijavi internu bilješku"
 #: code:addons/mail/static/src/xml/chatter.xml:12
 #, python-format
 msgid ""
-"Log an internal note which will not be sent to followers, but which can be read\n"
+"Log an internal note which will not be sent to followers, but which can be "
+"read\n"
 "                    by users accessing this document."
 msgstr ""
-"Prijavi internu bilješku koja neće biti poslana sljedbenicima, ali koju mogu pročitati\n"
+"Prijavi internu bilješku koja neće biti poslana sljedbenicima, ali koju mogu "
+"pročitati\n"
 "korisnici koji pristupaju ovom dokumentu."
 
 #. module: mail
@@ -2823,14 +2860,14 @@ msgstr "Poruka poslana u \""
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
 msgid ""
 "Message subtype gives a more precise type on the message, especially for "
-"system notifications. For example, it can be a notification related to a new"
-" record (New), or to a stage change in a process (Stage change). Message "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
 "subtypes allow to precisely tune the notifications the user want to receive "
 "on its wall."
 msgstr ""
 "Podvrste poruka preciznije definiraju poruku, posebno za sistemske "
-"obavijesti. Na primjer, to može biti obavijesti vezane uz novi zapis (nova),"
-" ili na promjene faze u procesu (promjena faze). Podvrste poruka omogućuju "
+"obavijesti. Na primjer, to može biti obavijesti vezane uz novi zapis (nova), "
+"ili na promjene faze u procesu (promjena faze). Podvrste poruka omogućuju "
 "precizno podešavanje obavijesti koje korisnici žele primati na svoj zid."
 
 #. module: mail
@@ -3024,7 +3061,8 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
-"Naziv koji se treba koristiti za kreiranu datoteku izvješća (može sadržavati zamjenske tekstove)\n"
+"Naziv koji se treba koristiti za kreiranu datoteku izvješća (može sadržavati "
+"zamjenske tekstove)\n"
 "Proširenje se može izostaviti i u tom će slučaju doći iz tipa izvješća. "
 
 #. module: mail
@@ -3538,8 +3576,8 @@ msgstr "Tekst stare vrijednosti"
 #: code:addons/mail/static/src/js/tour.js:24
 #, python-format
 msgid ""
-"Once a message has been starred, you can come back and review it at any time"
-" here."
+"Once a message has been starred, you can come back and review it at any time "
+"here."
 msgstr ""
 "Kada označite poruku zvjezdicom, možete se vratiti u bilo kojem trenutku i "
 "ponovno je pregledati."
@@ -3609,8 +3647,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako"
-" oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
+"Opcionalni ID zapisa na kojeg će biti povezane sve dolazne poruke, čak i ako "
+"oni nisu odgovorili na njega. Ako je postavljeno, to će onemogućiti "
 "stvaranje novih zapisa u potpunosti."
 
 #. module: mail
@@ -3640,15 +3678,14 @@ msgid ""
 msgstr ""
 "Izborni jezik prijevoda (ISO kod) može se izabrati prilikom slanja e-maila. "
 "Ako nije postavljen, koristit će se engleski jezik. Ovo bi obično trebao "
-"biti rezervirani izraz koji pruža odgovarajući jezik, npr. "
-"${object.partner_id.lang}."
+"biti rezervirani izraz koji pruža odgovarajući jezik, npr. ${object."
+"partner_id.lang}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_null_value
 #: model:ir.model.fields,help:mail.field_mail_template_null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
-"Opcionalna vrijednost koja će se koristiti ako je ciljano polje prazno"
+msgstr "Opcionalna vrijednost koja će se koristiti ako je ciljano polje prazno"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search selection:mail.mail,state:0
@@ -3682,13 +3719,12 @@ msgstr "Izlazni poslužitelj e-pošte"
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 msgid "Overdue"
@@ -3744,8 +3780,8 @@ msgstr "ID zapisa nadređenog"
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_parent_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not "
+"necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
 "Matični model sadrži pseudonim. Model sadrži alias referencu ali nije nužno "
@@ -3755,12 +3791,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_parent_id
 msgid ""
-"Parent subtype, used for automatic subscription. This field is not correctly"
-" named. For example on a project, the parent_id of project subtypes refers "
-"to task-related subtypes."
+"Parent subtype, used for automatic subscription. This field is not correctly "
+"named. For example on a project, the parent_id of project subtypes refers to "
+"task-related subtypes."
 msgstr ""
-"Nadređena podvrsta, korištena za automatsku pretplatu. Naziv ovog polja nije"
-" točan. Npr. na nekom projektu; nadređeni_id podvrste projekta odnosi se na "
+"Nadređena podvrsta, korištena za automatsku pretplatu. Naziv ovog polja nije "
+"točan. Npr. na nekom projektu; nadređeni_id podvrste projekta odnosi se na "
 "podvrste koje su povezane sa zadatkom."
 
 #. module: mail
@@ -3783,8 +3819,8 @@ msgstr "Profil partnera"
 #: model:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
-"Partneri koji nisu tražili da budu uključeni u kampanju masovnog slanja "
-"e-mailova."
+"Partneri koji nisu tražili da budu uključeni u kampanju masovnog slanja e-"
+"mailova."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_needaction_partner_ids
@@ -3837,13 +3873,12 @@ msgstr "Rerzerviran izraz"
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 #, python-format
@@ -3880,7 +3915,8 @@ msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following channels\n"
+"- followers: only followers of the related document or members of following "
+"channels\n"
 msgstr ""
 "Politika ostavljanja poruka na dokumentu koristeći mailgateway.\n"
 "- svatko: svatko može objaviti poruku\n"
@@ -4222,7 +4258,8 @@ msgstr "Traži grupe"
 #: model:ir.model.fields,help:mail.field_mail_template_model_object_field
 msgid ""
 "Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+"If it is a relationship field you will be able to select a target field at "
+"the destination of the relationship."
 msgstr ""
 
 #. module: mail
@@ -4383,8 +4420,8 @@ msgstr "Bočna tipka za otvaranje bočne akcije"
 #: model:ir.model.fields,help:mail.field_survey_mail_compose_message_author_avatar
 msgid ""
 "Small-sized image of this contact. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Mala sličica ovog kontakta. Veličina je automatski promijenjena na 64x64 px "
 "sliku. sa očuvanim proporcijama. Koristite ovo polje gdjegod je potrebna "
@@ -4399,11 +4436,11 @@ msgstr "Fotografija malog formata"
 #: model:ir.model.fields,help:mail.field_mail_channel_image_small
 msgid ""
 "Small-sized photo of the group. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
-"Slika grupe malog formata. Automatski će se promijeniti veličina na 64x64, s"
-" očuvanim omjerom. Koristite ovo polje gdje je potrebna mala slika."
+"Slika grupe malog formata. Automatski će se promijeniti veličina na 64x64, s "
+"očuvanim omjerom. Koristite ovo polje gdje je potrebna mala slika."
 
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
@@ -4606,12 +4643,12 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_alias_mixin_alias_model_id
 #: model:ir.model.fields,help:mail.field_mail_channel_alias_model_id
 msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
+"email that does not reply to an existing record will cause the creation of a "
+"new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni "
-"e-mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
+"Model (Odoo vrsta dokumenta) na koje se ovaj alias odgovara. Svaki dolazni e-"
+"mail koji ne odgovara na postojeći zapis uzrokovati će stvaranje novog "
 "zapisa ovog modela (npr. projektni zadatak)"
 
 #. module: mail
@@ -4622,8 +4659,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu "
-"za<jobs@example.odoo.com>"
+"Ime e-mail aliasa, npr. 'poslovi' ako žele uhvatiti e-poštu za<jobs@example."
+"odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_user_id
@@ -4636,8 +4673,8 @@ msgid ""
 "system user is found for that address."
 msgstr ""
 "Vlasnik zapisa kreiranih nakon primitka e-mailova na taj alias. Ako ovo "
-"polje nije postavljeno sustav će pokušati pronaći pravog vlasnika na temelju"
-" adrese pošiljatelja (od), ili će koristiti administratorski račun ako ne "
+"polje nije postavljeno sustav će pokušati pronaći pravog vlasnika na temelju "
+"adrese pošiljatelja (od), ili će koristiti administratorski račun ako ne "
 "pronađe sistemskog korisnika za tu adresu."
 
 #. module: mail
@@ -4645,11 +4682,13 @@ msgstr ""
 #: code:addons/mail/models/mail_message.py:667
 #, python-format
 msgid ""
-"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"Pokrenuta operacija nemože biti završena iz sigurnosnig razloga. Molimo kontaktirajte administratora.\n"
+"Pokrenuta operacija nemože biti završena iz sigurnosnig razloga. Molimo "
+"kontaktirajte administratora.\n"
 "\n"
 "(Tip dokumenta: %s, operacija : %s)"
 
@@ -4683,8 +4722,8 @@ msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
 msgstr ""
-"Ova grupa je vidljiva svima. Za nevidljive grupe članovi se dodaju kroz gumb"
-" pozivanja."
+"Ova grupa je vidljiva svima. Za nevidljive grupe članovi se dodaju kroz gumb "
+"pozivanja."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -4734,13 +4773,12 @@ msgstr "Za: Pratitelji od"
 #: selection:maintenance.equipment,activity_state:0
 #: selection:maintenance.request,activity_state:0
 #: selection:mrp.production,activity_state:0
-#: selection:mrp.repair,activity_state:0
-#: selection:mrp.unbuild,activity_state:0 selection:note.note,activity_state:0
+#: selection:mrp.repair,activity_state:0 selection:mrp.unbuild,activity_state:0
+#: selection:note.note,activity_state:0
 #: selection:project.issue,activity_state:0
 #: selection:project.task,activity_state:0
 #: selection:purchase.order,activity_state:0
-#: selection:res.partner,activity_state:0
-#: selection:sale.order,activity_state:0
+#: selection:res.partner,activity_state:0 selection:sale.order,activity_state:0
 #: selection:stock.picking,activity_state:0
 #: selection:survey.survey,activity_state:0
 #, python-format
@@ -4831,8 +4869,7 @@ msgstr "UUID"
 #: code:addons/mail/models/mail_message.py:30
 #, python-format
 msgid "Unable to send email, please configure the sender's email address."
-msgstr ""
-"E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja"
+msgstr "E-mail se ne može poslati, molimo postavite e-mail adresu pošiljatelja"
 
 #. module: mail
 #. openerp-web
@@ -5101,10 +5138,12 @@ msgstr "Pogled"
 #, python-format
 msgid ""
 "Warning! \n"
-" If you remove a follower, he won't be notified of any email or discussion on this document. Do you really want to remove this follower ?"
+" If you remove a follower, he won't be notified of any email or discussion "
+"on this document. Do you really want to remove this follower ?"
 msgstr ""
 "Upozorenje!\n"
-"Ako uklonite sljedbenika, neće biti obaviješten o e-pošti ili raspravi o ovom dokumentu. Da li stvarno želite ukloniti ovog sljedbenika?"
+"Ako uklonite sljedbenika, neće biti obaviješten o e-pošti ili raspravi o "
+"ovom dokumentu. Da li stvarno želite ukloniti ovog sljedbenika?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_sub_model_object_field
@@ -5181,8 +5220,7 @@ msgstr "Vi ste u kanalu <b>#%s</b>."
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:29
 #, python-format
-msgid ""
-"You can mark any message as 'starred', and it shows up in this channel."
+msgid "You can mark any message as 'starred', and it shows up in this channel."
 msgstr ""
 "Možete označiti bilo koju poruku zvjezdicom i one će se pojaviti u ovom "
 "kanalu."
@@ -5211,8 +5249,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:346
 #, python-format
 msgid ""
-"You could also add a new %(document)s by sending an email to: "
-"%(email_link)s."
+"You could also add a new %(document)s by sending an email to: %(email_link)s."
 msgstr ""
 "Također se može dodati novi %(document)s slanjem e-maila na: %(email_link)s."
 
@@ -5235,8 +5272,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Možete priložiti datoteke ovom predlošku, one će biti dodate svim "
-"e-mailovima kreiranim iz ovog predloška"
+"Možete priložiti datoteke ovom predlošku, one će biti dodate svim e-"
+"mailovima kreiranim iz ovog predloška"
 
 #. module: mail
 #. openerp-web

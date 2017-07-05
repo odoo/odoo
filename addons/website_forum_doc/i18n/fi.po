@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-15 13:36+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -20,16 +20,11 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr ""
+msgstr "&amp;times;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
-msgid "After-sale communication"
 msgstr ""
 
 #. module: website_forum_doc
@@ -55,19 +50,9 @@ msgid "Benefits of having done this setup"
 msgstr ""
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_cms_ecommerce
-msgid "CMS & eCommerce"
-msgstr ""
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_child_ids
 msgid "Children Table Of Content"
 msgstr ""
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_claim
-msgid "Claims"
-msgstr "Palautteet"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
@@ -85,16 +70,6 @@ msgstr "Luonut"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_create_date
 msgid "Created on"
 msgstr "Luotu"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm
-msgid "Customer Relationship Management"
-msgstr "Asiakkuuden hallinta"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_customer
-msgid "Customers"
-msgstr "Asiakkaat"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.view_forum_post_kanban
@@ -154,12 +129,8 @@ msgid "Edit Post"
 msgstr ""
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm_contract
-msgid "Employee Contract"
-msgstr "Työsopimus"
-
-#. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "Virhe! Et voi luoda rekursiivisia ryhmiä."
 
@@ -181,12 +152,7 @@ msgstr "Keskustelupalsta"
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
-msgstr ""
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
-msgid "Functional Documentation"
-msgstr ""
+msgstr "Keskustelupalstan viesti"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -209,11 +175,6 @@ msgid "How to forecast sales revenues?"
 msgstr ""
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_hrm
-msgid "Human Resources Management"
-msgstr "Henkilöstöhallinto (HR)"
-
-#. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_id
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_id
 msgid "ID"
@@ -227,7 +188,7 @@ msgstr "Ideat"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_introduction
 msgid "Introduction"
-msgstr ""
+msgstr "Esittely"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage___last_update
@@ -246,11 +207,6 @@ msgstr "Viimeksi päivittänyt"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_write_date
 msgid "Last Updated on"
 msgstr "Viimeksi päivitetty"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_crm_lead
-msgid "Lead & Opportunity"
-msgstr ""
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_left
@@ -285,7 +241,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_post_ids
 msgid "Posts"
-msgstr ""
+msgstr "Viestit"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -330,27 +286,12 @@ msgstr "Liittyvät aiheet"
 #. module: website_forum_doc
 #: model:forum.documentation.stage,name:website_forum_doc.stage_review
 msgid "Review"
-msgstr ""
+msgstr "Tarkasta"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_parent_right
 msgid "Right Parent"
 msgstr "Oikea ylempi"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_0
-msgid "Sales & Warehouse"
-msgstr "Myynnit ja varasto"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale
-msgid "Sales Management"
-msgstr "Myynti"
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_sale_so
-msgid "Sales orders"
-msgstr "Myyntitilaukset"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -396,11 +337,6 @@ msgid "The question title is short and descriptive"
 msgstr ""
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "This documentation is produced using the best posts from the"
-msgstr ""
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
@@ -422,18 +358,6 @@ msgid ""
 msgstr ""
 
 #. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_sale
-msgid ""
-"Tracks leads, boost opportunities and close deals.\n"
-"                    This serie of how-to will help you develop your business."
-msgstr ""
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,name:website_forum_doc.toc_website
-msgid "Website"
-msgstr "Verkkosivusto"
-
-#. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "What report should I use to compute probabilities per stage?"
 msgstr ""
@@ -446,33 +370,19 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "cancel"
-msgstr ""
-
-#. module: website_forum_doc
-#: model:forum.documentation.toc,introduction:website_forum_doc.toc_functional_doc
-msgid "community forum"
-msgstr ""
+msgstr "peruuta"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essay"
-msgstr ""
+msgstr "essee"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.toc
 msgid "essays"
-msgstr ""
+msgstr "esseet"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr ""
-
-#~ msgid "Website meta description"
-#~ msgstr "Verkkosivuston metakuvaus"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Verkkosivuston meta avainsanat"
-
-#~ msgid "Website meta title"
-#~ msgstr "Verkkosivuston metaotsikko"

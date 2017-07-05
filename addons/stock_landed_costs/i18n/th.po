@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-03 15:14+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -23,10 +23,10 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:127
-#: code:addons/stock_landed_costs/stock_landed_costs.py:131
-#: code:addons/stock_landed_costs/stock_landed_costs.py:147
-#: code:addons/stock_landed_costs/stock_landed_costs.py:151
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr ""
@@ -39,7 +39,7 @@ msgstr "บัญชี"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_account_journal_id
 msgid "Account Journal"
-msgstr ""
+msgstr "Account Journal"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_additional_landed_cost
@@ -112,6 +112,14 @@ msgid "Cost Lines"
 msgstr ""
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#, python-format
+msgid ""
+"Cost and adjustments lines do not match. You should maybe recompute the "
+"landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_create_uid
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_create_uid
@@ -135,14 +143,6 @@ msgstr "วันที่"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_name
 msgid "Description"
 msgstr "รายละเอียด"
-
-#. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:18
-#, python-format
-msgid ""
-"Disabling the costing methods will prevent you to use the landed costs "
-"feature."
-msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -246,7 +246,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "Landed Costs"
-msgstr ""
+msgstr "Landed Costs"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -291,7 +291,14 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:203
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#, python-format
+msgid ""
+"No valuation adjustments lines. You should maybe recompute the landed costs."
+msgstr ""
+
+#. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr ""
@@ -302,7 +309,7 @@ msgid "Pickings"
 msgstr "การหยิบ"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:90
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -376,7 +383,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr ""
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:52
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -396,7 +403,7 @@ msgid "Validate"
 msgstr "ตรวจสอบ"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:261
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
@@ -415,78 +422,11 @@ msgid "Volume"
 msgstr "ระดับเสียง"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/purchase_config_settings.py:17
-#, python-format
-msgid "Warning!"
-msgstr "คำเตือน!"
-
-#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_weight
 msgid "Weight"
 msgstr "น้ำหนัก"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/stock_landed_costs.py:205
-#, python-format
-msgid ""
-"You cannot validate a landed cost which has no valid valuation adjustments "
-"lines. Did you click on Compute?"
-msgstr ""
-
-#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
 msgid "describe the product characteristics..."
 msgstr "คำอธิบายลักษณะของสินค้า ..."
-
-#. module: stock_landed_costs
-#: model:ir.model,name:stock_landed_costs.model_purchase_config_settings
-msgid "purchase.config.settings"
-msgstr "purchase.config.settings"
-
-#~ msgid "Action Needed"
-#~ msgstr "ต้องดำเนินการ"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#~ msgid "Followers"
-#~ msgstr "ผู้ติดตาม"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Is Follower"
-#~ msgstr "เป็นผู้ติดตาม"
-
-#~ msgid "Last Message Date"
-#~ msgstr "วันที่ข้อความล่าสุด"
-
-#~ msgid "Messages"
-#~ msgstr "ข้อความ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "ข้อความและประวัติการติดต่อ"
-
-#~ msgid "Number of Actions"
-#~ msgstr "จำนวนกิจกรรม"
-
-#~ msgid "Unread Messages"
-#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Website Messages"
-#~ msgstr "ข้อความเว็บไซต์"
-
-#~ msgid "Website communication history"
-#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

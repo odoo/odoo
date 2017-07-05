@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-05-19 11:22+0000\n"
 "Last-Translator: Manuela Silva <inactive+alfalb@transifex.com>\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -118,7 +118,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr ""
+msgstr "Clique para configurar o seu leitor de cartão."
 
 #. module: pos_mercury
 #. openerp-web
@@ -149,6 +149,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr ""
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -161,7 +168,7 @@ msgid "Created on"
 msgstr "Criado em"
 
 #. module: pos_mercury
-#: code:addons/pos_mercury/models/pos_mercury.py:17
+#: code:addons/pos_mercury/models/pos_mercury.py:15
 #, python-format
 msgid "Credit Card"
 msgstr "Cartão de Crédito"
@@ -198,6 +205,13 @@ msgstr "Pagamento Eletrónico"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Empty Command String"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: pos_mercury
@@ -454,7 +468,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
 #, python-format
 msgid "Invalid Operator ID"
-msgstr ""
+msgstr "Id. de Operador Inválida"
 
 #. module: pos_mercury
 #. openerp-web
@@ -606,6 +620,18 @@ msgid "Name of this Mercury configuration"
 msgstr ""
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
@@ -747,7 +773,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
 #, python-format
 msgid "Server Login Failed"
-msgstr ""
+msgstr "Início de Sessão no Servidor Falhou"
 
 #. module: pos_mercury
 #. openerp-web
@@ -823,7 +849,7 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "A configuração de Mercury utilizada para este diário"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
@@ -898,7 +924,7 @@ msgstr "Erro Desconhecido"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
 #, python-format
 msgid "Unrecognized Request Format"
-msgstr ""
+msgstr "Formato de Pedido Não Reconhecido"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -959,6 +985,11 @@ msgstr "X______________________________"
 #: model:ir.model,name:pos_mercury.model_barcode_rule
 msgid "barcode.rule"
 msgstr "barcode.rule"
+
+#. module: pos_mercury
+#: model:ir.model,name:pos_mercury.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration

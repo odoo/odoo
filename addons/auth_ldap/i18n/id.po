@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-12-02 23:35+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -24,6 +24,8 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
+"Secara otomatis membuat akun pengguna lokal untuk pengguna baru yang "
+"melakukan autentikasi melalui LDAP"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -37,7 +39,7 @@ msgstr "Perusahaan"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
-msgid "Create user"
+msgid "Create User"
 msgstr ""
 
 #. module: auth_ldap
@@ -61,46 +63,51 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
+#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr ""
+msgstr "Konfigurasi LDAP"
 
 #. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_base_config_settings_ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.ui.view,arch_db:auth_ldap.company_form_view
 msgid "LDAP Parameters"
+msgstr "Parameter LDAP"
+
+#. module: auth_ldap
+#: model:ir.ui.view,arch_db:auth_ldap.base_config_settings_view_form_inherit_auth_ldap
+msgid "LDAP Server"
 msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
 msgid "LDAP Server address"
-msgstr ""
+msgstr "Alamat Server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
 msgid "LDAP Server port"
-msgstr ""
+msgstr "Port Server LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
 msgid "LDAP base"
-msgstr ""
+msgstr "base LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
 msgid "LDAP binddn"
-msgstr ""
+msgstr "binddn LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
 msgid "LDAP filter"
-msgstr ""
+msgstr "filter LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
 msgid "LDAP password"
-msgstr ""
+msgstr "kata sandi LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
@@ -125,7 +132,7 @@ msgstr "Informasi Login"
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr ""
+msgstr "Parameter Proses"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
@@ -134,6 +141,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication "
 "attempts will fail."
 msgstr ""
+"Meminta enkripsi TLS/SSL ketika mencoba terhubung ke server LDAP. Opsi ini "
+"membutuhkan server dengan fitur STARTTLS yang aktif, jika tidak, seluruh "
+"usaha autentikasi akan gagal."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
@@ -148,12 +158,12 @@ msgstr "Information Server"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr ""
+msgstr "Atur server LDAP Anda"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
 msgid "Template User"
-msgstr ""
+msgstr "Pengguna Template"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
@@ -161,6 +171,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
+"Kata sandi dari akun pengguna di server LDAP yang digunakan untuk melakukan "
+"query direktori."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
@@ -168,21 +180,23 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
+"Kata sandi dari akun pengguna di server LDAP yang digunakan untuk melakukan "
+"query direktori. Biarkan kosong jika terhubung secara anonim."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
 msgid "Use TLS"
-msgstr ""
+msgstr "Menggunakan TLS"
 
 #. module: auth_ldap
 #: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr ""
+msgstr "Informasi Pengguna"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
 msgid "User to copy when creating new users"
-msgstr ""
+msgstr "Data pengguna yang hendak disalin saat membuat pengguna baru"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
@@ -190,6 +204,11 @@ msgid "Users"
 msgstr "Pengguna"
 
 #. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "res.company.ldap"
-msgstr ""
+msgstr "res.company.ldap"

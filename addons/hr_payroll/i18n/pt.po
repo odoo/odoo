@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-10-23 14:44+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
@@ -32,7 +32,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:59
+#: code:addons/hr_payroll/models/hr_payroll.py:48
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -40,53 +40,48 @@ msgstr "%s (cópia)"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is "
-"'Waiting'.             \n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
-"* Quando o recibo de vencimento é criada o estado é 'Rascunho'.        \n"
-"* Se o recibo de vencimento está sobre verificação, o estado fica em 'Em "
-"Espera'.             \n"
-"* Se o recibo de vencimento é confirmada, em seguida, o estado é definido "
-"como 'Confirmado'.            \n"
-"* Quando o utilizador cancelar o recibo de vencimento, o estado fica em "
-"'Rejeitado'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>Morada</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Authorized signature</strong>"
-msgstr ""
+msgstr "<strong>Assinatura autorizada</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr ""
+msgstr "<strong>Conta Bancária</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
-msgstr ""
+msgstr "<strong>Data desde:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Date From</strong>"
-msgstr ""
+msgstr "<strong>Data Desde</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date To:</strong>"
-msgstr ""
+msgstr "<strong>Data Até:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -104,7 +99,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>E-mail</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -121,18 +116,13 @@ msgstr "<strong>Nome</strong>"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
-#, fuzzy
 msgid "<strong>Reference</strong>"
-msgstr ""
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"<strong>Referência</strong>\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"<strong>Referencia</strong>"
+msgstr "<strong>Referência</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Register Name:</strong>"
-msgstr ""
+msgstr "<strong>Nome de registo:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
@@ -249,8 +239,14 @@ msgid "Cancel Payslip"
 msgstr "Cancelar Recibo de Vencimento"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payroll.py:240
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9052
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7480
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categoria"
@@ -505,7 +501,6 @@ msgstr "Detalhes por Categoria da Regra de Salário"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
 msgstr "Nome a Mostrar"
@@ -554,9 +549,8 @@ msgstr "Funcionário"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Função do Funcionário"
+msgstr "Contrato do funcionário"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
@@ -579,7 +573,8 @@ msgid "Employees"
 msgstr "Funcionários"
 
 #. module: hr_payroll
-#: constraint:hr.payroll.structure:0
+#: code:addons/hr_payroll/models/hr_payroll.py:43
+#, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Erro! Não pode criar uma Estrutura de Salário recursiva"
 
@@ -646,7 +641,6 @@ msgstr "Agrupar por"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
 msgid "ID"
 msgstr "ID"
@@ -701,14 +695,10 @@ msgstr "Nota Interna"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
 msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
-"Ele é usado no cálculo da percentagem e por um montante fixo.Por exemplo a "
-"regra para o vale de refeição tem um valor fixo de 1 € por dia trabalhado "
-"pode ter sua quantidade definida na expressão como worked_days.WORK100."
-"number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
@@ -736,7 +726,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
 msgstr "Última Modificação em"
@@ -795,6 +784,11 @@ msgid "Made Payment Order ? "
 msgstr "Feita Ordem de Pagamento? "
 
 #. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Gestor"
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_condition_range_max
 msgid "Maximum Range"
@@ -830,7 +824,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:395
+#: code:addons/hr_payroll/models/hr_payroll.py:325
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Dias normais de trabalho pagos a 100%"
@@ -849,6 +843,11 @@ msgstr "Numero de dias"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
 msgid "Number of Hours"
 msgstr "Número de Horas"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Escritório"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -936,7 +935,8 @@ msgid "Payslip"
 msgstr "Recibo de Vencimento"
 
 #. module: hr_payroll
-#: constraint:hr.payslip:0
+#: code:addons/hr_payroll/models/hr_payroll.py:226
+#, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr "Recibo de Vencimento ' Data a partir de' deve ser anterior 'Data para'"
 
@@ -990,9 +990,8 @@ msgstr "Nome de Recibo de Pagamento"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#, fuzzy
 msgid "Payslip Run"
-msgstr "Linha Recibo de Vencimento"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1121,13 +1120,7 @@ msgid "Refund"
 msgstr "Reembolsar"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:315
-#, python-format
-msgid "Refund Payslip"
-msgstr "Reembolso de Recibo de Vencimento"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:306
+#: code:addons/hr_payroll/models/hr_payroll.py:246
 #, python-format
 msgid "Refund: "
 msgstr "Reembolsar: "
@@ -1198,8 +1191,8 @@ msgid "Salary Rules"
 msgstr "Regras salariais"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:640
-#: code:addons/hr_payroll/hr_payroll.py:699
+#: code:addons/hr_payroll/models/hr_payroll.py:552
+#: code:addons/hr_payroll/models/hr_payroll.py:600
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Recibo Salarial de %s para %s"
@@ -1405,39 +1398,39 @@ msgid "Worked Days & Inputs"
 msgstr "Dias Trabalhados & Entradas"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:884
+#: code:addons/hr_payroll/models/hr_payroll.py:775
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
 "Base de percentagem errada ou quantidade definida por regra salarial %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:890
+#: code:addons/hr_payroll/models/hr_payroll.py:781
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Código python definido está errado para a regra salarial %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:913
+#: code:addons/hr_payroll/models/hr_payroll.py:804
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Condição python definida está errada para a regra salarial %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:877
+#: code:addons/hr_payroll/models/hr_payroll.py:768
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Quantidade definida está errada para a regra salarial %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:907
+#: code:addons/hr_payroll/models/hr_payroll.py:798
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr ""
 "Condição de alcance definida está errada para a regra salarial %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:333
+#: code:addons/hr_payroll/models/hr_payroll.py:270
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
@@ -1445,18 +1438,17 @@ msgstr ""
 "Cancelados!"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 "Tem de selecionar um funcionário (s) para gerar o Recibo de Vencimento (s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:964
-#, fuzzy, python-format
+#: code:addons/hr_payroll/models/hr_payroll.py:843
+#, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""
-"Tem de selecionar um funcionário (s) para gerar o Recibo de Vencimento (s)."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
@@ -1471,11 +1463,6 @@ msgstr "hr.salary.rule"
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_contributionregister
 msgid "report.hr_payroll.report_contributionregister"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
-msgid "report.hr_payroll.report_payslip"
 msgstr ""
 
 #. module: hr_payroll

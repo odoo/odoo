@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-15 13:36+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> Kaikki"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
@@ -29,7 +29,7 @@ msgid "Active"
 msgstr "Aktiivinen"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:64
 #, python-format
 msgid "All Countries"
 msgstr "Kaikki maat"
@@ -130,6 +130,8 @@ msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ... "
 msgstr ""
+"Kumppanien tunnisteet - Näitä voidaan käyttää verkkosivuilla löytämään "
+"asiakasryhmiä jne."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
@@ -162,17 +164,22 @@ msgid "Trusted by millions worldwide"
 msgstr "Kansainvälisesti miljoonien luottama"
 
 #. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr "Näkyvillä verkkosivustolla"
+
+#. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr ""
+msgstr "Verkkosivun tunnisteet"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
 msgid "Website tags"
-msgstr ""
+msgstr "Verkkosivun tunnisteet"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country
@@ -183,12 +190,3 @@ msgstr "Maailman kartta"
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
 msgstr "referenssi(ä))"
-
-#~ msgid "Partner Tags"
-#~ msgstr "Kumppanien tunnisteet"
-
-#~ msgid "Tags"
-#~ msgstr "Tunnisteet"
-
-#~ msgid "Website URL"
-#~ msgstr "Verkkosivuston osoite"

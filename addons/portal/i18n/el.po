@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-12-13 18:12+0000\n"
 "Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
@@ -55,19 +55,9 @@ msgid "Access Groups"
 msgstr "Ομάδες Πρόσβασης"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Υπηρεσίες Μετά την Πώληση"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Εφαρμογή"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Χρεώση"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -106,6 +96,12 @@ msgstr "Εμφάνιση Ονόματος"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
 msgstr "Email"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -159,7 +155,6 @@ msgstr "Ομάδες χωρίς Portal"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Πύλη"
 
@@ -181,11 +176,6 @@ msgid "Portal User Config"
 msgstr "Ρυθμίσεις Χρήστη Πύλης"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Έργα"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
@@ -201,19 +191,19 @@ msgstr ""
 "οποιαδήποτε διεύθυνση e-mail μιας επαφής άμεσα στη λίστα."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Αρκετές επαφές έχουν το ίδιο email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Ορισμένες επαφές δεν έχουν ένα έγκυρο email:"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr "Ορισμένες επαφές έχουν το ίδιο email με μια επαφή στην πύλη χρηστών:"
@@ -238,7 +228,7 @@ msgstr ""
 "χρήστες της πύλης."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -260,7 +250,7 @@ msgid "Wizard"
 msgstr "Αυτόματος Οδηγός"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
 msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""

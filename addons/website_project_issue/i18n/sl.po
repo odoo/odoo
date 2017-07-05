@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:45+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -20,74 +20,114 @@ msgstr ""
 "%100==4 ? 2 : 3);\n"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "<span>Show more</span><span class=\"hidden\">Show less</span>"
-msgstr ""
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Assigned to</strong>"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Date:</strong>"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "<strong>Description</strong>"
+msgstr "<strong>Opis</strong>"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Message and communication history</strong>"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "<strong>Reported by</strong>"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
+#: code:addons/website_project_issue/controllers/main.py:38
+#, python-format
+msgid "All"
+msgstr "Vse"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "Current stage of the issue"
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
 msgstr ""
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "Description"
 msgstr "Opis"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#, fuzzy
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Edit Issue"
-msgstr "Zadeva"
+msgstr "Uredi zadevo"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Issue"
 msgstr "Zadeva"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.issues_followup
-msgid "My Account"
-msgstr "Moj račun"
+#: model:ir.ui.view,arch_db:website_project_issue.portal_layout
+msgid "Issues"
+msgstr "Zadeve"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Status"
-msgstr "Status"
+#: code:addons/website_project_issue/controllers/main.py:35
+#, python-format
+msgid "Last Stage Update"
+msgstr "Zadnja posodobitev stopnje"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "There are currently no issues for your account."
-msgstr ""
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "My Issues"
+msgstr "Moje zadeve"
 
 #. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.portal_project_issue
-msgid "Your Issues"
-msgstr ""
+#: code:addons/website_project_issue/controllers/main.py:33
+#, python-format
+msgid "Name"
+msgstr "Naziv"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:32
+#, python-format
+msgid "Newest"
+msgstr "Najnovejše"
 
 #. module: website_project_issue
 #: model:ir.model,name:website_project_issue.model_project_issue
-#, fuzzy
-msgid "project issue"
+msgid "Project Issue"
 msgstr "Projektna zadeva"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:34
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Stage"
+msgstr "Stopnja"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
+msgid "There are currently no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+msgid "There are no issues."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
+msgid "Your Issues"
+msgstr ""

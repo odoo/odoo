@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-01 14:48+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -26,51 +26,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "<strong>Analysis from:</strong>"
-msgstr "<strong>Analysen von:</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-msgid "<strong>Analysis from</strong>"
-msgstr "<strong>Analysen von</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-msgid "<strong>Analytic Account</strong>"
-msgstr "<strong>Analysekonto</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "<strong>Budget:</strong>"
-msgstr "<strong>Budget:</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "<strong>Currency:</strong>"
-msgstr "<strong>Währung:</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-msgid "<strong>Currency</strong>"
-msgstr "<strong>Währung</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-msgid "<strong>Printed at:</strong>"
-msgstr "<strong>Gedruckt am:</strong>"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "<strong>Total:</strong>"
-msgstr "<strong>Total:</strong>"
 
 #. module: account_budget
 #: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
@@ -86,22 +41,6 @@ msgstr ""
 "einer Periode in der Zukunft. Ein Budget wird über bestimmte Finanzkonten "
 "und/oder Kostenstellen erstellt, welche Projekte, Abteilungen, Warengruppen, "
 "usw. darstellen können."
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_account_budget_crossvered_report
-msgid "Account Budget crossovered report"
-msgstr "Budget-Kreuztabellenbericht"
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
-msgid "Account Budget crossovered summary report"
-msgstr "Budget-Übersichts-Kreuztabellen"
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_account_budget_analytic
-#: model:ir.model,name:account_budget.model_account_budget_report
-msgid "Account Budget report for analytic account"
-msgstr "Budgetauswertung Analyt. Konto"
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -121,23 +60,15 @@ msgid "Analytic Account"
 msgstr "Kostenstelle"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-msgid "Analytic Budget"
-msgstr "Budget der Kostenstelle (Analytisch)"
-
-#. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Approve"
 msgstr "Genehmigen"
 
 #. module: account_budget
-#: model:ir.actions.report.xml,name:account_budget.action_report_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_crossovered_budget_id
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_tree
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
 msgid "Budget"
 msgstr "Budget"
@@ -176,26 +107,19 @@ msgstr "Budget Name"
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_form
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_search
 #: model:ir.ui.view,arch_db:account_budget.view_budget_post_tree
-#, fuzzy
 msgid "Budgetary Position"
-msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Budgetposition\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Budget-inzelposten"
+msgstr "Budgetposition"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+#: model:ir.ui.view,arch_db:account_budget.account_config_settings_view_form_inherit_account_budget
 msgid "Budgetary Positions"
 msgstr "Budgetpositionen"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_report
-#: model:ir.actions.report.xml,name:account_budget.action_report_analytic_account_budget
-#: model:ir.actions.report.xml,name:account_budget.action_report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
 msgid "Budgets"
@@ -217,14 +141,6 @@ msgstr ""
 "Treffen Sie durch Detaillierung der Umsatzerwartungen pro \n"
 "Kostenstelle Vorhersagen und beobachten die Entwicklung an \n"
 "Hand der Ist-Zahlen der jeweiligen Periode."
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.account_budget_analytic_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_summary_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_report_view
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -259,45 +175,23 @@ msgid "Confirmed"
 msgstr "Bestätigt"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_create_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_create_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_create_uid
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_create_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_create_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_uid
 msgid "Created by"
 msgstr "Angelegt von"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_create_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_create_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_create_date
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_create_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_create_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_create_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_create_date
 msgid "Created on"
 msgstr "Angelegt am"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_display_name
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_display_name
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_display_name
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_display_name
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_display_name
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_display_name
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget_display_name
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget_display_name
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget_display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -325,58 +219,28 @@ msgid "End Date"
 msgstr "Enddatum"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_date_to
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_date_to
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_date_to
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_date_to
-msgid "End of period"
-msgstr "Periodenende"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_id
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_id
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_id
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_id
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_id
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_id
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget_id
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget_id
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget_id
 msgid "ID"
 msgstr "ID"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic___last_update
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report___last_update
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report___last_update
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post___last_update
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report___last_update
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget___last_update
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines___last_update
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_analyticaccountbudget___last_update
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_budget___last_update
-#: model:ir.model.fields,field_description:account_budget.field_report_account_budget_report_crossoveredbudget___last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_write_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_write_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_uid
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_uid
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_uid
 msgid "Last Updated by"
 msgstr "Zuletzt aktualisiert durch"
 
 #. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_write_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_write_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_write_date
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_write_date
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_write_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_write_date
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_write_date
 msgid "Last Updated on"
@@ -393,13 +257,6 @@ msgid "Paid Date"
 msgstr "Zahldatum"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "Perc(%)"
-msgstr "Proz (%)"
-
-#. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 msgid "Period"
 msgstr "Periode"
@@ -407,49 +264,15 @@ msgstr "Periode"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_planned_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.report_budget
 msgid "Planned Amount"
 msgstr "Geplanter Betrag"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "Planned Amt"
-msgstr "Plan"
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_practical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.report_budget
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Practical Amount"
 msgstr "Ist-Wert"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "Practical Amt"
-msgstr "Ist"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.account_budget_analytic_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_summary_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_report_view
-msgid "Print"
-msgstr "Drucken"
-
-#. module: account_budget
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
-#: model:ir.ui.view,arch_db:account_budget.account_budget_report_view
-msgid "Print Budgets"
-msgstr "Budgets drucken"
-
-#. module: account_budget
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
-msgid "Print Summary"
-msgstr "Finanzbudget drucken"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
@@ -462,25 +285,9 @@ msgid "Responsible"
 msgstr "Verantwortlicher"
 
 #. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.account_budget_analytic_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_summary_report_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_report_view
-msgid "Select Dates Period"
-msgstr "Perioden wählen"
-
-#. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_date_from
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_date_from
 msgid "Start Date"
-msgstr "Startdatum"
-
-#. module: account_budget
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_analytic_date_from
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_report_date_from
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_crossvered_summary_report_date_from
-#: model:ir.model.fields,field_description:account_budget.field_account_budget_report_date_from
-msgid "Start of period"
 msgstr "Startdatum"
 
 #. module: account_budget
@@ -489,7 +296,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:104
+#: code:addons/account_budget/models/account_budget.py:89
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr "Das Budget '%s' hat keine Konten!"
@@ -497,31 +304,13 @@ msgstr "Das Budget '%s' hat keine Konten!"
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
-#: model:ir.ui.view,arch_db:account_budget.report_budget
 msgid "Theoretical Amount"
 msgstr "Soll-Wert"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "Theoretical Amt"
-msgstr "Soll"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_account_analytic_account_form_inherit_budget
 msgid "Theoritical Amount"
 msgstr "Plan-Wert"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.account_budget_analytic_view
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_report_view
-msgid "This wizard is used to print budget"
-msgstr "Dieser Assistent wird genutzt, um Budgets zu drucken."
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.account_budget_crossvered_summary_report_view
-msgid "This wizard is used to print summary of budgets"
-msgstr "Dieser Assistent druckt eine Zusammenfassung des Budgets"
 
 #. module: account_budget
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_search
@@ -537,84 +326,3 @@ msgstr "Budgets genehmigen"
 #: selection:crossovered.budget,state:0
 msgid "Validated"
 msgstr "Genehmigt"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-msgid "at"
-msgstr "bei"
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_report_account_budget_report_analyticaccountbudget
-msgid "report.account_budget.report_analyticaccountbudget"
-msgstr "report.account_budget.report_analyticaccountbudget"
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_report_account_budget_report_budget
-msgid "report.account_budget.report_budget"
-msgstr "report.account_budget.report_budget"
-
-#. module: account_budget
-#: model:ir.model,name:account_budget.model_report_account_budget_report_crossoveredbudget
-msgid "report.account_budget.report_crossoveredbudget"
-msgstr "report.account_budget.report_crossoveredbudget"
-
-#. module: account_budget
-#: model:ir.ui.view,arch_db:account_budget.report_analyticaccountbudget
-#: model:ir.ui.view,arch_db:account_budget.report_budget
-#: model:ir.ui.view,arch_db:account_budget.report_crossoveredbudget
-msgid "to"
-msgstr "bis"
-
-#~ msgid "Action Needed"
-#~ msgstr "Aktion notwendig"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum der letzten Nachricht."
-
-#~ msgid "Followers"
-#~ msgstr "Beobachter"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Beobachter (Kanäle)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Beobachter (Partner)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
-
-#~ msgid "Is Follower"
-#~ msgstr "Ist Beobachter"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Letzte Benachrichtigung"
-
-#~ msgid "Messages"
-#~ msgstr "Mitteilungen"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Nachrichten und Kommunikations-Historie"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Anzahl der Aktionen"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Anzahl ungelesene Nachrichten"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Ungelesene Mitteilungen"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Zähler der ungelelesen Nachrichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website Kommunikationshistorie"

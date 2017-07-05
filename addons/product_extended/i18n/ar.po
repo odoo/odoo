@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -24,104 +24,47 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:24
-#: code:addons/product_extended/wizard/wizard_price.py:40
-#, python-format
-msgid "Active ID is not set in Context."
-msgstr "المعرف النشط غير محدد في السياق."
+#: model:ir.model.fields,field_description:product_extended.field_product_product_available_in_pos
+msgid "Available in the Point of Sale"
+msgstr "متوفر في نقطة البيع"
 
 #. module: product_extended
-#: model:ir.model,name:product_extended.model_mrp_bom
-msgid "Bill of Material"
-msgstr "قائمة الخامات"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Cancel"
-msgstr "إلغاء"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Price"
-msgstr "تغيير السعر"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Change Standard Price"
-msgstr "تغيير السعر القياسي"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_recursive
-msgid "Change prices of child BoMs too"
-msgstr "تغيير الأسعار لقوائم الخامات التابعة أيضاً"
-
-#. module: product_extended
-#: model:ir.actions.act_window,name:product_extended.action_view_compute_price_wizard
-#: model:ir.model,name:product_extended.model_wizard_price
-msgid "Compute Price Wizard"
-msgstr "معالج حساب السعر"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
-msgid "Compute from BOM"
+#: model:ir.model.fields,help:product_extended.field_product_product_to_weight
+msgid ""
+"Check if the product should be weighted using the hardware scale integration"
 msgstr ""
+"التحقق ما اذا كان المنتج يجب أن يكون وزنه باستخدام التكامل على نطاق الأجهزة "
+
+#. module: product_extended
+#: model:ir.model.fields,help:product_extended.field_product_product_available_in_pos
+msgid "Check if you want this product to appear in the Point of Sale"
+msgstr "تحقق مما إذا كنت تريد أن يظهر هذا المنتج في نقاط البيع"
 
 #. module: product_extended
 #: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
+msgid "Compute from BOM"
+msgstr "احتساب من مكتب الإدارة"
+
+#. module: product_extended
+#: model:ir.ui.view,arch_db:product_extended.product_product_ext_form_view2
+#: model:ir.ui.view,arch_db:product_extended.product_product_view_form_normal_inherit_extended
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"يحسب سعر المنتج باستخدام المنتجات والعمليات المقترن بفاتورة  المواد "
+"والمنتجات المصنعة فقط."
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_uid
-msgid "Created by"
-msgstr "أنشئ بواسطة"
+#: model:ir.model.fields,field_description:product_extended.field_product_product_pos_categ_id
+msgid "Point of Sale Category"
+msgstr "فئة نقطة البيع"
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_create_date
-msgid "Created on"
-msgstr "أنشئ في"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_display_name
-msgid "Display Name"
-msgstr "اسم العرض"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_real_time_accounting
-msgid "Generate accounting entries when real-time"
-msgstr "إنشاء القيود المحاسبية عند اختيار في الوقت الحقيقي"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_id
-msgid "ID"
-msgstr "المعرف"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_info_field
-msgid "Info"
-msgstr "المعلومات"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price___last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_uid
-msgid "Last Updated by"
-msgstr "آخر تحديث بواسطة"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_wizard_price_write_date
-msgid "Last Updated on"
-msgstr "آخر تحديث في"
-
-#. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_get_variant_count
-msgid "Number of variant for the product"
-msgstr ""
+#: model:ir.model,name:product_extended.model_product_product
+msgid "Product"
+msgstr "منتج"
 
 #. module: product_extended
 #: model:ir.model,name:product_extended.model_product_template
@@ -129,30 +72,11 @@ msgid "Product Template"
 msgstr "قالب المنتج"
 
 #. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid "Set price on BoM"
-msgstr "ضبط السعر في قائمة الخامات"
+#: model:ir.model.fields,help:product_extended.field_product_product_pos_categ_id
+msgid "Those categories are used to group similar products for point of sale."
+msgstr "تستخدم هذه الفئات لمجموعة منتجات مماثلة لنقاط البيع. "
 
 #. module: product_extended
-#: model:ir.model.fields,field_description:product_extended.field_mrp_bom_standard_price
-msgid "Standard Price"
-msgstr "السعر القياسي"
-
-#. module: product_extended
-#: model:ir.ui.view,arch_db:product_extended.view_compute_price_wizard
-msgid ""
-"The price is computed from the bill of material lines which are not variant "
-"specific"
-msgstr "يحتسب السعر من بنود قائمة الخامات والتي لا ترتبط بموديل معين."
-
-#. module: product_extended
-#: code:addons/product_extended/wizard/wizard_price.py:38
-#, fuzzy, python-format
-msgid ""
-"This wizard is built for product templates, while you are currently running "
-"it from a product variant."
-msgstr ""
-"صمم هذا المعالج ليعمل مع قالب المنتج، بينما أنت حالياً تعمل على موديل المنتج."
-
-#~ msgid "Compute price wizard"
-#~ msgstr "معالج احتساب السعر"
+#: model:ir.model.fields,field_description:product_extended.field_product_product_to_weight
+msgid "To Weigh With Scale"
+msgstr "وزن مع النطاق "

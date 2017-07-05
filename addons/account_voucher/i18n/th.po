@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-10 09:52+0000\n"
 "Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>\n"
 "Language-Team: Thai (http://www.transifex.com/odoo/odoo-9/language/th/)\n"
@@ -46,6 +46,11 @@ msgid "Account Date"
 msgstr "วันที่บัญชี"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_date
+msgid "Accounting Date"
+msgstr ""
+
+#. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "ใบสำคัญทางบัญชี"
@@ -67,7 +72,9 @@ msgid "Are you sure you want to cancel this receipt?"
 msgstr "คุณแน่ใจหรือว่าต้องการยกเลิกใบเสร็จรับเงินนี้"
 
 #. module: account_voucher
+#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
+#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Bill Date"
 msgstr "วันที่ออกบิล"
 
@@ -97,7 +104,7 @@ msgid "Cancelled"
 msgstr "ถูกยกเลิก"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:147
+#: code:addons/account_voucher/models/account_voucher.py:159
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "ไม่สามารถลบใบสำคัญที่ถูกเปิดหรือจ่ายแล้ว"
@@ -150,9 +157,7 @@ msgid "Customer"
 msgstr "ลูกค้า"
 
 #. module: account_voucher
-#: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
-#: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Date"
 msgstr "วันที่"
 
@@ -188,7 +193,7 @@ msgid "Due Date"
 msgstr "วันกำหนดจ่าย"
 
 #. module: account_voucher
-#: model:ir.model.fields,help:account_voucher.field_account_voucher_date
+#: model:ir.model.fields,help:account_voucher.field_account_voucher_account_date
 msgid "Effective date for accounting entries"
 msgstr ""
 
@@ -306,13 +311,13 @@ msgid "Payment Reference"
 msgstr "อ้างอิงการชำระ"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:183
+#: code:addons/account_voucher/models/account_voucher.py:195
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:186
+#: code:addons/account_voucher/models/account_voucher.py:198
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -432,12 +437,12 @@ msgstr "ภาษี"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
-msgid "Tax amount"
+msgid "Tax Amount"
 msgstr ""
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
-msgid "Tax correction"
+msgid "Tax Correction"
 msgstr ""
 
 #. module: account_voucher
@@ -500,7 +505,7 @@ msgid "Vendor Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:31
+#: code:addons/account_voucher/models/account_voucher.py:97
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_voucher_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
@@ -551,55 +556,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:348
+#: code:addons/account_voucher/models/account_voucher.py:376
 #, python-format
 msgid "You must first select a partner!"
 msgstr "คุณต้องเลือกคู่ค้าก่อน!"
-
-#~ msgid "Action Needed"
-#~ msgstr "ต้องดำเนินการ"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "วันที่ข้อความล่าสุดโพสต์ในระเบียน"
-
-#~ msgid "Followers"
-#~ msgstr "ผู้ติดตาม"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "ผู้ติดตาม (ช่องทาง)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "ผู้ติดตาม (คู่ค้า)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
-
-#~ msgid "Is Follower"
-#~ msgstr "เป็นผู้ติดตาม"
-
-#~ msgid "Last Message Date"
-#~ msgstr "วันที่ข้อความล่าสุด"
-
-#~ msgid "Messages"
-#~ msgstr "ข้อความ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "ข้อความและประวัติการติดต่อ"
-
-#~ msgid "Number of Actions"
-#~ msgstr "จำนวนกิจกรรม"
-
-#~ msgid "Unread Messages"
-#~ msgstr "ข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "จำนวนข้อความที่ยังไม่ได้อ่าน"
-
-#~ msgid "Website Messages"
-#~ msgstr "ข้อความเว็บไซต์"
-
-#~ msgid "Website communication history"
-#~ msgstr "ประวัติการสื่อสารเว็บไซต์"

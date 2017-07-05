@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-30 06:57+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -19,33 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_paypal
-#: model:payment.acquirer,cancel_msg:payment_paypal.payment_acquirer_paypal
-msgid "<span><i>Cancel,</i> Your payment has been cancelled.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,done_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Done,</i> Your online payment has been successfully processed. "
-"Thank you for your order.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,error_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Error,</i> Please be aware that an error occurred during the "
-"transaction. The order has been confirmed but won't be paid. Don't hesitate "
-"to contact us if you have any questions on the status of your order.</span>"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,pending_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"<span><i>Pending,</i> Your online payment has been successfully processed. "
-"But your order is not validated yet.</span>"
-msgstr ""
-
-#. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token
 msgid "Access Token"
 msgstr "アクセストークン"
@@ -53,12 +26,7 @@ msgstr "アクセストークン"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_access_token_validity
 msgid "Access Token Validity"
-msgstr ""
-
-#. module: payment_paypal
-#: model:ir.model,name:payment_paypal.model_res_company
-msgid "Companies"
-msgstr "会社"
+msgstr "アクセストークン有効性"
 
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.acquirer_form_paypal
@@ -68,17 +36,12 @@ msgstr "PayPalアカウントをどのように設定すればよいですか？
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "決済サービス"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,name:payment_paypal.payment_acquirer_paypal
-msgid "Paypal"
-msgstr "PayPal"
+msgstr "決済トランザクション"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_email_account
@@ -88,7 +51,7 @@ msgstr "PayPal EメールID"
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_use_ipn
 msgid "Paypal Instant Payment Notification"
-msgstr ""
+msgstr "Paypalインスタント決済通知"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_seller_account
@@ -98,23 +61,23 @@ msgstr "PayPalマーチャントID"
 #. module: payment_paypal
 #: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
 msgid "Paypal TX Details"
-msgstr ""
+msgstr "Paypal トランザクションの詳細"
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/paypal.py:183
+#: code:addons/payment_paypal/models/payment.py:137
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
-msgstr ""
+msgstr "Paypal：参照データが欠落している受信データ (%s)またはtxn_id (%s)"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_password
 msgid "Rest API Password"
-msgstr ""
+msgstr "Rest API パスワード"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_username
 msgid "Rest API Username"
-msgstr ""
+msgstr "Rest API ユーザ名"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_seller_account
@@ -122,11 +85,13 @@ msgid ""
 "The Merchant ID is used to ensure communications coming from Paypal are "
 "valid and secured."
 msgstr ""
+"マーチャントIDは、Paypalからの通信が有効で安全であることを保証するために使用"
+"されます。"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction_paypal_txn_type
 msgid "Transaction type"
-msgstr ""
+msgstr "トランザクションタイプ"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_use_ipn
@@ -136,11 +101,4 @@ msgstr "IPNを使用"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_api_enabled
 msgid "Use Rest API"
-msgstr ""
-
-#. module: payment_paypal
-#: model:payment.acquirer,pre_msg:payment_paypal.payment_acquirer_paypal
-msgid ""
-"You will be redirected to the Paypal website after clicking on the payment "
-"button."
-msgstr ""
+msgstr "Rest APIを使用"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-07-22 08:38+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -21,35 +21,6 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_3
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to let you know that you have entered the select circle "
-"of our Gold Partners!</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_2
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>We are delighted to welcome you among our Silver Partners as of today!</"
-"p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,body_html:marketing_campaign.email_template_1
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>You will receive your welcome pack via email shortly.</p>\n"
-"<p>Thank you,</p>\n"
-msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_campaign_analysis_count
@@ -95,7 +66,7 @@ msgid "Activity"
 msgstr "活動"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:479
+#: code:addons/marketing_campaign/models/marketing_campaign.py:394
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "%(interval_nbr)d %(interval_type)s 後"
@@ -107,13 +78,8 @@ msgstr "全て"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
-#, fuzzy
 msgid "All records (no duplicates)"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"全レコード (重複なし)\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"全レコード（重複なし）"
+msgstr "全レコード (重複なし)"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_signal
@@ -140,7 +106,7 @@ msgid "Automatic"
 msgstr "自動"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:478
+#: code:addons/marketing_campaign/models/marketing_campaign.py:393
 #, python-format
 msgid "Automatic transition"
 msgstr "自動翻訳"
@@ -242,7 +208,10 @@ msgid "Cancelled"
 msgstr "取消済"
 
 #. module: marketing_campaign
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_object_id
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_object_id
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_workitem_object_id
 msgid "Choose the resource on which you want this campaign to be run"
 msgstr "このキャンペーンを実行するリソースを選択して下さい。"
 
@@ -262,17 +231,7 @@ msgid "Condition"
 msgstr "条件"
 
 #. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_2
-msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_3
-msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:480
+#: code:addons/marketing_campaign/models/marketing_campaign.py:395
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -308,7 +267,7 @@ msgid "Created on"
 msgstr "作成日"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Custom Action"
 msgstr "カスタムアクション"
 
@@ -382,18 +341,18 @@ msgid "Draft"
 msgstr "ドラフト"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:170
+#: code:addons/marketing_campaign/models/marketing_campaign.py:127
 #, python-format
 msgid "Duplicating campaigns is not supported."
 msgstr ""
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Email"
 msgstr "Eメール"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:752
+#: code:addons/marketing_campaign/models/marketing_campaign.py:596
 #, python-format
 msgid "Email Preview"
 msgstr "Eメールプレビュー"
@@ -401,12 +360,6 @@ msgstr "Eメールプレビュー"
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_email_template_id
 msgid "Email Template"
-msgstr "Eメールテンプレート"
-
-#. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_email_template_preview
-#, fuzzy
-msgid "Email Template Preview"
 msgstr "Eメールテンプレート"
 
 #. module: marketing_campaign
@@ -649,7 +602,7 @@ msgstr "リード自動化"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_manager
 msgid "Manager"
-msgstr ""
+msgstr "マネジャ"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_search
@@ -690,6 +643,20 @@ msgid "Marketing Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_hour_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_hour
+msgid "Marketing Campaign: Campaign workitems processing"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.server,name:marketing_campaign.ir_cron_marketing_campaign_every_day_ir_actions_server
+#: model:ir.cron,cron_name:marketing_campaign.ir_cron_marketing_campaign_every_day
+#: model:ir.cron,name:marketing_campaign.ir_cron_marketing_campaign_every_day
+msgid "Marketing Campaign: Segment Sync"
+msgstr ""
+
+#. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_campaign_analysis_tree
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_graph
 #: model:ir.ui.view,arch_db:marketing_campaign.view_report_campaign_analysis_pivot
@@ -708,10 +675,10 @@ msgid "Mode"
 msgstr "モード"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.segment:0
-msgid "Model of filter must be same as resource model of Campaign "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:198
+#, python-format
+msgid "Model of filter must be same as resource model of Campaign"
 msgstr ""
-"フィルタのモデルはキャンペーンのリソースモデルと同じである必要があります。 "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -799,13 +766,8 @@ msgstr "最終同期後に作成されたレコードのみ"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
-#, fuzzy
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"最終同期後に変更されたレコードのみ (重複なし)\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"最終同期後に変更されたレコードのみ（重複なし）"
+msgstr "最終同期後に変更されたレコードのみ (重複なし)"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_activity_form
@@ -822,11 +784,6 @@ msgstr "取引先"
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid "Partner Field"
 msgstr "取引先項目"
-
-#. module: marketing_campaign
-#: model:ir.filters,name:marketing_campaign.filter0
-msgid "Partners"
-msgstr "取引先"
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -873,14 +830,14 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_report_id
-#: selection:marketing.campaign.activity,type:0
+#: selection:marketing.campaign.activity,action_type:0
 msgid "Report"
 msgstr "レポート"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.report_marketing_campaign
-msgid "Reports"
-msgstr "レポート"
+msgid "Reporting"
+msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.ui.view,arch_db:marketing_campaign.view_marketing_campaign_workitem_form
@@ -1032,22 +989,15 @@ msgstr "手動同期"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
 "Test - It creates and process all the activities directly (without waiting "
-"for the delay on transitions) but does not send emails or produce reports.\n"
+"for the delay on transitions) but does not send emails or produce reports. \n"
 "Test in Realtime - It creates and processes all the activities directly but "
 "does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to "
-"validate all workitem manually.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has "
+"to \n"
+" validate all workitem manually.\n"
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
-"テスト - 全てのアクティビティを直接作成し実行します（遷移の遅延を待たずに）"
-"が、Eメール送信やレポート生成はしません。\n"
-"リアルタイムテスト - 全てのアクティビティを直接作成し実行しますが、Eメール送"
-"信やレポート生成はしません。\n"
-"手動確認 - キャンペーンは正常に実行されますが、ユーザは全ての作業項目を手動で"
-"検証する必要があります。\n"
-"通常 - キャンペーンは正常に実行され、自動的に全てのEメールが送信されレポート"
-"されます（まさに本物。このモードはとても慎重に）。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -1065,11 +1015,10 @@ msgid "Test in Realtime"
 msgstr "リアルタイムテスト"
 
 #. module: marketing_campaign
-#: constraint:marketing.campaign.transition:0
-msgid "The To/From Activity of transition must be of the same Campaign "
+#: code:addons/marketing_campaign/models/marketing_campaign.py:411
+#, python-format
+msgid "The To/From Activity of transition must be of the same Campaign"
 msgstr ""
-"トランザクションのTo / Fromアクティビティは同じキャンペーンである必要がありま"
-"す。 "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_server_action_id
@@ -1077,14 +1026,14 @@ msgid "The action to perform when this activity is activated"
 msgstr "このアクティビティが有効化された時にアクションを実行します。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:114
+#: code:addons/marketing_campaign/models/marketing_campaign.py:107
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
 "全セグメントが閉じない限り、このキャンペーンは完了とはマークされません。"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:104
+#: code:addons/marketing_campaign/models/marketing_campaign.py:99
 #, python-format
 msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
@@ -1092,13 +1041,13 @@ msgid ""
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:92
+#: code:addons/marketing_campaign/models/marketing_campaign.py:87
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:777
+#: code:addons/marketing_campaign/models/marketing_campaign.py:619
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -1132,23 +1081,15 @@ msgid "The report to generate when this activity is activated"
 msgstr "このアクティビティが有効化された時に、レポートは生成されます。"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
-"   - Email: send an email using a predefined email template\n"
-"   - Report: print an existing Report defined on the resource item and save "
-"it into a specific directory\n"
-"   - Custom Action: execute a predefined action, e.g. to modify the fields "
-"of the resource record\n"
-"  "
+"- Email: send an email using a predefined email template \n"
+"- Report: print an existing Report defined on the resource item and save it "
+"into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of "
+"the resource record"
 msgstr ""
-"項目がこのアクティブティに入った時に実行するアクションのタイプです。例：\n"
-"　・ Eメール：Eメールテンプレートで事前定義されたEメールを送信します。\n"
-"　・ レポート：リソース項目に定義された既存のレポートを印刷し、特定のディレク"
-"トリに保存します。\n"
-"　・ カスタムアクション：事前定義されたアクションを実行します。例えば、リソー"
-"スレコードの項目を変更します。\n"
-"  "
 
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_start
@@ -1174,7 +1115,7 @@ msgid "Trigger"
 msgstr "トリガー"
 
 #. module: marketing_campaign
-#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_type
+#: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_action_type
 msgid "Type"
 msgstr "タイプ"
 
@@ -1186,17 +1127,12 @@ msgstr "固有項目"
 #. module: marketing_campaign
 #: model:res.groups,name:marketing_campaign.group_lead_automation_user
 msgid "User"
-msgstr ""
+msgstr "ユーザ"
 
 #. module: marketing_campaign
 #: model:ir.model.fields,field_description:marketing_campaign.field_marketing_campaign_activity_variable_cost
 msgid "Variable Cost"
 msgstr "変動経費"
-
-#. module: marketing_campaign
-#: model:mail.template,subject:marketing_campaign.email_template_1
-msgid "Welcome to the Odoo Partner Channel!"
-msgstr ""
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0

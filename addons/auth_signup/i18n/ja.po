@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-07-21 01:11+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -48,11 +48,11 @@ msgid ""
 "valid during 24 hours:</p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "        <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Change password</a>\n"
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\">Change password</a>\n"
 "    </div>\n"
 "    <p>If you do not expect this, you can safely ignore this email.</p>\n"
 "    <p>Best regards,</p>\n"
@@ -62,10 +62,49 @@ msgid ""
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"<tbody><tr>\n"
+"<td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\">\n"
+"<img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"</td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<p>Dear ${object.name},</p>\n"
+"<p>このメールにリンクされたOdooアカウントのパスワードリセットが要求されまし"
+"た。</p>\n"
+"<p>24時間有効なこのリンクをたどってパスワードを変更することができます:</p>\n"
+"<div style=\"text-align: center; margin-top: 16px;\">\n"
+"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; "
+"line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: "
+"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
+"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
+"background-image: none; background-color: #875A7B; border: 1px solid "
+"#875A7B; border-radius:3px\">パスワード変更</a>\n"
+"</div>\n"
+"<p>身に覚えがない場合は、このメールを無視しても問題ありません。</p>\n"
+"<p>以上、よろしくお願いいたします。</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"${user.signature | safe}\n"
+"<p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"<strong>送信者 ${user.company_id.name} using <a href=\"www.odoo.com\" style="
+"\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"</p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -96,11 +135,11 @@ msgid ""
 "    </p>\n"
 "    <div style=\"text-align: center; margin-top: 16px;\">\n"
 "         <a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-"
-"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
+"size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-"
 "decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
 "400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\">Accept invitation to \"${object."
+"space: nowrap; background-image: none; background-color: #875A7B; border: "
+"1px solid #875A7B; border-radius:3px\">Accept invitation to \"${object."
 "company_id.name}\"</a>\n"
 "    </div>\n"
 "    <p>Best regards,</p>\n"
@@ -110,15 +149,58 @@ msgid ""
 "    ${user.signature | safe}\n"
 "    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
 "        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com"
-"\" style=\"text-decoration:none; color: #a24689;\">Odoo</a></strong>\n"
+"\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
+"\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\">\n"
+"<tbody><tr>\n"
+"<td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\">\n"
+"<img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; "
+"width: 80px;\" alt=\"${user.company_id.name}\">\n"
+"</td>\n"
+"</tr></tbody>\n"
+"</table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\">\n"
+"<p> ${object.name},様</p>\n"
+"<p>\n"
+"Odooであなたの書類にアクセスするために \"$ {object.company_id.name}\"に接続す"
+"るように招待されました。\n"
+"</p>\n"
+"<p>\n"
+"招待状を受け入れるには、次のリンクをクリックしてください：\n"
+"</p>\n"
+"<div style=\"text-align: center; margin-top: 16px;\">\n"
+"<a href=\"${object.signup_url}\" style=\"padding: 5px 10px; font-size: 12px; "
+"line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: "
+"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
+"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
+"background-image: none; background-color: #875A7B; border: 1px solid "
+"#875A7B; border-radius:3px\"> \"${object.company_id.name}\"からの招待を受け入"
+"れる</a>\n"
+"</div>\n"
+"<p>以上、よろしくお願いいたします。</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; "
+"background: #fff repeat top /100%;color:#777777\">\n"
+"${user.signature | safe}\n"
+"<p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"<strong>送信者 ${user.company_id.name} using <a href=\"www.odoo.com\" style="
+"\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"</p>\n"
+"</div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
-msgstr ""
+msgstr "${object.company_id.name} 弊社Odooポータル接続のご招待"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -126,6 +208,8 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>パスワードのリセットが、このユーザから要求されてました。次のリンクを"
+"含む電子メールが送信されました：</strong>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -133,11 +217,8 @@ msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
 msgstr ""
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Activated"
-msgstr ""
+"<strong>次のサブスクリプションリンクを含む招待メールが送信されました：</"
+"strong>"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
@@ -145,22 +226,29 @@ msgid "Allow external users to sign up"
 msgstr "外部ユーザの登録を許可"
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Allow external users to sign up from Login page"
+msgstr ""
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:61
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"電子メールはあなたのパスワードをリセットするための資格情報を使用して送信され"
+"ました"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:38
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "別のユーザーが既にこのメールアドレスを使用して登録されています。"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:111
+#: code:addons/auth_signup/controllers/main.py:110
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "認証は失敗しました"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -172,7 +260,7 @@ msgstr "ログインへ戻る"
 #: code:addons/auth_signup/models/res_users.py:135
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "メール送信できません：ユーザ %s には、電子メールアドレスがありません。"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
@@ -185,32 +273,43 @@ msgid "Confirm Password"
 msgstr "パスワードを確認"
 
 #. module: auth_signup
+#: selection:res.users,state:0
+msgid "Confirmed"
+msgstr "確認済"
+
+#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:41
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "新しいアカウントを作成できません"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:63
 #, python-format
 msgid "Could not reset your password"
+msgstr "パスワードがリセットできません"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Default Access Rights"
 msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "Enable password reset from Login page"
 msgstr "ログインページでのパスワードリセットを有効化"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_uninvited
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
 msgid "If unchecked, only invited users may sign up."
-msgstr ""
+msgstr "チェックしない場合は、招待ユーザーのみががサインアップできます。"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:91
+#: code:addons/auth_signup/controllers/main.py:90
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "サインアップトークンは無効です。"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -228,76 +327,71 @@ msgid "Password"
 msgstr "パスワード"
 
 #. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "Password Reset"
+msgstr ""
+
+#. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "パスワードのリセット"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "パスワードリセット"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:108
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_self
-msgid "Self"
-msgstr ""
+msgstr "パスワードのリセット: 無効なユーザ名またはEメール"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
-#, fuzzy
 msgid "Send Reset Password Instructions"
-msgstr ""
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"パスワード再設定のEメール送信\n"
-"#-#-#-#-#  ja.po (Odoo 9.0)  #-#-#-#-#\n"
-"パスワードリセットのEメールを送信"
+msgstr "パスワード再設定のEメール送信"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "招待メールを送る"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
+msgstr "サインアップ"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
+msgid "Signup Expiration"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
+msgid "Signup Token"
 msgstr ""
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_type
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_type
 msgid "Signup Token Type"
-msgstr ""
+msgstr "サインアップトークンタイプ"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_valid
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_valid
 msgid "Signup Token is Valid"
-msgstr ""
+msgstr "サインアップトークンは有効です。"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_url
 msgid "Signup URL"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_expiration
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_expiration
-msgid "Signup expiration"
-msgstr ""
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner_signup_token
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_signup_token
-msgid "Signup token"
-msgstr ""
+msgstr "サインアップ URL"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
@@ -307,16 +401,16 @@ msgstr "ステータス"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
+msgstr "サインアップで作成されるユーザのテンプレートユーザ"
 
 #. module: auth_signup
 #: model:ir.model.fields,help:auth_signup.field_res_users_website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "ウェブサイトを介してドキュメントにアクセスするために完全なURLです。"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_base_config_settings_auth_signup_reset_password
-msgid "This allows users to trigger a password reset from the Login page."
+#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+msgid "User Signup"
 msgstr ""
 
 #. module: auth_signup
@@ -327,48 +421,48 @@ msgstr "ユーザ"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
 msgid "Visible in Website"
-msgstr ""
+msgstr "ウェブサイトに表示"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
 msgid "Website Partner Full Description"
-msgstr ""
+msgstr "ウェブサイト取引先完全名"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
 msgid "Website Partner Short Description"
-msgstr ""
+msgstr "ウェブサイト取引先短名"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
 msgid "Website URL"
-msgstr ""
+msgstr "ウェブサイトURL"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "ウェブサイトメタディスクリプション"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "ウェブサイトメタキーワード"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "ウェブサイトメタタイトル"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Eメール"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "Your Name"
-msgstr ""
+msgstr "お名前"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -378,7 +472,4 @@ msgstr "base.config.settings"
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr ""
-
-#~ msgid "Connected"
-#~ msgstr "接続済"
+msgstr "例: 鈴木 一郎"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-05-02 14:46+0000\n"
 "Last-Translator: Marc Tormo i Bochaca <mtbochaca@gmail.com>\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
@@ -22,11 +22,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_issue_count
 msgid "# Issues"
 msgstr "# Incidències"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_count
-msgid "# Tasks"
-msgstr "# Tasques"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_count
@@ -46,17 +41,14 @@ msgstr "<span class=\"o_stat_text\"> Pressupost(os) </span>"
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_associate_member
 msgid ""
-"A member with whom you want to associate your membership.It will consider "
+"A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
-"Un membre amb el qual voleu associar la seva afiliació. Es tindrà en compte "
-"l'estat de soci del membre associat."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_activation
-#, fuzzy
 msgid "Activation"
-msgstr "Pressupost"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_associate_member
@@ -69,9 +61,16 @@ msgid "Cancel Membership Date"
 msgstr "Cancel·lar Data d'Afiliació"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_count
-msgid "Count Payment Method"
-msgstr "Comptar la Forma de Pagament"
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:16
+#, python-format
+msgid "Click here to see more options."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_count
+msgid "Count Payment Token"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_state
@@ -116,6 +115,11 @@ msgid "Implementation References"
 msgstr ""
 
 #. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_implemented_count
+msgid "Implemented Count"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_assigned_partner_id
 msgid "Implemented by"
 msgstr ""
@@ -123,12 +127,12 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
-msgid "Invoiced in Sale Orders Target"
-msgstr "Facturat a l'objectiu de comandes de venda"
+msgid "Invoiced in Sales Orders Target"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_state
@@ -142,6 +146,14 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Indica l'estat de l'afiliació.\n"
+"- No membre: Una empresa que no ha sol·licitat cap afiliació.\n"
+"- Membre cancel·lat: Un membre que ha cancel·lat la seva afiliació.\n"
+"- Antic membre: Un membre que la seva afiliació ha expirat.\n"
+"- Membre en espera: Un membre que ha sol·licitat l'afiliació i que la seva "
+"factura va crear-se.\n"
+"- Membre facturat: Un membre que se li ha creat la seva factura.\n"
+"- Membre pagat: Un membre que ha pagat la seva quota d'afiliació."
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_review
@@ -152,6 +164,13 @@ msgstr ""
 #: model:ir.model,name:sale_crm.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Iniciativa/Oportunitat"
+
+#. module: sale_crm
+#. openerp-web
+#: code:addons/sale_crm/static/src/js/tour.js:20
+#, python-format
+msgid "Let's have a look at the quotations of this sales channel."
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_id
@@ -166,7 +185,7 @@ msgstr ""
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
+msgstr "Entra al xat des de cada oportunitat que generi la comanda"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_member_lines
@@ -187,6 +206,16 @@ msgstr "Data final d'Afiliació"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_membership_start
 msgid "Membership Start Date"
 msgstr "Data d'inici d'Afiliació"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "Missatge de comanda de vendes"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn_msg
+msgid "Message for Stock Picking"
+msgstr "Missatge per a empaquetat d'estoc"
 
 #. module: sale_crm
 #: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
@@ -215,14 +244,19 @@ msgstr "Comandes"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_date_partnership
-#, fuzzy
 msgid "Partnership Date"
-msgstr "Cancel·lar Data d'Afiliació"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_method_ids
-msgid "Payment Methods"
-msgstr "Formes de pagament"
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_payment_token_ids
+msgid "Payment Tokens"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:12
+#, python-format
+msgid "Pipeline"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
@@ -235,8 +269,14 @@ msgid "Quotations"
 msgstr "Cites"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_team
+msgid "Sales Channel"
+msgstr ""
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_sale_warn
 msgid "Sales Order"
 msgstr "Comanda de venda"
 
@@ -244,6 +284,29 @@ msgstr "Comanda de venda"
 #: model:ir.model.fields,help:sale_crm.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Seleccioneu si voleu donar lliure adhesió."
+
+#. module: sale_crm
+#: model:ir.model.fields,help:sale_crm.field_res_users_picking_warn
+#: model:ir.model.fields,help:sale_crm.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"Si seleccioneu l'opció \"Avís\" es notificarà als usuaris amb el missatge, "
+"si seleccioneu \"Missatge de bloqueig\" es llançarà una excepció amb el "
+"missatge i es bloquejarà el flux. El missatge s'ha d'escriure en el següent "
+"camp."
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_grade_sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users_picking_warn
+msgid "Stock Picking"
+msgstr "Empaquetat d'estoc"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
@@ -254,11 +317,6 @@ msgstr "Suma de Comandes"
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
 msgid "Tags"
 msgstr "Etiquetes"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_task_ids
-msgid "Tasks"
-msgstr "Tasques"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_res_users_membership_amount
@@ -292,43 +350,3 @@ msgstr "Usuaris"
 #: model:ir.model.fields,field_description:sale_crm.field_res_users_property_stock_supplier
 msgid "Vendor Location"
 msgstr "Ubicació del Venedor"
-
-#~ msgid "# Claims"
-#~ msgstr "# Reclamacions"
-
-#~ msgid "Campaign"
-#~ msgstr "Campanya"
-
-#~ msgid "Geo Latitude"
-#~ msgstr "Geo latitud"
-
-#~ msgid "Geo Localization Date"
-#~ msgstr "Data geolocalització"
-
-#~ msgid "Geo Longitude"
-#~ msgstr "Longitud Geo"
-
-#~ msgid "Medium"
-#~ msgstr "Mitja"
-
-#~ msgid "Source"
-#~ msgstr "Text original"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Aquest nom us permet fer un seguiment de les diferents accions de "
-#~ "campanya. Per ex: Tardor2015, Especial_Nadal"
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr ""
-#~ "Aquest és el mètode d'enviament. Per exemple: correu, correu electrònic o "
-#~ "pancarta"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Aquest és l'origen de l'enllaç. Per ex: cercador, un altre domini o el "
-#~ "nom d'una llista de correu electrònic"

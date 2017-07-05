@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-12 22:29+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
@@ -24,7 +24,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:692
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (نسخة)"
@@ -84,7 +84,7 @@ msgstr "تحديد الجدول الزمني للموارد"
 msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
-msgstr ""
+msgstr "حدد ساعات العمل والجدول الزمني الذي يمكن جدولته لأعضاء المشروع"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -93,11 +93,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
 msgid "Display Name"
 msgstr "اسم العرض"
-
-#. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "المدة"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
@@ -111,7 +106,8 @@ msgid "End Date"
 msgstr "تاريخ الإنتهاء"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:741
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "خطأ! يجب ان يكون تاريخ بدء الاجازة قبل تاريخ نهاية الاجازة."
 
@@ -197,7 +193,7 @@ msgstr "تفاصيل الاجازة"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "ترك الشهر"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
@@ -232,7 +228,7 @@ msgstr "السبب"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "اسم المستخدم ذو الصلة للمورد لإدارة وصوله."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
@@ -268,7 +264,7 @@ msgstr "نوع المصدر"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_calendar_id
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "موارد التقويم"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
@@ -280,7 +276,7 @@ msgstr "الموارد"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "اوراق الموارد"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -328,7 +324,7 @@ msgstr "تاريخ البدء"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "ابتداء تاريخ الإجازة حسب الشهر"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -338,10 +334,11 @@ msgstr "الأحد"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at "
+"this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
 
 #. module: resource
@@ -388,7 +385,7 @@ msgstr "العمل على"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
 msgid "Workgroup Manager"
-msgstr ""
+msgstr "مدير مجموعة العمل"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
