@@ -316,40 +316,41 @@
                 <input type="hidden" name="search" t-att-value="search" />
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-foreach="attributes" t-as="a">
-                        <t t-if="a.type != 'hidden'">
-                            <li t-if="a.value_ids and len(a.value_ids) &gt; 1">
-                                <div>
-                                    <strong t-field="a.name" />
-                                </div>
-                                <t t-if="a.type == 'select'">
-                                    <select class="form-control" name="attrib">
-                                        <option value="" />
-                                        <t t-foreach="a.value_ids" t-as="v">
-                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
-                                        </t>
-                                    </select>
-                                </t>
-                                <t t-if="a.type == 'radio'">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <t t-foreach="a.value_ids" t-as="v">
-                                            <li t-att-class="'active' if v.id in attrib_set else None">
-                                                <label style="margin: 0 20px;">
-                                                    <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
-                                                    <span style="font-weight: normal" t-field="v.name" />
-                                                </label>
-                                            </li>
-                                        </t>
-                                    </ul>
-                                </t>
-                                <t t-if="a.type == 'color'">
+                        <li t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                            <div>
+                                <strong t-field="a.name" />
+                            </div>
+                            <t t-if="a.type == 'select'">
+                                <select class="form-control" name="attrib">
+                                    <option value="" />
                                     <t t-foreach="a.value_ids" t-as="v">
                                         <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
                                             <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
                                         </label>
+                                        <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
                                     </t>
+                                </select>
+                            </t>
+                            <t t-if="a.type == 'radio'">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <t t-foreach="a.value_ids" t-as="v">
+                                        <li t-att-class="'active' if v.id in attrib_set else None">
+                                            <label style="margin: 0 20px;">
+                                                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
+                                                <span style="font-weight: normal" t-field="v.name" />
+                                            </label>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </t>
+                            <t t-if="a.type == 'color'">
+                                <t t-foreach="a.value_ids" t-as="v">
+                                    <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
+                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
+                                    </label>
                                 </t>
-                            </li>
-                        </t>
+                            </t>
+                        </li>
                     </t>
                 </ul>
             </form>
@@ -631,7 +632,7 @@
 
             <strong t-field="variant_id.attribute_id.name"/>
 
-            <t t-if="variant_id.attribute_id.type in ['select', 'hidden']">
+            <t t-if="variant_id.attribute_id.type == 'select'">
               <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
                 <t t-foreach="variant_id.value_ids" t-as="value_id">
                   <option t-att-value="value_id.id">

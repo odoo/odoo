@@ -207,7 +207,7 @@ class Product(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], default='radio')
+    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], default='radio')
 
 
 class ProductAttributeValue(models.Model):

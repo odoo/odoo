@@ -87,8 +87,6 @@ class TableCompute(object):
 
         return rows
 
-        # TODO keep with input type hidden
-
 
 class WebsiteSaleForm(WebsiteForm):
 
