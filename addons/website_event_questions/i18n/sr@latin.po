@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:15+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-9/"
@@ -26,12 +26,7 @@ msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Last questions</strong>"
-msgstr ""
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_question_2
-msgid "Accommodation"
+msgid "<strong>Common Questions</strong>"
 msgstr ""
 
 #. module: website_event_questions
@@ -59,11 +54,6 @@ msgid "Attendee"
 msgstr ""
 
 #. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_0_2
-msgid "Bronze"
-msgstr ""
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_create_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_create_uid
@@ -87,6 +77,7 @@ msgstr "Ime za prikaz"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_event_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
@@ -94,23 +85,18 @@ msgstr "Događaj"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_answer_id
-msgid "Event answer id"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
-msgid "Event id"
+msgid "Event Answer"
 msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
-msgid "Event registration id"
+msgid "Event Registration"
 msgstr ""
 
 #. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_0_0
-msgid "Gold"
-msgstr "Ili"
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
+msgid "General Questions"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
@@ -130,16 +116,6 @@ msgstr "ID"
 msgid ""
 "If True, this question will be asked for every attendee of a reservation. If "
 "not it will be asked only once and its value propagated to every attendees."
-msgstr ""
-
-#. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_2_1
-msgid "In Charge"
-msgstr ""
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_question_0
-msgid "Kind of partner"
 msgstr ""
 
 #. module: website_event_questions
@@ -165,16 +141,7 @@ msgid "Last Updated on"
 msgstr "Zadnja izmjena"
 
 #. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_1_1
-msgid "No"
-msgstr "Ne"
-
-#. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_2_0
-msgid "Personal"
-msgstr ""
-
-#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_question_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_form
@@ -183,14 +150,7 @@ msgid "Question"
 msgstr "Pitanje"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
-msgid "Question id"
-msgstr ""
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -217,24 +177,14 @@ msgid "Sequence"
 msgstr "Sekvenca"
 
 #. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_0_1
-msgid "Silver"
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+msgid "Specific Questions"
 msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title
 msgid "Title"
 msgstr "Naslov"
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_question_1
-msgid "Veggie"
-msgstr ""
-
-#. module: website_event_questions
-#: model:event.answer,name:website_event_questions.event_suggestion_1_0
-msgid "Yes"
-msgstr "Da"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_answer

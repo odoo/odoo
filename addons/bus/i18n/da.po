@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-04-06 06:35+0000\n"
 "Last-Translator: Morten Schou <ms@msteknik.dk>\n"
 "Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
@@ -34,6 +34,18 @@ msgid "Channel"
 msgstr "Kanal"
 
 #. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr "Oprettelses dato"
@@ -50,18 +62,33 @@ msgid "Display Name"
 msgstr "Vist navn"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Geografisk breddegrad"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Geografisk længdegrad"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr "Dato for geografisk placering"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
@@ -75,7 +102,7 @@ msgstr "Id"
 #: model:ir.model.fields,field_description:bus.field_res_partner_im_status
 #: model:ir.model.fields,field_description:bus.field_res_users_im_status
 msgid "IM Status"
-msgstr ""
+msgstr "IM status"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
@@ -86,7 +113,7 @@ msgstr "Sidst ændret den"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "Seneste meningsmåling"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_presence
@@ -124,9 +151,14 @@ msgid "Partner"
 msgstr "Kontakt"
 
 #. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
+
+#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "Bruger tilstedeværelse"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -138,6 +170,3 @@ msgstr "Brugere"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr "bus.bus"
-
-#~ msgid "Created on"
-#~ msgstr "Oprettet den"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:41+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Bosnian (http://www.transifex.com/odoo/odoo-9/language/bs/)\n"
@@ -19,7 +19,23 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Uklj./Isklj. navigaciju</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Arhive"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Promjeni"
 
@@ -40,11 +56,9 @@ msgid ""
 "                                        <span class=\"fa fa-long-arrow-right"
 "\"/>"
 msgstr ""
-
-#. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.contact
-msgid "Contact"
-msgstr "Kontakt"
+"Potvrdi\n"
+"                                        <span class=\"fa fa-long-arrow-right"
+"\"/>"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -64,7 +78,7 @@ msgstr "Država..."
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Custom Panel"
-msgstr ""
+msgstr "Prilagođeni panel"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -77,16 +91,16 @@ msgid "Email"
 msgstr "E-Mail"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:106
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Nepravilan email! Molimo unesite validnu email adresu."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
-msgstr ""
+msgstr "Moj nalog"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -96,18 +110,23 @@ msgstr "Telefon"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Place your content here."
+msgstr "Postavite vaš sadržaj ovdje"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.contact
+msgid "Saleman"
 msgstr ""
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:122
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Neka od obaveznih polja su prazna."
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "State / Province"
-msgstr ""
+msgstr "Rep./Fed."
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -117,24 +136,24 @@ msgstr "Ulica"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "VAT Number"
-msgstr ""
+msgstr "PDV Broj"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
-msgstr ""
+msgstr "Vaši detalji"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Your Name"
-msgstr ""
+msgstr "Vaše ime"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Zip / Postal Code"
-msgstr ""
+msgstr "Poštanski broj"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "select..."
-msgstr ""
+msgstr "odaberi..."

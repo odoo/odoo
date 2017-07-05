@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-09 17:40+0000\n"
 "Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -60,23 +60,6 @@ msgid "Configure payment acquirers"
 msgstr "Konfiguriere Zahlungsanbieter"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
-#, fuzzy
-msgid "Default Acquirer"
-msgstr ""
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Standard-Zahlungsdienstleister\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Standard Zahlungsmittel"
-
-#. module: website_payment
-#: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
-msgid ""
-"Default payment acquirer for website payments; your provider needs to be "
-"visible in the website."
-msgstr ""
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Entfernen <span class=\"fa fa-long-arrow-right\"/>"
@@ -99,15 +82,10 @@ msgstr "Von"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
-msgstr ""
+msgstr "Verwalten Sie Ihre Zahlungsmethoden"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Mein Konto"
-
-#. module: website_payment
-#: code:addons/website_payment/controllers/main.py:43
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "Jetzt Kaufen"
@@ -136,7 +114,7 @@ msgstr "Zahlungswege"
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 msgid "Payment processed by"
-msgstr ""
+msgstr "bezahlt mit"
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
@@ -155,19 +133,7 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_payment
-#: model:ir.model,name:website_payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
-msgstr ""
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr ""
-#~ "Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
-
-#~ msgid "Website URL"
-#~ msgstr "Webseite URL"
+msgstr "payment_provider_logo"

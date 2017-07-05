@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-02-07 08:09+0000\n"
 "Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -21,7 +21,6 @@ msgstr ""
 
 #. module: portal
 #: model:mail.template,body_html:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid ""
 "\n"
 "<p>\n"
@@ -53,14 +52,11 @@ msgstr ""
 "\n"
 "            \t<p>\n"
 "                    Guten Tag ${object.user_id.name or ''},\n"
-"                </p>\n"
-"                <p>\n"
-"                    Wir haben für Sie einen Nutzerzugang auf  ${user."
-"company_id.name}'s ${object.wizard_id.portal_id.name} eingerichtet.\n"
-"                </p>\n"
-"                <p>\n"
+"               \n"
+"                \n"
+"                    Wir haben für Sie einen Nutzerzugang \n"
 "                    Ihre Logindate nlauten:\n"
-"                </p>\n"
+"                \n"
 "                <ul>\n"
 "                    <li>Nutzername: ${object.user_id.login or ''}</li>\n"
 "                </ul>\n"
@@ -87,7 +83,7 @@ msgstr ""
 "                <p>---<br />\n"
 "                    Odoo - Open Source Business Applications<br />\n"
 "                    http://www.odoo.com<br />\n"
-"                </p>\n"
+"                \n"
 "            \n"
 "            "
 
@@ -97,19 +93,9 @@ msgid "Access Groups"
 msgstr "Berechtigungsgruppen"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_after_sales
-msgid "After Sale Services"
-msgstr "Kundendienst"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid "Apply"
 msgstr "Anwenden"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Billing"
-msgstr "Abrechnung"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
@@ -148,6 +134,12 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_email
 msgid "Email"
 msgstr "E-Mail"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:130
+#, python-format
+msgid "Group %s is not a portal"
+msgstr ""
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_id
@@ -201,7 +193,6 @@ msgstr "Kein-Portal Gruppe"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_portal_id
 #: model:ir.model.fields,field_description:portal.field_res_groups_is_portal
-#: model:ir.ui.menu,name:portal.portal_menu
 msgid "Portal"
 msgstr "Portal"
 
@@ -223,11 +214,6 @@ msgid "Portal User Config"
 msgstr "Portalbenutzer Konfiguration"
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_projects
-msgid "Projects"
-msgstr "Projekte"
-
-#. module: portal
 #: model:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "Select which contacts should belong to the portal in the list below.\n"
@@ -244,19 +230,19 @@ msgstr ""
 "Kontakte direkt in der Liste korrigiert werden."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:114
+#: code:addons/portal/wizard/portal_wizard.py:106
 #, python-format
 msgid "Several contacts have the same email: "
 msgstr "Einige Kontakte haben die gleiche E-Mail Adresse: "
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:111
+#: code:addons/portal/wizard/portal_wizard.py:103
 #, python-format
 msgid "Some contacts don't have a valid email: "
 msgstr "Einige Kontakte haben keine gültige E-Mail  Adresse: "
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:117
+#: code:addons/portal/wizard/portal_wizard.py:109
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr "Einige Kontakte haben die gleiche E-Mail wie Portal Benutzer."
@@ -281,7 +267,7 @@ msgstr ""
 "geschickt werden."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:120
+#: code:addons/portal/wizard/portal_wizard.py:112
 #, python-format
 msgid ""
 "To resolve this error, you can: \n"
@@ -304,7 +290,7 @@ msgid "Wizard"
 msgstr "Assistent"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:189
+#: code:addons/portal/wizard/portal_wizard.py:182
 #, python-format
 msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
@@ -313,6 +299,5 @@ msgstr ""
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
-#, fuzzy
 msgid "Your Odoo account at ${user.company_id.name}"
 msgstr "Ihr Odoo-Account bei ${user.company_id.name|safe}"

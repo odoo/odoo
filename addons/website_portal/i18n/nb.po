@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-01-13 15:20+0000\n"
 "Last-Translator: Mari Løken <mari@tinderbox.no>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
@@ -20,7 +20,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Arkiver"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Endre"
 
@@ -44,11 +57,6 @@ msgstr ""
 "Bekreft\n"
 "                                        <span class=\"fa fa-long-arrow-right"
 "\"/>"
-
-#. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.contact
-msgid "Contact"
-msgstr "Kontakt"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -81,14 +89,14 @@ msgid "Email"
 msgstr "Epost"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:106
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr "Ugyldig e-post! Vær vennlig å bruk en gyldig e-post adresse"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Min konto"
 
@@ -100,10 +108,15 @@ msgstr "Telefon"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Place your content here."
+msgstr "Plasser ditt innhold her."
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.contact
+msgid "Saleman"
 msgstr ""
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:122
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Noen obligatoriske felter er tomme"
@@ -124,7 +137,7 @@ msgid "VAT Number"
 msgstr "MVA-nummer"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
 msgstr "Dine detaljer"
 

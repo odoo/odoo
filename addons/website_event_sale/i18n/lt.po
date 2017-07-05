@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-06-11 17:18+0000\n"
 "Last-Translator: Rytis Štreimikis <r.streimikis@hotmail.lt>\n"
 "Language-Team: Lithuanian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -23,37 +23,43 @@ msgstr ""
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Free</span>"
-msgstr ""
+msgstr "<span>Nemokama</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>Unlimited</span>"
-msgstr ""
+msgstr "<span>Neribota</span>"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "<span>left</span>"
-msgstr ""
+msgstr "<span>kairė</span>"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
 msgid "Intrastat code"
-msgstr ""
+msgstr "Intrastato kodas"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
-msgstr ""
+msgstr "Tik"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Order Now"
-msgstr ""
+msgstr "Užsisakyti dabar"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "Produktas"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:61
+#, python-format
+msgid "Registration"
+msgstr "Registracija"
 
 #. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
@@ -69,13 +75,13 @@ msgstr "Pardavimo užsakymas"
 #: model:ir.ui.view,arch_db:website_event_sale.index
 #: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
-msgstr ""
+msgstr "Išparduota"
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:71
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
-msgstr ""
+msgstr "Atleiskite, %(ticket)s bilietai į %(event)s renginį jau išparduoti."
 
 #. module: website_event_sale
 #: code:addons/website_event_sale/models/sale_order.py:77
@@ -84,18 +90,14 @@ msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s "
 "ticket for the %(event)s event."
 msgstr ""
+"Atleiskite, tik %(remaining_seats)d vietos yra likusios %(ticket)s bilietams "
+"į %(event)s renginį."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:65
-#, python-format
-msgid "Subscription"
-msgstr "Įrašai"
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:36
+#: code:addons/website_event_sale/models/sale_order.py:39
 #, python-format
 msgid "The ticket doesn't match with this product."
-msgstr ""
+msgstr "Bilietas nesutampa su produktu."
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

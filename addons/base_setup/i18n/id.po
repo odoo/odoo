@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-28 02:47+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Indonesian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -19,19 +19,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_portal
-msgid "Activate the customer portal"
-msgstr "Aktifkan portal pelanggan"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid ""
+"<strong>Save</strong> this page and come back here to set up the feature."
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_share
-msgid "Allow documents sharing"
-msgstr "Mengizinkan berbagi dokumen(s)"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Access Rights"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_group_multi_currency
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Izinkan mata uang jamak"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_calendar
@@ -40,6 +41,7 @@ msgstr "Mengizikan sinkronisasi kalender dengan Goolgle Calendar"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_import
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
 msgid "Allow users to import data from CSV/XLS/XLSX/ODS files"
 msgstr "Memungkinkan pengguna untuk mengimpor data dari file CSV/XLS/XLSX/BPO"
 
@@ -49,155 +51,165 @@ msgid "Allows to work in a multi currency environment"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Apply"
-msgstr "Terapkan"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_drive
 msgid "Attach Google documents to any record"
 msgstr "Melampirkan dokumen Google pada setiap record"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Authentication"
-msgstr "Otentifikasi"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Automate inter-companies transactions"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "By default, new users get highest access rights for all installed apps."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
 msgid "Cancel"
 msgstr "Batalkan"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Client"
-msgstr "Klien"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Common Contact Book"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_sale_config
-#: model:ir.ui.view,arch_db:base_setup.view_sale_config_settings
-msgid "Configure Sales"
-msgstr "Pengaturan Penjualan"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Companies"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure outgoing email servers"
-msgstr "Pengaturan 'outgoing email servers'"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_id
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Company"
+msgstr "Perusahaan"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Configure your company data"
-msgstr "Pengaturan data perusahaan"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid ""
+"Configure company rules to automatically create SO/PO when one of your "
+"company sells/buys to another of your company."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Create and attach Google Drive documents to any record"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_uid
 msgid "Created by"
 msgstr "Dibuat oleh"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_create_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_create_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_create_date
 msgid "Created on"
 msgstr "Dibuat pada"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Customer"
-msgstr "Pelanggan"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_default_custom_report_footer
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_rml_footer
+msgid "Custom Report Footer"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_default_user_rights
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Default Access Rights"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_display_name
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_display_name
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_display_name
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Donor"
-msgstr "Donor"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_default_external_email_server
+msgid "External Email Servers"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Email"
-msgstr "e-mail"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_pad
+msgid "External Pads"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Extract and analyze Odoo data from Google Spreadsheet"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,help:base_setup.field_base_config_settings_rml_footer
+msgid "Footer text displayed at the bottom of all reports."
+msgstr ""
 
 #. module: base_setup
 #: model:ir.actions.act_window,name:base_setup.action_general_configuration
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_config
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
 msgid "General Settings"
 msgstr "Pengaturan Umum"
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_portal
-msgid "Give your customers access to their documents."
-msgstr "Mengizikan pelanggan akses ke dokomennya"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Gengo Translations"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
 msgid "Google Calendar"
 msgstr "Google Calendar"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
 msgid "Google Drive"
 msgstr "Google Drive"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Google Integration"
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_google_spreadsheet
+msgid "Google Spreadsheet"
 msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Guest"
-msgstr "Tamu"
-
-#. module: base_setup
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_partner
-msgid "How do you call a Customer"
-msgstr "Bagaimana anda menghubungi Pelanggan"
-
-#. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_id
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_id
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Import / Export"
-msgstr "Import / Export"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Import & Export"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Inter company"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Integrations"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Inter-Companies Transactions"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_ldap
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "LDAP Authentification"
 msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings___last_update
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology___last_update
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings___last_update
 msgid "Last Modified on"
 msgstr "Terakhir Dimodifikasi pada"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_uid
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_uid
 msgid "Last Updated by"
 msgstr "Diperbaharui oleh"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_write_date
-#: model:ir.model.fields,field_description:base_setup.field_base_setup_terminology_write_date
-#: model:ir.model.fields,field_description:base_setup.field_sale_config_settings_write_date
 msgid "Last Updated on"
 msgstr "Diperbaharui pada"
 
@@ -212,50 +224,29 @@ msgid "Manage multiple companies"
 msgstr "Mengatur multi-perusahaan"
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Member"
-msgstr "Anggota"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Company"
-msgstr "Multi Perusahaan"
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Multi Currencies"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Manage multiple legal entities with separate accounting"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\""
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Multi-Companies"
 msgstr ""
-"Once installed, you can configure your API credentials for \"Google calendar"
-"\"\r\n"
-"Sekali terinstal, anda dapat mengatur API pengenal anda untuk \"Google "
-"calendar\""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Partner"
-msgstr "Rekanan"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "OAuth Authentification"
+msgstr ""
 
 #. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Patient"
-msgstr "Telaten"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Save"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Portal access"
-msgstr "Akses portal"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_share
-msgid "Share or embbed any screen of Odoo."
-msgstr "Bagikan atau tunjukkan aneka tampilan Odoo."
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Set custom access rights for new users"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_company_share_partner
@@ -280,105 +271,46 @@ msgstr ""
 "terlihat untuk semua perusahaan."
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid "Shared resources"
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Synchronize your calendar with Google Calendar"
 msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid "Specify Your Terminology"
-msgstr "Spesifikasikan Terminologi Anda"
-
-#. module: base_setup
-#: selection:base.setup.terminology,partner:0
-msgid "Tenant"
-msgstr "Penyewa"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_calendar
-msgid "This installs the module google_calendar."
-msgstr "Ini menginstal modul google_calendar"
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_google_drive
-msgid "This installs the module google_docs."
-msgstr "Ini menginstall modul Google_Docs."
-
-#. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_module_inter_company_rules
-msgid ""
-"This installs the module inter_company_rules.\n"
-" Configure company rules to automatically create SO/PO when one of your "
-"company sells/buys to another of your company."
+#: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_base_gengo
+msgid "Translate Your Website with Gengo"
 msgstr ""
-"Ini akan menginstal modul inter_company_rules.\n"
-" Mengkonfigurasi perusahaan aturan untuk secara otomatis membuat jadi / PO "
-"ketika salah satu perusahaan Anda menjual/membeli lain dari perusahaan Anda."
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "Gunakan kata lain untuk \"Pelanggan\""
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Translate your website with Gengo"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Use LDAP credentials to log in"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Use external accounts to log in (Google, Facebook, etc.)"
+msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_base_config_settings_module_auth_oauth
-msgid "Use external authentication providers, sign in with Google..."
-msgstr "Menggunakan penyedia otentikasi eksternal, login dengan Google..."
+msgid "Use external authentication providers (OAuth)"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"When you send a document to a customer\n"
-"                                    (quotation, invoice), your customer will "
-"be\n"
-"                                    able to signup to get all his "
-"documents,\n"
-"                                    read your company news, check his "
-"projects,\n"
-"                                    etc."
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Use external pads in Odoo Notes"
 msgstr ""
-"Saat Anda mengirim dokumen ke pelanggan (penawaran, nota), pelanggan Anda "
-"akan bisa mendaftar untuk mendapatkan semua dokumen mereka, membaca berita "
-"perusahaan Anda, memeriksa proyek mereka, dll."
 
 #. module: base_setup
-#: model:ir.model.fields,help:base_setup.field_base_config_settings_group_multi_company
-msgid ""
-"Work in multi-company environments, with appropriate security access between "
-"companies."
+#: model:ir.ui.view,arch_db:base_setup.base_config_settings_view_form
+msgid "Users"
 msgstr ""
-"Bekerja dalam lingkungan multi-perusahaan, dengan akses keamanan yang tepat "
-"antara perusahaan."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.base_setup_terminology_form
-msgid ""
-"You can use this wizard to change the terminologies for customers in the "
-"whole application."
-msgstr ""
-"Anda dapat menggunakan wizard ini untuk mengubah terminologi bagi pelanggan "
-"di seluruh aplikasi."
-
-#. module: base_setup
-#: model:ir.ui.view,arch_db:base_setup.view_general_configuration
-msgid ""
-"You will find more options in your company details: address for the header "
-"and footer, overdue payments texts, etc."
-msgstr ""
-"Anda akan temukan lebih banyak opsi pada detail perusahaan anda: alamat "
-"untuk header dan footer, teks terlambat bayar, dsb."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_config_settings
 msgid "base.config.settings"
-msgstr ""
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "pengaturan.terminologi.dasar"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+msgstr "base.config.settings"

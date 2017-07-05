@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-07-14 07:13+0000\n"
 "Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>\n"
 "Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
@@ -35,15 +35,18 @@ msgstr "カレンダ"
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_stock_warehouse_orderpoint_calendar_id
 msgid ""
-"In the calendar you can define the days that the goods will be delivered.  "
+"In the calendar you can define the days that the goods will be delivered. "
 "That way the scheduler will only take into account the goods needed until "
-"the second delivery and put the procurement date as the first delivery.  "
+"the second delivery and put the procurement date as the first delivery."
 msgstr ""
+"カレンダーでは、商品が配送される日を定義することができます。\n"
+"そうすることで、スケジューラは2回目の配送までに必要な品物のみを考慮に入れ、調"
+"達日を最初の配送とします。"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_stock_warehouse_orderpoint_last_execution_date
 msgid "Last Execution Date"
-msgstr ""
+msgstr "最終実行日"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_leaves
@@ -58,17 +61,12 @@ msgstr "最小在庫ルール"
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_delivery_date
 msgid "Next Delivery Date"
-msgstr ""
+msgstr "次の配送日"
 
 #. module: stock_calendar
 #: model:ir.model.fields,field_description:stock_calendar.field_procurement_order_next_purchase_date
 msgid "Next Purchase Date"
-msgstr ""
-
-#. module: stock_calendar
-#: model:ir.model.fields,field_description:stock_calendar.field_resource_calendar_next_day
-msgid "Next day it should trigger"
-msgstr ""
+msgstr "次の購買日"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_procurement_order
@@ -97,11 +95,13 @@ msgid ""
 "The date of the next delivery for this procurement group, when this group is "
 "on the purchase calendar of the orderpoint"
 msgstr ""
+"このグループが注文ポイントの購買カレンダーにあるときの、この調達グループの次"
+"の出荷日。"
 
 #. module: stock_calendar
 #: model:ir.model.fields,help:stock_calendar.field_procurement_order_next_purchase_date
 msgid "The date the next purchase order should be sent to the vendor"
-msgstr ""
+msgstr "次の発注が仕入先に送付されるべき日付"
 
 #. module: stock_calendar
 #: model:ir.model,name:stock_calendar.model_resource_calendar_attendance

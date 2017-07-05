@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * stock_account
-# 
+#
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
@@ -18,11 +18,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -67,12 +69,12 @@ msgstr "Отменить"
 #: code:addons/stock_account/models/stock.py:252
 #, python-format
 msgid ""
-"Cannot find a stock input account for the product %s. You must define one on"
-" the product category, or on the location, before processing this operation."
+"Cannot find a stock input account for the product %s. You must define one on "
+"the product category, or on the location, before processing this operation."
 msgstr ""
 "Не удается найти учетную запись входа в акции для продукта %s. Перед "
-"обработкой этой операции необходимо определить ее в категории продукта или в"
-" местоположении."
+"обработкой этой операции необходимо определить ее в категории продукта или в "
+"местоположении."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:254
@@ -83,8 +85,8 @@ msgid ""
 "operation."
 msgstr ""
 "Невозможно найти учетную запись вывода запасов для продукта %s.. Перед "
-"обработкой этой операции необходимо определить ее в категории продукта или в"
-" местоположении."
+"обработкой этой операции необходимо определить ее в категории продукта или в "
+"местоположении."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -110,8 +112,7 @@ msgid ""
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
 "Выберите дату учёта, на которую вы хотите оценить складские перемещения, "
-"созданные инвентаризацией, вместо стандартной (дата окончания "
-"инвентаризации)"
+"созданные инвентаризацией, вместо стандартной (дата окончания инвентаризации)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_wizard_valuation_history_compute_at_date
@@ -148,8 +149,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
-"Ошибка конфигурации. Чтобы обработать эту операцию, настройте учетную запись"
-" разницы цен на продукте или его категории."
+"Ошибка конфигурации. Чтобы обработать эту операцию, настройте учетную запись "
+"разницы цен на продукте или его категории."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -218,11 +219,17 @@ msgstr "Номер"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
 msgid ""
-"If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
-"If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
 msgstr ""
-"Если себестоимость продукции увеличится, счет изменения суммы остатка будет дебитоваться, а счет исходящих ТМЦ  кредитоваться на сумму (разница себестоимости * доступное количество).\n"
-"Если себестоимость продукции уменьшится, счет изменения суммы остатка будет кредитоваться, а счет исходящих ТМЦ  дебитоваться."
+"Если себестоимость продукции увеличится, счет изменения суммы остатка будет "
+"дебитоваться, а счет исходящих ТМЦ  кредитоваться на сумму (разница "
+"себестоимости * доступное количество).\n"
+"Если себестоимость продукции уменьшится, счет изменения суммы остатка будет "
+"кредитоваться, а счет исходящих ТМЦ  дебитоваться."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -238,8 +245,8 @@ msgstr ""
 "автоматически создаст записи журнала, соответствующие складским "
 "перемещениям, с ценой продукта, как определено в \"Метод Учета Затрат\". "
 "Счет изменения запасов на категории продукта, будет представлять текущую "
-"стоимость запасов, и поступление запаса и счет вывода запаса будут содержать"
-" встречные перемещения для входящих и исходящих продуктов."
+"стоимость запасов, и поступление запаса и счет вывода запаса будут содержать "
+"встречные перемещения для входящих и исходящих продуктов."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -256,8 +263,8 @@ msgstr ""
 "автоматически создаст записи журнала, соответствующие складским "
 "перемещениям, с ценой продукта, как определено в \"Метод Учета Затрат\". "
 "Счет изменения запасов на категории продукта, будет представлять текущую "
-"стоимость запасов, и поступление запаса и счет вывода запаса будут содержать"
-" встречные перемещения для входящих и исходящих продуктов."
+"стоимость запасов, и поступление запаса и счет вывода запаса будут содержать "
+"встречные перемещения для входящих и исходящих продуктов."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -268,8 +275,8 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
 msgid ""
-"Install the module that allows to affect landed costs on pickings, and split"
-" them onto the different products."
+"Install the module that allows to affect landed costs on pickings, and split "
+"them onto the different products."
 msgstr ""
 "Установите модуль, который позволяет влиять на дополнительные затраты при "
 "комплектациях, и разделите их на различные продукты."
@@ -394,8 +401,7 @@ msgstr "Непрерывно (автоматически)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid ""
-"Perpetual inventory valuation (stock move generates accounting entries)"
+msgid "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
 "Непрерывная  оценка запасов (складское перемещение генерирует бухгалтерские "
 "проводки)"
@@ -475,24 +481,37 @@ msgstr "Стандартная цена изменена"
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"                Average Price: The cost price is recomputed at each incoming "
+"shipment and used for the product valuation.\n"
+"                Real Price: The cost price displayed is the price of the "
+"last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
-"Стандартная цена: Себестоимость вручную обновление в конце определенного периода (обычно один раз в год).\n"
-"                Средняя цена: Себестоимость пересчитывается на каждого входящего груза и используется для оценки продукта.\n"
-"                Реальная цена: Себестоимость отображается это цена последних исходящих продукта (будет использоваться в случае потери инвентаризации например)."
+"Стандартная цена: Себестоимость вручную обновление в конце определенного "
+"периода (обычно один раз в год).\n"
+"                Средняя цена: Себестоимость пересчитывается на каждого "
+"входящего груза и используется для оценки продукта.\n"
+"                Реальная цена: Себестоимость отображается это цена последних "
+"исходящих продукта (будет использоваться в случае потери инвентаризации "
+"например)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
 msgid ""
-"Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
-"Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
-"Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
+"Standard Price: The cost price is manually updated at the end of a specific "
+"period (usually once a year).\n"
+"Average Price: The cost price is recomputed at each incoming shipment and "
+"used for the product valuation.\n"
+"Real Price: The cost price displayed is the price of the last outgoing "
+"product (will be used in case of inventory loss for example)."
 msgstr ""
-"Стандартная Цена: Себестоимость обновляется вручную в конце определенного периода (обычно один раз в год) . \n"
-"Средняя Цена: Себестоимость вычисляется при каждом поступлении продукта и используется для оценки продукта.\n"
-"Реальная Цена: Показанная Себестоимость является ценой последнего исходящего продукта (будет использование в случае потери запасов, например)."
+"Стандартная Цена: Себестоимость обновляется вручную в конце определенного "
+"периода (обычно один раз в год) . \n"
+"Средняя Цена: Себестоимость вычисляется при каждом поступлении продукта и "
+"используется для оценки продукта.\n"
+"Реальная Цена: Показанная Себестоимость является ценой последнего исходящего "
+"продукта (будет использование в случае потери запасов, например)."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
@@ -502,7 +521,7 @@ msgstr "Складской учет"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_history
 msgid "Stock History"
-msgstr ""
+msgstr "История запасов"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -626,13 +645,13 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
+"value for all products in this category. It can also directly be set on each "
+"product"
 msgstr ""
 "При проведении оценки инвентаризации в реальном времени, корреспондирующие "
 "элементы журнала для всех входящих перемещений запасов будут отправлены на "
-"этот счёт, если нет конкретного счёта заданного по исходному месту хранения."
-" Его также можно установить непосредственно для каждого продукта."
+"этот счёт, если нет конкретного счёта заданного по исходному месту хранения. "
+"Его также можно установить непосредственно для каждого продукта."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -645,8 +664,8 @@ msgid ""
 msgstr ""
 "При проведении оценки инвентаризации в реальном времени, корреспондирующие "
 "пункты журнала для всех входящих перемещений запасов будут отправлены на "
-"этот счёт, если нет конкретного счёта заданного по исходному месту хранения."
-" Его также можно установить непосредственно для каждого товара."
+"этот счёт, если нет конкретного счёта заданного по исходному месту хранения. "
+"Его также можно установить непосредственно для каждого товара."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -654,8 +673,8 @@ msgid ""
 "When doing real-time inventory valuation, counterpart journal items for all "
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
+"default value for all products in this category. It can also directly be set "
+"on each product"
 msgstr ""
 "При проведении оценки инвентаризации в реальном времени, корреспондирующие "
 "пункты журнала для всех входящих перемещений запасов будут отправлены на "
@@ -672,8 +691,8 @@ msgid ""
 "the product, the one from the product category is used."
 msgstr ""
 "При проведении оценки инвентаризации в реальном времени, корреспондирующие "
-"элементы журнала для всех исходящих перемещений будут помещены на этот счёт,"
-" если нет задан счёт в месте назначения. Его также можно установить "
+"элементы журнала для всех исходящих перемещений будут помещены на этот счёт, "
+"если нет задан счёт в месте назначения. Его также можно установить "
 "непосредственно для каждого продукта."
 
 #. module: stock_account
@@ -683,8 +702,7 @@ msgid ""
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
 "При оценке стоимости запасов в реальном времени, это бухгалтерский журнал в "
-"который будут автоматически добавляться записи при обработке перемещений "
-"ТМЦ."
+"который будут автоматически добавляться записи при обработке перемещений ТМЦ."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
@@ -715,8 +733,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock.py:256
 #, python-format
 msgid ""
-"You don't have any stock valuation account defined on your product category."
-" You must define one before processing this operation."
+"You don't have any stock valuation account defined on your product category. "
+"You must define one before processing this operation."
 msgstr ""
 "Вы не имеете каких-либо запасов учетной записи, определенной на вашей "
 "категории продукта. Необходимо определить перед обработкой этой операции."

@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_mercury
-# 
+#
 # Translators:
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Mikhail - <expromt.core@gmail.com>, 2017
@@ -18,11 +18,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Sergey Vilizhanin <sv@grimmette.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: pos_mercury
 #. openerp-web
@@ -42,16 +44,25 @@ msgstr "Ошибка 128-битного CryptoAPI"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "<i>Mercury Configurations</i> define what Mercury account will be used when\n"
-"                                processing credit card transactions in the Point Of Sale. Setting up a Mercury\n"
-"                                configuration will enable you to allow payments with various credit cards\n"
-"                                (eg. Visa, MasterCard, Discovery, American Express, ...). After setting up this\n"
-"                                configuration you should associate it with a Point Of Sale payment method."
+"                                processing credit card transactions in the "
+"Point Of Sale. Setting up a Mercury\n"
+"                                configuration will enable you to allow "
+"payments with various credit cards\n"
+"                                (eg. Visa, MasterCard, Discovery, American "
+"Express, ...). After setting up this\n"
+"                                configuration you should associate it with a "
+"Point Of Sale payment method."
 msgstr ""
-"<i>Mercury Configurations </i> определяют, какую учетную запись Mercury будет использовать, когда\n"
-"                                 обработка транзакций по кредитным картам в точке продаж. Создание Меркурия\n"
-"                                 конфигурации позволит вам разрешить платежи с различными кредитными картами\n"
-"                                 (нап. Visa, MasterCard, Discovery, American Express, ...). После настройки этой\n"
-"                                 конфигурации, вы должны связать его с методом оплаты через пункт продажи."
+"<i>Mercury Configurations </i> определяют, какую учетную запись Mercury "
+"будет использовать, когда\n"
+"                                 обработка транзакций по кредитным картам в "
+"точке продаж. Создание Меркурия\n"
+"                                 конфигурации позволит вам разрешить платежи "
+"с различными кредитными картами\n"
+"                                 (нап. Visa, MasterCard, Discovery, American "
+"Express, ...). После настройки этой\n"
+"                                 конфигурации, вы должны связать его с "
+"методом оплаты через пункт продажи."
 
 #. module: pos_mercury
 #. openerp-web
@@ -155,6 +166,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Не удалось зашифровать ответ - вызов провайдера"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr ""
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -208,6 +226,13 @@ msgstr "Пустая командная строка"
 
 #. module: pos_mercury
 #. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: pos_mercury
+#. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
 #, python-format
 msgid "Error Occurred While Decrypting Request"
@@ -223,12 +248,16 @@ msgstr "Не удалось запустить поток событий."
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"For quickly handling orders: just swiping a credit card when on the payment screen\n"
-"                                (without having pressed anything else) will charge the full amount of the order to\n"
+"For quickly handling orders: just swiping a credit card when on the payment "
+"screen\n"
+"                                (without having pressed anything else) will "
+"charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
-"Для быстрой обработки заказов: просто прокручивание кредитной карты на экране оплаты\n"
-"                                 (не нажав ничего другого) будет взимать всю сумму заказа по\n"
+"Для быстрой обработки заказов: просто прокручивание кредитной карты на "
+"экране оплаты\n"
+"                                 (не нажав ничего другого) будет взимать всю "
+"сумму заказа по\n"
 "                                 карте."
 
 #. module: pos_mercury
@@ -287,10 +316,12 @@ msgstr "ID продавца для проверки подлинности на 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
+"If you don't already have a Mercury account, contact Mercury at +1 (800) "
+"846-4472\n"
 "                                to create one."
 msgstr ""
-"Если у вас еще нет учетной записи Mercury, свяжитесь с Mercury по телефону +1 (800) 846-4472.\n"
+"Если у вас еще нет учетной записи Mercury, свяжитесь с Mercury по телефону "
+"+1 (800) 846-4472.\n"
 "                                 Для его создания."
 
 #. module: pos_mercury
@@ -612,6 +643,18 @@ msgid "Name of this Mercury configuration"
 msgstr "Название этой конфигурации Mercury"
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
@@ -850,8 +893,8 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
-"Это может быть вызвано плохо выполненной салфеткой или отсутствием раскладки"
-" клавиатуры в США QWERTY (не США международный)."
+"Это может быть вызвано плохо выполненной салфеткой или отсутствием раскладки "
+"клавиатуры в США QWERTY (не США международный)."
 
 #. module: pos_mercury
 #. openerp-web
@@ -913,14 +956,19 @@ msgstr "Нераспознанный формат запроса"
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
 "Using the Mercury integration in the Point Of Sale is easy: just press the\n"
-"                                associated payment method. After that the amount can be adjusted (eg. for cashback)\n"
-"                                just like on any other payment line. Whenever the payment line is set up, a card\n"
+"                                associated payment method. After that the "
+"amount can be adjusted (eg. for cashback)\n"
+"                                just like on any other payment line. "
+"Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
 "Интеграция Меркурия в точку продаж проста: просто нажмите\n"
-"                                 связанный способ оплаты. После этого сумма может быть скорректирована (например, для возврата денег)\n"
-"                                 как на любой другой платежной линии. Всякий раз, когда устанавливается платежная линия, карта\n"
-"                                 может быть пропущен через устройство считывания карт."
+"                                 связанный способ оплаты. После этого сумма "
+"может быть скорректирована (например, для возврата денег)\n"
+"                                 как на любой другой платежной линии. Всякий "
+"раз, когда устанавливается платежная линия, карта\n"
+"                                 может быть пропущен через устройство "
+"считывания карт."
 
 #. module: pos_mercury
 #. openerp-web
@@ -939,11 +987,15 @@ msgstr "ЖДАТЬ СТОИМОСТИ"
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
 msgid ""
-"We currently support the MagTek Dynamag card reader device. It can be connected\n"
-"                                directly to the Point Of Sale device or it can be connected to the POSBox."
+"We currently support the MagTek Dynamag card reader device. It can be "
+"connected\n"
+"                                directly to the Point Of Sale device or it "
+"can be connected to the POSBox."
 msgstr ""
-"В настоящее время мы поддерживаем устройство считывания карт MagTek Dynamag. Он может быть подключен\n"
-"                                 непосредственно к устройству точке продаж, или он может быть подключен к POSBox."
+"В настоящее время мы поддерживаем устройство считывания карт MagTek Dynamag. "
+"Он может быть подключен\n"
+"                                 непосредственно к устройству точке продаж, "
+"или он может быть подключен к POSBox."
 
 #. module: pos_mercury
 #. openerp-web

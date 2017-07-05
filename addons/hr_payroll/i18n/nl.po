@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-# 
+#
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
@@ -17,10 +17,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_payroll
@@ -42,7 +42,8 @@ msgid ""
 msgstr ""
 "* Wanneer een loonafschrift is aangemaakt is de status 'Concept'. \n"
 "\n"
-"* Wanneer een loonafschrift ter goedkeuring is ingediend, is de status 'Wachtend'. \n"
+"* Wanneer een loonafschrift ter goedkeuring is ingediend, is de status "
+"'Wachtend'. \n"
 "\n"
 "* Wanneer een loonafschrift is goedgekeurd, is de status 'Gereed'. \n"
 "\n"
@@ -132,7 +133,8 @@ msgstr "<strong>Totaal</strong>"
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, the\n"
+"                payment of the employees. It can be the social security, "
+"the\n"
 "                estate or anyone that collect or inject money on payslips."
 msgstr ""
 "Een loonadministratie-instelling is een derde partij die betrokken\n"
@@ -655,8 +657,8 @@ msgid ""
 "If its checked, indicates that all payslips generated from here are refund "
 "payslips."
 msgstr ""
-"Indien aangevinkt, geeft dit aan dat alle loonafschriften, gegenereerd vanaf"
-" hier, credits zijn."
+"Indien aangevinkt, geeft dit aan dat alle loonafschriften, gegenereerd vanaf "
+"hier, credits zijn."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_active
@@ -703,21 +705,21 @@ msgid ""
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
-"Het wordt gebruikt in berekening voor percentage en vaste totaalbedrag. Voor"
-" bijvoorbeeld een regel van een maaltijdbon, met vast bedrag van 1 € per "
-"gewerkt dag, kan de hoeveelheid gedefinieerd worden als "
-"worked_days.WORK100.number_of_days."
+"Het wordt gebruikt in berekening voor percentage en vaste totaalbedrag. Voor "
+"bijvoorbeeld een regel van een maaltijdbon, met vast bedrag van 1 € per "
+"gewerkt dag, kan de hoeveelheid gedefinieerd worden als worked_days.WORK100."
+"number_of_days."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of"
-" basic salary for per product can defined in expression like result = "
-"inputs.SALEURO.amount * contract.wage*0.01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of "
+"basic salary for per product can defined in expression like result = inputs."
+"SALEURO.amount * contract.wage*0.01."
 msgstr ""
 "Wordt gebruikt voor berekeningen. Voor bijvoorbeeld een regel voor de "
-"verkopers dat ze 1% commissie krijgen over het basis salaris. Dit kan worden"
-" gedefinieerd als result = inputs.SALEURO.amount * contract.wage*0.01"
+"verkopers dat ze 1% commissie krijgen over het basis salaris. Dit kan worden "
+"gedefinieerd als result = inputs.SALEURO.amount * contract.wage*0.01"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
@@ -1299,8 +1301,8 @@ msgid ""
 "The code of salary rules can be used as reference in computation of other "
 "rules. In that case, it is case sensitive."
 msgstr ""
-"De code van het salaris regels kan worden gebruikt als referentie berekening"
-" voor andere regels. In dat geval is het hoofdlettergevoelig."
+"De code van het salaris regels kan worden gebruikt als referentie berekening "
+"voor andere regels. In dat geval is het hoofdlettergevoelig."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_code
@@ -1337,9 +1339,9 @@ msgstr "Het minimale bedrag, toegewezen voor deze regel"
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic,"
-" but you can also use categories code fields in lowercase as a variable "
-"names (hra, ma, lta, etc.) and the variable basic."
+"This will be used to compute the % fields values; in general it is on basic, "
+"but you can also use categories code fields in lowercase as a variable names "
+"(hra, ma, lta, etc.) and the variable basic."
 msgstr ""
 "Dit wordt gebruikt om de waardes van de %fields te berekenen. Normaliter is "
 "dit standaard, maar u kunt ook categorie veldcodes in kleine letters "
@@ -1348,8 +1350,8 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the"
-" dates and credit note specified on Payslips Run."
+"This wizard will generate payslips for all selected employee(s) based on the "
+"dates and credit note specified on Payslips Run."
 msgstr ""
 "Deze wizzard zal loonafschriften genereren,  voor alle geselecteerde "
 "medewerkers, gebaseerd op ?"
@@ -1453,8 +1455,7 @@ msgstr "U dient werknemer(s) te selecteren om loonafschrift(en) te genereren."
 #: code:addons/hr_payroll/models/hr_payroll.py:843
 #, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr ""
-"U dient een contract in te stellen om een loonafschrift lijn te maken."
+msgstr "U dient een contract in te stellen om een loonafschrift lijn te maken."
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings

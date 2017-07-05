@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2015-09-07 16:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
@@ -34,6 +34,18 @@ msgid "Channel"
 msgstr "Kanāls"
 
 #. module: bus
+#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_city_id
+msgid "Company"
+msgstr ""
+
+#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
 msgstr ""
@@ -47,21 +59,36 @@ msgstr "Izveidoja"
 #: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
+msgstr "Display Name"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
+msgid "Door Number"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
+msgid "Enforce Cities"
 msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Ģeo. platums"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Geo. garums"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_res_users_date_localization
 msgid "Geolocation Date"
+msgstr ""
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_number
+msgid "House Number"
 msgstr ""
 
 #. module: bus
@@ -81,7 +108,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Last Modified on"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -111,17 +138,22 @@ msgstr "Ziņojums"
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr ""
+msgstr "Offline"
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Online"
-msgstr ""
+msgstr "Online"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
 msgid "Partner"
 msgstr "Partneris"
+
+#. module: bus
+#: model:ir.model.fields,field_description:bus.field_res_users_street_name
+msgid "Street Name"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -138,6 +170,3 @@ msgstr "Lietotāji"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr ""
-
-#~ msgid "Created on"
-#~ msgstr "Izveidots"

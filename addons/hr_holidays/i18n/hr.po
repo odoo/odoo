@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
@@ -19,11 +19,12 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Language: hr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hr\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -75,8 +76,7 @@ msgstr "&lt;/th&gt;"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
 "&lt;td standard=\"centriranje teksta oe_podesi lijevo oe_podesi desno\" "
 "oblikovanje=\"boja pozadine:"
@@ -261,7 +261,8 @@ msgstr "Dodijeli odsustva"
 #: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
 msgid ""
 "Average hours of work per day.\n"
-"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
+"                It is used in an employee leave request to compute the "
+"number of days consumed based on the resource calendar.\n"
 "                It can be used to handle various contract types, e.g.:\n"
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
@@ -304,8 +305,8 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
-"Po djelatniku: dodjelom/zahtjev za pojedinog djelatnika, po tagu djelatnika:"
-" dodjela/zahtjev za grupu  djelatnika u kategoriji"
+"Po djelatniku: dodjelom/zahtjev za pojedinog djelatnika, po tagu djelatnika: "
+"dodjela/zahtjev za grupu  djelatnika u kategoriji"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_can_reset
@@ -337,10 +338,12 @@ msgstr "Kategorije djelatnika"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
 msgstr ""
 "Odaberite 'Zahtjev za odsustvom' ako netko želi uzeti slobodan dan. \n"
-"Odaberite 'Zahtjev za dodjelom' ukoliko želite dodijeliti broj slobodnih dana  raspoloživih nekome."
+"Odaberite 'Zahtjev za dodjelom' ukoliko želite dodijeliti broj slobodnih "
+"dana  raspoloživih nekome."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
@@ -515,8 +518,8 @@ msgstr "Završni datum"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
 msgstr ""
 "Filtrira samo odobrenja i zahtjeve koji pripadaju tipu praznika koji je "
 "'aktivan' (polje aktivan ja označeno)"
@@ -542,8 +545,8 @@ msgstr "Od datuma"
 msgid ""
 "Green this button when the leave has been taken into account in the payslip."
 msgstr ""
-"Ovaj gumb će biti zelen kada su sva odsustva uključena u obračun "
-"plaće/dohotka"
+"Ovaj gumb će biti zelen kada su sva odsustva uključena u obračun plaće/"
+"dohotka"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -700,7 +703,8 @@ msgstr "Tipovi odsustva"
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:434
 #, python-format
-msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgid ""
+"Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
 
 #. module: hr_holidays
@@ -908,8 +912,7 @@ msgstr "Najviše dopuštenih odsustava -odsustva već zauzeta"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
 msgstr ""
 "Najviše dopuštenih odsustava - odsustva već zauzeta - odsustva koja čekaju "
 "odobrenje"
@@ -996,7 +999,9 @@ msgid ""
 "                number of open days related to your leave."
 msgstr ""
 "Kada spremite vaš zahtjev za odsustvom, biti će poslan\n"
-"vašem voditelju na ovjeru. Provjerite jeste li postavili ispravnu                 vrstu odsustva ( oporavak, godišnji odmor, bolovanje) i točan           broj otvorenih dana vezanih uz vaše odsustvo.\n"
+"vašem voditelju na ovjeru. Provjerite jeste li postavili "
+"ispravnu                 vrstu odsustva ( oporavak, godišnji odmor, "
+"bolovanje) i točan           broj otvorenih dana vezanih uz vaše odsustvo.\n"
 "            "
 
 #. module: hr_holidays
@@ -1198,8 +1203,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr.py:117
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-" You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in Leaves Application to manage the leave days of the "
+"employees if the configuration does not allow to use this field."
 msgstr ""
 
 #. module: hr_holidays
@@ -1268,8 +1278,8 @@ msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
 msgstr ""
-"Ova je vrijednost dobivena kao suma svih zahtjeva za godišnjim sa pozitivnom"
-" vrijednošću."
+"Ova je vrijednost dobivena kao suma svih zahtjeva za godišnjim sa pozitivnom "
+"vrijednošću."
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -1314,9 +1324,9 @@ msgid ""
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
 msgstr ""
-"Ukupan broj redovnih odsustava dodijeljenih tom zaposleniku, promijenite ovu"
-" vrijednost da bi stvoriti zahtjev za dodjelom / odsustvom. Ukupno se "
-"temelji na svim vrstama dopusta koji nemaju preskakanje limita."
+"Ukupan broj redovnih odsustava dodijeljenih tom zaposleniku, promijenite ovu "
+"vrijednost da bi stvoriti zahtjev za dodjelom / odsustvom. Ukupno se temelji "
+"na svim vrstama dopusta koji nemaju preskakanje limita."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1390,7 +1400,8 @@ msgid ""
 "You can assign remaining Legal Leaves for each employee, Odoo\n"
 "               will automatically create and validate allocation requests."
 msgstr ""
-"Možete dodijeliti preostala redovna odsustva za svakog djelatnika, OpenERP će automatski kreirati i potvrditi zahtjev za dodjelom.\n"
+"Možete dodijeliti preostala redovna odsustva za svakog djelatnika, OpenERP "
+"će automatski kreirati i potvrditi zahtjev za dodjelom.\n"
 "           "
 
 #. module: hr_holidays

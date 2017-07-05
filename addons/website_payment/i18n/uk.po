@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-04-16 20:36+0000\n"
 "Last-Translator: Bohdan Lisnenko\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
@@ -48,20 +48,6 @@ msgid "Configure payment acquirers"
 msgstr "Налаштувати еквайєрів платіжних"
 
 #. module: website_payment
-#: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
-msgid "Default Acquirer"
-msgstr "Типовий екваєр"
-
-#. module: website_payment
-#: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
-msgid ""
-"Default payment acquirer for website payments; your provider needs to be "
-"visible in the website."
-msgstr ""
-"Типовий еквайєр для платежів на сайті; ваш надавач послуг повинен бути "
-"оприлюдненим на сайті."
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
 msgid "Delete <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Видалити <span class=\"fa fa-long-arrow-right\"/>"
@@ -87,12 +73,7 @@ msgid "Manage your payment methods"
 msgstr "Керувати моїми способами оплати"
 
 #. module: website_payment
-#: model:ir.ui.view,arch_db:website_payment.pay_methods
-msgid "My Account"
-msgstr "Мій обліковий запис"
-
-#. module: website_payment
-#: code:addons/website_payment/controllers/main.py:43
+#: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
 msgstr "Оплатити зараз"
@@ -140,18 +121,7 @@ msgid "Website"
 msgstr "Веб-сайт"
 
 #. module: website_payment
-#: model:ir.model,name:website_payment.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
-
-#. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
 msgstr "payment_provider_logo"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "URL-адреса повністю, для доступу до документації через сайт"
-
-#~ msgid "Website URL"
-#~ msgstr "URL сайту"

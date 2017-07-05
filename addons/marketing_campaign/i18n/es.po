@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * marketing_campaign
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -26,10 +26,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2016\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: marketing_campaign
@@ -50,7 +50,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "A campaign can have many activities like sending an email, printing\n"
-"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
 "            from specific situations; contact form, 10 days after first\n"
 "            contact, if a lead is not closed yet, etc."
 msgstr ""
@@ -319,13 +320,13 @@ msgid ""
 "records to inject in the campaign. \"No duplicates\" prevents selecting "
 "records which have already entered the campaign previously.If the campaign "
 "has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
-"records which have the same value for the unique field as other records that"
-" already entered the campaign."
+"records which have the same value for the unique field as other records that "
+"already entered the campaign."
 msgstr ""
 "Determina un criterio adicional para añadir al filtro cuando seleccione "
 "nuevos registros para inyectar en la campaña. \"Sin duplicados\" previene "
-"seleccionar registros que ya han sido incorporados a la campaña previamente."
-" Si la campaña tiene marcado \"Campo único\", \"Sin duplicados\" previene "
+"seleccionar registros que ya han sido incorporados a la campaña previamente. "
+"Si la campaña tiene marcado \"Campo único\", \"Sin duplicados\" previene "
 "también seleccionar registros con el mismo valor para el campo único que "
 "otros ya introducidos en la campaña."
 
@@ -465,12 +466,12 @@ msgstr "Coste fijo"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_fixed_cost
 msgid ""
-"Fixed cost for running this campaign. You may also specify variable cost and"
-" revenue on each campaign activity. Cost and Revenue statistics are included"
-" in Campaign Reporting."
+"Fixed cost for running this campaign. You may also specify variable cost and "
+"revenue on each campaign activity. Cost and Revenue statistics are included "
+"in Campaign Reporting."
 msgstr ""
-"Coste fijo para el funcionamiento de esta campaña. También puede especificar"
-" los costes variables y los ingresos en cada actividad de la campaña. Se "
+"Coste fijo para el funcionamiento de esta campaña. También puede especificar "
+"los costes variables y los ingresos en cada actividad de la campaña. Se "
 "incluyen estadísticas de costes e ingresos en los informes de la campaña."
 
 #. module: marketing_campaign
@@ -522,20 +523,20 @@ msgstr ""
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_unique_field_id
 msgid ""
-"If set, this field will help segments that work in \"no duplicates\" mode to"
-" avoid selecting similar records twice. Similar records are records that "
-"have the same value for this unique field. For example by choosing the "
+"If set, this field will help segments that work in \"no duplicates\" mode to "
+"avoid selecting similar records twice. Similar records are records that have "
+"the same value for this unique field. For example by choosing the "
 "\"email_from\" field for CRM Leads you would prevent sending the same "
 "campaign to the same email address again. If not set, the \"no duplicates\" "
 "segments will only avoid selecting the same record again if it entered the "
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
-"Si está establecido, este campo ayuda a segmentar ese trabajo en el modo sin"
-" duplicados para evitar seleccionar registros similares dos veces. Los "
+"Si está establecido, este campo ayuda a segmentar ese trabajo en el modo sin "
+"duplicados para evitar seleccionar registros similares dos veces. Los "
 "registros similares son registros que tienen el mismo valor para su campo "
-"único. Por ejemplo escogiendo el campo 'E-mail' para las iniciativas de CRM,"
-" evita enviarle la misma campaña a la misma dirección de correo más de una "
+"único. Por ejemplo escogiendo el campo 'E-mail' para las iniciativas de CRM, "
+"evita enviarle la misma campaña a la misma dirección de correo más de una "
 "vez. Si no se establece, los segmentos \"sin duplicados\" sólo prevendrán "
 "seleccionar el mismo registro otra vez si ya esta incorporado a la campaña. "
 "Sólo se pueden usar campos fácilmente comparables como textos, enteros, "
@@ -754,8 +755,8 @@ msgstr "Siguiente sincronización"
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_segment_date_next_sync
 msgid "Next time the synchronization job is scheduled to run automatically"
 msgstr ""
-"Próxima vez que el trabajo de sincronización está programado para ejecutarse"
-" automáticamente."
+"Próxima vez que el trabajo de sincronización está programado para ejecutarse "
+"automáticamente."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -781,7 +782,8 @@ msgstr "Octubre"
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
 msgid ""
 "Odoo's marketing campaign allows you to automate communication\n"
-"            to your prospects. You can define a segment (set of conditions) on\n"
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
 "            your leads and partners to fulfill the campaign."
 msgstr ""
 
@@ -839,18 +841,23 @@ msgstr "Procesar"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_activity_condition
 msgid ""
-"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
 "   - activity: the campaign activity\n"
 "   - workitem: the campaign workitem\n"
 "   - resource: the resource object this campaign item represents\n"
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
-"Expresión de Python para decidir si la actividad se puede ejecutar, de lo contrario será eliminada o cancelada.La expresión puede utilizar las siguientes variables [navegables]:\n"
+"Expresión de Python para decidir si la actividad se puede ejecutar, de lo "
+"contrario será eliminada o cancelada.La expresión puede utilizar las "
+"siguientes variables [navegables]:\n"
 "   - actividad: la actividad de la campaña\n"
 "   - trabajo: el elemento de trabajo de la campaña\n"
 "   - recurso: el recurso que representa esta campaña\n"
-"   - transiciones: lista de las transiciones de la campaña salientes desde esta actividad\n"
+"   - transiciones: lista de las transiciones de la campaña salientes desde "
+"esta actividad\n"
 "...- re: Expresión regular de Python"
 
 #. module: marketing_campaign
@@ -955,8 +962,8 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
-"Especifique un ingreso previsto si considera que cada elemento de la campaña"
-" que ha alcanzado este punto ha generado un cierto ingreso. Puede obtener "
+"Especifique un ingreso previsto si considera que cada elemento de la campaña "
+"que ha alcanzado este punto ha generado un cierto ingreso. Puede obtener "
 "estadísticas sobre ingresos en la sección de informes"
 
 #. module: marketing_campaign
@@ -1019,11 +1026,15 @@ msgstr "Sincronizar manualmente"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_mode
 msgid ""
-"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports. \n"
-"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
-"With Manual Confirmation - the campaigns runs normally, but the user has to \n"
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports. \n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has "
+"to \n"
 " validate all workitem manually.\n"
-"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
 msgstr ""
 
 #. module: marketing_campaign
@@ -1093,8 +1104,8 @@ msgstr "El correo a enviar cuando se crea la actividad"
 #. module: marketing_campaign
 #: model:ir.model.fields,help:marketing_campaign.field_marketing_campaign_partner_field_id
 msgid ""
-"The generated workitems will be linked to the partner related to the record."
-" If the record is the partner itself leave this field empty. This is useful "
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself leave this field empty. This is useful "
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
@@ -1118,8 +1129,10 @@ msgstr "El informe a generar cuando la actividad es activada"
 msgid ""
 "The type of action to execute when an item enters this activity, such as:\n"
 "- Email: send an email using a predefined email template \n"
-"- Report: print an existing Report defined on the resource item and save it into a specific directory \n"
-"- Custom Action: execute a predefined action, e.g. to modify the fields of the resource record"
+"- Report: print an existing Report defined on the resource item and save it "
+"into a specific directory \n"
+"- Custom Action: execute a predefined action, e.g. to modify the fields of "
+"the resource record"
 msgstr ""
 
 #. module: marketing_campaign

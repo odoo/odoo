@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * google_drive
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -23,28 +23,48 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
 "<b>To create a new filter:</b><br/>\n"
-"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
-"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
-"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
-"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
-"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+"                                - Go to the Odoo document you want to "
+"filter. For instance, go to Opportunities and search on Sales Department.<br/"
+">\n"
+"                                - In this \"Search\" view, select the option "
+"\"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", "
+"link of google document in \"More\" options will appear for all users in "
+"opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users"
+"\", link of google document in \"More\" options will not appear for other "
+"users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google "
+"document will appear in \"More\" option for all users for all opportunities."
 msgstr ""
 "<b>pour créer un nouveau filtre :</b><br/>\n"
-"                                - Aller dans la liste des enregistrements que vous voulez filtrer. Par exemple, aller dans Opportunités et faîtes une recherche sur les équipes commerciales.<br/>\n"
-"                                - Dans cette vue \"Recherche\", sélectionner l'option \"Sauvegarder le filtre en cours\", entrer le nom (Ex : Équipe commerciale)<br/>\n"
-"                                - Si vous sélectionnez \"Partager avec tous les usagers\", le lien du document Google dans les options \"Plus\" apparaîtra pour tous les usagers des opportunités dans le département des ventes.<br/>\n"
-"                                - Si vous ne sélectionnez pas \"Partager avec tous les usagers\", le lien du document Google dans les options \"Plus\" n'apparaîtra pas pour tous les usagers des opportunités dans le département des ventes..<br/>\n"
-"                                - Si le filtre n'est pas indiqué, le lien du document Google dans les options \"Plus\" apparaîtra pour tous les usagers de toutes les opportunités."
+"                                - Aller dans la liste des enregistrements "
+"que vous voulez filtrer. Par exemple, aller dans Opportunités et faîtes une "
+"recherche sur les équipes commerciales.<br/>\n"
+"                                - Dans cette vue \"Recherche\", sélectionner "
+"l'option \"Sauvegarder le filtre en cours\", entrer le nom (Ex : Équipe "
+"commerciale)<br/>\n"
+"                                - Si vous sélectionnez \"Partager avec tous "
+"les usagers\", le lien du document Google dans les options \"Plus\" "
+"apparaîtra pour tous les usagers des opportunités dans le département des "
+"ventes.<br/>\n"
+"                                - Si vous ne sélectionnez pas \"Partager "
+"avec tous les usagers\", le lien du document Google dans les options \"Plus"
+"\" n'apparaîtra pas pour tous les usagers des opportunités dans le "
+"département des ventes..<br/>\n"
+"                                - Si le filtre n'est pas indiqué, le lien du "
+"document Google dans les options \"Plus\" apparaîtra pour tous les usagers "
+"de toutes les opportunités."
 
 #. module: google_drive
 #: model:ir.model.fields,field_description:google_drive.field_google_drive_config_active
@@ -66,11 +86,11 @@ msgstr "Code d'autorisation"
 #. module: google_drive
 #: model:ir.model.fields,help:google_drive.field_google_drive_config_name_template
 msgid ""
-"Choose how the new google drive will be named, on google side. Eg. "
-"gdoc_%(field_name)s"
+"Choose how the new google drive will be named, on google side. Eg. gdoc_"
+"%(field_name)s"
 msgstr ""
-"Choisissez comment le nouveau Google Drive sera renommé, du côté Google. Par"
-" ex: gdoc_%(field_name)s"
+"Choisissez comment le nouveau Google Drive sera renommé, du côté Google. Par "
+"ex: gdoc_%(field_name)s"
 
 #. module: google_drive
 #: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
@@ -247,13 +267,20 @@ msgstr "L'URL pour générer le code d'autorisation de Google"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
-"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
-"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"The name of the attached document can use fixed or variable data. To "
+"distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. "
+"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document "
+"in your Google Drive and in Odoo attachment will be named\n"
 "                                'Agrolait_SO0001_Sales'."
 msgstr ""
-"Le nom du document attaché peut utiliser une donnée variable ou fixe. Pour distinguer les documents dans Google Drive, utilisez des mots et des champs fixes. Pour le moment, dans l'exemple ci-dessous, si vous écrivez Agrolait_Vente_%(name)s\n"
-"dans le champ nom de Google Drive, le document dans votre Google Drive et dans le fichier attaché dans Odoo sera nommé \"Agrolait_Vente_SO0001\"."
+"Le nom du document attaché peut utiliser une donnée variable ou fixe. Pour "
+"distinguer les documents dans Google Drive, utilisez des mots et des champs "
+"fixes. Pour le moment, dans l'exemple ci-dessous, si vous écrivez "
+"Agrolait_Vente_%(name)s\n"
+"dans le champ nom de Google Drive, le document dans votre Google Drive et "
+"dans le fichier attaché dans Odoo sera nommé \"Agrolait_Vente_SO0001\"."
 
 #. module: google_drive
 #: code:addons/google_drive/models/google_drive.py:135
@@ -288,6 +315,8 @@ msgstr "base.config.settings"
 #. module: google_drive
 #: model:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
 msgid ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
 msgstr ""
-"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+"https://docs.google.com/document/"
+"d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

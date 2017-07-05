@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2015-09-08 10:42+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
@@ -19,7 +19,23 @@ msgstr ""
 "2);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+"<span class=\"sr-only\">Pārslēgt navigāciju</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Arhīvi"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Mainīt"
 
@@ -40,16 +56,14 @@ msgid ""
 "                                        <span class=\"fa fa-long-arrow-right"
 "\"/>"
 msgstr ""
-
-#. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.contact
-msgid "Contact"
-msgstr "Kontakts"
+"Apstiprināt\n"
+"                                        <span class=\"fa fa-long-arrow-right"
+"\"/>"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Contact Details"
-msgstr ""
+msgstr "Kontakta informācija"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -64,7 +78,7 @@ msgstr "Valsts..."
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Custom Panel"
-msgstr ""
+msgstr "Pielāgots panelis"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -77,16 +91,16 @@ msgid "Email"
 msgstr "E-pasts"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:106
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "Nekorekts E-pasts! Lūdzu norādiet korektu e-pasta adresi."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
-msgstr ""
+msgstr "Mans konts"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -96,13 +110,18 @@ msgstr "Telefons"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Place your content here."
-msgstr ""
+msgstr "Aizpildiet savu saturu šeit."
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: model:ir.ui.view,arch_db:website_portal.contact
+msgid "Saleman"
+msgstr "Pārdevējs"
+
+#. module: website_portal
+#: code:addons/website_portal/controllers/main.py:122
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Daži obligātie lauki nav aizpildīti."
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -120,9 +139,9 @@ msgid "VAT Number"
 msgstr "PVN reģistrācijas numurs"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
-msgstr ""
+msgstr "Jūsu informācija"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details

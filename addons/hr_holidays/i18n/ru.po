@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_holidays
-# 
+#
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
@@ -25,11 +25,13 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -81,11 +83,9 @@ msgstr "&lt;/th&gt;"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 msgstr ""
-"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-"
-"color:"
+"&lt;td class=\"text-center oe_leftfit oe_rightfit\" style=\"background-color:"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -269,14 +269,17 @@ msgstr "Назначить отгулы"
 #: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
 msgid ""
 "Average hours of work per day.\n"
-"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
+"                It is used in an employee leave request to compute the "
+"number of days consumed based on the resource calendar.\n"
 "                It can be used to handle various contract types, e.g.:\n"
 "                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
 "                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
 msgstr ""
 "Среднее количество часов работы в день.\n"
-"                 Он используется в запросе на отпуск сотрудника, чтобы вычислить количество дней, потребляемых на основе календаря ресурсов.\n"
-"                 Он может использоваться для обработки различных типов контрактов, например:\n"
+"                 Он используется в запросе на отпуск сотрудника, чтобы "
+"вычислить количество дней, потребляемых на основе календаря ресурсов.\n"
+"                 Он может использоваться для обработки различных типов "
+"контрактов, например:\n"
 "                 - 38 часов / неделя, 5 дней / неделя: 1 день = 7,6 часов\n"
 "                 - 45 часов / неделя, 5 дней / неделя: 1 день = 9,0 часов"
 
@@ -350,10 +353,12 @@ msgstr "Категория сотрудника"
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_type
 msgid ""
 "Choose 'Leave Request' if someone wants to take an off-day. \n"
-"Choose 'Allocation Request' if you want to increase the number of leaves available for someone"
+"Choose 'Allocation Request' if you want to increase the number of leaves "
+"available for someone"
 msgstr ""
 "Выберите \"Запрос на отгул\" если кто-либо берет выходной.\n"
-"Выберите \"Запрос на распределение\" если вы хотите увеличить количество доступных дней отгула для кого-либо"
+"Выберите \"Запрос на распределение\" если вы хотите увеличить количество "
+"доступных дней отгула для кого-либо"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_allocation_holidays
@@ -528,8 +533,8 @@ msgstr "Дата окончания"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an holiday type that "
+"is 'active' (active field is True)"
 msgstr ""
 "Фильтры только для распределений и запросов, которые принадлежат к типу "
 "отгула, который «активен» (поле активности \"Действителен\")"
@@ -602,8 +607,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
 msgstr ""
-"Если активное поле установлено в False, это позволяет вам скрыть тип без его"
-" удаления."
+"Если активное поле установлено в False, это позволяет вам скрыть тип без его "
+"удаления."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_limit
@@ -711,7 +716,8 @@ msgstr "Типы отгулов"
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:434
 #, python-format
-msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
+msgid ""
+"Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr "Запрос отпуска на подтверждение (\"Утвердить\"), чтобы утвердить его."
 
 #. module: hr_holidays
@@ -725,8 +731,7 @@ msgstr "Заявку отпуска необходимо подтвердить,
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Отпуск заявки необходимо подтверждены или проверены, чтобы отказаться от "
-"нее."
+"Отпуск заявки необходимо подтверждены или проверены, чтобы отказаться от нее."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:421
@@ -744,8 +749,8 @@ msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
 "to Draft."
 msgstr ""
-"Для возврата в состояние черновик, запроса на отпуск должно быть\"Отказано\""
-" или \"Утвердить\"."
+"Для возврата в состояние черновик, запроса на отпуск должно быть\"Отказано\" "
+"или \"Утвердить\"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_leave_to_approve_count
@@ -860,7 +865,7 @@ msgstr "Отпуска/Распределения первичное согла�
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2017"
-msgstr ""
+msgstr "Легальные отпуска 2017"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -925,11 +930,9 @@ msgstr "Максимально разрешенные отгулы - Взяты�
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_virtual_remaining_leaves
-msgid ""
-"Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
+msgid "Maximum Leaves Allowed - Leaves Already Taken - Leaves Waiting Approval"
 msgstr ""
-"Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие "
-"подтверждения"
+"Максимально разрешенные отгулы - Взятые отгулы - Отгулы, ждущие подтверждения"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_meeting_id
@@ -1001,8 +1004,8 @@ msgid ""
 "Once a leave is validated, Odoo will create a corresponding meeting of this "
 "type in the calendar."
 msgstr ""
-"После проверки отгула, Odoo будет создать соответствующую встречу этого типа"
-" в календаре."
+"После проверки отгула, Odoo будет создать соответствующую встречу этого типа "
+"в календаре."
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -1013,7 +1016,8 @@ msgid ""
 "                number of open days related to your leave."
 msgstr ""
 "Как только вы зарегистрируете свой запрос на отпуск, он будет отправлен\n"
-"                 менеджеру для проверки. Обязательно установите правильный отпуск\n"
+"                 менеджеру для проверки. Обязательно установите правильный "
+"отпуск\n"
 "                 типа (рекуперация, отпуск по закону, болезнь) и точное\n"
 "                 количество открытых дней, связанных с вашим отпуском."
 
@@ -1030,8 +1034,8 @@ msgstr ""
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
-"Только менеджер по персоналу или соответствующий сотрудник могут вернуться к"
-" черновику."
+"Только менеджер по персоналу или соответствующий сотрудник могут вернуться к "
+"черновику."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_holidays.py:429
@@ -1222,11 +1226,23 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr.py:117
 #, python-format
 msgid ""
-"The feature behind the field 'Remaining Legal Leaves' can only be used when there is only one leave type with the option 'Allow to Override Limit' unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot decide on which leave type the update has to be done. \n"
-" You may prefer to use the classic menus 'Leave Requests' and 'Allocation Requests' located in Leaves Application to manage the leave days of the employees if the configuration does not allow to use this field."
+"The feature behind the field 'Remaining Legal Leaves' can only be used when "
+"there is only one leave type with the option 'Allow to Override Limit' "
+"unchecked. (%s Found). Otherwise, the update is ambiguous as we cannot "
+"decide on which leave type the update has to be done. \n"
+" You may prefer to use the classic menus 'Leave Requests' and 'Allocation "
+"Requests' located in Leaves Application to manage the leave days of the "
+"employees if the configuration does not allow to use this field."
 msgstr ""
-"Функция, лежащая в основе поля «Оставшиеся законные отпуска», может использоваться только в том случае, когда имеется только один тип отпуска с опцией 'Разрешить превышать лимит'. (Найдено %s). В противном случае обновление будет неоднозначным, так как мы не можем решить, какой тип отпуска следует выполнить.\n"
-"  Вы можете использовать классические меню 'Запросы на отпуск'» и 'Запросы на распределение', расположенные в приложении «Листья», чтобы управлять днями отпуска сотрудников, если конфигурация не позволяет использовать это поле."
+"Функция, лежащая в основе поля «Оставшиеся законные отпуска», может "
+"использоваться только в том случае, когда имеется только один тип отпуска с "
+"опцией 'Разрешить превышать лимит'. (Найдено %s). В противном случае "
+"обновление будет неоднозначным, так как мы не можем решить, какой тип "
+"отпуска следует выполнить.\n"
+"  Вы можете использовать классические меню 'Запросы на отпуск'» и 'Запросы "
+"на распределение', расположенные в приложении «Листья», чтобы управлять "
+"днями отпуска сотрудников, если конфигурация не позволяет использовать это "
+"поле."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -1264,8 +1280,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr ""
-"Поле автоматически заполняется пользователем, который утверждает отгул"
+msgstr "Поле автоматически заполняется пользователем, который утверждает отгул"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id2
@@ -1454,8 +1469,7 @@ msgstr ""
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:27
 #, python-format
 msgid "You have to select at least one Department. And try again."
-msgstr ""
-"Вы должны выбрать как минимум одно подразделение. И попробовать снова."
+msgstr "Вы должны выбрать как минимум одно подразделение. И попробовать снова."
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new

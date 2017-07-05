@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product
-# 
+#
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
@@ -38,10 +38,10 @@ msgstr ""
 "PO-Revision-Date: 2017-02-15 09:50+0000\n"
 "Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: product
@@ -81,9 +81,12 @@ msgstr "%s (copie)"
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid ""
-"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
-"                            <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
+"<span attrs=\"{'invisible':[('base', '!=', 'list_price')]}\">Public Price  "
+"-  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'standard_price')]}\">Cost  -  </span>\n"
+"                            <span attrs=\"{'invisible':[('base', '!=', "
+"'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
 
 #. module: product
@@ -136,15 +139,15 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
-"Une catégorie de type \"vue\" est une catégorie virtuelle qui sert de mère à"
-" d'autres catégories pour former une structure hiérarchique."
+"Une catégorie de type \"vue\" est une catégorie virtuelle qui sert de mère à "
+"d'autres catégories pour former une structure hiérarchique."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
 msgid ""
-"A description of the Product that you want to communicate to your customers."
-" This description will be copied to every Sales Order, Delivery Order and "
+"A description of the Product that you want to communicate to your customers. "
+"This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Refund"
 msgstr ""
 
@@ -179,15 +182,24 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product_type
 #: model:ir.model.fields,help:product.field_product_template_type
 msgid ""
-"A stockable product is a product for which you manage stock. The \"Inventory\" app has to be installed.\n"
-"A consumable product, on the other hand, is a product for which stock is not managed.\n"
+"A stockable product is a product for which you manage stock. The \"Inventory"
+"\" app has to be installed.\n"
+"A consumable product, on the other hand, is a product for which stock is not "
+"managed.\n"
 "A service is a non-material product you provide.\n"
-"A digital content is a non-material product you sell online. The files attached to the products are the one that are sold on the e-commerce such as e-books, music, pictures,... The \"Digital Product\" module has to be installed."
+"A digital content is a non-material product you sell online. The files "
+"attached to the products are the one that are sold on the e-commerce such as "
+"e-books, music, pictures,... The \"Digital Product\" module has to be "
+"installed."
 msgstr ""
-"Un produit « stockable » est un produit pour lequel vous désirez gérer le stock. L'application « Inventaire » doit être installée.\n"
+"Un produit « stockable » est un produit pour lequel vous désirez gérer le "
+"stock. L'application « Inventaire » doit être installée.\n"
 "Un produit « consommable », en revanche, est un produit non géré en stock.\n"
 "Un service est un bien immatériel que vous fournissez ou achetez.\n"
-"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres électronique, musique, photos, …). Le module « Produits numériques » doit être installé."
+"Un contenu numérique est un bien immatériel que vous vendez en ligne. Les "
+"fichier liés aux produits sont ceux vendu sur la boutique en ligne (livres "
+"électronique, musique, photos, …). Le module « Produits numériques » doit "
+"être installé."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_active
@@ -301,8 +313,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_list_price
 #: model:ir.model.fields,help:product.field_product_template_lst_price
 msgid ""
-"Base price to compute the customer price. Sometimes called the catalog "
-"price."
+"Base price to compute the customer price. Sometimes called the catalog price."
 msgstr ""
 "Prix de base pour calculer le prix client. Parfois appelé prix catalogue."
 
@@ -463,8 +474,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les rapports définis pour ces "
+"Il est possible de convertir deux unités de mesures si elles appartiennent à "
+"la même catégorie. Cette conversion utilise les rapports définis pour ces "
 "unités."
 
 #. module: product
@@ -475,8 +486,7 @@ msgid ""
 "both belong to different Category!."
 msgstr ""
 "La conversion d'unité de mesure (UdM) de l'article %s dans l'UdM par défaut "
-"%s n'est pas possible car elles appartiennent à deux catégories différentes "
-"!"
+"%s n'est pas possible car elles appartiennent à deux catégories différentes !"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_price_history_cost
@@ -489,8 +499,8 @@ msgstr "Coût"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_standard_price
 msgid ""
-"Cost of the product template used for standard stock valuation in accounting"
-" and used as a base price on purchase orders. Expressed in the default unit "
+"Cost of the product template used for standard stock valuation in accounting "
+"and used as a base price on purchase orders. Expressed in the default unit "
 "of measure of the product."
 msgstr ""
 "Prix de revient utilisé en comptabilité pour la valorisation standard des "
@@ -649,10 +659,12 @@ msgstr "Douzaine(s)"
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
 msgid ""
 "Each rule include a set of applicability criteria (date range,\n"
-"                product category...) and a computation that easily helps to achieve\n"
+"                product category...) and a computation that easily helps to "
+"achieve\n"
 "                any kind of pricing."
 msgstr ""
-"Chaque règle inclus un ensemble de critères d'applicabilité (plages de dates,\n"
+"Chaque règle inclus un ensemble de critères d'applicabilité (plages de "
+"dates,\n"
 "catégorie de produits,...) et le calcul qui aide facilement à atteindre\n"
 "n'importe quel prix."
 
@@ -688,8 +700,7 @@ msgstr ""
 #: code:addons/product/models/product.py:306
 #, python-format
 msgid ""
-"Error! It is not allowed to choose more than one value for a given "
-"attribute."
+"Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
 
 #. module: product
@@ -737,10 +748,12 @@ msgstr "Forfait"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_min_quantity
 msgid ""
-"For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
+"For the rule to apply, bought/sold quantity must be greater than or equal to "
+"the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
-"Pour que la règle s'applique, la quantité achetée/vendue doit être supérieure ou égale à la quantité minimum spécifiée dans ce champ.\n"
+"Pour que la règle s'applique, la quantité achetée/vendue doit être "
+"supérieure ou égale à la quantité minimum spécifiée dans ce champ.\n"
 "Exprimée dans l'unité de mesure par défaut du produit."
 
 #. module: product
@@ -762,8 +775,8 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_sequence
 msgid ""
-"Gives the order in which the pricelist items will be checked. The evaluation"
-" gives highest priority to lowest sequence and stops as soon as a matching "
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
 "Donne l'ordre dans lequel les entrées de la liste de prix sont vérifiées. "
@@ -849,8 +862,8 @@ msgstr "Image"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image
 msgid ""
-"Image of the product variant (Big-sized image of product template if false)."
-" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"Image of the product variant (Big-sized image of product template if false). "
+"It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
 msgstr ""
 "Image de la variante d'article (si  non renseigné, image de grandes "
@@ -1173,7 +1186,8 @@ msgid ""
 "Price Extra: Extra price for the variant with this attribute value on sale "
 "price. eg. 200 price extra, 1000 + 200 = 1200."
 msgstr ""
-"Supplément : supplément de prix pour la variante ayant cette valeur de caractéristique.\n"
+"Supplément : supplément de prix pour la variante ayant cette valeur de "
+"caractéristique.\n"
 "Ex.: Supplément de prix de 200, 1000 + 200 = 1200"
 
 #. module: product
@@ -1565,7 +1579,8 @@ msgid ""
 msgstr ""
 "Fixe le prix comme un multiple de cette valeur.\n"
 "L'arrondi sera appliqué après la remise et avant la surcharge.\n"
-"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et la surcharge à -0.01"
+"Pour avoir un prix dont la fin est 9.99, mettre l'arrondi à 10 et la "
+"surcharge à -0.01"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_base_config_settings_company_share_product
@@ -1576,12 +1591,17 @@ msgstr "Partager les articles entre toutes les sociétés"
 #: model:ir.model.fields,help:product.field_base_config_settings_company_share_product
 msgid ""
 "Share your product to all companies defined in your instance.\n"
-" * Checked : Product are visible for every company, even if a company is defined on the partner.\n"
-" * Unchecked : Each company can see only its product (product where company is defined). Product not related to a company are visible for all companies."
+" * Checked : Product are visible for every company, even if a company is "
+"defined on the partner.\n"
+" * Unchecked : Each company can see only its product (product where company "
+"is defined). Product not related to a company are visible for all companies."
 msgstr ""
 "Partagez vos articles avec toutes les sociétés définies dans votre base.\n"
-"* Coché : Les articles sont visibles par toutes les sociétés, même si une société est définie pour le partenaire.\n"
-"* Non coché : Chaque entreprise ne peut voir que ses articles (articles pour lesquels la société est définie). Les articles non reliés à une société sont visibles par toutes les sociétés."
+"* Coché : Les articles sont visibles par toutes les sociétés, même si une "
+"société est définie pour le partenaire.\n"
+"* Non coché : Chaque entreprise ne peut voir que ses articles (articles pour "
+"lesquels la société est définie). Les articles non reliés à une société sont "
+"visibles par toutes les sociétés."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_small
@@ -1593,8 +1613,8 @@ msgstr "Image de petite taille"
 #: model:ir.model.fields,help:product.field_product_template_image_small
 msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
 msgstr ""
 "Vignette de l'article. Elle sera automatiquement redimensionnée à 64 x 64 "
 "px, en préservent le rapport hauteur/largeur. Utilisez ce champ partout où "
@@ -1620,8 +1640,8 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
-"Indiquez un article si cette règle ne s'applique qu'à lui. Laissez vide dans"
-" le cas contraire."
+"Indiquez un article si cette règle ne s'applique qu'à lui. Laissez vide dans "
+"le cas contraire."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item_product_tmpl_id
@@ -1702,8 +1722,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une"
-" unité de mesure indivisible telle que la pièce."
+"La quantité calculée sera un multiple de cette valeur. Utilisez 1,0 pour une "
+"unité de mesure indivisible telle que la pièce."
 
 #. module: product
 #: code:addons/product/models/product_uom.py:43 sql_constraint:product.uom:0
@@ -1738,10 +1758,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The operation cannot be completed:\n"
-"You are trying to delete an attribute value with a reference on a product variant."
+"You are trying to delete an attribute value with a reference on a product "
+"variant."
 msgstr ""
 "L'opération ne peut être complétée:\n"
-"Vous avez essayé d'effacer une valeur d'attribut avec une référence sur une variante de produit."
+"Vous avez essayé d'effacer une valeur d'attribut avec une référence sur une "
+"variante de produit."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_price
@@ -1814,8 +1836,8 @@ msgstr "A pour origine le formulaire de l'article"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_image_variant
 msgid ""
-"This field holds the image used as image for the product variant, limited to"
-" 1024x1024px."
+"This field holds the image used as image for the product variant, limited to "
+"1024x1024px."
 msgstr ""
 "Ce champ contient l'image utilisée pour la variante d'article, limitée à "
 "1024x1024 px."
@@ -2048,11 +2070,10 @@ msgstr "Poids"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo_product_id
 msgid ""
-"When this field is filled in, the vendor data will only apply to the "
-"variant."
+"When this field is filled in, the vendor data will only apply to the variant."
 msgstr ""
-"Lorsque ce champ est rempli, les données du fournisseur ne seront appliquées"
-" uniquement sur la variante."
+"Lorsque ce champ est rempli, les données du fournisseur ne seront appliquées "
+"uniquement sur la variante."
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime

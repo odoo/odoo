@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2016-06-27 10:42+0000\n"
 "Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
 "Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
@@ -30,6 +30,13 @@ msgstr ""
 "wyzwań."
 
 #. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_badge_ids
+msgid ""
+"All employee badges, linked to the employee either directly or through the "
+"user"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
 msgid ""
 "Assign a list of goals to chosen users to evaluate them.\n"
@@ -40,6 +47,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_badge_ids
 #: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
 msgid "Badges"
 msgstr "Odznaki"
@@ -51,6 +59,11 @@ msgid ""
 msgstr ""
 "Odznaki to nagrody za dobrą pracę. Przyznawaj je osobom, które na nie "
 "zasługują."
+
+#. module: hr_gamification
+#: model:ir.model.fields,help:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Badges directly linked to the employee"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -85,6 +98,11 @@ msgid "Describe what they did and why it matters (will be public)"
 msgstr "Opisz co zrobili i dlaczego jest to ważne (widoczne dla wszystkich)."
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_direct_badge_ids
+msgid "Direct Badge"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_employee_id
 #: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_user_wizard_employee_id
@@ -112,6 +130,11 @@ msgid "Gamification user badge"
 msgstr "Odznaka grywalizacyjna użytkownika"
 
 #. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_res_users_goal_ids
+msgid "Goal"
+msgstr ""
+
+#. module: hr_gamification
 #: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
 #: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
 msgid "Goals History"
@@ -124,8 +147,13 @@ msgstr "Przyznaj odznakę"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.hr_badge_form_view
-msgid "Granted Employees"
-msgstr "Odznaczeni pracownicy"
+msgid "Granted"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model.fields,field_description:hr_gamification.field_gamification_badge_granted_employees_count
+msgid "Granted Employees Count"
+msgstr ""
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_has_badges
@@ -149,9 +177,15 @@ msgid "Reward Employee with"
 msgstr "Nagródź pracownika"
 
 #. module: hr_gamification
-#: constraint:gamification.badge.user:0
+#: code:addons/hr_gamification/models/gamification.py:18
+#, python-format
 msgid "The selected employee does not correspond to the selected user."
 msgstr "Wybrany pracownik nie odpowiada wybranemu użytkownikowi."
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_res_users
+msgid "Users"
+msgstr "Użytkownicy"
 
 #. module: hr_gamification
 #: model:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
@@ -159,13 +193,13 @@ msgid "What are you thankful for?"
 msgstr "Za co dziękujesz?"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:31
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:21
 #, python-format
 msgid "You can not send a badge to yourself"
 msgstr "Nie możesz przyznać odznaki samemu sobie"
 
 #. module: hr_gamification
-#: code:addons/hr_gamification/wizard/grant_badge.py:28
+#: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:18
 #, python-format
 msgid "You can send badges only to employees linked to a user."
 msgstr "Możesz przyznać odznaki tylko pracownikom powiązanym z użytkownikiem."

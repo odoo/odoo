@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
 "PO-Revision-Date: 2016-01-20 13:49+0000\n"
 "Last-Translator: Wolfgang Taferner\n"
 "Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
@@ -19,7 +19,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
+msgid ""
+"<span class=\"sr-only\">Toggle navigation</span>\n"
+"                            <span class=\"icon-bar\"/>\n"
+"                            <span class=\"icon-bar\"/>"
+msgstr ""
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archiv"
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Change"
 msgstr "Wechselgeld"
 
@@ -45,11 +58,6 @@ msgstr ""
 "\"/>"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.contact
-msgid "Contact"
-msgstr "Kontakt"
-
-#. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
 msgid "Contact Details"
 msgstr "Kontaktdaten"
@@ -67,7 +75,7 @@ msgstr "Bitte Land auswählen..."
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Custom Panel"
-msgstr ""
+msgstr "Benutzerdefiniertes Panel"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -80,14 +88,14 @@ msgid "Email"
 msgstr "E-Mail"
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:73
+#: code:addons/website_portal/controllers/main.py:106
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr ""
+msgstr "E-mail Addresse ungültig. Bitte gültige E-mail Adresse eingeben."
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.details
 #: model:ir.ui.view,arch_db:website_portal.my_account_link
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "My Account"
 msgstr "Mein Konto"
 
@@ -99,13 +107,18 @@ msgstr "Telefon"
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.custom_panel
 msgid "Place your content here."
+msgstr "Platzieren Sie Ihren Inhalt hier."
+
+#. module: website_portal
+#: model:ir.ui.view,arch_db:website_portal.contact
+msgid "Saleman"
 msgstr ""
 
 #. module: website_portal
-#: code:addons/website_portal/controllers/main.py:88
+#: code:addons/website_portal/controllers/main.py:122
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Einige benötigte Felder sind leer."
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
@@ -123,9 +136,9 @@ msgid "VAT Number"
 msgstr "VAT Nummer"
 
 #. module: website_portal
-#: model:ir.ui.view,arch_db:website_portal.account
+#: model:ir.ui.view,arch_db:website_portal.portal_layout
 msgid "Your Details"
-msgstr ""
+msgstr "Ihre Angaben"
 
 #. module: website_portal
 #: model:ir.ui.view,arch_db:website_portal.details
