@@ -132,33 +132,39 @@ class MailActivity(models.Model):
     def create(self, values):
         activity = super(MailActivity, self).create(values)
         self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
-        self.env['bus.bus'].sendone(
-            (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-            {'type': 'activity_updated', 'activity_created': True})
+        if activity.date_deadline <= fields.Date.today():
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                {'type': 'activity_updated', 'activity_created': True})
         return activity
 
     @api.multi
     def write(self, values):
-        res = super(MailActivity, self).write(values)
         if values.get('user_id'):
             pre_responsibles = self.mapped('user_id.partner_id')
+        res = super(MailActivity, self).write(values)
+        if values.get('user_id'):
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                    {'type': 'activity_updated', 'activity_created': True})
-            for partner in pre_responsibles:
-                self.env['bus.bus'].sendone(
-                    (self._cr.dbname, 'res.partner', partner.id),
-                    {'type': 'activity_updated', 'activity_deleted': True})
+                if activity.date_deadline <= fields.Date.today():
+                    self.env['bus.bus'].sendone(
+                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                        {'type': 'activity_updated', 'activity_created': True})
+            for activity in self:
+                if activity.date_deadline <= fields.Date.today():
+                    for partner in pre_responsibles:
+                        self.env['bus.bus'].sendone(
+                            (self._cr.dbname, 'res.partner', partner.id),
+                            {'type': 'activity_updated', 'activity_deleted': True})
         return res
 
     @api.multi
     def unlink(self):
         for activity in self:
-            self.env['bus.bus'].sendone(
-                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
-                {'type': 'activity_updated', 'activity_deleted': True})
+            if activity.date_deadline <= fields.Date.today():
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
     @api.multi

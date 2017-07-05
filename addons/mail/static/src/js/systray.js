@@ -185,7 +185,6 @@ var ActivityMenu = Widget.extend({
             model: 'res.users',
             method: 'activity_user_count',
         }).then(function (data) {
-            self.isCounterUpdated = false;
             self.activities = data;
             self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
@@ -239,7 +238,6 @@ var ActivityMenu = Widget.extend({
             if (data.activity_deleted && this.activityCounter > 0) {
                 this.activityCounter --;
             }
-            this.isCounterUpdated = true;
             this.$('.o_notification_counter').text(this.activityCounter);
             this.$el.toggleClass('o_no_notification', !this.activityCounter);
         }
@@ -257,7 +255,12 @@ var ActivityMenu = Widget.extend({
         event.stopPropagation();
         var $target = $(event.currentTarget);
         var context = {};
-        context['search_default_activities_' + $target.data('filter')] = 1;
+        if ($target.data('filter')=='my') {
+            context['search_default_activities_overdue'] = 1;
+            context['search_default_activities_today'] = 1;
+        } else {
+            context['search_default_activities_' + $target.data('filter')] = 1;
+        }
         this.do_action({
             type: 'ir.actions.act_window',
             name: $target.data('model_name'),
@@ -274,7 +277,7 @@ var ActivityMenu = Widget.extend({
      * @param {MouseEvent} event
      */
     _onActivityMenuClick: function () {
-        if (!this._isOpen() && this.isCounterUpdated) {
+        if (!this._isOpen()) {
             this._updateActivityPreview();
         }
     },

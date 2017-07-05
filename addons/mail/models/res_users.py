@@ -145,7 +145,8 @@ class Users(models.Model):
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
                 }
             user_activities[activity['model']]['%s_count' % activity['states']] += activity['count']
-            user_activities[activity['model']]['total_count'] += activity['count']
+            if activity['states'] in ('today','overdue'):
+                user_activities[activity['model']]['total_count'] += activity['count']
 
         return user_activities.values()
 
