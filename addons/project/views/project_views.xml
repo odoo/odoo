@@ -47,6 +47,9 @@
                     <filter string="Overdue Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                    <filter string="Upcoming Activities (All)" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -447,7 +450,7 @@ action = model.activate_sample_project()
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
