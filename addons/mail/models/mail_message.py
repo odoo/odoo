@@ -5,7 +5,7 @@ import logging
 
 from email.utils import formataddr
 
-from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import pycompat
@@ -420,6 +420,8 @@ class Message(models.Model):
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+            if message['model']:
+                message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
         return message_values
 
     #------------------------------------------------------
