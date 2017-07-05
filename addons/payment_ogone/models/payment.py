@@ -310,6 +310,7 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
+            self.payment_token_id.verification_status = 'verified'
             self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -334,6 +335,10 @@ class PaymentTxOgone(models.Model):
                 'state_message': error,
                 'acquirer_reference': data.get('PAYID'),
             })
+
+            if self.payment_token_id and self.payment_token_id.verification_status != 'verified':
+                self.payment_token_id.verification_status = 'invalid'
+
             return False
 
     # --------------------------------------------------
@@ -414,6 +419,7 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
+            self.payment_token_id.verification_status = 'verified'
             self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -444,6 +450,9 @@ class PaymentTxOgone(models.Model):
                 'state_message': error,
                 'acquirer_reference': tree.get('PAYID'),
             })
+
+            if self.payment_token_id and self.payment_token_id.verification_status != 'verified':
+                self.payment_token_id.verification_status = 'invalid'
             return False
 
     def _ogone_s2s_get_tx_status(self):
@@ -593,8 +602,6 @@ class PaymentToken(models.Model):
         return self._ogone_s2s_validate_tree(tree)
 
     def _ogone_do_validation_refund(self):
-        import pudb
-        pu.db
         account = self.acquirer_id
         reference = "ODOO-VALIDATION-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
 
