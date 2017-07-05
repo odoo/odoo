@@ -253,6 +253,9 @@
                   <filter string="Overdue Activities" name="activities_overdue"
                       domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                       help="Show all records which has next action date is before today"/>
+                  <filter string="Upcoming Activities (All)" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                   <group expand="0" string="Group By">
                       <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
