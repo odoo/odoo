@@ -44,11 +44,11 @@ class hr_employee(osv.osv):
 
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
-    _description = 'Contract Type'
+    _description = 'Employee Type'
     _order = 'sequence, id'
 
     _columns = {
-        'name': fields.char('Contract Type', required=True),
+        'name': fields.char('Employee Type', required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence when displaying a list of Contract."),
     }
     defaults = {
@@ -65,14 +65,18 @@ class hr_contract(osv.osv):
         'name': fields.char('Contract Reference', required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'department_id': fields.many2one('hr.department', string="Department"),
-        'type_id': fields.many2one('hr.contract.type', "Contract Type", required=True),
-        'job_id': fields.many2one('hr.job', 'Job Title'),
+        'type_id': fields.many2one('hr.contract.type', "Employee Type", required=True),
+        'job_id': fields.many2one('hr.job', 'Designation'),
+        'scale_pay': fields.char('Scale of Pay'),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date'),
         'trial_date_start': fields.date('Trial Start Date'),
         'trial_date_end': fields.date('Trial End Date'),
         'working_hours': fields.many2one('resource.calendar', 'Working Schedule'),
-        'wage': fields.float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee"),
+        'wage': fields.float('Basic / Wage', digits=(16, 2), required=True, help="Basic Salary of the employee"),
+        'wagesix': fields.float('Basic Sixth', digits=(16, 2), help="6th Pay - Basic Salary of the employee"),
+        'payband': fields.float('Payband', digits=(16, 2), help="6th Pay - Pay Band Salary of the employee"),
+        'gradepay': fields.float('Grade Pay', digits=(16, 2), help="6th Pay - Grade Pay Salary of the employee"),
         'advantages': fields.text('Advantages'),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', required=False, readonly=False),
@@ -98,12 +102,17 @@ class hr_contract(osv.osv):
         if not employee_id:
             return {'value': {'job_id': False, 'department_id': False}}
         emp_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
-        job_id = dept_id = False
+        job_id = dept_id = type_id = False
         if emp_obj.job_id:
             job_id = emp_obj.job_id.id
+	    print "designation ",job_id	
         if emp_obj.department_id:
             dept_id = emp_obj.department_id.id
-        return {'value': {'job_id': job_id, 'department_id': dept_id}}
+	    print " department ", dept_id	
+        if emp_obj.scale_pay:
+            scale_pay = emp_obj.scale_pay
+	    print scale_pay	
+        return {'value': {'job_id': job_id, 'scale_pay': scale_pay, 'department_id': dept_id}}
 
     def _check_dates(self, cr, uid, ids, context=None):
         for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
