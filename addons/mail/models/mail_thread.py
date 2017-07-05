@@ -234,10 +234,13 @@ class MailThread(models.AbstractModel):
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
+        new_context = {}
         for key, val in self._context.iteritems():
             if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
-        thread.message_auto_subscribe(create_values.keys(), values=create_values)
+            elif not key.startswith('default_'):
+                new_context[key] = val
+        thread.with_context(new_context).message_auto_subscribe(create_values.keys(), values=create_values)
 
         # track values
         if not self._context.get('mail_notrack'):
