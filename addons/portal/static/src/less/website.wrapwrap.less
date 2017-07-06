@@ -25,6 +25,27 @@
 }
 
 // Default Style
+#oe_main_menu_navbar + #wrapwrap .o_header_affix {
+    top: @odoo-navbar-height;
+}
+
+#wrapwrap .o_header_affix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: -200px;
+    width: 100%;
+    z-index: 1000;
+    background: @navbar-default-bg;
+    border-bottom: @navbar-default-border;
+    .transition(margin-top 500ms ease);
+
+    &.affixed {
+        margin-top: 0px;
+        .transition(margin-top 500ms ease);
+    }
+}
+
 header a.navbar-brand {
     &.logo {
         padding: 0 15px;
