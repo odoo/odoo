@@ -293,12 +293,19 @@ class SaleOrder(models.Model):
     @api.model_cr_context
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
-            Overridden here because we skip generating unique access tokens
-            for potentially tons of existing sale orders, should they be needed,
-            they will be generated on the fly.
+
+            Overridden here because we need to generate different access tokens
+            and by default _init_column calls the default method once and applies
+            it for every record.
         """
         if column_name != 'access_token':
             super(SaleOrder, self)._init_column(column_name)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._name, 'column_name': column_name}
+            self.env.cr.execute(query)
 
     def _generate_access_token(self):
         for order in self:

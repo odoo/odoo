@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, fields, models
 
-from odoo.exceptions import ValidationError
+from werkzeug.urls import url_encode
+import uuid
 
 
 class SaleOrder(models.Model):
@@ -24,26 +25,33 @@ class SaleOrder(models.Model):
             order.payment_transaction_count = mapped_data.get(order.id, 0)
 
     @api.multi
-    def get_access_action(self):
-        """ Instead of the classic form view, redirect to the online quote for
-        portal users that have access to a confirmed order. """
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online order for
+        portal users or if force_website=True in the context. """
         # TDE note: read access on sales order to portal users granted to followed sales orders
         self.ensure_one()
         if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
-            return super(SaleOrder, self).get_access_action()
-        if self.env.user.share or self.env.context.get('force_website'):
-            try:
-                self.check_access_rule('read')
-            except exceptions.AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/orders/%s' % self.id,
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(SaleOrder, self).get_access_action()
+            return super(SaleOrder, self).get_access_action(access_uid)
+
+        user = self.env['res.users'].sudo().browse(access_uid) if access_uid else self.env.user
+        if user.share or self.env.context.get('force_website'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
+                'target': 'self',
+                'res_id': self.id,
+            }
+        return super(SaleOrder, self).get_access_action(access_uid)
+
+    def get_mail_url(self):
+        self.ensure_one()
+        params = {
+            'model': self._name,
+            'res_id': self.id,
+            'access_token': self.access_token,
+        }
+        params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+        return '/mail/view?' + url_encode(params)
 
     @api.multi
     def _notification_recipients(self, message, groups):

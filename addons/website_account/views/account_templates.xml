@@ -1,19 +1,17 @@
 <odoo>
 	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="website_portal.portal_layout" priority="30">
-        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-if="invoice_count" t-att-class="page_name == 'invoice' and 'active'">
-                <a href="/my/invoices">Invoices</a>		
-            </li>		
-        </xpath>		
+        <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'invoice'" class="active">
+                Invoices
+            </li>
+        </xpath>
     </template>
 
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="website_portal.portal_my_home" priority="30">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 t-if="invoice_count" class="page-header">
-              <a href="/my/invoices">Your Invoices and Payments
-                <small class="ml8">
-                  <span class='badge'><t t-esc="invoice_count"/></span>
-                </small>
+              <a href="/my/invoices">My Invoices
+                <span class="badge ml8" t-esc="invoice_count"/>
               </a>
             </h3>
         </xpath>
@@ -22,7 +20,7 @@
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="website_portal.portal_layout">
         <div class="page-header">
-            <span class="h3">Your Invoices</span>
+            <span class="h3">My Invoices</span>
             <t t-call="website_portal.portal_searchbar"/>
         </div>
         <t t-if="not invoices">

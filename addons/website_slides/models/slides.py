@@ -434,7 +434,7 @@ class Slide(models.Model):
         return fields
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
         if self.website_published:
@@ -444,7 +444,7 @@ class Slide(models.Model):
                 'target': 'self',
                 'res_id': self.id,
             }
-        return super(Slide, self).get_access_action()
+        return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
     def _notification_recipients(self, message, groups):
