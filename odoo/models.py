@@ -1339,12 +1339,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return False
 
     @api.multi
-    def get_formview_action(self):
+    def get_formview_action(self, access_uid=None):
         """ Return an action to open the document ``self``. This method is meant
             to be overridden in addons that want to give specific view ids for
             example.
-        """
-        view_id = self.sudo().get_formview_id(access_uid=self.env.uid)
+
+        An optional access_uid holds the user that will access the document
+        that could be different from the current user. """
+        view_id = self.sudo().get_formview_id(access_uid=access_uid)
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
@@ -1357,12 +1359,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
+
+        An optional access_uid holds the user that will access the document
+        that could be different from the current user.
         """
-        return self[0].get_formview_action()
+        return self[0].get_formview_action(access_uid=access_uid)
 
     @api.model
     def search_count(self, args):
