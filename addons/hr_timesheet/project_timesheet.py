@@ -67,3 +67,12 @@ class Task(models.Model):
         for task in self:
             if task.parent_id and task.parent_id.project_id and task.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
                 raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))
+
+    @api.model
+    def create(self, vals):
+        context = dict(self.env.context)
+        # Remove default_parent_id to avoid a confusion in get_record_data
+        if context.get('default_parent_id', False):
+            vals['parent_id'] = context.pop('default_parent_id', None)
+        task = super(Task, self.with_context(context)).create(vals)
+        return task

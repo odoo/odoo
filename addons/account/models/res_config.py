@@ -129,7 +129,12 @@ class AccountConfigSettings(models.TransientModel):
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
         # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
         # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
+        # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
+        # code the missing characters to complete the desired number of digit, leading to a sql_constraint.
         if ('company_id' in values and 'currency_id' in values):
-            if self.env['res.company'].browse(values.get('company_id')).currency_id.id == values.get('currency_id'):
+            company = self.env['res.company'].browse(values.get('company_id'))
+            if company.currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
+            if company.accounts_code_digits == vals.get('code_digits'):
+                vals.pop('code_digits')
         return super(AccountConfigSettings, self).create(values)
