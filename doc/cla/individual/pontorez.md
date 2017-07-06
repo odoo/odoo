@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-John Doe pontorez@protonmail.ch https://github.com/pontorez
+John Doe pontorez@protonmail.ch https://github.com/Pontorez
