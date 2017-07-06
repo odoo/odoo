@@ -273,7 +273,7 @@ var AbstractField = Widget.extend({
      */
     reset: function (record, event) {
         this._reset(record, event);
-        return this._render();
+        return this._render() || $.when();
     },
 
     //--------------------------------------------------------------------------

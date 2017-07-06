@@ -684,7 +684,7 @@ var FieldX2Many = AbstractField.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _render: function () {
         if (!this.view) {
