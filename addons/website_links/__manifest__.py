@@ -14,5 +14,5 @@ Website interface to create short and trackable URLs.
         'security/ir.model.access.csv',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'auto_install': False,
+    'auto_install': True,
 }
