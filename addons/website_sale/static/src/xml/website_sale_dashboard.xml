@@ -58,55 +58,67 @@
         </div>
     </t>
 
+    <t t-name="website_sale.order_reports">
+        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+            <div class="col-sm-4 o_link_enable" title="Orders">
+                <div>Orders</div>
+                <div class="o_highlight">
+                    <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
+                </div>
+                <t t-set="order_count" t-value="widget.dashboards_data.sales.evl_summary.evl_order_count"/>
+                <t t-if="order_count &gt; 0">
+                    <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
+                </t>
+                <t t-if="order_count &lt; 0">
+                    <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
+                </t>
+            </div>
+        </a>
+    </t>
+
+    <t t-name="website_sale.sold_order_reports">
+        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
+            <div class="col-sm-4 o_link_enable" title="Untaxed Total Sold">
+                <div>Sold</div>
+                <div class="o_highlight">
+                    <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
+                </div>
+                <t t-set="total_sold" t-value="widget.dashboards_data.sales.evl_summary.evl_total_sold"/>
+                <t t-if="total_sold &gt; 0">
+                    <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
+                </t>
+                <t t-if="total_sold &lt; 0">
+                    <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
+                </t>
+            </div>
+        </a>
+    </t>
+
+    <t t-name="website_sale.carts_order_reports">
+        <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_carts">
+            <div class="col-sm-4 o_link_enable o_invisible_border" title="Carts">
+                <div>Carts</div>
+                <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
+                <t t-set="order_carts" t-value="widget.dashboards_data.sales.evl_summary.evl_order_carts_count"/>
+                <t t-if="order_carts &gt; 0">
+                    <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
+                </t>
+                <t t-if="order_carts &lt; 0">
+                    <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
+                </t>
+            </div>
+        </a>
+    </t>
+
     <t t-name="website_sale.products_table">
         <t t-set="set_tooltip" t-value="'compared to previous period'"/>
         <div class="row">
             <div class="col-md-12 col-xs-12">
                 <div class="row">
                     <h4>AT A GLANCE</h4>
-                    <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
-                        <div class="col-sm-4 o_link_enable" title="Orders">
-                            <div>Orders</div>
-                            <div class="o_highlight">
-                                <t t-esc="widget.dashboards_data.sales.summary.order_count"/>
-                            </div>
-                            <t t-set="order_count" t-value="widget.dashboards_data.sales.evl_summary.evl_order_count"/>
-                            <t t-if="order_count &gt; 0">
-                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
-                            </t>
-                            <t t-if="order_count &lt; 0">
-                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_count, 'float', [3, 2], '%')"/></div>
-                            </t>
-                        </div>
-                    </a>
-                    <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_dashboard">
-                        <div class="col-sm-4 o_link_enable" title="Untaxed Total Sold">
-                            <div>Sold</div>
-                            <div class="o_highlight">
-                                <t t-esc="widget.render_monetary_field(widget.dashboards_data.sales.summary.total_sold, widget.data.currency)"/>
-                            </div>
-                            <t t-set="total_sold" t-value="widget.dashboards_data.sales.evl_summary.evl_total_sold"/>
-                            <t t-if="total_sold &gt; 0">
-                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
-                            </t>
-                            <t t-if="total_sold &lt; 0">
-                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(total_sold, 'float', [3, 2], '%')"/></div>
-                            </t>
-                        </div>
-                    </a>
-                    <a href="#" class="o_dashboard_action" name="website_sale.sale_report_action_carts">
-                        <div class="col-sm-4 o_link_enable o_invisible_border" title="Carts">
-                            <div>Carts</div>
-                            <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_carts_count"/></div>
-                            <t t-set="order_carts" t-value="widget.dashboards_data.sales.evl_summary.evl_order_carts_count"/>
-                            <t t-if="order_carts &gt; 0">
-                                <div class="o_green" t-att-title="set_tooltip"><i class="fa fa-caret-up"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
-                            </t>
-                            <t t-if="order_carts &lt; 0">
-                                <div class="o_red" t-att-title="set_tooltip"><i class="fa fa-caret-down"/><t t-esc="widget.format_number(order_carts, 'float', [3, 2], '%')"/></div>
-                            </t>
-                        </div>
-                    </a>
+                    <t t-call="website_sale.order_reports"/>
+                    <t t-call="website_sale.sold_order_reports"/>
+                    <t t-call="website_sale.carts_order_reports"/>
                     <div class="col-sm-4 o_link_disable" title="Orders/Day">
                         <div>Orders/Day</div>
                         <div class="o_highlight"><t t-esc="widget.dashboards_data.sales.summary.order_per_day_ratio"/></div>
