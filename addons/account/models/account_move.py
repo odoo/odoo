@@ -1398,7 +1398,7 @@ class AccountPartialReconcile(models.Model):
                 'partner_id': rec.debit_move_id.partner_id.id,
             })
             for aml in aml_to_fix:
-                partial_rec = rec.env['account.partial.reconcile'].create({
+                partial_rec = rec.env['account.partial.reconcile'].with_context(cash_basis=False).create({
                     'debit_move_id': aml.credit and line_to_reconcile.id or aml.id,
                     'credit_move_id': aml.debit and line_to_reconcile.id or aml.id,
                     'amount': abs(aml.amount_residual),
