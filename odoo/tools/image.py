@@ -75,7 +75,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
 
     if image.size != size:
         image = image_resize_and_sharpen(image, size)
-    if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
+    if image.mode not in ["1", "L", "P", "RGB"]:
         image = image.convert("RGB")
 
     background_stream = StringIO.StringIO()
