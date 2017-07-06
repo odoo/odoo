@@ -4763,6 +4763,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('resetting invisible one2manys', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].turtles = [];
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.turtles = [[5], [4, 1]];
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="foo"/>' +
+                    '<field name="turtles" invisible="1"/>' +
+                '</form>',
+            viewOptions: {
+                mode: 'edit',
+            },
+            res_id: 1,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        form.$('input[name="foo"]').val('abcd').trigger('input');
+        assert.verifySteps(['read', 'onchange']);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
