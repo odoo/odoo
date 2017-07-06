@@ -160,7 +160,7 @@ class GoogleDrive(models.Model):
         # check if a model is configured with a template
         configs = self.search([('model_id', '=', res_model)])
         config_values = []
-        for config in configs:
+        for config in configs.sudo():
             if config.filter_id:
                 if config.filter_id.user_id and config.filter_id.user_id.id != self.env.user.id:
                     #Private
