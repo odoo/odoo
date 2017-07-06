@@ -247,7 +247,6 @@
                     <field name="user_id"/>
                     <field name="partner_address_email"/>
                     <field name="message_needaction_counter"/>
-                    <field name="tag_ids"/>
                     <field name="partner_id"/>
                     <field name="activity_summary"/>
                     <field name="active"/>
@@ -273,7 +272,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div>
-                                        <field name="tag_ids"/>
+                                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     </div>
                                     <div>
                                         <strong><field name="name"/></strong>

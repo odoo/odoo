@@ -87,7 +87,6 @@
           <field name="memo"/>
           <field name="date_done"/>
           <field name="message_partner_ids"/>
-          <field name="tag_ids"/>
           <field name="activity_ids" />
           <field name="activity_state" />
           <templates>
@@ -95,7 +94,7 @@
 
               <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
-                <field name="tag_ids"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
                     <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
