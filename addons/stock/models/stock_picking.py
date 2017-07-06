@@ -848,7 +848,7 @@ class Picking(models.Model):
 
     def check_backorder(self):
         need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(done_qtys=True)
-        for move in self.move_lines:
+        for move in self.move_lines.filtered(lambda m: m.state not in ('done', 'cancel')):
             if float_compare(move.remaining_qty, 0, precision_rounding=move.product_id.uom_id.rounding) != 0:
                 return True
         return False
