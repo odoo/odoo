@@ -142,7 +142,7 @@ class config(osv.Model):
         # check if a model is configured with a template
         config_ids = self.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
-        for config in self.browse(cr, uid, config_ids, context=context):
+        for config in self.browse(cr, SUPERUSER_ID, config_ids, context=context):
             if config.filter_id:
                 if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
                     #Private
