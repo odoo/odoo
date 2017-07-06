@@ -11,7 +11,6 @@ class ResConfigSettings(models.TransientModel):
     generate_lead_from_alias = fields.Boolean('Manual Assignation of Emails')
     group_use_lead = fields.Boolean(string="Leads", implied_group='crm.group_use_lead')
     module_crm_phone_validation = fields.Boolean("Phone Validation")
-    module_crm_voip = fields.Boolean("Asterisk (VoIP)")
     module_web_clearbit = fields.Boolean("Customer Autocomplete")
 
     def _find_default_lead_alias_id(self):
