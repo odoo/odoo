@@ -579,7 +579,7 @@ class ProductPackaging(models.Model):
     qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
 
 
-class SuppliferInfo(models.Model):
+class SupplierInfo(models.Model):
     _name = "product.supplierinfo"
     _description = "Information about a product vendor"
     _order = 'sequence, min_qty desc, price'
