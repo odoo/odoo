@@ -164,6 +164,9 @@ var BasicRenderer = AbstractRenderer.extend({
 
         var recordWidgets = this.allFieldWidgets[record.id] || [];
         for (var i = 0 ; i < recordWidgets.length ; i++) {
+            if (!recordWidgets[currentIndex]) {
+                return -1;
+            }
             var activated = recordWidgets[currentIndex].activate({event: options.event});
             if (activated) {
                 return currentIndex;

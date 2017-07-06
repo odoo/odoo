@@ -672,6 +672,9 @@ var ListRenderer = BasicRenderer.extend({
      * @param {MouseEvent} event
      */
     _onSortColumn: function (event) {
+        if (this.mode === 'edit' && this.currentRow !== null) {
+            return;
+        }
         var name = $(event.currentTarget).data('name');
         this.trigger_up('toggle_column_order', {id: this.state.id, name: name});
     },
