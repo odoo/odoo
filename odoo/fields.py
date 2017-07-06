@@ -1063,51 +1063,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # Notification when fields are modified
     #
 
-    def modified(self, records):
-        """ Notify that field ``self`` has been modified on ``records``: prepare the
-            fields/records to recompute, and return a spec indicating what to
-            invalidate.
-        """
-        # invalidate the fields that depend on self, and prepare recomputation
-        spec = [(self, records._ids)]
-
-        # group triggers by model and path to reduce the number of calls to search()
-        bymodel = defaultdict(lambda: defaultdict(list))
-        for field, path in records._field_triggers[self]:
-            bymodel[field.model_name][path].append(field)
-
-        for model_name, bypath in pycompat.items(bymodel):
-            for path, fields in pycompat.items(bypath):
-                if path and any(field.compute and field.store for field in fields):
-                    # process stored fields
-                    stored = set(field for field in fields if field.compute and field.store)
-                    fields = set(fields) - stored
-                    if path == 'id':
-                        target0 = records
-                    else:
-                        # don't move this line to function top, see log
-                        env = records.env(user=SUPERUSER_ID, context={'active_test': False})
-                        target0 = env[model_name].search([(path, 'in', records.ids)])
-                    if target0:
-                        for field in stored:
-                            # discard records to not recompute for field
-                            target = target0 - records.env.protected(field)
-                            if not target:
-                                continue
-                            spec.append((field, target._ids))
-                            # recompute field on target in the environment of
-                            # records, and as user admin if required
-                            if field.compute_sudo:
-                                target = target.with_env(records.env(user=SUPERUSER_ID))
-                            else:
-                                target = target.with_env(records.env)
-                            target._recompute_todo(field)
-                # process non-stored fields
-                for field in fields:
-                    spec.append((field, None))
-
-        return spec
-
     def modified_draft(self, records):
         """ Same as :meth:`modified`, but in draft mode. """
         env = records.env
@@ -1897,15 +1852,6 @@ class _Relational(Field):
 
     def null(self, record):
         return record.env[self.comodel_name]
-
-    def modified(self, records):
-        # Invalidate cache for inverse fields, too. Note that the recomputation
-        # of fields that depend on inverse fields is already covered by the
-        # triggers.
-        spec = super(_Relational, self).modified(records)
-        for invf in records._field_inverses[self]:
-            spec.append((invf, None))
-        return spec
 
 
 class Many2one(_Relational):
