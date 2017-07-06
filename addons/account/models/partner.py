@@ -278,7 +278,7 @@ class ResPartner(models.Model):
         # generate where clause to include multicompany rules
         where_query = account_invoice_report._where_calc([
             ('partner_id', 'in', all_partner_ids), ('state', 'not in', ['draft', 'cancel']), ('company_id', '=', self.env.user.company_id.id),
-            ('type', 'in', ('out_invoice', 'out_refund'))
+            ('type', '=', 'out_invoice')
         ])
         account_invoice_report._apply_ir_rules(where_query, 'read')
         from_clause, where_clause, where_clause_params = where_query.get_sql()
@@ -427,3 +427,13 @@ class ResPartner(models.Model):
         return super(ResPartner, self)._commercial_fields() + \
             ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'last_time_entries_checked']
+
+    @api.multi
+    def action_open_partner_history(self):
+        '''
+        This function returns an action that display invoices/refunds made for the given partners.
+        '''
+        self.ensure_one()
+        action = self.env.ref('account.action_invoice_tree').read()[0]
+        action['domain'] = [('partner_id', '=', self.id), ('type', '=', 'out_invoice')]
+        return action
