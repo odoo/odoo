@@ -3654,14 +3654,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check.
-        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
-        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
-        This is ok at the security level because this method is private and not callable through XML-RPC.
+        Private implementation of search() method, allowing specifying the uid
+        to use for the access right check. This is useful for example when
+        filling in the selection list for a drop-down and avoiding access rights
+        errors, by specifying ``access_rights_uid=1`` to bypass access rights
+        check, but not ir.rules! This is ok at the security level because this
+        method is private and not callable through XML-RPC.
 
         :param access_rights_uid: optional user ID to use when checking access rights
                                   (not for ir.rules, this is only for ir.model.access)
-        :return: a list of record ids or an integer (if count is True)
+        :return: an integer if count=True, otherwise a list of record ids or a lazy query
         """
         self.sudo(access_rights_uid or self._uid).check_access_rights('read')
 
@@ -3687,17 +3689,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
         query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + order_by + limit_str + offset_str
-        self._cr.execute(query_str, where_clause_params)
-        res = self._cr.fetchall()
-
-        # TDE note: with auto_join, we could have several lines about the same result
-        # i.e. a lead with several unread messages; we uniquify the result using
-        # a fast way to do it while preserving order (http://www.peterbe.com/plog/uniqifiers-benchmark)
-        def _uniquify_list(seq):
-            seen = set()
-            return [x for x in seq if x not in seen and not seen.add(x)]
-
-        return _uniquify_list([x[0] for x in res])
+        return self._cr.lazy(query_str, where_clause_params)
 
     @api.multi
     @api.returns(None, lambda value: value[0])
@@ -4629,6 +4621,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     def __str__(self):
         return "%s%s" % (self._name, getattr(self, '_ids', ""))
+
     def __repr__(self):
         return str(self)
 

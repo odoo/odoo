@@ -389,7 +389,7 @@ class IrAttachment(models.Model):
 
         # sort result according to the original sort ordering
         result = [id for id in orig_ids if id in ids]
-        return len(result) if count else list(result)
+        return len(result) if count else tuple(result)
 
     @api.multi
     def read(self, fields=None, load='_classic_read'):

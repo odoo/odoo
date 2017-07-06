@@ -8,6 +8,7 @@ the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
 """
 
+from collections import Sequence
 from contextlib import contextmanager
 from functools import wraps
 import logging
@@ -20,6 +21,8 @@ import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
+
+from .tools import pycompat, unique
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -253,6 +256,12 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][0] += 1
                 self.sql_into_log[res_into.group(1)][1] += delay
         return res
+
+    def lazy(self, query, params=None):
+        """ Return a lazy sequence of values determined by the given query. """
+        if params:
+            query = self.mogrify(query, params)
+        return LazyQuery(self, query)
 
     def split_for_in_conditions(self, ids, size=None):
         """Split a list of identifiers into one or more smaller tuples
@@ -495,6 +504,47 @@ class LazyCursor(object):
         self._depth -= 1
         if self._cursor is not None:
             self._cursor.__exit__(exc_type, exc_value, traceback)
+
+
+@pycompat.implements_to_string
+class LazyQuery(Sequence):
+    """ A sequence of unique values determined by an SQL query. """
+    __slots__ = ['_cr', '_query', '_ids']
+
+    def __init__(self, cr, query):
+        self._cr = cr
+        self._query = query
+
+    def __getattr__(self, name):
+        if name == '_ids':
+            self._cr.execute(self._query)
+            self._ids = tuple(unique(row[0] for row in self._cr.fetchall()))
+            self._cr = self._query = None
+            return self._ids
+        raise AttributeError(name)
+
+    def __getitem__(self, pos):
+        return self._ids[pos]
+
+    def __len__(self):
+        return len(self._ids)
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return "<LazyQuery: %s>" % self._query if self._query else str(self._ids)
+
+    def getquoted(self):
+        if self._query:
+            return "(%s)" % self._query
+        elif self._ids:
+            return psycopg2.extensions.adapt(self._ids).getquoted()
+        else:
+            return "(NULL)"
+
+psycopg2.extensions.register_adapter(LazyQuery, lambda x: x)
+
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass

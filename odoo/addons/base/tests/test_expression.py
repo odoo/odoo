@@ -5,7 +5,7 @@ import psycopg2
 
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, flatten
 from odoo.osv import expression
 
 
@@ -191,6 +191,7 @@ class TestExpression(TransactionCase):
         res_7 = Partner.search([('name', '=', one.name)])
         self.assertEqual(one, res_7)
         res_8 = Partner.search([('name', 'in', [one.name])])
+        self.assertEqual(one, res_8)
         # res_9 = Partner.search([('name', 'in', one.name)]) # TODO
 
     def test_15_m2o(self):
@@ -611,6 +612,25 @@ class TestExpression(TransactionCase):
         not_be = Partner.with_context(lang='fr_FR').search([('country_id', '!=', 'Belgique')])
         self.assertNotIn(agrolait, not_be)
 
+    def test_subselect(self):
+        query = "SELECT name FROM res_users WHERE id IN %s"
+
+        # check serialization of subselect
+        ids = self.cr.lazy("SELECT id FROM res_users")
+        self.assertEqual(ids.getquoted(), "(SELECT id FROM res_users)")
+        self.assertEqual(self.cr.mogrify(query, [ids]), query % ids.getquoted())
+
+        # force evaluation, then check serialization
+        self.assertTrue(ids)
+        self.assertEqual(ids.getquoted(), self.cr.mogrify("%s", [tuple(ids)]))
+        self.assertEqual(self.cr.mogrify(query, [ids]), query % ids.getquoted())
+
+        # check serialization of empty result
+        ids = self.cr.lazy("SELECT id FROM res_users WHERE login IS NULL")
+        self.assertFalse(ids)
+        self.assertEqual(ids.getquoted(), "(NULL)")
+        self.assertEqual(self.cr.mogrify(query, [ids]), query % ids.getquoted())
+
 
 class TestAutoJoin(TransactionCase):
 
@@ -697,9 +717,9 @@ class TestAutoJoin(TransactionCase):
         sql_query = self.query_list[1].get_sql()
         self.assertIn('res_partner', sql_query[0],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect main table")
-        self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
+        self.assertIn('"res_partner"."id" in %s', sql_query[1],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect where condition")
-        self.assertIn(p_aa.id, sql_query[2],
+        self.assertIn(p_aa.id, flatten(sql_query[2]),
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') second query incorrect parameter")
 
         # Do: cascaded one2many without _auto_join

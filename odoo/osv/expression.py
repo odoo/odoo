@@ -123,6 +123,7 @@ from zlib import crc32
 import odoo.modules
 from odoo.tools import pycompat
 from ..models import MAGIC_COLUMNS, BaseModel
+from ..sql_db import LazyQuery
 import odoo.tools as tools
 
 
@@ -406,26 +407,31 @@ def is_leaf(element, internal=False):
 # SQL utils
 # --------------------------------------------------
 
+def is_query(ids):
+    """ Return whether ``ids`` is an unresolved query. """
+    return isinstance(ids, LazyQuery) and ids._query
+
+def is_empty(ids):
+    """ Return whether ``ids`` is a known empty list. """
+    return not (is_query(ids) or ids)
+
 def select_from_where(cr, select_field, from_table, where_field, where_ids, where_operator):
-    # todo: merge into parent query as sub-query
-    res = []
-    if where_ids:
-        if where_operator in ['<', '>', '>=', '<=']:
-            cr.execute('SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % \
-                (select_field, from_table, where_field, where_operator),
-                (where_ids[0],))  # TODO shouldn't this be min/max(where_ids) ?
-            res = [r[0] for r in cr.fetchall()]
-        else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
-            for i in range(0, len(where_ids), cr.IN_MAX):
-                subids = where_ids[i:i + cr.IN_MAX]
-                cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (select_field, from_table, where_field), (tuple(subids),))
-                res.extend([r[0] for r in cr.fetchall()])
-    return res
+    """ Return a tuple or a lazy query for the given selection. """
+    if not isinstance(where_ids, LazyQuery):
+        where_ids = tuple(where_ids)
+    if is_empty(where_ids):
+        return ()
+    elif where_operator in ['<', '>', '>=', '<=']:
+        query = 'SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % (select_field, from_table, where_field, where_operator)
+        return cr.lazy(query, [where_ids])
+    else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
+        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (select_field, from_table, where_field)
+        return cr.lazy(query, [where_ids])
 
 def select_distinct_from_where_not_null(cr, select_field, from_table):
-    cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (select_field, from_table, select_field))
-    return [r[0] for r in cr.fetchall()]
+    """ Return a tuple or a lazy query for the given selection. """
+    query = 'SELECT DISTINCT("%s") FROM "%s" WHERE "%s" IS NOT NULL' % (select_field, from_table, select_field)
+    return cr.lazy(query)
 
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
@@ -697,6 +703,8 @@ class expression(object):
                         return the list of related ids
             """
             names = []
+            if isinstance(value, LazyQuery):
+                return value
             if isinstance(value, pycompat.string_types):
                 names = [value]
             elif value and isinstance(value, (tuple, list)) and all(isinstance(item, pycompat.string_types) for item in value):
@@ -726,13 +734,13 @@ class expression(object):
                         doms.insert(0, OR_OPERATOR)
                     doms += [AND_OPERATOR, ('parent_left', '<', rec.parent_right), ('parent_left', '>=', rec.parent_left)]
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
+                    return [(left, 'in', left_model._search(doms))]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
                 child_ids = set(ids)
                 while ids:
-                    ids = left_model.search([(parent_name, 'in', ids)]).ids
+                    ids = left_model._search([(parent_name, 'in', ids)])
                     child_ids.update(ids)
                 return [(left, 'in', list(child_ids))]
 
@@ -747,7 +755,7 @@ class expression(object):
                         doms.insert(0, OR_OPERATOR)
                     doms += [AND_OPERATOR, ('parent_right', '>', rec.parent_left), ('parent_left', '<=',  rec.parent_left)]
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
+                    return [(left, 'in', left_model._search(doms))]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
@@ -870,13 +878,13 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.with_context(active_test=False)._search([('.'.join(path[1:]), operator, right)])
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel._search([('.'.join(path[1:]), operator, right)])
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
@@ -892,7 +900,7 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                        right = comodel._search([('.'.join(path[1:]), operator, right)])
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
@@ -934,11 +942,11 @@ class expression(object):
                         ids2 = right
                     else:
                         ids2 = [right]
-                    if ids2 and inverse_is_int and domain:
+                    if not is_empty(ids2) and inverse_is_int and domain:
                         ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
 
                     # determine ids1 in model related to ids2
-                    if not ids2:
+                    if is_empty(ids2):
                         ids1 = []
                     elif comodel._fields[field.inverse_name].store:
                         ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
@@ -972,14 +980,15 @@ class expression(object):
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel.search(domain).ids
+                    ids2 = comodel._search(domain)
 
                     # rewrite condition in terms of ids2
                     if comodel == model:
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
                     else:
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [tuple(ids2)])), internal=True))
+                        ids2 = tuple(ids2) if isinstance(ids2, list) else ids2
+                        push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [ids2])), internal=True))
 
                 elif right is not False:
                     # determine ids2 in comodel
@@ -998,7 +1007,8 @@ class expression(object):
                     # rewrite condition in terms of ids2
                     subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
                     subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                    ids2 = tuple(it for it in ids2 if it) or (None,)
+                    if not isinstance(ids2, LazyQuery):
+                        ids2 = tuple(it for it in ids2 if it) or (None,)
                     push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2])), internal=True))
 
                 else:
@@ -1168,7 +1178,10 @@ class expression(object):
                 else:
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
-            elif isinstance(right, (list, tuple)):
+            elif is_query(right):
+                query = '(%s."%s" %s %%s)' % (table_alias, left, operator)
+                params = [right]
+            elif isinstance(right, (list, tuple, LazyQuery)):
                 params = [it for it in right if it != False]
                 check_null = len(params) < len(right)
                 if params:

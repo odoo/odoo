@@ -479,10 +479,8 @@ class Message(models.Model):
         ids = super(Message, self)._search(
             args, offset=offset, limit=limit, order=order,
             count=False, access_rights_uid=access_rights_uid)
-        if not ids and count:
-            return 0
-        elif not ids:
-            return ids
+        if isinstance(ids, list):
+            ids = tuple(ids)
 
         pid = self.env.user.partner_id.id
         author_ids, partner_ids, channel_ids, allowed_ids = set([]), set([]), set([]), set([])
@@ -501,7 +499,7 @@ class Message(models.Model):
             ON channel.id = channel_rel.mail_channel_id
             LEFT JOIN "mail_channel_partner" channel_partner
             ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, pid, ids,))
+            WHERE m.id IN %%s""" % self._table, (pid, pid, ids))
         for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
@@ -519,9 +517,8 @@ class Message(models.Model):
         if count:
             return len(final_ids)
         else:
-            # re-construct a list based on ids, because set did not keep the original order
-            id_list = [id for id in ids if id in final_ids]
-            return id_list
+            # re-construct a tuple based on ids, because sets do not keep the original order
+            return tuple(id for id in ids if id in final_ids)
 
     @api.multi
     def check_access_rule(self, operation):
