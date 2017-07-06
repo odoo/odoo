@@ -53,6 +53,10 @@ class WebsiteConfigSettings(models.TransientModel):
     has_google_analytics = fields.Boolean("Google Analytics")
     has_google_analytics_dashboard = fields.Boolean("Google Analytics in Dashboard")
     has_google_maps = fields.Boolean("Google Maps")
+    auth_signup_uninvited = fields.Selection([
+        ('b2b', 'On invitation (B2B)'),
+        ('b2c', 'Free sign up (B2C)'),
+    ], string='Customer Account')
 
     @api.onchange('has_google_analytics')
     def onchange_has_google_analytics(self):
@@ -77,12 +81,13 @@ class WebsiteConfigSettings(models.TransientModel):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
         res = super(WebsiteConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
+        get_param = self.env['ir.config_parameter'].sudo().get_param
         res.update(
-            has_google_analytics=params.get_param('website.has_google_analytics'),
-            has_google_analytics_dashboard=params.get_param('website.has_google_analytics_dashboard'),
-            has_google_maps=params.get_param('website.has_google_maps'),
-            google_maps_api_key=params.get_param('google_maps_api_key', default=''),
+            auth_signup_uninvited='b2c' if get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
+            has_google_analytics=get_param('website.has_google_analytics'),
+            has_google_analytics_dashboard=get_param('website.has_google_analytics_dashboard'),
+            has_google_maps=get_param('website.has_google_maps'),
+            google_maps_api_key=get_param('google_maps_api_key', default=''),
         )
         return res
 
@@ -90,7 +95,9 @@ class WebsiteConfigSettings(models.TransientModel):
         if not self.user_has_groups('website.group_website_designer'):
             raise AccessDenied()
         super(WebsiteConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics', self.has_google_analytics)
-        self.env['ir.config_parameter'].sudo().set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
-        self.env['ir.config_parameter'].sudo().set_param('website.has_google_maps', self.has_google_maps)
-        self.env['ir.config_parameter'].sudo().set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())
+        set_param = self.env['ir.config_parameter'].sudo().set_param
+        set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited == 'b2c'))
+        set_param('website.has_google_analytics', self.has_google_analytics)
+        set_param('website.has_google_analytics_dashboard', self.has_google_analytics_dashboard)
+        set_param('website.has_google_maps', self.has_google_maps)
+        set_param('google_maps_api_key', (self.google_maps_api_key or '').strip())

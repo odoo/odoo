@@ -20,7 +20,7 @@
 % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'
 % set pay_sign_name =  ('require_payment' in object and object.require_payment and 'pay') or 'sign'
 % set access_name = is_online and object.template_id and object.state in ('draft', 'sent')  and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name
-% set access_url = is_online and access_action['url'] or ''
+% set access_url = is_online and object.get_mail_url() or ''
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)

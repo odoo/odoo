@@ -166,20 +166,10 @@
 
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
-      <t t-call="website.layout">
+      <t t-call="website_portal.portal_layout">
+        <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
-              <div t-if="breadcrumb" class="row">
-                  <div class="col-sm-4">
-                      <ol class="breadcrumb mt8">
-                          <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                          <li><a t-attf-href="/my/quotes?#{keep_query()}">My Quotations</a></li>
-                          <li>
-                              Quotation <t t-esc="quotation.name"/>
-                          </li>
-                      </ol>
-                  </div>
-              </div>
               <div class="row mt16">
                 <!-- Sidebar -->
                   <div class="col-md-3 hidden-print">
