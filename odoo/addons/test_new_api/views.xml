@@ -56,7 +56,7 @@
                                 <field name="messages">
                                     <tree string="Messages">
                                         <field name="name"/>
-                                        <field name="body"/>
+                                        <field name="introductory"/>
                                         <field name="important"/>
                                     </tree>
                                     <form string="Message">
@@ -66,6 +66,7 @@
                                             <field name="size"/>
                                             <field name="important"/>
                                         </group>
+                                        <field name="introductory"/>
                                         <label for="body"/>
                                         <field name="body"/>
                                     </form>
@@ -87,6 +88,7 @@
                                             <field name="important"/>
                                             <field name="email_to"/>
                                         </group>
+                                        <field name="introductory"/>
                                         <label for="body"/>
                                         <field name="body"/>
                                     </form>
@@ -126,6 +128,7 @@
                                     <tree name="Messages" editable="bottom">
                                         <field name="name"/>
                                         <field name="author"/>
+                                        <field name="introductory"/>
                                         <field name="body" required="1"/>
                                         <field name="size"/>
                                     </tree>
@@ -215,6 +218,7 @@
                             <field name="author"/>
                             <field name="size"/>
                         </group>
+                        <field name="introductory"/>
                         <label for="body"/>
                         <field name="body"/>
                     </sheet>

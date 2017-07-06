@@ -298,6 +298,79 @@ class TestFields(common.TransactionCase):
         discussion.participants += self.env.user
         self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
 
+    def test_16_rw_stored(self):
+        """ test readwrite stored computed fields """
+        record = self.env['test_new_api.message'].create({
+            'body': 'Whatever'
+        })
+        introductory = "%s says on %s: \"" % (record.display_name, record.write_date)
+        root_id = record.id
+
+        self.assertTrue(record.introductory.starts_with(introductory))
+        record.write({'introductory': 'Defaced'})
+        self.assertTrue(record.introductory == 'Defaced')
+        record.write({})
+        introductory = "%s says on %s: \"" % (record.author.name, record.write_date)
+        self.assertTrue(record.introductory.starts_with(introductory))
+
+        record = self.env['test_new_api.compute_read_write'].create({
+            'body': 'Whatever',
+            'introductory': 'No intro'
+        })
+        self.assertTrue(record.introductory == 'No intro')
+
+        record = self.env['test_new_api.compute_read_write'].create({
+            'body': 'A' * root_id,
+            'introductory': 'Test recursive'
+        })
+
+        self.assertTrue(record.parent.id == root_id)
+
+        child_record = self.env['test_new_api.compute_read_write'].create({
+            'body': 'A' * record.id,
+            'introductory': 'Test recursive'
+        })
+
+        self.assertTrue(child_record.parent.id == record.id)
+        self.assertTrue(child_record.parent.parent.id == root_id)
+        self.assertTrue(child_record.formatted_ids.starts_with(
+            "%s / %s / 1" % (child_record.id, record.id)))
+
+        child_record.parent = child_record.parent.parent
+        self.assertTrue(child_record.parent.id == root_id)
+
+        try:
+            record = self.env['test_new_api.compute_read_write'].create({
+                'body': 'A',
+                'introductory': 'Test mutual dependency with no data',
+                'amount': False,
+                'amount_with_taxes': False
+            })
+            created = True
+        except:
+            created = False
+
+        self.assertFalse(created)
+
+        record = self.env['test_new_api.compute_read_write'].create({
+            'body': 'A',
+            'introductory': 'Test mutual dependency',
+            'amount': 100,
+            'taxes': 20,
+        })
+        self.assertTrue(record.amount_with_taxes == 120)
+
+        record = self.env['test_new_api.compute_read_write'].create({
+            'body': 'A',
+            'introductory': 'Test mutual dependency',
+            'amount_with_taxes': 1200,
+            'taxes': 20,
+        })
+
+        self.assertTrue(record.amount == 1000)
+        record.amount = 1000
+        self.assertTrue(record.amount_with_taxes == 1200)
+
     def test_20_float(self):
         """ test float fields """
         record = self.env['test_new_api.mixed'].create({})
