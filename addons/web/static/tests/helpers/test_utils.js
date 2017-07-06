@@ -369,6 +369,7 @@ function createModel(params) {
  * @param {jqueryElement} $to
  * @param {Object} [options]
  * @param {string} [options.position=center] target position
+ * @param {string} [options.disableDrop=false] whether to trigger the drop action
  */
 function dragAndDrop($el, $to, options) {
     var position = (options && options.position) || 'center';
@@ -396,11 +397,13 @@ function dragAndDrop($el, $to, options) {
         pageY: toOffset.top
     }));
 
-    $el.trigger($.Event("mouseup", {
-        which: 1,
-        pageX: toOffset.left,
-        pageY: toOffset.top
-    }));
+    if (!(options && options.disableDrop)) {
+        $el.trigger($.Event("mouseup", {
+            which: 1,
+            pageX: toOffset.left,
+            pageY: toOffset.top
+        }));
+    }
 }
 
 /**
