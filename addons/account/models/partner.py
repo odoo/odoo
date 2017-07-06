@@ -446,3 +446,9 @@ class ResPartner(models.Model):
         result = action.read()[0]
         result['domain'] = [('partner_id', 'child_of', self.ids)]
         return result
+
+    @api.constrains('mobile', 'phone')
+    def _check_phone_mobile(self):
+        if (not self.phone and not self.mobile):
+            raise ValidationError("At least one of the fields 'phone' and "
+                                  "'mobile' must be filled to proceed.")
