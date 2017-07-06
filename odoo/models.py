@@ -4713,12 +4713,48 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :param fnames: iterable of field names that have been modified on
                 records ``self``
         """
-        # each field knows what to invalidate and recompute
-        spec = []
+        # group triggers by (model, path) to minimize the calls to search()
+        invalids = []
+        triggers = defaultdict(set)
         for fname in fnames:
-            spec += self._fields[fname].modified(self)
+            mfield = self._fields[fname]
+            # invalidate mfield on self, and its inverses fields
+            invalids.append((mfield, self._ids))
+            for field in self._field_inverses[mfield]:
+                invalids.append((field, None))
+            # group triggers by model and path to reduce the number of search()
+            for field, path in self._field_triggers[mfield]:
+                triggers[(field.model_name, path)].add(field)
 
-        self.env.invalidate(spec)
+        # process triggers, mark fields to be invalidated/recomputed
+        for model_path, fields in triggers.items():
+            model_name, path = model_path
+            stored = {field for field in fields if field.compute and field.store}
+            # process stored fields
+            if path and stored:
+                # determine records of model_name linked by path to self
+                if path == 'id':
+                    target0 = self
+                else:
+                    env = self.env(user=SUPERUSER_ID, context={'active_test': False})
+                    target0 = env[model_name].search([(path, 'in', self.ids)])
+                    target0 = target0.with_env(self.env)
+                # prepare recomputation for each field on linked records
+                for field in stored:
+                    # discard records to not recompute for field
+                    target = target0 - self.env.protected(field)
+                    if not target:
+                        continue
+                    invalids.append((field, target._ids))
+                    # mark field to be recomputed on target
+                    if field.compute_sudo:
+                        target = target.sudo()
+                    target._recompute_todo(field)
+            # process non-stored fields
+            for field in (fields - stored):
+                invalids.append((field, None))
+
+        self.env.invalidate(invalids)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the
