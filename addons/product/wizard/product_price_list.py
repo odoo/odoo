@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class product_price_list(models.TransientModel):
@@ -21,6 +22,9 @@ class product_price_list(models.TransientModel):
         To get the date and print the report
         @return : return report
         """
+        if ((not self.env.user.company_id.external_report_layout) or (not self.env.user.company_id.logo)):
+            raise UserError(_("You have to set a logo or a layout for your company."))
+
         datas = {'ids': self.env.context.get('active_ids', [])}
         res = self.read(['price_list', 'qty1', 'qty2', 'qty3', 'qty4', 'qty5'])
         res = res and res[0] or {}
