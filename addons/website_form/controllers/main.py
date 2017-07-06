@@ -172,7 +172,7 @@ class WebsiteForm(http.Controller):
 
     def insert_record(self, request, model, values, custom, meta=None):
         record = request.env[model.model].sudo().with_context(mail_create_nosubscribe=True).create(values)
-
+        self._custom_label = model.model == 'mail.mail' and _('<b>You have received a new message</b>\n___________\n\n') or self._custom_label
         if custom or meta:
             default_field = model.website_form_default_field_id
             default_field_data = values.get(default_field.name, '')

@@ -48,6 +48,18 @@ odoo.define('website_form.animation', function (require) {
             datepickers_options.format = time.strftime_to_moment_format(l10n.date_format);
             this.$target.find('.o_website_form_date').datetimepicker(datepickers_options);
 
+            if (this.$target.parents('body.editor_enable').length ===0) {
+                var $default_form_data = $('#default_form_data');
+                if ($default_form_data.length) {
+                    var data = jQuery.parseJSON($default_form_data.attr('default_data'));
+                    var form_fields = this.$target.serializeArray();
+                    _.each(form_fields, function(field) {
+                        if (_.has(data, field.name)) {
+                            self.$target.find("input[name='" + field.name + "'], textarea[name='" + field.name + "']").val(data[field.name]);
+                        }
+                    });
+                }
+            }
             return this._super.apply(this, arguments);
         },
 
