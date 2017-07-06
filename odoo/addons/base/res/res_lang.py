@@ -196,8 +196,8 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache()
     def get_available(self):
-        """ Return the available languages to install as a list of (code, name) sorted by name. """
-        langs = self.search([('active', '=', False)])
+        """ Return the available languages as a list of (code, name) sorted by name. """
+        langs = self.with_context(active_test=False).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
     @api.model
