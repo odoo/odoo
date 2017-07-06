@@ -274,7 +274,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        product_context = dict(request.env.context, active_id=product.id)
+        product_context = dict(request.env.context,
+                               active_id=product.id,
+                               partner=request.env.user.partner_id)
         ProductCategory = request.env['product.public.category']
         Rating = request.env['rating.rating']
 
