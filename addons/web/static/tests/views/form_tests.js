@@ -3584,10 +3584,10 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in readonly form view', function (assert) {
-        // The behavior of the phone widget is completely altered by crm_voip so
-        // this test fails if crm_voip is installed. The enterprise module is
+        // The behavior of the phone widget is completely altered by voip so
+        // this test fails if voip is installed. The enterprise module is
         // responsible for testing its own behavior in its own tests.
-        if ('crm.voip' in odoo.__DEBUG__.services) {
+        if ('voip.user_agent' in odoo.__DEBUG__.services) {
             assert.expect(0);
             return;
         }

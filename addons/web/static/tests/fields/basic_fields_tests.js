@@ -2646,10 +2646,10 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in form view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by crm_voip so this
-        // test is irrelevant and fails if crm_voip is installed. The enterprise
+        // The behavior of this widget is completely altered by voip so this
+        // test is irrelevant and fails if voip is installed. The enterprise
         // module is responsible for testing its own behavior in its own tests.
-        if ('crm.voip' in odoo.__DEBUG__.services) {
+        if ('voip.user_agent' in odoo.__DEBUG__.services) {
             assert.expect(0);
             return;
         }
@@ -2701,10 +2701,10 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in editable list view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by crm_voip so this
-        // test is irrelevant and fails if crm_voip is installed. The enterprise
+        // The behavior of this widget is completely altered by voip so this
+        // test is irrelevant and fails if voip is installed. The enterprise
         // module is responsible for testing its own behavior in its own tests.
-        if ('crm.voip' in odoo.__DEBUG__.services) {
+        if ('voip.user_agent' in odoo.__DEBUG__.services) {
             assert.expect(0);
             return;
         }
