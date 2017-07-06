@@ -17,9 +17,8 @@ import uuid
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ, parse_dsn
 from psycopg2.pool import PoolError
-from werkzeug import urls
 
 from .tools import pycompat
 
@@ -657,24 +656,16 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
-    if db_or_uri.startswith(('postgresql://', 'postgres://')):
-        # extract db from uri
-        us = urls.url_parse(db_or_uri)
-        if len(us.path) > 1:
-            db_name = us.path[1:]
-        elif us.username:
-            db_name = us.username
-        else:
-            db_name = us.hostname
-        return db_name, {'dsn': db_or_uri}
+    if not db_or_uri.startswith(('postgresql://', 'postgres://')):
+        db_or_uri = "dbname=%s " % db_or_uri
+    connection_info = parse_dsn(db_or_uri)
 
-    connection_info = {'database': db_or_uri}
     for p in ('host', 'port', 'user', 'password'):
         cfg = tools.config['db_' + p]
         if cfg:
             connection_info[p] = cfg
 
-    return db_or_uri, connection_info
+    return connection_info.get('dbname'), connection_info
 
 _Pool = None
 
