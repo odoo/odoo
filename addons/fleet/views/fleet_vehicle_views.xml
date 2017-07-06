@@ -180,7 +180,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_tags_section">
-                                <field name="tag_ids"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </div>
                             <div class="o_kanban_image">
                                 <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>

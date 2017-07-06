@@ -200,7 +200,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                    <field name="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div>
                                         <b><field name="name"/></b> <br/>
                                         <field name="partner_id"/> <br/>
