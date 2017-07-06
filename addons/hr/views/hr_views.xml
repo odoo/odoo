@@ -52,7 +52,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Work Information">
                                 <group>

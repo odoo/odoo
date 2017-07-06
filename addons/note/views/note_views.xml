@@ -143,7 +143,7 @@
           <field name="name"/>
           <field name="open"/>
           <field name="stage_id"/>
-          <field name="tag_ids" widget="many2many_tags"/>
+          <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
         </tree>
       </field>
     </record>
@@ -158,7 +158,7 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
                 </header>
                 <sheet>
-                    <field name="tag_ids" widget="many2many_tags" placeholder="Tags"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
                     <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 </sheet>
                 <div class="oe_chatter">

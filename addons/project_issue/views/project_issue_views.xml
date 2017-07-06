@@ -25,7 +25,7 @@
                         <group>
                             <field name="user_id"/>
                             <field name="priority" groups="base.group_user" widget="priority"/>
-                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </group>
                         <group>
                             <field name="partner_id"/>
