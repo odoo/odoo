@@ -9,26 +9,44 @@ from odoo.addons import decimal_precision as dp
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    delivery_price = fields.Float(string='Estimated Delivery Price', compute='_compute_delivery_price', store=True)
-    carrier_id = fields.Many2one("delivery.carrier", string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
-    invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery")
+    carrier_id = fields.Many2one('delivery.carrier', string="Delivery Method", help="Fill this field if you plan to invoice the shipping based on picking.")
+    delivery_price = fields.Float(string='Estimated Delivery Price', readonly=True, copy=False)
+    delivery_message = fields.Char(readonly=True, copy=False)
+    delivery_rating_success = fields.Boolean(copy=False)
+    invoice_shipping_on_delivery = fields.Boolean(string="Invoice Shipping on Delivery", copy=False)
 
-    @api.depends('carrier_id', 'order_line')
-    def _compute_delivery_price(self):
-        for order in self:
-            if order.state != 'draft':
-                # We do not want to recompute the shipping price of an already validated/done SO
-                continue
-            elif order.carrier_id.delivery_type != 'grid' and not order.order_line:
-                # Prevent SOAP call to external shipping provider when SO has no lines yet
-                continue
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        delivery_cost = sum([l.price_total for l in self.order_line if l.is_delivery])
+        return self.amount_total - delivery_cost
+
+    def get_delivery_price(self):
+        for order in self.filtered(lambda o: o.state in ('draft', 'sent') and len(o.order_line) > 0):
+            # We do not want to recompute the shipping price of an already validated/done SO
+            # or on an SO that has no lines yet
+            order.delivery_rating_success = False
+            res = order.carrier_id.rate_shipment(order)
+            if res['success']:
+                order.delivery_rating_success = True
+                order.delivery_price = res['price']
+                order.delivery_message = res['warning_message']
             else:
-                order.delivery_price = order.carrier_id.with_context(order_id=order.id).price
+                order.delivery_rating_success = False
+                order.delivery_price = 0.0
+                order.delivery_message = res['error_message']
+
+    @api.onchange('carrier_id')
+    def onchange_carrier_id(self):
+        if self.state in ('draft', 'sent'):
+            self.delivery_price = 0.0
+            self.delivery_rating_success = False
 
     @api.onchange('partner_id')
-    def onchange_partner_id_dtype(self):
+    def onchange_partner_id_carrier_id(self):
         if self.partner_id:
             self.carrier_id = self.partner_id.property_delivery_carrier_id
+
+    # TODO onchange sol, clean delivery price
 
     @api.multi
     def action_confirm(self):
@@ -38,39 +56,26 @@ class SaleOrder(models.Model):
         return res
 
     @api.multi
-    def _delivery_unset(self):
+    def _remove_delivery_line(self):
         self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
     @api.multi
-    def delivery_set(self):
+    def set_delivery_line(self):
 
         # Remove delivery products from the sales order
-        self._delivery_unset()
+        self._remove_delivery_line()
 
         for order in self:
-            carrier = order.carrier_id
-            if carrier:
-                if order.state not in ('draft', 'sent'):
-                    raise UserError(_('The order state have to be draft to add delivery lines.'))
-
-                if carrier.delivery_type not in ['fixed', 'base_on_rule']:
-                    # Shipping providers are used when delivery_type is other than 'fixed' or 'base_on_rule'
-                    price_unit = order.carrier_id.get_shipping_price_from_so(order)
-                else:
-                    # Classic grid-based carriers
-                    carrier = order.carrier_id.verify_carrier(order.partner_shipping_id)
-                    if not carrier:
-                        raise UserError(_('No carrier matching.'))
-                    price_unit = carrier.get_price_available(order)
-                    if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-                        price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
-
-                final_price = price_unit * (1.0 + (float(self.carrier_id.margin) / 100.0))
-                order._create_delivery_line(carrier, final_price)
-
-            else:
+            if order.state not in ('draft', 'sent'):
+                raise UserError(_('You can add delivery price only on unconfirmed quotations.'))
+            elif not order.carrier_id:
                 raise UserError(_('No carrier set for this order.'))
-
+            elif not order.delivery_rating_success:
+                raise UserError(_('Please use "Check price" in order to compute a shipping price for this quotation.'))
+            else:
+                price_unit = order.carrier_id.rate_shipment(order)['price']
+                # TODO check whether it is safe to use delivery_price here
+                order._create_delivery_line(order.carrier_id, price_unit)
         return True
 
     def _create_delivery_line(self, carrier, price_unit):
