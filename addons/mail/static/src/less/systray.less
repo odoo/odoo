@@ -25,7 +25,7 @@
         color: white;
         padding: 0em 0.5em;
         font-size: 0.7em;
-        top: 5px;
+        top: 0px;
         right: 0px;
         position: absolute;
         margin: 0px;
@@ -152,9 +152,86 @@
             opacity: 0.5;
             padding: 3px;
         }
+
+        &.o_mail_navbar_mobile {
+            position: relative;
+
+            .o_mail_navbar_mobile_header {
+                padding: 5px 5px 5px 0px;
+                min-height: 44px;
+                border-bottom: 1px solid #ccc;
+                background: #ffffff;
+            }
+
+            .o_mail_navbar_dropdown_channels {
+                padding-bottom: 55px;
+            }
+
+            .o_mail_navbar_mobile_tabs {
+                background: #fff;
+                box-shadow: 0px 0px 20px #afafaf;
+                position: fixed;
+                bottom: 0px;
+                left: 0px;
+                width: 100%;
+
+                .o_mail_navbar_mobile_tab {
+                    display: inline-block;
+                    width: 20%;
+                    height: 100%;
+                    min-height: 100%;
+                    padding: 8px 4px;
+                    text-align: center;
+                    float: left;
+                    font-size: 1.2em;
+                    color: #666666;
+
+                    &:first-child:nth-last-child(3),
+                    &:first-child:nth-last-child(3) ~ .o_mail_navbar_mobile_tab {
+                        width: 33.33%;
+                    }
+
+                    &:first-child:nth-last-child(4),
+                    &:first-child:nth-last-child(4) ~ .o_mail_navbar_mobile_tab {
+                        width: 25%;
+                    }
+
+                    &:first-child:nth-last-child(5),
+                    &:first-child:nth-last-child(5) ~ .o_mail_navbar_mobile_tab {
+                        width: 20%;
+                    }
+
+                    &:not(:last-child) {
+                        border-right: 1px solid #d7d7d7;
+                    }
+
+                    span {
+                        display: block;
+                        &.fa {
+                           font-size: 16px;
+                        }
+
+                        &.o_tab_title{
+                           font-size: 11px;
+                           padding-top: 8px;
+                        }
+                    }
+                    &.o_selected {
+                        span {
+                           color: @odoo-brand-optional;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 .o_no_chat_window .o_mail_navbar_dropdown .o_new_message {
     display: none;  // hide 'new message' button if chat windows are disabled
+}
+
+// Fix for enterprise nav bar
+.o_main_navbar .o_menu_systray .o_notification_counter {
+    top: 5px;
 }

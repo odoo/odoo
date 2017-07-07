@@ -585,6 +585,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 });
             this.$buttons.appendTo(this.mailMobileControlPanel);
             this.searchview.$el.appendTo(this.mailMobileControlPanel);
+            this.$(".o_enable_searchview").remove();
             $enable_searchview.insertAfter(this.searchview.$el);
         }
     },
