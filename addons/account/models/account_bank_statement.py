@@ -586,7 +586,7 @@ class AccountBankStatementLine(models.Model):
         if str:
             str_domain = self.env['account.move.line'].domain_move_lines_for_reconciliation(str=str)
             if not partner_id:
-                str_domain = expression.OR([str_domain, ('partner_id.name', 'ilike', str)])
+                str_domain = expression.OR([str_domain, [('partner_id.name', 'ilike', str)]])
             domain = expression.AND([domain, str_domain])
         if excluded_ids:
             domain = expression.AND([[('id', 'not in', excluded_ids)], domain])
