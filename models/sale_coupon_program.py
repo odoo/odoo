@@ -81,7 +81,8 @@ class SaleCouponProgram(models.Model):
                 'taxes_id': False,
                 'supplier_taxes_id': False,
                 'sale_ok': False,
-                'purchase_ok': False
+                'purchase_ok': False,
+                'invoice_policy': 'order',
             })
             program.write({'discount_line_product_id': discount_line_product_id.id})
         return program
