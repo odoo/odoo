@@ -8,25 +8,28 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page name="inventory" position="after">
-                    <page string="Invoicing" name="invoicing">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_user">
                         <group name="properties">
                             <group string="Receivables">
-                                <field name="taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_income_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
                             </group>
                             <group string="Payables" name="payables">
-                                <field name="supplier_taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_expense_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
                             </group>
                         </group>
                         <group name="accounting"/>
-                        <group name="invoicing" invisible="1"/>
                     </page>
                 </page>
+                <field name="list_price" position="after">
+                    <field name="taxes_id" widget="many2many_tags"/>
+                </field>
+                <group name="bill" position="inside">
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                </group>
             </field>
         </record>
 

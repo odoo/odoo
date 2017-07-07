@@ -651,7 +651,7 @@
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
-                <group name="sale_warning" position="replace">
+                <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
@@ -669,11 +669,11 @@
             <field name="arch" type="xml">
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="action_view_sales"
-                        type="object" icon="fa-usd">
+                        type="object" icon="fa-usd" attrs="{'invisible': [('sale_ok', '=', False)]}">
                         <field string="Sales" name="sales_count" widget="statinfo" />
                     </button>
                 </button>
-                <group name="sale_warning" position="replace">
+                <group name="description" position="after">
                     <group string="Warning when Selling this Product" groups="sale.group_warning_sale">
                         <field name="sale_line_warn" nolabel="1"/>
                         <field name="sale_line_warn_msg" colspan="3" nolabel="1"
@@ -688,8 +688,8 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <group name="invoicing" position="inside">
-                    <group string="Invoicing" name="invoicing" attrs="{'invisible': [('sale_ok','=',False)]}">
+                <group name="sale" position="inside">
+                    <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
                     </group>

@@ -208,8 +208,8 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text "service"',
 }, {
-    trigger: '.o_notebook a:contains("Invoicing")',
-    content: _t('Go to invoicing tab'),
+    trigger: '.o_notebook a:contains("Sales")',
+    content: _t('Go to sales tab'),
     position: 'bottom',
 }, {
     trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
