@@ -180,7 +180,6 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="state">sale</field>
         </record>
 
         <record id="sale_order_line_15" model="sale.order.line">
@@ -246,7 +245,6 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.crm_team_1"/>
-            <field name="state">sale</field>
         </record>
 
         <record id="sale_order_line_20" model="sale.order.line">
@@ -552,7 +550,9 @@
 
         <!-- Confirm some Sales Orders-->
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_6')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_7')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_8')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_9')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_10')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_11')]]"/>
