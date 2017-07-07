@@ -36,7 +36,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 1)
 
         order.carrier_id = self.env['delivery.carrier'].search([])[1]
-        order.delivery_set()
+        order.get_delivery_price()
+        order.set_delivery_line()
+
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2)
 
