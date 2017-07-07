@@ -423,7 +423,7 @@
                                     context="{'search_default_not_opt_out':1}"/>
                                 <div attrs="{'invisible': [('mailing_model', '!=', 'mail.mass_mailing.list')]}">
                                     <label for="contact_list_ids" string="Select mailing lists:" class="oe_edit_only"/>
-                                    <field name="contact_list_ids" widget="many2many_tags"
+                                    <field name="contact_list_ids" widget="many2many_tags" options="{'color_field': 'color'}"
                                         placeholder="Select mailing lists..." class="oe_inline"/>
                                 </div>
                             </div>
@@ -758,7 +758,7 @@
                         <group>
                             <field name="name" string="Campaign Name"/>
                             <field name="user_id"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             <field name="unique_ab_testing" groups="base.group_no_one"/>
                         </group>
                         <notebook>
@@ -817,11 +817,11 @@
                                     </ul>
                                 </div>
                                  <div class="oe_kanban_content">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <div>
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)"
                                             t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                          <h3 class="oe_margin_bottom_8"><field name="name"/></h3>
-                                        <field name="tag_ids"/>
                                         <a name="%(action_view_mass_mailings_from_campaign)d" type="action"
                                             class="oe_mailings">
                                             <h4 class="oe_margin_top_8"><t t-raw="record.mass_mailing_ids.raw_value.length"/> Mailings</h4>

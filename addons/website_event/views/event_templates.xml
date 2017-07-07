@@ -57,7 +57,7 @@
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="label label-info">Participating</small>
-                                    <small t-if="not event.address_id" class="label label-info">Online</small>
+                                    <small t-if="not event.is_online" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">unpublished</small>
                                 </h4>
                                 <div>
@@ -68,10 +68,12 @@
                                 <div>
                                     <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
                                 </div>
-                                <div itemprop="location" t-field="event.address_id" t-options='{
-                                    "widget": "contact",
-                                    "fields": ["city"]
-                                    }'/>
+                                <t t-if="not event.is_online">
+                                    <div itemprop="location" t-field="event.address_id" t-options='{
+                                        "widget": "contact",
+                                        "fields": ["city"]
+                                        }'/>
+                                </t>
                                 <div class="text-muted" t-if="event.event_type_id">
                                     <i class="fa fa-tag"></i> <span t-field="event.event_type_id"/>
                                 </div>
@@ -333,25 +335,27 @@
         <div class="col-md-4 css_noprint">
             <div class="clearfix"/>
 
-            <div class="panel panel-default" t-if="event.address_id">
-                <div class="panel-heading">
-                    <h4>Where</h4>
+            <t t-if="not event.is_online">
+                <div class="panel panel-default" t-if="event.address_id">
+                    <div class="panel-heading">
+                        <h4>Where</h4>
+                    </div>
+                    <div class="panel-body">
+                        <t t-if="event.google_map_img()">
+                            <a t-att-href="event.google_map_link()" target="_BLANK">
+                               <img t-att-src="event.google_map_img()" width="100%%"/>
+                            </a>
+                        </t>
+                        <t t-else="1">
+                            <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
+                        </t>
+                        <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
+                            "widget": "contact",
+                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            }'/>
+                    </div>
                 </div>
-                <div class="panel-body">
-                    <t t-if="event.google_map_img()">
-                        <a t-att-href="event.google_map_link()" target="_BLANK">
-                           <img t-att-src="event.google_map_img()" width="100%%"/>
-                        </a>
-                    </t>
-                    <t t-else="1">
-                        <a t-att-href="event.google_map_link()" target="_BLANK">Visualize on Google Maps</a>
-                    </t>
-                    <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
-                        "widget": "contact",
-                        "fields": ["name", "address", "phone", "mobile", "fax", "email"]
-                        }'/>
-                </div>
-            </div>
+            </t>
 
             <div class="panel panel-default">
                 <div class="panel-heading">

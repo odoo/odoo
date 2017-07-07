@@ -85,7 +85,7 @@ class WebsiteSaleDigital(website_account):
 
         # Also check for attachments in the product templates
         elif res_model == 'product.template':
-            template_ids = request.env['product.product'].browse(purchased_products).mapped('product_tmpl_id').ids
+            template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
             if res_id not in template_ids:
                 return redirect(self.orders_page)
 

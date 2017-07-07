@@ -657,7 +657,14 @@ var FieldX2Many = AbstractField.extend({
     reset: function (record, ev) {
         if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
             var command = ev.data.changes[this.name];
-            if (command.operation === 'UPDATE') {
+            // Here, we only consider 'UPDATE' commands with data, which occur
+            // with editable list view. In order to keep the current line in
+            // edition, we call confirmChange which will reset the widgets
+            // instead of re-rendering the list. 'UPDATE' commands with no data
+            // can be ignored: they occur in one2manys when the record is
+            // updated from a dialog and in this case, we can re-render the
+            // whole subview.
+            if (command.operation === 'UPDATE' && command.data) {
                 var state = record.data[this.name];
                 var fieldNames = state.getFieldNames();
                 this.renderer.confirmChange(state, command.id, fieldNames, ev.initialEvent);
@@ -677,7 +684,7 @@ var FieldX2Many = AbstractField.extend({
      *
      * @override
      * @private
-     * @returns {Deferred}
+     * @returns {Deferred|undefined}
      */
     _render: function () {
         if (!this.view) {
@@ -1068,9 +1075,15 @@ var FieldOne2Many = FieldX2Many.extend({
         // we don't want interference with the components upstream.
         ev.stopPropagation();
 
+        var id = ev.data.id;
+        // trigger an empty 'UPDATE' operation when the user clicks on 'Save' in
+        // the dialog, to notify the main record that a subrecord of this
+        // relational field has changed (those changes will be already stored on
+        // that subrecord, thanks to the 'Save').
+        var onSaved = this._setValue.bind(this, { operation: 'UPDATE', id: id }, {});
         this._openFormDialog({
-            id: ev.data.id,
-            on_saved: this._setValue.bind(this, { operation: 'NOOP' }, {}),
+            id: id,
+            on_saved: onSaved,
             readonly: this.mode === 'readonly',
         });
     },
@@ -1354,7 +1367,6 @@ var FieldMany2ManyTags = AbstractField.extend({
         'click .o_delete': '_onDeleteTag',
     }),
     fieldsToFetch: {
-        color: {type: 'integer'},
         display_name: {type: 'char'},
     },
 
@@ -1367,6 +1379,8 @@ var FieldMany2ManyTags = AbstractField.extend({
         if (this.mode === 'edit') {
             this.className += ' o_input';
         }
+
+        this.colorField = this.nodeOptions.color_field;
     },
 
     //--------------------------------------------------------------------------
@@ -1431,6 +1445,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     _getRenderTagsContext: function () {
         var elements = this.value ? _.pluck(this.value.data, 'data') : [];
         return {
+            colorField: this.colorField,
             elements: elements,
             readonly: this.mode === "readonly",
         };
@@ -1558,7 +1573,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     _onOpenColorPicker: function (event) {
         var tag_id = $(event.currentTarget).data('id');
         var tag = _.findWhere(this.value.data, { res_id: tag_id });
-        if (tag && 'color' in tag.data) { // if there is a color field on the related model
+        if (tag && this.colorField in tag.data) { // if there is a color field on the related model
             this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
                 'widget': this,
                 'tag_id': tag_id,
@@ -1583,11 +1598,11 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 
         if (color === current_color) { return; }
 
+        var changes = {};
+        changes[this.colorField] = color;
         this.trigger_up('field_changed', {
             dataPointID: _.findWhere(this.value.data, {res_id: id}).id,
-            changes: {
-                color: color,
-            },
+            changes: changes,
             force_save: true,
         });
     },
@@ -1598,12 +1613,19 @@ var KanbanFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var self = this;
         this.$el.empty().addClass('o_field_many2manytags o_kanban_tags');
         _.each(this.value.data, function (m2m) {
-            // 10th color is invisible
-            if ('color' in m2m.data && m2m.data.color !== 10) {
-                $('<span>')
-                    .addClass('o_tag o_tag_color_' + m2m.data.color)
+            var $tag = $('<span>')
                     .attr('title', _.str.escapeHTML(m2m.data.display_name))
                     .appendTo(self.$el);
+            if (self.colorField in m2m.data) {
+                if (m2m.data[self.colorField] === 10) {
+                    // 10th color is invisible
+                    $tag.hide();
+                } else {
+                    $tag.addClass('o_tag o_tag_color_' + m2m.data[self.colorField]);
+                }
+            } else {
+                // display tags in grey by default
+                $tag.addClass('o_tag o_tag_color_0');
             }
         });
     },
@@ -1772,15 +1794,7 @@ var FieldSelection = AbstractField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'many2one') {
-            this.values = this.record.specialData[this.name];
-            this.formatType = 'many2one';
-        } else {
-            this.values = _.reject(this.field.selection, function (v) {
-                return v[0] === false && v[1] === '';
-            });
-        }
-        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
+        this._setValues();
     },
 
     //--------------------------------------------------------------------------
@@ -1810,13 +1824,12 @@ var FieldSelection = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (!this.$el.children().length) {
-            for (var i = 0 ; i < this.values.length ; i++) {
-                this.$el.append($('<option/>', {
-                    value: JSON.stringify(this.values[i][0]),
-                    html: this.values[i][1]
-                }));
-            }
+        this.$el.empty();
+        for (var i = 0 ; i < this.values.length ; i++) {
+            this.$el.append($('<option/>', {
+                value: JSON.stringify(this.values[i][0]),
+                html: this.values[i][1]
+            }));
         }
         var value = this.value;
         if (this.field.type === 'many2one' && value) {
@@ -1830,6 +1843,31 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'many2one') {
+            this.values = this.record.specialData[this.name];
+            this.formatType = 'many2one';
+        } else {
+            this.values = _.reject(this.field.selection, function (v) {
+                return v[0] === false && v[1] === '';
+            });
+        }
+        this.values = [[false, this.attrs.placeholder || '']].concat(this.values);
     },
 
     //--------------------------------------------------------------------------
@@ -1856,7 +1894,9 @@ var FieldSelection = AbstractField.extend({
 });
 
 var FieldRadio = FieldSelection.extend({
-    template: 'FieldRadio',
+    template: null,
+    className: 'o_field_radio',
+    tagName: 'span',
     specialData: "_fetchSpecialMany2ones",
     supportedFieldTypes: ['selection', 'many2one'],
     events: _.extend({}, AbstractField.prototype.events, {
@@ -1867,14 +1907,12 @@ var FieldRadio = FieldSelection.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        if (this.field.type === 'selection') {
-            this.values = this.field.selection || [];
-        } else if (this.field.type === 'many2one') {
-            this.values = _.map(this.record.specialData[this.name], function (val) {
-                return [val.id, val.display_name];
-            });
+        if (this.mode === 'edit') {
+            this.tagName = 'div';
+            this.className += this.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical';
         }
         this.unique_id = _.uniqueId("radio");
+        this._setValues();
     },
 
     //--------------------------------------------------------------------------
@@ -1898,17 +1936,45 @@ var FieldRadio = FieldSelection.extend({
      * @override
      */
     _renderEdit: function () {
-        var value;
+        var self = this;
+        var currentValue;
         if (this.field.type === 'many2one') {
-            value = this.value && this.value.data.id;
+            currentValue = this.value && this.value.data.id;
         } else {
-            value = this.value;
+            currentValue = this.value;
         }
-        var index = _.findIndex(this.values, function (option) {
-            return option[0] === value;
+        this.$el.empty();
+        _.each(this.values, function (value, index) {
+            self.$el.append(qweb.render('FieldRadio.button', {
+                checked: value[0] === currentValue,
+                id: self.unique_id + '_' + value[0],
+                index: index,
+                value: value,
+            }));
         });
-        this.$("input").prop("checked", false);
-        this.$('input[data-index="' + index + '"]').prop('checked', true);
+    },
+    /**
+     * @override
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setValues();
+    },
+    /**
+     * Sets the possible field values. If the field is a many2one, those values
+     * may change during the lifecycle of the widget if the domain change (an
+     * onchange may change the domain).
+     *
+     * @private
+     */
+    _setValues: function () {
+        if (this.field.type === 'selection') {
+            this.values = this.field.selection || [];
+        } else if (this.field.type === 'many2one') {
+            this.values = _.map(this.record.specialData[this.name], function (val) {
+                return [val.id, val.display_name];
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -1930,6 +1996,106 @@ var FieldRadio = FieldSelection.extend({
     },
 });
 
+/**
+ * The FieldReference is a combination of a select (for the model) and
+ * a FieldMany2one for its value.
+ * Its intern representation is similar to the many2one (a datapoint with a
+ * `name_get` as data).
+ */
+var FieldReference = FieldMany2One.extend({
+    supportedFieldTypes: ['reference'],
+    template: 'FieldReference',
+    events: _.extend({}, FieldMany2One.prototype.events, {
+        'change select': '_onSelectionChange',
+    }),
+    /**
+     * @override
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        // needs to be copied as it is an unmutable object
+        this.field = _.extend({}, this.field);
+        if (this.value) {
+            this._setRelation(this.value.model);
+        }
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        this.$('select').val(this.field.relation);
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Add a select in edit mode (for the model).
+     *
+     * @override
+     */
+    _renderEdit: function () {
+        this._super.apply(this, arguments);
+
+        if (this.$('select').val()) {
+            this.$('.o_input_dropdown').show();
+            this.$el.addClass('o_row'); // this class is used to display the two
+                                        // components (select & input) on the same line
+        } else {
+            // hide the many2one if the selection is empty
+            this.$('.o_input_dropdown').hide();
+        }
+
+    },
+    /**
+     * @override
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setRelation(this.value && this.value.model);
+    },
+    /**
+     * Set `relation` key in field properties.
+     *
+     * @private
+     * @param {string} model
+     */
+    _setRelation: function (model) {
+        // used to generate the search in many2one
+        this.field.relation = model;
+    },
+    /**
+     * @override
+     * @private
+     */
+    _setValue: function (value, options) {
+        value = value || {};
+        // we need to specify the model for the change in basic_model
+        // the value is then now a dict with id, display_name and model
+        value.model = this.$('select').val();
+        return this._super(value, options);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * When the selection (model) changes, the many2one is reset.
+     *
+     * @private
+     */
+    _onSelectionChange: function () {
+        var value = this.$('select').val();
+        this.reinitialize(false);
+        this._setRelation(value);
+    },
+});
+
 return {
     FieldMany2One: FieldMany2One,
     KanbanFieldMany2One: KanbanFieldMany2One,
@@ -1947,6 +2113,8 @@ return {
     FieldRadio: FieldRadio,
     FieldSelection: FieldSelection,
     FieldStatus: FieldStatus,
+
+    FieldReference: FieldReference,
 };
 
 });
