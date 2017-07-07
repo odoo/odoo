@@ -215,6 +215,9 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
+    sequence_number_next = fields.Integer(string='Next Number', related='journal_id.sequence_number_next', help='If you have made others invoices in this period, set the sequence of this invoice to continue the serie')
+    sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
+
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -343,6 +346,14 @@ class AccountInvoice(models.Model):
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    @api.depends('state', 'date_invoice')
+    def _get_sequence_prefix(self):
+        for record in self:
+            if (record.state=='draft') and (record.journal_id.sequence_number_next==1) and (record.type in ('out_invoice','in_invoice')):
+                record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
+            else:
+                record.sequence_number_next_prefix = False
 
     @api.model
     def create(self, vals):
