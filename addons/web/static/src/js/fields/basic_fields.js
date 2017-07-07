@@ -1506,6 +1506,52 @@ var FieldBooleanButton = AbstractField.extend({
     },
 });
 
+var BooleanToggle = FieldBoolean.extend({
+    events: {
+        'click': '_onClick'
+    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this._renderToggleSwitch();
+    },
+
+    /**
+     * Display toggle switch
+     *
+     * @private
+     */
+    _renderToggleSwitch: function () {
+        this.$el.addClass("o_boolean_toggle");
+        var $div = $('<div class="slider"></div>');
+        $div.insertAfter(this.$("input[type=checkbox]"));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle active value
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+        this._setValue(!this.value);
+        this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
+    },
+
+});
+
 var StatInfo = AbstractField.extend({
     supportedFieldTypes: ['integer', 'float'],
 
@@ -2258,6 +2304,7 @@ return {
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,
+    BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,

@@ -41,6 +41,7 @@ registry
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
+    .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)
@@ -70,5 +71,4 @@ registry
 // Special fields
 registry
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
-
 });
