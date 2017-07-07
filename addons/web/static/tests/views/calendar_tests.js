@@ -143,7 +143,7 @@ QUnit.module('Views', {
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
-        assert.expect(19);
+        assert.expect(22);
 
         var calendar = createView({
             View: CalendarView,
@@ -200,6 +200,13 @@ QUnit.module('Views', {
         assert.strictEqual($attendeesFilter.find('.o_calendar_filter_item').length, 3, "should display 3 filter items for 'attendees' who use write_model (2 saved + Everything)");
         assert.ok($attendeesFilter.find('.o_field_many2one').length, "should display one2many search bar for 'attendees' filter");
 
+        assert.strictEqual(calendar.$('.fc-event').length, 6,
+            "should display 6 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
+        calendar.$('.o_calendar_filter .o_checkbox input').first().click();  // Disable first filter
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should now only display 4 event");
+        calendar.$('.o_calendar_filter .o_checkbox input').eq(1).click();  // Disable second filter
+        assert.strictEqual(calendar.$('.fc-event').length, 0, "should not display any event anymore");
+
         // test search bar in filter
 
         $sidebar.find('input[type="text"]').trigger('click');
@@ -208,7 +215,7 @@ QUnit.module('Views', {
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 4, "should display 4 filter items for 'attendees'");
         $sidebar.find('input[type="text"]').trigger('click');
         assert.strictEqual($('ul.ui-autocomplete li:not(.o_m2o_dropdown_option)').text(), "partner 4", "should display the last choice in one2many autocomplete"); // TODO: remove :not(.o_m2o_dropdown_option) because can't have "create & edit" choice
-        $sidebar.find('.o_calendar_filter_item[data-id="1"] .o_remove').trigger('click');
+        $sidebar.find('.o_calendar_filter_item .o_remove').first().trigger('click');
         assert.ok($('.modal button.btn:contains(Ok)').length, "should display the confirm message");
         $('.modal button.btn:contains(Ok)').trigger('click');
         assert.strictEqual($sidebar.find('.o_calendar_filter:has(h3:contains(attendees)) .o_calendar_filter_item').length, 3, "click on remove then should display 3 filter items for 'attendees'");
@@ -345,6 +352,63 @@ QUnit.module('Views', {
         calendar.$buttons.find('.o_calendar_button_next').click();
 
         assert.strictEqual(calendar.$('.fc-event-container .fc-event').length, 0, "should display 0 events");
+
+        calendar.destroy();
+    });
+
+    QUnit.test('quickcreate switching to actual create for required fields', function (assert) {
+        assert.expect(4);
+
+        var event = $.Event();
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === "create") {
+                    return $.Deferred().reject({
+                        code: 200,
+                        data: {},
+                        message: "Odoo server error",
+                    }, event);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // create a new event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal-dialog.modal-sm .modal-title').text(), 'Create',
+            "should open the quick create dialog");
+
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click').trigger('click');
+
+        // If the event is not default-prevented, a traceback will be raised, which we do not want
+        assert.ok(event.isDefaultPrevented(), "fail deferred event should have been default-prevented");
+
+        assert.strictEqual($('.modal-dialog.modal-lg .modal-title').text(), 'Create: Events',
+            "should have switched to a bigger modal for an actual create rather than quickcreate");
+        assert.strictEqual($('.modal-dialog.modal-lg .modal-body .o_form_view.o_form_editable').length, 1,
+            "should open the full event form view in a dialog");
 
         calendar.destroy();
     });
@@ -640,7 +704,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use mini calendar', function (assert) {
-        assert.expect(2);
+        assert.expect(12);
 
         var calendar = createView({
             View: CalendarView,
@@ -665,17 +729,36 @@ QUnit.module('Views', {
             },
         });
 
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
         assert.strictEqual(calendar.$('.fc-event').length, 9, "should display 9 events on the week (4 event + 5 days event)");
-        $('.o_calendar_mini a:contains(19)').click();
+        calendar.$('.o_calendar_mini a:contains(19)').click();
+        // Clicking on a day in another week should switch to the other week view
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
         assert.strictEqual(calendar.$('.fc-event').length, 4, "should display 4 events on the week (1 event + 3 days event)");
+        // Clicking on a day in the same week should switch to that particular day view
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaDay-view').length, 1, "should be in day mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
+        // Clicking on the same day should toggle between day, month and week views
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-month-view').length, 1, "should be in month mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 7, "should display 7 events on the month (event 5 is on multiple weeks and generates to .fc-event)");
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaWeek-view').length, 1, "should be in week mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 4, "should display 4 events on the week (1 event + 3 days event)");
+        calendar.$('.o_calendar_mini a:contains(18)').click();
+        assert.strictEqual(calendar.$('.fc-agendaDay-view').length, 1, "should be in day mode");
+        assert.strictEqual(calendar.$('.fc-event').length, 2, "should display 2 events on the day");
 
         calendar.destroy();
     });
 
     QUnit.test('rendering, with many2many', function (assert) {
-        assert.expect(1);
+        assert.expect(5);
 
         this.data.event.fields.partner_ids.type = 'many2many';
+        this.data.event.records[0].partner_ids = [1,2,3,4,5];
+        this.data.partner.records.push({id: 5, display_name: "partner 5", image: 'EEE'});
 
         var calendar = createView({
             View: CalendarView,
@@ -698,6 +781,15 @@ QUnit.module('Views', {
         assert.strictEqual(calendar.$('.o_calendar_filter_items .o_cal_avatar').length, 3,
             "should have 3 avatars in the side bar");
 
+        var $event1Avatars = calendar.$('.fc-event .o_calendar_avatars').first();
+        assert.strictEqual($event1Avatars.find('img').length, 1, "should have 1 avatar");
+        assert.strictEqual($event1Avatars.find('span').length, 0,
+            "should not have a span for more attendees since there is only one");
+
+        var $event2Avatars = calendar.$('.fc-event:contains(All the day) .o_calendar_avatars');
+        assert.strictEqual($event2Avatars.find('img').length, 3, "should have 3 avatars");
+        assert.strictEqual($event2Avatars.find('span').text(), '+2',
+            "should indicate there are 2 more attendees that we don't show");
         calendar.destroy();
     });
 

@@ -158,3 +158,4 @@ class website_account(website_account):
         })
         values.update(get_records_pager(history, order_sudo))
         return request.render("website_portal_sale.orders_followup", values)
+

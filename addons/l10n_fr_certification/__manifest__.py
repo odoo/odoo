@@ -9,7 +9,7 @@
 """,
     'depends': ['l10n_fr'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'application': True,
     'data': [
         'views/no_cancel.xml',

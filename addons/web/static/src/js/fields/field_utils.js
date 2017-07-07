@@ -427,6 +427,52 @@ function parseFloat(value) {
     return parsed;
 }
 
+/**
+ * Parse a String containing currency symbol and returns amount
+ * 
+ * @param {string} value 
+ *                The string to be parsed
+ *                We assume that a monetary is always a pair (symbol, amount) separated
+ *                by a non breaking space. A simple float can also be accepted as value
+ * @param {Object} [field]
+ *        a description of the field (returned by fields_get for example).
+ * @param {Object} [options] additional options.
+ * @param {Object} [options.currency] - the description of the currency to use
+ * @param {integer} [options.currency_id]
+ *        the id of the 'res.currency' to use (ignored if options.currency)
+ * @param {string} [options.currency_field]
+ *        the name of the field whose value is the currency id
+ *        (ignore if options.currency or options.currency_id)
+ *        Note: if not given it will default to the field currency_field value
+ *        or to 'currency_id'.
+ * @param {Object} [options.data]
+ *        a mapping of field name to field value, required with
+ *        options.currency_field
+ *
+ * @returns {float} the float value contained in the string representation
+ * @throws {Error} if no float is found or if parameter does not respect monetary condition
+ */
+function parseMonetary(value, field, options) {
+    var values = value.split('&nbsp;');
+    if (values.length === 1) {
+        return parseFloat(value);
+    }
+    else if (values.length !== 2) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
+    options = options || {};
+    var currency = options.currency;
+    if (!currency) {
+        var currency_id = options.currency_id;
+        if (!currency_id && options.data) {
+            var currency_field = options.currency_field || field.currency_field || 'currency_id';
+            currency_id = options.data[currency_field] && options.data[currency_field].res_id;
+        }
+        currency = session.get_currency(currency_id);
+    }
+    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+}
+
 function parseFloatTime(value) {
     var factor = 1;
     if (value[0] === '-') {
@@ -494,7 +540,7 @@ return {
         many2one: formatMany2one,
         monetary: formatMonetary,
         one2many: formatX2Many,
-        reference: _.identity, // todo
+        reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
     },
@@ -510,9 +556,9 @@ return {
         integer: parseInteger,
         many2many: _.identity, // todo
         many2one: parseMany2one,
-        monetary: parseFloat,
+        monetary: parseMonetary,
         one2many: _.identity,
-        reference: _.identity, // todo
+        reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo
     },

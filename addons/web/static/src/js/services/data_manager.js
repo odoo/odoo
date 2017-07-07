@@ -355,6 +355,11 @@ return core.Class.extend({
                         return {};
                     }),
                 };
+                if (attrs.options.color_field) {
+                    // used by m2m tags
+                    attrs.relatedFields[attrs.options.color_field] = { type: 'integer' };
+                    attrs.fieldsInfo.default[attrs.options.color_field] = {};
+                }
             }
         }
         return attrs;

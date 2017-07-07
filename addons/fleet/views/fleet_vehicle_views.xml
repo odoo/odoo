@@ -66,7 +66,7 @@
                             <field name="license_plate" class="oe_inline" placeholder="e.g. PAE 326"/>
                         </h2>
                         <label for="tag_ids" class="oe_edit_only"/>
-                        <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </div>
                     <group col="2" string="General Properties">
                         <group >
@@ -180,7 +180,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click">
                             <div class="o_kanban_tags_section">
-                                <field name="tag_ids"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </div>
                             <div class="o_kanban_image">
                                 <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>

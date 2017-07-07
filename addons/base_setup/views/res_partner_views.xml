@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[contains(@class, 'oe_kanban_partner_categories')]" position="inside">
                     <span class="oe_kanban_list_many2many">
-                        <field name="category_id"/>
+                        <field name="category_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     </span>
                 </xpath>
             </field>

@@ -50,27 +50,6 @@ var ListController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * To improve performance, list view must not be rerendered if it is asked
-     * to discard all its changes. Indeed, only the in-edition row needs to be
-     * discarded in that case.
-     *
-     * @override
-     * @param {string} [recordID] - default to main recordID
-     * @returns {Deferred}
-     */
-    discardChanges: function (recordID) {
-        if ((recordID || this.handle) === this.handle) {
-            recordID = this.renderer.getEditableRecordID();
-            if (recordID === null) {
-                return $.when();
-            }
-        }
-        var self = this;
-        return this._super(recordID).then(function () {
-            self._updateButtons('readonly');
-        });
-    },
-    /**
      * Calculate the active domain of the list view. This should be done only
      * if the header checkbox has been checked. This is done by evaluating the
      * search results, and then adding the dataset domain (i.e. action domain).
@@ -246,6 +225,28 @@ var ListController = BasicController.extend({
             .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
+     * To improve performance, list view must not be rerendered if it is asked
+     * to discard all its changes. Indeed, only the in-edition row needs to be
+     * discarded in that case.
+     *
+     * @override
+     * @private
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Deferred}
+     */
+    _discardChanges: function (recordID) {
+        if ((recordID || this.handle) === this.handle) {
+            recordID = this.renderer.getEditableRecordID();
+            if (recordID === null) {
+                return $.when();
+            }
+        }
+        var self = this;
+        return this._super(recordID).then(function () {
+            self._updateButtons('readonly');
+        });
+    },
+    /**
      * @override
      * @private
      */
@@ -362,7 +363,7 @@ var ListController = BasicController.extend({
      */
     _onDiscard: function (ev) {
         ev.stopPropagation(); // So that it is not considered as a row leaving
-        this.discardChanges();
+        this._discardChanges();
     },
     /**
      * Called when the user asks to edit a row -> Updates the controller buttons

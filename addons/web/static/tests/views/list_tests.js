@@ -2,6 +2,7 @@ odoo.define('web.list_tests', function (require) {
 "use strict";
 
 var config = require('web.config');
+var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
@@ -23,6 +24,8 @@ QUnit.module('Views', {
                     currency_id: {string: "Currency", type: "many2one",
                                   relation: "res_currency", default: 1},
                     datetime: {string: "Datetime Field", type: 'datetime'},
+                    reference: {string: "Reference Field", type: 'reference', selection: [
+                        ["bar", "Bar"], ["res_currency", "Currency"], ["event", "Event"]]},
                 },
                 records: [
                     {
@@ -37,11 +40,12 @@ QUnit.module('Views', {
                         currency_id: 2,
                         date: "2017-01-25",
                         datetime: "2016-12-12 10:55:05",
+                        reference: 'bar,1',
                     },
                     {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13,
-                     m2o: 2, m2m: [1, 2, 3], amount: 500},
+                     m2o: 2, m2m: [1, 2, 3], amount: 500, reference: 'res_currency,1'},
                     {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3,
-                     m2o: 1, m2m: [], amount: 300},
+                     m2o: 1, m2m: [], amount: 300, reference: 'res_currency,2'},
                     {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9,
                      m2o: 1, m2m: [1], amount: 0},
                 ]
@@ -2400,6 +2404,68 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('reference field rendering', function (assert) {
+        assert.expect(4);
+
+        this.data.foo.records.push({
+            id: 5,
+            reference: 'res_currency,2',
+        });
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="reference"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'name_get') {
+                    assert.step(args.model);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.verifySteps(['bar', 'res_currency'], "should have done 1 name_get by model in reference values");
+        assert.strictEqual(list.$('tbody td').text(), "Value 1USDEUREUR",
+            "should have the display_name of the reference");
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: contexts are correctly sent', function (assert) {
+        assert.expect(6);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+            mockRPC: function (route, args) {
+                var context;
+                if (route === '/web/dataset/search_read') {
+                    context = args.context;
+                } else {
+                    context = args.kwargs.context;
+                }
+                assert.strictEqual(context.active_field, 2, "context should be correct");
+                assert.strictEqual(context.someKey, 'some value', "context should be correct");
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {someKey: 'some value'},
+            },
+            viewOptions: {
+                context: {active_field: 2},
+            },
+        });
+
+        list.$('.o_data_cell:first').click();
+        list.$('.o_field_widget[name=foo]').val('abc').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        list.destroy();
+    });
 });
 
 });

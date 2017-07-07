@@ -725,15 +725,11 @@
         t-att-autofocus="widget.attrs.autofocus"
         t-att-id="widget.idForLabel"/>
 </t>
-<t t-name="FieldRadio">
-    <span t-if="widget.mode === 'readonly'"/>
-
-    <div t-if="widget.mode !== 'readonly'" t-attf-class="o_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
-        <div t-foreach="widget.values" t-as="value" class="o_radio_item">
-            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]"
-                   t-att-name="widget.unique_id" t-att-data-value="value[0]" t-att-data-index="value_index"/>
-            <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
-        </div>
+<t t-name="FieldRadio.button">
+    <div class="o_radio_item">
+        <input type="radio" class="o_radio_input" t-att-checked="checked ? true : undefined"
+            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+        <label class="o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
 <t t-name="FieldMany2One">
@@ -754,9 +750,17 @@
         <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
     </div>
 </t>
+<t t-name="FieldReference" t-extend="FieldMany2One">
+    <t t-jquery=".o_input_dropdown" t-operation="before">
+        <select class="o_input o_field_widget">
+            <option/>
+            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+        </select>
+    </t>
+</t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown o_tag_color_#{el.color || 10}" t-att-data-color="el.color || 10" t-att-data-index="el_index" t-att-data-id="el.id">
+        <span t-attf-class="badge dropdown o_tag_color_#{el[colorField] || 10}" t-att-data-color="el[colorField] || 10" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text"><t t-raw="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>

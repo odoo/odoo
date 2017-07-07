@@ -2968,6 +2968,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('discarding before save returns', function (assert) {
+        assert.expect(4);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'write') {
+                    return def.then(_.constant(result));
+                }
+                return result;
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input').val("1234").trigger('input');
+
+        // save the value and discard directly
+        form.$buttons.find('.o_form_button_save').click();
+        form.discardChanges(); // Simulate click on breadcrumb
+
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), "1234",
+            "field foo should still contain new value");
+        assert.strictEqual($('.modal').length, 0,
+            "Confirm dialog should not be displayed");
+
+        // complete the write
+        def.resolve();
+
+        assert.strictEqual($('.modal').length, 0,
+            "Confirm dialog should not be displayed");
+        assert.strictEqual(form.$('.o_field_widget[name="foo"]').text(), "1234",
+            "value should have been saved and rerendered in readonly");
+
+        form.destroy();
+    });
+
     QUnit.test('unchanged relational data is sent for onchanges', function (assert) {
         assert.expect(1);
 
@@ -4361,7 +4408,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('default_order on x2many embedded view', function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         this.data.partner.fields.display_name.sortable = true;
         this.data.partner.records[0].p = [1, 4];
@@ -4418,6 +4465,18 @@ QUnit.module('Views', {
             "record zop should be first");
         assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').length,
             "record yop should be second");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
+            "record xop should be third");
+
+        // client-side sort on edit
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_field_one2many tbody tr:eq(1) td:contains(yop)').click();
+        $('.modal input[name="foo"]').val('zzz').trigger("input");
+        $('.modal .modal-footer button:first').click(); // Save
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(0) td:contains(zzz)').length,
+            "record zzz should be first");
+        assert.ok(form.$('.o_field_one2many tbody tr:eq(1) td:contains(zop)').length,
+            "record zop should be second");
         assert.ok(form.$('.o_field_one2many tbody tr:eq(2) td:contains(xop)').length,
             "record xop should be third");
 

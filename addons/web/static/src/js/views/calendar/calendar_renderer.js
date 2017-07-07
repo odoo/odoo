@@ -164,6 +164,7 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.displayFields = params.displayFields;
+        this.model = params.model;
         this.filters = [];
         this.color_map = {};
 

@@ -29,7 +29,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <field name="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <h4><field name="name"/></h4>
                                     <div>
                                         <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
@@ -147,7 +147,7 @@
                                     <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
                                 <field name="location_id"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
                     </sheet>
