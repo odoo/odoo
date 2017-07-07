@@ -18,7 +18,6 @@ You could use this simplified accounting in case you work with an (external) acc
     'depends': ['account'],
     'data': [
         'views/account_menuitem_views.xml',
-        'views/product_template_views.xml',
         'views/account_invoicing_templates.xml',
         'views/account_invoicing_views.xml',
 

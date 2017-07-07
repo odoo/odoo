@@ -48,10 +48,6 @@
                                 </group>
                                 <group name="group_standard_price">
                                     <field name="list_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
-                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                    </div>
                                     <field name="company_id" groups="base.group_multi_company"
                                         options="{'no_create': True}"/>
                                     <field name="uom_id" groups="product.group_uom" options="{'no_create': True}"/>
@@ -79,8 +75,24 @@
                                 <group name="email_template_and_project"
                                     attrs="{'invisible':[('type', '!=', 'service')]}"/>
                             </group>
+                            <group string="Description for Customers" name="description">
+                                <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders &amp; invoices."/>
+                            </group>
+                        </page>
+                        <page string="Purchase" name="purchase" attrs="{'invisible': [('purchase_ok','=',False)]}">
+                            <group name="purchase">
+                                <group string="Purchase Bills" name="bill"/>
+                            </group>
                         </page>
                         <page string="Inventory" name="inventory" groups="stock.group_stock_user,product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
+                            <group name="inventory">
+                                <group string="Inventory Valuation" name="inventory_valuation">
+                                    <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"/>
+                                    <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}">
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    </div>
+                                </group>
+                            </group>
                             <group name="packaging" string="Packaging"
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
@@ -88,17 +100,6 @@
                                 <field name="packaging_ids" nolabel="1" context="{'default_product_id': product_variant_id,'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}"/>
                             </group>
                         </page>
-                        <page string="Notes" name="notes">
-                            <group name="description">
-                                <group string="Description for Customers" attrs="{'invisible': [('sale_ok','=',False)]}">
-                                    <field name="description_sale" nolabel="1" placeholder="This note will show up on sales orders."/>
-                                </group>
-                            </group>
-                            <group name="warning">
-                                <group name="sale_warning"/>
-                                <group name="purchase_warning"/>
-                            </group>
-                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
