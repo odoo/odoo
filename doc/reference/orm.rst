@@ -45,14 +45,20 @@ Field access
 ------------
 
 Recordsets provide an "Active Record" interface: model fields can be read and
-written directly from the record, but only on singletons (single-record
-recordsets). Setting a field's value triggers an update to the database::
+written directly from the record as attributes, but only on singletons
+(single-record recordsets).
+Field values can also be accessed like dict items, which is more elegant and
+safer than ``getattr()`` for dynamic field names.
+Setting a field's value triggers an update to the database::
 
     >>> record.name
     Example Name
     >>> record.company_id.name
     Company Name
     >>> record.name = "Bob"
+    >>> field = "name"
+    >>> record[field]
+    Bob
 
 Trying to read or write a field on multiple records will raise an error.
 

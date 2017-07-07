@@ -36,7 +36,7 @@ data.ready = function () {
             // TODO find a better way to find if we are in the backend or not
             // We don't load translation if we are in the backend since it's already done by the webclient
             if (!$(document).find('.o_web_client').length) {
-                load_translations();
+                return load_translations();
             }
         });
     } else if(all_ready.state() === "resolved") { // can add async template
