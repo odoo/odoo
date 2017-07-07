@@ -81,19 +81,19 @@
                                     <field name="margin" class="oe_inline"/>%
                                 </div>
                             </group>
+                            <group>
+                                <div class="o_row">
+                                    <label for="free_over"/>
+                                    <field name="free_over"/>
+                                    <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                </div>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">
                                 <group attrs="{'invisible':[('delivery_type', '!=', 'fixed')]}">
                                     <group>
                                         <field name="fixed_price"/>
-                                    </group>
-                                    <group>
-                                        <div class="o_row">
-                                            <label for="free_if_more_than"/>
-                                            <field name="free_if_more_than"/>
-                                            <field nolabel="1" name="amount" attrs="{'required':[('free_if_more_than','!=', False)], 'invisible':[('free_if_more_than','=', False)]}"/>
-                                        </div>
                                     </group>
                                 </group>
                                 <group name="general" attrs="{'invisible':[('delivery_type', '!=', 'base_on_rule')]}">
@@ -285,11 +285,16 @@
                       <label for="carrier_id"/>
                       <div name='carrier_selection'>
                           <div>
-                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/>
+                            <field name="carrier_id" context="{'order_id': id}" class="oe_inline" options="{'no_create': True, 'no_open': True}" attrs="{'readonly':[('state','not in',('draft','sent'))]}"/> <i class="fa fa-check text-success" aria-hidden="true" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"></i>
                           </div>
                           <div>
                             <field name='delivery_price' widget='monetary' class="oe_inline" options="{'currency_field': 'currency_id'}" nolabel="1" attrs="{'invisible': [('carrier_id','=', False)]}"/>
-                            <button name="delivery_set" string="Set price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                            <button name="get_delivery_price" string="Check price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                            <button name="set_delivery_line" string="Set price" type="object" class="oe_inline fa fa-arrow-right oe_link" attrs="{'invisible':['|','|',('carrier_id','=',False),('state','not in',('draft','sent')),('delivery_rating_success','=',False)]}"/>
+                            <field name='delivery_rating_success' invisible="1"/>
+                          </div>
+                          <div class="alert alert-info" role="alert" attrs="{'invisible': ['|',('carrier_id','=', False),('delivery_message','=',False)]}">
+                            <field name='delivery_message'/>
                           </div>
                       </div>
                   </xpath>
