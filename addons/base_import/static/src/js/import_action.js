@@ -124,6 +124,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.$('input[name=import_id]').val(id);
 
                 self.renderButtons();
+                self.renderImportLink();
                 var status = {
                     breadcrumbs: self.action_manager.get_breadcrumbs(),
                     cp_content: {$buttons: self.$buttons},
@@ -148,6 +149,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             e.preventDefault();
             self.exit();
         });
+    },
+    renderImportLink: function() {
+        if (this.res_model == 'res.partner') {
+            this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
+            this.$(".template-import").removeClass("hidden");
+        }
     },
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
