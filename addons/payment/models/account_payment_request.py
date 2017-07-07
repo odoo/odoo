@@ -91,6 +91,8 @@ class AccountInvoice(models.Model):
     payment_acquirer_id = fields.Many2one('payment.acquirer', string='Payment Acquirer', copy=False)
     payment_tx_id = fields.Many2one('payment.transaction', string='Transaction', copy=False)
     payment_request_id = fields.Many2one('account.payment.request', string='Request for Online Payment', copy=False)
+    # field needed to post a message using '_message_post_helper'
+    access_token = fields.Char(related='payment_request_id.access_token', string="Security Token", store=True, readonly=True)
 
     @api.multi
     def action_invoice_open(self):
