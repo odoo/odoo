@@ -374,6 +374,28 @@ try:
 except ImportError:
     xlwt = None
 
+try:
+    import xlsxwriter
+
+    # add some sanitizations to respect the excel sheet name restrictions
+    # as the sheet name is often translatable, can not control the input
+    class PatchedXlsxWorkbook(xlsxwriter.Workbook):
+
+        # TODO when xlsxwriter bump to 0.9.8, add worksheet_class=None parameter instead of kw
+        def add_worksheet(self, name=None, **kw):
+            # invalid Excel character: []:*?/\
+            name = re.sub(r'[\[\]:*?/\\]', '', name)
+
+            # maximum size is 31 characters
+            name = name[:31]
+            return super(PatchedXlsxWorkbook, self).add_worksheet(name, **kw)
+
+    xlsxwriter.Workbook = PatchedXlsxWorkbook
+
+except ImportError:
+    xlsxwriter = None
+
+
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
