@@ -41,8 +41,6 @@ class DeliveryCarrier(models.Model):
     product_type = fields.Selection(related='product_id.type', default='service')
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete="cascade")
-    price = fields.Float(compute='get_price')
-    available = fields.Boolean(compute='get_price')
     free_if_more_than = fields.Boolean('Free if Order total is more than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping", default=False)
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
