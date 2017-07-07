@@ -47,7 +47,9 @@
             .o-flex(0, 0, auto);
             justify-content: space-between;
             border-bottom: 1px solid lightgray;
-
+            @media (max-width: @screen-xs-max) {
+                padding: 5px;
+            }
             .o_filter_button, .o_new_message {
                 .btn-link;
                 padding: 5px;
