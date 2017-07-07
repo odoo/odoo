@@ -76,25 +76,6 @@ class DeliveryCarrier(models.Model):
                 </p>'''),
         }
 
-    @api.multi
-    def name_get(self):
-        display_delivery = self.env.context.get('display_delivery', False)
-        order_id = self.env.context.get('order_id', False)
-        if display_delivery and order_id:
-            order = self.env['sale.order'].browse(order_id)
-            currency = order.pricelist_id.currency_id.name or ''
-            res = []
-            for carrier_id in self.ids:
-                try:
-                    r = self.read([carrier_id], ['name', 'price'])[0]
-                    res.append((r['id'], r['name'] + ' (' + (str(r['price'])) + ' ' + currency + ')'))
-                except ValidationError:
-                    r = self.read([carrier_id], ['name'])[0]
-                    res.append((r['id'], r['name']))
-        else:
-            res = super(DeliveryCarrier, self).name_get()
-        return res
-
     @api.depends('product_id.list_price', 'product_id.product_tmpl_id.list_price')
     def _compute_fixed_price(self):
         for carrier in self:
