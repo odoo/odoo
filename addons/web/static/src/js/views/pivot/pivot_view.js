@@ -63,7 +63,7 @@ var PivotView = AbstractView.extend({
                 name += ':' + field.attrs.interval;
             }
 
-            if (field.attrs.invisible) {
+            if (field.attrs.disabled || field.attrs.invisible) {
                 delete measures[name];
                 delete groupableFields[name];
                 return;
