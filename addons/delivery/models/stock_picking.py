@@ -93,15 +93,6 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
 
-    @api.onchange('carrier_id')
-    def onchange_carrier(self):
-        if self.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
-            order = self.sale_id
-            if order:
-                self.carrier_price = self.carrier_id.get_price_available(order)
-            else:
-                self.carrier_price = self.carrier_id.price
-
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
         for picking in self:
