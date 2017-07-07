@@ -201,7 +201,7 @@
                 <separator string="Delivery Information"/>
                 <group>
                     <group name='carrier_data'>
-                        <field name="carrier_id" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                        <field name="carrier_id" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}"/>
                         <field name="delivery_type" attrs="{'invisible':True}"/>
                         <label for="carrier_tracking_ref"/>
                         <div name="tracking">
