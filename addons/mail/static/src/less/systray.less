@@ -82,6 +82,10 @@
                 cursor: pointer;
                 font-size: 12px;
                 overflow: hidden;
+                @media (max-width: @screen-xs-max) {
+                    padding: 10px;
+                    height: 85px;
+                }
                 &~.o_mail_channel_preview {
                     border-top: 1px solid lightgray;
                 }
@@ -95,6 +99,12 @@
                 .o_channel_image {
                     .o-flex(0, 0, 36px);
                     max-height: 36px;
+                    @media (max-width: @screen-xs-max) {
+                        .o-flex(0, 0, 50px);
+                        border-radius: 3px;
+                        margin-right: 10px;
+                        max-height: 50px;
+                    }
                 }
                 .o_channel_info {
                     .o-flex(1, 1, 100%);
@@ -107,6 +117,11 @@
                             .o-flex(1, 1, auto);
                             .o-text-overflow();
                             color: @odoo-main-text-color;
+                            @media (max-width: @screen-xs-max) {
+                                font-size: 1.4em;
+                                color: #000;
+                                font-weight: 300;
+                            }
                         }
                         .o_last_message_date {
                             .o-flex(0, 0, auto);
