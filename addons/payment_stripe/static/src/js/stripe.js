@@ -54,11 +54,12 @@ odoo.define('payment_stripe.stripe', function(require) {
                 $currentTarget.attr('disabled','disabled');
 
             var acquirer_id = $currentTarget.closest('div.o_payment_acquirer_button,div.o_website_payment_new_payment');
+            var params = {'call_url': acquirer_id.data('callUrl')};
             acquirer_id = acquirer_id.data('id') || acquirer_id.data('acquirer_id');
             if (! acquirer_id) {
                 return false;
             }
-            var params = {'form': $form};
+            params['form'] = $form;
             event.preventDefault();
             self.stripe_payment_transaction(acquirer_id, params);
         },
@@ -68,17 +69,13 @@ odoo.define('payment_stripe.stripe', function(require) {
                 handler = self.handler,
                 so_token = $("input[name='token']").val(),
                 so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined,
-                access_token = $("input[name='access_token']").val(),
-                payment_request_id = $("input[name='return_url']").val().match(/payment\/([0-9]+)/) || undefined;
+                access_token = $("input[name='access_token']").val();
             if (so_id) {
                 so_id = parseInt(so_id[1]);
             }
-            if (payment_request_id) {
-                payment_request_id = parseInt(payment_request_id[1]);
-            }
+
             if ($('#online_invoice_payment').length !== 0){
-                ajax.jsonRpc('/payment/transaction/' + acquirer_id, 'call', {
-                    payment_request_id: payment_request_id,
+                ajax.jsonRpc(params.call_url, 'call', {
                     access_token: access_token
                     }).then(function (data) {
                     params.form.html(data);
