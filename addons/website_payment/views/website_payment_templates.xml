@@ -64,9 +64,7 @@
                             <thead>
                                 <tr>
                                     <th>Payment Methods</th>
-                                    <th>Payment Acquirer</th>
                                     <th>Status</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -76,10 +74,7 @@
                                             <t t-esc="pm.name"/>
                                         </td>
                                         <td>
-                                            <t t-esc="pm.acquirer_id.name"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="dict(pm.fields_get(allfields=['verification_status'])['verification_status']['selection'])[pm.verification_status]"/>
+                                            <t t-esc="'Verified' if pm.verified else 'Not Verified'"/>
                                         </td>
                                         <td>
                                             <form action="/website_payment/delete/" method="post">
