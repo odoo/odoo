@@ -119,6 +119,7 @@ class ResPartner(models.Model):
 
     def _construct_constraint_msg(self, country_code):
         self.ensure_one()
+        vat_country, vat_number = self._split_vat(self.vat)
         vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
         vat_no = _ref_vat.get(country_code) or vat_no
         if self.env.user.company_id.vat_check_vies:
