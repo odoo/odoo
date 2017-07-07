@@ -13,9 +13,5 @@
             <field name="product_sale_ok" eval="False"/>
         </record>
 
-        <record forcecreate="True" id="property_delivery_carrier" model="ir.property">
-            <field name="name">property_delivery_carrier_id</field>
-            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_delivery_carrier_id')]"/>
-        </record>
     </data>
 </odoo>
