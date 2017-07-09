@@ -350,7 +350,7 @@ class AccountInvoice(models.Model):
     @api.depends('state', 'date_invoice')
     def _get_sequence_prefix(self):
         for record in self:
-            if (record.state=='draft') and (record.journal_id.sequence_number_next==1) and (record.type in ('out_invoice','in_invoice')):
+            if (record.state=='draft') and not self.search([('type','=',record.type)], limit=1):
                 record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
             else:
                 record.sequence_number_next_prefix = False

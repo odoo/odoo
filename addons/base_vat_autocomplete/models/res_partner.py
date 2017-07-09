@@ -47,7 +47,7 @@ class ResPartner(models.Model):
                 self.name = result['name']
             if result['address'] == '---': return {}
 
-            lines = filter(None, result['address'].split("\n"))
+            lines = [x for x in result['address'].split("\n") if x]
             self.street = lines.pop(0)
             if len(lines)>0:
                 res = self._check_city(lines, result['countryCode'])
