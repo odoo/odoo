@@ -42,8 +42,11 @@ class ImLivechatChannel(models.Model):
     script_external = fields.Text('Script (external)', compute='_compute_script_external', store=False, readonly=True)
     nbr_channel = fields.Integer('Number of conversation', compute='_compute_nbr_channel', store=False, readonly=True)
     rating_percentage_satisfaction = fields.Integer(
-        '% Happy', compute='_compute_percentage_satisfaction', store=False, default=-1,
+        '% Rating', compute='_compute_percentage_satisfaction', store=False, default=-1,
         help="Percentage of happy ratings over the past 7 days")
+    rating_count_satisfaction = fields.Integer(
+        'Rating', compute='_compute_rating_count_satisfaction',
+        help="Count total ratings over the past 7 days")
 
     # images fields
     image = fields.Binary('Image', default=_default_image, attachment=True,
@@ -103,6 +106,13 @@ class ImLivechatChannel(models.Model):
             else:
                 record.rating_percentage_satisfaction = -1
 
+    @api.depends('channel_ids.rating_ids')
+    def _compute_rating_count_satisfaction(self):
+        for record in self:
+            dt = fields.Datetime.to_string(datetime.utcnow() - timedelta(days=7))
+            repartition = record.channel_ids.rating_get_grades([('create_date', '>=', dt)])
+            record.rating_count_satisfaction = sum(repartition.values())
+
     @api.model
     def create(self, vals):
         tools.image_resize_images(vals)
@@ -127,13 +137,13 @@ class ImLivechatChannel(models.Model):
         return self.write({'user_ids': [(3, self._uid)]})
 
     @api.multi
-    def action_view_rating(self):
+    def im_livechat_rating_view_action(self):
         """ Action to display the rating relative to the channel, so all rating of the
             sessions of the current channel
-            :returns : the ir.action 'action_view_rating' with the correct domain
+            :returns : the ir.action 'im_livechat_rating_view_action' with the correct domain
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('rating', 'action_view_rating')
+        action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'im_livechat_rating_view_action')
         action['domain'] = [('res_id', 'in', [s.id for s in self.channel_ids]), ('res_model', '=', 'mail.channel')]
         return action
 
