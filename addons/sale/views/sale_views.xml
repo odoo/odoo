@@ -238,8 +238,8 @@
                                             </div>
                                         </group>
                                         <group>
-                                            <field name="tax_id" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}" options="{'no_create': True}"/>
+                                            <field name="tax_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create': True}" domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
+                                                attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
                                             <label for="customer_lead"/>
                                             <div>
                                                 <field name="customer_lead" class="oe_inline"/> days

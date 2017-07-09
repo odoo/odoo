@@ -42,7 +42,7 @@ class ResPartner(models.Model):
                     'message': _('The VAT number has been tested invalid by the European Commission VIES service: http://ec.europa.eu/taxation_customs/vies/')
                 }}
 
-            if (not self.name) and (result['name']<>'---'):
+            if (not self.name) and (result['name'] != '---'):
                 self.name = result['name']
             if result['address'] == '---': return {}
 
