@@ -13,6 +13,7 @@
     'description': 'Plano de contas SNC para Portugal',
     'depends': ['base',
                 'account',
+                'base_vat',
                 ],
     'data': [
            'data/l10n_pt_chart_data.xml',

@@ -14,6 +14,7 @@
     'category': 'Localization',
     "depends" : [
         'account',
+        'base_vat',
     ],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
