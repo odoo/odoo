@@ -581,13 +581,12 @@ class AccountInvoice(models.Model):
         date_invoice = self.date_invoice
         if not date_invoice:
             date_invoice = fields.Date.context_today(self)
-        if not self.payment_term_id:
-            # When no payment terms defined
-            self.date_due = self.date_due or self.date_invoice
-        else:
+        if self.payment_term_id:
             pterm = self.payment_term_id
             pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
             self.date_due = max(line[0] for line in pterm_list)
+        elif self.date_due and (date_invoice > self.date_due):
+            self.date_due = date_invoice
 
     @api.multi
     def action_invoice_draft(self):

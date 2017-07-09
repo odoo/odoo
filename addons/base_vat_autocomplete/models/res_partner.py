@@ -30,7 +30,6 @@ class ResPartner(models.Model):
 
     @api.onchange('vat')
     def vies_vat_change(self):
-        print 'Change:', self.vat
         if self.vat:
             try:
                 import stdnum.eu.vat
