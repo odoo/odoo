@@ -13,11 +13,11 @@
                         <strong t-if="doc.partner_shipping_id == doc.partner_invoice_id">Invoicing and shipping address:</strong>
                         <strong t-if="doc.partner_shipping_id != doc.partner_invoice_id">Invoicing address:</strong>
                         <div t-field="doc.partner_invoice_id"
-                        t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         <div t-if="doc.partner_shipping_id != doc.partner_invoice_id" class="mt8">
                             <strong>Shipping address:</strong>
                             <div t-field="doc.partner_shipping_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                     </t>
                 </div>

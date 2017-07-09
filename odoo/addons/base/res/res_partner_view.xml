@@ -245,7 +245,6 @@
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701"/>
-                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags..."/>
                         </group>
                         <group>
@@ -253,9 +252,9 @@
                                 attrs="{'invisible': [('is_company','=', True)]}"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
-                            <field name="fax"/>
                             <field name="user_ids" invisible="1"/>
                             <field name="email" widget="email" context="{'gravatar_image': True}" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
                             <field name="title" options='{"no_open": True}'
                                 attrs="{'invisible': [('is_company', '=', True)]}"/>
                             <field name="lang"/>
@@ -281,7 +280,6 @@
                                     <field name="city"/>
                                     <field name="country_id"/>
                                     <field name="mobile"/>
-                                    <field name="fax"/>
                                     <field name="state_id"/>
                                     <field name="image_small"/>
                                     <field name="lang"/>
@@ -315,7 +313,6 @@
                                                     </div>
                                                     <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
                                                     <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
-                                                    <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
                                                 </div>
                                             </div>
                                         </t>

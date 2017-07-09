@@ -249,7 +249,7 @@
         <h4 class="text-center text-muted"
             t-field="event.address_id" t-options='{
                 "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "fax"]
+                "fields": ["name", "address", "phone", "mobile"]
             }'/>
     </t>
 </template>
@@ -351,7 +351,7 @@
                         </t>
                         <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
-                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "email"]
                             }'/>
                     </div>
                 </div>
@@ -373,7 +373,7 @@
                 </div>
                 <div class="panel-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
-                    "fields": ["name", "phone", "mobile", "fax", "email"]
+                    "fields": ["name", "phone", "mobile", "email"]
                     }'/>
             </div>
 
@@ -595,7 +595,7 @@
                     <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
-                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "email"]
                             }'/>
                 </div>
                 <div class="col-md-3 mt16">

@@ -840,7 +840,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <!-- TODO widget contact must add itemprop attributes -->
         <div t-field="res_company.partner_id" t-options='{
                 "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+                "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
             <span class="fa fa-map-marker fa-fw mt16"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
