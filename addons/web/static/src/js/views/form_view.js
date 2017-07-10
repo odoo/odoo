@@ -1171,8 +1171,9 @@ var FormView = View.extend(common.FieldManagerMixin, {
             }
             field._dirty_flag = true;
             if (field.is_syntax_valid()) {
-                this.do_onchange(field);
-                this.on_form_changed(true);
+                this.do_onchange(field).always(function () {
+                    this.on_form_changed();
+                }.bind(this));
                 this.do_notify_change();
             }
         });
