@@ -53,11 +53,11 @@
             <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
             <li class="search">
                 <ul class="pager mb0 mt0">
-                    <li class="previous disabled">
-                        <a href="#">← Previous</a>
+                    <li class="previous">
+                        <a class="btn btn-default disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
                     </li>
-                    <li class="next disabled">
-                        <a href="#">Next →</a>
+                    <li class="next">
+                        <a class="btn btn-default disabled" href="#">Next&#32;<i class="fa fa-angle-right"/></a>
                     </li>
                 </ul>
             </li>
@@ -202,16 +202,16 @@
                     <button class="btn btn-default">Preview</button>
                 </div>
             </div>
-            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+            <div id="video-preview">
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
                     <iframe allowfullscreen="allowfullscreen" frameborder="0" src=""/>
                 </div>
             </div>
-            <div class="text-center mt32">
+            <div class="text-center mt8">
                 <div class="checkbox">
                     <label title="The feature might not be supported for every video type">
-                        <input id="autoplay" type="checkbox"/>Autoplay</label>
+                        <input id="autoplay" style="margin-right:5px" type="checkbox"/>Autoplay</label>
                 </div>
             </div>
         </form>

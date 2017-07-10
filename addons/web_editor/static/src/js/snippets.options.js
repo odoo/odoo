@@ -329,6 +329,8 @@ odoo.define('web_editor.snippets.options', function (require) {
                     if (change) {
                         self.on_resize(compass, beginClass, current);
                         self.buildingBlock.cover_target(self.$overlay, self.$target);
+                        self.adapt_margin_preview_size();
+                        $handle.addClass('oe_handle_change');
                     }
                 };
 
@@ -343,10 +345,13 @@ odoo.define('web_editor.snippets.options', function (require) {
                         }
                     },0);
                     self.$target.removeClass("resize_editor_busy");
+                    $handle.removeClass('oe_handle_change');
 
                     if (compass === "size") {
                         $fixed_size.addClass("active");
                         $auto_size.removeClass("active");
+                    } else {
+                        self._highlight_margins_preview(300);
                     }
                 };
                 $body.mousemove(body_mousemove);
@@ -372,10 +377,14 @@ odoo.define('web_editor.snippets.options', function (require) {
         on_focus : function () {
             this._super();
             this.change_cursor();
+            this.adapt_margin_preview_size();
         },
 
         change_cursor : function () {
             var _class = this.$target.attr("class") || "";
+            var $handle_s = this.$overlay.find('.oe_handle.s');
+            var $handle_n = this.$overlay.find('.oe_handle.n');
+            var $handle_w = this.$overlay.find('.oe_handle.w');
 
             var col = _class.match(/col-md-([0-9-]+)/i);
             col = col ? +col[1] : 0;
@@ -387,18 +396,42 @@ odoo.define('web_editor.snippets.options', function (require) {
             if (col+offset >= 12) overlay_class+= " block-e-right";
             if (col === 1) overlay_class+= " block-w-right block-e-left";
             if (offset === 0) overlay_class+= " block-w-left";
+            $handle_w.toggleClass('oe_handle_centered', offset > 0).toggleClass('o_handle_edited', offset >= 1 );
 
             var mb = _class.match(/mb([0-9-]+)/i);
             mb = mb ? +mb[1] : parseInt(this.$target.css('margin-bottom'));
             if (mb >= 128) overlay_class+= " block-s-bottom";
             else if (!mb) overlay_class+= " block-s-top";
+            $handle_s.toggleClass('oe_handle_centered', mb >= 32).toggleClass('o_handle_edited', mb > 0 );
 
             var mt = _class.match(/mt([0-9-]+)/i);
             mt = mt ? +mt[1] : parseInt(this.$target.css('margin-top'));
             if (mt >= 128) overlay_class+= " block-n-top";
             else if (!mt) overlay_class+= " block-n-bottom";
+            $handle_n.toggleClass('oe_handle_centered', mt >= 32).toggleClass('o_handle_edited', mt > 0 );
 
             this.$overlay.attr("class", overlay_class);
+        },
+
+        adapt_margin_preview_size : function () {
+            var self = this,
+                ml = this.$target.css('margin-left');
+            _.each(this.$overlay.find(".oe_handle.n, .oe_handle.s"), function (handle) {
+                var $handle = $(handle);
+                var direction = $handle.hasClass('n') ? 'top': 'bottom';
+                $handle.height(self.$target.css('margin-' + direction ));
+            });
+            this.$overlay.find(".oe_handle.w").css({
+                width: ml,
+                left: '-' + ml
+            });
+        },
+
+        _highlight_margins_preview: function (timing) {
+            var handlers = this.$overlay.find(".oe_handle.n, .oe_handle.s, .oe_handle.w");
+            handlers.addClass('oe_handle_active').delay(timing).queue(function(){
+                handlers.removeClass('oe_handle_active').dequeue();
+            });
         },
 
         /* on_resize

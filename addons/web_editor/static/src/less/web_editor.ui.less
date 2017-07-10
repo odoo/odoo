@@ -299,7 +299,7 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
 // MANIPULATORS
 #oe_manipulators {
-    @odoo-handle-edge-size: 8px;
+    @odoo-handle-edge-size: 1px;
     @odoo-handle-border-width: 1px;
 
     // SNIPPET MANIPULATORS
@@ -534,34 +534,78 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         // HANDLES
         > .oe_handles {
             @o-handles-offset-to-hide: 10000px;
+            @o-handless-accent-color: #00e2ff;
             .o-position-absolute(-@o-handles-offset-to-hide, 0, auto, 0);
 
-            > .oe_handle {
-                @o-handle-size: 18px;
+            &:hover > .oe_handle {
+                background-color: fade(@o-handless-accent-color, 5%);
+            }
 
+            > .oe_handle {
+                @o-handle-btn-size: 18px;
                 opacity: 0.5;
                 .o-transition(opacity, 400ms);
-                &:hover {
-                    opacity: 0.9;
+                border: 0 solid @o-handless-accent-color;
+
+                // MARGINS PREVIEW
+                &.n, &.s, &.w {
+                    position: relative;
+                    .o-transition(background, 0.3s);
+
+                    &.oe_handle_change, &.oe_handle_active, &:hover {
+                        background-color: fade(@o-handless-accent-color, 20%);
+                    }
+
+                    &.o_handle_edited {
+                        opacity: 0.9;
+
+                        &:after {
+                            color: white;
+                            border-color: darken(@o-handless-accent-color, 10%);
+                            background-color: darken(@o-handless-accent-color, 20%);
+                        }
+                    }
+
+                    &.oe_handle_change, &:hover {
+                        opacity: 1;
+
+                        &:before {
+                            .o-position-absolute(0, @left:50%);
+                            width: 1px;
+                            height: 100%;
+                            margin-left: -1px;
+                            background-color: fade(@o-handless-accent-color, 50%);
+                            content:'';
+                        }
+
+                        &.w:before {
+                            .o-position-absolute(50%,@left: 0);
+                            width: 100%;
+                            height: 1px;
+                        }
+
+                        &:after {
+                            border-color: darken(@o-handless-accent-color, 10%);
+                            background-color: darken(@o-handless-accent-color, 20%);
+                        }
+                    }
                 }
-                border: 0 dashed black;
 
                 &:after {
                     display: block;
-                    width: @o-handle-size;
-                    height: @o-handle-size;
+                    width: @o-handle-btn-size;
+                    height: @o-handle-btn-size;
                     border: solid 1px rgba(0, 0, 0, 0.2);
-                    line-height: @o-handle-size - 2;
+                    line-height: @o-handle-btn-size - 2;
                     font-size: 14px;
                     font-family: FontAwesome;
                     background-color: @o-we-color-light;
                     color: @o-we-color-text-light;
                 }
-                &:hover:after {
-                    background-color: @o-we-color-dark;
-                    color: white;
-                    box-shadow: 0 0 5px 3px rgba(255,255,255,0.7);
+                &:hover {
+                    opacity: 0.9;
                 }
+
                 &.w:after, &.e:after {
                     content: "\f07e";
                 }
@@ -570,14 +614,18 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
                 }
 
                 &.w {
-                    border-left-width: @odoo-handle-border-width;
+                    border-width: @odoo-handle-border-width;
+                    border-right-width: 0;
                     cursor: e-resize;
                     width: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, auto, -@o-handles-offset-to-hide, 0);
 
                     &:after {
-                        .o-position-absolute(@top: 50%, @left: -@odoo-handle-border-width);
-                        margin-top: -@o-handle-size/2;
+                        .o-position-absolute(@top: 50%, @left: 50%);
+                        margin-top: -@o-handle-btn-size/2;
+                    }
+                    &.oe_handle_centered:after {
+                        margin-left: -@o-handle-btn-size/2;
                     }
                 }
                 &.e {
@@ -588,29 +636,33 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
                     &:after {
                         .o-position-absolute(@top: 50%, @right: -@odoo-handle-border-width);
-                        margin-top: -@o-handle-size/2;
+                        margin-top: -@o-handle-btn-size/2;
                     }
                 }
                 &.n {
                     border-top-width: @odoo-handle-border-width;
-                    cursor: s-resize;
-                    height: @odoo-handle-edge-size;
                     .o-position-absolute(@o-handles-offset-to-hide, 0, auto, 0);
 
                     &:after {
-                        .o-position-absolute(@left: 50%, @top: -@odoo-handle-border-width);
-                        margin-left: -@o-handle-size/2;
+                        .o-position-absolute(@left: 50%, @top: 50%);
+                        margin-left: -@o-handle-btn-size/2;
                     }
                 }
                 &.s {
                     border-bottom-width: @odoo-handle-border-width;
-                    cursor: n-resize;
-                    height: @odoo-handle-edge-size;
                     .o-position-absolute(auto, 0, -@o-handles-offset-to-hide, 0);
 
                     &:after {
-                        .o-position-absolute(@left: 50%, @bottom: -@odoo-handle-border-width);
-                        margin-left: -@o-handle-size/2;
+                        .o-position-absolute(@left: 50%, @bottom: 50%);
+                        margin-left: -@o-handle-btn-size/2;
+                    }
+                }
+                &.n, &.s {
+                    cursor: ns-resize;
+
+                    &.oe_handle_centered:after {
+                        .o-position-absolute(@left: 50%, @top: 50%);
+                        margin-top:  -@o-handle-btn-size/2;
                     }
                 }
 
@@ -689,17 +741,17 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
         &.block-e-left.block-e-right .e:after {
             display: none !important;
         }
-        &.block-s-top .s:after {
-            content: "" !important;
+        &.block-s-bottom .s, &.block-n-top .n {
+            cursor: n-resize!important;
+            &:after {
+                content: "\f062" !important;
+            }
         }
-        &.block-s-bottom .s:after {
-            content: "" !important;
-        }
-        &.block-n-top .n:after {
-            content: "" !important;
-        }
-        &.block-n-bottom .n:after {
-            content: "" !important;
+        &.block-s-top .s, &.block-n-bottom .n {
+            cursor: s-resize!important;
+            &:after {
+                content: "\f063" !important;
+            }
         }
     }
 }
