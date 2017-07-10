@@ -98,7 +98,7 @@
 
     <template id="portal_layout" name="Portal Layout">
         <t t-call="website.layout">
-            <div class="container mt16 o_website_portal">
+            <div class="container mt16 o_portal">
                 <div class="oe_structure">
                     <div t-if="not no_breadcrumbs" class="row">
                         <div class="col-sm-12">
@@ -181,7 +181,7 @@
                     <h1>Contact Details</h1>
                     <form action="/my/account" method="post">
                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                        <div class="row o_website_portal_details">
+                        <div class="row o_portal_details">
                             <div class="col-md-8">
                                 <div class="row">
                                     <div class="col-md-12">
