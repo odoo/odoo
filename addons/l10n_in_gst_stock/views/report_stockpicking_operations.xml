@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="gst_report_picking_inherit" inherit_id="stock.report_picking">
+        <xpath expr="//p[@t-if='o.sudo().partner_id.vat']" position="replace">
+            <p t-if="o.sudo().partner_id.x_gstin">GSTIN: <span t-field="o.sudo().partner_id.x_gstin"/></p>
+        </xpath>
+        <xpath expr="//span[@t-field='pack_operation.product_id.description_picking']" position="after">
+            <t t-if="pack_operation.product_id and pack_operation.product_id.x_hsn_code"><h6><strong class="ml16">HSN Code:</strong> <span t-field="pack_operation.product_id.x_hsn_code"/></h6></t>
+        </xpath>
+    </template>
+
+</odoo>
