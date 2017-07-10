@@ -833,7 +833,7 @@ registry.background = SnippetOption.extend({
      */
     background: function (previewMode, value, $li) {
         if (value && value.length) {
-            this.$target.css('background-image', 'url(' + value + ')');
+            this.$target.css('background-image', 'url(\'' + value + '\')');
             this.$target.addClass('oe_img_bg');
         } else {
             this.$target.css('background-image', '');
