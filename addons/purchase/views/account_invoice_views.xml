@@ -63,8 +63,8 @@
                     options="{'no_create': True}"/>
             </field>
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
-                <field name="purchase_line_id" invisible="1"/>
-                <field name="purchase_id" invisible="1"/>
+                <field name="purchase_line_id" invisible="1" readonly="0"/>
+                <field name="purchase_id" invisible="1" readonly="0"/>
             </xpath>
         </field>
     </record>
