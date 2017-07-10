@@ -132,6 +132,6 @@ class AccountConfigSettings(models.TransientModel):
             company = self.env['res.company'].browse(values.get('company_id'))
             if company.currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
-            if company.accounts_code_digits == vals.get('code_digits'):
-                vals.pop('code_digits')
+            if company.accounts_code_digits == values.get('code_digits'):
+                values.pop('code_digits')
         return super(AccountConfigSettings, self).create(values)
