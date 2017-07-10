@@ -306,7 +306,7 @@ var ImageDialog = Widget.extend({
             return (r.url || r.id);
         });
         _.each(this.records, function (record) {
-            record.src = record.url || '/web/image/' + record.id;
+            record.src = record.url || _.str.sprintf('/web/image/%s/%s', record.id, record.name); // Name is added for SEO purposes
             record.is_document = !(/gif|jpe|jpg|png/.test(record.mimetype));
         });
         this.display_attachments();
