@@ -840,7 +840,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.bank.statement']
             for model in model_to_check:
                 if len(self.env[model].search([('company_id', '=', self.company_id.id)])) > 0:
-                    raise UserError(_('Could not install new chart of account as there is some object already existing (%s)' % (model,)))
+                    raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
             # delete account property
             values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
             partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)])
