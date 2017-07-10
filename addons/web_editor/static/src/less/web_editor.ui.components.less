@@ -1,49 +1,56 @@
 // INPUTS
+@o-switch-size: 2ex;
+@o-switch-inactive-color: @gray-lighter;
+
 .o_switch {
     .o-flex-display();
     .o-align-items(center);
     font-weight: normal;
-    height: 1.5em;
     cursor: pointer;
 
     > input {
         display: none;
 
         + span {
-            background: #bababa;
-            border-radius: 0.4em;
-            height: 1em;
-            width: 2.5em;
+            background-color: @o-switch-inactive-color;
+            box-shadow: inset 0 0 0px 1px darken(@o-switch-inactive-color,10%);
+            border-radius: 100rem;
+            height: @o-switch-size;
+            width: @o-switch-size * 1.8;
             margin-right: 0.5em;
             display: inline-block;
             .transition(all 0.3s @o-we-md-ease);
+
             &:after {
                 content: "";
-                background: #fafafa;
+                background: @o-we-color-paper;
                 display: block;
-                width: 1.5em;
-                height: 1.5em;
-                border-radius: 100em;
-                margin-top: -0.3em;
-                margin-left: -0.1em;
+                width: @o-switch-size - 0.2;
+                height: @o-switch-size - 0.2;
+                margin-top: 0.1ex;
+                margin-left: 0.3ex;
+                border-radius: 100rem;
                 .transition(all 0.3s @o-we-md-ease);
-                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+                box-shadow: 0 1px 1px darken(@o-switch-inactive-color,35%), inset 0 0 0 1px lighten(@o-switch-inactive-color,10%);
             }
         }
 
         &:checked + span {
-            background-color: rgb(142, 224, 212);
-            background-color: transparentize(@odoo-brand-optional, 0.5);
+            box-shadow: none;
+            .o-linear-gradient(0deg, @o-we-color-success, darken(@o-we-color-success, 10%));
+
             &:after {
-                background-color: @odoo-brand-optional;
-                margin-left: 1.1em;
+                margin-left: (@o-switch-size*1.8 - @o-switch-size) + 0.1;
             }
         }
     }
-    &:hover > input + span:after {
-        background-color: mix(@odoo-brand-optional, #fafafa);
-    }
 }
+
+.dropdown-menu label .o_switch {
+    margin: 0;
+    padding: 2px 0;
+}
+
 .text-input-group {
     position: relative;
     margin-bottom: 45px;
@@ -208,16 +215,15 @@ body .modal {
         width: 80%;
 
         .modal-body {
+            .nav-tabs .active > a[href="#editor-media-icon"] {
+                background-color: white;
+            }
+
             li.search {
                 float: right;
 
-                ul.pager {
-                    margin: 0;
-                    > li > a {
-                        border-radius: 0px;
-                        margin-left: 2px;
-                        padding: 6px 14px;
-                    }
+                ul.pager li:last-child{
+                    margin-left: 2px;
                 }
                 .form-group {
                     position: relative;
@@ -233,6 +239,7 @@ body .modal {
             }
 
             .well {
+                border-color: @gray-lighter;
                 border-top-width: 0;
 
                 label {

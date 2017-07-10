@@ -59,37 +59,40 @@
     </t>
 
     <t t-name="website.dependencies">
-        <t t-if="dependencies">
-            <p class="text-warning">
-              <strong>Warning!</strong> Don't forget to update all links referring to this page:
-            </p>
+        <div t-if="_.keys(dependencies).length > 0" class="panel panel-warning">
+            <div class="panel-heading"><strong>Warning!</strong> Don't forget to update all links referring to this page:</div>
+
             <t t-set='tid' t-value='0'/>
-            <div t-foreach="_.keys(dependencies)" t-as="type" class="mb16">
-                <a class="collapsed fa fa-caret-right" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
-                  <t t-esc="type"/>:&amp;nbsp;
-                  <span class="text-muted"><t t-esc="dependencies[type].length"/> found(s)</span>
-                </a>
-                <div t-att-id="'collapseDependencies'+tid" class="collapse" aria-expanded="false" >
-                  <ul>
-                      <li t-foreach="dependencies[type]" t-as="error">
-                          <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
-                              <t t-raw="error.text"/>
-                          </a>
-                          <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
-                      </li>
-                  </ul>
+            <div class="panel-body">
+                <div t-foreach="_.keys(dependencies)" t-as="type">
+                    <a class="collapsed" data-toggle="collapse" t-att-href="'#collapseDependencies'+tid" aria-expanded="false" t-att-aria-controls="'collapseDependencies'+tid">
+                        <i class="fa fa-caret-right"/>
+                        <b><t t-esc="type"/></b>:&amp;nbsp;
+                        <span class="text-muted"><t t-esc="dependencies[type].length"/> found<span t-if="dependencies[type].length > 1">s</span></span>
+                    </a>
+                    <div t-att-id="'collapseDependencies'+tid" class="collapse" aria-expanded="false">
+                        <ul>
+                            <li t-foreach="dependencies[type]" t-as="error">
+                                <a t-if="!_.contains(['', '#', false,], error.link)" t-att-href="error.link">
+                                    <t t-raw="error.text"/>
+                                </a>
+                                <t t-if="_.contains(['', '#', false,], error.link)" t-raw="error.text"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <t t-set='tid' t-value='tid+1'/>
                 </div>
-                <t t-set='tid' t-value='tid+1'/>
             </div>
-        </t>
+        </div>
     </t>
     <t t-name="website.delete_page">
         <t t-call="website.modal_base">
             <t t-call="website.dependencies" />
             <form class="form-horizontal" role="form" t-att-id="id">
                 <div class="form-group">
-                    <label class="col-sm-offset-2 col-sm-8 text-left alert alert-danger">
-                        <input type="checkbox" onchange="$('.btn-continue').prop('disabled', !this.checked)"/> I'm sure, I want to delete this page definitively
+                    <label class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 mt16 text-center alert alert-danger">
+                        <input style="margin-right:10px" type="checkbox" onchange="$('.btn-continue').prop('disabled', !this.checked)"/>
+                        <span style="font-weight:normal"><br class="visible-xs"/><b>I'm sure</b>, I want to delete this page <b> <ins>definitively</ins></b></span>
                     </label>
                 </div>
             </form>
@@ -99,8 +102,8 @@
     <t t-name="website.rename_page">
         <t t-call="website.modal_base">
             <t t-call="website.dependencies" />
-            <div class="row">
-                <form class="form-horizontal alert alert-info" role="form" t-att-id="id">
+            <div class="well">
+                <form class="form-horizontal" role="form" t-att-id="id">
                     <div class="form-group mb0" >
                         <label for="new_name" class="control-label col-sm-4">Rename Page To:</label>
                         <div class="col-sm-8">

@@ -471,8 +471,8 @@ var ImageDialog = Widget.extend({
 
         this.$('.existing-attachments').replaceWith(QWeb.render('web_editor.dialog.image.existing.content', {rows: rows}));
         this.parent.$('.pager')
-            .find('li.previous').toggleClass('disabled', (from === 0)).end()
-            .find('li.next').toggleClass('disabled', (from + per_screen >= records.length));
+            .find('li.previous a').toggleClass('disabled', (from === 0)).end()
+            .find('li.next a').toggleClass('disabled', (from + per_screen >= records.length));
 
         this.$el.find('.o_image').each(function () {
             var $div = $(this);
