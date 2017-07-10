@@ -9,10 +9,6 @@ var _t = core._t;
 tour.register('account_invoicing_tour', {
     'skip_enabled': true,
 }, [{
-    trigger: '.o_app[data-menu-xmlid="account.menu_finance"], .oe_menu_toggler[data-menu-xmlid="account.menu_finance"]',
-    content: _t('Ready to <b>send your first invoice</b>? Get started by clicking here.'),
-    position: 'bottom',
-}, {
     trigger: ".o_form_readonly .o_invoice_validate",
     extra_trigger: '.o_invoice_form',
     content: _t("Click to <b>validate your invoice.</b> A reference will be assigned to this invoice and you will not be able to modify it anymore."),
