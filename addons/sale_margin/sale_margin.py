@@ -57,7 +57,16 @@ class sale_order_line(osv.osv):
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = 0
             if line.product_id:
-                tmp_margin = line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uom_qty)
+                price = line.purchase_price
+
+                if not price:
+                    from_cur = self.pool['res.users'].browse(cr, uid, uid, context=context).company_id.currency_id
+                    cost = line.product_id.standard_price
+                    ctx = context.copy()
+                    ctx['date'] = line.order_id.date_order
+                    price = self.pool['res.currency'].compute(cr, uid, from_cur.id, cur.id, cost, round=False, context=ctx)
+
+                tmp_margin = line.price_subtotal - (price * line.product_uom_qty)
                 res[line.id] = cur_obj.round(cr, uid, cur, tmp_margin)
         return res
 
