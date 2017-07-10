@@ -8,6 +8,8 @@ from odoo.exceptions import ValidationError
 class Project(models.Model):
     _inherit = 'project.project'
 
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
+
     @api.multi
     def action_view_timesheet(self):
         self.ensure_one()

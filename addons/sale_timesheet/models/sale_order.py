@@ -45,16 +45,13 @@ class SaleOrder(models.Model):
             order.project_project_id = self.env['project.project'].search([('analytic_account_id', '=', order.analytic_account_id.id)])
 
     @api.multi
-    @api.constrains('order_line')
-    def _check_multi_timesheet(self):
+    @api.depends('order_line.product_id', 'project_project_id')
+    def _compute_project_ids(self):
         for order in self:
-            count = 0
-            for line in order.order_line:
-                if line.product_id.track_service == 'timesheet':
-                    count += 1
-                if count > 1:
-                    raise ValidationError(_("You can use only one product on timesheet within the same sales order. You should split your order to include only one contract based on time and material."))
-        return {}
+            projects = order.order_line.mapped('product_id.project_id')
+            if order.project_project_id:
+                projects |= order.project_project_id
+            order.project_ids = projects
 
     @api.multi
     def action_confirm(self):
@@ -130,9 +127,10 @@ class SaleOrderLine(models.Model):
     is_service = fields.Boolean("Is service", compute='_compute_is_service', help="Sales Order item should generate a task and/or a project, depending on the product settings.")
 
     @api.multi
+    @api.depends('product_id.type')
     def _compute_is_service(self):
         for so_line in self:
-            so_line.is_service = so_line.product_id.type == 'service' and so_line.product_id.track_service in ['task', 'timesheet']
+            so_line.is_service = so_line.product_id.type == 'service'
 
     @api.model
     def create(self, values):
@@ -181,8 +179,14 @@ class SaleOrderLine(models.Model):
                 account = self.order_id.analytic_account_id
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
-                project_id = account.sudo().project_create({'name': account.name})
+                project_id = account.sudo().project_create({
+                    'name': account.name,
+                    'allow_timesheets': self.product_id.service_type == 'timesheet',
+                })
                 project = Project.sudo().browse(project_id)
+                # set the SO line origin if product should create project
+                if not project.sale_line_id and self.product_id.service_tracking in ['task_new_project', 'project_only']:
+                    project.write({'sale_line_id': self.id})
         return project
 
     def _timesheet_create_task_prepare_values(self):
@@ -251,7 +255,12 @@ class SaleOrderLine(models.Model):
             the existing one to the line.
         """
         for so_line in self.filtered(lambda sol: sol.is_service):
-            if so_line.product_id.track_service == 'task':
+            # create task
+            if so_line.product_id.service_tracking == 'task_global_project':
                 so_line._timesheet_find_task()
-            if so_line.product_id.track_service == 'timesheet':
+            # create project
+            if so_line.product_id.service_tracking == 'project_only':
                 so_line._timesheet_find_project()
+            # create project and task
+            if so_line.product_id.service_tracking == 'task_new_project':
+                so_line._timesheet_find_task()

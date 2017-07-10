@@ -49,7 +49,8 @@ class TestSaleService(TestSale):
             'uom_id': self.env.ref('product.product_uom_hour').id,
             'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'default_code': 'SERV-DELI',
-            'track_service': 'task',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
             'project_id': project.id
         })
 
