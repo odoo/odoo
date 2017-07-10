@@ -685,6 +685,19 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="account_invoice_line_tree">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='discount']" position="attributes">
+                        <attribute name="groups">sale.group_discount_per_so_line</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="account_invoice_line_form">
             <field name="name">account.invoice.line.form</field>
             <field name="model">account.invoice.line</field>

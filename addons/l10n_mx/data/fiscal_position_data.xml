@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="account_fiscal_position_foreign" model="account.fiscal.position.template">
+        <field name="name">Foreign Customer</field>
+        <field name="chart_template_id" ref="mx_coa"/>
+    </record>
+    <record id="account_fiscal_position0_purchase" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="tax14"/>
+        <field name="tax_dest_id" ref="tax13"/>
+        <field name="position_id" ref="account_fiscal_position_foreign"/>
+    </record>
+    <record id="account_fiscal_position0_sale" model="account.fiscal.position.tax.template">
+        <field name="tax_src_id" ref="tax12"/>
+        <field name="tax_dest_id" ref="tax9"/>
+        <field name="position_id" ref="account_fiscal_position_foreign"/>
+    </record>
+</odoo>
