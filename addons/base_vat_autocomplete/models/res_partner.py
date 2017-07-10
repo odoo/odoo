@@ -10,6 +10,8 @@ from odoo import api, models, _
 from odoo.tools.misc import ustr
 from odoo.exceptions import ValidationError
 
+_logger = logging.getLogger(__name__)
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -30,10 +32,12 @@ class ResPartner(models.Model):
 
     @api.onchange('vat')
     def vies_vat_change(self):
-        if self.vat:
+        if len(self.vat or '')>5:
             try:
                 import stdnum.eu.vat
                 result = stdnum.eu.vat.check_vies(self.vat)
+            except ImportError:
+                _logger.warning('Python stdnum library not found, unable to call VIES service to detect address based on VAT number.')
             except:
                 return {}
             if not result['valid']:
@@ -47,6 +51,10 @@ class ResPartner(models.Model):
             if result['address'] == '---': return {}
 
             lines = [x for x in result['address'].split("\n") if x]
+            if len(lines)==1:
+                lines = [x.strip() for x in lines[0].split(',') if x]
+            if len(lines)==1:
+                lines = [x.strip() for x in lines[0].split('   ') if x]
             self.street = lines.pop(0)
             if len(lines)>0:
                 res = self._check_city(lines, result['countryCode'])
@@ -56,7 +64,6 @@ class ResPartner(models.Model):
             if len(lines)>0:
                 self.street2 = lines.pop(0)
 
-            if not self.country_id:
-                country = self.env['res.country'].search([('code','=',result['countryCode'])], limit=1)
-                self.country_id = country and country.id or False
+            country = self.env['res.country'].search([('code','=',result['countryCode'])], limit=1)
+            self.country_id = country and country.id or False
         return {}

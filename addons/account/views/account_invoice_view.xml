@@ -391,7 +391,7 @@
                         </group>
                         <group>
                             <field name="date_invoice"/>
-                            <field name="date_due"/>
+                            <field name="date_due" attrs="{'invisible': [('payment_term_id','!=',False)]}"/>
                             <field name="move_name" invisible="1"/>
                             <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
