@@ -41,33 +41,6 @@ class AccountAnalyticLine(models.Model):
 
         return True
 
-    @api.multi
-    def _sale_postprocess(self, additionnal_so_lines=None):
-        """ Set the SO line before recomputed delivered quantity on SO line.
-            Only applied for timesheet lines, having no SO line set yet.
-        """
-        self.filtered(lambda aal: not aal.so_line and aal.project_id)._timesheet_set_sale_order_line()
-        return super(AccountAnalyticLine, self)._sale_postprocess(additionnal_so_lines=additionnal_so_lines)
-
-    @api.multi
-    def _timesheet_set_sale_order_line(self):
-        """ Automatically set the SO line on the analytic line, for the timesheet flow. It retrives
-            the SO line which has create the project (track_service='timesheet'). There is only one line
-            per SO like this (See constraint).
-        """
-        for timesheet in self.filtered(lambda aal: not aal.so_line):
-            sol = self.env['sale.order.line'].search([
-                ('order_id.analytic_account_id', '=', timesheet.account_id.id),
-                ('state', 'in', ('sale', 'done')),
-                ('product_id.track_service', '=', 'timesheet'),
-                ('product_id.type', '=', 'service')
-            ], limit=1)
-            if sol:
-                timesheet.write({
-                    'so_line': sol.id,
-                    'product_id': sol.product_id.id,
-                })
-
     def _get_timesheet_values(self, values):
         result = {}
         values = values if values is not None else {}
@@ -144,7 +117,7 @@ class AccountAnalyticLine(models.Model):
             if so_line.product_id.invoice_policy == 'delivery':
                 revenue = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
                 billable_type = 'billable_time'
-            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.track_service == 'task':
+            elif so_line.product_id.invoice_policy == 'order':
                 quantity_hour = unit_amount
                 if so_line.product_uom.category_id == timesheet_uom.category_id:
                     quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
