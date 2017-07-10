@@ -385,11 +385,15 @@ class SaleOrder(models.Model):
     @api.multi
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
-        orders.write({
-            'state': 'draft',
-            'procurement_group_id': False,
-        })
-        orders.mapped('order_line').mapped('procurement_ids').write({'sale_line_id': False})
+        for order in orders:
+            if order.procurement_group_id and self.env['procurement.order'].\
+                    search([('id', '=', order.procurement_group_id.id),
+                            ('state', '=', 'done')]):
+                order.write({'state': 'draft'})
+            else:
+                order.write({'state': 'draft', 'procurement_group_id': False})
+                order.mapped('order_line').mapped('procurement_ids').write(
+                    {'sale_line_id': False})
 
     @api.multi
     def action_cancel(self):
