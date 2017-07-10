@@ -711,12 +711,19 @@ class IrModelFields(models.Model):
             res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
         return res
 
-    @tools.ormcache('model_name')
-    def _existing_field_data(self, model_name):
-        """ Return the given model's existing field data. """
+    @tools.ormcache()
+    def _all_field_data(self):
+        """ Return all fields data, indexed by model name, then field name. """
         cr = self._cr
-        cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", [model_name])
-        return {row['name']: row for row in cr.dictfetchall()}
+        cr.execute("SELECT * FROM ir_model_fields")
+        result = defaultdict(dict)
+        for row in cr.dictfetchall():
+            result[row['model']][row['name']] = row
+        return result
+
+    def _get_field_data(self, model_name):
+        """ Return the given model's existing field data. """
+        return self._all_field_data()[model_name]
 
     def _reflect_field_params(self, field):
         """ Return the values to write to the database for the given field. """
@@ -746,7 +753,7 @@ class IrModelFields(models.Model):
 
     def _reflect_field(self, field):
         """ Reflect the given field and return its corresponding record. """
-        fields_data = self._existing_field_data(field.model_name)
+        fields_data = self._get_field_data(field.model_name)
         field_data = fields_data.get(field.name)
         params = self._reflect_field_params(field)
 
@@ -794,7 +801,7 @@ class IrModelFields(models.Model):
 
         if not self.pool._init:
             # remove ir.model.fields that are not in self._fields
-            fields_data = self._existing_field_data(model._name)
+            fields_data = self._get_field_data(model._name)
             extra_names = set(fields_data) - set(model._fields)
             if extra_names:
                 # add key MODULE_UNINSTALL_FLAG in context to (1) force the
@@ -830,7 +837,7 @@ class IrModelFields(models.Model):
             if not self.pool.loaded and not (
                 field_data['relation'] in self.env and (
                     field_data['relation_field'] in self.env[field_data['relation']]._fields or
-                    field_data['relation_field'] in self._existing_field_data(field_data['relation'])
+                    field_data['relation_field'] in self._get_field_data(field_data['relation'])
             )):
                 return
             attrs['comodel_name'] = field_data['relation']
@@ -858,7 +865,7 @@ class IrModelFields(models.Model):
 
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
-        fields_data = self._existing_field_data(model._name)
+        fields_data = self._get_field_data(model._name)
         for name, field_data in pycompat.items(fields_data):
             if name not in model._fields and field_data['state'] == 'manual':
                 field = self._instanciate(field_data)
