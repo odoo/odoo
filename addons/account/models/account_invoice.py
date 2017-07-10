@@ -360,7 +360,10 @@ class AccountInvoice(models.Model):
                 domain += [('id', '<>', record.id)]
             if (record.state=='draft') and not self.search(domain, limit=1):
                 record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
-                record.sequence_number_next = '1'
+                sequence = str(self.journal_id.sequence_id._get_current_sequence().number_next_actual)
+                while len(sequence) <= ((self.journal_id.sequence_id.padding or 1) -3):
+                    sequence = '0'+sequence
+                record.sequence_number_next = sequence
             else:
                 record.sequence_number_next_prefix = False
                 record.sequence_number_next = False
