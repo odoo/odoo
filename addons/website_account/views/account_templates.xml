@@ -8,25 +8,23 @@
     </template>
 
     <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="website_portal.portal_my_home" priority="30">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 t-if="invoice_count" class="page-header">
-              <a href="/my/invoices">My Invoices
-                <span class="badge ml8" t-esc="invoice_count"/>
-              </a>
-            </h3>
+        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+            <li t-if="invoice_count" class="list-group-item">
+                <span class="badge" t-esc="invoice_count"/>
+                <a href="/my/invoices">Invoices</a>
+            </li>
         </xpath>
     </template>
 
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="website_portal.portal_layout">
-        <div class="page-header">
-            <span class="h3">My Invoices</span>
+        <h3>Invoices
             <t t-call="website_portal.portal_searchbar"/>
-        </div>
+        </h3>
         <t t-if="not invoices">
             <p>There are currently no invoices and payments for your account.</p>
         </t>
-        <t t-if="invoices">
+        <div t-if="invoices" class="panel panel-default">
             <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -66,7 +64,7 @@
             <div t-if="pager" class="o_portal_pager text-center">
                 <t t-call="website.pager"/>
             </div>
-        </t>
+        </div>
       </t>
     </template>
 </odoo>

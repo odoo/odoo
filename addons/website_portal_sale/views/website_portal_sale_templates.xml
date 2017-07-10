@@ -9,61 +9,43 @@
     <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="website_portal.portal_layout" priority="20">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'quote' or sales_order and sales_order.state == 'sent'">
-                <a t-if="sales_order" t-attf-href="/my/quotes?{{ keep_query() }}">
-                    My Quotations
-                </a>
-                <t t-else="">
-                    My Quotations
-                </t>
+                <a t-if="sales_order" t-attf-href="/my/quotes?{{ keep_query() }}">Quotations</a>
+                <t t-else="">Quotations</t>
             </li>
             <li t-if="page_name == 'order' or sales_order and sales_order.state != 'sent'">
-                <a t-if="sales_order" t-attf-href="/my/orders?{{ keep_query() }}">
-                    My Sales Orders
-                </a>
-                <t t-else="">
-                    My Sales Orders
-                </t>
+                <a t-if="sales_order" t-attf-href="/my/orders?{{ keep_query() }}">Sales Orders</a>
+                <t t-else="">Sales Orders</t>
             </li>
             <li t-if="sales_order">
-                <t t-if="sales_order.state == 'sent'">
-                      Quotation
-                </t>
-                <t t-if="sales_order.state != 'sent'">
-                      Order
-                </t>
+                <t t-if="sales_order.state == 'sent'">Quotation</t>
+                <t t-if="sales_order.state != 'sent'">Order</t>
                 <t t-esc="sales_order.name"/>
             </li>
         </xpath>
     </template>
 
     <template id="portal_my_home_sale" name="Portal My Home : sales entries" inherit_id="website_portal.portal_my_home" priority="20">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 t-if="quotation_count" class="page-header">
-              <a href="/my/quotes">My Quotations
-                <span class="badge ml8" t-esc="quotation_count"/>
-              </a>
-            </h3>
-            <h3 class="page-header">
-                <a href="/my/orders">My Sales Orders
-                    <span t-if="order_count" class="badge ml8" t-esc="order_count"/>
-                    <small t-if="not order_count" class="ml8">
-                        There are currently no orders.
-                    </small>
-                </a>
-            </h3>
+        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+            <li t-if="quotation_count" class="list-group-item">
+                <span class="badge" t-esc="quotation_count"/>
+                <a href="/my/quotes">Quotations</a>
+            </li>
+            <li t-if="order_count" class="list-group-item">
+                <span class="badge" t-esc="order_count"/>
+                <a href="/my/orders">Sales Orders</a>
+            </li>
         </xpath>
     </template>
 
     <template id="portal_my_quotations" name="My Quotations">
       <t t-call="website_portal.portal_layout">
-        <div class="page-header">
-            <span class="h3">My Quotations</span>
+        <h3>Quotations
             <t t-call="website_portal.portal_searchbar"/>
-        </div>
+        </h3>
         <t t-if="not quotations">
             <p>There are currently no quotations for your account.</p>
         </t>
-        <t t-if="quotations">
+        <div t-if="quotations" class="panel panel-default">
             <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -97,20 +79,19 @@
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
-        </t>
+        </div>
       </t>
     </template>
 
     <template id="portal_my_orders" name="My Sales Orders">
       <t t-call="website_portal.portal_layout">
-        <div class="page-header">
-            <span class="h3">My Sales Orders</span>
+        <h3>Sales Orders
             <t t-call="website_portal.portal_searchbar"/>
-        </div>
+        </h3>
         <t t-if="not orders">
             <p>There are currently no orders for your account.</p>
         </t>
-        <t t-if="orders">
+        <div t-if="orders" class="panel panel-default">
             <div class="table-responsive"><table class="table table-hover o_my_status_table">
                 <thead>
                   <tr class="active">
@@ -150,7 +131,7 @@
             <div t-if="pager" class="o_portal_pager text-center">
               <t t-call="website.pager"/>
             </div>
-        </t>
+        </div>
       </t>
     </template>
 

@@ -4,12 +4,8 @@
     <template id="portal_layout" name="Portal layout: Issues menu entry" inherit_id="website_portal.portal_layout" priority="45">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'issue' or issue">
-                <a t-if="issue" t-attf-href="/my/issues?{{ keep_query() }}">
-                    My Issues
-                </a>
-                <t t-else="">
-                    My Issues
-                </t>
+                <a t-if="issue" t-attf-href="/my/issues?{{ keep_query() }}">Issues</a>
+                <t t-else="">Issues</t>
             </li>
             <li t-if="issue">
                 Issue <span t-esc="issue.id"/>
@@ -18,19 +14,17 @@
     </template>
 
     <template id="portal_my_home" name="Portal My Home: Issue entries" inherit_id="website_portal.portal_my_home" priority="45">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 t-if="issue_count" class="page-header">
-                <a href="/my/issues">My Issues
-                    <span class="badge ml8" t-esc="issue_count"/>
-                </a>
-            </h3>
+        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+            <li t-if="issue_count" class="list-group-item">
+                <span class="badge" t-esc="issue_count"/>
+                <a href="/my/issues">Issues</a>
+            </li>
         </xpath>
     </template>
 
     <template id="my_issues" name="My Issues">
         <t t-call="website_portal.portal_layout">
-            <h3 class="page-header">
-                My Issues
+            <h3>Issues
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
             <t t-if="not issues">
@@ -136,7 +130,7 @@
 
     <template id="my_projects" inherit_id="website_project.my_projects">
         <xpath expr="//table/thead/tr/th[last()]" position="after">
-            <th></th>
+            <th>Issues</th>
         </xpath>
         <xpath expr="//table/tbody/tr/td[last()]" position="after">
             <td>
