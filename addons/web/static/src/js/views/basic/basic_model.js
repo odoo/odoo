@@ -2181,7 +2181,7 @@ var BasicModel = AbstractModel.extend({
             var type = record.fields[fieldName].type;
             var value;
             if (type === 'one2many' || type === 'many2many') {
-                if (commands[fieldName].length) { // replace localId by commands
+                if (commands[fieldName] && commands[fieldName].length) { // replace localId by commands
                     changes[fieldName] = commands[fieldName];
                 } else { // no command -> no change for that field
                     delete changes[fieldName];
@@ -2256,11 +2256,11 @@ var BasicModel = AbstractModel.extend({
             type = fields[fieldName].type;
 
             if (type === 'many2many' || type === 'one2many') {
-                commands[fieldName] = [];
                 if (!data[fieldName]) {
                     // skip if this field is empty
                     continue;
                 }
+                commands[fieldName] = [];
                 var list = this.localData[data[fieldName]];
                 if (options.changesOnly && (!list._changes || !list._changes.length)) {
                     // if only changes are requested, skip if there is no change
