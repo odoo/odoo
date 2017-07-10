@@ -408,6 +408,7 @@ class PaymentTransaction(models.Model):
     date_validate = fields.Datetime('Validation Date')
     acquirer_id = fields.Many2one('payment.acquirer', 'Acquirer', required=True)
     type = fields.Selection([
+        ('validation', 'Validation of the bank card'),
         ('server2server', 'Server To Server'),
         ('form', 'Form'),
         ('form_save', 'Form with tokenization')], 'Type',
@@ -417,6 +418,8 @@ class PaymentTransaction(models.Model):
         ('pending', 'Pending'),
         ('authorized', 'Authorized'),
         ('done', 'Done'),
+        ('refunding', 'Refunding'),
+        ('refunded', 'Refunded'),
         ('error', 'Error'),
         ('cancel', 'Canceled')], 'Status',
         copy=False, default='draft', required=True, track_visibility='onchange')
@@ -738,9 +741,10 @@ class PaymentToken(models.Model):
         }
 
     @api.model
-    def validate(self):
-        """ This method allow to verify if this payment method is valid or not.
-            It calls a method named %provider_name%_validate which should do check
+    def validate(self, **kwargs):
+        """
+            This method allow to verify if this payment method is valid or not.
+            It does this by withdrawing a certain amount and then refund it right after.
         """
         currency = self.partner_id.currency_id
 
@@ -753,25 +757,31 @@ class PaymentToken(models.Model):
 
         if len(currency) != 1:
             _logger.error("Error 'EUR' currency not found for payment method validation!")
-            return
+            return False
 
         reference = "VALIDATION-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
         tx = self.env['payment.transaction'].create({
             'amount': amount,
             'acquirer_id': self.acquirer_id.id,
-            'type': 'server2server',
+            'type': 'validation',
             'currency_id': currency.id,
             'reference': reference,
             'payment_token_id': self.id,
             'partner_id': self.partner_id.id,
             'partner_country_id': self.partner_id.country_id.id,
         })
+
         try:
-            tx.s2s_do_transaction()
+            kwargs.update({'3d_secure': True})
+            tx.s2s_do_transaction(**kwargs)
+            # if 3D secure is called, then we do not refund right now
+            if tx.html_3ds:
+                return tx
         except:
             _logger.error('Error while validating a payment method')
         finally:
             tx.s2s_do_refund()
+        return tx
 
     @api.multi
     @api.depends('name')
