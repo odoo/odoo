@@ -3,23 +3,15 @@
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="40">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'project' or project">
-                <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">
-                    Projects
-                </a>
-                <t t-else="">
-                    Projects
-                </t>
+                <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
+                <t t-else="">Projects</t>
             </li>
             <li t-if="project">
                 <t t-esc="project.name"/>
             </li>
             <li t-if="page_name == 'task' or task">
-                <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">
-                    My Tasks
-                </a>
-                <t t-else="">
-                    My Tasks
-                </t>
+                <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
+                <t t-else="">Tasks</t>
             </li>
             <li t-if="task">
                 <span t-field="task.name"/>
@@ -28,28 +20,23 @@
     </template>
 
     <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="40">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 t-if="project_count" class="page-header">
-                <a href="/my/projects">My Projects
-                    <span class="badge ml8" t-esc="project_count"/>
-                </a>
-            </h3>
-            <h3 t-if="task_count" class="page-header">
-                <a href="/my/tasks">My Tasks
-                    <span class="badge ml8" t-esc="task_count"/>
-                </a>
-            </h3>
+        <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+            <li t-if="project_count" class="list-group-item">
+                <span class="badge" t-esc="project_count"/>
+                <a href="/my/projects">Projects</a>
+            </li>
+            <li t-if="task_count" class="list-group-item">
+                <span class="badge" t-esc="task_count"/>
+                <a href="/my/tasks">Tasks</a>
+            </li>
         </xpath>
     </template>
 
     <template id="my_projects" name="My Projects">
         <t t-call="website_portal.portal_layout">
-            <div class="row">
-                <h3 class="page-header">
-                    My Projects
-                    <t t-call="website_portal.portal_searchbar"/>
-                </h3>
-            </div>
+            <h3>Projects
+                <t t-call="website_portal.portal_searchbar"/>
+            </h3>
             <t t-if="not projects">
                 <div class="alert alert-warning mt8" role="alert">
                     There are no projects.
@@ -60,7 +47,7 @@
                     <thead>
                         <tr class="active">
                             <th class="col-md-6">Name</th>
-                            <th></th>
+                            <th>Tasks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,7 +56,7 @@
                                 <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
                             </td>
                             <td>
-                                <a t-if="project.use_tasks" t-attf-href="/my/tasks?filterby=#{project.id}">
+                                <a t-if="project.use_tasks" t-attf-href="/my/tasks?{{keep_query('debug', filterby=project.id)}}">
                                     <t t-esc="project.task_count" />
                                     <t t-esc="project.label_tasks" />
                                 </a>
@@ -140,8 +127,7 @@
 
     <template id="my_tasks" name="My Tasks">
         <t t-call="website_portal.portal_layout">
-            <h3 class="page-header">
-                My Tasks
+            <h3>Tasks
                 <t t-call="website_portal.portal_searchbar"/>
             </h3>
             <t t-if="not tasks">

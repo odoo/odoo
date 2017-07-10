@@ -4,12 +4,8 @@
   <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="website_portal.portal_layout" priority="25">
     <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
       <li t-if="page_name == 'purchase' or purchase_order">
-        <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">
-          My Purchase Orders
-        </a>
-        <t t-else="">
-          My Purchase Orders
-        </t>
+        <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
+        <t t-else="">Purchase Orders</t>
       </li>
       <li t-if="purchase_order">
         <t t-esc="purchase_order.name"/>
@@ -18,22 +14,21 @@
   </template>
 
   <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="website_portal.portal_my_home" priority="25">
-    <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-        <h3 t-if="purchase_count" class="page-header">
-          <a href="/my/purchase">My Purchase Orders
-            <span class="badge ml8" t-esc="purchase_count"/>
-          </a>
-        </h3>
+    <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
+        <li t-if="purchase_count" class="list-group-item">
+          <span class="badge" t-esc="purchase_count"/>
+          <a href="/my/purchase">Purchase Orders</a>
+        </li>
     </xpath>
   </template>
 
   <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
     <t t-call="website_portal.portal_layout">
-      <h3 class="page-header">
-        My Purchase Orders
+      <h3>Purchase Orders
         <t t-call="website_portal.portal_searchbar"/>
       </h3>
-      <table class="table table-hover o_my_status_table">
+      <div t-if="orders" class="panel panel-default">
+      <div class="table-responsive"><table class="table table-hover o_my_status_table">
         <thead>
           <tr class="active">
             <th>Purchase Orders #</th>
@@ -57,9 +52,10 @@
             </td>
           </tr>
         </t>
-      </table>
+      </table></div>
       <div t-if="pager" class="o_portal_pager text-center">
         <t t-call="website.pager"/>
+      </div>
       </div>
     </t>
   </template>
