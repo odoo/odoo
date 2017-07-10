@@ -2,11 +2,25 @@
 <odoo>
     <data>
 
+        <record id="rating_rating_action_view_project_rating_issue" model="ir.actions.act_window">
+            <field name="name">Ratings for issues</field>
+            <field name="res_model">rating.rating</field>
+            <field name="view_mode">kanban,tree,graph,pivot,form</field>
+            <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id','=',active_id), ('res_model','=','project.issue')]</field>
+            <field name="search_view_id" ref="rating_project.rating_rating_view_search_project"/>
+            <field name="help" type="html">
+                <p>
+                    There is no rating for issues of this project at the moment.
+                </p>
+            </field>
+        </record>
+
         <record id="rating_rating_action_issue" model="ir.actions.act_window">
             <field name="name">Customer Ratings</field>
             <field name="res_model">rating.rating</field>
             <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="domain">[('res_model','=','project.issue'),('res_id','=',active_id), ('consumed', '=', True)]</field>
+            <field name="search_view_id" ref="rating_project.rating_rating_view_search_project"/>
             <field name="help" type="html">
                 <p>
                     Customer ratings on issues. If you have no rating, change your project Settings to activate it.
@@ -17,10 +31,10 @@
         <record id="rating_rating_view_search" model="ir.ui.view">
             <field name="name">rating.rating.search.inherit</field>
             <field name="model">rating.rating</field>
-            <field name="inherit_id" ref="rating.rating_rating_view_search" />
+            <field name="inherit_id" ref="rating_project.rating_rating_view_search_project" />
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='rating_tasks']" position="after">
-                    <filter string="Rating for issues" domain="[('res_model', '=', 'project.issue')]" />
+                    <filter string="Rating for issues" name="rating_issues" domain="[('res_model', '=', 'project.issue')]" />
                 </xpath>
             </field>
         </record>
@@ -78,10 +92,10 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
-                    <button name="action_view_issue_rating"
+                    <button name="%(rating_rating_action_view_project_rating_issue)d"
                         attrs="{'invisible': ['|', '|', ('use_issues','=', False), ('rating_status', '=', 'no'), ('percentage_satisfaction_issue', '=', -1)]}"
                         class="oe_stat_button oe_percent"
-                        type="object"
+                        type="action"
                         icon="fa-smile-o">
                         <field string="% On issues" name="percentage_satisfaction_issue" widget="statinfo"/>
                      </button>
