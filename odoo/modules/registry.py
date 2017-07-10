@@ -15,9 +15,9 @@ import threading
 
 import odoo
 from .. import SUPERUSER_ID
-from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, table_exists, topological_sort,
-                        OrderedSet, pycompat)
+from odoo.tools import (assertion_report, config, existing_tables,
+                        lazy_classproperty, lazy_property, table_exists,
+                        topological_sort, OrderedSet, pycompat)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -310,10 +310,10 @@ class Registry(Mapping):
             models[0].recompute()
 
         # make sure all tables are present
-        missing = [name
-                   for name, model in pycompat.items(env)
-                   if not model._abstract and not table_exists(cr, model._table)]
-        if missing:
+        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+        if missing_tables:
+            missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
             deps = {name: model._depends for name, model in pycompat.items(env)}
@@ -322,9 +322,9 @@ class Registry(Mapping):
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
             # check again, and log errors if tables are still missing
-            for name, model in pycompat.items(env):
-                if not model._abstract and not table_exists(cr, model._table):
-                    _logger.error("Model %s has no table.", name)
+            missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+            for table in missing_tables:
+                _logger.error("Model %s has no table.", table2model[table])
 
     @lazy_property
     def cache(self):
