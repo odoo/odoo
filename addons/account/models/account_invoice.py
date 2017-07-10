@@ -366,7 +366,7 @@ class AccountInvoice(models.Model):
                 record.sequence_number_next = sequence
             else:
                 record.sequence_number_next_prefix = False
-                record.sequence_number_next = False
+                record.sequence_number_next = 'no'
 
     @api.one
     def _set_sequence_next(self):
