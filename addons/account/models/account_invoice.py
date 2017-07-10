@@ -376,7 +376,6 @@ class AccountInvoice(models.Model):
             sequence = self.journal_id.sequence_id._get_current_sequence()
             sequence.write({
                 'number_next': int(result.group(2)),
-                'padding': len(nxt)+2
             })
             self.journal_id.sequence_id.write({
                 'padding': len(nxt)+2
