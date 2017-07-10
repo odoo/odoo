@@ -354,7 +354,10 @@ class AccountInvoice(models.Model):
                 'out': ['out_invoice', 'out_refund'],
                 'in_': ['in_invoice', 'in_refund']
             }
-            if (record.state=='draft') and not self.search([('type','in',types.get(record.type[:3], (record.type,)))], limit=1):
+            domain = [('type','in',types.get(record.type[:3], (record.type,)))]
+            if record.id:
+                domain += [('id', '<>', record.id)]
+            if (record.state=='draft') and not self.search(domain, limit=1):
                 record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
             else:
                 record.sequence_number_next_prefix = False
