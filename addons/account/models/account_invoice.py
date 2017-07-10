@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import re
 from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -215,7 +216,7 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
-    sequence_number_next = fields.Integer(string='Next Number', related='journal_id.sequence_number_next')
+    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
     sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
 
     origin = fields.Char(string='Source Document',
@@ -359,8 +360,24 @@ class AccountInvoice(models.Model):
                 domain += [('id', '<>', record.id)]
             if (record.state=='draft') and not self.search(domain, limit=1):
                 record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
+                record.sequence_number_next = '1'
             else:
                 record.sequence_number_next_prefix = False
+                record.sequence_number_next = False
+
+    @api.one
+    def _set_sequence_next(self):
+        nxt = re.sub("[^0-9]", '', self.sequence_number_next or '1')
+        result = re.match("(0*)([0-9]+)", nxt)
+        if result and self.journal_id.sequence_id:
+            sequence = self.journal_id.sequence_id._get_current_sequence()
+            sequence.write({
+                'number_next': int(result.group(2)),
+                'padding': len(nxt)+2
+            })
+            self.journal_id.sequence_id.write({
+                'padding': len(nxt)+2
+            })
 
     @api.model
     def create(self, vals):
