@@ -137,9 +137,6 @@ class StockQuant(models.Model):
                     'date': date,
                     'ref': move.picking_id.name})
                 new_account_move.post()
-                new_account_move.message_post_with_view('mail.message_origin_link',
-                        values={'self': new_account_move, 'origin': move.picking_id},
-                        subtype_id=self.env.ref('mail.mt_note').id)
 
     def _quant_create_from_move(self, qty, move, lot_id=False, owner_id=False, src_package_id=False, dest_package_id=False, force_location_from=False, force_location_to=False):
         quant = super(StockQuant, self)._quant_create_from_move(qty, move, lot_id=lot_id, owner_id=owner_id, src_package_id=src_package_id, dest_package_id=dest_package_id, force_location_from=force_location_from, force_location_to=force_location_to)

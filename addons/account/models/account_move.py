@@ -19,7 +19,6 @@ from lxml import etree
 class AccountMove(models.Model):
     _name = "account.move"
     _description = "Account Entry"
-    _inherit = ['mail.thread']
     _order = 'date desc, id desc'
 
     @api.multi

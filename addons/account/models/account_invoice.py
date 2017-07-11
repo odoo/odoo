@@ -941,9 +941,6 @@ class AccountInvoice(models.Model):
                 'move_name': move.name,
             }
             inv.with_context(ctx).write(vals)
-            move.message_post_with_view('mail.message_origin_link',
-                    values={'self': move, 'origin': inv},
-                    subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     @api.multi
