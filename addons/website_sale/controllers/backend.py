@@ -109,9 +109,17 @@ class WebsiteSaleBackend(WebsiteBackend):
         sales_values['summary']['order_convertion_pctg'] = 100.0 * sales_values['summary']['order_count'] / sales_values['summary']['order_carts_count'] if sales_values['summary']['order_carts_count'] else 0
 
         # Previous Sale-based results computation
-        previous_datetime_from = (datetime_from - timedelta(days=date_diff_days))
+        previous_date_from = datetime.strftime(date_date_from - timedelta(days=date_diff_days), '%Y-%m-%d')
+        previous_date_to = datetime.strftime(date_date_from, '%Y-%m-%d')
+        previous_sales_domain = [
+            ('team_id.team_type', '=', 'website'),
+            ('state', 'in', ['sale', 'done']),
+            ('date', '>=', previous_date_from),
+            ('date', '<=', previous_date_to)
+        ]
+        previous_sale_evolution = self._compute_previous_sale_evolution(date_from=date_date_from - timedelta(days=date_diff_days), date_to=date_date_from, previous_sales_domain=previous_sales_domain)
 
-        previous_summary = self._compute_sale_graph(date_from=previous_datetime_from, date_to=datetime_from)['previous_summary']
+        previous_summary = previous_sale_evolution['previous_summary']
         sales_values['evl_summary'].update(
             evl_order_count=round((float(sales_values['summary']['order_count']) / previous_summary['pre_order_count'] * 100) - 100, 2) if previous_summary['pre_order_count'] > 0 else 0,
             evl_total_sold=round((float(sales_values['summary']['total_sold']) / previous_summary['pre_total_sold'] * 100) - 100, 2) if previous_summary['pre_total_sold'] > 0 else 0,
@@ -129,9 +137,6 @@ class WebsiteSaleBackend(WebsiteBackend):
         else:
             previous_sale_label = _('Previous Year')
 
-        prev_date_from = datetime.strftime(date_date_from - timedelta(days=date_diff_days), '%Y-%m-%d')
-        prev_date_to = datetime.strftime(date_date_from, '%Y-%m-%d')
-
         sales_domain = [
             ('team_id.team_type', '=', 'website'),
             ('state', 'in', ['sale', 'done']),
@@ -139,24 +144,18 @@ class WebsiteSaleBackend(WebsiteBackend):
             ('date', '<=', date_to)
         ]
 
-        prev_sales_domain = [
-            ('team_id.team_type', '=', 'website'),
-            ('state', 'in', ['sale', 'done']),
-            ('date', '>=', prev_date_from),
-            ('date', '<=', prev_date_to)
-        ]
-
         sales_values['graph'] += [{
-            'values': self._compute_sale_graph(date_from=date_date_from, date_to=date_date_to, sales_domain=sales_domain)['sales_graph'],
+            'values': self._compute_sale_graph(date_date_from, date_date_to, sales_domain),
             'key': 'Untaxed Total',
         }, {
-            'values': self._compute_sale_graph(date_from=date_date_from - timedelta(days=date_diff_days), date_to=date_date_from, sales_domain=prev_sales_domain, previous=True)['sales_graph'],
+            'values': previous_sale_evolution['sales_graph'],
             'key': previous_sale_label,
         }]
 
         return results
 
-    def _compute_sale_graph(self, date_from, date_to, sales_domain=False, previous=False):
+    def _compute_sale_graph(self, date_from, date_to, sales_domain):
+
         days_between = (date_to - date_from).days
         date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
         daily_sales = request.env['sale.report'].read_group(
@@ -167,7 +166,25 @@ class WebsiteSaleBackend(WebsiteBackend):
         daily_sales_dict = {p['date:day']: p['price_subtotal'] for p in daily_sales}
 
         sales_graph = [{
-            '0': fields.Date.to_string(d) if not previous else fields.Date.to_string(d + timedelta(days=days_between)),
+            '0': fields.Date.to_string(d),
+            # Respect read_group format in models.py
+            '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
+        } for d in date_list]
+
+        return sales_graph
+
+    def _compute_previous_sale_evolution(self, date_from, date_to, previous_sales_domain):
+        days_between = (date_to - date_from).days
+        date_list = [(date_from + timedelta(days=x)) for x in range(0, days_between + 1)]
+        daily_sales = request.env['sale.report'].read_group(
+            domain=previous_sales_domain,
+            fields=['date', 'price_subtotal'],
+            groupby='date:day')
+
+        daily_sales_dict = {p['date:day']: p['price_subtotal'] for p in daily_sales}
+
+        sales_graph = [{
+            '0': fields.Date.to_string(d + timedelta(days=days_between)),
             # Respect read_group format in models.py
             '1': daily_sales_dict.get(babel.dates.format_date(d, format='dd MMM yyyy', locale=request.env.context.get('lang', 'en_US')), 0)
         } for d in date_list]
@@ -187,22 +204,12 @@ class WebsiteSaleBackend(WebsiteBackend):
                 previous_summary['pre_order_count'] += res['state_count']
             previous_summary['pre_order_carts_count'] += res['state_count']
 
-        pre_report_price_lines = request.env['sale.report'].read_group(
-            domain=[
-                ('team_id.team_type', '=', 'website'),
-                ('state', 'in', ['sale', 'done']),
-                ('date', '>=', fields.Datetime.to_string(date_from)),
-                ('date', '<', fields.Datetime.to_string(date_to))],
-            fields=['team_id', 'price_subtotal'],
-            groupby=['team_id'],
-        )
         previous_summary.update(
-            pre_total_sold=sum(price_line['price_subtotal'] for price_line in pre_report_price_lines)
+            pre_total_sold=sum(price_line['price_subtotal'] for price_line in daily_sales)
         )
 
         # Previous Ratio computation
         previous_summary['pre_order_per_day_ratio'] = round(float(previous_summary['pre_order_count']) / days_between, 2)
         previous_summary['pre_order_sold_ratio'] = round(float(previous_summary['pre_total_sold']) / previous_summary['pre_order_count'], 2) if previous_summary['pre_order_count'] else 0
         previous_summary['pre_order_convertion_pctg'] = 100.0 * previous_summary['pre_order_count'] / previous_summary['pre_order_carts_count'] if previous_summary['pre_order_carts_count'] else 0
-
         return {'previous_summary': previous_summary, 'sales_graph': sales_graph}
