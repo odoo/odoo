@@ -4891,9 +4891,9 @@ class BaseModel(object):
         if context is None:
             context = {}
         context = context.copy()
-        data = self.copy_data(cr, uid, id, default, context)
-        new_id = self.create(cr, uid, data, context)
-        self.copy_translations(cr, uid, id, new_id, context)
+        data = self.copy_data(cr, uid, id, default=default, context=context)
+        new_id = self.create(cr, uid, data, context=context)
+        self.copy_translations(cr, uid, id, new_id, context=context)
         return new_id
 
     @api.multi
