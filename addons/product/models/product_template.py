@@ -7,7 +7,7 @@ import psycopg2
 from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError, except_orm
+from odoo.exceptions import ValidationError, RedirectWarning, except_orm
 from odoo.tools import pycompat
 
 
@@ -21,7 +21,16 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        return category.id if category.type == 'normal' else False
+        if category and category.type == 'normal':
+            return category.id
+        # fallback if no category "All" exists, because yes, users do delete default data!
+        category = self.env['product.category'].search([('type', '=', 'normal')], limit=1)
+        if category:
+            return category.id
+        else:
+            err_msg = _('You must define at least one product category (that is not a view) in order to be able to create products.')
+            redir_msg = _('Go to Internal Categories')
+            raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
     def _get_default_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
