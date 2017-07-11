@@ -641,7 +641,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      * @private
      */
     _onSwitchToPreviousView: function () {
-        if (this.view_stack.length === 1) {
+        var action_stack = this.action_manager && this.action_manager.get_action_stack() || [];
+        if (this.view_stack.length === 1 && action_stack.length <= 1) {
             var currentView = this.view_stack[0].controller;
             currentView.update({}, {reload: false});
         } else {
