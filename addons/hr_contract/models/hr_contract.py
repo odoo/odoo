@@ -100,27 +100,30 @@ class Contract(models.Model):
             raise ValidationError(_('Contract start date must be less than contract end date.'))
 
     @api.model
-    def update_to_pending(self):
-        soon_expired_contracts = self.search([
+    def update_state(self):
+        self.search([
             ('state', '=', 'open'),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=-7))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=-60)))
-        ])
-        return soon_expired_contracts.write({
+            '&',
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=7))),
+            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            '&',
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60))),
+            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+        ]).write({
             'state': 'pending'
         })
 
-    @api.model
-    def update_to_close(self):
-        expired_contracts = self.search([
+        self.search([
+            ('state', 'in', ('open', 'pending')),
             '|',
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1)))
-        ])
-        return expired_contracts.write({
+            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=1))),
+        ]).write({
             'state': 'close'
         })
+
+        return True
 
     @api.multi
     def _track_subtype(self, init_values):
