@@ -1187,7 +1187,8 @@ var BasicModel = AbstractModel.extend({
         }
 
         var self = this;
-        var list = this.localData[record._changes[fieldName] || record.data[fieldName]];
+        var localID = (record._changes && record._changes[fieldName]) || record.data[fieldName];
+        var list = this.localData[localID];
         var field = record.fields[fieldName];
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
