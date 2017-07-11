@@ -360,7 +360,7 @@
                                                 t-att-data-id="acquirer.id"
                                                 t-att-data-access-token="token or ''"
                                                 t-att-data-tx-type="form"
-                                                t-att-data-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
+                                                t-att-data-call-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
                                             <div t-raw="buttons.get(acquirer.id)"/>
                                             <div t-field="acquirer.pre_msg"/>
                                         </div>
