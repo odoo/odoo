@@ -449,7 +449,8 @@
                         <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
-                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
+                            <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">

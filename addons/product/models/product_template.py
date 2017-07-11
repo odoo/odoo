@@ -20,7 +20,7 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        return category.id if category.type == 'normal' else False
+        return category and category.type == 'normal' and category.id or False
 
     def _get_default_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
