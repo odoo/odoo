@@ -8,6 +8,20 @@ from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
 
 
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    repair_id = fields.Many2one('mrp.repair')
+    consume_repair_id = fields.Many2one('mrp.repair')
+
+
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
+
+    repair_id = fields.Many2one('mrp.repair', related='move_id.repair_id')
+    consume_repair_id = fields.Many2one('mrp.repair', related='move_id.consume_repair_id')
+
+
 class Repair(models.Model):
     _name = 'mrp.repair'
     _description = 'Repair Order'
@@ -419,14 +433,15 @@ class Repair(models.Model):
                     'location_id': operation.location_id.id,
                     'location_dest_id': operation.location_dest_id.id,
                     'pack_operation_ids': [(0, 0, {'product_id': operation.product_id.id,
-                                           'lot_id': operation.lot_id.id, 
-                                           'product_qty': 0,  # bypass reservation here
-                                           'product_uom_id': operation.product_uom_id.id,
+                                           'lot_id': operation.lot_id.id,
+                                           'product_uom_qty': 0,  # bypass reservation here
+                                           'product_uom_id': operation.product_uom.id,
                                            'qty_done': operation.product_uom_qty,
                                            'package_id': False,
                                            'result_package_id': False,
                                            'location_id': operation.location_id.id, #TODO: owner stuff
-                                           'location_dest_id': operation.location_dest_id.id,})]
+                                           'location_dest_id': operation.location_dest_id.id,})],
+                    'consume_repair_id': repair.id,
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
@@ -439,17 +454,21 @@ class Repair(models.Model):
                 'location_id': repair.location_id.id,
                 'location_dest_id': repair.location_dest_id.id,
                 'pack_operation_ids': [(0, 0, {'product_id': repair.product_id.id,
-                                           'lot_id': repair.lot_id.id, 
-                                           'product_qty': 0,  # bypass reservation here
-                                           'product_uom_id': repair.product_uom_id.id or repair.product_id.uom_id.id,
+                                           'lot_id': repair.lot_id.id,
+                                           'product_uom_qty': 0,  # bypass reservation here
+                                           'product_uom_id': repair.product_uom.id or repair.product_id.uom_id.id,
                                            'qty_done': repair.product_qty,
                                            'package_id': False,
                                            'result_package_id': False,
                                            'location_id': repair.location_id.id, #TODO: owner stuff
-                                           'location_dest_id': repair.location_dest_id.id,})]
+                                           'location_dest_id': repair.location_dest_id.id,})],
+                'repair_id': repair.id,
             })
+            consumed_lines = moves.mapped('move_line_ids')
+            produced_lines = move.move_line_ids
             moves |= move
             moves.action_done()
+            produced_lines.write({'consume_line_ids': [(6, 0, consumed_lines.ids)]})
             res[repair.id] = move.id
         return res
 
