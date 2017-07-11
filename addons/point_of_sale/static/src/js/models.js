@@ -1101,6 +1101,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.quantity = this.quantity;
         orderline.quantityStr = this.quantityStr;
         orderline.discount = this.discount;
+        orderline.price = this.price;
         orderline.type = this.type;
         orderline.selected = false;
         return orderline;
