@@ -79,29 +79,27 @@ Index: addons/openacademy/demo.xml
 +++ addons/openacademy/demo.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,25 @@
 +<odoo>
-+    <data>
-+        <!--  -->
-+        <!--   <record id="object0" model="openacademy.openacademy"> -->
-+        <!--     <field name="name">Object 0</field> -->
-+        <!--   </record> -->
-+        <!--  -->
-+        <!--   <record id="object1" model="openacademy.openacademy"> -->
-+        <!--     <field name="name">Object 1</field> -->
-+        <!--   </record> -->
-+        <!--  -->
-+        <!--   <record id="object2" model="openacademy.openacademy"> -->
-+        <!--     <field name="name">Object 2</field> -->
-+        <!--   </record> -->
-+        <!--  -->
-+        <!--   <record id="object3" model="openacademy.openacademy"> -->
-+        <!--     <field name="name">Object 3</field> -->
-+        <!--   </record> -->
-+        <!--  -->
-+        <!--   <record id="object4" model="openacademy.openacademy"> -->
-+        <!--     <field name="name">Object 4</field> -->
-+        <!--   </record> -->
-+        <!--  -->
-+    </data>
++    <!--  -->
++    <!--   <record id="object0" model="openacademy.openacademy"> -->
++    <!--     <field name="name">Object 0</field> -->
++    <!--   </record> -->
++    <!--  -->
++    <!--   <record id="object1" model="openacademy.openacademy"> -->
++    <!--     <field name="name">Object 1</field> -->
++    <!--   </record> -->
++    <!--  -->
++    <!--   <record id="object2" model="openacademy.openacademy"> -->
++    <!--     <field name="name">Object 2</field> -->
++    <!--   </record> -->
++    <!--  -->
++    <!--   <record id="object3" model="openacademy.openacademy"> -->
++    <!--     <field name="name">Object 3</field> -->
++    <!--   </record> -->
++    <!--  -->
++    <!--   <record id="object4" model="openacademy.openacademy"> -->
++    <!--     <field name="name">Object 4</field> -->
++    <!--   </record> -->
++    <!--  -->
 +</odoo>
 Index: addons/openacademy/models.py
 ===================================================================
@@ -129,24 +127,22 @@ Index: addons/openacademy/templates.xml
 +++ addons/openacademy/templates.xml	2014-08-26 17:25:49.791783523 +0200
 @@ -0,0 +1,22 @@
 +<odoo>
-+    <data>
-+        <!-- <template id="listing"> -->
-+        <!--   <ul> -->
-+        <!--     <li t-foreach="objects" t-as="object"> -->
-+        <!--       <a t-attf-href="{{ root }}/objects/{{ object.id }}"> -->
-+        <!--         <t t-esc="object.display_name"/> -->
-+        <!--       </a> -->
-+        <!--     </li> -->
-+        <!--   </ul> -->
-+        <!-- </template> -->
-+        <!-- <template id="object"> -->
-+        <!--   <h1><t t-esc="object.display_name"/></h1> -->
-+        <!--   <dl> -->
-+        <!--     <t t-foreach="object._fields" t-as="field"> -->
-+        <!--       <dt><t t-esc="field"/></dt> -->
-+        <!--       <dd><t t-esc="object[field]"/></dd> -->
-+        <!--     </t> -->
-+        <!--   </dl> -->
-+        <!-- </template> -->
-+    </data>
++    <!-- <template id="listing"> -->
++    <!--   <ul> -->
++    <!--     <li t-foreach="objects" t-as="object"> -->
++    <!--       <a t-attf-href="{{ root }}/objects/{{ object.id }}"> -->
++    <!--         <t t-esc="object.display_name"/> -->
++    <!--       </a> -->
++    <!--     </li> -->
++    <!--   </ul> -->
++    <!-- </template> -->
++    <!-- <template id="object"> -->
++    <!--   <h1><t t-esc="object.display_name"/></h1> -->
++    <!--   <dl> -->
++    <!--     <t t-foreach="object._fields" t-as="field"> -->
++    <!--       <dt><t t-esc="field"/></dt> -->
++    <!--       <dd><t t-esc="object[field]"/></dd> -->
++    <!--     </t> -->
++    <!--   </dl> -->
++    <!-- </template> -->
 +</odoo>
