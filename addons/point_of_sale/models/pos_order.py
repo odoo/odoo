@@ -211,7 +211,7 @@ class PosOrder(models.Model):
         have_to_group_by = session and session.config_id.group_by or False
         rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
 
-        for order in self.filtered(lambda o: not o.account_move or order.state == 'paid'):
+        for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
             current_company = order.sale_journal.company_id
             account_def = IrProperty.get(
                 'property_account_receivable_id', 'res.partner')
