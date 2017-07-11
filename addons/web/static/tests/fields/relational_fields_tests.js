@@ -30,6 +30,7 @@ QUnit.module('relational_fields', {
                         type: "selection",
                         selection: [['red', "Red"], ['black', "Black"]],
                         default: 'red',
+                        string: "Color",
                     },
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
@@ -1472,11 +1473,11 @@ QUnit.module('relational_fields', {
         }, true);
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
-            "should have the 3 rows in the correct order")
+            "should have the 3 rows in the correct order");
 
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
-            "should still have the 3 rows in the correct order")
+            "should still have the 3 rows in the correct order");
 
         // Drag and drop the fourth line in second position
         testUtils.dragAndDrop(
@@ -1489,11 +1490,11 @@ QUnit.module('relational_fields', {
             "sequences values should be incremental starting from the previous minimum one");
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
-            "should have the 3 rows in the new order")
+            "should have the 3 rows in the new order");
 
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
-            "should still have the 3 rows in the new order")
+            "should still have the 3 rows in the new order");
 
         form.destroy();
     });
@@ -6409,6 +6410,31 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('fieldradio widget has o_horizontal or o_vertical class', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.color2 = this.data.partner.fields.color;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                    '<field name="color" widget="radio"/>' +
+                    '<field name="color2" widget="radio" options="{\'horizontal\': True}"/>' +
+                    '</group>' +
+                '</form>',
+        });
+
+        var btn1 = form.$('div.o_field_radio.o_vertical');
+        var btn2 = form.$('div.o_field_radio.o_horizontal');
+
+        assert.strictEqual(btn1.length, 1, "should have o_vertical class");
+        assert.strictEqual(btn2.length, 1, "should have o_horizontal class");
         form.destroy();
     });
 
