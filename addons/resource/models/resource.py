@@ -669,6 +669,10 @@ class ResourceResource(models.Model):
         required=True,
         help="Define the schedule of resource")
 
+    _sql_constraints = [
+        ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
+    ]
+
     @api.model
     def create(self, values):
         if values.get('company_id') and not values.get('calendar_id'):
