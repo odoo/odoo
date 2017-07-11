@@ -11,14 +11,17 @@
                     </p>
                     <group>
                         <group colspan="4" class="mb0">
-                            <field name="count" invisible="[('count','=',1)]" readonly="True"/>
+                            <field name="count" invisible="[('count', '=', 1)]" readonly="True"/>
                             <field name="product_id" context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline" invisible="1"/>
                             <field name="advance_payment_method" widget="radio" options="{'horizontal':true}"
-                            attrs="{'invisible': [('count','&gt;',1)]}"/> 
+                            attrs="{'invisible': [('count','&gt;',1)]}"/>
                         </group>
                         <group>
-                            <div class="text-center ml8 " attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('total_down_payment', '==', 0), ('count','&gt;',1)]}" colspan="2">
-                                <field name="deduct_down_payment" class="ml92"/>
+                            <div colspan="2" class="text-center ml24" attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('invoiceable_amount', '==', 0), ('count','&gt;',1)]}">
+                                <span class="fa fa-info-circle ml32"/><span> Invoiceable amount <field name="invoiceable_amount"/></span>
+                            </div>
+                            <div class="text-center ml32" attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('total_down_payment', '==', 0), ('count','&gt;',1)]}" colspan="2">
+                                <field name="deduct_down_payment" class="ml64"/>
                                 <label for="deduct_down_payment"/>
                                 <field name="currency_id" invisible="1"/>
                                 ( <field name="total_down_payment" widget="monetary"/> )

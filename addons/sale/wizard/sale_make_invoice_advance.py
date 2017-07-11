@@ -6,7 +6,6 @@ import time
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -38,26 +37,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_deposit_taxes_id(self):
         return self._default_product_id().taxes_id
 
-    @api.model
-    def _get_advance_payment_option(self):
-        # FIX ME: it doesn't get updated onchange of quantities
-        # precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-        # [line.price_total for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice')]
+    @api.depends('advance_payment_method')
+    def _get_invoiceable_amount(self):
         order = self.env['sale.order'].browse(self._context.get('active_id'))
-        total_amount = 0
-        for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice'):
-            quantity = line.product_uom_qty if line.product_id.invoice_policy == 'order' else line.qty_to_invoice if line.qty_to_invoice > 0 else 0.0
-            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, quantity, product=line.product_id, partner=line.order_id.partner_shipping_id)
-            subtotal_amount = taxes['total_included']
-            # print '>>>>>>>>> price included:', taxes['total_included']
-            # print '>>>>>>>>> price excluded:', taxes['total_excluded']
-            total_amount += subtotal_amount
-        return [
-            ('invoiceable', 'Invoiceable lines ( %s %s )' % (order.currency_id.symbol, total_amount)),
-            ('down_payment', 'Down payments'),
-            ('all_uninvoiced', 'All the lines not yet invoiced'),
-        ]
+        self.invoiceable_amount = sum(line.price_total for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice'))
 
     @api.multi
     def _get_default_currency(self):
@@ -66,17 +49,18 @@ class SaleAdvancePaymentInv(models.TransientModel):
     @api.depends('advance_payment_method')
     def _get_down_payment(self):
         order = self.env['sale.order'].browse(self._context.get('active_id'))
-        self.total_down_payment = sum(line.price_unit for line in order.order_line.filtered(lambda x: x.is_downpayment == True and x.invoice_status == 'to invoice'))
+        self.total_down_payment = sum(line.price_unit for line in order.order_line.filtered(lambda x: x.is_downpayment and x.invoice_status == 'to invoice'))
 
-    advance_payment_method = fields.Selection(_get_advance_payment_option, string='What do you want to invoice?', default='invoiceable', required=True)
+    advance_payment_method = fields.Selection([
+        ('invoiceable', 'Invoiceable lines'),
+        ('down_payment', 'Down payments'),
+        ('all_uninvoiced', 'All the lines not yet invoiced')], string='What do you want to invoice?', default='invoiceable', required=True)
     product_id = fields.Many2one('product.product', string='Down payment product', domain=[('type', '=', 'service')], default=_default_product_id)
-    down_payment_method = fields.Selection([
-        ('percentage', 'Percentage'),
-        ('fixed', 'Fixed amount')
-    ], default='percentage', required=True)
+    down_payment_method = fields.Selection([('percentage', 'Percentage'), ('fixed', 'Fixed amount')], default='percentage', required=True)
     deduct_down_payment = fields.Boolean('Deduct down payments', default=_get_deduct_down_payment)
     currency_id = fields.Many2one('res.currency', default=_get_default_currency, readonly=True)
     total_down_payment = fields.Monetary(compute='_get_down_payment', digits=dp.get_precision('Account'), string='Total paid down payment amount', readonly=True, currency_field='currency_id')
+    invoiceable_amount = fields.Monetary(compute='_get_invoiceable_amount', digits=dp.get_precision('Account'), string='Total Invoiceable amount', readonly=True, currency_field='currency_id')
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
