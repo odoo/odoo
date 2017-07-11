@@ -144,16 +144,16 @@ Odoo's XML files, an overview
 -----------------------------
 
 Any Odoo XML file starts with encoding specifications.
-After that, you have to write your code inside a ``<data>`` tag, placed into an ``</odoo>`` tag.
+After that, you have to write your code inside a ``<odoo>`` tag.
 
 .. code-block:: xml
 
    [XML]
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
+     
        ## YOUR CODE HERE
-     </data>
+     
    </odoo>
 
 Almost every element and option that you create has to be placed inside a ``<template>`` tag, like in this example.
@@ -310,12 +310,12 @@ To do so, create a **layout.xml** file in your **views** folder and add the defa
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
 
-     </data>
+
+
    </odoo>
 
-Create a new template into the ``<data>`` tag, copy-pasting the following
+Create a new template into the ``<odoo>`` tag, copy-pasting the following
 code.
 
 .. code-block:: xml
@@ -373,14 +373,14 @@ Imagine that we want to create a specific layout for a Services page.
 For this page, we need to add a list of services to the top and give the client the possibility of setting the rest of the page’s layout using snippets.
 
 Inside your *views* folder, create a **pages.xml** file and add the
-default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
+default Odoo markup.  Inside ``<odoo>`` create a ``<template>`` tag, set the
 ``page`` attribute to ``True`` and add your code into it.
 
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
+
        <!-- === Services Page === -->
        <template name="Services page" id="website.services" page="True">
          <h1>Our Services</h1>
@@ -390,7 +390,7 @@ default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
              <li>Unlimited space</li>
            </ul>
          </template>
-       </data>
+
      </odoo>
 
 The page title will be the template ID. In our case *Services* (from ``website.services``)
@@ -430,7 +430,6 @@ can fill with snippets. To achieve this, just create a ``div`` with
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-   <data>
 
    <!-- === Services Page === -->
    <template name="Services page" id="website.services" page="True">
@@ -450,7 +449,6 @@ can fill with snippets. To achieve this, just create a ``div`` with
      </t>
    </template>
 
-   </data>
    </odoo>
 
 .. tip::

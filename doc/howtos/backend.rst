@@ -230,11 +230,11 @@ record.
 .. code-block:: xml
 
     <odoo>
-        <data>
+
             <record model="{model name}" id="{record identifier}">
                 <field name="{a field name}">{a value}</field>
             </record>
-        </data>
+
     </odoo>
 
 * ``model`` is the name of the Odoo model for the record.
