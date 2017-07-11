@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class HrPayrollConfigSettings(models.TransientModel):
-    _inherit = 'hr.payroll.config.settings'
+    _inherit = 'res.config.settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         copy=False, default=lambda self: self.env['res.company']._company_default_get())

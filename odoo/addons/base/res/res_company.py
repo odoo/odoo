@@ -243,7 +243,7 @@ class Company(models.Model):
     @api.multi
     def open_company_edit_report(self):
         self.ensure_one()
-        return self.env['base.config.settings'].open_company()
+        return self.env['res.config.settings'].open_company()
 
     @api.multi
     def set_report_template(self):

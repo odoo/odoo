@@ -4,7 +4,7 @@
 from odoo import api, models, fields
 
 class WebsiteConfigSettings(models.TransientModel):
-    _inherit = 'website.config.settings'
+    _inherit = 'res.config.settings'
 
     def _default_order_mail_template(self):
         if self.env['ir.module.module'].search([('name', '=', 'website_quote')]).state in ('installed', 'to upgrade'):
@@ -58,14 +58,6 @@ class WebsiteConfigSettings(models.TransientModel):
         ('percentage', 'Multiple prices per product (e.g. customer segments, currencies)'),
         ('formula', 'Price computed from formulas (discounts, margins, roundings)')
         ], string="Pricelists")
-    group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
-        implied_group='product.group_sale_pricelist')
-
-    group_product_variant = fields.Boolean("Attributes and Variants", implied_group='product.group_product_variant')
-    group_pricelist_item = fields.Boolean("Show pricelists to customers",
-        implied_group='product.group_pricelist_item')
-    group_product_pricelist = fields.Boolean("Show pricelists On Products",
-        implied_group='product.group_product_pricelist')
 
     order_mail_template = fields.Many2one('mail.template', string='Order Confirmation Email',
         default=_default_order_mail_template, domain="[('model', '=', 'sale.order')]",
@@ -87,7 +79,7 @@ class WebsiteConfigSettings(models.TransientModel):
 
     group_multi_currency = fields.Boolean(string='Multi-Currencies', implied_group='base.group_multi_currency')
 
-    sale_show_tax = fields.Selection([
+    website_sale_show_tax = fields.Selection([
         ('total', 'Tax-Included Prices'),
         ('subtotal', 'Tax-Excluded Prices')],
         "Product Prices", default='subtotal')
@@ -111,7 +103,7 @@ class WebsiteConfigSettings(models.TransientModel):
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['formula'] and 1 or False,
             sale_pricelist_setting=sale_pricelist_setting,
-            sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.sale_show_tax')
+            website_sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.website_sale_show_tax')
         )
         return res
 
@@ -120,7 +112,7 @@ class WebsiteConfigSettings(models.TransientModel):
         value = self.module_account_invoicing and self.default_invoice_policy == 'order' and self.automatic_invoice
         self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
         self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
-        self.env['ir.config_parameter'].sudo().set_param('website.sale_show_tax', self.sale_show_tax)
+        self.env['ir.config_parameter'].sudo().set_param('website.website_sale_show_tax', self.website_sale_show_tax)
 
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
@@ -179,9 +171,9 @@ class WebsiteConfigSettings(models.TransientModel):
                 'multi_sales_price': True,
             })
 
-    @api.onchange('sale_show_tax')
+    @api.onchange('website_sale_show_tax')
     def _onchange_sale_tax(self):
-        if self.sale_show_tax == "subtotal":
+        if self.website_sale_show_tax == "subtotal":
             self.update({
                 'group_show_price_total': False,
                 'group_show_price_subtotal': True,

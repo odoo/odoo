@@ -11,7 +11,7 @@ from odoo import api, fields, models, tools
 class BaseConfigSettings(models.TransientModel):
     """ Inherit the base settings to add a counter of failed email + configure
     the alias domain. """
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     fail_counter = fields.Integer('Fail Mail', readonly=True)
     alias_domain = fields.Char('Alias Domain', help="If you have setup a catch-all email domain redirected to "

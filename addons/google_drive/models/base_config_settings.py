@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = "base.config.settings"
+    _inherit = "res.config.settings"
 
     google_drive_authorization_code = fields.Char(string='Authorization Code')
     google_drive_uri = fields.Char(compute='_compute_drive_uri', string='URI', help="The URL to generate the authorization code from Google")

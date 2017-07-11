@@ -3,7 +3,7 @@
 
     <record id="website_config_settings_view_form_inherit_website_sale" model="ir.ui.view">
         <field name="name">website.config.settings.form.inherit.sale</field>
-        <field name="model">website.config.settings</field>
+        <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website.website_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="features_settings" position="after">
@@ -12,13 +12,13 @@
                     <div class="col-xs-12 col-md-6 o_setting_box" id="tax_inclusion_setting">
                         <div class="o_setting_left_pane"/>
                         <div class="o_setting_right_pane">
-                            <label string="Product Prices" for="sale_show_tax"/>
+                            <label string="Product Prices" for="website_sale_show_tax"/>
                             <div class="text-muted">
                                 Product prices displaying in web catalog
                             </div>
                             <div class="content-group">
                                 <div class="mt16">
-                                    <field name="sale_show_tax" class="o_light_label" widget="radio"/>
+                                    <field name="website_sale_show_tax" class="o_light_label" widget="radio"/>
                                     <field name="group_show_price_total" invisible="1"/>
                                     <field name="group_show_price_subtotal" invisible="1"/>
                                     </div>

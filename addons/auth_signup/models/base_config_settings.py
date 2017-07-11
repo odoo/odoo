@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     auth_signup_reset_password = fields.Boolean(string='Enable password reset from Login page')
     auth_signup_uninvited = fields.Selection([

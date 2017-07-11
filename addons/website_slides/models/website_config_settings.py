@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class WebsiteConfigSettings(models.TransientModel):
-    _inherit = "website.config.settings"
+    _inherit = "res.config.settings"
 
     website_slide_google_app_key = fields.Char(string='Google Doc Key')
 

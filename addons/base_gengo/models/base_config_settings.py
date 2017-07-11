@@ -5,7 +5,7 @@ from odoo import api, models, fields
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     gengo_private_key = fields.Text(string="Gengo Private Key", related="company_id.gengo_private_key")
     gengo_public_key = fields.Text(string="Gengo Public Key", related="company_id.gengo_public_key")

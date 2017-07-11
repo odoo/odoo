@@ -5,7 +5,7 @@ from odoo import fields, models, api
 
 
 class WebsiteConfigSettings(models.TransientModel):
-    _inherit = 'website.config.settings'
+    _inherit = 'res.config.settings'
 
     inventory_availability = fields.Selection([
         ('never', 'Sell regardless of inventory'),

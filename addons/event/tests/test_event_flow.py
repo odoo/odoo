@@ -106,7 +106,7 @@ class TestEventFlow(TestEventCommon):
             (4, self.env.ref('base.group_erp_manager').id)
         ]})
         with self.assertRaises(AccessError):
-            event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
+            event_config = self.env['res.config.settings'].sudo(self.user_eventmanager).create({
             })
             event_config.execute()
 

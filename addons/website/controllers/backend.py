@@ -30,7 +30,7 @@ class WebsiteBackend(http.Controller):
             }
         }
         if has_group_designer:
-            config = request.env['website.config.settings'].sudo().create({})
+            config = request.env['res.config.settings'].sudo().create({})
             if config.has_google_analytics_dashboard:
                 dashboard_data['dashboards']['visits'] = dict(
                     ga_client_id=config.google_management_client_id or '',  # void string instead of stringified False
@@ -54,7 +54,7 @@ class WebsiteBackend(http.Controller):
                     'message': 'The Google Analytics Client ID or Key you entered seems incorrect.',
                 }
             }
-        request.env['website.config.settings'].create({
+        request.env['res.config.settings'].create({
             'has_google_analytics': True,
             'has_google_analytics_dashboard': True,
             'google_management_client_id': ga_client_id,

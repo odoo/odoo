@@ -6,7 +6,6 @@ from odoo import api, fields, models, _
 
 class BaseConfigSettings(models.TransientModel):
 
-    _name = 'base.config.settings'
     _inherit = 'res.config.settings'
 
     group_multi_company = fields.Boolean("Manage multiple companies", implied_group='base.group_multi_company')
@@ -15,7 +14,6 @@ class BaseConfigSettings(models.TransientModel):
     default_user_rights = fields.Boolean("Default Access Rights")
     default_external_email_server = fields.Boolean("External Email Servers")
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
-    module_pad = fields.Boolean("External Pads")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
     module_google_drive = fields.Boolean("Attach Google documents to any record")
@@ -24,6 +22,7 @@ class BaseConfigSettings(models.TransientModel):
     module_auth_ldap = fields.Boolean("LDAP Authentification")
     module_base_gengo = fields.Boolean("Translate Your Website with Gengo")
     module_inter_company_rules = fields.Boolean("Manage Inter Company")
+    module_pad = fields.Boolean("External Pads")
     company_share_partner = fields.Boolean(string='Share partners to all companies',
         help="Share your partners to all companies defined in your instance.\n"
              " * Checked : Partners are visible for every companies, even if a company is defined on the partner.\n"

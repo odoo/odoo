@@ -13,7 +13,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.SaleOrder = self.env['sale.order']
         self.SaleOrderLine = self.env['sale.order.line']
         self.AccountAccount = self.env['account.account']
-        self.SaleConfigSetting = self.env['sale.config.settings']
+        self.SaleConfigSetting = self.env['res.config.settings']
         self.Product = self.env['product.product']
 
         self.partner_18 = self.env.ref('base.res_partner_18')

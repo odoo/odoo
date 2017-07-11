@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     cal_client_id = fields.Char("Client_id")
     cal_client_secret = fields.Char("Client_key")

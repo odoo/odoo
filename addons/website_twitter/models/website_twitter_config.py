@@ -24,7 +24,7 @@ TWITTER_EXCEPTION = {
 
 
 class WebsiteTwitterConfig(models.TransientModel):
-    _inherit = 'website.config.settings'
+    _inherit = 'res.config.settings'
 
     twitter_api_key = fields.Char(
         related='website_id.twitter_api_key',

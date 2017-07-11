@@ -5,6 +5,6 @@ from odoo import fields, models
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     ldaps = fields.One2many(related='company_id.ldaps', string="LDAP Parameters")

@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class TimesheetConfig(models.TransientModel):
-    _inherit = 'hr.timesheet.config.settings'
+    _inherit = 'res.config.settings'
 
     leave_timesheet_project_id = fields.Many2one(related='company_id.leave_timesheet_project_id', string="Internal Project")
     leave_timesheet_task_id = fields.Many2one(related='company_id.leave_timesheet_task_id', string="Leave Task")

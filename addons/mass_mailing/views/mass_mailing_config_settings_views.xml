@@ -2,27 +2,14 @@
 <odoo>
         <record id="view_mass_mailing_configuration" model="ir.ui.view">
             <field name="name">Configure Mass Mailing</field>
-            <field name="model">mass.mailing.config.settings</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="12"/>
+            <field name="inherit_id" ref="base.res_config_setting_form"/>
             <field name="arch" type="xml">
-                <form string="Configure Mass Mailing" class="oe_form_configuration">
-                    <header>
-                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <sheet>
-                      <h2>Design</h2>
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Email Marketing" data-key="mass_mailing" groups="mass_mailing.group_mass_mailing_user">
+                      <h2>Email Marketing</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 o_setting_box col-xs-12">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_mass_mailing_themes" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_mass_mailing_themes"/>
-                                    <div class="text-muted">
-                                        Choose among multiple email templates and styles
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-6 o_setting_box col-xs-12" title="This tool is advised if your marketing campaign is composed of several emails.">
                                 <div class="o_setting_left_pane" title="This is useful if your marketing campaigns are composed of several emails.">
                                     <field name="group_mass_mailing_campaign"/>
@@ -43,40 +30,19 @@
                             </div>
                         </div>
                         <h2>Mailing Lists</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 o_setting_box col-xs-12" id="module_website_mass_mailing" title="This adds a new Newsletter snippet to drag &amp; drop on on your website pages. This call-to-action prompts visitors to enter their email address to join a mailing list.">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_website_mass_mailing"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_website_mass_mailing"/>
-                                    <div class="text-muted">
-                                        Encourage to subscribe to mailing lists with a call-to-action
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 o_setting_box col-xs-12">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_crm"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_crm"/>
-                                    <div class="text-muted">
-                                        Manage mailing campaigns with your prospects
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </sheet>
-                </form>
+                        <div id="mailing_list" class="row mt16 o_settings_container"/>
+                    </div>
+                </xpath>
             </field>
         </record>
 
         <record id="action_mass_mailing_configuration" model="ir.actions.act_window">
             <field name="name">Configure Mass Mailing</field>
-            <field name="res_model">mass.mailing.config.settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
+            <field name="context">{'module' : 'mass_mailing'}</field>
         </record>
 
         <menuitem id="menu_mass_mailing_configuration" name="Configuration" parent="mass_mailing_menu_root"

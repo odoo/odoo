@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 
 class BaseConfigSettings(models.TransientModel):
-    _inherit = 'base.config.settings'
+    _inherit = 'res.config.settings'
 
     @api.model
     def get_uri(self):

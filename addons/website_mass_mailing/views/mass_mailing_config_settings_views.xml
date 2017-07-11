@@ -3,9 +3,9 @@
     <record id="inherited_view_mass_mailing_configuration" model="ir.ui.view">
         <field name="inherit_id" ref="mass_mailing.view_mass_mailing_configuration"/>
         <field name="name">mass.mailing.config.settings.inherit</field>
-        <field name="model">mass.mailing.config.settings</field>
+        <field name="model">res.config.settings</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='module_website_mass_mailing']" position="after">
+            <xpath expr="//div[@id='mailing_list']" position="inside">
                 <div class="col-md-6 o_setting_box col-xs-12" title="This adds a new Newsletter Popup snippet to drag &amp; drop on on your website pages. It triggers a popup when visitors land on the page. This popup prompts them to enter their email address to join a mailing list.">
                     <div class="o_setting_left_pane">
                         <field name="group_website_popup_on_exit"/>

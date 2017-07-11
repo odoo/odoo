@@ -3,7 +3,7 @@
     <data>
         <record id="view_stock_config_settings_inherit" model="ir.ui.view">
             <field name="name">stock.config.settings.inherit</field>
-            <field name="model">stock.config.settings</field>
+            <field name="model">res.config.settings</field>
             <field name="inherit_id" ref="stock.view_stock_config_settings"/>
             <field name="arch" type="xml">
                 <div id="production_lot_info" position="after">
@@ -19,9 +19,7 @@
                                     Include landed costs in product cost
                                 </div>
                                 <div class="content-group">
-                                    <div class="mt16 text-warning" name="landed_cost_info" attrs="{'invisible': [('module_stock_landed_costs','=',False)]}">
-                                            Save this page and come back here to set up the feature.
-                                    </div>
+                                    <div name="landed_cost_info"/>
                                 </div>
                             </div>
                         </div>

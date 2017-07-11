@@ -5,7 +5,7 @@ from odoo import api, fields, models
 
 
 class StockConfigSettings(models.TransientModel):
-    _inherit = 'stock.config.settings'
+    _inherit = 'res.config.settings'
 
     security_lead = fields.Float(related='company_id.security_lead')
     use_security_lead = fields.Boolean(

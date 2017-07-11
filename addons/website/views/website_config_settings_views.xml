@@ -4,15 +4,12 @@
 
         <record id="website_config_settings_view_form" model="ir.ui.view">
             <field name="name">website.config.settings.form</field>
-            <field name="model">website.config.settings</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="4"/>
+            <field name="inherit_id" ref="base.res_config_setting_form"/>
             <field name="arch" type="xml">
-                <form string="Configure Website" class="oe_form_configuration">
-                    <header>
-                        <button string="Save" type="object" name="execute" class="oe_highlight"/>
-                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
-                    </header>
-                    <sheet>
-                        <div>
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Website" data-key="website" groups="website.group_website_designer">
                             <field name="website_id" invisible="1"/>
                             <h2>Website</h2>
                             <div class="row mt16 o_settings_container" id="webmaster_settings">
@@ -378,17 +375,18 @@ You can also edit the fields of the Extra Step page in eCommerce checkout.">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </sheet>
-                </form>
+                    </div>
+                </xpath>
             </field>
         </record>
 
         <record id="action_website_configuration" model="ir.actions.act_window">
             <field name="name">Website Settings</field>
-            <field name="res_model">website.config.settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
+            <field name="context">{'module' : 'website'}</field>
         </record>
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"

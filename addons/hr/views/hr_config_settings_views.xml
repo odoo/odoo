@@ -2,15 +2,13 @@
 <odoo>
     <record id="hr_config_settings_view_form" model="ir.ui.view">
         <field name="name">hr.config.settings.form</field>
-        <field name="model">hr.config.settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="14"/>
+        <field name="inherit_id" ref="base.res_config_setting_form"/>
         <field name="arch" type="xml">
-            <form String="Hr Settings" class="oe_form_configuration">
-                <field name="company_id" invisible="1"/>
-                <header>
-                    <button string="Save" type="object" name="execute" class="oe_highlight"/>
-                    <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                </header>
-                <sheet>
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Employee" data-key="hr" groups="hr.group_hr_manager">
+                    <field name="company_id" invisible="1"/>
                     <h2>Work Organization</h2>
                     <div class="row mt16 o_settings_container" title="Prout prout prout">
                         <div class="col-xs-12 col-md-6 o_setting_box">
@@ -45,17 +43,18 @@
                             </div>
                         </div>
                     </div>
-
-                </sheet>
-            </form>
+                </div>
+            </xpath>
         </field>
     </record>
 
     <record id="hr_config_settings_action" model="ir.actions.act_window">
         <field name="name">Configure HR</field>
-        <field name="res_model">hr.config.settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
+        <field name="context">{'module' : 'hr'}</field>
     </record>
 
     <menuitem id="hr_menu_configuration"

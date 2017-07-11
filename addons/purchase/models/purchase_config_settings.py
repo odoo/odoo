@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class PurchaseConfigSettings(models.TransientModel):
-    _name = 'purchase.config.settings'
     _inherit = 'res.config.settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
@@ -23,18 +22,12 @@ class PurchaseConfigSettings(models.TransientModel):
         ], string="Bill Control", default_model="product.template",
         help="This default value is applied to any new product created. "
         "This can be changed in the product detail form.", default="receive")
-    group_product_variant = fields.Boolean("Attributes & Variants",
-        implied_group='product.group_product_variant')
-    group_uom = fields.Boolean("Units of Measure",
-        implied_group='product.group_uom')
     module_purchase_requisition = fields.Boolean("Purchase Agreements")
     group_warning_purchase = fields.Boolean("Warnings", implied_group='purchase.group_warning_purchase')
     module_stock_dropshipping = fields.Boolean("Dropshipping")
     group_manage_vendor_price = fields.Boolean("Vendor Pricelists",
         implied_group="purchase.group_manage_vendor_price")
     module_account_3way_match = fields.Boolean("3-way matching: purchases, receptions and bills")
-    module_sale = fields.Boolean("Sales")
-    module_mrp = fields.Boolean("Manufacturing")
     is_installed_sale = fields.Boolean()
 
     @api.multi
@@ -52,6 +45,6 @@ class PurchaseConfigSettings(models.TransientModel):
 
 
 class AccountConfigSettings(models.TransientModel):
-    _inherit = 'account.config.settings'
+    _inherit = 'res.config.settings'
     group_analytic_account_for_purchases = fields.Boolean('Analytic accounting for purchases',
         implied_group='purchase.group_analytic_accounting')

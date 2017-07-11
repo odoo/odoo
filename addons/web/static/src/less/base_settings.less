@@ -1,0 +1,192 @@
+@o-mobile-tabs-height: 40px;
+
+.o_base_settings {
+    padding: 0px !important;
+    overflow: auto;
+    display: flex !important;
+    flex-flow: column nowrap;
+    height: 100%;
+    @media (max-width: @screen-xs-max) {
+        flex-direction: column;
+    }
+    .o_control_panel {
+        flex: 0 0 auto;
+        .o_panel {
+            display: flex;
+            flex: 1 0 100%;
+            .title {
+                width: 50%;
+                font-size: 18px;
+                color: #8f8f8f;
+            }
+            .o_setting_search {
+                width: 50%;
+                position: relative;
+                .searchInput {
+                    border: 0px;
+                    padding: 0px;
+                }
+                .searchInput , .searchInput:focus {
+                    border-bottom: 1px solid #8f8f8f;
+                    box-shadow: none;
+                    height: 26px;
+                }
+                .searchIcon {
+                    position: absolute;
+                    top: 4px;
+                    left: auto;
+                    bottom: auto;
+                    right: 0;
+                }
+            }
+        }
+        .o_form_statusbar {
+            padding: 0px !important;
+            margin: 0px !important;
+            border: 0px;
+        }
+    }
+    .o_setting_container {
+        height: 100%;
+        overflow: auto;
+        display: flex;
+        @media (max-width: @screen-xs-max) {
+            .o-flex-flow(column, wrap);
+        }
+        .settings_tab {
+            .o-flex(1, 1, 17%);
+            background: #f3f3f3;
+            overflow: auto;
+            @media (max-width: @screen-xs-max) {
+                .o-flex(0, 0, @o-mobile-tabs-height);
+                display: inline-flex;
+                overflow: auto;
+                position: relative;
+                overflow: hidden;
+                .selected {
+                    background-color: #f3f3f3 !important;
+                }
+            }
+            .selected {
+                background-color: #fff;
+                .icon {
+                    filter: grayscale(0%) !important;
+                }
+             }
+            .tab {
+                font-size: 15px;
+                padding-left: 16px;
+                height: 40px;
+                width: 100%;
+                line-height: 40px;
+                cursor: pointer;
+                display: inline-flex;
+                .icon {
+                    width: 23px;
+                    filter: grayscale(100%);
+                }
+                .app_name {
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    white-space: nowrap;
+                }
+                @media (max-width: @screen-xs-max) {
+                    .o_mobile_tab();
+                }
+            }
+        }
+        .settings {
+            position: relative;
+            .o-flex(1, 1, 83%);
+            overflow: auto;
+            padding: 0 16px 0 16px;
+            @media (max-width: @screen-xs-max) {
+                .o-flex(none, none, none);
+                display: inline-flex;
+                overflow-x: hidden;
+                overflow-y: auto;
+                .app_settings_block, .notFound {
+                    flex: 0 0 100vw;
+                }
+            }
+            .settingSearchHeader {
+                display: flex;
+                margin-top: 30px;
+                margin-bottom: 15px;
+                .icon {
+                    width: 25px;
+                    height: 25px;
+                }
+                .appName {
+                    font-size: 20px;
+                    padding-left: 10px;
+                }
+            }
+            .notFound {
+                color : #d4d1d1;
+                text-align: center;
+                font-size: 25px;
+                padding-top: 50px;
+            }
+            .highlighter {
+                background: yellow;
+            }
+        }
+        .d-block {
+            display: block !important;
+        }
+    }
+}
+
+.o_mobile_tab() {
+    display: block;
+    position: absolute;
+    font-size: 14px;
+    font-weight: 500;
+    width: auto;
+    left: 100%;
+    padding: 10px;
+    text-align: center;
+    height: @o-mobile-tabs-height;
+    transition: 0.2s all;
+    transform: translate3d(0,0,0);
+    line-height: inherit;
+
+    .app_name {
+        display: block;
+        white-space: nowrap;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        bottom: 0px;
+        left: 0;
+        background: @odoo-brand-primary;
+        width: 100%;
+        height: 3px;
+        opacity: 0;
+        transition: 0.2s all;
+        transform: translate3d(0,3px,0);
+    }
+
+    &.previous, &.before {
+        left: 0px;
+    }
+
+    &.current {
+        left: 50%;
+        font-weight: 600;
+
+        &:after {
+            opacity: 1;
+            transform: translate3d(0,0,0);
+        }
+    }
+
+    &.next, &.after {
+        left: 100%;
+    }
+}
