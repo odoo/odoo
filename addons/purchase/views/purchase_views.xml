@@ -242,7 +242,7 @@
                                                 <field name="price_unit"/>
                                             </group>
                                             <group>
-                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True', 'color_field': 'color'}"/>
+                                                <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use', '=', 'purchase')]" options="{'no_create': True, 'color_field': 'color'}"/>
                                                 <field name="date_planned" widget="date"/>
                                                 <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
