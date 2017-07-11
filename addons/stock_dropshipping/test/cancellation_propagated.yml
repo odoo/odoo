@@ -88,19 +88,19 @@
 
     # Check the two purchase order lines
     purchase_line = purchases[0].order_line[0]
-    assert purchase_line.product_qty == 29.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert purchase_line.product_qty == 29.0, 'The product quantity of the first order line should be 29 and not %s' % (purchase_line.product_qty,)
     assert purchase_line.product_uom.id == ref("product.product_uom_unit"), 'The product UoM ID of the first order line should be %s and not %s' % (ref("product.product_uom_unit"), purchase_line.product_uom.id,)
 
     # Cancel the Sales Order 2
     so2.order_line[0].procurement_ids[0].cancel()
-    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 2 should be cancelled !'
-    assert purchase_line.product_qty == 5.0, 'The product quantity of the first order line should be 5 and not %s' % (purchase_line.product_qty,)
+    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 2 should not be cancelled !'
+    assert purchase_line.product_qty == 29.0, 'The product quantity of the first order line should be 29 and not %s' % (purchase_line.product_qty,)
 
     # Cancel the Sales Order 1
     so1.order_line[0].procurement_ids[0].cancel()
-    assert so1.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 1 should be cancelled !'
-    assert len(purchases.order_line) == 0, 'The PO line should have been unlinked!'
+    assert so1.order_line[0].procurement_ids[0].state == u'cancel', 'Procurement 1 should not be cancelled !'
+    assert len(purchases.order_line) == 1, 'The PO line should not have been unlinked since the pick does not cancel the delivery nor the purchase!'
     
     # Check that all procurements related are cancelled    
     for procu in procus:
-        assert procu.state == u'cancel', 'Procurement %d should be cancelled but is with a state : %s!' %(procu.id, procu.state)
+        assert procu.state in (u'running', u'cancel'), 'Procurement %d should not be in an exception state : %s!' %(procu.id, procu.state)
