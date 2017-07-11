@@ -44,6 +44,10 @@ class PosDetails(models.TransientModel):
 
     @api.multi
     def generate_report(self):
+        if (not self.env.user.company_id.logo):
+            raise UserError(_("You have to set a logo or a layout for your company."))
+        elif (not self.env.user.company_id.external_report_layout):
+            raise UserError(_("You have to set your reports's header and footer layout."))
         data = {'date_start': self.start_date, 'date_stop': self.end_date, 'config_ids': self.pos_config_ids.ids}
         return self.env['report'].get_action(
             [], 'point_of_sale.report_saledetails', data=data)
