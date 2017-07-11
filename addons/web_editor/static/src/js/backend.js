@@ -182,6 +182,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             var exp_editor = new ExpEditor(options);
             exp_editor.attachTo($(tag));
         });
+        if (this.mode === 'edit'){
+            this._isDirty = true;
+        }
     },
     /**
      * @private
