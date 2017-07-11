@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class SaleConfigSettings(models.TransientModel):
-    _name = 'sale.config.settings'
     _inherit = 'res.config.settings'
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
@@ -14,22 +13,11 @@ class SaleConfigSettings(models.TransientModel):
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
         oldname='default_use_sale_note')
-    group_product_variant = fields.Boolean("Attributes & Variants",
-        implied_group='product.group_product_variant')
     group_sale_pricelist = fields.Boolean("Use pricelists to adapt your price per customers",
         implied_group='product.group_sale_pricelist',
         help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc.""")
-    group_pricelist_item = fields.Boolean("Show pricelists to customers",
-        implied_group='product.group_pricelist_item')
-    group_product_pricelist = fields.Boolean("Show pricelists On Products",
-        implied_group='product.group_product_pricelist')
-    group_uom = fields.Boolean("Units of Measure",
-        implied_group='product.group_uom')
     group_discount_per_so_line = fields.Boolean("Discounts", implied_group='sale.group_discount_per_so_line')
-    group_stock_packaging = fields.Boolean("Packaging", implied_group='product.group_stock_packaging',
-        help="""Ability to select a package type in sales orders and
-                to force a quantity that is a multiple of the number of units per package.""")
     module_sale_margin = fields.Boolean("Margins")
     group_sale_layout = fields.Boolean("Sections on Sales Orders", implied_group='sale.group_sale_layout')
     group_warning_sale = fields.Boolean("Warnings", implied_group='sale.group_warning_sale')
@@ -79,7 +67,6 @@ class SaleConfigSettings(models.TransientModel):
         ('b2c', 'Free sign up (B2C)'),
     ], string='Customer Account')
 
-    group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
@@ -87,7 +74,6 @@ class SaleConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
 
-    module_print_docsaway = fields.Boolean("Docsaway")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
@@ -98,6 +84,19 @@ class SaleConfigSettings(models.TransientModel):
                 'multi_sales_price_method': 'percentage',
             })
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
+
+    @api.onchange('sale_show_tax')
+    def _onchange_sale_tax(self):
+        if self.sale_show_tax == "subtotal":
+            self.update({
+                'group_show_price_total': False,
+                'group_show_price_subtotal': True,
+            })
+        else:
+            self.update({
+                'group_show_price_total': True,
+                'group_show_price_subtotal': False,
+            })
 
     @api.onchange('sale_pricelist_setting')
     def _onchange_sale_pricelist_setting(self):
@@ -118,19 +117,6 @@ class SaleConfigSettings(models.TransientModel):
                 'group_product_pricelist': False,
                 'group_sale_pricelist': False,
                 'group_pricelist_item': False,
-            })
-
-    @api.onchange('sale_show_tax')
-    def _onchange_sale_tax(self):
-        if self.sale_show_tax == "subtotal":
-            self.update({
-                'group_show_price_total': False,
-                'group_show_price_subtotal': True,
-            })
-        else:
-            self.update({
-                'group_show_price_total': True,
-                'group_show_price_subtotal': False,
             })
 
     @api.model

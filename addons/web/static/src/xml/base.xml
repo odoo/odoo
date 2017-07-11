@@ -1394,4 +1394,13 @@
     </div>
 </t>
 
+
+<t t-name="BaseSetting.Tabs">
+    <t t-foreach="tabItems" t-as="tab">
+        <div class="tab" t-attf-data-key="#{tab.key}">
+            <div class="icon hidden-xs" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
+        </div>
+    </t>
+</t>
+
 </templates>

@@ -5,6 +5,6 @@ from odoo import api, fields, models
 
 
 class SaleConfiguration(models.TransientModel):
-    _inherit = 'sale.config.settings'
+    _inherit = 'res.config.settings'
 
     default_template_id = fields.Many2one('sale.quote.template', default_model='sale.order', string='Default Template')

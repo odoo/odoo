@@ -5,6 +5,6 @@ from odoo import fields, models
 
 
 class CrmConfigSettings(models.TransientModel):
-    _inherit = 'crm.config.settings'
+    _inherit = 'res.config.settings'
 
-    crm_phone_valid_method = fields.Boolean(related="company_id.phone_international_format", required=True)
+    crm_phone_valid_method = fields.Selection(related="company_id.phone_international_format", required=True)

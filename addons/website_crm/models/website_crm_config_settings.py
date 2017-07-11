@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class WebsiteCrmConfigSettings(models.TransientModel):
-    _inherit = 'website.config.settings'
+    _inherit = 'res.config.settings'
 
     def _get_crm_default_team_domain(self):
         if self.env.user.has_group('crm.group_use_lead'):

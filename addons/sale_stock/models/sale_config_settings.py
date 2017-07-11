@@ -5,7 +5,7 @@ from odoo import fields, models
 
 
 class SaleConfiguration(models.TransientModel):
-    _inherit = 'sale.config.settings'
+    _inherit = 'res.config.settings'
 
     security_lead = fields.Float(related='company_id.security_lead', string="Security Lead Time")
     group_route_so_lines = fields.Boolean("Order-Specific Routes",

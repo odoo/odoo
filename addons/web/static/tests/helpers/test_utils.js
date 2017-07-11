@@ -18,6 +18,7 @@ var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
 var Widget = require('web.Widget');
+var view_registry = require('web.view_registry');
 
 var DebouncedField = basic_fields.DebouncedField;
 
@@ -144,7 +145,13 @@ function createAsyncView(params) {
 
     _.extend(viewOptions, params.viewOptions);
 
-    var view = new params.View(viewInfo, viewOptions);
+
+    if (viewInfo.arch.attrs.js_class) {
+        var jsClsssView = view_registry.get(viewInfo.arch.attrs.js_class);
+        var view = new jsClsssView(viewInfo, viewOptions);
+    } else{
+        var view = new params.View(viewInfo, viewOptions);
+    }
 
     // make sure images do not trigger a GET on the server
     $target.on('DOMNodeInserted.removeSRC', function () {

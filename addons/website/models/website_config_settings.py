@@ -6,7 +6,6 @@ from odoo.exceptions import AccessDenied
 
 
 class WebsiteConfigSettings(models.TransientModel):
-    _name = 'website.config.settings'
     _inherit = 'res.config.settings'
 
     def _default_website(self):
@@ -78,8 +77,6 @@ class WebsiteConfigSettings(models.TransientModel):
 
     @api.model
     def get_values(self):
-        if not self.user_has_groups('website.group_website_designer'):
-            raise AccessDenied()
         res = super(WebsiteConfigSettings, self).get_values()
         get_param = self.env['ir.config_parameter'].sudo().get_param
         res.update(
