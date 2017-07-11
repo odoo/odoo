@@ -180,6 +180,11 @@ Or ``dpkg`` (handles less dependencies automatically):
 This will install Odoo as a service, create the necessary PostgreSQL_ user
 and automatically start the server.
 
+.. danger:: odoo uses databases encoding with UTF-8 then you need to install
+            and configure locales_ and set environment variables
+            LANG, LANGUAGE, LC_ALL, PYTHONIOENCODING
+            before installing postgresql and starting odoo service.
+
 .. danger:: to print PDF reports, you must install wkhtmltopdf_ yourself:
             the version of wkhtmltopdf_ available in debian repositories does
             not support headers and footers so it can not be installed
@@ -562,3 +567,4 @@ default db to serve on localhost:8069
 .. _Editions: https://www.odoo.com/pricing#pricing_table_features
 .. _nightly: https://nightly.odoo.com/10.0/nightly/
 .. _extra: https://nightly.odoo.com/extra/
+.. _locales: https://help.ubuntu.com/community/Locale
