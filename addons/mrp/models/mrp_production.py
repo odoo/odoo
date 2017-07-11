@@ -447,9 +447,12 @@ class MrpProduction(models.Model):
         for operation in bom.routing_id.operation_ids:
             # create workorder
             cycle_number = math.ceil(bom_qty / operation.workcenter_id.capacity)  # TODO: float_round UP
-            duration_expected = (operation.workcenter_id.time_start +
-                                 operation.workcenter_id.time_stop +
-                                 cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+            try:
+                duration_expected = (operation.workcenter_id.time_start +
+                                     operation.workcenter_id.time_stop +
+                                     cycle_number * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency)
+            except:
+                raise UserError(_('Invalid value of time efficiency, Please give valid time efficiency to create Plan'))
             workorder = workorders.create({
                 'name': operation.name,
                 'production_id': self.id,
