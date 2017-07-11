@@ -90,3 +90,25 @@ class WebsitePayment(http.Controller):
             return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
+
+    @http.route(['/website_payment/get_linked_records'], type='json', auth='user', website=True)
+    def get_linked_records(self, payment_token_id):
+        payment_token_id = int(payment_token_id)
+
+        res = []
+        token = request.env['payment.token'].search([('id','=',payment_token_id)])
+        # if the payment token is valid
+        if token:
+            # then we retrieve the description for the model sale.subscription
+            subscription_description = request.env['sale.subscription']._description
+            # we retrieve all the linked records for the token
+            records = token._get_linked_records()
+            # transform the list of tuple into a dict so we can search easily
+            records = dict(records[payment_token_id])
+            # if there's subscriptions linked to that token
+            if records.get(subscription_description):
+                subscriptions = records[subscription_description]
+                # we create our json with all the info needed
+                for r in subscriptions:
+                    res.append({'id': r.id, 'name': r.name})
+        return res

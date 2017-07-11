@@ -788,3 +788,16 @@ class PaymentToken(models.Model):
     def _compute_short_name(self):
         for token in self:
             token.short_name = token.name.replace('XXXXXXXXXXXX', '***')
+
+    @api.multi
+    def _get_linked_records(self):
+        """ Returns the list of records currently using the records in self as payment token. """
+        res = {}
+        for r in self:
+            res[r.id] = []
+            subscriptions = self.env['sale.subscription'].search([('payment_token_id', '=', r.id)])
+
+            if subscriptions:
+                res[r.id].append((subscriptions._description, subscriptions))
+
+        return res

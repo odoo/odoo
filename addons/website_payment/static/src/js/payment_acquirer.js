@@ -74,23 +74,43 @@ var Dialog = require('web.Dialog');
     payment_methods.find('form').find('button[type="submit"]').on('click', function(ev){
         ev.stopPropagation();
         ev.preventDefault();
+        var self = this;
+
+        // we retrieve the selected payment method id
+        var payment_method_id = $(ev.target.form).find("input[name='delete_pm_id']")[0].value;
 
         var Delete = function()
         {
             ev.currentTarget.parentElement.submit();
-        }
+        };
 
-        var content = $('<div>').html("<p>Be aware that if this credit card is linked to an ongoing contract, <b>it will prevent the payment of it.</b></p>" + 
-        "<p>Are you sure you want to proceed?</p>");
-        new Dialog(this, {
-            title: 'Warning!',
-            size: 'medium',
-            $content: content,
-            buttons: [
-            {text: 'Delete', classes: 'btn-primary', close: true, click: Delete},
-            {text: 'Cancel', close: true}]}).open();
+        ajax.jsonRpc('/website_payment/get_linked_records', 'call', {
+            'payment_token_id': payment_method_id,
+        }).done(function (response) {
+            // if there's records linked to the payment method we're trying to delete
+            if(response.length > 0)
+            {
+                var content = '';
 
+                response.forEach(function(sub) {
+                    content += '<p><a href="/my/contract/' + sub.id + '">' + sub.name + '</a><p/>';
+                });
+
+                content = $('<div>').html('<p>This card is currently linked to the following records:<p/>' + content);
+                // Then we display the list of the records and ask the user if he really want to remove the ppayment method.
+                new Dialog(self, {
+                    title: 'Warning!',
+                    size: 'medium',
+                    $content: content,
+                    buttons: [
+                    {text: 'Confirm Deletion', classes: 'btn-primary', close: true, click: Delete},
+                    {text: 'Cancel', close: true}]}).open();
+            }
+            // otherwise if the user has no records linked to this payment method, then we just delete it.
+            else
+            {
+                Delete();
+            }
+        });
     });
-
-
 });
