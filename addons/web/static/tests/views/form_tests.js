@@ -1146,6 +1146,53 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('onchange only send present fields value', function (assert) {
+        assert.expect(1);
+        this.data.partner.onchanges.foo = function (obj) {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="p">' +
+                        '<tree editable="top">' +
+                            '<field name="display_name"/>' +
+                            '<field name="qux"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === "onchange") {
+                    assert.deepEqual(args.args[1], {
+                        display_name: "first record",
+                        foo: "tralala",
+                        id: 1,
+                        p: [[0, false, {"display_name": "valid line", "qux": 12.4}]]
+                    }, "should send the values for the present fields");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+
+        // add a o2m row
+        form.$('.o_field_x2many_list_row_add a').click();
+        form.$('.o_field_one2many input:first').focus();
+        form.$('.o_field_one2many input:first').val('valid line').trigger('input');
+        form.$('.o_field_one2many input:last').focus();
+        form.$('.o_field_one2many input:last').val('12.4').trigger('input');
+
+        // trigger an onchange by modifying foo
+        form.$('input[name="foo"]:first').val("tralala").trigger('input');
+
+        form.destroy();
+    });
+
     QUnit.test('evaluate in python field options', function (assert) {
         assert.expect(1);
 

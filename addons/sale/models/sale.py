@@ -548,9 +548,10 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                amount = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes'][0]['amount']
-                res[group] += amount
+                taxes = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
+                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
+                for t in taxes:
+                    res[group] += t['amount']
                 if tax.include_base_amount:
                     base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
