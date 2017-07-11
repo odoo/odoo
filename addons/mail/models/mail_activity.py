@@ -143,7 +143,12 @@ class MailActivity(models.Model):
         return res
 
     @api.multi
-    def action_done(self, feedback=False):
+    def action_done(self):
+        """ Wrapper without feedback because web button add context as
+        parameter, therefore setting context to feedback """
+        return self.action_feedback()
+
+    def action_feedback(self, feedback=False):
         message = self.env['mail.message']
         if feedback:
             self.write(dict(feedback=feedback))

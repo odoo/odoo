@@ -54,7 +54,7 @@ var AbstractActivityField = AbstractField.extend({
     _markActivityDone: function (id, feedback) {
         return this._rpc({
                 model: 'mail.activity',
-                method: 'action_done',
+                method: 'action_feedback',
                 args: [[id]],
                 kwargs: {feedback: feedback},
             });
