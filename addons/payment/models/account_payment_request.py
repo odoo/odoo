@@ -78,10 +78,12 @@ class AccountPaymentRequest(models.Model):
 
             transaction = Transaction.create(tx_values)
             # update record
-            self.write({
+            val = {
                 'payment_acquirer_id': acquirer_id,
                 'payment_tx_id': transaction.id,
-            })
+            }
+            self.write(val)
+            self.invoice_id.write(val)
         return transaction
 
 
@@ -111,12 +113,17 @@ class AccountInvoice(models.Model):
         return result
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """Instead of the classic form view, redirect to the online invoice."""
         self.ensure_one()
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+
         if self.env.user.share or self.env.context.get('force_website'):
             try:
-                self.check_access_rule('read')
+                record.check_access_rule('read')
             except AccessError:
                 pass
             else:
@@ -134,4 +141,4 @@ class AccountInvoice(models.Model):
                     'target': 'self',
                     'res_id': self.id,
                 }
-        return super(AccountInvoice, self).get_access_action()
+        return super(AccountInvoice, self).get_access_action(access_uid)

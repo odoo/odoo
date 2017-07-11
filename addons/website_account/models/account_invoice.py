@@ -17,29 +17,6 @@ class AccountInvoice(models.Model):
 
         return groups
 
-    @api.multi
-    def get_access_action(self, access_uid=None):
-        """ Instead of the classic form view, redirect to the online invoice for portal users. """
-        self.ensure_one()
-        user, record = self.env.user, self
-        if access_uid:
-            user = self.env['res.users'].sudo().browse(access_uid)
-            record = self.sudo(user)
-
-        if user.share or self.env.context.get('force_website'):
-            try:
-                record.check_access_rule('read')
-            except exceptions.AccessError:
-                pass
-            else:
-                return {
-                    'type': 'ir.actions.act_url',
-                    'url': '/my/invoices?',  # No controller /my/invoices/<int>, only a report pdf
-                    'target': 'self',
-                    'res_id': self.id,
-                }
-        return super(AccountInvoice, self).get_access_action(access_uid)
-
     def get_mail_url(self):
         self.ensure_one()
         params = {
