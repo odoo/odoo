@@ -151,7 +151,9 @@ After that, you have to write your code inside a ``<odoo>`` tag.
    [XML]
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     ## YOUR CODE HERE
+     
+       ## YOUR CODE HERE
+     
    </odoo>
 
 Almost every element and option that you create has to be placed inside a ``<template>`` tag, like in this example.
@@ -308,7 +310,9 @@ To do so, create a **layout.xml** file in your **views** folder and add the defa
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
+     
 
+     
    </odoo>
 
 Create a new template into the ``<odoo>`` tag, copy-pasting the following
@@ -376,15 +380,17 @@ default Odoo markup.  Inside ``<odoo>`` create a ``<template>`` tag, set the
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <!-- === Services Page === -->
-     <template name="Services page" id="website.services" page="True">
-       <h1>Our Services</h1>
-         <ul class="services">
-           <li>Cloud Hosting</li>
-           <li>Support</li>
-           <li>Unlimited space</li>
-         </ul>
-       </template>
+     
+       <!-- === Services Page === -->
+       <template name="Services page" id="website.services" page="True">
+         <h1>Our Services</h1>
+           <ul class="services">
+             <li>Cloud Hosting</li>
+             <li>Support</li>
+             <li>Unlimited space</li>
+           </ul>
+         </template>
+       
      </odoo>
 
 The page title will be the template ID. In our case *Services* (from ``website.services``)
@@ -424,6 +430,7 @@ can fill with snippets. To achieve this, just create a ``div`` with
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
+   
 
    <!-- === Services Page === -->
    <template name="Services page" id="website.services" page="True">
@@ -443,6 +450,7 @@ can fill with snippets. To achieve this, just create a ``div`` with
      </t>
    </template>
 
+   
    </odoo>
 
 .. tip::

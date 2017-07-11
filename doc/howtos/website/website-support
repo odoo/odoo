@@ -31,19 +31,20 @@ diff --git a/academy/templates.xml b/academy/templates.xml
 +++ b/academy/templates.xml
 @@ -1,9 +1,15 @@
  <odoo>
-     <template id="index">
--        <title>Academy</title>
--        <t t-foreach="teachers" t-as="teacher">
--            <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
-+        <t t-call="website.layout">
-+            <t t-set="title">Academy</t>
-+            <div class="oe_structure">
-+                <div class="container">
-+                    <t t-foreach="teachers" t-as="teacher">
-+                        <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
-+                    </t>
+     
+         <template id="index">
+-            <title>Academy</title>
+-            <t t-foreach="teachers" t-as="teacher">
+-                <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++            <t t-call="website.layout">
++                <t t-set="title">Academy</t>
++                <div class="oe_structure">
++                    <div class="container">
++                        <t t-foreach="teachers" t-as="teacher">
++                            <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++                        </t>
++                    </div>
 +                </div>
-+            </div>
-         </t>
-     </template>
-     <!-- <template id="object"> -->
+             </t>
+         </template>
+         <!-- <template id="object"> -->
