@@ -277,7 +277,7 @@ QUnit.test('kanban activity widget with an activity', function (assert) {
                 '</kanban>',
         mockRPC: function (route, args) {
             rpcCount++;
-            if (route === '/web/dataset/call_kw/mail.activity/action_done') {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
                 var current_ids = this.data.partner.records[0].activity_ids;
                 var done_ids = args.args[0];
                 this.data.partner.records[0].activity_ids = _.difference(current_ids, done_ids);
@@ -521,8 +521,8 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
             '</form>',
         res_id: 2,
         mockRPC: function (route, args) {
-            if (route === '/web/dataset/call_kw/mail.activity/action_done') {
-                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_done' for id 1");
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
+                assert.ok(_.isEqual(args.args[0], [1]), "should call 'action_feedback' for id 1");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 return $.when();
@@ -607,8 +607,8 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
         mockRPC: function (route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 assert.ok(_.isEqual(args.args[0], [1]), "should call 'unlink' for id 1");
-            } else if (route === '/web/dataset/call_kw/mail.activity/action_done') {
-                assert.ok(_.isEqual(args.args[0], [2]), "should call 'action_done' for id 2");
+            } else if (route === '/web/dataset/call_kw/mail.activity/action_feedback') {
+                assert.ok(_.isEqual(args.args[0], [2]), "should call 'action_feedback' for id 2");
                 assert.strictEqual(args.kwargs.feedback, 'everything is ok',
                     "the feedback should be sent correctly");
                 // should generate a message and unlink the activity
