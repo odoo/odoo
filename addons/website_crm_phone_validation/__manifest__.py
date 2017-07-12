@@ -9,7 +9,7 @@
 Contact Number Validation on Website
 ====================================
 
-Validate contact (phone,mobile,fax) numbers and normalize them on leads and contacts:
+Validate contact (phone,mobile) numbers and normalize them on leads and contacts:
 - use the national format for your company country
 - use the international format for all others
         """,

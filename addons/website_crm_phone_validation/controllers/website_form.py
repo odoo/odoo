@@ -16,7 +16,7 @@ class WebsiteForm(WebsiteForm):
         return request.env['res.country']
 
     def _get_phone_fields_to_validate(self):
-        return ['phone', 'mobile', 'fax']
+        return ['phone', 'mobile']
 
     @route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):

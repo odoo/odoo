@@ -61,7 +61,7 @@
                         <group>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}" groups="base.group_no_one"/>
+                                context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_email': email_from, 'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}" groups="base.group_no_one"/>
                             <field name="partner_name" string="Company Name"/>
                             <label for="street" string="Address"/>
                             <div class="o_address_format">
@@ -84,7 +84,6 @@
                             <field name="function"/>
                             <field name="phone" widget="phone"/>
                             <field name="mobile"/>
-                            <field name="fax"/>
                         </group>
                         <group>
                             <field name="user_id" domain="[('share', '=', False)]"
@@ -469,7 +468,7 @@
                                         'default_state_id': state_id, 'default_zip': zip,
                                         'default_country_id': country_id, 'default_function': function,
                                         'default_phone': phone, 'default_mobile': mobile,
-                                        'default_fax': fax, 'default_email': email_from,
+                                        'default_email': email_from,
                                         'default_user_id': user_id, 'default_team_id': team_id, 'default_website': website}"/>
                                 <field name="email_from" string="Email" widget="email"/>
                                 <field name="phone" widget="phone"/>
@@ -519,7 +518,6 @@
                                     </div>
                                     <field name="function"/>
                                     <field name="mobile"/>
-                                    <field name="fax"/>
                                     <field name="opt_out"/>
                                 </group>
                                 <group string="Marketing">
