@@ -15,13 +15,13 @@
                             <field name="product_id" context="{'search_default_services': 1, 'default_type': 'service', 'default_invoice_policy': 'order'}" class="oe_inline" invisible="1"/>
                             <field name="advance_payment_method" widget="radio" options="{'horizontal':true}"
                             attrs="{'invisible': [('count','&gt;',1)]}"/>
-                        </group>
-                        <group>
-                            <div colspan="2" class="text-center ml24" attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('invoiceable_amount', '==', 0), ('count','&gt;',1)]}">
-                                <span class="fa fa-info-circle ml32"/><span> Invoiceable amount <field name="invoiceable_amount"/></span>
+                            <label string=''/>
+                            <div attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('invoiceable_amount', '==', 0), ('count','&gt;',1)]}">
+                                <span class="fa fa-info-circle"/><span> Invoiceable amount <strong><field name="invoiceable_amount"/></strong></span>
                             </div>
-                            <div class="text-center ml32" attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('total_down_payment', '==', 0), ('count','&gt;',1)]}" colspan="2">
-                                <field name="deduct_down_payment" class="ml64"/>
+                            <label string=''/>
+                            <div attrs="{'invisible': ['|', '|', ('advance_payment_method', '!=', 'invoiceable'), ('total_down_payment', '==', 0), ('count','&gt;',1)]}">
+                                <field name="deduct_down_payment"/>
                                 <label for="deduct_down_payment"/>
                                 <field name="currency_id" invisible="1"/>
                                 ( <field name="total_down_payment" widget="monetary"/> )
@@ -32,10 +32,8 @@
                                 <field name="amount" attrs="{'required': [('advance_payment_method', '=', 'down_payment')]}" class="ml16 oe_inline"/>
                                 <label string="%" attrs="{'invisible': [('down_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
                             </div>
-                        </group>
-                        <group attrs="{'invisible': ['|', ('advance_payment_method', '!=', 'down_payment'), ('product_id', '!=', False)]}">
-                            <field name="deposit_account_id" class="oe_inline" groups="account.group_account_manager"/>
-                            <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
+                            <field name="deposit_account_id" class="oe_inline" attrs="{'invisible': ['|', ('advance_payment_method', '!=', 'down_payment'), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
+                            <field name="deposit_taxes_id" attrs="{'invisible': ['|', ('advance_payment_method', '!=', 'down_payment'), ('product_id', '!=', False)]}" class="oe_inline" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                         </group>
                     </group>
                     <footer>

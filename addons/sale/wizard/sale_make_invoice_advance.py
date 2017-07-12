@@ -20,7 +20,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_deduct_down_payment(self):
         if self._count() == 1:
             order = self.env['sale.order'].browse(self._context.get('active_id'))
-            if order.invoice_count:
+            if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
                 return True
         return False
 
@@ -37,10 +37,16 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_deposit_taxes_id(self):
         return self._default_product_id().taxes_id
 
-    @api.depends('advance_payment_method')
+    @api.depends('advance_payment_method', 'deduct_down_payment')
     def _get_invoiceable_amount(self):
         order = self.env['sale.order'].browse(self._context.get('active_id'))
-        self.invoiceable_amount = sum(line.price_total for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice'))
+        total_amount = 0
+        for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice'):
+            if not self.deduct_down_payment and line.is_downpayment:
+                continue
+            taxes = line.tax_id.compute_all(line.price_reduce, line.order_id.currency_id, line.qty_to_invoice, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            total_amount += taxes['total_included']
+        self.invoiceable_amount = total_amount
 
     @api.multi
     def _get_default_currency(self):

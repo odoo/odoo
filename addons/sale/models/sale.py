@@ -164,7 +164,7 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
-    all_uninvoiced_method = fields.Boolean('Want to invoice all uninvoiced lines?', default=False, readonly=True)
+    is_all_uninvoiced = fields.Boolean('invoice all uninvoiced lines', readonly=True)
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -371,8 +371,6 @@ class SaleOrder(models.Model):
         invoices = {}
         references = {}
         for order in self:
-            if all_uninvoiced:
-                order.all_uninvoiced_method = True
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
                 if float_is_zero(line.qty_to_invoice, precision_digits=precision) and not all_uninvoiced:
@@ -394,6 +392,7 @@ class SaleOrder(models.Model):
                 elif line.qty_to_invoice < 0 and final and not all_uninvoiced:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
                 elif all_uninvoiced and float_compare(line.product_uom_qty, line.qty_invoiced, precision_digits=precision) > 0:
+                    order.is_all_uninvoiced = True
                     line.invoice_line_create(invoices[group_key].id, float_round((line.product_uom_qty - line.qty_invoiced), precision))
 
             if references.get(invoices.get(group_key)):
