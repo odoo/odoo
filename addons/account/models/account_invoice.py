@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import re
 from lxml import etree
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -215,6 +216,7 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
+
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
         readonly=True, states={'draft': [('readonly', False)]})
@@ -340,9 +342,52 @@ class AccountInvoice(models.Model):
     payments_widget = fields.Text(compute='_get_payment_info_JSON')
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
 
+    #fields use to set the sequence, on the first invoice of the journal
+    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
+    sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
+
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
+
+    @api.depends('state', 'journal_id', 'date_invoice')
+    def _get_sequence_prefix(self):
+        """ computes the number that will be assigned to the first invoice/bill/refund of a journal, in order to
+        let the user manually change it.
+        """
+        for invoice in self:
+            journal_sequence = invoice.journal_id.sequence_id
+            if invoice.journal_id.refund_sequence:
+                domain = [('type', '=', invoice.type)]
+                journal_sequence = invoice.type in ['in_refund', 'out_refund'] and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
+            elif invoice.type in ['in_invoice', 'in_refund']:
+                domain = [('type', 'in', ['in_invoice', 'in_refund'])]
+            else:
+                domain = [('type', 'in', ['out_invoice', 'out_refund'])]
+            if invoice.id:
+                domain += [('id', '<>', invoice.id)]
+            domain += [('journal_id', '=', invoice.journal_id.id), ('state', 'not in', ['draft', 'cancel'])]
+
+            if (invoice.state == 'draft') and not self.search(domain, limit=1):
+                prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice)._get_prefix_suffix()
+                invoice.sequence_number_next_prefix = prefix
+                number_next = journal_sequence._get_current_sequence().number_next_actual
+                invoice.sequence_number_next = '%%0%sd' % journal_sequence.padding % number_next
+            else:
+                invoice.sequence_number_next_prefix = False
+                invoice.sequence_number_next = 'no'
+
+    @api.multi
+    def _set_sequence_next(self):
+        ''' Set the number_next on the sequence related to the invoice/bill/refund'''
+        for invoice in self:
+            nxt = re.sub("[^0-9]", '', invoice.sequence_number_next or '1')
+            result = re.match("(0*)([0-9]+)", nxt)
+            journal_sequence = invoice.journal_id.refund_sequence and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
+            if result and journal_sequence:
+                #use _get_current_sequence to manage the date range sequences
+                sequence = journal_sequence._get_current_sequence()
+                sequence.number_next = int(result.group(2))
 
     @api.model
     def create(self, vals):
@@ -570,13 +615,12 @@ class AccountInvoice(models.Model):
         date_invoice = self.date_invoice
         if not date_invoice:
             date_invoice = fields.Date.context_today(self)
-        if not self.payment_term_id:
-            # When no payment terms defined
-            self.date_due = self.date_due or self.date_invoice
-        else:
+        if self.payment_term_id:
             pterm = self.payment_term_id
             pterm_list = pterm.with_context(currency_id=self.company_id.currency_id.id).compute(value=1, date_ref=date_invoice)[0]
             self.date_due = max(line[0] for line in pterm_list)
+        elif self.date_due and (date_invoice > self.date_due):
+            self.date_due = date_invoice
 
     @api.multi
     def action_invoice_draft(self):
