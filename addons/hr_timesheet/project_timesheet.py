@@ -15,6 +15,7 @@ class Project(models.Model):
 
 class Task(models.Model):
     _inherit = "project.task"
+    _parent_store = True
 
     @api.multi
     def _get_subtask_count(self):
@@ -55,7 +56,9 @@ class Task(models.Model):
     children_hours = fields.Float(compute='_hours_get', store=True, string='Sub-tasks Hours', help="Sum of the planned hours of all sub-tasks (when a sub-task is closed or its spent hours exceed its planned hours, spent hours are counted instead)")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task')
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, ondelete='restrict')
+    parent_left = fields.Integer('Left Parent', index=True)
+    parent_right = fields.Integer('Right Parent', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_get_subtask_count', type='integer', string="Sub-task count")
