@@ -878,6 +878,21 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
+        result = {'domain': domain}
+
+        title = False
+        message = False
+        warning = {}
+        if product.sale_line_warn != 'no-message':
+            title = _("Warning for %s") % product.name
+            message = product.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            result = {'warning': warning}
+            if product.sale_line_warn == 'block':
+                self.product_id = False
+                return result
+
         name = product.name_get()[0][1]
         if product.description_sale:
             name += '\n' + product.description_sale
@@ -889,22 +904,11 @@ class SaleOrderLine(models.Model):
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
         self.update(vals)
 
-        title = False
-        message = False
-        warning = {}
-        if product.sale_line_warn != 'no-message':
-            title = _("Warning for %s") % product.name
-            message = product.sale_line_warn_msg
-            warning['title'] = title
-            warning['message'] = message
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-            return {'warning': warning}
-        return {'domain': domain}
+        return result
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        if not self.product_uom:
+        if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return
         if self.order_id.pricelist_id and self.order_id.partner_id:
