@@ -104,11 +104,12 @@ class StockWarehouse(models.Model):
                     if not warehouse.manu_type_id:
                         warehouse._create_manufacturing_picking_type()
                     warehouse.manu_type_id.active = True
+                self.mapped('manufacture_pull_id').write({'active':True})
             else:
                 for warehouse in self:
                     if warehouse.manu_type_id:
                         warehouse.manu_type_id.active = False
-                self.mapped('manufacture_pull_id').unlink()
+                self.mapped('manufacture_pull_id').write({'active':False})
         return super(StockWarehouse, self).write(vals)
 
     @api.multi
