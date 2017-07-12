@@ -590,7 +590,7 @@ odoo.define('web_editor.snippets.options', function (require) {
         },
         background: function (type, value, $li) {
             if (value && value.length) {
-                this.$target.css("background-image", "url(" + value + ")");
+                this.$target.css("background-image", "url('" + value + "')");
                 this.$target.addClass("oe_img_bg");
             } else {
                 this.$target.css("background-image", "");
