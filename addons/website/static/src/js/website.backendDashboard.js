@@ -54,8 +54,8 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
     fetch_data: function() {
         var self = this;
         return ajax.jsonRpc('/website/fetch_dashboard_data', 'call', {
-            'date_from': this.date_from.format('YYYY-MM-DD'),
-            'date_to': this.date_to.format('YYYY-MM-DD'),
+            'date_from': this.date_from.year()+'-'+(this.date_from.month()+1)+'-'+this.date_from.date(),
+            'date_to': this.date_to.year()+'-'+(this.date_to.month()+1)+'-'+this.date_to.date(),
         }).done(function(result) {
             self.data = result;
             self.dashboards_data = result.dashboards;
