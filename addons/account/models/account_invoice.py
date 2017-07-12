@@ -370,7 +370,7 @@ class AccountInvoice(models.Model):
             if (invoice.state == 'draft') and not self.search(domain, limit=1):
                 prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice)._get_prefix_suffix()
                 invoice.sequence_number_next_prefix = prefix
-                number_next = str(journal_sequence._get_current_sequence().number_next_actual)
+                number_next = journal_sequence._get_current_sequence().number_next_actual
                 invoice.sequence_number_next = '%%0%sd' % journal_sequence.padding % number_next
             else:
                 invoice.sequence_number_next_prefix = False
