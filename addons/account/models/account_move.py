@@ -976,7 +976,7 @@ class AccountMoveLine(models.Model):
         writeoff_move.post()
 
         # Return the writeoff move.line which is to be reconciled
-        return writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
+        return writeoff_move.line_ids[1]
 
     @api.model
     def compute_full_after_batch_reconcile(self):
