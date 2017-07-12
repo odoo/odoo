@@ -396,7 +396,7 @@ class Lead(models.Model):
                             'fadeout': 'slow',
                             'message': message,
                             'img_url': '/web/image/%s/%s/image' % (lead.team_id.user_id._name, lead.team_id.user_id.id) if lead.team_id.user_id.image else '/web/static/src/img/smile.svg',
-                            'type': 'rainbow',
+                            'type': 'rainbow_man',
                         }
                     }
             return True
