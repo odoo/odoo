@@ -384,6 +384,13 @@ data.Class = Widget.extend({
             setTimeout(function () {snipped_event_flag = false;}, 0);
             var $target = $(srcElement);
 
+            if($target.hasClass('fa')){
+                $(".oe_overlay.oe_active").removeClass("oe_active").addClass("hide_overlay");
+            }
+            else{
+               $(".oe_overlay.hide_overlay").addClass("oe_active").removeClass('hide_overlay');
+            }
+
             if ($target.closest(".oe_overlay, .note-popover").length) {
                 return;
             }
