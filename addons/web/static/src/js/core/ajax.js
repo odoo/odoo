@@ -352,37 +352,82 @@ function post (controller_url, data) {
     return Def;
 }
 
+/**
+ * Loads an XML file according to the given URL and adds its associated qweb
+ * templates to the given qweb engine. The function can also be used to get
+ * the deferred which indicates when all the calls to the function are finished.
+ *
+ * Note: "all the calls" = the calls that happened before the current no-args
+ * one + the calls that will happen after but when the previous ones are not
+ * finished yet.
+ *
+ * @param {string} [url] - an URL where to find qweb templates
+ * @param {QWeb} [qweb] - the engine to which the templates need to be added
+ * @returns {Deferred}
+ *          If no argument is given to the function, the deferred's state
+ *          indicates if "all the calls" are finished (see main description).
+ *          Otherwise, it indicates when the templates associated to the given
+ *          url have been loaded.
+ */
 var loadXML = (function () {
-    var loading = false;
-    var urls = [];
-    var qwebs = [];
-    var templates_def = $.Deferred();
+    // Some "static" variables associated to the loadXML function
+    var isLoading = false;
+    var loadingsData = [];
+    var allLoadingsDef = $.when();
+    var seenURLs = [];
 
-    var load = function loadXML(url, qweb) {
-        if (url) {
-            urls.push(url);
-            qwebs.push(qweb);
+    return function (url, qweb) {
+        // If no argument, simply returns the deferred which indicates when
+        // "all the calls" are finished
+        if (!url || !qweb) {
+            return allLoadingsDef;
         }
 
-        if (!loading && urls.length) {
-            if (templates_def.state() === "resolved") {
-                templates_def = $.Deferred();
+        // If the given URL has already been seen, do nothing but returning the
+        // associated deferred
+        if (_.contains(seenURLs, url)) {
+            var oldLoadingData = _.findWhere(loadingsData, {url: url});
+            return oldLoadingData ? oldLoadingData.def : $.when();
+        }
+        seenURLs.push(url);
+
+        // Add the information about the new data to load: the url, the qweb
+        // engine and the associated deferred
+        var newLoadingData = {
+            url: url,
+            qweb: qweb,
+            def: $.Deferred(),
+        };
+        loadingsData.push(newLoadingData);
+
+        // If not already started, start the loading loop (reinitialize the
+        // "all the calls" deferred to an unresolved state)
+        if (!isLoading) {
+            allLoadingsDef = $.Deferred();
+            _load();
+        }
+
+        // Return the deferred associated to the new given URL
+        return newLoadingData.def;
+
+        function _load() {
+            isLoading = true;
+            if (loadingsData.length) {
+                // There is something to load, load it, resolve the associated
+                // deferred then start loading the next one
+                var loadingData = loadingsData.shift();
+                loadingData.qweb.add_template(loadingData.url, function () {
+                    loadingData.def.resolve();
+                    _load();
+                });
+            } else {
+                // There is nothing to load anymore, so resolve the
+                // "all the calls" deferred
+                allLoadingsDef.resolve();
+                isLoading = false;
             }
-
-            loading = true;
-            qwebs.shift().add_template(urls.shift(), function () {
-                loading = false;
-                if (!urls.length) {
-                    templates_def.resolve();
-                }
-                load(null);
-            });
         }
-
-        return templates_def;
     };
-
-    return load;
 })();
 
 return {
