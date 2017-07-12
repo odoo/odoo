@@ -324,6 +324,10 @@ class PurchaseOrder(models.Model):
 
     @api.multi
     def button_confirm(self):
+        if not self._context.get('skip_warning'):
+            partner_warning = self.partner_id.check_warning('purchase_warn_msg', 'purchase_warn', 'button_confirm')
+            if partner_warning:
+                return partner_warning
         for order in self:
             if order.state not in ['draft', 'sent']:
                 continue
