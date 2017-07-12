@@ -8,7 +8,6 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="opt_out" string="Mailing Opt-Out" groups="base.group_no_one"/>
                     <field name="message_bounce" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//sheet" position="after">
@@ -27,10 +26,6 @@
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                     <filter name="supplier" position="after">
-                        <separator />
-                        <filter string="Available for mass mailing"
-                                name='not_opt_out' domain="[('opt_out', '=', False)]"
-                                help="Partners that did not ask not to be included in mass mailing campaigns" />
                         <separator/>
                         <filter string="My Activities" name="activities_my"
                                 domain="[('activity_ids.user_id', '=', uid)]"/>

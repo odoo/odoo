@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <act_window name="Lead/Opportunity Email Marketing"
+    res_model="mail.mass_mailing"
+    multi="True"
+    src_model="crm.lead"
+    view_mode="form"
+    target="current"
+    key2="client_action_multi"
+    id="mass_mailing_action_crm"
+    context="{
+                'default_mailing_model': context.get('active_model', False),
+                'default_mailing_domain': [['id', 'in', context.get('active_ids', [])]],
+            }"
+        />
+</odoo>

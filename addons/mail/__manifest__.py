@@ -52,6 +52,7 @@ Main Features
         'views/ir_actions_views.xml',
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
+        'views/mail_blacklist_views.xml',
     ],
     'demo': [
         'data/mail_demo.xml',

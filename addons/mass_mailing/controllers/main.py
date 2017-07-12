@@ -17,10 +17,7 @@ class MassMailController(http.Controller):
             res_id = res_id and int(res_id)
             res_ids = []
             if mailing.mailing_model == 'mail.mass_mailing.contact':
-                contacts = request.env['mail.mass_mailing.contact'].sudo().search([
-                    ('email', '=', email),
-                    ('list_id', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
-                ])
+                contacts = request.env['mail.mass_mailing.contact'].sudo().search([('email', '=', email)])
                 res_ids = contacts.ids
             else:
                 res_ids = [res_id]
@@ -28,7 +25,7 @@ class MassMailController(http.Controller):
             right_token = mailing._unsubscribe_token(res_id, email)
             if not consteq(str(token), right_token):
                 raise exceptions.AccessDenied()
-            mailing.update_opt_out(email, res_ids, True)
+            mailing.update_blacklist_email(email)
             return _('You have been unsubscribed successfully')
 
     @http.route('/mail/track/<int:mail_id>/blank.gif', type='http', auth='none')

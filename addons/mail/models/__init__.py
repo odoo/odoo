@@ -19,3 +19,4 @@ from . import update
 from . import ir_actions
 from . import ir_autovacuum
 from . import ir_model
+from . import mail_blacklist
