@@ -216,8 +216,6 @@ class AccountInvoice(models.Model):
 
     name = fields.Char(string='Reference/Description', index=True,
         readonly=True, states={'draft': [('readonly', False)]}, copy=False, help='The name that will be used on account move lines')
-    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
-    sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
 
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
@@ -344,42 +342,52 @@ class AccountInvoice(models.Model):
     payments_widget = fields.Text(compute='_get_payment_info_JSON')
     has_outstanding = fields.Boolean(compute='_get_outstanding_info_JSON')
 
+    #fields use to set the sequence, on the first invoice of the journal
+    sequence_number_next = fields.Char(string='Next Number', compute="_get_sequence_prefix", inverse="_set_sequence_next")
+    sequence_number_next_prefix = fields.Char(string='Next Number', compute="_get_sequence_prefix")
+
     _sql_constraints = [
         ('number_uniq', 'unique(number, company_id, journal_id, type)', 'Invoice Number must be unique per Company!'),
     ]
 
-    @api.depends('state', 'date_invoice')
+    @api.depends('state', 'journal_id', 'date_invoice')
     def _get_sequence_prefix(self):
-        for record in self:
-            types = {
-                'out': ['out_invoice', 'out_refund'],
-                'in_': ['in_invoice', 'in_refund']
-            }
-            domain = [('type','in',types.get(record.type[:3], (record.type,)))]
-            if record.id:
-                domain += [('id', '<>', record.id)]
-            if (record.state=='draft') and not self.search(domain, limit=1):
-                record.sequence_number_next_prefix = record.date_invoice and (record.date_invoice[:4]+'/00') or datetime.now().strftime('%Y/00')
-                sequence = str(self.journal_id.sequence_id._get_current_sequence().number_next_actual)
-                while len(sequence) <= ((self.journal_id.sequence_id.padding or 1) -3):
-                    sequence = '0'+sequence
-                record.sequence_number_next = sequence
+        """ computes the number that will be assigned to the first invoice/bill/refund of a journal, in order to
+        let the user manually change it.
+        """
+        for invoice in self:
+            journal_sequence = invoice.journal_id.sequence_id
+            if invoice.journal_id.refund_sequence:
+                domain = [('type', '=', invoice.type)]
+                journal_sequence = invoice.journal_id.refund_sequence_id
+            elif invoice.type in ['in_invoice', 'in_refund']:
+                domain = [('type', 'in', ['in_invoice', 'in_refund'])]
             else:
-                record.sequence_number_next_prefix = False
-                record.sequence_number_next = 'no'
+                domain = [('type', 'in', ['out_invoice', 'out_refund'])]
+            if invoice.id:
+                domain += [('id', '<>', invoice.id)]
 
-    @api.one
+            if (invoice.state == 'draft') and not self.search(domain, limit=1):
+                prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice)._get_prefix_suffix()
+                invoice.sequence_number_next_prefix = prefix
+                number_next = str(journal_sequence._get_current_sequence().number_next_actual)
+                invoice.sequence_number_next = '%%0%sd' % journal_sequence.padding % number_next
+            else:
+                invoice.sequence_number_next_prefix = False
+                invoice.sequence_number_next = 'no'
+
+    @api.multi
     def _set_sequence_next(self):
-        nxt = re.sub("[^0-9]", '', self.sequence_number_next or '1')
-        result = re.match("(0*)([0-9]+)", nxt)
-        if result and self.journal_id.sequence_id:
-            sequence = self.journal_id.sequence_id._get_current_sequence()
-            sequence.write({
-                'number_next': int(result.group(2)),
-            })
-            self.journal_id.sequence_id.write({
-                'padding': len(nxt)+2
-            })
+        ''' Set the number_next on the sequence related to the invoice/bill/refund'''
+        for invoice in self:
+            nxt = re.sub("[^0-9]", '', invoice.sequence_number_next or '1')
+            result = re.match("(0*)([0-9]+)", nxt)
+            journal_sequence = invoice.journal_id.refund_sequence and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
+            if result and journal_sequence:
+                journal_sequence.padding = len(nxt) + 2
+                #use _get_current_sequence to manage the date range sequences
+                sequence = journal_sequence._get_current_sequence()
+                sequence.number_next = int(result.group(2))
 
     @api.model
     def create(self, vals):
