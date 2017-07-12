@@ -112,6 +112,10 @@ class Employee(models.Model):
     # private partner
     address_home_id = fields.Many2one(
         'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+    is_address_home_a_company = fields.Boolean(
+        'The employee adress has a company linked',
+        compute='_compute_is_address_home_a_company',
+    )
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)')
     gender = fields.Selection([
@@ -260,6 +264,12 @@ class Employee(models.Model):
         # Do not notify user it has been marked as follower of its employee.
         return
 
+    @api.depends('address_home_id.parent_id')
+    def _compute_is_address_home_a_company(self):
+        """Checks that choosen address (res.partner) is not linked to a company.
+        """
+        for employee in self:
+            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
 
 class Department(models.Model):
     _name = "hr.department"
