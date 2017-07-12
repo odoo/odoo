@@ -4,7 +4,7 @@
 import logging
 import re
 
-from odoo import api, models, _
+from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 
@@ -40,10 +40,7 @@ class ResPartner(models.Model):
             if len(partner.vat or '') > 5:
                 result = stdnum_vat.check_vies(partner.vat)
                 if not result['valid']:
-                    return {'warning': {
-                        'title': _('Invalid VAT number!'),
-                        'message': _('The VAT number has been tested invalid by the European Commission VIES service: http://ec.europa.eu/taxation_customs/vies/')
-                    }}
+                    return {}
 
                 if (not partner.name) and (result['name'] != '---'):
                     partner.name = result['name']
