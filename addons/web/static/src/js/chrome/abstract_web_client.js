@@ -21,6 +21,7 @@ var Dialog = require('web.Dialog');
 var Loading = require('web.Loading');
 var mixins = require('web.mixins');
 var NotificationManager = require('web.notification').NotificationManager;
+var RainbowMan = require('web.rainbow_man');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
@@ -43,7 +44,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         // downstream widgets.  Mainly side effects, such as rpcs, notifications
         // or cache.
 
-        // notifications and warnings
+        // notifications, warnings and effects
         notification: function (e) {
             if(this.notification_manager) {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
@@ -65,6 +66,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        rainbow_man: '_onDisplayRainbowMan',
         // session
         get_session: function (event) {
             if (event.data.callback) {
@@ -82,7 +84,6 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 }
             });
         },
-        show_wow: '_onShowWow',
     },
     init: function (parent) {
         this.client_options = {};
@@ -299,6 +300,18 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     //--------------------------------------------------------------------------
 
     /**
+     * Displays a rainbowman
+     *
+     * @private
+     * @param {OdooEvent} e
+     * @param {Object} [e.data] - key-value options to decide rainbowman behavior / appearance
+     */
+    _onDisplayRainbowMan: function (e) {
+        var data = e.data || {};
+        new RainbowMan(data).appendTo(this.$el);
+    },
+
+    /**
      * Displays a warning in a dialog of with the NotificationManager
 
      * @param {OdooEvent} e
@@ -319,22 +332,6 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         } else if (this.notification_manager) {
             this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
         }
-    },
-    /**
-     * Displays a thumb up, heart or peace image (randomly) for a moment (e.g.
-     * used when an opportunity is won)
-     *
-     * @private
-     */
-    _onShowWow: function () {
-        var className = 'o_wow_thumbs';
-        if (Math.random() > 0.9) {
-            var otherClasses = ['o_wow_peace', 'o_wow_heart'];
-            className = otherClasses[Math.floor(Math.random()*otherClasses.length)];
-        }
-        var $body = $('body');
-        $body.addClass(className);
-        setTimeout($body.removeClass.bind($body, className), 1000);
     },
 });
 

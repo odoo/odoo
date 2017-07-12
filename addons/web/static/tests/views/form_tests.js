@@ -4,6 +4,8 @@ odoo.define('web.form_tests', function (require) {
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var FormView = require('web.FormView');
+var pyeval = require('web.pyeval');
+var RainbowMan = require('web.rainbow_man');
 var testUtils = require('web.test_utils');
 
 var _t = core._t;
@@ -5200,42 +5202,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('wow effect', function (assert) {
-        assert.expect(3);
-
-        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
-
-        var clickCount = 0;
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form string="Partners">' +
-                    '<button name="test" string="Mark Won" type="object" class="o_wow"/>' +
-                '</form>',
-            intercepts: {
-                execute_action: function (event) {
-                    if (clickCount === 0) {
-                        event.data.on_success();
-                    } else {
-                        event.data.on_fail();
-                    }
-                    clickCount++;
-                },
-                show_wow: function () {
-                    assert.step('wow');
-                },
-            },
-        });
-
-        form.$('button.o_wow').click();
-        assert.verifySteps(['wow']);
-        form.$('button.o_wow').click();
-        assert.verifySteps(['wow']);
-
-        form.destroy();
-    });
-
     QUnit.test('readonly fields are not sent when saving', function (assert) {
         assert.expect(6);
 
@@ -5377,5 +5343,31 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('rainbowman attributes correctly passed on button click', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="action_won" string="Won" type="object" rainbow="{\'message\': \'Congrats!\'}"/>' +
+                    '</header>' +
+                '</form>',
+            intercepts: {
+                execute_action: function (event) {
+                    var rainbow_data = pyeval.py_eval(event.data.action_data.rainbow);
+                    assert.strictEqual(_.size(rainbow_data), 1, "should have only one key");
+                    assert.strictEqual(rainbow_data.message, 'Congrats!', "should have passed correct message");
+                }
+            }
+        });
+
+        form.$('.o_form_statusbar .btn-default').click();
+        form.destroy();
+    });
+
 });
 });

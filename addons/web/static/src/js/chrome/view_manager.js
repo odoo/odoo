@@ -562,6 +562,14 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
 
         // response handler
         var handler = function (action) {
+            // show rainbow if button have rainbow attribute
+            // Rainbowman can be displayed from two places : from attribute on a button, or from python.
+            // Code below handles the first case i.e 'rainbow' attribute on button.
+            var rainbow = false;
+            if (action_data.rainbow) {
+                rainbow = pyeval.py_eval(action_data.rainbow);
+            };
+
             if (action && action.constructor === Object) {
                 // filter out context keys that are specific to the current action.
                 // Wrong default_* and search_default_* values will no give the expected result
@@ -580,11 +588,16 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 }
                 ncontext.add(action.context || {});
                 action.context = ncontext;
+                // In case rainbow data is returned from python and also there is rainbow
+                // attribute on button, priority is given to button attribute
+                action.rainbow = rainbow || action.rainbow;
                 return self.do_action(action, {
                     on_close: result_handler,
                 });
             } else {
-                self.do_action({"type":"ir.actions.act_window_close"});
+                // If action doesn't return anything, but have rainbow
+                // attribute on button, display rainbowman
+                self.do_action({"type":"ir.actions.act_window_close", 'rainbow': rainbow});
                 return result_handler();
             }
         };

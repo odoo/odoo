@@ -511,7 +511,7 @@ function on_mark_as_read_notification (data) {
         if (message) {
             invalidate_caches(message.channel_ids);
             remove_message_from_channel("channel_inbox", message);
-            chat_manager.bus.trigger('update_message', message);
+            chat_manager.bus.trigger('update_message', message, data.type);
         }
     });
     if (data.channel_ids) {
