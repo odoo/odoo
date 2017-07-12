@@ -359,13 +359,14 @@ class AccountInvoice(models.Model):
             journal_sequence = invoice.journal_id.sequence_id
             if invoice.journal_id.refund_sequence:
                 domain = [('type', '=', invoice.type)]
-                journal_sequence = invoice.journal_id.refund_sequence_id
+                journal_sequence = invoice.type in ['in_refund', 'out_refund'] and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
             elif invoice.type in ['in_invoice', 'in_refund']:
                 domain = [('type', 'in', ['in_invoice', 'in_refund'])]
             else:
                 domain = [('type', 'in', ['out_invoice', 'out_refund'])]
             if invoice.id:
                 domain += [('id', '<>', invoice.id)]
+            domain += [('journal_id', '=', invoice.journal_id.id), ('state', 'not in', ['draft', 'cancel'])]
 
             if (invoice.state == 'draft') and not self.search(domain, limit=1):
                 prefix, dummy = journal_sequence.with_context(ir_sequence_date=invoice.date_invoice)._get_prefix_suffix()
@@ -384,7 +385,6 @@ class AccountInvoice(models.Model):
             result = re.match("(0*)([0-9]+)", nxt)
             journal_sequence = invoice.journal_id.refund_sequence and invoice.journal_id.refund_sequence_id or invoice.journal_id.sequence_id
             if result and journal_sequence:
-                journal_sequence.padding = len(nxt) + 2
                 #use _get_current_sequence to manage the date range sequences
                 sequence = journal_sequence._get_current_sequence()
                 sequence.number_next = int(result.group(2))
