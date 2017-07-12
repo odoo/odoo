@@ -319,6 +319,8 @@ class AccountJournal(models.Model):
             if journal.sequence_id:
                 sequence = journal.sequence_id._get_current_sequence()
                 journal.sequence_number_next = sequence.number_next_actual
+            else:
+                journal.sequence_number_next = 1
 
     @api.multi
     def _inverse_seq_number_next(self):
@@ -341,6 +343,8 @@ class AccountJournal(models.Model):
             if journal.refund_sequence_id and journal.refund_sequence:
                 sequence = journal.refund_sequence_id._get_current_sequence()
                 journal.refund_sequence_number_next = sequence.number_next_actual
+            else:
+                journal.refund_sequence_number_next = 1
 
     @api.multi
     def _inverse_refund_seq_number_next(self):

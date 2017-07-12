@@ -88,6 +88,20 @@
             <field name="res_model">account.analytic.account</field>
         </record>
 
+        <record model="ir.ui.view" id="partner_view_short_extra">
+            <field name="name">partner.short.view.account</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_short_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="email" position="after">
+                    <field name="property_payment_term_id" widget="selection"/>
+                    <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                </field>
+            </field>
+        </record>
+
+
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
