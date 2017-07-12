@@ -30,7 +30,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'city',
     'contact_name',
     'description',
-    'fax',
     'mobile',
     'partner_name',
     'phone',
@@ -125,7 +124,6 @@ class Lead(models.Model):
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
     phone = fields.Char('Phone')
-    fax = fields.Char('Fax')
     mobile = fields.Char('Mobile')
     function = fields.Char('Job Position')
     title = fields.Many2one('res.partner.title')
@@ -225,7 +223,6 @@ class Lead(models.Model):
                 'email_from': partner.email,
                 'phone': partner.phone,
                 'mobile': partner.mobile,
-                'fax': partner.fax,
                 'zip': partner.zip,
                 'function': partner.function,
                 'website': partner.website,
@@ -751,7 +748,6 @@ class Lead(models.Model):
             'phone': self.phone,
             'mobile': self.mobile,
             'email': email_split[0] if email_split else False,
-            'fax': self.fax,
             'title': self.title.id,
             'function': self.function,
             'street': self.street,

@@ -26,7 +26,6 @@ class Bank(models.Model):
     country = fields.Many2one('res.country')
     email = fields.Char()
     phone = fields.Char()
-    fax = fields.Char()
     active = fields.Boolean(default=True)
     bic = fields.Char('Bank Identifier Code', index=True, help="Sometimes called BIC or Swift.")
 

@@ -444,7 +444,7 @@ class Contact(models.AbstractModel):
         if not value.exists():
             return False
 
-        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "fax", "email"]
+        opf = options and options.get('fields') or ["name", "address", "phone", "mobile", "email"]
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]
 
@@ -453,7 +453,6 @@ class Contact(models.AbstractModel):
             'address': escape("\n".join(name_get.split("\n")[1:])).strip(),
             'phone': value.phone,
             'mobile': value.mobile,
-            'fax': value.fax,
             'city': value.city,
             'country_id': value.country_id.display_name,
             'website': value.website,
