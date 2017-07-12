@@ -7,6 +7,7 @@
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
     ],
     'author': 'OpenERP Italian Community',
     'description': """

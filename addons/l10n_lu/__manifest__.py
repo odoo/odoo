@@ -27,6 +27,7 @@ Notes:
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
     ],
     'data': [
         # basic accounting data

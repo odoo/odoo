@@ -29,6 +29,7 @@ Spanish charts of accounts (PGCE 2008).
     "depends" : [
         "account",
         "base_iban",
+        "base_vat",
     ],
     "data" : [
         'data/account_account_type_data.xml',

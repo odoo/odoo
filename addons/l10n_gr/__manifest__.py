@@ -17,6 +17,7 @@ Greek accounting chart and localization.
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
     ],
     'data': [ 'data/account_type_data.xml',
               'data/l10n_gr_chart_data.xml',
