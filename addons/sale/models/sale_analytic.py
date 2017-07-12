@@ -10,7 +10,10 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _compute_analytic(self, domain=None):
         lines = {}
+        force_so_lines = self.env.context.get("force_so_lines")
         if not domain:
+            if not self.ids and not force_so_lines:
+                return True
             # To filter on analyic lines linked to an expense
             expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
             expense_type_id = expense_type_id and expense_type_id.id
@@ -30,7 +33,6 @@ class SaleOrderLine(models.Model):
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
         # If the unlinked analytic line was the last one on the SO line, the qty was not updated.
-        force_so_lines = self.env.context.get("force_so_lines")
         if force_so_lines:
             for line in force_so_lines:
                 lines.setdefault(line, 0.0)
