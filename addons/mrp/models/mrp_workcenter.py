@@ -15,7 +15,7 @@ class MrpWorkcenter(models.Model):
 
     # resource
     name = fields.Char(related='resource_id.name', store=True)
-    time_efficiency = fields.Float('Time Efficiency', related='resource_id.time_efficiency', store=True)
+    time_efficiency = fields.Float('Time Efficiency', related='resource_id.time_efficiency', default=100, store=True)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
 
     code = fields.Char('Code', copy=False)
