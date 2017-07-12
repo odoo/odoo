@@ -25,20 +25,21 @@ class account_analytic_account(models.Model):
             domain.append(('date', '>=', self._context['from_date']))
         if self._context.get('to_date', False):
             domain.append(('date', '<=', self._context['to_date']))
-
-        account_amounts = analytic_line_obj.search_read(domain, ['account_id', 'amount'])
-        account_ids = set([line['account_id'][0] for line in account_amounts])
-        data_debit = {account_id: 0.0 for account_id in account_ids}
-        data_credit = {account_id: 0.0 for account_id in account_ids}
-        for account_amount in account_amounts:
-            if account_amount['amount'] < 0.0:
-                data_debit[account_amount['account_id'][0]] += account_amount['amount']
-            else:
-                data_credit[account_amount['account_id'][0]] += account_amount['amount']
-
+            
+        account_amounts = analytic_line_obj.search(domain)
+        self.env.cr.execute("""
+            select account_id,
+            sum(greatest(0, amount)) as credit,
+            sum(least(0, amount)) as debit
+            from account_analytic_line 
+            where id IN %s 
+            group by account_id
+        """, (tuple(account_amounts.ids), ))
+        datas = {result[0]: (result[1], result[2]) for result in self.env.cr.fetchall()}
+            
         for account in self:
-            account.debit = abs(data_debit.get(account.id, 0.0))
-            account.credit = data_credit.get(account.id, 0.0)
+            account.credit = abs(datas.get(account.id, (0.0, 0.0))[0])
+            account.debit = abs(datas.get(account.id, (0.0, 0.0))[1])
             account.balance = account.credit - account.debit
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
