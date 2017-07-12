@@ -298,7 +298,6 @@
         <t t-if="not o and doc">
             <t t-set="o" t-value="doc"/>
         </t>
-        <h2 t-esc="o"/>
 
         <t t-if="o and 'company_id' in o">
             <t t-set="company" t-value="o.company_id.sudo()"/>
