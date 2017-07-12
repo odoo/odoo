@@ -19,6 +19,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     'depends': [
         'account',
         'base_iban',
+        'base_vat',
     ],
     'data': [
         'data/l10n_uk_chart_data.xml',
