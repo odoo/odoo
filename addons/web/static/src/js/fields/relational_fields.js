@@ -1909,7 +1909,7 @@ var FieldRadio = FieldSelection.extend({
         this._super.apply(this, arguments);
         if (this.mode === 'edit') {
             this.tagName = 'div';
-            this.className += this.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical';
+            this.className += this.nodeOptions.horizontal ? ' o_horizontal' : ' o_vertical';
         }
         this.unique_id = _.uniqueId("radio");
         this._setValues();
