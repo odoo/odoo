@@ -62,7 +62,6 @@ class Company(models.Model):
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True)
     phone = fields.Char(related='partner_id.phone', store=True)
-    fax = fields.Char(compute='_compute_address', inverse='_inverse_fax')
     website = fields.Char(related='partner_id.website')
     vat = fields.Char(related='partner_id.vat', string="TIN")
     company_registry = fields.Char()
@@ -96,7 +95,6 @@ class Company(models.Model):
             'zip'        : partner.zip,
             'state_id'   : partner.state_id,
             'country_id' : partner.country_id,
-            'fax'        : partner.fax
         }
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
@@ -131,10 +129,6 @@ class Company(models.Model):
     def _inverse_country(self):
         for company in self:
             company.partner_id.country_id = company.country_id
-
-    def _inverse_fax(self):
-        for company in self:
-            company.partner_id.fax = company.fax
 
     @api.depends('partner_id', 'partner_id.image')
     def _compute_logo_web(self):
