@@ -558,7 +558,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var result_handler = on_closed || function () {};
         var context = new Context(this.env.context, action_data.context || {});
-        var record_id = res_ids && res_ids[0];
+        // OR NULL hereunder: pyeval waits specifically for a null value, different from undefined
+        var record_id = res_ids && res_ids[0] || null;
 
         // response handler
         var handler = function (action) {
