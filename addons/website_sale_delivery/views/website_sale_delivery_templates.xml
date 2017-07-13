@@ -28,11 +28,10 @@
                 <h4>Choose a delivery method</h4>
                 <ul class="list-unstyled">
                     <li t-foreach="deliveries" t-as="delivery">
-                        <t t-if="delivery.available">
                             <div id="delivery_method">
                                 <label>
                                     <input t-att-value="delivery.id" type="radio" name="delivery_type"
-                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
+                                        t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" disabled="1"/>
                                     <abbr t-att-title="delivery.website_description"><span t-field="delivery.name"/></abbr>
                                     <span class="badge" t-field="delivery.price"
                                         t-options='{
@@ -43,7 +42,6 @@
                                     <div t-field="delivery.website_description" class="text-muted"/>
                                 </label>
                             </div>
-                        </t>
                     </li>
                 </ul>
                 <a class="btn btn-default btn-block"

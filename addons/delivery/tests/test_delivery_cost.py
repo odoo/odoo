@@ -74,7 +74,8 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         # I add delivery cost in Sales order
-        self.sale_normal_delivery_charges.delivery_set()
+        self.sale_normal_delivery_charges.get_delivery_price()
+        self.sale_normal_delivery_charges.set_delivery_line()
 
         # I check sales order after added delivery cost
 
@@ -113,7 +114,8 @@ class TestDeliveryCost(common.TransactionCase):
         })
 
         # I add free delivery cost in Sales order
-        self.delivery_sale_order_cost.delivery_set()
+        self.delivery_sale_order_cost.get_delivery_price()
+        self.delivery_sale_order_cost.set_delivery_line()
 
         # I check sales order after adding delivery cost
         line = self.SaleOrderLine.search([('order_id', '=', self.delivery_sale_order_cost.id),

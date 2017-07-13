@@ -35,14 +35,12 @@ class SaleOrder(models.Model):
             order.has_delivery = any(order.order_line.filtered('is_delivery'))
 
     def _check_carrier_quotation(self, force_carrier_id=None):
-        # check to add or remove carrier_id
-        if not self:
-            return False
         self.ensure_one()
         DeliveryCarrier = self.env['delivery.carrier']
+
         if self.only_services:
             self.write({'carrier_id': None})
-            self._delivery_unset()
+            self._remove_delivery_line()
             return True
         else:
             carrier = force_carrier_id and DeliveryCarrier.browse(force_carrier_id) or self.carrier_id
@@ -56,45 +54,28 @@ class SaleOrder(models.Model):
                     available_carriers = carrier + available_carriers
             if force_carrier_id or not carrier or carrier not in available_carriers:
                 for delivery in available_carriers:
-                    verified_carrier = delivery.verify_carrier(self.partner_shipping_id)
+                    verified_carrier = delivery._match_address(self.partner_shipping_id)
                     if verified_carrier:
                         carrier = delivery
                         break
                 self.write({'carrier_id': carrier.id})
             if carrier:
-                self.delivery_set()
+                self.get_delivery_price()
+                self.set_delivery_line()
             else:
-                self._delivery_unset()
+                self._remove_delivery_line()
 
         return bool(carrier)
 
     def _get_delivery_methods(self):
-        """Return the available and published delivery carriers"""
-        self.ensure_one()
-        available_carriers = DeliveryCarrier = self.env['delivery.carrier']
-        # Following loop is done to avoid displaying delivery methods who are not available for this order
-        # This can surely be done in a more efficient way, but at the moment, it mimics the way it's
-        # done in delivery_set method of sale.py, from delivery module
-        carrier_ids = DeliveryCarrier.sudo().search(
-            [('website_published', '=', True)]).ids
-        for carrier_id in carrier_ids:
-            carrier = DeliveryCarrier.browse(carrier_id)
-            try:
-                _logger.debug("Checking availability of carrier #%s" % carrier_id)
-                available = carrier.with_context(order_id=self.id).read(fields=['available'])[0]['available']
-                if available:
-                    available_carriers += carrier
-            except ValidationError as e:
-                # RIM TODO: hack to remove, make available field not depend on a SOAP call to external shipping provider
-                # The validation error is used in backend to display errors in fedex config, but should fail silently in frontend
-                _logger.debug("Carrier #%s removed from e-commerce carrier list. %s" % (carrier_id, e))
-        return available_carriers
+        address = self.partner_shipping_id
+        return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
 
     @api.multi
     def _cart_update(self, product_id=None, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Override to update carrier quotation if quantity changed """
 
-        self._delivery_unset()
+        self._remove_delivery_line()
 
         # When you update a cart, it is not enouf to remove the "delivery cost" line
         # The carrier might also be invalid, eg: if you bought things that are too heavy
