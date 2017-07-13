@@ -849,6 +849,9 @@ class WizardMultiChartsAccounts(models.TransientModel):
                 raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
             # delete account property
             values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
+            existing_journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
+            if existing_journals:
+                values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
             partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)])
             if partner_prop_acc:
                 partner_prop_acc.unlink()
