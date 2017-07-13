@@ -19,8 +19,8 @@ var core = require('web.core');
  * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
  * that on_attach_callback() will be called on each w with arguments args
  */
-function _notify (content, callbacks) {
-    _.each(callbacks, function(c) {
+function _notify(content, callbacks) {
+    _.each(callbacks, function (c) {
         if (c.widget && c.widget.on_attach_callback) {
             c.widget.on_attach_callback(c.callback_args);
         }
@@ -115,14 +115,14 @@ return {
      * @return {jQuery} the detached elements
      */
     detach: function (to_detach, options) {
-        _.each(to_detach, function(d) {
+        _.each(to_detach, function (d) {
             if (d.widget.on_detach_callback) {
                 d.widget.on_detach_callback(d.callback_args);
             }
         });
         var $to_detach = options && options.$to_detach;
         if (!$to_detach) {
-            $to_detach = $(_.map(to_detach, function(d) {
+            $to_detach = $(_.map(to_detach, function (d) {
                 return d.widget.el;
             }));
         }
@@ -159,6 +159,47 @@ return {
         if (options && options.in_DOM) {
             _notify(content, options.callbacks);
         }
+    },
+    /**
+     * Renders a button with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple button.
+     *
+     * @param {Object} options
+     * @param {Object} [options.attrs] - Attributes to put on the button element
+     * @param {string} [options.attrs.type="button"]
+     * @param {string} [options.attrs.class="btn-default"]
+     *        Note: automatically completed with "btn btn-X" (@see options.size
+     *        for the value of X)
+     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.icon]
+     *        The specific fa icon class (for example "fa-home") or an URL for
+     *        an image to use as icon.
+     * @param {string} [options.text] - the button's text
+     * @returns {jQuery}
+     */
+    renderButton: function (options) {
+        var params = options.attrs || {};
+        params.type = params.type || 'button';
+        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
+        var $button = $('<button/>', params);
+        if (options.icon) {
+            if (options.icon.substr(0, 3) === 'fa-') {
+                $button.append($('<i/>', {
+                    class: 'fa fa-fw o_button_icon ' + options.icon,
+                }));
+            } else {
+                $button.append($('<img/>', {
+                    src: options.icon,
+                }));
+            }
+        }
+        if (options.text) {
+            $button.append($('<span/>', {
+                text: options.text,
+            }));
+        }
+        return $button;
     },
 };
 

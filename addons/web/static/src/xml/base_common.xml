@@ -16,17 +16,4 @@
     </div>
 </div>
 
-<t t-name="WidgetButton">
-    <button type="button" t-attf-class="btn btn-sm #{widget.node.attrs.class or 'btn-default'}"
-        t-att-style="widget.node.attrs.style"
-        t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus"
-        t-att-accesskey="widget.node.attrs.accesskey">
-        <t t-if="widget.node.attrs.icon">
-            <img t-if="!widget.fa_icon" t-att-src="widget.node.attrs.icon"/>
-            <div t-if="widget.fa_icon" t-attf-class="fa fa-fw #{widget.node.attrs.icon} o_button_icon"/>
-        </t>
-        <span t-if="widget.string"><t t-esc="widget.string"/></span>
-    </button>
-</t>
 </templates>
