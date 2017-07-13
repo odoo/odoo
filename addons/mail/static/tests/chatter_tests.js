@@ -864,6 +864,70 @@ QUnit.test('followers widget: do not display follower duplications', function (a
     form.destroy();
 });
 
+QUnit.test('does not render and crash when destroyed before chat system is ready', function (assert) {
+    assert.expect(0);
+
+    var def = $.Deferred();
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_follower_ids" widget="mail_followers"/>' +
+                    '<field name="message_ids" widget="mail_thread"/>' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (route === '/mail/read_followers') {
+                return $.when({
+                    followers: [],
+                    subtypes: [],
+                });
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            chat_manager_ready: function (event) {
+                // we delay the return of the chat_manager ready event
+                event.data.callback(def);
+            },
+            get_messages: function (event) {
+                event.stopPropagation();
+                event.data.callback($.when([{
+                    attachment_ids: [],
+                    body: "",
+                    date: moment("2016-12-20 09:35:40"),
+                    id: 34,
+                    res_id: 3,
+                    author_id: ["3", "Fu Ck Mil Grom"],
+                }]));
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+            get_session: function (event) {
+                event.stopPropagation();
+                event.data.callback({uid: 1});
+            },
+        },
+    });
+
+    form.destroy();
+    // here, the chat_manager system is ready, and the chatter can try to render
+    // itself. We simply make sure here that no crashes occur (since the form
+    // view is destroyed, all rpcs will be dropped, and many other mechanisms
+    // relying on events will not work, such as _getBus)
+    def.resolve();
+});
+
 QUnit.module('FieldMany2ManyTagsEmail', {
     beforeEach: function () {
         this.data = {
@@ -943,70 +1007,6 @@ QUnit.test('fieldmany2many tags email', function (assert) {
     // set the email and save the modal (will render the form view)
     $('.modal-body.o_act_window input[name="email"]').val('coucou@petite.perruche').trigger('input');
     $('.modal-footer .btn-primary').click();
-});
-
-QUnit.test('does not render and crash when destroyed before chat system is ready', function (assert) {
-    assert.expect(0);
-
-    var def = $.Deferred();
-
-    var form = createView({
-        View: FormView,
-        model: 'partner',
-        data: this.data,
-        arch: '<form string="Partners">' +
-                '<sheet>' +
-                    '<field name="foo"/>' +
-                '</sheet>' +
-                '<div class="oe_chatter">' +
-                    '<field name="message_follower_ids" widget="mail_followers"/>' +
-                    '<field name="message_ids" widget="mail_thread"/>' +
-                    '<field name="activity_ids" widget="mail_activity"/>' +
-                '</div>' +
-            '</form>',
-        res_id: 2,
-        mockRPC: function (route, args) {
-            if (route === '/mail/read_followers') {
-                return $.when({
-                    followers: [],
-                    subtypes: [],
-                });
-            }
-            return this._super(route, args);
-        },
-        intercepts: {
-            chat_manager_ready: function (event) {
-                // we delay the return of the chat_manager ready event
-                event.data.callback(def);
-            },
-            get_messages: function (event) {
-                event.stopPropagation();
-                event.data.callback($.when([{
-                    attachment_ids: [],
-                    body: "",
-                    date: moment("2016-12-20 09:35:40"),
-                    id: 34,
-                    res_id: 3,
-                    author_id: ["3", "Fu Ck Mil Grom"],
-                }]));
-            },
-            get_bus: function (event) {
-                event.stopPropagation();
-                event.data.callback(new Bus());
-            },
-            get_session: function (event) {
-                event.stopPropagation();
-                event.data.callback({uid: 1});
-            },
-        },
-    });
-
-    form.destroy();
-    // here, the chat_manager system is ready, and the chatter can try to render
-    // itself. We simply make sure here that no crashes occur (since the form
-    // view is destroyed, all rpcs will be dropped, and many other mechanisms
-    // relying on events will not work, such as _getBus)
-    def.resolve();
 });
 
 });
