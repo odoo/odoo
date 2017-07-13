@@ -394,7 +394,9 @@ class PosOrder(models.Model):
     amount_paid = fields.Float(compute='_compute_amount_all', string='Paid', states={'draft': [('readonly', False)]}, readonly=True, digits=0)
     amount_return = fields.Float(compute='_compute_amount_all', string='Returned', digits=0)
     lines = fields.One2many('pos.order.line', 'order_id', string='Order Lines', states={'draft': [('readonly', False)]}, readonly=True, copy=True)
-    statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)]}, readonly=True)
+    statement_ids = fields.One2many('account.bank.statement.line', 'pos_statement_id', string='Payments', states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}, readonly=True)
+    # Technical field to show only 'Payment Methods' which are used in current order's PoS configration
+    config_journal_ids = fields.Many2many(related='config_id.journal_ids')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, states={
                                    'draft': [('readonly', False)]}, readonly=True, default=_default_pricelist)
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index=True, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]})

@@ -69,12 +69,13 @@
                     </page>
                     <page string="Payments">
                         <field name="statement_ids" colspan="4" nolabel="1">
-                            <tree editable="bottom" string="Statement lines">
-                                <field name="journal_id"/>
-                                <field name="statement_id"/>
-                                <field name="amount"/>
+                            <tree editable="bottom" string="Statement lines" create="0">
+                                <field name="journal_id" domain="[('id', 'in', parent.config_journal_ids)]" readonly="0" options="{'no_create': True}"/>
+                                <field name="statement_id" readonly="1" force_save="1"/>
+                                <field name="amount" readonly="1"/>
                             </tree>
                         </field>
+                        <field name="config_journal_ids" invisible="1"/>
                     </page>
                     <page name="extra" string="Extra Info">
                         <group string="General Information">
