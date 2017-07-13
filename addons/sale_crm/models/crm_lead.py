@@ -10,7 +10,7 @@ from odoo import api, fields, models
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    sale_amount_total = fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", currency_field='company_currency')
+    sale_amount_total = fields.Monetary(compute='_compute_sale_amount_total', string="Sum of Orders", help="Untaxed Total of Confirmed Orders", currency_field='company_currency')
     sale_number = fields.Integer(compute='_compute_sale_amount_total', string="Number of Quotations")
     order_ids = fields.One2many('sale.order', 'opportunity_id', string='Orders')
 
@@ -21,7 +21,7 @@ class CrmLead(models.Model):
             nbr = 0
             company_currency = lead.company_currency or self.env.user.company_id.currency_id
             for order in lead.order_ids:
-                if order.state in ('draft', 'sent'):
+                if order.state in ('draft', 'sent', 'sale'):
                     nbr += 1
                 if order.state not in ('draft', 'sent', 'cancel'):
                     total += order.currency_id.compute(order.amount_untaxed, company_currency)

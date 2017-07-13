@@ -6,13 +6,20 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">form,tree,graph</field>
         <field name="domain">[('opportunity_id', '=', active_id)]</field>
-        <field name="context">{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
+        <field name="context">{'search_default_opportunity_id': active_id, 'hide_sale': True, 'default_opportunity_id': active_id}</field>
     </record>
 
     <record id="sale_action_quotations" model="ir.actions.act_window">
         <field name="name">Quotations</field>
         <field name="res_model">sale.order</field>
         <field name="domain">[('opportunity_id', '=', active_id)]</field>
+        <field name="context">{'search_default_opportunity_id': [active_id], 'hide_sale': True, 'default_opportunity_id': active_id}</field>
+    </record>
+
+    <record id="sale_action_orders" model="ir.actions.act_window">
+        <field name="name">Sale orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="domain">[('opportunity_id', '=', active_id), ('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
         <field name="context">{'search_default_opportunity_id': [active_id], 'default_opportunity_id': active_id}</field>
     </record>
 
