@@ -485,8 +485,16 @@ var FieldMany2One = AbstractField.extend({
     },
     /**
      * @private
+     *
+     * @param {OdooEvent} ev
      */
-    _onInputKeyup: function () {
+    _onInputKeyup: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            // If we pressed enter, we want to prevent _onInputFocusout from
+            // executing since it would open a M2O dialog to request
+            // confirmation that the many2one is not properly set.
+            return;
+        }
         if (this.$input.val() === "") {
             this.reinitialize(false);
         } else if (this._getDisplayName(this.m2o_value) !== this.$input.val()) {
