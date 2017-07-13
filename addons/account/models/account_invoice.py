@@ -1397,6 +1397,12 @@ class AccountPaymentTerm(models.Model):
             result.append((last_date, dist))
         return result
 
+    @api.multi
+    def unlink(self):
+        property_recs = self.env['ir.property'].search([('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in self])])
+        property_recs.unlink()
+        return super(AccountPaymentTerm, self).unlink()
+
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
