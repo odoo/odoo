@@ -285,6 +285,7 @@ class Inventory(models.Model):
             })
         return vals
 
+
 class InventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
@@ -296,6 +297,7 @@ class InventoryLine(models.Model):
     partner_id = fields.Many2one('res.partner', 'Owner')
     product_id = fields.Many2one(
         'product.product', 'Product',
+        domain=[('type', '=', 'product')],
         index=True, required=True)
     product_name = fields.Char(
         'Product Name', related='product_id.name', store=True)
@@ -377,6 +379,15 @@ class InventoryLine(models.Model):
                               "the first inventory adjustement with this product before creating another one.") % (res.product_id.name, res.location_id.name))
         return res
 
+    @api.constrains('product_id')
+    def _check_product_id(self):
+        """ As no quants are created for consumable products, it should not be possible do adjust
+        their quantity.
+        """
+        for line in self:
+            if line.product_id.type != 'product':
+                raise UserError(_("You can only adjust stockable products."))
+
     def _get_quants(self):
         return self.env['stock.quant'].search([
             ('company_id', '=', self.company_id.id),
@@ -386,7 +397,7 @@ class InventoryLine(models.Model):
             ('owner_id', '=', self.partner_id.id),
             ('package_id', '=', self.package_id.id)])
 
-    def _get_move_values(self, qty, location_id, location_dest_id):
+    def _get_move_values(self, qty, location_id, location_dest_id, out):
         self.ensure_one()
         return {
             'name': _('INV:') + (self.inventory_id.name or ''),
@@ -397,60 +408,30 @@ class InventoryLine(models.Model):
             'company_id': self.inventory_id.company_id.id,
             'inventory_id': self.inventory_id.id,
             'state': 'confirmed',
-            'restrict_lot_id': self.prod_lot_id.id,
+            #'restrict_lot_id': self.prod_lot_id.id,
             'restrict_partner_id': self.partner_id.id,
             'location_id': location_id,
             'location_dest_id': location_dest_id,
+            'pack_operation_ids': [(0, 0, {'product_id': self.product_id.id,
+                                           'lot_id': self.prod_lot_id.id, 
+                                           'product_uom_qty': 0,  # bypass reservation here
+                                           'product_uom_id': self.product_uom_id.id,
+                                           'qty_done': qty,
+                                           'package_id': out and self.package_id.id or False,
+                                           'result_package_id': (not out) and self.package_id.id or False,
+                                           'location_id': location_id, #TODO: owner stuff
+                                           'location_dest_id': location_dest_id,})]
         }
-
-    def _fixup_negative_quants(self):
-        """ This will handle the irreconciable quants created by a force availability followed by a
-        return. When generating the moves of an inventory line, we look for quants of this line's
-        product created to compensate a force availability. If there are some and if the quant
-        which it is propagated from is still in the same location, we move it to the inventory
-        adjustment location before getting it back. Getting the quantity from the inventory
-        location will allow the negative quant to be compensated.
-        """
-        self.ensure_one()
-        for quant in self._get_quants().filtered(lambda q: q.propagated_from_id.location_id.id == self.location_id.id):
-            # send the quantity to the inventory adjustment location
-            move_out_vals = self._get_move_values(quant.qty, self.location_id.id, self.product_id.property_stock_inventory.id)
-            move_out = self.env['stock.move'].create(move_out_vals)
-            self.env['stock.quant'].quants_reserve([(quant, quant.qty)], move_out)
-            move_out.action_done()
-
-            # get back the quantity from the inventory adjustment location
-            move_in_vals = self._get_move_values(quant.qty, self.product_id.property_stock_inventory.id, self.location_id.id)
-            move_in = self.env['stock.move'].create(move_in_vals)
-            move_in.action_done()
 
     def _generate_moves(self):
         moves = self.env['stock.move']
-        Quant = self.env['stock.quant']
         for line in self:
-            line._fixup_negative_quants()
-
             if float_utils.float_compare(line.theoretical_qty, line.product_qty, precision_rounding=line.product_id.uom_id.rounding) == 0:
                 continue
             diff = line.theoretical_qty - line.product_qty
             if diff < 0:  # found more than expected
-                vals = self._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id)
+                vals = self._get_move_values(abs(diff), line.product_id.property_stock_inventory.id, line.location_id.id, False)
             else:
-                vals = self._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id)
-            move = moves.create(vals)
-
-            if diff > 0:
-                domain = [('qty', '>', 0.0), ('package_id', '=', line.package_id.id), ('lot_id', '=', line.prod_lot_id.id), ('location_id', '=', line.location_id.id)]
-                preferred_domain_list = [[('reservation_id', '=', False)], [('reservation_id.inventory_id', '!=', line.inventory_id.id)]]
-                quants = Quant.quants_get_preferred_domain(move.product_qty, move, domain=domain, preferred_domain_list=preferred_domain_list)
-                Quant.quants_reserve(quants, move)
-            elif line.package_id:
-                move.action_done()
-                move.quant_ids.write({'package_id': line.package_id.id})
-                quants = Quant.search([('qty', '<', 0.0), ('product_id', '=', move.product_id.id),
-                                       ('location_id', '=', move.location_dest_id.id), ('package_id', '!=', False)], limit=1)
-                if quants:
-                    for quant in move.quant_ids:
-                        if quant.location_id.id == move.location_dest_id.id:  #To avoid we take a quant that was reconcile already
-                            quant._quant_reconcile_negative(move)
+                vals = self._get_move_values(abs(diff), line.location_id.id, line.product_id.property_stock_inventory.id, True)
+            moves |= self.env['stock.move'].create(vals)
         return moves
