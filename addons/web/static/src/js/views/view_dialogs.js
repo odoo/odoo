@@ -192,13 +192,16 @@ var FormViewDialog = ViewDialog.extend({
                 .then(function () {
                     var $buttons = $('<div>');
                     self.form_view.renderButtons($buttons);
-                    if ($buttons.children().length) {
-                        self.$footer.empty().append($buttons.contents());
-                    }
-                    dom.append(_super().$el, fragment, {
-                        callbacks: [{widget: self.form_view}],
-                        in_DOM: true,
+                    self.opened().always(function () {
+                        if ($buttons.children().length) {
+                            self.$footer.empty().append($buttons.contents());
+                        }
+                        dom.append(self.$el, fragment, {
+                            callbacks: [{widget: self.form_view}],
+                            in_DOM: true,
+                        });
                     });
+                    _super();
                 });
         });
 
@@ -282,7 +285,7 @@ var SelectCreateDialog = ViewDialog.extend({
     },
 
     open: function () {
-        if(this.options.initial_view !== "search") {
+        if (this.options.initial_view !== "search") {
             return this.create_edit_record();
         }
         var self = this;
@@ -303,10 +306,14 @@ var SelectCreateDialog = ViewDialog.extend({
         this.loadViews(this.dataset.model, this.dataset.get_context(), [[false, 'list'], [false, 'search']], {})
             .then(this.setup.bind(this, search_defaults))
             .then(function (fragment) {
-                dom.append(_super().$el, fragment, {
-                    callbacks: [{widget: self.list_controller}],
-                    in_DOM: true,
+                self.opened().then(function () {
+                    dom.append(self.$el, fragment, {
+                        callbacks: [{widget: self.list_controller}],
+                        in_DOM: true,
+                    });
+                    self.set_buttons(self.__buttons);
                 });
+                _super();
             });
         return this;
     },
@@ -349,20 +356,20 @@ var SelectCreateDialog = ViewDialog.extend({
         }).then(function (controller) {
             self.list_controller = controller;
             // Set the dialog's buttons
-            var buttons = [{
+            self.__buttons = [{
                 text: _t("Cancel"),
                 classes: "btn-default o_form_button_cancel",
                 close: true,
             }];
             if (!self.options.no_create) {
-                buttons.unshift({
+                self.__buttons.unshift({
                     text: _t("Create"),
                     classes: "btn-primary",
                     click: self.create_edit_record.bind(self)
                 });
             }
             if (!self.options.disable_multiple_selection) {
-                buttons.unshift({
+                self.__buttons.unshift({
                     text: _t("Select"),
                     classes: "btn-primary o_select_button",
                     disabled: true,
@@ -372,7 +379,6 @@ var SelectCreateDialog = ViewDialog.extend({
                     },
                 });
             }
-            self.set_buttons(buttons);
             return self.list_controller.appendTo(fragment);
         }).then(function () {
             searchview.toggle_visibility(true);
@@ -401,7 +407,7 @@ var SelectCreateDialog = ViewDialog.extend({
                 self.on_selected([record.res_id]);
             },
         })).open();
-        dialog.on('closed', this, this.close.bind(this));
+        dialog.on('closed', this, this.close);
     },
 });
 
