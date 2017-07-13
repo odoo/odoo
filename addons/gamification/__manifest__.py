@@ -5,7 +5,7 @@
     'version': '1.0',
     'sequence': 160,
     'category': 'Human Resources',
-    'website' : 'https://www.odoo.com/page/gamification',
+    'website': 'https://www.odoo.com/page/gamification',
     'depends': ['mail', 'web_kanban_gauge'],
     'description': """
 Gamification process
@@ -30,6 +30,10 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
         'data/goal_base.xml',
+        # 'data/test_goal_base.xml',
+        # 'data/test2_goal_base.xml',
+        # 'data/test3_goal_base.xml',
+        # 'data/old_goal_base.xml',
         'data/badge.xml',
         'views/gamification.xml',
     ],

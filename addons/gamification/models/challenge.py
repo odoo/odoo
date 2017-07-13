@@ -468,6 +468,7 @@ class Challenge(models.Model):
                 'computation_mode': line.definition_id.computation_mode,
                 'monetary': line.definition_id.monetary,
                 'suffix': line.definition_id.suffix,
+                'full_suffix': line.definition_id.full_suffix,
                 'action': True if line.definition_id.action_id else False,
                 'display_mode': line.definition_id.display_mode,
                 'target': line.target_goal,
@@ -494,10 +495,13 @@ class Challenge(models.Model):
                 goal = Goals.search(domain, limit=1)
                 if not goal:
                     continue
-
                 if goal.state != 'reached':
                     return []
                 line_data.update(goal.read(['id', 'current', 'completeness', 'state'])[0])
+                line_data['user'] = {
+                    'name': goal.user_id.name,
+                    'user_id': goal.user_id.id
+                }
                 res_lines.append(line_data)
                 continue
 
