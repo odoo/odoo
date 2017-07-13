@@ -387,7 +387,7 @@ class SaleOrder(models.Model):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
         for order in orders:
             if order.procurement_group_id and self.env['procurement.order'].\
-                    search([('id', '=', order.procurement_group_id.id),
+                    search([('group_id', '=', order.procurement_group_id.id),
                             ('state', '=', 'done')]):
                 order.write({'state': 'draft'})
             else:
