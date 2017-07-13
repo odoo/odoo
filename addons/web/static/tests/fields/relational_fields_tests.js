@@ -1141,6 +1141,52 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('pressing ENTER on a \'no_quick_create\' many2one should not trigger M2ODialog', function (assert) {
+        var done = assert.async();
+        assert.expect(1);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="trululu" options="{\'no_quick_create\': True}"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="display_name"/></form>',
+            },
+        });
+
+        var $input = form.$('.o_field_many2one input');
+        $input.val("Something that does not exist").trigger('input');
+        $('.ui-autocomplete .ui-menu-item a:contains(Create and)').trigger('mouseenter');
+        concurrency.delay(0).then(function() {
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keypress', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keyup', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            concurrency.delay(0).then(function() {
+                $input.blur();
+                assert.strictEqual($('.modal').length, 1,
+                    "should have one modal in body");
+                form.destroy();
+                done();
+            });
+        });
+    });
+
     QUnit.test('many2one in editable list + onchange, with enter [REQUIRE FOCUS]', function (assert) {
         assert.expect(6);
         var done = assert.async();
