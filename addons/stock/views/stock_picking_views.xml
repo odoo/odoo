@@ -214,7 +214,7 @@
                     <field name="picking_type_code" invisible="1"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available'))]}"/>
                     <field name="show_operations" invisible="1"/>
-                    <field name="pack_operation_exist" invisible="1"/>
+                    <field name="move_line_exist" invisible="1"/>
                     <field name="has_packages" invisible="1"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,partially_available,assigned,done" />
@@ -247,14 +247,14 @@
                             <!--<label for="owner_id" groups="stock.group_tracking_owner"/>-->
                             <div groups="stock.group_tracking_owner">
                                 <!--<field name="owner_id"/>-->
-                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('pack_operation_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
+                                <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
                                     class="oe_link oe_edit_only"/>
                             </div>
                         </group>
                     </group>
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': ['|', '&amp;', ('show_operations', '=', True), ('state', '=', 'draft'), ('show_operations', '=', False)]}">
-                            <field name="pack_operation_ids" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                            <field name="move_line_ids" context="{'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                                 <tree editable="bottom" decoration-muted="result_package_id" decoration-danger="qty_done&gt;product_uom_qty" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
                                     <field name="product_id" required="1"/>
                                     <field name="product_uom_id" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="product.group_uom"/>
