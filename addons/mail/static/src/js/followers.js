@@ -311,11 +311,14 @@ var Followers = AbstractField.extend({
         event.preventDefault();
         this._inviteFollower(true);
     },
+    /**
+     * @param {Event} event
+     */
     _onEditSubtype: function (event) {
         var self = this;
         var $currentTarget = $(event.currentTarget);
         var follower_id = $currentTarget.data('follower-id'); // id of model mail_follower
-        return this._rpc({
+        this._rpc({
                 route: '/mail/read_subscription_data',
                 params: {res_model: this.model, follower_id: follower_id},
             })
@@ -339,8 +342,11 @@ var Followers = AbstractField.extend({
                             close: true,
                         },
                     ],
-                }).open();
-                self._displaySubtypes(data, true, is_channel);
+                });
+                self.dialog.opened().then(function () {
+                    self._displaySubtypes(data, true, is_channel);
+                });
+                self.dialog.open();
             });
     },
     _onFollowButtonClicked: function () {

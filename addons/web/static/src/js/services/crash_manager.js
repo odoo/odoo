@@ -117,12 +117,17 @@ var CrashManager = core.Class.extend({
         var dialog = new Dialog(this, {
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Error"),
             $content: $(QWeb.render('CrashManager.error', {error: error}))
-        }).open();
+        });
 
         // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed
         var $clipboardBtn;
         var clipboard;
         dialog.opened(function () {
+            // When the full traceback is shown, scroll it to the end (useful for better python error reporting)
+            dialog.$(".o_error_detail").on("shown.bs.collapse", function (e) {
+                e.target.scrollTop = e.target.scrollHeight;
+            });
+
             $clipboardBtn = dialog.$(".o_clipboard_button");
             $clipboardBtn.tooltip({title: _t("Copied !"), trigger: "manual", placement: "left"});
             clipboard = new window.Clipboard($clipboardBtn[0], {
@@ -144,10 +149,7 @@ var CrashManager = core.Class.extend({
             clipboard.destroy();
         });
 
-        // When the full traceback is shown, scroll it to the end (useful for better python error reporting)
-        dialog.$(".o_error_detail").on("shown.bs.collapse", function (e) {
-            e.target.scrollTop = e.target.scrollHeight;
-        });
+        dialog.open();
     },
     show_message: function(exception) {
         this.show_error({

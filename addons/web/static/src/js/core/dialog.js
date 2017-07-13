@@ -16,20 +16,30 @@ var _t = core._t;
     during the lifecycle of the dialog.
 */
 var Dialog = Widget.extend({
-    /**
-        Constructor.
+    xmlDependencies: ['/web/static/src/xml/dialog.xml'],
 
-        @param {Widget} parent
-        @param {dictionary} options
-            - title
-            - subtitle
-            - size: one of the following: 'large', 'medium', 'small'
-            - dialogClass: class to add to the modal-body
-            - buttons: It must be a list of dictionaries -> text, classes, close, click, disabled
-                -> If no buttons, a "ok" primary button is added with close = true
-                -> By default: close = false and classes = 'btn-primary' if only one button and 'btn-default' if many buttons
-            - $content: Some content to replace this.$el .
-    */
+    /**
+     * @constructor
+     * @param {Widget} parent
+     * @param {Object} [options]
+     * @param {string} [options.title=Odoo]
+     * @param {string} [options.subtitle]
+     * @param {string} [options.size=large] - 'large', 'medium' or 'small'
+     * @param {string} [options.dialogClass] - class to add to the modal-body
+     * @param {jQuery} [options.$content]
+     *        Element which will be the $el, replace the .modal-body and get the
+     *        modal-body class
+     * @param {Object[]} [options.buttons]
+     *        List of button descriptions. Note: if no buttons, a "ok" primary
+     *        button is added to allow closing the dialog
+     * @param {string} [options.buttons[].text]
+     * @param {string} [options.buttons[].classes]
+     *        Default to 'btn-primary' if only one button, 'btn-default'
+     *        otherwise
+     * @param {boolean} [options.buttons[].close=false]
+     * @param {function} [options.buttons[].click]
+     * @param {boolean} [options.buttons[].disabled]
+     */
     init: function (parent, options) {
         this._super(parent);
         this._opened = $.Deferred();
@@ -43,31 +53,42 @@ var Dialog = Widget.extend({
         });
 
         this.$content = options.$content;
-
         this.title = options.title;
         this.subtitle = options.subtitle;
-        this.$modal = $(QWeb.render('Dialog', {title: this.title, subtitle: this.subtitle}));
-
-        switch(options.size) {
-            case 'large':
-                this.$modal.find('.modal-dialog').addClass('modal-lg');
-                break;
-            case 'small':
-                this.$modal.find('.modal-dialog').addClass('modal-sm');
-                break;
-        }
-
         this.dialogClass = options.dialogClass;
-        this.$footer = this.$modal.find(".modal-footer");
-
-        this.set_buttons(options.buttons);
-
-        this.$modal.on('hidden.bs.modal', _.bind(this.destroy, this));
+        this.size = options.size;
+        this.buttons = options.buttons;
     },
-
-    renderElement: function() {
+    /**
+     * Wait for XML dependencies and instantiate the modal structure (except
+     * modal-body).
+     *
+     * @override
+     */
+    willStart: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            // Render modal once xml dependencies are loaded
+            self.$modal = $(QWeb.render('Dialog', {title: self.title, subtitle: self.subtitle}));
+            switch (self.size) {
+                case 'large':
+                    self.$modal.find('.modal-dialog').addClass('modal-lg');
+                    break;
+                case 'small':
+                    self.$modal.find('.modal-dialog').addClass('modal-sm');
+                    break;
+            }
+            self.$footer = self.$modal.find(".modal-footer");
+            self.set_buttons(self.buttons);
+            self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
+        });
+    },
+    /**
+     * @override
+     */
+    renderElement: function () {
         this._super();
-        if(this.$content) {
+        if (this.$content) {
             this.setElement(this.$content);
         }
         this.$el.addClass('modal-body ' + this.dialogClass);
@@ -100,7 +121,7 @@ var Dialog = Widget.extend({
         });
     },
 
-    set_title: function(title, subtitle) {
+    set_title: function (title, subtitle) {
         this.title = title || "";
         if (subtitle !== undefined) {
             this.subtitle = subtitle || "";
@@ -114,15 +135,16 @@ var Dialog = Widget.extend({
         return this;
     },
 
-    opened: function(handler) {
+    opened: function (handler) {
         return (handler)? this._opened.then(handler) : this._opened;
     },
 
-    open: function() {
+    open: function () {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
-        this.replace(this.$modal.find(".modal-body")).then(function() {
+        this.appendTo($('<div/>')).then(function () {
+            self.$modal.find(".modal-body").replaceWith(self.$el);
             self.$modal.modal('show');
             self._opened.resolve();
         });
@@ -130,26 +152,32 @@ var Dialog = Widget.extend({
         return self;
     },
 
-    close: function() {
-        this.$modal.modal('hide');
+    close: function () {
+        this.destroy();
     },
 
-    destroy: function(reason) {
+    destroy: function (reason) {
+        // Need to trigger before real destroy but if 'closed' handler destroys
+        // the widget again, we want to avoid infinite recursion
+        if (!this.__closed) {
+            this.__closed = true;
+            this.trigger("closed", reason);
+        }
+
         if (this.isDestroyed()) {
             return;
         }
-
-        this.trigger("closed", reason);
-
         this._super();
 
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
-        this.$modal.modal('hide');
-        this.$modal.remove();
+        if (this.$modal) {
+            this.$modal.modal('hide');
+            this.$modal.remove();
+        }
 
         setTimeout(function () { // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
             var modals = $('body > .modal').filter(':visible');
-            if(modals.length) {
+            if (modals.length) {
                 modals.last().focus();
                 $('body').addClass('modal-open');
             }

@@ -101,12 +101,13 @@ var MediaDialog = Dialog.extend({
         this.media = media;
         this.isNewMedia = !media;
         this.range = range.create();
-
-        this.$modal.addClass('note-image-dialog');
-        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
     },
     start: function () {
         var self = this;
+
+        this.$modal.addClass('note-image-dialog');
+        this.$modal.find('.modal-dialog').addClass('o_select_media_dialog');
+
         this.only_images = this.options.only_images || this.options.select_images || (this.media && ($(this.media).parent().data("oe-field") === "image" || $(this.media).parent().data("oe-type") === "image"));
         if (this.only_images) {
             this.$('[href="#editor-media-document"], [href="#editor-media-video"], [href="#editor-media-icon"]').addClass('hidden');

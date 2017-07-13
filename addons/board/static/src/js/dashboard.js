@@ -85,13 +85,16 @@ FormController.include({
         var dialog = new Dialog(this, {
             title: _t("Edit Layout"),
             $content: QWeb.render('DashBoard.layouts', _.clone(event.data))
-        }).open();
-        dialog.$el.find('li').click(function () {
-            var layout = $(this).attr('data-layout');
-            self.renderer.changeLayout(layout);
-            self._saveDashboard();
-            dialog.close();
         });
+        dialog.opened().then(function () {
+            dialog.$('li').click(function () {
+                var layout = $(this).attr('data-layout');
+                self.renderer.changeLayout(layout);
+                self._saveDashboard();
+                dialog.close();
+            });
+        });
+        dialog.open();
     },
 
     /**

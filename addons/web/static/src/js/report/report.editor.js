@@ -12,8 +12,6 @@ var trusted_host = utils.get_host_from_url(web_base_url);
 var trusted_protocol = utils.get_protocol_from_url(web_base_url);
 var trusted_origin = utils.build_origin(trusted_protocol, trusted_host);
 
-ajax.loadXML('/web/static/src/xml/base_common.xml', core.qweb);
-
 // Patch the editor's behavior when it is launched inside an iframe.
 if (window.self !== window.top) {
     $(document.body).addClass('o_in_iframe'); //  in order to apply css rules
