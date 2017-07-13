@@ -12,6 +12,7 @@ class AccountConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
+    has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -104,6 +105,7 @@ class AccountConfigSettings(models.TransientModel):
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.chart_template_id = self.company_id.chart_template_id or False
+        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

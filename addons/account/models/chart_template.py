@@ -829,6 +829,14 @@ class WizardMultiChartsAccounts(models.TransientModel):
         return True
 
     @api.multi
+    def existing_accounting(self, company_id):
+        model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.payment', 'account.bank.statement']
+        for model in model_to_check:
+            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+                return True
+        return False
+
+    @api.multi
     def execute(self):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
@@ -837,10 +845,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         '''
         existing_accounts = self.env['account.account'].search([('company_id', '=', self.company_id.id)])
         if existing_accounts:
-            model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.bank.statement']
-            for model in model_to_check:
-                if len(self.env[model].search([('company_id', '=', self.company_id.id)])) > 0:
-                    raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
+            if self.existing_accounting(self.company_id):
+                raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
             # delete account property
             values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
             partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)])
