@@ -55,7 +55,7 @@
                         <notebook>
                             <page name="public" string="Public Information">
                                 <group>
-                                    <group string="Contact Information">
+                                    <group name="contact_information" string="Contact Information">
                                         <field name="address_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
@@ -64,7 +64,7 @@
                                         <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
                                     </group>
-                                    <group string="Position">
+                                    <group name="position" string="Position">
                                         <field name="department_id"/>
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
@@ -82,7 +82,7 @@
                                         <field name="passport_id" groups="hr.group_hr_user"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
                                     </group>
-                                    <group string="Contact Information">
+                                    <group name="contact_information_home_address" string="Contact Information">
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
@@ -98,7 +98,7 @@
                             </page>
                             <page name="hr_settings" string="HR Settings" groups="hr.group_hr_user">
                                 <group>
-                                    <group string='Status' name="active_group">
+                                    <group string='Others' name="active_group">
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="user_id" string="Related User"/>
                                     </group>

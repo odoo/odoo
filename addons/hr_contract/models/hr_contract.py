@@ -49,22 +49,24 @@ class Contract(models.Model):
     _description = 'Contract'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
-    name = fields.Char('Contract Reference', required=True)
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
-    department_id = fields.Many2one('hr.department', string="Department")
-    type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True, default=lambda self: self.env['hr.contract.type'].search([], limit=1))
-    job_id = fields.Many2one('hr.job', string='Job Title')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today)
-    date_end = fields.Date('End Date')
-    trial_date_start = fields.Date('Trial Start Date')
-    trial_date_end = fields.Date('Trial End Date')
-    working_hours = fields.Many2one('resource.calendar', string='Working Schedule')
-    wage = fields.Float('Wage', digits=(16, 2), required=True, help="Basic Salary of the employee")
-    advantages = fields.Text('Advantages')
-    notes = fields.Text('Notes')
-    permit_no = fields.Char('Work Permit No')
-    visa_no = fields.Char('Visa No')
-    visa_expire = fields.Date('Visa Expire Date')
+    name = fields.Char('Contract Reference', required=True, track_visibility='onchange')
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
+    department_id = fields.Many2one('hr.department', track_visibility='onchange', string="Department")
+    type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True,
+                              default=lambda self: self.env['hr.contract.type'].search([], limit=1),
+                              track_visibility='onchange')
+    job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, track_visibility='onchange')
+    date_end = fields.Date('End Date', track_visibility='onchange')
+    trial_date_start = fields.Date('Trial Start Date', default=fields.Date.today, track_visibility='onchange')
+    trial_date_end = fields.Date('Trial End Date', track_visibility='onchange')
+    working_hours = fields.Many2one('resource.calendar', string='Working Schedule', track_visibility='onchange')
+    wage = fields.Float('Wage', digits=(16, 2), required=True, track_visibility='onchange', help="Basic Salary of the employee")
+    advantages = fields.Text('Advantages', track_visibility='onchange')
+    notes = fields.Text('Notes', track_visibility='onchange')
+    permit_no = fields.Char('Work Permit No', track_visibility='onchange')
+    visa_no = fields.Char('Visa No', track_visibility='onchange')
+    visa_expire = fields.Date('Visa Expire Date', track_visibility='onchange')
     state = fields.Selection([
         ('draft', 'New'),
         ('open', 'Running'),

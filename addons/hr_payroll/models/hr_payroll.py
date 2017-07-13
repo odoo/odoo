@@ -74,7 +74,8 @@ class HrContract(models.Model):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
 
-    struct_id = fields.Many2one('hr.payroll.structure', string='Salary Structure')
+    struct_id = fields.Many2one('hr.payroll.structure', string='Salary Structure',
+                                track_visibility='onchange')
     schedule_pay = fields.Selection([
         ('monthly', 'Monthly'),
         ('quarterly', 'Quarterly'),
@@ -157,6 +158,7 @@ class HrPayslipRun(models.Model):
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
+    _inherit = 'mail.thread'
 
     struct_id = fields.Many2one('hr.payroll.structure', string='Structure',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -181,7 +183,7 @@ class HrPayslip(models.Model):
         ('verify', 'Waiting'),
         ('done', 'Done'),
         ('cancel', 'Rejected'),
-    ], string='Status', index=True, readonly=True, copy=False, default='draft',
+    ], string='Status', index=True, readonly=True, copy=False, default='draft', track_visibility='onchange',
         help="""* When the payslip is created the status is \'Draft\'
                 \n* If the payslip is under verification, the status is \'Waiting\'.
                 \n* If the payslip is confirmed then status is set to \'Done\'.
