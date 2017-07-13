@@ -25,7 +25,7 @@
                                 <field name="picking_ids" widget="many2many_tags" domain="[('state', '=', 'done')]"/>
                             </group>
                             <group>
-                                <field name="account_journal_id"/>
+                                <field name="account_journal_id" options="{'no_create': True}"/>
                                 <field name="account_move_id"/>
                             </group>
                         </group>
