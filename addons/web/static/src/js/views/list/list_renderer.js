@@ -328,6 +328,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $cells.unshift($('<td>'));
         }
+        if (!(isGrouped || this.hasSelectors)) {
+            return '';
+        }
         return $('<tfoot>').append($('<tr>').append($cells));
     },
     /**

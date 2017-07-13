@@ -280,7 +280,7 @@
                 <th t-if="options.deletable" class="o_list_record_delete"/>
             </tr>
         </thead>
-        <tfoot>
+        <tfoot t-if="options.selectable or aggregate_columns or options.deletable">
             <tr>
                 <td t-if="options.selectable"/>
                 <td t-foreach="aggregate_columns" t-as="column" t-att-data-field="column.id" t-att-title="column.label">
