@@ -90,7 +90,7 @@ class MrpUnbuild(models.Model):
         consume_move = self._generate_consume_moves()[0]
         produce_moves = self._generate_produce_moves()
         if consume_move.has_tracking != 'none':
-            self.env['stock.pack.operation'].create({
+            self.env['stock.move.line'].create({
                 'move_id': consume_move.id,
                 'lot_id': self.lot_id.id,
                 'qty_done': consume_move.product_uom_qty,
@@ -106,7 +106,7 @@ class MrpUnbuild(models.Model):
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
                 original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
-                self.env['stock.pack.operation'].create({
+                self.env['stock.move.line'].create({
                     'move_id': produce_move.id,
                     'lot_id': original.lot_id.id,
                     'qty_done': produce_move.product_uom_qty,

@@ -77,10 +77,10 @@ class TestStockFlow(TestStockCommon):
         # Replace pack operation of incoming shipments.
         # ----------------------------------------------------------------------
         picking_in.action_assign()
-        move_a.pack_operation_ids.qty_done = 4
-        move_b.pack_operation_ids.qty_done = 5
-        move_c.pack_operation_ids.qty_done = 5
-        move_d.pack_operation_ids.qty_done = 5
+        move_a.move_line_ids.qty_done = 4
+        move_b.move_line_ids.qty_done = 5
+        move_c.move_line_ids.qty_done = 5
+        move_d.move_line_ids.qty_done = 5
         lot2_productC = LotObj.create({'name': 'C Lot 2', 'product_id': self.productC.id})
         self.StockPackObj.create({
             'product_id': self.productC.id,
@@ -221,8 +221,8 @@ class TestStockFlow(TestStockCommon):
         # Replace pack operation of outgoing shipment.
         # ----------------------------------------------------------------------
 
-        move_cust_a.pack_operation_ids.qty_done = 2.0
-        move_cust_b.pack_operation_ids.qty_done = 3.0
+        move_cust_a.move_line_ids.qty_done = 2.0
+        move_cust_b.move_line_ids.qty_done = 3.0
         self.StockPackObj.create({
             'product_id': self.productB.id,
             'qty_done': 2,
@@ -231,7 +231,7 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location,
             'move_id': move_cust_b.id})
         # TODO care if product_qty and lot_id are set at the same times the system do 2 unreserve.
-        move_cust_c.pack_operation_ids[0].write({
+        move_cust_c.move_line_ids[0].write({
             'qty_done': 2.0,
             'lot_id': lot2_productC.id,
         })
@@ -242,7 +242,7 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
             'move_id': move_cust_c.id})
-        move_cust_d.pack_operation_ids.qty_done = 6.0
+        move_cust_d.move_line_ids.qty_done = 6.0
 
         # Transfer picking.
         picking_out.action_done()
@@ -1370,11 +1370,11 @@ class TestStockFlow(TestStockCommon):
             self.assertEqual(move.state, 'waiting', 'Wrong state of move line.')
 
         # Set the quantity done on the pack operation
-        move_in.pack_operation_ids.qty_done = 3.0
+        move_in.move_line_ids.qty_done = 3.0
         # Put in a pack
         picking_in.put_in_pack()
         # Get the new package
-        picking_in_package = move_in.pack_operation_ids.result_package_id
+        picking_in_package = move_in.move_line_ids.result_package_id
         # Validate picking
         picking_in.action_done()
 
@@ -1386,9 +1386,9 @@ class TestStockFlow(TestStockCommon):
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
 
         # Set the quantity done on the pack operation
-        move_pack.pack_operation_ids.qty_done = 3.0
+        move_pack.move_line_ids.qty_done = 3.0
         # Get the new package
-        picking_pack_package = move_pack.pack_operation_ids.result_package_id
+        picking_pack_package = move_pack.move_line_ids.result_package_id
         # Validate picking
         picking_pack.action_done()
 
@@ -1400,8 +1400,8 @@ class TestStockFlow(TestStockCommon):
             self.assertEqual(move.state, 'assigned', 'Wrong state of move line.')
 
         # Validate picking
-        picking_out.pack_operation_ids.qty_done = 3.0
-        picking_out_package = move_out.pack_operation_ids.result_package_id
+        picking_out.move_line_ids.qty_done = 3.0
+        picking_out_package = move_out.move_line_ids.result_package_id
         picking_out.action_done()
 
         # check all pickings are done
@@ -1438,9 +1438,9 @@ class TestStockFlow(TestStockCommon):
         pack_obj = self.env['stock.quant.package']
         pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
-        picking_in.pack_operation_ids[0].result_package_id = pack1
-        picking_in.pack_operation_ids[0].qty_done = 4
-        packop2 = picking_in.pack_operation_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
+        picking_in.move_line_ids[0].result_package_id = pack1
+        picking_in.move_line_ids[0].qty_done = 4
+        packop2 = picking_in.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
         packop2.qty_done = 6
         packop2.result_package_id = pack2
         picking_in.action_done()
@@ -1464,8 +1464,8 @@ class TestStockFlow(TestStockCommon):
             'location_dest_id': self.customer_location})
         picking_out.action_confirm()
         picking_out.action_assign()
-        packout1 = picking_out.pack_operation_ids[0]
-        packout2 = picking_out.pack_operation_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
+        packout1 = picking_out.move_line_ids[0]
+        packout2 = picking_out.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
         packout1.qty_done = 2
         packout1.package_id = pack1
         packout2.package_id = pack2
@@ -1496,9 +1496,9 @@ class TestStockFlow(TestStockCommon):
         pack_obj = self.env['stock.quant.package']
         pack1 = pack_obj.create({'name': 'PACKINOUTTEST1'})
         pack2 = pack_obj.create({'name': 'PACKINOUTTEST2'})
-        picking_in.pack_operation_ids[0].result_package_id = pack1
-        picking_in.pack_operation_ids[0].qty_done = 120
-        packop2 = picking_in.pack_operation_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
+        picking_in.move_line_ids[0].result_package_id = pack1
+        picking_in.move_line_ids[0].qty_done = 120
+        packop2 = picking_in.move_line_ids[0].with_context(bypass_reservation_update=True).copy({'product_uom_qty': 0})
         packop2.qty_done = 80
         packop2.result_package_id = pack2
         picking_in.action_done()
@@ -1523,8 +1523,8 @@ class TestStockFlow(TestStockCommon):
         picking_out.action_confirm()
         picking_out.action_assign()
         # Convert entire packs into taking out of packs
-        packout0 = picking_out.pack_operation_ids[0]
-        packout1 = picking_out.pack_operation_ids[1]
+        packout0 = picking_out.move_line_ids[0]
+        packout1 = picking_out.move_line_ids[1]
         packout0.write({
             'package_id': pack1.id,
             'product_id': self.productE.id,

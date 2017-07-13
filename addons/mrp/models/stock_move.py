@@ -7,8 +7,8 @@ from odoo.tools import float_compare, float_round
 from odoo.addons import decimal_precision as dp
 
 
-class StockPackOperation(models.Model):
-    _inherit = 'stock.pack.operation'
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     production_id = fields.Many2one('mrp.production', 'Production Order')
@@ -33,10 +33,10 @@ class StockPackOperation(models.Model):
     def write(self, vals):
         if 'lot_id' in vals:
             for movelot in self:
-                movelot.move_id.production_id.move_raw_ids.mapped('pack_operation_ids')\
+                movelot.move_id.production_id.move_raw_ids.mapped('move_line_ids')\
                     .filtered(lambda r: r.done_wo and not r.done_move and r.lot_produced_id == movelot.lot_id)\
                     .write({'lot_produced_id': vals['lot_id']})
-        return super(StockPackOperation, self).write(vals)
+        return super(StockMoveLine, self).write(vals)
 
 
 class StockMove(models.Model):
@@ -55,7 +55,7 @@ class StockMove(models.Model):
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume')
     # Quantities to process, in normalized UoMs
-    active_move_line_ids = fields.One2many('stock.pack.operation', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
+    active_move_line_ids = fields.One2many('stock.move.line', 'move_id', domain=[('done_wo', '=', True)], string='Lots')
     bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line')
     unit_factor = fields.Float('Unit Factor')
     is_done = fields.Boolean(
@@ -80,8 +80,8 @@ class StockMove(models.Model):
     def action_assign(self):
         res = super(StockMove, self).action_assign()
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
-            if move.pack_operation_ids:
-                move.pack_operation_ids.write({'production_id': move.raw_material_production_id.id, 
+            if move.move_line_ids:
+                move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
                                                'workorder_id': move.workorder_id.id,})
         return res
 
@@ -99,7 +99,7 @@ class StockMove(models.Model):
         view = self.env.ref('mrp.view_stock_move_lots')
         serial = (self.has_tracking == 'serial')
         only_create = False  # Check operation type in theory
-        show_reserved = any([x for x in self.pack_operation_ids if x.product_qty > 0.0])
+        show_reserved = any([x for x in self.move_line_ids if x.product_qty > 0.0])
         ctx.update({
             'serial': serial,
             'only_create': only_create,

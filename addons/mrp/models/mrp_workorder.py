@@ -102,11 +102,11 @@ class MrpWorkorder(models.Model):
     move_raw_ids = fields.One2many(
         'stock.move', 'workorder_id', 'Moves')
     move_line_ids = fields.One2many(
-        'stock.pack.operation', 'workorder_id', 'Moves to Track',
+        'stock.move.line', 'workorder_id', 'Moves to Track',
         domain=[('done_wo', '=', True)],
         help="Inventory moves for which you must scan a lot number at this work order")
     active_move_line_ids = fields.One2many(
-        'stock.pack.operation', 'workorder_id',
+        'stock.move.line', 'workorder_id',
         domain=[('done_wo', '=', False)])
     final_lot_id = fields.Many2one(
         'stock.production.lot', 'Current Lot', domain="[('product_id', '=', product_id)]",
@@ -199,7 +199,7 @@ class MrpWorkorder(models.Model):
                 qty_todo = new_qty - sum(move_lots.mapped('quantity'))
                 if float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
                     while float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                        self.active_move_line_ids += self.env['stock.pack.operation'].new({
+                        self.active_move_line_ids += self.env['stock.move.line'].new({
                             'move_id': move.id,
                             'product_id': move.product_id.id,
                             'lot_id': False,
@@ -236,7 +236,7 @@ class MrpWorkorder(models.Model):
     def _generate_lot_ids(self):
         """ Generate stock move lines """
         self.ensure_one()
-        MoveLine = self.env['stock.pack.operation']
+        MoveLine = self.env['stock.move.line']
         tracked_moves = self.move_raw_ids.filtered(
             lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id)
         for move in tracked_moves:
@@ -322,7 +322,7 @@ class MrpWorkorder(models.Model):
         if not self.next_work_order_id:
             production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
             if production_move.has_tracking != 'none':
-                move_line = production_move.pack_operation_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
                 if move_line:
                     move_line.product_qty += self.qty_producing
                 else:

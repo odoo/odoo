@@ -72,7 +72,7 @@
 - 
   Check one move line was created in Customers location with 200 pieces
 - 
-    !python {model: stock.pack.operation, id: False}: |
+    !python {model: stock.move.line, id: False}: |
         move_line = self.search([('location_dest_id', '=', ref('stock.stock_location_customers')), ('product_id', '=', ref("drop_shop_product"))])
         assert move_line, 'No move line found'
         assert len(move_line.ids) == 1, 'There should be exactly one move line'

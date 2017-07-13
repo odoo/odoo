@@ -412,7 +412,7 @@ class InventoryLine(models.Model):
             'restrict_partner_id': self.partner_id.id,
             'location_id': location_id,
             'location_dest_id': location_dest_id,
-            'pack_operation_ids': [(0, 0, {'product_id': self.product_id.id,
+            'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
                                            'lot_id': self.prod_lot_id.id, 
                                            'product_uom_qty': 0,  # bypass reservation here
                                            'product_uom_id': self.product_uom_id.id,

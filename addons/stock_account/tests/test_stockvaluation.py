@@ -33,7 +33,7 @@ class TestStockValuation(TransactionCase):
         })
         move1.action_confirm()
         move1.action_assign()
-        move1.pack_operation_ids.qty_done = 68.0
+        move1.move_line_ids.qty_done = 68.0
         move1.action_done()
 
         self.assertEqual(move1.value, 1020.0)
@@ -53,7 +53,7 @@ class TestStockValuation(TransactionCase):
         })
         move2.action_confirm()
         move2.action_assign()
-        move2.pack_operation_ids.qty_done = 140.0
+        move2.move_line_ids.qty_done = 140.0
         move2.action_done()
 
         self.assertEqual(move2.value, 2170.0)
@@ -73,7 +73,7 @@ class TestStockValuation(TransactionCase):
         })
         move3.action_confirm()
         move3.action_assign()
-        move3.pack_operation_ids.qty_done = 94.0
+        move3.move_line_ids.qty_done = 94.0
         move3.action_done()
 
         self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
@@ -99,7 +99,7 @@ class TestStockValuation(TransactionCase):
         })
         move4.action_confirm()
         move4.action_assign()
-        move4.pack_operation_ids.qty_done = 40.0
+        move4.move_line_ids.qty_done = 40.0
         move4.action_done()
 
         self.assertEqual(move4.value, 640.0)
@@ -122,7 +122,7 @@ class TestStockValuation(TransactionCase):
         })
         move5.action_confirm()
         move5.action_assign()
-        move5.pack_operation_ids.qty_done = 78.0
+        move5.move_line_ids.qty_done = 78.0
         move5.action_done()
 
         self.assertEqual(move5.value, 1287.0)
@@ -145,7 +145,7 @@ class TestStockValuation(TransactionCase):
         })
         move6.action_confirm()
         move6.action_assign()
-        move6.pack_operation_ids.qty_done = 116.0
+        move6.move_line_ids.qty_done = 116.0
         move6.action_done()
 
         # note: it' ll have to get 114 units from the move2 and 2 from move4
@@ -171,7 +171,7 @@ class TestStockValuation(TransactionCase):
         })
         move7.action_confirm()
         move7.action_assign()
-        move7.pack_operation_ids.qty_done = 62.0
+        move7.move_line_ids.qty_done = 62.0
         move7.action_done()
 
         # note: it' ll have to get 38 units from the move4 and 24 from move5
@@ -203,7 +203,7 @@ class TestStockValuation(TransactionCase):
         })
         move1.action_confirm()
         move1.action_assign()
-        move1.pack_operation_ids.qty_done = 10.0
+        move1.move_line_ids.qty_done = 10.0
         move1.action_done()
 
         self.assertEqual(move1.value, 1000.0)
@@ -223,7 +223,7 @@ class TestStockValuation(TransactionCase):
         })
         move2.action_confirm()
         move2.action_assign()
-        move2.pack_operation_ids.qty_done = 10.0
+        move2.move_line_ids.qty_done = 10.0
         move2.action_done()
 
         self.assertEqual(move2.value, 800.0)
@@ -243,7 +243,7 @@ class TestStockValuation(TransactionCase):
         })
         move3.action_confirm()
         move3.action_assign()
-        move3.pack_operation_ids.qty_done = 15.0
+        move3.move_line_ids.qty_done = 15.0
         move3.action_done()
 
         self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
@@ -269,7 +269,7 @@ class TestStockValuation(TransactionCase):
         })
         move4.action_confirm()
         move4.action_assign()
-        move4.pack_operation_ids.qty_done = 5.0
+        move4.move_line_ids.qty_done = 5.0
         move4.action_done()
 
         self.assertEqual(move4.value, 300.0)
@@ -291,7 +291,7 @@ class TestStockValuation(TransactionCase):
         })
         move5.action_confirm()
         move5.action_assign()
-        move5.pack_operation_ids.qty_done = 7.0
+        move5.move_line_ids.qty_done = 7.0
         move5.action_done()
 
         # note: it' ll have to get 5 units from the move2 and 2 from move4
@@ -322,7 +322,7 @@ class TestStockValuation(TransactionCase):
         })
         move1.action_confirm()
         move1.action_assign()
-        move1.pack_operation_ids.qty_done = 60.0
+        move1.move_line_ids.qty_done = 60.0
         move1.action_done()
 
         self.assertEqual(move1.value, 900.0)
@@ -342,7 +342,7 @@ class TestStockValuation(TransactionCase):
         })
         move2.action_confirm()
         move2.action_assign()
-        move2.pack_operation_ids.qty_done = 140.0
+        move2.move_line_ids.qty_done = 140.0
         move2.action_done()
 
         self.assertEqual(move2.value, 2170.0)
@@ -359,7 +359,7 @@ class TestStockValuation(TransactionCase):
         })
         move3.action_confirm()
         move3.action_assign()
-        move3.pack_operation_ids.qty_done = 190.0
+        move3.move_line_ids.qty_done = 190.0
         move3.action_done()
 
         self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
@@ -379,7 +379,7 @@ class TestStockValuation(TransactionCase):
         })
         move4.action_confirm()
         move4.action_assign()
-        move4.pack_operation_ids.qty_done = 70.0
+        move4.move_line_ids.qty_done = 70.0
         move4.action_done()
 
         self.assertEqual(move4.value, 1120.0)
@@ -396,7 +396,7 @@ class TestStockValuation(TransactionCase):
         })
         move5.action_confirm()
         move5.action_assign()
-        move5.pack_operation_ids.qty_done = 30.0
+        move5.move_line_ids.qty_done = 30.0
         move5.action_done()
 
         self.assertEqual(move5.value, -477.6)

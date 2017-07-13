@@ -9,8 +9,8 @@ from odoo.tools.pycompat import izip
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
 
-class PackOperation(models.Model):
-    _name = "stock.pack.operation" #TODO: change to stock.move.operation
+class StockMoveLine(models.Model):
+    _name = "stock.move.line"
     _description = "Packing Operation"
     _order = "result_package_id desc, id"
 
@@ -94,7 +94,7 @@ class PackOperation(models.Model):
     @api.model
     def create(self, vals):
         vals['ordered_qty'] = vals.get('product_uom_qty')
-        ml = super(PackOperation, self).create(vals)
+        ml = super(StockMoveLine, self).create(vals)
         if ml.state == 'done':
             Quant = self.env['stock.quant']
             quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
@@ -121,7 +121,7 @@ class PackOperation(models.Model):
         the old quants and allocate the new ones.
         """
         if self.env.context.get('bypass_reservation_update'):
-            return super(PackOperation, self).write(vals)
+            return super(StockMoveLine, self).write(vals)
 
         Quant = self.env['stock.quant']
         # We forbid to change the reserved quantity in the interace, but it is needed in the
@@ -219,7 +219,7 @@ class PackOperation(models.Model):
                     Quant._increase_available_quantity(product_id, location_dest_id, quantity, lot_id=lot_id, package_id=result_package_id, owner_id=owner_id)
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
-        res = super(PackOperation, self).write(vals)
+        res = super(StockMoveLine, self).write(vals)
         next_moves.do_unreserve()
         next_moves.action_assign()
         return res
@@ -234,7 +234,7 @@ class PackOperation(models.Model):
             if ml.location_id.should_impact_quants() and ml.product_id.type == 'product' and not float_is_zero(ml.product_qty, precision_digits=precision):
                 self.env['stock.quant']._decrease_reserved_quantity(ml.product_id, ml.location_id, ml.product_qty, lot_id=ml.lot_id,
                                                                    package_id=ml.package_id, owner_id=ml.owner_id)
-        return super(PackOperation, self).unlink()
+        return super(StockMoveLine, self).unlink()
 
     def action_done(self):
         """ This method will finalize the work with a move line by "moving" quants to the
@@ -296,7 +296,7 @@ class PackOperation(models.Model):
                 ('qty_done', '=', 0.0),
                 ('id', '!=', self.id),
             ]
-            oudated_candidates = self.env['stock.pack.operation'].search(oudated_move_lines_domain)
+            oudated_candidates = self.env['stock.move.line'].search(oudated_move_lines_domain)
 
             # As the move's state is not computed over the move lines, we'll have to manually
             # recompute the moves which we adapted their lines.

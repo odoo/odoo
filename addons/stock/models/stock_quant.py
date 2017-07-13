@@ -245,8 +245,8 @@ class QuantPackage(models.Model):
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True)
-    move_line_ids = fields.One2many('stock.pack.operation', 'result_package_id')
-    current_picking_move_line_ids = fields.One2many('stock.pack.operation', compute="_compute_current_picking_info")
+    move_line_ids = fields.One2many('stock.move.line', 'result_package_id')
+    current_picking_move_line_ids = fields.One2many('stock.move.line', compute="_compute_current_picking_info")
     current_picking_id = fields.Boolean(compute="_compute_current_picking_info")
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id')
@@ -331,7 +331,7 @@ class QuantPackage(models.Model):
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]
-        pickings = self.env['stock.pack.operation'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
+        pickings = self.env['stock.move.line'].search([('result_package_id', 'in', self.ids)]).mapped('picking_id')
         action['domain'] = [('id', 'in', pickings.ids)]
         return action
 
