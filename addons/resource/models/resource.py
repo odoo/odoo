@@ -707,6 +707,13 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one("resource.calendar", string='Working Time', help="Define the schedule of resource")
 
     @api.multi
+    @api.constrains('time_efficiency')
+    def _check_time_efficiency(self):
+        for record in self:
+            if record.time_efficiency == 0:
+                raise ValidationError(_('The efficiency factor cannot be equal to 0.'))
+
+    @api.multi
     def copy(self, default=None):
         self.ensure_one()
         if default is None:
