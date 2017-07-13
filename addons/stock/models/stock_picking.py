@@ -268,12 +268,12 @@ class Picking(models.Model):
         index=True, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
-    pack_operation_ids = fields.One2many(
-        'stock.pack.operation', 'picking_id', 'Operations',
+    move_line_ids = fields.One2many(
+        'stock.move.line', 'picking_id', 'Operations',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
-    pack_operation_exist = fields.Boolean(
-        'Has Pack Operations', compute='_compute_pack_operation_exist',
+    move_line_exist = fields.Boolean(
+        'Has Pack Operations', compute='_compute_move_line_exist',
         help='Check the existence of pack operation on the picking')
 
     has_packages = fields.Boolean(
@@ -370,13 +370,13 @@ class Picking(models.Model):
         self.has_scrap_move = bool(self.env['stock.move'].search_count([('picking_id', '=', self.id), ('scrapped', '=', True)]))
 
     @api.one
-    def _compute_pack_operation_exist(self):
-        self.pack_operation_exist = bool(self.pack_operation_ids)
+    def _compute_move_line_exist(self):
+        self.move_line_exist = bool(self.move_line_ids)
 
     @api.one
     def _compute_has_packages(self):
         has_packages = False
-        for pack_op in self.pack_operation_ids:
+        for pack_op in self.move_line_ids:
             if pack_op.result_package_id:
                 has_packages = True
                 break
@@ -458,7 +458,7 @@ class Picking(models.Model):
 
     @api.one
     def action_assign_owner(self):
-        self.pack_operation_ids.write({'owner_id': self.owner_id.id})
+        self.move_line_ids.write({'owner_id': self.owner_id.id})
 
     @api.multi
     def do_print_picking(self):
@@ -518,9 +518,9 @@ class Picking(models.Model):
         # Check if there are ops not linked to moves yet
         for pick in self:
             # # Explode manually added packages
-            # for ops in pick.pack_operation_ids.filtered(lambda x: not x.move_id and not x.product_id):
+            # for ops in pick.move_line_ids.filtered(lambda x: not x.move_id and not x.product_id):
             #     for quant in ops.package_id.quant_ids: #Or use get_content for multiple levels
-            #         self.pack_operation_ids.create({'product_id': quant.product_id.id,
+            #         self.move_line_ids.create({'product_id': quant.product_id.id,
             #                                    'package_id': quant.package_id.id,
             #                                    'result_package_id': ops.result_package_id,
             #                                    'lot_id': quant.lot_id.id,
@@ -533,7 +533,7 @@ class Picking(models.Model):
             #                                    'picking_id': pick.id
             #                                    }) # Might change first element
             # # Link existing moves or add moves when no one is related
-            for ops in pick.pack_operation_ids.filtered(lambda x: not x.move_id):
+            for ops in pick.move_line_ids.filtered(lambda x: not x.move_id):
                 # Search move with this product
                 moves = pick.move_lines.filtered(lambda x: x.product_id == ops.product_id) 
                 if moves: #could search move that needs it the most (that has some quantities left)
@@ -561,10 +561,10 @@ class Picking(models.Model):
     def _check_entire_pack(self):
         """ This function check if entire packs are moved in the picking"""
         for picking in self:
-            origin_packages = picking.pack_operation_ids.mapped("package_id")
+            origin_packages = picking.move_line_ids.mapped("package_id")
             for pack in origin_packages:
                 all_in = True
-                packops = picking.pack_operation_ids.filtered(lambda x: x.package_id == pack)
+                packops = picking.move_line_ids.filtered(lambda x: x.package_id == pack)
                 keys = ['product_id', 'lot_id']
 
                 grouped_quants = {}
@@ -573,7 +573,7 @@ class Picking(models.Model):
 
                 grouped_ops = {}
                 for k, g in groupby(sorted(packops, key=itemgetter(*keys)), key=itemgetter(*keys)):
-                    grouped_ops[k] = sum(self.env['stock.pack.operation'].concat(*list(g)).mapped('product_qty'))
+                    grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                 if any(grouped_quants[key] - grouped_ops.get(key, 0) != 0 for key in grouped_quants)\
                         or any(grouped_ops[key] - grouped_quants[key] != 0 for key in grouped_ops):
                     all_in = False
@@ -590,15 +590,15 @@ class Picking(models.Model):
     @api.multi
     def button_validate(self):
         self.ensure_one()
-        pack_operations_delete = self.env['stock.pack.operation']
-        if not self.move_lines and not self.pack_operation_ids:
+        move_line_delete = self.env['stock.move.line']
+        if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some lines to move'))
         # In draft or with no pack operations edited yet, ask if we can just do everything
-        if self.state == 'draft' or all([x.qty_done == 0.0 for x in self.pack_operation_ids]):
+        if self.state == 'draft' or all([x.qty_done == 0.0 for x in self.move_line_ids]):
             # If no lots when needed, raise error
             picking_type = self.picking_type_id
             if (picking_type.use_create_lots or picking_type.use_existing_lots):
-                for pack in self.pack_operation_ids:
+                for pack in self.move_line_ids:
                     if pack.product_id and pack.product_id.tracking != 'none':
                         raise UserError(_('Some products require lots/serial numbers, so you need to specify those first!'))
             view = self.env.ref('stock.view_immediate_transfer')
@@ -632,16 +632,16 @@ class Picking(models.Model):
                 'res_id': wiz.id,
                 'context': self.env.context,
             }
-        for operation in self.pack_operation_ids:
+        for operation in self.move_line_ids:
             if operation.qty_done < 0:
                 raise UserError(_('No negative quantities allowed'))
             if operation.qty_done > 0:
                 pass
                 #operation.write({'product_qty': operation.qty_done})
             else:
-                pack_operations_delete |= operation
-        if pack_operations_delete:
-            pack_operations_delete.unlink()
+                move_line_delete |= operation
+        if move_line_delete:
+            move_line_delete.unlink()
         self.action_done()
         return
 
@@ -656,11 +656,11 @@ class Picking(models.Model):
             quantity_done.setdefault(move.product_id.id, 0)
             quantity_todo[move.product_id.id] += move.product_qty
             quantity_done[move.product_id.id] += move.quantity_done #TODO: convert to base units
-        for ops in self.pack_operation_ids.filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
+        for ops in self.move_line_ids.filtered(lambda x: x.package_id and not x.product_id and not x.move_id):
             for quant in ops.package_id.quant_ids:
                 quantity_done.setdefault(quant.product_id.id, 0)
                 quantity_done[quant.product_id.id] += quant.qty
-        for pack in self.pack_operation_ids.filtered(lambda x: x.product_id and not x.move_id):
+        for pack in self.move_line_ids.filtered(lambda x: x.product_id and not x.move_id):
             quantity_done.setdefault(pack.product_id.id, 0)
             quantity_done[pack.product_id.id] += pack.qty_done
         return any(quantity_done[x] < quantity_todo.get(x, 0) for x in quantity_done)
@@ -672,10 +672,10 @@ class Picking(models.Model):
         # TDE FIXME: move to batch
         self.ensure_one()
         moves = self.env['stock.move']
-        for pack_operation in self.pack_operation_ids:
-            for product, remaining_qty in pycompat.items(pack_operation._get_remaining_prod_quantities()):
+        for move_line in self.move_line_ids:
+            for product, remaining_qty in pycompat.items(move_line._get_remaining_prod_quantities()):
                 if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
-                    vals = self._prepare_values_extra_move(pack_operation, product, remaining_qty)
+                    vals = self._prepare_values_extra_move(move_line, product, remaining_qty)
                     moves |= moves.create(vals)
         if moves:
             moves.with_context(skip_check=True).action_confirm()
@@ -733,7 +733,7 @@ class Picking(models.Model):
             backorder_picking = picking.copy({
                 'name': '/',
                 'move_lines': [],
-                'pack_operation_ids': [],
+                'move_line_ids': [],
                 'backorder_id': picking.id
             })
             picking.message_post(body=_("Back order <em>%s</em> <b>created</b>.") % (backorder_picking.name))
@@ -749,8 +749,8 @@ class Picking(models.Model):
     def _put_in_pack(self):
         package = False
         for pick in self:
-            operations = pick.pack_operation_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
-            operation_ids = self.env['stock.pack.operation']
+            operations = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
+            operation_ids = self.env['stock.move.line']
             if operations:
                 package = self.env['stock.quant.package'].create({})
                 for operation in operations:
@@ -779,7 +779,7 @@ class Picking(models.Model):
     def button_scrap(self):
         self.ensure_one()
         # only stockable products are scrapeable
-        scrapeable_products = self.pack_operation_ids.mapped('product_id').filtered(lambda p: p.type == 'product')
+        scrapeable_products = self.move_line_ids.mapped('product_id').filtered(lambda p: p.type == 'product')
         return {
             'name': _('Scrap'),
             'view_type': 'form',
@@ -803,7 +803,7 @@ class Picking(models.Model):
     def action_see_packages(self):
         self.ensure_one()
         action = self.env.ref('stock.action_package_view').read()[0]
-        packages = self.pack_operation_ids.mapped('result_package_id')
+        packages = self.move_line_ids.mapped('result_package_id')
         action['domain'] = [('id', 'in', packages.ids)]
         action['context'] = {'picking_id': self.id}
         return action

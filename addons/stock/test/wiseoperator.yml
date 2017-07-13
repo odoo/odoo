@@ -29,10 +29,10 @@
   Put 4 pieces in shelf1 and 6 pieces in shelf2
 - 
   !python {model: stock.picking, id: pick1_wise}: |
-    stock_pack = self.env['stock.pack.operation']
+    stock_pack = self.env['stock.move.line']
     stock_quant_pack = self.env['stock.quant.package']
     package1 = stock_quant_pack.create({'name': 'Pack 1'})
-    self.pack_operation_ids[0].write({
+    self.move_line_ids[0].write({
       'result_package_id': package1.id,
       'qty_done': 4,
       'location_dest_id': ref('stock_location_components')
@@ -102,8 +102,8 @@
     picking2 = self.browse(ref('delivery_order_wise2'))
     move1 = picking1.move_lines[0]
     move2 = picking2.move_lines[0]
-    pack_ids1 = picking1.pack_operation_ids
-    pack_ids2 = picking2.pack_operation_ids
+    pack_ids1 = picking1.move_line_ids
+    pack_ids2 = picking2.move_line_ids
 
     assert pack_ids1.location_id.id == ref('stock_location_14')
     assert set(pack_ids2.mapped('location_id.id')) == set([ref('stock_location_components'), ref('stock_location_14')])
@@ -114,7 +114,7 @@
       new_pack_id1.qty_done = new_pack_id1.product_qty
       new_pack_id1.with_context(bypass_reservation_update=True).product_uom_qty = 0
 
-    new_move_lines = picking1.pack_operation_ids.filtered(lambda p: p.qty_done)
+    new_move_lines = picking1.move_line_ids.filtered(lambda p: p.qty_done)
     assert sum(new_move_lines.mapped('product_qty')) == 0
     assert sum(new_move_lines.mapped('qty_done')) == 5
     assert set(new_move_lines.mapped('location_id.id')) == set([ref('stock_location_components'), ref('stock_location_14')])
@@ -124,7 +124,7 @@
     new_pack_id2.qty_done = new_pack_id2.product_qty
     new_pack_id2.with_context(bypass_reservation_update=True).product_uom_qty = 0
 
-    new_move_lines = picking2.pack_operation_ids.filtered(lambda p: p.qty_done)
+    new_move_lines = picking2.move_line_ids.filtered(lambda p: p.qty_done)
     assert len(new_move_lines) == 1
     assert sum(new_move_lines.mapped('product_qty')) == 0
     assert sum(new_move_lines.mapped('qty_done')) == 5

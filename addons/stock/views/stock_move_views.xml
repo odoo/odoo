@@ -165,7 +165,7 @@
 
                         </group>
                     </group>
-                    <field name="pack_operation_ids" attrs="{'readonly': ['&amp;', ('state', 'in', ('done', 'cancel')), ('is_editable', '=', False)]}" context="{'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                    <field name="move_line_ids" attrs="{'readonly': ['&amp;', ('state', 'in', ('done', 'cancel')), ('is_editable', '=', False)]}" context="{'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                         <tree editable="bottom" decoration-succes="product_uom_qty==qty_done" decoration-danger="qty_done > product_uom_qty)">
                             <field name="picking_id" invisible="1"/>
                             <field name="product_id" invisible="1"/>
@@ -195,12 +195,12 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="stock.view_stock_move_operations"/>
             <field name="arch" type="xml">
-                <field name="pack_operation_ids" position="before">
+                <field name="move_line_ids" position="before">
                     <field name="quantity_done" readonly="1"/>
                     <field name="product_uom_qty" readonly="1"/>
                 </field>
-                <field name="pack_operation_ids" position="replace">
-                    <field name="pack_operation_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                <field name="move_line_ids" position="replace">
+                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
                         <tree editable="bottom" decoration-succes="product_uom_qty==qty_done" decoration-danger="(product_uom_qty &gt; 0) and (qty_done&gt;product_uom_qty)">
                             <field name="location_id" invisible="context.get('hide_source')" domain="[('id', 'child_of', parent.location_id)])" groups="stock.group_stock_multi_locations"/>
                             <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('from_supplier')"/>

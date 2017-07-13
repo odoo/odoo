@@ -36,7 +36,7 @@
 - 
   !python {model: stock.picking, id: pick1}: |
     #Change quantity of first to 120 and create 2 others quant operations
-    stock_pack = self.env['stock.pack.operation']
+    stock_pack = self.env['stock.move.line']
     stock_quant_pack = self.env['stock.quant.package']
     #create lot A
     lot_a = self.env['stock.production.lot'].create({'name': 'Lot A', 'product_id': ref('product1')})
@@ -46,7 +46,7 @@
     package3 = stock_quant_pack.create({'name': 'Pallet 3'})
     #Create package for each line and assign it as result_package_id
     #create pack operation
-    self.pack_operation_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
+    self.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
     new_pack1 = stock_pack.create({
       'product_id': ref('product1'),
       'product_uom_id': ref('product.product_uom_unit'),
@@ -114,7 +114,7 @@
   Instead of doing the 300 pieces, you decide to take pallet 1 (do not mention product in operation here) and 20 pieces from lot A and 10 pieces from pallet 3
 - 
   !python {model: stock.picking, id: delivery_order1}: |
-    for rec in self.pack_operation_ids:
+    for rec in self.move_line_ids:
       if rec.package_id.name == 'Pallet 1':
         rec.qty_done = 120
       if rec.package_id.name == 'Pallet 2':
@@ -146,8 +146,8 @@
     assert backorders, "Backorder should have been created"
     backorders.action_assign()
     picking = backorders[0]
-    assert len(picking.pack_operation_ids) == 2, "Wrong number of pack operation"
-    for pack_op in picking.pack_operation_ids:
+    assert len(picking.move_line_ids) == 2, "Wrong number of pack operation"
+    for pack_op in picking.move_line_ids:
         assert pack_op.package_id.name in ('Pallet 2', 'Pallet 3'), "Wrong pallet info in pack operation (%s found)" % (pack_op.package_id.name)
         if pack_op.package_id.name == 'Pallet 2':
           assert pack_op.product_qty == 100

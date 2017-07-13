@@ -48,7 +48,7 @@ class ReturnPicking(models.TransientModel):
                 if move.move_dest_ids:
                     move_dest_exists = True
                 quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
-                                                  mapped('pack_operation_ids').mapped('product_qty'))
+                                                  mapped('move_line_ids').mapped('product_qty'))
                 product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id}))
 
             if not product_return_moves:

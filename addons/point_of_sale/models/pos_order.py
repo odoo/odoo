@@ -724,7 +724,7 @@ class PosOrder(models.Model):
                     has_wrong_lots = True
                 for pack_lot in pack_lots:
                     lot_id, qty = pack_lot['lot_id'], pack_lot['qty']
-                    self.env['stock.pack.operation'].create({
+                    self.env['stock.move.line'].create({
                         'move_id': move.id,
                         'product_id': move.product_id.id,
                         'product_uom_id': move.product_uom.id,

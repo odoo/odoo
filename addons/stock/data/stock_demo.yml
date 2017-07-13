@@ -91,7 +91,7 @@
         picking_type_id: stock.picking_type_out
         location_id: stock.stock_location_stock
         location_dest_id: stock.stock_location_customers
-        pack_operation_ids:
+        move_line_ids:
           - product_id: product.product_product_6
             qty_done: 100
             product_uom_id: product.product_uom_unit
@@ -231,7 +231,7 @@
         location_id: stock.stock_location_suppliers
         location_dest_id: stock.stock_location_shop0
         state: done
-        pack_operation_ids:
+        move_line_ids:
           - product_id: product.product_delivery_01
             qty_done: 100
             product_uom_id: product.product_uom_unit
@@ -296,7 +296,7 @@
         picking_type_id: chi_picking_type_out
         location_id: stock.stock_location_shop0
         location_dest_id: stock.stock_location_customers
-        pack_operation_ids:
+        move_line_ids:
           - product_id: product.product_product_6
             qty_done: 100
             product_uom_id: product.product_uom_unit

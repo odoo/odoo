@@ -50,12 +50,12 @@ class StockLocation(models.Model):
              "This has no effect for internal locations.")
 
 
-class StockPackOperation(models.Model):
-    _inherit = 'stock.pack.operation'
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
     
     @api.multi
     def write(self, vals):
-        super(StockPackOperation, self).write(vals)
+        super(StockMoveLine, self).write(vals)
         if 'qty_done' in vals:
             for move in self.mapped('move_id').filtered(lambda m: m.state == 'done'):
                 move.value = move.quantity_done * move.price_unit

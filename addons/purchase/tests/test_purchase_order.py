@@ -75,7 +75,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.force_assign()
-        self.picking.pack_operation_ids.write({'qty_done': 5.0})
+        self.picking.move_line_ids.write({'qty_done': 5.0})
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
@@ -109,7 +109,7 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.force_assign()
-        self.picking.pack_operation_ids.write({'qty_done': 5.0})
+        self.picking.move_line_ids.write({'qty_done': 5.0})
         self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
@@ -139,7 +139,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Validate picking
         return_pick.force_assign()
-        return_pick.pack_operation_ids.write({'qty_done': 2})
+        return_pick.move_line_ids.write({'qty_done': 2})
         
         return_pick.button_validate()
 

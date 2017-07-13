@@ -12,7 +12,7 @@
 
     <t t-name="report_mrp_line">
         <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
-        <t t-if="l.model == 'stock.pack.operation'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
+        <t t-if="l.model == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
         <t t-if="l.model == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
         <t t-set="space_td" t-value="'margin-left: '+ l.level + 'px;'"/>
         <t t-set="domainClass" t-value="'o_stock_reports_domain_line_0'"/>
@@ -53,7 +53,7 @@
                 </td>
             </t>
             <td>
-                <t t-if="l.model == 'stock.pack.operation'">
+                <t t-if="l.model == 'stock.move.line'">
                     <span t-if="l.stream == 'downstream'" class="o_stock_reports_stream text-muted" data-stream="upstream" title="Upstream Traceability"><i class="fa fa-arrow-up"></i></span>
                     <span t-if="l.stream == 'upstream'" class="o_stock_reports_stream" data-stream="downstream" title="Downstream Traceability"><i class="fa fa-arrow-down"></i></span>
                 </t>
