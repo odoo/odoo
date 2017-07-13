@@ -2,6 +2,7 @@ odoo.define('web.Dialog', function (require) {
 "use strict";
 
 var core = require('web.core');
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -71,36 +72,31 @@ var Dialog = Widget.extend({
         }
         this.$el.addClass('modal-body ' + this.dialogClass);
     },
-
-    set_buttons: function(buttons) {
+    /**
+     * @param {Object[]} buttons - @see init
+     */
+    set_buttons: function (buttons) {
         var self = this;
-
-        self.$footer.empty();
-
-        _.each(buttons, function(b) {
-            var text = b.text || "";
-            var classes = b.classes || ((buttons.length === 1)? "btn-primary" : "btn-default");
-
-            var $b = $(QWeb.render('WidgetButton', {
-                widget: {
-                    string: text,
-                    node: {
-                        attrs: {'class': classes, icon: b.icon}
-                    },
-                    fa_icon: true
+        this.$footer.empty();
+        _.each(buttons, function (buttonData) {
+            var $button = dom.renderButton({
+                attrs: {
+                    class: buttonData.classes || (buttons.length > 1 ? 'btn-default' : 'btn-primary'),
+                    disabled: buttonData.disabled,
+                },
+                icon: buttonData.icon,
+                text: buttonData.text,
+            });
+            $button.on('click', function (e) {
+                var def;
+                if (buttonData.click) {
+                    def = buttonData.click.call(self, e);
                 }
-            }));
-            $b.prop('disabled', b.disabled);
-            $b.on('click', function(e) {
-                var click_def;
-                if(b.click) {
-                    click_def = b.click.call(self, e);
-                }
-                if(b.close) {
-                    $.when(click_def).always(self.close.bind(self));
+                if (buttonData.close) {
+                    $.when(def).always(self.close.bind(self));
                 }
             });
-            self.$footer.append($b);
+            self.$footer.append($button);
         });
     },
 
