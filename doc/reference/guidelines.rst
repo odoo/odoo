@@ -165,6 +165,8 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 - Use naming convention defined at the next point
 - The tag *<odoo>* can be used to set not-updatable data with ``noupdate=1``
   but avoid use ``noupdate=0`` because is the default value.
+  The tag ``<data>`` is now optional and should only be used if the same xml
+  file contains both update and noupdate records.
 
 .. code-block:: xml
 
