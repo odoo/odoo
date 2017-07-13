@@ -941,7 +941,7 @@
             <field name="name">account.tax.tree</field>
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
-                <tree string="Account Tax" decoration-muted="active == False">
+                <tree string="Account Tax" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type_tax_use"/>
