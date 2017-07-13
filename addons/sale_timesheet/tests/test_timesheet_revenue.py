@@ -35,7 +35,7 @@ class TestSaleTimesheet(TestSale):
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
-            'project_id': self.project.id
+            'project_id': self.project.id,
         })
 
         self.product_order = self.env['product.product'].create({
@@ -49,7 +49,7 @@ class TestSaleTimesheet(TestSale):
             'default_code': 'SERV-ORDER',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
-            'project_id': self.project.id
+            'project_id': self.project.id,
         })
 
         # pricelists
@@ -65,7 +65,6 @@ class TestSaleTimesheet(TestSale):
             'currency_id': self.env.ref('base.EUR').id,
             'company_id': self.env.user.company_id.id,
         })
-
         # partners
         self.partner_usd = self.env['res.partner'].create({
             'name': 'Cool Partner in USD',
