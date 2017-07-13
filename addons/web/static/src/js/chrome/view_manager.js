@@ -636,18 +636,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      * will call this very view manager to activate the previous view.
      * @todo: directly switch to previous view
      *
-     * A special case is done in the case that there is no previous view.  When
-     * that happens, we simply rerender the current view.
-     *
      * @private
      */
     _onSwitchToPreviousView: function () {
-        if (this.view_stack.length === 1) {
-            var currentView = this.view_stack[0].controller;
-            currentView.update({}, {reload: false});
-        } else {
-            this.do_action('history_back');
-        }
+        this.trigger_up('history_back');
     }
 });
 
