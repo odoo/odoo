@@ -731,7 +731,7 @@ var ActionManager = Widget.extend({
      * @param {String} executor.klass CSS class to add on the dialog root, if action.target=new
      * @param {Function<instance.web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
      * @param {Object} options
-     * @return {*}
+     * @return {Deferred<*>}
      */
     ir_actions_common: function(executor, options) {
         var self = this;
@@ -772,10 +772,13 @@ var ActionManager = Widget.extend({
             };
             this.dialog.on("closed", null, this.dialog.on_close);
             this.dialog_widget = executor.widget();
+            var $dialogFooter;
             if (this.dialog_widget instanceof ViewManager) {
                 executor.action.viewManager = this.dialog_widget;
+                $dialogFooter = $('<div/>'); // fake dialog footer in which view
+                                             // manager buttons will be put
                 _.defaults(this.dialog_widget.flags, {
-                    $buttons: this.dialog.$footer,
+                    $buttons: $dialogFooter,
                     footer_to_buttons: true,
                 });
                 if (this.dialog_widget.action.view_mode === 'form') {
@@ -790,15 +793,24 @@ var ActionManager = Widget.extend({
             this.dialog_widget.setParent(this.dialog);
 
             var fragment = document.createDocumentFragment();
-            return this.dialog_widget.appendTo(fragment).then(function() {
+            return this.dialog_widget.appendTo(fragment).then(function () {
+                var def = $.Deferred();
+                self.dialog.opened().then(function () {
+                    dom.append(self.dialog.$el, fragment, {
+                        in_DOM: true,
+                        callbacks: [{widget: self.dialog_widget}],
+                    });
+                    if ($dialogFooter) {
+                        self.dialog.$footer.empty().append($dialogFooter.contents());
+                    }
+                    if (options.state && self.dialog_widget.do_load_state) {
+                        return self.dialog_widget.do_load_state(options.state);
+                    }
+                })
+                .done(def.resolve.bind(def))
+                .fail(def.reject.bind(def));
                 self.dialog.open();
-                dom.append(self.dialog.$el, fragment, {
-                    in_DOM: true,
-                    callbacks: [{widget: self.dialog_widget}],
-                });
-                if(options.state && self.dialog_widget.do_load_state) {
-                    return self.dialog_widget.do_load_state(options.state);
-                }
+                return def;
             }).then(function () {
                 return executor.action;
             });

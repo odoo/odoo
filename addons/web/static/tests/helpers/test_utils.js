@@ -10,6 +10,7 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var core = require('web.core');
@@ -490,7 +491,15 @@ function removeSrcAttribute($el, widget) {
     });
 }
 
-return session.is_bound.then(function () {
+// Loading static files cannot be properly simulated when their real content is
+// really needed. This is the case for static XML files so we load them here,
+// before starting the qunit test suite.
+// (session.js is in charge of loading the static xml bundle and we also have
+// to load xml files that are normally lazy loaded by specific widgets).
+return $.when(
+    session.is_bound,
+    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb)
+).then(function () {
     setTimeout(function () {
         // this is done with the hope that tests are
         // only started all together...

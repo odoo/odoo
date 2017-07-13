@@ -351,10 +351,14 @@ DebugManager.include({
         this._active_view.controller.open_defaults_dialog();
     },
     fvg: function() {
-        var dialog = new Dialog(this, { title: _t("Fields View Get") }).open();
-        $('<pre>').text(utils.json_node_to_xml(
-            this._active_view.controller.renderer.arch, true)
-        ).appendTo(dialog.$el);
+        var self = this;
+        var dialog = new Dialog(this, { title: _t("Fields View Get") });
+        dialog.opened().then(function () {
+            $('<pre>').text(utils.json_node_to_xml(
+                self._active_view.controller.renderer.arch, true)
+            ).appendTo(dialog.$el);
+        });
+        dialog.open();
     },
 });
 function make_context(width, height, fn) {
