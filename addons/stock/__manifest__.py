@@ -12,8 +12,8 @@
     'sequence': 13,
     'demo': [
         'data/stock_demo_pre.yml',
-        'data/stock_demo.xml',
         'data/procurement_demo.xml',
+        'data/stock_demo.xml',
         'data/stock_orderpoint_demo.xml',
         'data/stock_orderpoint_demo.yml',
         'data/stock_demo.yml',
