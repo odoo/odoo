@@ -12,6 +12,7 @@ class AccountConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
+    has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -83,9 +84,7 @@ class AccountConfigSettings(models.TransientModel):
         if self.default_purchase_tax_id:
             ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
         """ install a chart of accounts for the given company (if required) """
-        if self.chart_template_id and not self.has_chart_of_accounts and self.company_id.expects_chart_of_accounts:
-            if self.company_id.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-                raise UserError(_('You can not change a company chart of account once it has been installed'))
+        if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
@@ -105,6 +104,8 @@ class AccountConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
+        self.chart_template_id = self.company_id.chart_template_id or False
+        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

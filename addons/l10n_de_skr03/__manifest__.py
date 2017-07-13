@@ -69,4 +69,5 @@ German accounting chart and localization.
         'data/account_tax_fiscal_position_data.xml',
         'data/account_chart_template_data.yml',
     ],
+    'auto_install': True
 }
