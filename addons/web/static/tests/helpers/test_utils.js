@@ -412,6 +412,14 @@ function dragAndDrop($el, $to, options) {
             pageX: toOffset.left,
             pageY: toOffset.top
         }));
+    } else {
+        // It's impossible to drag another element when one is already
+        // being dragged. So it's necessary to finish the drop when the test is
+        // over otherwise it's impossible for the next tests to drag and
+        // drop elements.
+        $el.on("remove", function () {
+            $el.trigger($.Event("mouseup"));
+        });
     }
 }
 
