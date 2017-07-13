@@ -420,16 +420,20 @@ var ActionManager = Widget.extend({
         return this.inner_widget;
     },
     history_back: function() {
-        var nb_views = this.inner_action.get_nb_views();
-        if (nb_views > 1) {
+        var nbViews = this.inner_action.get_nb_views();
+        if (nbViews > 1) {
             // Stay on this action, but select the previous view
-            return this.select_action(this.inner_action, nb_views - 2);
+            return this.select_action(this.inner_action, nbViews - 2);
         }
-        if (this.action_stack.length > 1) {
+        var nbActions = this.action_stack.length;
+        if (nbActions > 1) {
             // Select the previous action
-            var action = this.action_stack[this.action_stack.length - 2];
-            nb_views = action.get_nb_views();
-            return this.select_action(action, nb_views - 1);
+            var action = this.action_stack[nbActions - 2];
+            nbViews = action.get_nb_views();
+            return this.select_action(action, nbViews - 1);
+        }
+        else if (nbActions === 1 && nbViews === 1) {
+            return this.select_action(this.action_stack[0], 0);
         }
         return $.Deferred().reject();
     },
