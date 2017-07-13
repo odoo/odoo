@@ -3,6 +3,7 @@
 from odoo.exceptions import AccessError
 from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
+from odoo.exceptions import UserError
 
 import logging
 
@@ -828,17 +829,40 @@ class WizardMultiChartsAccounts(models.TransientModel):
         return True
 
     @api.multi
+    def existing_accounting(self, company_id):
+        model_to_check = ['account.move.line', 'account.invoice', 'account.move', 'account.payment', 'account.bank.statement']
+        for model in model_to_check:
+            if len(self.env[model].search([('company_id', '=', company_id.id)])) > 0:
+                return True
+        return False
+
+    @api.multi
     def execute(self):
         '''
         This function is called at the confirmation of the wizard to generate the COA from the templates. It will read
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
-        if len(self.env['account.account'].search([('company_id', '=', self.company_id.id)])) > 0:
-            # We are in a case where we already have some accounts existing, meaning that user has probably
-            # created its own accounts and does not need a coa, so skip installation of coa.
-            _logger.info('Could not install chart of account since some accounts already exists for the company (%s)', (self.company_id.id,))
-            return {}
+        existing_accounts = self.env['account.account'].search([('company_id', '=', self.company_id.id)])
+        if existing_accounts:
+            if self.existing_accounting(self.company_id):
+                raise UserError(_('Could not install new chart of account as there are already accounting entries existing'))
+            # delete account property
+            values = ['account.account,%s' % (account_id,) for account_id in existing_accounts.ids]
+            existing_journals = self.env['account.journal'].search([('company_id', '=', self.company_id.id)])
+            if existing_journals:
+                values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
+            partner_prop_acc = self.env['ir.property'].search([('value_reference', 'in', values)])
+            if partner_prop_acc:
+                partner_prop_acc.unlink()
+            # delete account, journal, tax and fiscal position well
+            models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.journal']
+            for model in models_to_delete:
+                res = self.env[model].search([('company_id', '=', self.company_id.id)])
+                if len(res):
+                    res.unlink()
+            existing_accounts.unlink()
+
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
         ir_values_obj = self.env['ir.values']
