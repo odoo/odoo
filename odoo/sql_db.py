@@ -225,7 +225,7 @@ class Cursor(object):
 
         if self.sql_log:
             now = time.time()
-            _logger.debug("query: %s", query)
+            _logger.info("query: %s", query)
 
         try:
             params = params or None

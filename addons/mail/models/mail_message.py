@@ -710,6 +710,11 @@ class Message(models.Model):
                 self.env[record.model].invalidate_cache(ids=[record.res_id])
 
     @api.model
+    def create_fast(self, values):
+        return super(Message, self).create(values)
+
+
+    @api.model
     def create(self, values):
         # coming from mail.js that does not have pid in its values
         if self.env.context.get('default_starred'):

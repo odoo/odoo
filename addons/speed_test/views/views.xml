@@ -1,0 +1,70 @@
+<odoo>
+  <data>
+
+    <record model="ir.ui.view" id="speed_test.form">
+      <field name="name">speed_test list</field>
+      <field name="model">speed_test.speed_test</field>
+      <field name="arch" type="xml">
+        <form>
+            <header>
+                <button name="check" string="Mark Won" type="object" class="oe_highlight"/>
+                <button name="check_track" string="Track" type="object"/>
+            </header>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="value"/>
+                    <field name="track"/>
+                    <field name="value2"/>
+                    <field name="partner_id"/>
+                </group>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+            </div>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="speed_test.list">
+      <field name="name">speed_test list</field>
+      <field name="model">speed_test.speed_test</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+          <field name="partner_id"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record model="ir.actions.act_window" id="speed_test.action_window">
+      <field name="name">speed_test window</field>
+      <field name="res_model">speed_test.speed_test</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+    <record model="ir.actions.server" id="speed_test.action_server">
+      <field name="name">speed_test server</field>
+      <field name="model_id" ref="model_speed_test_speed_test"/>
+      <field name="code">model.search([]).check()</field>
+      <field name="state">code</field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem name="speed_test" id="speed_test.menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Menu 1" id="speed_test.menu_1" parent="speed_test.menu_root"/>
+    <menuitem name="Menu 2" id="speed_test.menu_2" parent="speed_test.menu_root"/>
+    <!-- actions -->
+    <menuitem name="List" id="speed_test.menu_1_list" parent="speed_test.menu_1"
+              action="speed_test.action_window"/>
+    <menuitem name="Server to list" id="speed_test" parent="speed_test.menu_2"
+              action="speed_test.action_server"/>
+
+  </data>
+</odoo>

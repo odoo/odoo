@@ -223,17 +223,22 @@ class MailThread(models.AbstractModel):
         if self._context.get('tracking_disable'):
             return super(MailThread, self).create(values)
 
-        # subscribe uid unless asked not to
-        if not self._context.get('mail_create_nosubscribe'):
-            message_follower_ids = values.get('message_follower_ids') or []  # webclient can send None or False
-            message_follower_ids += self.env['mail.followers']._add_follower_command(self._name, [], {self.env.user.partner_id.id: None}, {}, force=True)[0]
-            values['message_follower_ids'] = message_follower_ids
         thread = super(MailThread, self).create(values)
+        if not self._context.get('mail_create_nosubscribe'):
+            self.env['mail.followers']._add_follower_command(self._name, [thread.id], [self.env.user.partner_id.id], [])
 
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
             doc_name = self.env['ir.model']._get(self._name).name
-            thread.message_post(body=_('%s created') % doc_name)
+            self.env['mail.message'].create_fast({
+                'model': self._name,
+                'res_id': thread.id,
+                'body': _('%s created') % doc_name,
+                'message_type': 'notification',
+                'subtype_id': 2,
+            })
+
+            # thread.message_post(body=_('%s created') % doc_name)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
@@ -242,17 +247,12 @@ class MailThread(models.AbstractModel):
                 create_values[key[8:]] = val
         thread.message_auto_subscribe(list(create_values), values=create_values)
 
+
+        # print 'track', '-'*40
         # track values
         if not self._context.get('mail_notrack'):
-            if 'lang' not in self._context:
-                track_thread = thread.with_context(lang=self.env.user.lang)
-            else:
-                track_thread = thread
-            tracked_fields = track_thread._get_tracked_fields(list(values))
-            if tracked_fields:
-                initial_values = {thread.id: dict.fromkeys(tracked_fields, False)}
-                track_thread.message_track(tracked_fields, initial_values)
-
+            initial_values = {thread.id: {}}
+            self.with_context(is_new=1).message_track([], initial_values)
         return thread
 
     @api.multi
@@ -281,8 +281,26 @@ class MailThread(models.AbstractModel):
 
         # Perform the tracking
         if tracked_fields:
+            #            for rid, values in initial_values.items():
+            #                tracking = []
+            #                for key, val in values.items():
+            #                    if (val != getattr(self.browse([rid]), key)):
+            #                        tracking.append((key, val, getattr(self.browse([rid]), key)))
+            #                if tracking:
+            #                    body = self.env['mail.template'].with_context(tracking=tracking).render_template("""<ul>
+            #        % for tracking in ctx['tracking']
+            #            <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+            #        % endfor
+            #        </ul>""", self._name, [rid])[rid]
+            #                    self.env['mail.message'].create_fast({
+            #                        'model': self._name,
+            #                        'res_id': rid,
+            #                        'body': body,
+            #                        'message_type': 'notification',
+            #                        'subtype_id': 2,
+            #                    })
+            #
             track_self.message_track(tracked_fields, initial_values)
-
         return result
 
     @api.multi
@@ -479,32 +497,67 @@ class MailThread(models.AbstractModel):
         the fields given in tracked_fields, it generates a message containing
         the updated values. This message can be linked to a mail.message.subtype
         given by the ``_track_subtype`` method. """
-        if not tracked_fields:
-            return True
 
-        tracking = self._message_track_get_changes(tracked_fields, initial_values)
-        for record in self:
-            changes, tracking_value_ids = tracking[record.id]
-            if not changes:
+
+        for rid, values in initial_values.items():
+            record = self.browse([rid])
+            subtype_xmlid = False
+            if not self._context.get('mail_track_log_only'):
+                subtype_xmlid = record._track_subtype(initial_values)
+
+            if (not tracked_fields) and (not subtype_xmlid):
                 continue
 
-            # find subtypes and post messages or log if no subtype found
-            subtype_xmlid = False
-            # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
-            if not self._context.get('mail_track_log_only'):
-                subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
-
+            tracking = []
+            for key, val in values.items():
+                if (val != getattr(self.browse([rid]), key)):
+                    tracking.append((key, val, getattr(self.browse([rid]), key)))
+            subtype_id = 2
+            body = ''
             if subtype_xmlid:
-                subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
-                if not (subtype_rec and subtype_rec.exists()):
+                subtype_rec = self.env.ref(subtype_xmlid)
+                if not subtype_rec:
                     _logger.debug('subtype %s not found' % subtype_xmlid)
                     continue
-                record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
-            elif tracking_value_ids:
-                record.message_post(tracking_value_ids=tracking_value_ids)
+                body = subtype_rec.name + '\n'
+                subtype_id = subtype_rec.id
+            if tracking or body:
+                body += self.env['mail.template'].with_context(tracking=tracking).render_template("""<ul>
+    % for tracking in ctx['tracking']
+        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+    % endfor
+    </ul>""", self._name, [rid])[rid]
+                self.env['mail.message'].create_fast({
+                    'model': self._name,
+                    'res_id': rid,
+                    'body': body,
+                    'message_type': 'notification',
+                    'subtype_id': subtype_id,
+                })
 
-        self._message_track_post_template(tracking)
 
+        # tracking = self._message_track_get_changes(tracked_fields, initial_values)
+        # for record in self:
+        #     changes, tracking_value_ids = tracking[record.id]
+        #     if not changes:
+        #         continue
+
+        #     # find subtypes and post messages or log if no subtype found
+        #     subtype_xmlid = False
+        #     # By passing this key, that allows to let the subtype empty and so don't sent email because partners_to_notify from mail_message._notify will be empty
+        #     if not self._context.get('mail_track_log_only'):
+        #         subtype_xmlid = record._track_subtype(dict((col_name, initial_values[record.id][col_name]) for col_name in changes))
+
+        #     if subtype_xmlid:
+        #         subtype_rec = self.env.ref(subtype_xmlid)  # TDE FIXME check for raise if not found
+        #         if not (subtype_rec and subtype_rec.exists()):
+        #             _logger.debug('subtype %s not found' % subtype_xmlid)
+        #             continue
+        #         record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
+        #     elif tracking_value_ids:
+        #         record.message_post(tracking_value_ids=tracking_value_ids)
+
+        # self._message_track_post_template(tracking)
         return True
 
     #------------------------------------------------------
@@ -1975,8 +2028,10 @@ class MailThread(models.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if user_ids is None:
-            user_ids = [self._uid]
-        return self.message_subscribe(self.env['res.users'].browse(user_ids).mapped('partner_id').ids, subtype_ids=subtype_ids)
+            partners = [self.env.user.partner_id.id]
+        else:
+            partners = self.env['res.users'].browse(user_ids).mapped('partner_id').ids
+        return self.message_subscribe(partners, subtype_ids=subtype_ids)
 
     @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
@@ -2000,14 +2055,7 @@ class MailThread(models.AbstractModel):
             self.check_access_rights('write')
             self.check_access_rule('write')
 
-        partner_data = dict((pid, subtype_ids) for pid in partner_ids)
-        channel_data = dict((cid, subtype_ids) for cid in channel_ids)
-        gen, part = self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_data, channel_data, force=force)
-        self.sudo().write({'message_follower_ids': gen})
-        for record in self.filtered(lambda self: self.id in part):
-            record.write({'message_follower_ids': part[record.id]})
-
-        self.invalidate_cache()
+        self.env['mail.followers']._add_follower_command(self._name, self.ids, partner_ids, channel_ids, subtype_ids)
         return True
 
     @api.multi
@@ -2117,10 +2165,11 @@ class MailThread(models.AbstractModel):
         user_field_lst = self._message_get_auto_subscribe_fields(updated_fields)
 
         # fetch header subtypes
-        subtypes, relation_fields = self.env['mail.message.subtype'].auto_subscribe_subtypes(self._name)
+        subtypes = self.env['mail.message.subtype'].search([('relation_field', '<>', False), '|', ('res_model', '=', False), ('parent_id.res_model', '=', self._name)])
 
         # if no change in tracked field or no change in tracked relational field: quit
-        if not any(relation in relation_fields for relation in updated_fields) and not user_field_lst:
+        relation_fields = set([subtype.relation_field for subtype in subtypes])
+        if not any(relation in updated_fields for relation in relation_fields) and not user_field_lst:
             return True
 
         # find followers of headers, update structure for new followers

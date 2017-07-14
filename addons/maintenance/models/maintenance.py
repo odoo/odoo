@@ -262,7 +262,7 @@ class MaintenanceRequest(models.Model):
     @api.multi
     def _track_subtype(self, init_values):
         self.ensure_one()
-        if 'stage_id' in init_values and self.stage_id.sequence <= 1:
+        if self.env.context.get('is_new', False):
             return 'maintenance.mt_req_created'
         elif 'stage_id' in init_values and self.stage_id.sequence > 1:
             return 'maintenance.mt_req_status'
