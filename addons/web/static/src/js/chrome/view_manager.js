@@ -561,7 +561,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
         var self = this;
         var result_handler = on_closed || function () {};
         var context = new Context(this.env.context, action_data.context || {});
-        var record_id = res_ids && res_ids[0];
+        // OR NULL hereunder: pyeval waits specifically for a null value, different from undefined
+        var record_id = res_ids && res_ids[0] || null;
 
         // response handler
         var handler = function (action) {
@@ -651,18 +652,10 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      * will call this very view manager to activate the previous view.
      * @todo: directly switch to previous view
      *
-     * A special case is done in the case that there is no previous view.  When
-     * that happens, we simply rerender the current view.
-     *
      * @private
      */
     _onSwitchToPreviousView: function () {
-        if (this.view_stack.length === 1) {
-            var currentView = this.view_stack[0].controller;
-            currentView.update({}, {reload: false});
-        } else {
-            this.do_action('history_back');
-        }
+        this.trigger_up('history_back');
     }
 });
 

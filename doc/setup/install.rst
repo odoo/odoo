@@ -546,7 +546,7 @@ default db to serve on localhost:8069
     http://www.enterprisedb.com/products-services-training/pgdownload
 .. _Quilt: http://en.wikipedia.org/wiki/Quilt_(software)
 .. _saas: https://www.odoo.com/page/start
-.. _the wkhtmltopdf download page: http://wkhtmltopdf.org/downloads.html
+.. _the wkhtmltopdf download page: https://github.com/wkhtmltopdf/wkhtmltopdf/releases/tag/0.12.1
 .. _UAC: http://en.wikipedia.org/wiki/User_Account_Control
 .. _wkhtmltopdf: http://wkhtmltopdf.org
 .. _pip: https://pip.pypa.io
