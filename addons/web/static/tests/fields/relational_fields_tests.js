@@ -995,14 +995,16 @@ QUnit.module('relational_fields', {
                     assert.deepEqual(
                         args.kwargs.context,
                         {hey: "ho", hello: "world", test: "yop"},
-                        'the field attr context should have been used for the '
-                        + 'RPC (evaluated and merged with the session one)');
+                        'the field attr context should have been used for the ' +
+                        'RPC (evaluated and merged with the session one)');
+                    return $.when([]);
                 }
                 if (args.method === 'name_search' && args.model === 'partner') {
                     assert.deepEqual(args.kwargs.args, [['id', 'in', [12]]],
                         'the field attr domain should have been used for the RPC (and evaluated)');
                     assert.deepEqual(args.kwargs.context, {hey: 'ho', timmy: [[6, false, [12]]]},
                         'the field attr context should have been used for the RPC (and evaluated)');
+                    return $.when([]);
                 }
                 return this._super.apply(this, arguments);
             },
