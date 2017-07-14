@@ -422,7 +422,7 @@ class Repair(models.Model):
                 })
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
-            move = Move.create({
+            repair_move = Move.create({
                 'name': repair.name,
                 'product_id': repair.product_id.id,
                 'product_uom': repair.product_uom.id or repair.product_id.uom_id.id,
@@ -432,9 +432,16 @@ class Repair(models.Model):
                 'location_dest_id': repair.location_dest_id.id,
                 'restrict_lot_id': repair.lot_id.id,
             })
-            moves |= move
+            moves |= repair_move
             moves.action_done()
-            res[repair.id] = move.id
+            op_moves = moves - repair_move
+            consumed_quants = op_moves.mapped('quant_ids').filtered(lambda x: x.qty > 0.0)
+            for quant in repair_move.quant_ids.filtered(lambda x: x.qty > 0.0):
+                if hasattr(quant, 'consumed_quant_ids'):
+                    extra_quants = consumed_quants - quant.consumed_quant_ids
+                    if extra_quants:
+                        quant.write({'consumed_quant_ids': [(4, quant.id) for quant in extra_quants]})
+            res[repair.id] = repair_move.id
         return res
 
 
@@ -603,3 +610,19 @@ class RepairFee(models.Model):
                 self.price_unit = price
         if warning:
             return {'warning': warning}
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    consume_repair_id = fields.Many2one('mrp.repair', compute='compute_traceability')
+    repair_id = fields.Many2one('mrp.repair', compute='compute_traceability')
+
+    @api.multi
+    def compute_traceability(self):
+        Repair = self.env['mrp.repair']
+        RepairLine = self.env['mrp.repair.line']
+        for move in self:
+            move.repair_id = Repair.search([('move_id', '=', move.id)], limit=1).id
+            line = RepairLine.search([('move_id', '=', move.id)], limit=1)
+            if line:
+                move.consume_repair_id = line.repair_id.id
