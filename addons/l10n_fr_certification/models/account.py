@@ -10,7 +10,7 @@ ERR_MSG = _("According to the french law, you cannot modify a %s in order for it
 
 #forbidden fields
 MOVE_FIELDS = ['date', 'journal_id', 'company_id']
-LINE_FIELDS = ['debit', 'credit', 'account_id', 'move_id', 'partner_id']
+LINE_FIELDS = ['debit', 'credit', 'account_id', 'partner_id']
 
 
 class AccountMove(models.Model):
@@ -55,7 +55,8 @@ class AccountMove(models.Model):
 
             for line in move.line_ids:
                 for field in LINE_FIELDS:
-                    values[field] = _getattrstring(line, field)
+                    k = 'line_%d_%s' % (line.id, field)
+                    values[k] = _getattrstring(line, field)
             #make the json serialization canonical
             #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
             move.l10n_fr_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
