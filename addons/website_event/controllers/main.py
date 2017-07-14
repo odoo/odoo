@@ -238,18 +238,15 @@ class WebsiteEventController(http.Controller):
     def set_new_timezone(self, timezone, date_time):
         if not timezone or not date_time:
             return False
-        unaware_utc = datetime.strptime(date_time,"%Y-%m-%d %H:%M:%S")
-        localtz = pytz.utc
-        aware_tz = localtz.localize(unaware_utc)
-        new_tz = aware_tz.astimezone(pytz.timezone(timezone)).strftime("%m/%d/%Y %H:%M")
-        return new_tz
+
+        for key, value in date_time.iteritems():
+            aware_tz = pytz.utc.localize(fields.Datetime.from_string(value))
+            date_time[key] = aware_tz.astimezone(pytz.timezone(timezone)).strftime("%m/%d/%Y %H:%M")
+        return date_time
 
     @http.route(['/event/get_all_timezone'], type='json', auth="public", methods=['POST'], website=True)
     def get_all_timezone(self):
-        tz_list = []
-        for timezone in pytz.all_timezones:
-            tz_list.append(timezone)
-        return tz_list
+        return [timezone for timezone in pytz.all_timezones]
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''
