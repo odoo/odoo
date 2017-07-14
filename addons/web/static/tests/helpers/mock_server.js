@@ -632,7 +632,9 @@ var MockServer = Class.extend({
             var fieldName = groupByField.split(':')[0];
             var aggregateFunction = groupByField.split(':')[1] || 'month';
             if (fields[fieldName].type === 'date') {
-                if (aggregateFunction === 'day') {
+                if (!val) {
+                    return false;
+                } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else {
                     return moment(val).format('MMMM YYYY');

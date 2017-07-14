@@ -84,8 +84,8 @@ odoo.define('web.BasicModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
-var core = require('web.core');
 var Context = require('web.Context');
+var core = require('web.core');
 var Domain = require('web.Domain');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
@@ -3087,7 +3087,8 @@ var BasicModel = AbstractModel.extend({
                 lazy: true,
             })
             .then(function (groups) {
-                var rawGroupBy = list.groupedBy[0].split(':')[0];
+                var groupByField = list.groupedBy[0];
+                var rawGroupBy = groupByField.split(':')[0];
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });
@@ -3098,13 +3099,13 @@ var BasicModel = AbstractModel.extend({
                 _.each(groups, function (group) {
                     var aggregateValues = {};
                     _.each(group, function (value, key) {
-                        if (_.contains(fields, key) && key !== list.groupedBy[0]) {
+                        if (_.contains(fields, key) && key !== groupByField) {
                             aggregateValues[key] = value;
                         }
                     });
                     // When a view is grouped, we need to display the name of each group in
                     // the 'title'.
-                    var value = group[rawGroupBy];
+                    var value = group[groupByField];
                     if (list.fields[rawGroupBy].type === "selection") {
                         var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
                             return c[0] === value;
