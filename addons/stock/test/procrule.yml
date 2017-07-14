@@ -49,6 +49,6 @@
       ('product_id', '=', ref('product.product_product_3')),
       ('location_id', '=', ref('stock.stock_location_stock')),
       ('location_dest_id', '=', ref('stock.stock_location_output')),
-      ('move_dest_id', '=', picking.move_lines[0].id)
+      ('move_dest_ids', 'in', [picking.move_lines[0].id])
     ])
     assert len(moves.ids) == 1, "It should have created a picking from Stock to Output with the original picking as destination"

@@ -10,6 +10,17 @@ from odoo.exceptions import UserError
 from odoo.tools import pycompat
 
 
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    landed_cost_value = fields.Float('Landed Cost')
+    total_value = fields.Float('Total Value', compute='_compute_total_value')
+    
+    def _compute_total_value(self):
+        for move in self:
+            move.total_value = move.value + move.landed_cost_value
+
+
 class LandedCost(models.Model):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
@@ -86,50 +97,14 @@ class LandedCost(models.Model):
                 'ref': cost.name
             })
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                per_unit = line.final_cost / line.quantity
-                diff = per_unit - line.former_cost_per_unit
-
-                # If the precision required for the variable diff is larger than the accounting
-                # precision, inconsistencies between the stock valuation and the accounting entries
-                # may arise.
-                # For example, a landed cost of 15 divided in 13 units. If the products leave the
-                # stock one unit at a time, the amount related to the landed cost will correspond to
-                # round(15/13, 2)*13 = 14.95. To avoid this case, we split the quant in 12 + 1, then
-                # record the difference on the new quant.
-                # We need to make sure to able to extract at least one unit of the product. There is
-                # an arbitrary minimum quantity set to 2.0 from which we consider we can extract a
-                # unit and adapt the cost.
-                curr_rounding = line.move_id.company_id.currency_id.rounding
-                diff_rounded = tools.float_round(diff, precision_rounding=curr_rounding)
-                diff_correct = diff_rounded
-                quants = line.move_id.quant_ids.sorted(key=lambda r: r.qty, reverse=True)
-                quant_correct = False
-                if quants\
-                        and tools.float_compare(quants[0].product_id.uom_id.rounding, 1.0, precision_digits=1) == 0\
-                        and tools.float_compare(line.quantity * diff, line.quantity * diff_rounded, precision_rounding=curr_rounding) != 0\
-                        and tools.float_compare(quants[0].qty, 2.0, precision_rounding=quants[0].product_id.uom_id.rounding) >= 0:
-                    # Search for existing quant of quantity = 1.0 to avoid creating a new one
-                    quant_correct = quants.filtered(lambda r: tools.float_compare(r.qty, 1.0, precision_rounding=quants[0].product_id.uom_id.rounding) == 0)
-                    if not quant_correct:
-                        quant_correct = quants[0]._quant_split(quants[0].qty - 1.0)
-                    else:
-                        quant_correct = quant_correct[0]
-                        quants = quants - quant_correct
-                    diff_correct += (line.quantity * diff) - (line.quantity * diff_rounded)
-                    diff = diff_rounded
-
-                quant_dict = {}
-                for quant in quants:
-                    quant_dict[quant] = quant.cost + diff
-                if quant_correct:
-                    quant_dict[quant_correct] = quant_correct.cost + diff_correct
-                for quant, value in pycompat.items(quant_dict):
-                    quant.sudo().write({'cost': value})
-                qty_out = 0
-                for quant in line.move_id.quant_ids:
-                    if quant.location_id.usage != 'internal':
-                        qty_out += quant.qty
-                line._create_accounting_entries(move, qty_out)
+                cost_to_add = line.additional_landed_cost
+                line.move_id.landed_cost_value += cost_to_add
+                
+#                 for quant in line.move_id.quant_ids:
+#                     if quant.location_id.usage != 'internal':
+#                         qty_out += quant.qty
+                line._create_accounting_entries(move, 0) #TODO: qty_out like you would do with the different moves
+                
             move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -157,13 +132,13 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'real':
+            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('average', 'fifo'):
                 continue
             vals = {
                 'product_id': move.product_id.id,
                 'move_id': move.id,
                 'quantity': move.product_qty,
-                'former_cost': sum(quant.cost * quant.qty for quant in move.quant_ids),
+                'former_cost': move.value,
                 'weight': move.product_id.weight * move.product_qty,
                 'volume': move.product_id.volume * move.product_qty
             }

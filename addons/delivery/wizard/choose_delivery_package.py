@@ -40,9 +40,8 @@ class ChooseDeliveryPackage(models.TransientModel):
             return stock_quant_package.shipping_weight
         else:
             picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            pack_operation_product_ids = [po for po in picking_id.pack_operation_product_ids if po.qty_done > 0 and not po.result_package_id]
-            pack_operation_pack_ids = [po for po in picking_id.pack_operation_pack_ids if po.qty_done > 0 and not po.result_package_id]
-            total_weight = sum([po.qty_done * po.product_id.weight for po in pack_operation_product_ids]) + sum([po.package_id.weight for po in pack_operation_pack_ids])
+            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
+            total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
             return total_weight
 
     def put_in_pack(self):

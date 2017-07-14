@@ -12,8 +12,8 @@ class MrpProduction(models.Model):
     sale_ref = fields.Char(compute='_compute_sale_name_sale_ref', string='Sale Reference', help='Indicate the Customer Reference from sales order.')
 
     def _get_parent_move(self, move):
-        if move.move_dest_id:
-            return self._get_parent_move(move.move_dest_id)
+        if move.move_dest_ids:
+            return self._get_parent_move(move.move_dest_ids[0])
         return move
 
     @api.multi

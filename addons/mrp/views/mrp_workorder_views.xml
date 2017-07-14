@@ -146,12 +146,12 @@
                         </group>
                     </group>
                     <field name="move_raw_ids" invisible="1"/>
-                    <field name="active_move_lot_ids" attrs="{'invisible': [('active_move_lot_ids', '=', [])]}">
+                    <field name="active_move_line_ids" attrs="{'invisible': [('active_move_line_ids', '=', [])]}">
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
-                            <field name="quantity" readonly="1"/>
+                            <field name="product_qty" readonly="1"/>
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                            <field name="quantity_done"/>
+                            <field name="qty_done"/>
                             <field name="move_id" invisible="1"/>
                             <field name="done_wo" invisible="1"/>
                         </tree>

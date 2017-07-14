@@ -18,18 +18,13 @@ class WizardValuationHistory(models.TransientModel):
     def open_table(self):
         self.ensure_one()
         if self.compute_at_date and self.date:
-            ctx = dict(
-                self._context,
-                history_date=self.date,
-                search_default_group_by_product=True,
-                search_default_group_by_location=True)
 
-            action = self.env['ir.model.data'].xmlid_to_object('stock_account.action_stock_history')
+            action = self.env['ir.model.data'].xmlid_to_object('stock_account.stock_move_valuation_action')
             if not action:
                 action = {
                     'view_type': 'form',
-                    'view_mode': 'tree,graph,pivot',
-                    'res_model': 'stock.history',
+                    'view_mode': 'tree',
+                    'res_model': 'stock.move',
                     'type': 'ir.actions.act_window',
                 }
             else:
@@ -37,7 +32,6 @@ class WizardValuationHistory(models.TransientModel):
 
             action['domain'] = "[('date', '<=', '" + self.date + "')]"
             action['name'] = _('Stock Value At Date')
-            action['context'] = ctx
         else:
-            action = self.env.ref('stock.quantsact').read()[0]
+            action = self.env.ref('stock_account.product_valuation_action').read()[0]
         return action
