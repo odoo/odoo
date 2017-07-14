@@ -370,8 +370,13 @@ var FormController = BasicController.extend({
             // save the record but don't switch to readonly mode
             def = this.saveRecord(this.handle, {
                 stayInEdit: true,
-                reload: false,
             }).then(function () {
+                // Update title so that breadcrumb have right title after record reload by basic model
+                // also call _updateEnv so that we have right currentID in env.
+                var title = self.getTitle();
+                self.set('title', title);
+                self._updateEnv();
+
                 // we need to reget the record to make sure we have changes made
                 // by the basic model, such as the new res_id, if the record is
                 // new.
