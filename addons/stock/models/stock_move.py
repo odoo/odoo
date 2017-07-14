@@ -674,7 +674,7 @@ class StockMove(models.Model):
             )
         return vals
 
-    def _increase_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
         self.ensure_one()
@@ -689,7 +689,7 @@ class StockMove(models.Model):
         taken_quantity = min(available_quantity, need)
 
         # Find a candidate move line to update or create a new one.
-        quants = self.env['stock.quant']._increase_reserved_quantity(
+        quants = self.env['stock.quant']._update_reserved_quantity(
             self.product_id, location_id, taken_quantity, lot_id=lot_id,
             package_id=package_id, owner_id=owner_id, strict=strict
         )
@@ -733,7 +733,7 @@ class StockMove(models.Model):
                     if available_quantity <= 0:
                         continue
                     need = move.product_qty - move.reserved_availability
-                    taken_quantity = move._increase_reserved_quantity(need, available_quantity, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
                     if need == taken_quantity:
                         move.state = 'assigned'
                     else:
@@ -770,7 +770,7 @@ class StockMove(models.Model):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.product_qty
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('product_qty'))
-                        taken_quantity = move._increase_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
+                        taken_quantity = move._update_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
                         if need - taken_quantity == 0.0:
                             move.state = 'assigned'
                             break
