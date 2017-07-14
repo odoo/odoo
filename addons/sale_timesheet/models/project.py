@@ -56,7 +56,17 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line')
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain=[('is_service', '=', True)])
+
+    @api.multi
+    def write(self, values):
+        result = super(ProjectTask, self).write(values)
+        # reassign SO line on related timesheet lines
+        if 'sale_line_id' in values:
+            self.sudo().mapped('timesheet_ids').write({
+                'so_line': values['sale_line_id']
+            })
+        return result
 
     @api.multi
     def unlink(self):

@@ -57,14 +57,17 @@
             <field name="inherit_id" ref="project.view_task_form2" />
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
-                <field name="tag_ids" position="after">
-                    <field name="progress" widget="progressbar"/>
-                </field>
-                <field name="user_id" position="after">
-                    <field name="planned_hours" widget="float_time"/>
-                </field>
                 <xpath expr="//notebook/page[@name='description_page']" position="after">
                     <page string="Timesheets" attrs="{'invisible': [('project_id', '=', False)]}"  groups="hr_timesheet.group_hr_timesheet_user">
+
+                        <group>
+                            <group>
+                                <field name="planned_hours" widget="float_time"/>
+                            </group>
+                            <group>
+                                <field name="progress" widget="progressbar"/>
+                            </group>
+                        </group>
                     <field name="timesheet_ids" context="{'default_project_id': project_id}">
                         <tree editable="bottom" string="Timesheet Activities" default_order="date">
                             <field name="date"/>
