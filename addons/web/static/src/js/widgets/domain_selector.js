@@ -51,7 +51,6 @@ var DomainNode = Widget.extend({
         "mouseleave button": "_onButtonLeft",
     },
     /**
-     * @constructor
      * A DomainNode needs a model and domain to work. It can also receive a set
      * of options.
      *

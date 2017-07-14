@@ -25,6 +25,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
+    'autojsdoc.ext',
     'github_link',
     'odoo_ext',
     'html_domain',
@@ -67,8 +68,9 @@ today_fmt = '%B %d, %Y'
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']
 
-# The reST default role (used for this markup: `text`) to use for all documents.
-#default_role = None
+# markdown compatibility: make `foo` behave like ``foo``, the rst default is
+# title-reference which is never what people are looking for
+default_role = 'literal'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True

@@ -23,6 +23,11 @@ _.each('resize,scroll'.split(','), function(evtype) {
 });
 
 return {
+    /**
+     * Whether the client is currently in "debug" mode
+     *
+     * @constant {Boolean}
+     */
     debug: debug,
     qweb: new QWeb(debug),
 
@@ -43,7 +48,9 @@ return {
     one2many_view_registry: new Registry(),
     search_filters_registry: new Registry(),
     search_widgets_registry: new Registry(),
-
+    /**
+     * @constant {String}
+     */
     csrf_token: odoo.csrf_token,
 };
 

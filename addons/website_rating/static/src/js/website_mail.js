@@ -87,7 +87,7 @@ odoo.define('website_rating.thread', function(require) {
         /**
          * Update the messages format
          *
-         * @param {Array<Object>}
+         * @param {Array<Object>} messages
          * @returns {Array}
          */
         preprocessMessages: function(messages){
@@ -105,7 +105,7 @@ odoo.define('website_rating.thread', function(require) {
          * Example :    1.2 --> 1.0
          *              1.7 --> 1.5
          *              1.9 --> 2.0
-         * @param Float
+         * @param {Float} value
          * @returns Float
          **/
         round_to_half: function(value) {

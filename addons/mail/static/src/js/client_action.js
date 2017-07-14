@@ -683,7 +683,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
 
     /**
      * @private
-     * @param {OdooEvent}
+     * @param {OdooEvent} event
      */
     _onSearch: function (event) {
         var session = this.getSession();

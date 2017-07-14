@@ -54,6 +54,9 @@ var Dashboard = Widget.extend(ControlPanelMixin, {
         });
     },
 
+    /**
+     * Fetches dashboard data
+     */
     fetch_data: function() {
         var self = this;
         return this._rpc({

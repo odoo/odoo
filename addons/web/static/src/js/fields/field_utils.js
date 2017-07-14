@@ -80,7 +80,7 @@ function formatChar(value, field, options) {
  * Returns a string representing a date.  If the value is false, then we return
  * an empty string. Note that this is dependant on the localization settings
  *
- * @param {Moment|false}
+ * @param {Moment|false} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -334,7 +334,7 @@ function formatSelection(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -376,7 +376,7 @@ function parseDate(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options

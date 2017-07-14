@@ -103,7 +103,7 @@ var DateWidget = Widget.extend({
         }
     },
     /**
-     * @param {Moment|false}
+     * @param {Moment|false} value
      */
     setValue: function (value) {
         this.set({'value': value});
@@ -120,7 +120,7 @@ var DateWidget = Widget.extend({
 
     /**
      * @private
-     * @param {Moment}
+     * @param {Moment} v
      * @returns {string}
      */
     _formatClient: function (v) {
@@ -128,7 +128,7 @@ var DateWidget = Widget.extend({
     },
     /**
      * @private
-     * @param {string|false}
+     * @param {string|false} v
      * @returns {Moment}
      */
     _parseClient: function (v) {
@@ -136,7 +136,7 @@ var DateWidget = Widget.extend({
     },
     /**
      * @private
-     * @param {boolean}
+     * @param {boolean} readonly
      */
     _setReadonly: function (readonly) {
         this.readonly = readonly;

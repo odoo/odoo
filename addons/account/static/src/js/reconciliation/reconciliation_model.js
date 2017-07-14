@@ -112,7 +112,7 @@ var StatementModel = BasicModel.extend({
      * account type
      *
      * @param {string} handle
-     * @param {number} mv_lines id
+     * @param {number} mv_line_id
      * @returns {Deferred}
      */
     addProposition: function (handle, mv_line_id) {
@@ -286,7 +286,7 @@ var StatementModel = BasicModel.extend({
     /**
      * get the line data for this handle
      *
-     * @param {OdooEvent} event
+     * @param {Object} handle
      * @returns {Object}
      */
     getLine: function (handle) {
@@ -372,7 +372,7 @@ var StatementModel = BasicModel.extend({
      * 'amount_type'
      *
      * @param {string} handle
-     * @param {integer} reconcile model id
+     * @param {integer} reconcileModelId
      * @returns {Deferred}
      */
     quickCreateProposition: function (handle, reconcileModelId) {
@@ -402,7 +402,7 @@ var StatementModel = BasicModel.extend({
      * Remove a proposition and switch to an active mode ('create' or 'match')
      *
      * @param {string} handle
-     * @param {number} proposition id (move line id)
+     * @param {number} id (move line id)
      * @returns {Deferred}
      */
     removeProposition: function (handle, id) {
@@ -621,7 +621,7 @@ var StatementModel = BasicModel.extend({
      * Check the taxes server side for each updated propositions with tax_id
      *
      * @private
-     * @param {Object}
+     * @param {Object} line
      * @returns {Deferred}
      */
     _computeLine: function (line) {
@@ -731,7 +731,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {Object|Array} data or name_get
-     * @param {Object|false} {id, display_name}
+     * @param {Object|false} value
      */
     _formatNameGet: function (value) {
         return value ? (value.id ? value : {'id': value[0], 'display_name': value[1]}) : false;
@@ -740,8 +740,8 @@ var StatementModel = BasicModel.extend({
      * Format each propositions (amount, label, account_id)
      *
      * @private
-     * @param {Object}
-     * @param {Object[]}
+     * @param {Object} line
+     * @param {Object[]} props
      */
     _formatLineProposition: function (line, props) {
         var self = this;
@@ -760,7 +760,7 @@ var StatementModel = BasicModel.extend({
      * @see '_computeLine'
      *
      * @private
-     * @param {Object[]}
+     * @param {Object[]} lines
      * @returns {Deferred}
      */
     _formatLine: function (lines) {
@@ -786,7 +786,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {string} handle
-     * @param {Object[]}
+     * @param {Object[]} mv_lines
      * @returns {Deferred}
      */
     _formatMoveLine: function (handle, mv_lines) {
@@ -810,8 +810,8 @@ var StatementModel = BasicModel.extend({
      * base_amount with the decimal number from the currency
      *
      * @private
-     * @param {Object}
-     * @param {Object}
+     * @param {Object} line
+     * @param {Object} values
      * @returns {Object}
      */
     _formatQuickCreate: function (line, values) {
@@ -1134,7 +1134,7 @@ var ManualModel = StatementModel.extend({
      * 
      * @override
      * @private
-     * @param {Object}
+     * @param {Object} line
      * @returns {Deferred}
      */
     _computeLine: function (line) {
@@ -1155,8 +1155,8 @@ var ManualModel = StatementModel.extend({
      * @see '_computeLine'
      *
      * @private
-     * @param {string} 'customers', 'suppliers' or 'accounts'
-     * @param {Object}
+     * @param {'customers' or 'suppliers' or 'accounts'} type
+     * @param {Object} data
      * @returns {Deferred}
      */
     _formatLine: function (type, data) {
@@ -1181,8 +1181,8 @@ var ManualModel = StatementModel.extend({
      * 
      * @override
      * @private
-     * @param {Object}
-     * @param {Object}
+     * @param {Object} line
+     * @param {Object} props
      */
     _formatLineProposition: function (line, props) {
         var self = this;

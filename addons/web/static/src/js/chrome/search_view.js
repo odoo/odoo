@@ -499,8 +499,8 @@ var SearchView = Widget.extend({
                 .$el.focus();
     },
     /**
-     * @param {openerp.web.search.SearchQuery | undefined} Undefined if event is change
-     * @param {openerp.web.search.Facet}
+     * @param {openerp.web.search.SearchQuery | undefined} collection Undefined if event is change
+     * @param {openerp.web.search.Facet} model
      * @param {Object} [options]
      */
     renderFacets: function (collection, model, options) {
