@@ -16,7 +16,7 @@ tour.register('portal_load_homepage', {
         },
         {
             content: "Load my account details",
-            trigger: 'body:contains("Contact Details")',
+            trigger: 'body:contains("Your Details")',
         }
     ]
 );

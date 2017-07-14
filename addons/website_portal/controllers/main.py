@@ -99,6 +99,7 @@ class website_account(http.Controller):
             'states': states,
             'has_check_vat': hasattr(request.env['res.partner'], 'check_vat'),
             'redirect': redirect,
+            'page_name': 'my_details',
         })
 
         response = request.render("website_portal.details", values)
