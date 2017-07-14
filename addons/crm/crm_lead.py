@@ -1074,7 +1074,7 @@ Update your business card, phone book, social media,... Send an email right now 
                     res['closing']['today'] += 1
                 if date_deadline >= date.today() and date_deadline <= date.today() + timedelta(days=7):
                     res['closing']['next_7_days'] += 1
-                if date_deadline < date.today():
+                if date_deadline < date.today() and not opp['date_closed']:
                     res['closing']['overdue'] += 1
 
             # Next activities
