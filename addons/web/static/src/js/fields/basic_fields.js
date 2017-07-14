@@ -65,7 +65,7 @@ var DebouncedField = AbstractField.extend({
      * it could be a good idea to debounce the changes. In that case, this is
      * the suggested value.
      */
-    DEBOUNCE: 1000,
+    DEBOUNCE: 1000000000,
 
     /**
      * Override init to debounce the field "_doAction" method (by creating a new
