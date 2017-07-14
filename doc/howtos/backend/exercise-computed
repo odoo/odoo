@@ -2,9 +2,9 @@
 # Parent a358be0a577b0569831958a8ec1302825c645dee
 # Parent  59107edbe5f81bab5e7db172bf2bffa504ce399a
 
-diff --git a/openacademy/models.py b/openacademy/models.py
---- a/openacademy/models.py
-+++ b/openacademy/models.py
+diff --git a/openacademy/models/models.py b/openacademy/models/models.py
+--- a/openacademy/models/models.py
++++ b/openacademy/models/models.py
 @@ -30,3 +30,13 @@ class Session(models.Model):
      course_id = fields.Many2one('openacademy.course',
          ondelete='cascade', string="Course", required=True)

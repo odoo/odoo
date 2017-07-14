@@ -2,9 +2,9 @@
 # Parent dba00a105dd2a82490394b8dec5fea5f1d8847e1
 # Parent  f4374b6e2e661e0782e396b24c57c1eb97d13288
 
-diff --git a/openacademy/models.py b/openacademy/models.py
---- a/openacademy/models.py
-+++ b/openacademy/models.py
+diff --git a/openacademy/models/models.py b/openacademy/models/models.py
+--- a/openacademy/models/models.py
++++ b/openacademy/models/models.py
 @@ -61,6 +61,9 @@ class Session(models.Model):
      end_date = fields.Date(string="End Date", store=True,
          compute='_get_end_date', inverse='_set_end_date')
