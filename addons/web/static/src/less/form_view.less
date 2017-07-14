@@ -206,10 +206,10 @@
 
                 &:not(.disabled) {
                     &:hover, &:active, &:focus {
-                        color: white;
-                        background-color: @odoo-brand-optional;
+                        color: @text-color;
+                        background-color: @odoo-statusbar-disabled-bg;
                         &:after {
-                            border-left-color: @odoo-brand-optional;
+                            border-left-color: @odoo-statusbar-disabled-bg;
                         }
                     }
                 }
@@ -220,14 +220,14 @@
                 }
 
                 &.btn-primary.disabled {
-                    color: @text-color;
-                    background-color: @odoo-statusbar-disabled-bg;
+                    color: white;
+                    background-color: @odoo-brand-optional;;
 
                     &:before {
                         border-left-color: @odoo-brand-lightsecondary;
                     }
                     &:after {
-                        border-left-color: @odoo-statusbar-disabled-bg;
+                        border-left-color: @odoo-brand-optional;
                     }
                 }
             }
