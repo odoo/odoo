@@ -105,7 +105,7 @@ class Challenge(models.Model):
     visibility_mode = fields.Selection([
             ('personal', "Individual Goals"),
             ('ranking', "Leader Board (Group Ranking)"),
-        ], default='personal',
+        ], default='ranking',
         string="Display Mode", required=True)
 
     report_message_frequency = fields.Selection([
@@ -149,10 +149,13 @@ class Challenge(models.Model):
             else:
                 challenge.next_report_date = False
 
+
     def _get_report_template(self):
-        template = self.env.ref('gamification.simple_report_template', raise_if_not_found=False)
+
+        template = self.env.ref('gamification.simple_report_template_ranking', raise_if_not_found=False)
 
         return template.id if template else False
+
 
     @api.model
     def create(self, vals):
@@ -349,7 +352,7 @@ class Challenge(models.Model):
                 if end_date:
                     date_clause += "AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
@@ -542,18 +545,27 @@ class Challenge(models.Model):
         """
 
         challenge = self
+        # challenge.report_template_id = challenge._get_report_template()
+        ctx = {
+            'default_use_template': bool(challenge.report_template_id),
+            'default_template_id': challenge.report_template_id,
+            'custom_layout': "gamification.challenge_mail_template",
+        }
 
         MailTemplates = self.env['mail.template']
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            ctx.update(challenge_lines=lines_boards)
+            body_html = MailTemplates.with_context(ctx).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
 
-            # send to every follower and participant of the challenge
-            challenge.message_post(
-                body=body_html,
-                partner_ids=challenge.mapped('user_ids.partner_id.id'),
-                subtype='mail.mt_comment')
+            challenge.with_context(ctx).message_post_with_template(
+                challenge.report_template_id.id,
+                res_id=challenge.id,
+                model='gamification.challenge',
+                partner_ids=challenge.mapped('user_ids.partner_id.id')
+            )
+
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
                     body=body_html,
@@ -566,21 +578,15 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines).render_template(
-                    challenge.report_template_id.body_html,
-                    'gamification.challenge',
-                    challenge.id)
+                ctx.update(challenge_lines=lines)
 
                 # send message only to users, not on the challenge
-                self.env['gamification.challenge'].message_post(
-                    body=body_html,
-                    partner_ids=[(4, user.partner_id.id)],
-                    subtype='mail.mt_comment'
-                )
+                challenge.report_template_id.with_context(ctx).send_mail(challenge.id, email_values={'recipient_ids': [(4, user.partner_id.id)]})
+
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
-                         body=body_html,
-                         subtype='mail.mt_comment')
+                        body=body_html,
+                        subtype='mail.mt_comment')
         return challenge.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
