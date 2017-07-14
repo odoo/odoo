@@ -26,7 +26,7 @@ class TestInventory(TransactionCase):
         as expected.
         """
         # make some stock
-        self.env['stock.quant']._increase_available_quantity(self.product1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 100)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 100.0)
 

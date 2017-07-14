@@ -131,7 +131,7 @@ class StockQuant(models.Model):
         return sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
 
     @api.model
-    def _increase_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
         for quant in quants:
@@ -160,11 +160,7 @@ class StockQuant(models.Model):
         return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
     @api.model
-    def _decrease_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
-        return self._increase_available_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-
-    @api.model
-    def _increase_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Increase the reserved quantity, i.e. increase `reserved_quantity` for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
         the *exact same characteristics* otherwise. Typically, this method is called when reserving
@@ -205,19 +201,6 @@ class StockQuant(models.Model):
             if quantity == 0 or available_quantity == 0:
                 break
         return reserved_quants
-
-    @api.model
-    def _decrease_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
-        """ Decrease the reserved quantity, i.e. decrease `reserved_quantity`, for the set of
-        quants sharing the *exact same characteristics* if `strict` is set to True or sharing the
-        combination of `product_id, location_id` otherwise. Typically, this method is called during
-        a move line's validation or a move line's unlink and `strict` should be `True` in these
-        cases, because the characteristics are known.
-
-        :return: a list of tuples (quant, quantity_unreserved) showing on which quant the decrease
-            of reservation was done and how much the system was able to unreserve on it
-        """
-        return self._increase_reserved_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
 
 class QuantPackage(models.Model):
