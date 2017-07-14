@@ -21,8 +21,6 @@ OPERATORS = {
 class Product(models.Model):
     _inherit = "product.product"
 
-    reception_count = fields.Integer('Receipt', compute='_compute_reception_count')
-    delivery_count = fields.Integer('Delivery', compute='_compute_delivery_count')
     stock_quant_ids = fields.One2many('stock.quant', 'product_id', help='Technical: used to compute quantities.')
     stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
     qty_available = fields.Float(
@@ -77,26 +75,6 @@ class Product(models.Model):
     nbr_reordering_rules = fields.Integer('Reordering Rules', compute='_compute_nbr_reordering_rules')
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
-
-    def _compute_reception_count(self):
-        move_data = self.env['stock.move'].read_group([
-            ('product_id', 'in', self.ids),
-            ('location_id.usage', '!=', 'internal'),
-            ('location_dest_id.usage', '=', 'internal'),
-            ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
-        res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.reception_count = res.get(move.id, 0)
-
-    def _compute_delivery_count(self):
-        move_data = self.env['stock.move'].read_group([
-            ('product_id', 'in', self.ids),
-            ('location_id.usage', '=', 'internal'),
-            ('location_dest_id.usage', '!=', 'internal'),
-            ('state', 'in', ('confirmed', 'assigned', 'pending'))], ['product_id'], ['product_id'])
-        res = dict((data['product_id'][0], data['product_id_count']) for data in move_data)
-        for move in self:
-            move.delivery_count = res.get(move.id, 0)
 
     @api.depends('stock_quant_ids', 'stock_move_ids')
     def _compute_quantities(self):
