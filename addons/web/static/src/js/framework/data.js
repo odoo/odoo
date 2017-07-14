@@ -1085,6 +1085,10 @@ function compute_domain (expr, fields) {
                 ex[0], JSON.stringify(expr)));
         }
         var field_value = field.get_value ? field.get_value() : field.value;
+        // for x2many get a list of ids and not a list of commands
+        if (field.field.type === 'one2many' || field.field.type === 'many2many') {
+            field_value = field.get('value');
+        }
         var op = ex[1];
         var val = ex[2];
 
