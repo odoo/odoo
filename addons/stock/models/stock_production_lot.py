@@ -32,15 +32,14 @@ class ProductionLot(models.Model):
     def create(self, vals):
         pack_id = self.env.context.get('active_pack_operation', False)
         if pack_id:
-            pack = self.env['stock.pack.operation'].browse(pack_id)
+            pack = self.env['stock.move.line'].browse(pack_id)
             if pack.picking_id and not pack.picking_id.picking_type_id.use_create_lots:
                 raise UserError(_("You are not allowed to create a lot for this picking type"))
         return super(ProductionLot, self).create(vals)
 
     @api.one
-    @api.depends('quant_ids.qty')
     def _product_qty(self):
-        self.product_qty = sum(self.quant_ids.mapped('qty'))
+        self.product_qty = sum(self.quant_ids.mapped('quantity'))
 
     @api.multi
     def action_traceability(self):

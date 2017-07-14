@@ -28,9 +28,10 @@ class StockImmediateTransfer(models.TransientModel):
                 self.pick_id.action_assign()
                 if self.pick_id.state != 'assigned':
                     raise UserError(_("Could not reserve all requested products. Please use the \'Mark as Todo\' button to handle the reservation manually."))
-        for pack in self.pick_id.pack_operation_ids:
-            if pack.product_qty > 0:
-                pack.write({'qty_done': pack.product_qty})
+        for move in self.pick_id.move_lines:
+            if move.move_line_ids:
+                for move_line in move.move_line_ids:
+                    move_line.qty_done = move_line.product_uom_qty
             else:
-                pack.unlink()
+                move.quantity_done = move.product_uom_qty
         self.pick_id.do_transfer()

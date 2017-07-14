@@ -12,18 +12,20 @@
     'sequence': 13,
     'demo': [
         'data/stock_demo_pre.yml',
-        'data/stock_demo.xml',
         'data/procurement_demo.xml',
+        'data/stock_demo.xml',
         'data/stock_orderpoint_demo.xml',
         'data/stock_orderpoint_demo.yml',
         'data/stock_demo.yml',
         'data/stock_location_demo_cpu1.xml',
         'data/stock_location_demo_cpu3.yml',
+        'data/stock_quant_demo.xml',
     ],
     'data': [
         'security/stock_security.xml',
         'security/ir.model.access.csv',
         'views/stock_menu_views.xml',
+        'data/stock_traceability_report_data.xml',
 
         'report/report_stock_forecast.xml',
         'report/stock_report_views.xml',
@@ -54,9 +56,10 @@
         'views/procurement_views.xml',
         'views/stock_warehouse_views.xml',
         'views/stock_move_views.xml',
-        'views/stock_pack_operation_views.xml',
         'views/product_views.xml',
         'views/stock_config_settings_views.xml',
+        'views/report_stock_traceability.xml',
+        'views/stock_template.xml',
 
         'data/default_barcode_patterns.xml',
         'data/stock_data.xml',
@@ -64,6 +67,9 @@
         'data/stock_incoterms_data.xml',
         'data/stock_sequence_data.xml',
         'data/web_planner_data.xml',
+    ],
+    'qweb': [
+        'static/src/xml/stock_traceability_report_backend.xml',
     ],
     'test': [
         'test/procrule.yml',

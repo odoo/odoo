@@ -123,7 +123,7 @@
         </record>
         <menuitem action="action_picking_wave" id="menu_action_picking_wave" parent="stock.menu_stock_warehouse_mgmt" sequence="30"/>
 
-        <record model="ir.ui.view" id="view_stock_picking_wave_inherit">
+        <!-- <record model="ir.ui.view" id="view_stock_picking_wave_inherit">
         <field name="name">stock.picking.wave.inherit.form</field>
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
@@ -132,7 +132,7 @@
                 <field name="wave_id" domain="[('state', 'not in', ('done', 'cancel'))]"/>
             </xpath>
         </field>
-        </record>
+        </record>-->
         <record model="ir.ui.view" id="view_stock_picking_wave_tree_inherit">
         <field name="name">stock.picking.wave.inherit.tree</field>
         <field name="model">stock.picking</field>

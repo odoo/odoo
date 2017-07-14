@@ -11,22 +11,19 @@ class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
     @api.one
-    @api.depends('quant_ids', 'children_ids')
+    @api.depends('quant_ids')
     def _compute_weight(self):
         weight = 0
         for quant in self.quant_ids:
             weight += quant.qty * quant.product_id.weight
-        for pack in self.children_ids:
-            pack._compute_weight()
-            weight += pack.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight')
     shipping_weight = fields.Float(string='Shipping Weight', help="Can be changed during the 'put in pack' to adjust the weight of the shipping.")
 
 
-class StockPackOperation(models.Model):
-    _inherit = 'stock.pack.operation'
+class StockMoveLine(models.Model):
+    _inherit = 'stock.move.line'
 
     @api.multi
     def manage_package_type(self):
@@ -58,22 +55,22 @@ class StockPicking(models.Model):
         return weight_uom_id
 
     @api.one
-    @api.depends('pack_operation_ids')
+    @api.depends('move_line_ids')
     def _compute_packages(self):
         self.ensure_one()
         packs = set()
-        for packop in self.pack_operation_ids:
-            if packop.result_package_id and packop.result_package_id.packaging_id:
-                packs.add(packop.result_package_id.id)
+        for move_line in self.move_line_ids:
+            if move_line.result_package_id and move_line.result_package_id.packaging_id:
+                packs.add(move_line.result_package_id.id)
         self.package_ids = list(packs)
 
     @api.one
-    @api.depends('pack_operation_ids')
+    @api.depends('move_line_ids')
     def _compute_bulk_weight(self):
         weight = 0.0
-        for packop in self.pack_operation_ids:
-            if packop.product_id and not packop.result_package_id:
-                weight += packop.product_uom_id._compute_quantity(packop.product_qty, packop.product_id.uom_id) * packop.product_id.weight
+        for move_line in self.move_line_ids:
+            if move_line.product_id and not move_line.result_package_id:
+                weight += move_line.product_uom_id._compute_quantity(move_line.product_qty, move_line.product_id.uom_id) * move_line.product_id.weight
         self.weight_bulk = weight
 
     @api.one

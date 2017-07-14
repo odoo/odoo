@@ -131,9 +131,91 @@
                     <field name="availability" invisible="1"/>
                     <field name="reserved_availability" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
-                    <field name="remaining_qty" invisible="1"/>
                     <field name="state"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_move_operations" model="ir.ui.view">
+            <field name="name">stock.move.operations.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form string="Move Detail">
+                    <field name="state" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="is_editable" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="1"/>
+                            <label for="product_uom_qty"/>
+                            <div class="o_row">
+                                <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                            </div>
+                            <label for="quantity_done"/>
+                            <div class="o_row">
+                                <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
+                                <span> / </span>
+                                <span><field name="reserved_availability" nolabel="1"/></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                            </div>
+
+                        </group>
+                    </group>
+                    <field name="move_line_ids" attrs="{'readonly': ['&amp;', ('state', 'in', ('done', 'cancel')), ('is_editable', '=', False)]}" context="{'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                        <tree editable="bottom" decoration-succes="product_uom_qty==qty_done" decoration-danger="qty_done > product_uom_qty)">
+                            <field name="picking_id" invisible="1"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="location_id" invisible="not context.get('show_source_location')" domain="[('id', 'child_of', parent.location_id)])" groups="stock.group_stock_multi_locations"/>
+                            <field name="location_dest_id" invisible="not context.get('show_destination_location')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
+                            <field name="lot_id" invisible="not context.get('show_lots_m2o')" domain="[('product_id', '=', parent.product_id)]" groups="stock.group_production_lot" context="{'default_product_id': parent.product_id}"/>
+                            <field name="lot_name" invisible="not context.get('show_lots_text')" groups="stock.group_production_lot"/>
+                            <field name="package_id" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
+                            <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                            <field name="product_uom_qty" readonly="1"/>
+                            <field name="qty_done"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="product.group_uom"/>
+                        </tree>
+                    </field>
+                    <footer class="oe_edit_only">
+                        <button string="Confirm" special="save" class="oe_highlight"/>
+                        <button string="Discard" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_stock_move_nosuggest_operations" model="ir.ui.view">
+            <field name="name">stock.move.operations.nosuggest.form</field>
+            <field name="model">stock.move</field>
+            <field name="priority">1000</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+            <field name="arch" type="xml">
+                <field name="move_line_ids" position="before">
+                    <field name="quantity_done" readonly="1"/>
+                    <field name="product_uom_qty" readonly="1"/>
+                </field>
+                <field name="move_line_ids" position="replace">
+                    <field name="move_line_nosuggest_ids" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" context="{'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
+                        <tree editable="bottom" decoration-succes="product_uom_qty==qty_done" decoration-danger="(product_uom_qty &gt; 0) and (qty_done&gt;product_uom_qty)">
+                            <field name="location_id" invisible="context.get('hide_source')" domain="[('id', 'child_of', parent.location_id)])" groups="stock.group_stock_multi_locations"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('from_supplier')"/>
+                            <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" invisible="context.get('show_lots_inv', True)" context="{'default_product_id': parent.product_id}"/>
+                            <field name="lot_name" invisible="context.get('show_lots_name_inv', True)"/>
+                            <field name="product_uom_qty" invisible="1"/>
+                            <field name="location_dest_id" invisible="context.get('hide_dest')" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations"/>
+                            <field name="qty_done"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="product.group_uom"/>
+                            <field name="result_package_id" groups="stock.group_tracking_lot"/>
+                            <field name="picking_id" invisible="1"/>
+                            <field name="product_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </field>
             </field>
         </record>
 
@@ -178,13 +260,10 @@
                             <field name="location_dest_id" />
                             <field name="partner_id" context="{'contact_display':'partner'}" />
                             <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
-                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                            <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
                         </group>
                         <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
                             <field name="string_availability_info"/>
-                        </group>
-                        <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
-                            <field name="quant_ids" readonly="1" nolabel="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -225,13 +304,10 @@
                        <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         <field name="create_date" invisible="1"/>
                         <field name="date_expected"/>
-                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                        <field name="move_dest_ids" groups="base.group_no_one" readonly="1"/>
                     </group>
                     <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
                         <field name="string_availability_info"/>
-                    </group>
-                    <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
-                        <field name="quant_ids" readonly="1" nolabel="1"/>
                     </group>
                 </group>
                 </form>
@@ -252,6 +328,9 @@
                     <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
                     <filter string="Today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed Today or planned for Today"/>
+                    <separator/>
+                    <filter string="Incoming" name="incoming" domain="[('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit'))]"/>
+                    <filter string="Outgoing" name="outgoing" domain="[('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit'))]"/>
                     <field name="product_id"/>
                     <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
