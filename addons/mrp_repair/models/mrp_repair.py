@@ -18,6 +18,7 @@ class Repair(models.Model):
     _name = 'mrp.repair'
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'create_date desc'
 
     @api.model
     def _default_stock_location(self):
