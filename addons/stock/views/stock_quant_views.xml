@@ -6,7 +6,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <search string="Inventory Valuation">
+            <search string="Quants">
                 <field name="product_id"/>
                 <field name="location_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -16,8 +16,8 @@
                     <filter name='internal_loc' string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     <filter name='transit_loc' string="Transit Locations" domain="[('location_id.usage' ,'=', 'transit')]"/>
                     <separator/>
-                    <filter name="negative" string="Negative" domain="[('quantity', '&lt;', 0.0)]"/>
-                    <filter name="positive" string="Positive" domain="[('quantity', '&gt;', 0.0)]"/>
+                    <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
+                    <filter name="positive" string="Positive Stock" domain="[('quantity', '&gt;', 0.0)]"/>
                 </group>
                 <group expand='0' string='Group by...'>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
@@ -87,11 +87,10 @@
     </record>
 
     <record model="ir.actions.act_window" id="quantsact"> <!-- Menu + python -->
-        <field name="name">Inventory Valuation</field>
+        <field name="name">Inventory</field>
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup': 1}</field>
         <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->
@@ -113,7 +112,7 @@
         <field name="res_model">stock.quant</field>
     </record>
 
-    <menuitem id="menu_quants" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="120" action="quantsact"/>
+    <menuitem id="menu_quants" name="Inventory" parent="stock.menu_warehouse_report" sequence="100" action="quantsact"/>
 
     <record id="quant_package_search_view" model="ir.ui.view">
         <field name="name">stock.quant.package.search</field>
