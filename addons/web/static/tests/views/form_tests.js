@@ -1662,7 +1662,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('buttons with attr "special=save" save', function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         var form = createView({
             View: FormView,
@@ -1689,7 +1689,7 @@ QUnit.module('Views', {
 
         form.$('input').val("tralala").trigger('input'); // make the record dirty
         form.$('button').click(); // click on Save
-        assert.verifySteps(['read', 'write', 'execute_action']);
+        assert.verifySteps(['read', 'write', 'read', 'execute_action']);
 
         form.destroy();
     });
