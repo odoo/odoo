@@ -164,7 +164,7 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
-    is_all_uninvoiced = fields.Boolean('invoice all uninvoiced lines', readonly=True)
+    is_all_uninvoiced = fields.Boolean('invoice all uninvoiced lines', readonly=True, copy=False)
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
