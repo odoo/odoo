@@ -250,7 +250,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             on_fail: function (reason) {
                 reload().always(function() {
                     def.reject(reason);
-                })
+                });
             },
             on_success: def.resolve.bind(def),
         });

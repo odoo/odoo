@@ -30,6 +30,7 @@ QUnit.module('relational_fields', {
                         type: "selection",
                         selection: [['red', "Red"], ['black', "Black"]],
                         default: 'red',
+                        string: "Color",
                     },
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
@@ -1140,6 +1141,52 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('pressing ENTER on a \'no_quick_create\' many2one should not trigger M2ODialog', function (assert) {
+        var done = assert.async();
+        assert.expect(1);
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="trululu" options="{\'no_quick_create\': True}"/>' +
+                    '<field name="foo"/>' +
+                '</form>',
+            archs: {
+                'partner,false,form': '<form string="Partners"><field name="display_name"/></form>',
+            },
+        });
+
+        var $input = form.$('.o_field_many2one input');
+        $input.val("Something that does not exist").trigger('input');
+        $('.ui-autocomplete .ui-menu-item a:contains(Create and)').trigger('mouseenter');
+        concurrency.delay(0).then(function() {
+            $input.trigger($.Event('keydown', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keypress', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            $input.trigger($.Event('keyup', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+            concurrency.delay(0).then(function() {
+                $input.blur();
+                assert.strictEqual($('.modal').length, 1,
+                    "should have one modal in body");
+                form.destroy();
+                done();
+            });
+        });
+    });
+
     QUnit.test('many2one in editable list + onchange, with enter [REQUIRE FOCUS]', function (assert) {
         assert.expect(6);
         var done = assert.async();
@@ -1472,11 +1519,11 @@ QUnit.module('relational_fields', {
         }, true);
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
-            "should have the 3 rows in the correct order")
+            "should have the 3 rows in the correct order");
 
         form.$buttons.find('.o_form_button_edit').click();
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "My little Foo Valueblipyop",
-            "should still have the 3 rows in the correct order")
+            "should still have the 3 rows in the correct order");
 
         // Drag and drop the fourth line in second position
         testUtils.dragAndDrop(
@@ -1489,11 +1536,11 @@ QUnit.module('relational_fields', {
             "sequences values should be incremental starting from the previous minimum one");
 
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
-            "should have the 3 rows in the new order")
+            "should have the 3 rows in the new order");
 
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipMy little Foo Valueyop",
-            "should still have the 3 rows in the new order")
+            "should still have the 3 rows in the new order");
 
         form.destroy();
     });
@@ -6409,6 +6456,31 @@ QUnit.module('relational_fields', {
 
         var newRecord = _.last(this.data.partner.records);
         assert.strictEqual(newRecord.color, 'black', "should have saved record with correct value");
+        form.destroy();
+    });
+
+    QUnit.test('fieldradio widget has o_horizontal or o_vertical class', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.color2 = this.data.partner.fields.color;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<group>' +
+                    '<field name="color" widget="radio"/>' +
+                    '<field name="color2" widget="radio" options="{\'horizontal\': True}"/>' +
+                    '</group>' +
+                '</form>',
+        });
+
+        var btn1 = form.$('div.o_field_radio.o_vertical');
+        var btn2 = form.$('div.o_field_radio.o_horizontal');
+
+        assert.strictEqual(btn1.length, 1, "should have o_vertical class");
+        assert.strictEqual(btn2.length, 1, "should have o_horizontal class");
         form.destroy();
     });
 

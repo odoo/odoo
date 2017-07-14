@@ -615,7 +615,7 @@ class Import(models.TransientModel):
                     for num, line in enumerate(data):
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(ustr(line[index]).encode('utf-8'), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(ustr(line[index].strip()).encode('utf-8'), user_format), server_format)
                             except ValueError as e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:

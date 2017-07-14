@@ -22,6 +22,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         'click div:first h1.statement_name': '_onClickStatementName',
         'click div:first h1.statement_name_edition button': '_onValidateName',
         "click *[rel='do_action']": "_onDoAction",
+        'click button.button_back_to_statement': '_onGoToBankStatement',
+        'click button.button_close_statement': '_onCloseBankStatement',
     },
     /**
      * @override
@@ -107,7 +109,8 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             var $done = $(qweb.render("reconciliation.done", {
                 'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
                 'number': state.valuenow,
-                'timePerTransaction': Math.round(dt/1000/state.valuemax)
+                'timePerTransaction': Math.round(dt/1000/state.valuemax),
+                'context': state.context,
             }));
             this.$el.children().hide();
             // display rainbowman after full reconciliation
@@ -165,11 +168,12 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
     },
     /**
      * @private
+     * Click on close bank statement button, this will
+     * close and then open form view of bank statement
+     * @param {MouseEvent} event
      */
-    _onValidateName: function () {
-        var name = this.model.get(this.handleNameRecord).data.name;
-        this.trigger_up('change_name', {'data': name});
-        this.$('.statement_name, .statement_name_edition').toggle();
+    _onCloseBankStatement: function (e) {
+        this.trigger_up('close_statement');
     },
     /**
      * @private
@@ -189,6 +193,34 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             view_type: "list",
             view_mode: "list"
         });
+    },
+    /**
+     * Open the list view for account.bank.statement model
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onGoToBankStatement: function (e) {
+        var journalId = $(e.target).attr('data_journal_id');
+        if (journalId) {
+            journalId = parseInt(journalId);
+        }
+        this.do_action({
+            name: 'Bank Statements',
+            res_model: 'account.bank.statement',
+            views: [[false, 'list'], [false, 'form']],
+            type: 'ir.actions.act_window',
+            context: {search_default_journal_id: journalId},
+            view_type: 'list',
+            view_mode: 'form',
+        });
+    },
+    /**
+     * @private
+     */
+    _onValidateName: function () {
+        var name = this.model.get(this.handleNameRecord).data.name;
+        this.trigger_up('change_name', {'data': name});
+        this.$('.statement_name, .statement_name_edition').toggle();
     },
 });
 
@@ -312,6 +344,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             }
 
             if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
+                    line.already_paid === false &&
                     (
                         (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
                         (state.st_line.amount < 0 && state.st_line.amount > props[0].amount))
@@ -372,6 +405,16 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {jQueryElement} $el
+     */
+    _destroyPopover: function ($el) {
+        var popover = $el.data('bs.popover');
+        if (popover) {
+            popover.destroy();
+        }
+    },
     /**
      * @private
      * @param {integer} partnerID
@@ -557,16 +600,20 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
      * @param {MouseEvent} event
      */
     _onSelectMoveLine: function (event) {
-        var mv_line_id = $(event.target).closest('.mv_line').data('line-id');
-        this.trigger_up('add_proposition', {'data': mv_line_id});
+        var $el = $(event.target)
+        this._destroyPopover($el);
+        var moveLineId = $el.closest('.mv_line').data('line-id');
+        this.trigger_up('add_proposition', {'data': moveLineId});
     },
     /**
      * @private
      * @param {MouseEvent} event
      */
     _onSelectProposition: function (event) {
-        var mv_line_id = $(event.target).closest('.mv_line').data('line-id');
-        this.trigger_up('remove_proposition', {'data': mv_line_id});
+        var $el = $(event.target)
+        this._destroyPopover($el);
+        var moveLineId = $el.closest('.mv_line').data('line-id');
+        this.trigger_up('remove_proposition', {'data': moveLineId});
     },
     /**
      * @private

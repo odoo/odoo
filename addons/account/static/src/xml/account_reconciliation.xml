@@ -48,6 +48,16 @@
 <div t-name="reconciliation.done" class="done_message">
     <h2>Congrats, you're all done!</h2>
     <p>You reconciled <strong><t t-esc="number"/></strong> transactions in <strong><t t-esc="duration"/></strong>.<br/>That's on average <t t-esc="timePerTransaction"/> seconds per transaction.</p>
+    <t t-if="context &amp;&amp; context.active_model">
+        <p t-if="context['active_model'] === 'account.journal' || context['active_model'] === 'account.bank.statement'" class="actions_buttons">
+            <t t-if="context.journal_id">
+                <button class="button_back_to_statement btn btn-default btn-sm" t-att-data_journal_id='context.journal_id'>Go to bank statement(s)</button>
+            </t>
+            <t t-if="context['active_model'] === 'account.bank.statement'">
+                <button class="button_close_statement btn btn-primary btn-sm" style="display: inline-block;">Close statement</button>
+            </t>
+        </p>
+    </t>
 </div>
 
 <t t-name="reconciliation.line">
