@@ -45,50 +45,56 @@ var EventRegistrationForm = Widget.extend({
 });
 
 var TimeZoneForm = Widget.extend({
+
     start: function() {
         var self = this;
-        var res = this._super.apply(this.arguments).then(function() {
+        return this._super.apply(this.arguments).then(function() {
             $('.o_user_timezone')
                 .off('click')
-                .click(function (ev) {
-                    self.on_click(ev);
+                .click(function (event) {
+                    self._onUserTimezoneClick(event);
                 });
         });
-        return res
     },
-    on_click: function(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        var $form = $(ev.currentTarget).closest('form'), post = {};
-        return ajax.jsonRpc($form.attr('action'), 'call', post).then(function (modal) {
-            var $modal = $(modal), tzContainer = $modal.find('#timezone-container');
+
+    _onUserTimezoneClick: function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var action = $(event.currentTarget).closest('form#user_timezone').attr('action');
+
+        return ajax.jsonRpc(action, 'call', {}).then(function (modal) {
+            var $modal = $(modal),
+                tzContainer = $modal.find('#timezone-container');
+
             $modal.appendTo('body').modal();
             ajax.jsonRpc('/event/get_all_timezone', 'call', {}).done(function(data) {
                 _.each(data, function(value, key) {
                     $('<option>'+ value +'</option>').appendTo(tzContainer);
                 });
             });
+
             $modal.on('click', '.o_set_timezone_btn', function () {
-                var another_timezone = tzContainer.val(), newData = null;
-                _.each($('.o_visitor_timezone'), function (el) {
-                    $(el).text(another_timezone);
-                    $modal.modal('hide');
-                });
-                _.each($('[data-event-visitor-date]'), function (el) {
-                    ajax.jsonRpc("/event/set_timezone", 'call', {
-                        timezone: another_timezone,
-                        date_time: $(el).data('event-visitor-date')
-                    }).done(function(data) {
-                        if(newData === null) {
-                            newData = data;
-                            $('.starting_date').text(newData);
-                        }
-                        else {
-                            $('.ending_date').text(data);
-                        }
-                    });
+                var user_local_tz = tzContainer.val(),
+                    $visitordate = $('h4.o_event_visitor_date'),
+                    event_date = {};
+
+                $modal.modal('hide');
+                $visitordate.find('.o_visitor_timezone').text(user_local_tz);
+
+                // find value of start date and end date from event
+                event_date.starting_date = $visitordate.find('.o_event_starting_date').data('eventVisitorDate'),
+                event_date.ending_date = $visitordate.find('.o_event_ending_date').data('eventVisitorDate');
+
+                ajax.jsonRpc("/event/set_timezone", 'call', {
+                    timezone: user_local_tz,
+                    date_time: event_date
+                }).done(function(data) {
+                    // set value of start date and end date in event
+                    $('.o_event_starting_date').text(data.starting_date);
+                    $('.o_event_ending_date').text(data.ending_date);
                 });
             });
+
             $modal.on('click', '.js_goto_event', function () {
                 $modal.modal('hide');
             });
@@ -98,12 +104,12 @@ var TimeZoneForm = Widget.extend({
 
 web_editor_base.ready().then(function(){
     _.each($('[data-event-visitor-date]'), function (el) {
-        var utc_date = $(el).data('event-visitor-date');
-        $(el).text(moment.utc(utc_date).utcOffset(moment().utcOffset()).format("L HH:mm"));
+        $(el).text(
+            moment.utc($(el).data('event-visitor-date'))
+            .utcOffset(moment().utcOffset()).format("L HH:mm"));
    });
     _.each($('.o_visitor_timezone'), function (el) {
-        var visitor_system_timezone = jstz.determine().name()
-        $(el).text = $(el).text(visitor_system_timezone);
+        $(el).text(jstz.determine().name());
     });
     var event_registration_form = new EventRegistrationForm().appendTo($('#registration_form'));
     var timezone_selection_form = new TimeZoneForm().appendTo($('.o_user_timezone'));
