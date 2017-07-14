@@ -19,7 +19,7 @@ class WebsitePayment(http.Controller):
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
             acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True, 'verify_validity': True})
-        return request.render("website_payment.pay_methods", values)
+        return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
@@ -56,7 +56,7 @@ class WebsitePayment(http.Controller):
             'amount': float(amount),
             'payment_form': payment_form,
         }
-        return request.render('website_payment.pay', values)
+        return request.render('payment.pay', values)
 
     @http.route(['/website_payment/transaction'], type='json', auth="public", website=True)
     def transaction(self, reference, amount, currency_id, acquirer_id):
@@ -87,7 +87,7 @@ class WebsitePayment(http.Controller):
             else:
                 status = 'danger'
                 message = tx.acquirer_id.error_msg
-            return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
+            return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
 

@@ -62,7 +62,7 @@ $(document).ready(function () {
 });
 
 
-odoo.define('website_payment.payment_acquirer', function (require) {
+odoo.define('payment.payment_acquirer', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
