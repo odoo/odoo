@@ -270,7 +270,7 @@ var DebugWidget = PosBaseWidget.extend({
         this.$('.button.delete_unpaid_orders').click(function(){
             self.gui.show_popup('confirm',{
                 'title': _t('Delete Unpaid Orders ?'),
-                'body':  _t('This operation will permanently destroy all unpaid orders from all sessions that have been put in the local storage. You will lose all the data and exit the point of sale. This operation cannot be undone.'),
+                'body':  _t('This operation will destroy all unpaid orders in the browser. You will lose all the unsaved data and exit the point of sale. This operation cannot be undone.'),
                 confirm: function(){
                     self.pos.db.remove_all_unpaid_orders();
                     window.location = '/';
