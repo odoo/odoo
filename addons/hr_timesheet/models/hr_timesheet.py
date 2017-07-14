@@ -30,25 +30,32 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def create(self, vals):
-        vals = self._update_timesheet_values(vals)
-        if not vals.get('employee_id') and vals.get('project_id'):  # compute employee only for timesheet lines, makes no sense for other lines
-            if vals.get('user_id'):
-                ts_user_id = vals['user_id']
-            else:
-                ts_user_id = self.env.user.id
-            vals['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
+        vals = self._timesheet_preprocess(vals)
         return super(AccountAnalyticLine, self).create(vals)
 
     @api.multi
     def write(self, vals):
-        vals = self._update_timesheet_values(vals)
+        vals = self._timesheet_preprocess(vals)
         return super(AccountAnalyticLine, self).write(vals)
 
-    def _update_timesheet_values(self, vals):
-        if vals.get('project_id'):
+    def _timesheet_preprocess(self, vals):
+        """ Deduce other field values from the one given.
+            Overrride this to compute on the fly some field that can not be computed fields.
+            :param values: dict values for `create`or `write`.
+        """
+        # project implies analytic account
+        if vals.get('project_id') and not vals.get('account_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
             vals['account_id'] = project.analytic_account_id.id
-        if vals.get('employee_id'):
+        # employee implies user
+        if vals.get('employee_id') and not vals.get('user_id'):
             employee = self.env['hr.employee'].browse(vals['employee_id'])
             vals['user_id'] = employee.user_id.id
+        # compute employee only for timesheet lines, makes no sense for other lines
+        if not vals.get('employee_id') and vals.get('project_id'):
+            if vals.get('user_id'):
+                ts_user_id = vals['user_id']
+            else:
+                ts_user_id = self._default_user()
+            vals['employee_id'] = self.env['hr.employee'].search([('user_id', '=', ts_user_id)], limit=1).id
         return vals
