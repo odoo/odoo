@@ -84,10 +84,13 @@ odoo.define('web.BasicModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
+var core = require('web.core');
 var Context = require('web.Context');
 var Domain = require('web.Domain');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
+
+var _t = core._t;
 
 var x2ManyCommands = {
     // (0, _, {values})
@@ -419,6 +422,22 @@ var BasicModel = AbstractModel.extend({
         }
         this._sortList(list);
         return list;
+    },
+    /**
+     * Returns the current display_name for the record.
+     *
+     * @param {string} id the localID for a valid record element
+     * @returns {string}
+     */
+    getName: function (id) {
+        var record = this.localData[id];
+        if (record._changes && 'display_name' in record._changes) {
+            return record._changes.display_name;
+        }
+        if ('display_name' in record.data) {
+            return record.data.display_name;
+        }
+        return _t("New");
     },
     /**
      * Returns true if a record is dirty. A record is considered dirty if it has

@@ -920,7 +920,7 @@ QUnit.module('Views', {
 
     QUnit.test('buttons in form view, new record', function (assert) {
         // this simulates a situation similar to the settings forms.
-        assert.expect(6);
+        assert.expect(7);
 
         var resID;
 
@@ -960,12 +960,12 @@ QUnit.module('Views', {
         });
         form.$('.o_form_statusbar button.p').click();
 
-        assert.verifySteps(['default_get', 'create', 'execute_action', 'read']);
+        assert.verifySteps(['default_get', 'create', 'read', 'execute_action', 'read']);
         form.destroy();
     });
 
     QUnit.test('buttons in form view, new record, with field id in view', function (assert) {
-        assert.expect(6);
+        assert.expect(7);
         // buttons in form view are one of the rare example of situation when we
         // save a record without reloading it immediately, because we only care
         // about its id for the next step.  But at some point, if the field id
@@ -1010,7 +1010,7 @@ QUnit.module('Views', {
         });
         form.$('.o_form_statusbar button.p').click();
 
-        assert.verifySteps(['default_get', 'create', 'execute_action', 'read']);
+        assert.verifySteps(['default_get', 'create', 'read', 'execute_action', 'read']);
         form.destroy();
     });
 
@@ -1521,7 +1521,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('clicking on stat buttons in edit mode', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var form = createView({
             View: FormView,
@@ -1566,7 +1566,49 @@ QUnit.module('Views', {
 
         assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
-        assert.verifySteps(['read', 'write']);
+        assert.verifySteps(['read', 'write', 'read']);
+        form.destroy();
+    });
+
+    QUnit.test('clicking on stat buttons save and reload in edit mode', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box">' +
+                            '<button class="oe_stat_button" type="action">' +
+                                '<field name="int_field" widget="statinfo" string="Some number"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="name"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    // simulate an override of the model...
+                    args.args[1].display_name = "GOLDORAK";
+                    args.args[1].name = "GOLDORAK";
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.getTitle(), 'second record',
+            "should have correct display_name");
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('input[name="name"]').val('some other name').trigger('input');
+
+        form.$('.oe_stat_button').first().click();
+        assert.strictEqual(form.getTitle(), 'GOLDORAK',
+            "should have correct display_name");
+
         form.destroy();
     });
 
