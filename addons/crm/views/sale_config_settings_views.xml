@@ -6,7 +6,7 @@
         <field name="model">sale.config.settings</field>
         <field name="inherit_id" ref="sales_team.sale_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//h2[@id='integration_h2']"  position="before">
+            <xpath expr="//div[@id='crm_config']" position="replace">
                 <h2>CRM</h2>
                 <div class="row mt16 o_settings_container">
                     <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead">
