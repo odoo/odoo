@@ -141,7 +141,8 @@ class TestPyLint(TransactionCase):
         with _patch_streams(StringIO()):  # Avoid show 'no config file msg'
             res = lint.Run(options + paths, reporter=Reporter(), exit=False)
         msgs = res.linter.reporter.messages
+        out = ""
         for msg in msgs:
-            _logger.error(msg.format(res.linter.config.msg_template))
+            out += msg.format(res.linter.config.msg_template) + '\n'
         if msgs:
-            self.fail("Pylint %d errors found." % len(msgs))
+            self.fail("Pylint %d errors found: \n%s" % (len(msgs), out))
