@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
 import logging
 try:
     import pylint
@@ -8,15 +9,18 @@ try:
     from pylint.reporters import BaseReporter
 except ImportError:
     pylint = None
-import subprocess
+import sys
 from distutils.version import LooseVersion
-from os import devnull
 from os.path import join
 
 from odoo.tests.common import TransactionCase
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
 
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 _logger = logging.getLogger(__name__)
 
@@ -26,6 +30,16 @@ class Reporter(BaseReporter):
 
     def handle_message(self, msg):
         self.messages.append(msg)
+
+
+@contextlib.contextmanager
+def _patch_streams(out):
+    sys.stderr = sys.stdout = out
+    try:
+        yield
+    finally:
+        sys.stderr = sys.__stderr__
+        sys.stdout = sys.__stdout__
 
 
 class TestPyLint(TransactionCase):
@@ -124,8 +138,10 @@ class TestPyLint(TransactionCase):
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
 
-        reporter = Reporter()
-        lint_res = lint.Run(options + paths, reporter=reporter, exit=False)
-        lint_stats = lint_res.linter.stats
-        for msg in reporter.messages:
-            _logger.error("%s:%d - %s" , msg.abspath, msg.line, msg.msg)
+        with _patch_streams(StringIO()):  # Avoid show 'no config file msg'
+            res = lint.Run(options + paths, reporter=Reporter(), exit=False)
+        msgs = res.linter.reporter.messages
+        for msg in msgs:
+            _logger.error(msg.format(res.linter.config.msg_template))
+        if msgs:
+            self.fail("Pylint %d errors found." % len(msgs))
