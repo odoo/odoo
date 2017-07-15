@@ -4,6 +4,8 @@
 import logging
 try:
     import pylint
+    from pylint import lint
+    from pylint.reporters import BaseReporter
 except ImportError:
     pylint = None
 import subprocess
@@ -17,6 +19,13 @@ from odoo.modules import get_modules, get_module_path
 
 
 _logger = logging.getLogger(__name__)
+
+
+class Reporter(BaseReporter):
+    messages = []
+
+    def handle_message(self, msg):
+        self.messages.append(msg)
 
 
 class TestPyLint(TransactionCase):
@@ -115,11 +124,8 @@ class TestPyLint(TransactionCase):
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
 
-        try:
-            process = subprocess.Popen(['pylint'] + options + paths, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        except (OSError, IOError):
-            self._skip_test('pylint executable not found in the path')
-        else:
-            out, err = process.communicate()
-            if process.returncode:
-                self.fail("\n" + out + "\n" + err)
+        reporter = Reporter()
+        lint_res = lint.Run(options + paths, reporter=reporter, exit=False)
+        lint_stats = lint_res.linter.stats
+        for msg in reporter.messages:
+            _logger.error("%s:%d - %s" , msg.abspath, msg.line, msg.msg)
