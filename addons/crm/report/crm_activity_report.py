@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools
+from odoo import fields, models, tools, api
 
 
 class ActivityReport(models.Model):
@@ -30,34 +30,57 @@ class ActivityReport(models.Model):
         help="Type is used to separate Leads and Opportunities")
     active = fields.Boolean('Active', readonly=True)
     probability = fields.Float('Probability', group_operator='avg', readonly=True)
-
+    
+    def _select(self):
+        select_str = """
+            SELECT
+                m.id,
+                m.subtype_id,
+                m.mail_activity_type_id,
+                m.author_id,
+                m.date,
+                m.subject,
+                l.id as lead_id,
+                l.user_id,
+                l.team_id,
+                l.country_id,
+                l.company_id,
+                l.stage_id,
+                l.partner_id,
+                l.type as lead_type,
+                l.active,
+                l.probability
+        """
+        return select_str
+    
+    def _from(self):
+        from_str = """
+            FROM mail_message AS m
+        """
+        return from_str
+    
+    def _join(self):
+        join_str = """
+            JOIN crm_lead AS l ON m.res_id = l.id
+        """
+        return join_str
+    
+    def _where(self):
+        where_str = """
+            WHERE
+                m.model = 'crm.lead' AND m.mail_activity_type_id IS NOT NULL
+        """
+        return where_str
+    
+    @api.model_cr
     def init(self):
-        tools.drop_view_if_exists(self._cr, 'crm_activity_report')
+        tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""
-            CREATE VIEW crm_activity_report AS (
-                select
-                    m.id,
-                    m.subtype_id,
-                    m.mail_activity_type_id,
-                    m.author_id,
-                    m.date,
-                    m.subject,
-                    l.id as lead_id,
-                    l.user_id,
-                    l.team_id,
-                    l.country_id,
-                    l.company_id,
-                    l.stage_id,
-                    l.partner_id,
-                    l.type as lead_type,
-                    l.active,
-                    l.probability
-                from
-                    "mail_message" m
-                join
-                    "crm_lead" l
-                on
-                    (m.res_id = l.id)
-                WHERE
-                    (m.model = 'crm.lead' AND m.mail_activity_type_id IS NOT NULL)
-            )""")
+            CREATE OR REPLACE VIEW %s AS (
+                %s
+                %s
+                %s
+                %s
+            )
+        """ % (self._table, self._select(), self._from(), self._join(),self._where())
+        )
