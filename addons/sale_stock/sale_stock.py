@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 from openerp import api, fields, models, _
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare
-from openerp.exceptions import UserError
+from openerp.exceptions import UserError, ValidationError
 
 
 class SaleOrder(models.Model):
@@ -290,6 +290,18 @@ class StockMove(models.Model):
         for line in todo:
             line.qty_delivered = line._get_delivered_qty()
         return result
+
+    @api.multi
+    @api.constrains
+    def _check_product_in_sale_order_line(self):
+        for sm in self:
+            if sm.procurement_id.sale_line_id and \
+                    sm.procurement_id.sale_line_id.product_id != sm.product_id:
+                raise ValidationError(_('The product %s does not match with ' 
+                                        'sales order %s, line %s.') % (
+                    sm.product_id.name,
+                    sm.procurement_id.sale_line_id.order_id.name,
+                    sm.procurement_id.sale_line_id.name))
 
 
 class StockPicking(models.Model):
