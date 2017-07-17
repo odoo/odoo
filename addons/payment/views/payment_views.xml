@@ -138,7 +138,7 @@
                             <div class="oe_kanban_global_click">
                                 <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                                 <div class="o_kanban_image">
-                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.value)"/>
+                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.raw_value)"/>
                                 </div>
                                 <div class="o_payment_acquirer_desc">
                                     <h3 class="mt4"><t t-esc="record.name.value"/></h3>

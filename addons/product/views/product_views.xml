@@ -346,7 +346,7 @@
                                     <field name="attribute_value_ids" groups="product.group_product_variant"/>
                                 </div>
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.value)"/>
+                                    <img t-att-src="kanban_image('product.product', 'image_small', record.id.raw_value)"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong><field name="name"/></strong>

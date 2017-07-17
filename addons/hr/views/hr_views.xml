@@ -177,7 +177,7 @@
                     <div class="oe_kanban_global_click">
                         <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
                                 <t t-if="record.message_needaction_counter.raw_value">
                                     <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
