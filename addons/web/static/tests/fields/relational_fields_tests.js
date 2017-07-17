@@ -3652,6 +3652,34 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('id in one2many obtained in onchange is properly set', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.turtles = function (obj) {
+            obj.turtles = [
+                [5],
+                [1, 3, {turtle_foo: "kawa"}]
+            ];
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="id"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('tr.o_data_row').text(), '3kawa',
+            "should have properly displayed id and foo field");
+        form.destroy();
+    });
+
     QUnit.test('sub form view with a required field', function (assert) {
         assert.expect(2);
         this.data.partner.fields.foo.required = true;

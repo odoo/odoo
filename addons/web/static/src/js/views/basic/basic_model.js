@@ -2656,8 +2656,14 @@ var BasicModel = AbstractModel.extend({
         var type = params.type || ('domain' in params && 'list') || 'record';
         var res_id, value;
         var res_ids = params.res_ids || [];
+        var data = params.data || (type === 'record' ? {} : []);
         if (type === 'record') {
-            res_id = params.res_id || (params.data && params.data.id) || _.uniqueId('virtual_');
+            res_id = params.res_id || (params.data && params.data.id);
+            if (res_id) {
+                data.id = res_id;
+            } else {
+                res_id = _.uniqueId('virtual_');
+            }
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -2675,7 +2681,7 @@ var BasicModel = AbstractModel.extend({
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
-            data: params.data || (type === 'record' ? {} : []),
+            data: data,
             domain: params.domain || [],
             fields: fields,
             fieldsInfo: params.fieldsInfo,
