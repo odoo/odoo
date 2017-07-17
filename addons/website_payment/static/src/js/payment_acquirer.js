@@ -65,7 +65,6 @@ $(document).ready(function () {
 odoo.define('website_payment.payment_acquirer', function (require) {
 "use strict";
 
-var website = require('website.website');
 var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
 
