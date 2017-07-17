@@ -47,6 +47,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">Testi</span>\n"
+"                                    <span class=\"o_stat_text\">-ympäristö</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -54,6 +56,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">Tuotanto</span>\n"
+"                                    <span class=\"o_stat_text\">-ympäristö</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -103,6 +107,9 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Virhe,</i> Maksussa tapahtui virhe. Tilaus on vahvistettu, mutta "
+"maksusuoritus ei onnistunut. Ole hyvä ja ota meihin yhteyttä jos sinulla on "
+"kysyttävää tilauksen tilasta.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -118,7 +125,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
-"<span><i>Odottaa,</i> Verkkomaksusi onnistui. Kiitos tilauksestasi.</span>"
+"<span><i>Odottaa vahvistusta,</i> Maksusuorituksesi on käsitelty "
+"onnistuneesti, mutta tilaustasi ei ole vielä vahvistettu.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -126,6 +134,8 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Odottaa maksusuoritusta</i>... Tilauksesi vahvistetaan hyväksytyn "
+"maksusuorituksen jälkeen.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -363,7 +373,7 @@ msgstr "Valmis"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_done_msg
 msgid "Done Message"
-msgstr ""
+msgstr "Valmis-viesti"
 
 #. module: payment
 #: selection:payment.transaction,state:0
@@ -739,7 +749,7 @@ msgstr "Odottaa"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
 msgid "Pending Message"
-msgstr ""
+msgstr "Odottaa-viesti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_phone
