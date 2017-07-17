@@ -16,17 +16,17 @@
                        </button>
                     </xpath>
                     <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <field name="project_project_id" invisible="1"/>
                        <button type="object"
-                           name="action_view_project_project"
+                           name="action_view_project_ids"
                            class="oe_stat_button"
                            icon="fa-puzzle-piece"
-                           string="Project"
-                           attrs="{'invisible': [('project_project_id', '=', False)]}" groups="base.group_user">
+                           string="Project(s) Overview"
+                           attrs="{'invisible': [('project_ids', '=', [])]}"
+                           groups="project.group_project_user">
+                          <field name="project_ids" invisible="1"/>
                        </button>
                     </xpath>
                     <xpath expr="//button[@name='action_view_invoice']" position="before">
-                       <field name="tasks_ids" invisible="1"/>
                        <button type="object"
                            name="action_view_task"
                            class="oe_stat_button"
