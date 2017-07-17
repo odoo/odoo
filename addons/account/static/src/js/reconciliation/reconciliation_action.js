@@ -40,7 +40,6 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         // used to instanciate each widget line
         LineRenderer: ReconciliationRenderer.LineRenderer
     },
-
     /**
      * @override
      * @param {Object} params
@@ -116,6 +115,9 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                 active_id: this.params.res_id,
             });   
         }
+    },
+    on_attach_callback: function(){
+        this.renderer.activate();
     },
 
     //--------------------------------------------------------------------------
