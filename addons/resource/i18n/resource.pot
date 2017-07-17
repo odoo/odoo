@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-17 08:18+0000\n"
+"PO-Revision-Date: 2017-07-17 08:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,11 +27,6 @@ msgid "Active"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_res_users_country_enforce_cities
-msgid "Check this box to ensure every address created in that country has a 'City' chosen in the list of the country's cities."
-msgstr ""
-
-#. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
 msgstr ""
@@ -44,7 +39,6 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_hr_employee_company_id
 #: model:ir.model.fields,field_description:resource.field_mrp_workcenter_company_id
-#: model:ir.model.fields,field_description:resource.field_res_users_city_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_mixin_company_id
@@ -110,11 +104,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_street_number2
-msgid "Door Number"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
 msgid "Efficiency Factor"
 msgstr ""
@@ -126,12 +115,7 @@ msgid "End Date"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_country_enforce_cities
-msgid "Enforce Cities"
-msgstr ""
-
-#. module: resource
-#: code:addons/resource/models/resource.py:697
+#: code:addons/resource/models/resource.py:712
 #, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
@@ -154,21 +138,6 @@ msgid "Friday Morning"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
-
-#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
@@ -183,11 +152,6 @@ msgstr ""
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
 msgid "Hours"
-msgstr ""
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_street_number
-msgid "House Number"
 msgstr ""
 
 #. module: resource
@@ -422,11 +386,6 @@ msgid "Starting Date of Leave by Month"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_res_users_street_name
-msgid "Street Name"
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr ""
@@ -437,14 +396,14 @@ msgid "Test Resource Model"
 msgstr ""
 
 #. module: resource
-#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
-msgid "This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
-msgstr ""
-
-#. module: resource
 #: code:addons/resource/models/resource.py:667
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
+msgid "This field is used to calculate the the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
 msgstr ""
 
 #. module: resource

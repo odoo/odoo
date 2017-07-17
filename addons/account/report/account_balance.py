@@ -61,7 +61,7 @@ class ReportTrialBalance(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         if not data.get('form') or not self.env.context.get('active_model'):
-            raise UserError(_("Some data are missing, this report cannot be printed."))
+            raise UserError(_("Form content is missing, this report cannot be printed."))
 
         self.model = self.env.context.get('active_model')
         docs = self.env[self.model].browse(self.env.context.get('active_ids', []))
