@@ -43,6 +43,7 @@ var DateWidget = Widget.extend({
             allowInputToggle: true,
             keyBinds: null,
             widgetParent: 'body',
+            useCurrent: false,
         });
     },
     /**
@@ -164,11 +165,11 @@ var DateWidget = Widget.extend({
     _onShow: function () {
         //when opening datetimepicker the date and time by default should be the one from
         //the input field if any or the current day otherwise
-        var value = moment().second(0);
         if(this.$input.val().length !== 0 && this.isValid()) {
-            value = this._parseClient(this.$input.val());
+            var value = this._parseClient(this.$input.val());
+            this.picker.date(value);
+            this.$input.select();
         }
-        this.picker.date(value);
     },
 });
 
