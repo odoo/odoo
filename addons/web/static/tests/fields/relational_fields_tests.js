@@ -9,6 +9,7 @@ var relationalFields = require('web.relational_fields');
 var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
+var fieldUtils = require('web.field_utils');
 
 var createView = testUtils.createView;
 
@@ -5296,6 +5297,8 @@ QUnit.module('relational_fields', {
         form.$('.o_data_row .o_field_widget').val('a name').trigger('input');
         def = $.Deferred();
         form.$('.o_datepicker_input').click(); // focusout o2m and set value to today
+        var dateTimeVal = fieldUtils.format.datetime(moment(), {timezone: false});
+        form.$('.o_datepicker_input').val(dateTimeVal).trigger('change');
 
         // resolve the onchange def
         def.resolve();

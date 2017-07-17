@@ -1633,6 +1633,25 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field value should not set on first click', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_datepicker_input').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '', "date field's input should be empty on first click");
+        $('.day:contains(22)').click();
+        form.$('.o_datepicker_input').click(); // Open Datepicker second time
+        assert.strictEqual($('.day.active').text(), '22', 'datepicker should be highlight with 22nd day of month');
+        form.destroy();
+    });
+
     QUnit.test('date field in form view (with positive time zone offset)', function (assert) {
         assert.expect(8);
 
