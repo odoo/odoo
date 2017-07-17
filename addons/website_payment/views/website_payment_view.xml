@@ -18,17 +18,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="acquirer_list_published" model="ir.ui.view">
-            <field name="name">payment.acquirer.tree.published</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_list"/>
-            <field name="arch" type="xml">
-                <field name="provider" position="after">
-                    <field name="website_published"/>
-                </field>
-            </field>
-        </record>
-
     </data>
 </odoo>
