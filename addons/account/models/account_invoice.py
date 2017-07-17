@@ -1397,6 +1397,14 @@ class AccountPaymentTerm(models.Model):
             result.append((last_date, dist))
         return result
 
+    @api.multi
+    def unlink(self):
+        for payment_term in self:
+            partner = self.env['res.partner'].search(['|', ('property_payment_term_id', '=', payment_term.id), ('property_supplier_payment_term_id', '=', payment_term.id)], limit=1)
+            if partner:
+                raise UserError(_('You cannot delete this payment term %s') % (payment_term.name,))
+        return super(AccountPaymentTerm, self).unlink()
+
 
 class AccountPaymentTermLine(models.Model):
     _name = "account.payment.term.line"
