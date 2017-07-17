@@ -342,6 +342,13 @@ class product_product(osv.osv):
             }}
         return {}
 
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        if 'active' in vals and not vals['active']:
+            orderpoints = self.mapped('orderpoint_ids')
+            orderpoints.write({'active': False})
+        return res
+
 
 class product_template(osv.osv):
     _name = 'product.template'
