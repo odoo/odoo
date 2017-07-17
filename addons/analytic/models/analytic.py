@@ -30,16 +30,15 @@ class account_analytic_account(models.Model):
         self.env.cr.execute("""
             select account_id,
             sum(greatest(0, amount)) as credit,
-            sum(least(0, amount)) as debit
+            sum(abs(least(0, amount))) as debit
             from account_analytic_line 
             where id IN %s 
             group by account_id
         """, (tuple(account_amounts.ids), ))
-        datas = {result[0]: (result[1], result[2]) for result in self.env.cr.fetchall()}
+        datas = {account: (credit, debit) for (account, credit, debit) in self.env.cr.fetchall()}
             
         for account in self:
-            account.credit = abs(datas.get(account.id, (0.0, 0.0))[0])
-            account.debit = abs(datas.get(account.id, (0.0, 0.0))[1])
+            account.credit, account.debit = datas.get(account.id, (0.0, 0.0))
             account.balance = account.credit - account.debit
 
     name = fields.Char(string='Analytic Account', index=True, required=True, track_visibility='onchange')
