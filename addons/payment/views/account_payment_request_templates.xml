@@ -69,12 +69,12 @@
                                             <h4>Due by<span class="ml4" t-esc="payment_request.invoice_id.date_due" t-options='{"widget": "date"}'/></h4>
                                         </t>
                                     </li>
-                                    <li>
+                                    <li class="o_download_button">
                                         <a target="_blank" t-att-href="'/payment/%s' % payment_request.access_token+'?pdf=True'" title="Download">
                                             <i class="fa fa-download fa-2x" aria-hidden="true"/>
                                         </a><br></br>
                                     </li>
-                                    <li>
+                                    <li class="o_print_button">
                                         <a id="print_iframe" title="Print">
                                             <i class="fa fa-print fa-2x" aria-hidden="true"/>
                                         </a>

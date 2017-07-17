@@ -48,17 +48,6 @@ footer {
     }
 }
 
-.o_paynow_button {
-    font-size: 25px;
-}
-
-#pay_button ul li {
-    vertical-align: middle;
-}
-.o_divider {
-    margin-top: 1%;
-    border-right: 1px solid grey;
-}
 /* apply when payment module install only not website */
 .company_logo {
     max-height: 60px;
@@ -73,22 +62,39 @@ footer {
     }
 }
 /* payment button and text alignment */
-.o_payment_text_align {
-    @media (max-width: @screen-xs-min) {
-        text-align: left;
+#pay_button {
+    .o_payment_text_align {
+        @media (max-width: @screen-xs-min) {
+            text-align: left;
+        }
+        @media (min-width: @screen-sm-max) {
+            text-align: right;
+        }
     }
-    @media (min-width: @screen-sm-max) {
-        text-align: right;
+    .o_payment_pull_align {
+        @media (max-width: @screen-xs-min) {
+            float: left !important;
+        }
+        @media (min-width: @screen-sm-max) {
+            float: right !important;
+        }
     }
     .o_payment_button {
         margin-top: 20px;
     }
-}
-.o_payment_pull_align {
-    @media (max-width: @screen-xs-min) {
-       float: left !important;
-    }
-    @media (min-width: @screen-sm-max) {
-        float: right !important;
+    ul {
+        .o_download_button, .o_print_button {
+            margin-top: 12px;
+        }
+        .o_divider {
+            margin-top: 2%;
+            border-right: 1px solid grey;
+        }
+        li {
+            vertical-align: middle;
+            .o_paynow_button {
+                font-size: 25px;
+            }
+        }
     }
 }
