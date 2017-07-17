@@ -1051,8 +1051,7 @@ class QwebWidgetMonetary(osv.AbstractModel):
     def _format(self, inner, options, qwebcontext):
         inner = self.pool['ir.qweb'].eval(inner, qwebcontext)
         display = self.pool['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        fmt = "%.{0}f".format(display.decimal_places)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         formatted_amount = self.pool['res.lang'].format(
             qwebcontext.cr, qwebcontext.uid, [lang_code], fmt, inner, grouping=True, monetary=True
