@@ -11,10 +11,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgid "# of Issues"
 msgstr "# Issues"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:146
+#: code:addons/project_issue/models/project_issue.py:150
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -53,11 +53,6 @@ msgstr "<b>Project:</b>"
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">als </span>"
-
-#. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Activate timesheets on issues"
-msgstr "Activeer urenstaten op issues"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -161,6 +156,7 @@ msgid "Company"
 msgstr "Bedijf"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_res_partner
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
@@ -200,13 +196,13 @@ msgid "Currently there are not any activity scheduled."
 msgstr "Momenteel is er geen activiteit ingepland."
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:267
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "Customer"
 msgstr "Klant"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:269
+#: code:addons/project_issue/models/project_issue.py:273
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
@@ -289,11 +285,6 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Do not track working hours on issues"
-msgstr "Geen urenstaten op issues"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
 msgstr "Tijdsduur"
@@ -340,18 +331,13 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Helpdesk & Support"
-msgstr "Helpdesk & Support"
-
-#. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Hoog"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:242
+#: code:addons/project_issue/models/project_issue.py:246
 #, python-format
 msgid "I take it"
 msgstr "Ik neem het"
@@ -539,15 +525,10 @@ msgid "Next Issue Activities"
 msgstr "Volgende issue activiteiten"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:293
+#: code:addons/project_issue/models/project_issue.py:297
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
-
-#. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
-msgid "No customer rating"
-msgstr "Geen klantenbeoordeling"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -598,11 +579,6 @@ msgstr ""
 "de kanban selectie, wanneer de taak of issue zich in die fase bevind."
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: project_issue
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
@@ -650,23 +626,26 @@ msgid "Project Issues"
 msgstr "Project issues"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
-msgid ""
-"Provides timesheet support for the issues/bugs management in project.\n"
-"-This installs the module project_issue_sheet."
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Provides timesheet support for the issues/bugs management in project."
 msgstr ""
-"Geeft de mogelijkheid voor het beheren van urenstaten op bugs/issues in projecten.\n"
-"- Dit installeert de module project_issue-sheet."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "Rating on issue"
-msgstr "Beoordeling op issue"
+msgid "Rating on Issues"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Red"
 msgstr "Rood"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+"Sla deze pagina op en kom terug naar hier om deze functionaliteit te "
+"activeren."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -741,11 +720,6 @@ msgid "These people will receive email."
 msgstr "Deze personen zullen email ontvangen."
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "This allows customers to give rating on issue"
-msgstr "Dit staat klanten toe om een beoordeling te geven op issues"
-
-#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
 msgid ""
@@ -760,11 +734,6 @@ msgstr ""
 " uitgewisselde emails en de gemiddelde besteedde tijd per issue."
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Timesheets"
-msgstr "Urenstaten"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
 msgstr "Urenstaten op issues"
@@ -775,9 +744,14 @@ msgid "Today Activities"
 msgstr "Activiteiten van vandaag"
 
 #. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Track customer satisfaction on issues"
 msgstr "Volg klanttevredenheid op taken op issues"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Track time spent to solve issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -837,7 +811,7 @@ msgstr ""
 " taak van hieruit aanmaken"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:181
+#: code:addons/project_issue/models/project_issue.py:185
 #, python-format
 msgid "issues"
 msgstr "issues"

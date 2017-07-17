@@ -13,13 +13,17 @@
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# zyx <zheng.yaxi@elico-corp.com>, 2017
+# 菜小蛇 <lttlsnk@gmail.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"Last-Translator: fausthuang <faust_huang@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,10 +119,10 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
 "                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
@@ -128,7 +132,7 @@ msgid ""
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -164,8 +168,8 @@ msgid "# of Tasks"
 msgstr "#  任务"
 
 #. module: project
-#: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:407
+#: code:addons/project/models/project.py:242
+#: code:addons/project/models/project.py:428
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -454,13 +458,6 @@ msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
 msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr "<span>( * )此配置与您登录的公司有关</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -970,6 +967,12 @@ msgid "Active"
 msgstr "有效"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
+#: model:ir.ui.menu,name:project.project_menu_config_activity_type
+msgid "Activity Types"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "添加描述"
@@ -1074,9 +1077,9 @@ msgstr ""
 "另外一个限制你收到的通知的数量的好办法是只跟进你自己项目的‘分配的任务’事件。然后你就会在一个任务或者议题被创建的时候被通知到，然后手工的决定是否其他的事件也被通知到"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Apply"
-msgstr "应用"
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Apple App Store"
+msgstr "苹果应用商店"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1142,6 +1145,11 @@ msgid "Attachments"
 msgstr "附件"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet_attendance
+msgid "Attendances"
+msgstr "考勤"
+
+#. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
 msgstr "在项目创建的时候自动生成电子邮件别名"
@@ -1150,6 +1158,11 @@ msgstr "在项目创建的时候自动生成电子邮件别名"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
 msgstr "在Apple Store可用"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1190,6 +1203,11 @@ msgid ""
 msgstr "注意团队的生产力和事件：试着把会议保持在一个小时之内或者更少。"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Billing"
+msgstr "开单"
+
+#. module: project
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -1226,8 +1244,8 @@ msgid "By Responsible"
 msgstr "负责人"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
-#: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "取消"
 
@@ -1310,9 +1328,9 @@ msgid "Click to create a new project.<br>"
 msgstr "点击创建新项目.<br>"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Collaborative rich text on task description"
-msgstr "在任务描述中使用附文字协作"
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr "协作pad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1361,7 +1379,7 @@ msgid "Configuration options are available in the Settings app."
 msgstr "配置选项在模块的设置里可用。"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_config_settings
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 msgid "Configure Project"
 msgstr "配置项目"
 
@@ -1383,6 +1401,7 @@ msgid "Consulting mission"
 msgstr "咨询使命"
 
 #. module: project
+#: model:ir.model,name:project.model_res_partner
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1522,7 +1541,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1531,10 +1550,15 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #, python-format
 msgid "Customer Email"
 msgstr "客户邮件"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Customer Satisfaction"
+msgstr "客户满意度"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1785,7 +1809,7 @@ msgid "Ending Date"
 msgstr "期末日期"
 
 #. module: project
-#: code:addons/project/models/project.py:415
+#: code:addons/project/models/project.py:436
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr "错误！任务的开始日期必须早于完成日期"
@@ -1824,6 +1848,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "例子"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_expense
+msgid "Expenses"
+msgstr "费用"
 
 #. module: project
 #. openerp-web
@@ -1917,14 +1946,9 @@ msgid ""
 msgstr "同样的理由，不要创建一个基于周或者时间的项目（例如：Scrum）"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts"
 msgstr "预测"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
-msgid "Forecasts, planning and Gantt charts"
-msgstr "预测，计划和甘特图"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -1980,6 +2004,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr "祝好运！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "谷歌浏览器商店"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Play Store"
+msgstr "谷歌游戏商店"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2041,7 +2075,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:564
+#: code:addons/project/models/project.py:585
 #, python-format
 msgid "I take it"
 msgstr "我来做"
@@ -2207,6 +2241,16 @@ msgid ""
 "Internal notes are messages that will appear in the Chatter but will not be "
 "notified in Odoo's Inbox."
 msgstr "内部提示会显示在Chatter中单身是不会通知到odoo的收件箱"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Issue Management"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue
+msgid "Issue Tracking"
+msgstr "问题跟踪"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2376,6 +2420,11 @@ msgid ""
 msgstr "学着更好的让公司使用项目，任务，议题和工时单"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_holidays
+msgid "Leave Management"
+msgstr "休假管理"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
@@ -2383,13 +2432,11 @@ msgid "Let's create your first project."
 msgstr "创建第一个项目."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
-"-This installs the module pad."
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://ietherpad.com/)."
 msgstr ""
-"让公司定制化起来：应该用来链接到新的Pads的Pad安装(例如: http://ietherpad.com/)。\n"
-"需要安装模块：pad"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2403,6 +2450,11 @@ msgstr "如果你需要项目的财务管理，链接这项目到一个分析账
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
 msgstr "列表，计划和跟踪要做的事情"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Manage your resources with Gantt charts"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2465,11 +2517,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "更多 <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "More Info"
-msgstr "更多信息"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "在雇员质检更加有效的交流"
@@ -2529,11 +2576,6 @@ msgstr "下一步活动"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 msgid "Next Task Activities"
 msgstr ""
-
-#. module: project
-#: selection:project.config.settings,module_rating_project:0
-msgid "No customer rating"
-msgstr "没有客户评级"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2598,7 +2640,7 @@ msgid ""
 msgstr "Odoo项目管理允许你管理你的任务以及有效的项目。你可以追踪进展，任务状态，附加文件等方面进行讨论。"
 
 #. module: project
-#: code:addons/project/models/project.py:203
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2689,11 +2731,6 @@ msgid "Owner"
 msgstr "所有者"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
-msgid "Pads"
-msgstr "Pads"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
 msgstr "上级模型"
@@ -2714,11 +2751,6 @@ msgstr ""
 " task (model))"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
 msgstr "计划那天的活动"
@@ -2729,7 +2761,7 @@ msgid "Planner"
 msgstr "计划器"
 
 #. module: project
-#: code:addons/project/models/project.py:718
+#: code:addons/project/models/project.py:738
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2789,11 +2821,6 @@ msgid "Project Count"
 msgstr "项目计数"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Project Management"
-msgstr "项目管理"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_manager_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2827,11 +2854,6 @@ msgid "Project Tasks"
 msgstr "项目任务"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
-msgid "Project Time Unit *"
-msgstr "项目时间单位 *"
-
-#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "项目任务"
@@ -2860,8 +2882,8 @@ msgstr "项目"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
-msgid "Rating on task"
-msgstr "在任务上点评"
+msgid "Rating on Tasks"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_data_0
@@ -2930,6 +2952,11 @@ msgid "Record Thread ID"
 msgstr "记录线索ID"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Record time with mobile Timesheet app"
+msgstr ""
+
+#. module: project
 #: selection:project.task,kanban_state:0
 msgid "Red"
 msgstr "红色"
@@ -2948,6 +2975,11 @@ msgstr "红：任务卡住了（有议题存在）"
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
 msgstr "参考"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Reimburse employee expenses and invoice customers"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3016,6 +3048,16 @@ msgid "Runs outside Odoo, always available"
 msgstr "在Odoo之外运行，总是可以的"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save"
+msgstr "保存"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
 msgstr "Scrum方法论"
@@ -3036,6 +3078,11 @@ msgstr "搜索项目"
 #, python-format
 msgid "Select"
 msgstr "选择"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3074,7 +3121,7 @@ msgid "Set a Cover Image"
 msgstr "设置一张封面图像"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
@@ -3292,11 +3339,6 @@ msgid "Task blocked"
 msgstr "受阻的任务"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Task description is plain text"
-msgstr "任务描述就是一个很平常的文本"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
@@ -3385,6 +3427,11 @@ msgstr "项目和用户的任务"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Team Collaboration"
 msgstr ""
 
 #. module: project
@@ -3478,17 +3525,19 @@ msgid ""
 msgstr "没有可用图像能被设置为封面，在任务上发送一条信息并附上一张图像"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
-msgid "This allows customers to give rating on provided services"
-msgstr "这可以让客户针对收到的服务进行评级"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This is particularly useful to manage help and support: all incoming email  "
 "from customers will be transformed into an issue that you'll be able to "
 "track easily!"
 msgstr "这个用来管理帮助和支持特别有用：所有从客户那边过来的邮件都会自动的转换为议题，你可以很方便的追踪！"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid ""
+"This replaces task's description text field by a collaborative rich text "
+"pad. This is advised if tasks involve several people."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3527,7 +3576,6 @@ msgstr "这会在项目模块中增加一个新的菜单，它可以被用来去
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
-#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
@@ -3537,9 +3585,19 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_timesheet
+msgid "Time Billing"
+msgstr ""
+
+#. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
 msgstr "任务时间估算"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Time Management"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3551,6 +3609,11 @@ msgstr "时间排程"
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
 msgstr "工时单的单位"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet
+msgid "Timesheets"
+msgstr "工时表"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3614,9 +3677,29 @@ msgid ""
 msgstr "总剩余时间，任务执行者可定期重估"
 
 #. module: project
-#: selection:project.config.settings,module_rating_project:0
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track and solve issues from a Kanban view"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track attendances and compare with timesheets"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
 msgstr "允许在项目发行完成后激活客户评级"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track leaves to optimize your scheduling"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track time spent on projects and tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3650,6 +3733,11 @@ msgstr "用任务来"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
 msgstr "使用工时单"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Use collaborative rich text pads in tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3715,14 +3803,14 @@ msgid "View statistics for the week"
 msgstr "查看本周的统计"
 
 #. module: project
-#: code:addons/project/models/project.py:204
+#: code:addons/project/models/project.py:206
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "所有员工可见"
 
 #. module: project
-#: code:addons/project/models/project.py:205
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -3978,7 +4066,7 @@ msgid "send us an email"
 msgstr "给我们发邮件"
 
 #. module: project
-#: code:addons/project/models/project.py:463
+#: code:addons/project/models/project.py:484
 #, python-format
 msgid "tasks"
 msgstr "任务"

@@ -9,14 +9,13 @@
 # Volluta <volluta@tutanota.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
-# wilcobergacker <wilcobergacker@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: wilcobergacker <wilcobergacker@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -112,10 +111,10 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
 "                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
@@ -125,7 +124,7 @@ msgid ""
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -161,8 +160,8 @@ msgid "# of Tasks"
 msgstr "# Taken"
 
 #. module: project
-#: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:407
+#: code:addons/project/models/project.py:242
+#: code:addons/project/models/project.py:428
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -471,15 +470,6 @@ msgid ""
 msgstr ""
 "<span class=\"text-muted\">P.S: Dit archiveert de geselecteerde taken "
 "(behalve de bestemde taak)</span>"
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Deze configuratie is gerelateerd aan het bedrijf waarmee je "
-"ingelogd bent.</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1030,6 +1020,12 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
+#: model:ir.ui.menu,name:project.project_menu_config_activity_type
+msgid "Activity Types"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Voeg een omschrijving toe..."
@@ -1147,9 +1143,9 @@ msgstr ""
 "worden van andere updates."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Apply"
-msgstr "Toepassen"
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Apple App Store"
+msgstr "Apple App Store"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1222,6 +1218,11 @@ msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet_attendance
+msgid "Attendances"
+msgstr "Aanwezigheden"
+
+#. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
 msgstr ""
@@ -1231,6 +1232,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
 msgstr "Beschikbaar op de Apple Store"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1275,6 +1281,11 @@ msgstr ""
 "korter dan een uur te houden."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Billing"
+msgstr "Facturatie"
+
+#. module: project
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -1312,8 +1323,8 @@ msgid "By Responsible"
 msgstr "Op verantwoordelijke"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
-#: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "Annuleer"
 
@@ -1401,9 +1412,9 @@ msgid "Click to create a new project.<br>"
 msgstr "Klik om een nieuw project aan te maken.<br>"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Collaborative rich text on task description"
-msgstr "Rijke tekst voor samenwerking op taakomschrijving"
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr "Pads voor samenwerking"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1452,7 +1463,7 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Configuratie mogelijkheden zijn beschikbaar in de Instellingen app."
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_config_settings
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 msgid "Configure Project"
 msgstr "Project configureren"
 
@@ -1476,6 +1487,7 @@ msgid "Consulting mission"
 msgstr "Consulting missie"
 
 #. module: project
+#: model:ir.model,name:project.model_res_partner
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1617,7 +1629,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr "Momenteel is er geen activiteit ingepland."
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1626,10 +1638,15 @@ msgid "Customer"
 msgstr "Klant"
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #, python-format
 msgid "Customer Email"
 msgstr "Klant email"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Customer Satisfaction"
+msgstr "Klanttevredenheid"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1895,7 +1912,7 @@ msgid "Ending Date"
 msgstr "Einddatum"
 
 #. module: project
-#: code:addons/project/models/project.py:415
+#: code:addons/project/models/project.py:436
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr "Fout! Startdatum van taak moet voor einddatum liggen."
@@ -1936,6 +1953,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "Voorbeelden"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_expense
+msgid "Expenses"
+msgstr "Declaraties"
 
 #. module: project
 #. openerp-web
@@ -2037,14 +2059,9 @@ msgstr ""
 "(bijvoorbeeld: Scrum)."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts"
 msgstr "Prognoses"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
-msgid "Forecasts, planning and Gantt charts"
-msgstr "Prognoses, planning en Gantt diagram"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2103,6 +2120,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr "Veel succes!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "Google Chrome Store"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Play Store"
+msgstr "Google Play Store"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2172,7 +2199,7 @@ msgstr ""
 "Als website is geactiveerd, kunnen gebruikers van de portal projecten, taken of issues zien, als deze gevolgd worden door iemand van hun onderneming\n"
 
 #. module: project
-#: code:addons/project/models/project.py:564
+#: code:addons/project/models/project.py:585
 #, python-format
 msgid "I take it"
 msgstr "Ik neem het"
@@ -2359,6 +2386,16 @@ msgstr ""
 "niet in de Odoo inbox binnenkomen."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Issue Management"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue
+msgid "Issue Tracking"
+msgstr "Issue tracering"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issue Tracking app."
 msgstr "Issue Tracking app."
@@ -2536,6 +2573,11 @@ msgstr ""
 " urenstaten te gebruiken."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_holidays
+msgid "Leave Management"
+msgstr "Verlofbeheer"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
@@ -2543,13 +2585,11 @@ msgid "Let's create your first project."
 msgstr "Maak uw eerste project aan."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
-"-This installs the module pad."
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://ietherpad.com/)."
 msgstr ""
-"Geeft het bedrijf de mogelijkheid om te kiezen welke Pad installatie wordt gebruikt (bijvoorbeeld: http://ietherpad.com/).\n"
-"-Dit installeert de module pad."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2567,6 +2607,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
 msgstr "Lijst, plan en traceer dingen die te doen zijn"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Manage your resources with Gantt charts"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2635,11 +2680,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Meer <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "More Info"
-msgstr "Meer info"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Meer efficiënte communicatie tussen werknemers"
@@ -2699,11 +2739,6 @@ msgstr "Volgende activiteiten"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 msgid "Next Task Activities"
 msgstr "Volgende taak activiteiten"
-
-#. module: project
-#: selection:project.config.settings,module_rating_project:0
-msgid "No customer rating"
-msgstr "Geen klantenbeoordeling"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2774,7 +2809,7 @@ msgstr ""
 "toevoegen, enz."
 
 #. module: project
-#: code:addons/project/models/project.py:203
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2882,11 +2917,6 @@ msgid "Owner"
 msgstr "Eigenaar"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
-msgid "Pads"
-msgstr "Paden"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
 msgstr "Bovenliggend model"
@@ -2907,11 +2937,6 @@ msgstr ""
 "is niet noodzakelijk het model wat wordt gegeven door alias_model_id (bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
 msgstr "Plan uw activiteiten voor de dag"
@@ -2922,7 +2947,7 @@ msgid "Planner"
 msgstr "Planner"
 
 #. module: project
-#: code:addons/project/models/project.py:718
+#: code:addons/project/models/project.py:738
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2984,11 +3009,6 @@ msgid "Project Count"
 msgstr "Project teller"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Project Management"
-msgstr "Projectbeheer"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_manager_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3022,11 +3042,6 @@ msgid "Project Tasks"
 msgstr "Projecttaken"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
-msgid "Project Time Unit *"
-msgstr "Tijdseenheid project *"
-
-#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "Projecttaken"
@@ -3055,8 +3070,8 @@ msgstr "Projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
-msgid "Rating on task"
-msgstr "Beoordeling op taken"
+msgid "Rating on Tasks"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_data_0
@@ -3125,6 +3140,11 @@ msgid "Record Thread ID"
 msgstr "Record Thread ID"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Record time with mobile Timesheet app"
+msgstr ""
+
+#. module: project
 #: selection:project.task,kanban_state:0
 msgid "Red"
 msgstr "Rood"
@@ -3143,6 +3163,11 @@ msgstr "Rood: de taak is geblokkeerd (er is een probleem)"
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
 msgstr "Referentie"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Reimburse employee expenses and invoice customers"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3211,6 +3236,18 @@ msgid "Runs outside Odoo, always available"
 msgstr "Draait buiten Odoo, altijd beschikbaar"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save"
+msgstr "Opslaan"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+"Sla deze pagina op en kom terug naar hier om deze functionaliteit te "
+"activeren."
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
 msgstr "Scrum methode"
@@ -3231,6 +3268,11 @@ msgstr "Zoek project"
 #, python-format
 msgid "Select"
 msgstr "Selecteer"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3273,7 +3315,7 @@ msgid "Set a Cover Image"
 msgstr "Stel een voorkant afbeelding in"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
@@ -3494,11 +3536,6 @@ msgid "Task blocked"
 msgstr "Taak geblokkeerd"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Task description is plain text"
-msgstr "Taakomschrijving is platte tekst"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
@@ -3588,6 +3625,11 @@ msgstr "Taken per gebruiker en project"
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
 msgstr "Taken om samen te voegen"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Team Collaboration"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3699,12 +3741,6 @@ msgstr ""
 "bericht op de taak met een afbeelding als bijlage."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
-msgid "This allows customers to give rating on provided services"
-msgstr ""
-"Dit staat klanten toe om een beoordeling te geven op geleverde diensten"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This is particularly useful to manage help and support: all incoming email  "
@@ -3714,6 +3750,13 @@ msgstr ""
 "Dit is voornamelijk handig om help en ondersteuning te beheren: alle "
 "inkomende e-mail van klanten wordt omgevormd in een issue dat u gemakkelijk "
 "kan opvolgen!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid ""
+"This replaces task's description text field by a collaborative rich text "
+"pad. This is advised if tasks involve several people."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3762,7 +3805,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
-#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
@@ -3774,9 +3816,19 @@ msgstr ""
 "Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan niet de juiste eenheid voor uw werknemers in te stellen."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_timesheet
+msgid "Time Billing"
+msgstr ""
+
+#. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
 msgstr "Tijd inschattingen bij taken"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Time Management"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3788,6 +3840,11 @@ msgstr "Tijdsplanning"
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
 msgstr "Urenstaat maateenheid"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet
+msgid "Timesheets"
+msgstr "Urenstaten"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3856,9 +3913,29 @@ msgstr ""
 "deze taak toegewezen persoon."
 
 #. module: project
-#: selection:project.config.settings,module_rating_project:0
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track and solve issues from a Kanban view"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track attendances and compare with timesheets"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
 msgstr "Volg klanttevredenheid op taken"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track leaves to optimize your scheduling"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track time spent on projects and tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3892,6 +3969,11 @@ msgstr "Gebruik taken als"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
 msgstr "Gebruik urenstaten"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Use collaborative rich text pads in tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3962,14 +4044,14 @@ msgid "View statistics for the week"
 msgstr "Bekijk statistieken voor deze week"
 
 #. module: project
-#: code:addons/project/models/project.py:204
+#: code:addons/project/models/project.py:206
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "Zichtbaar voor alle werknemers"
 
 #. module: project
-#: code:addons/project/models/project.py:205
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -4258,7 +4340,7 @@ msgid "send us an email"
 msgstr "verzend ons een e-mail"
 
 #. module: project
-#: code:addons/project/models/project.py:463
+#: code:addons/project/models/project.py:484
 #, python-format
 msgid "tasks"
 msgstr "taken"

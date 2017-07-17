@@ -14,10 +14,10 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -87,6 +87,12 @@ msgid "Activities Done"
 msgstr "活动结束"
 
 #. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+#: model:ir.ui.menu,name:sales_team.sales_team_menu_config_activity_types
+msgid "Activity Types"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
 msgstr "已归档"
@@ -108,7 +114,7 @@ msgid "Bar"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:235
+#: code:addons/sales_team/models/crm_team.py:237
 #, python-format
 msgid "Big Pretty Button :)"
 msgstr ""
@@ -179,6 +185,11 @@ msgstr "配置"
 #: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
 msgid "Configure Sales"
 msgstr "配置销售"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "联系人"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_partner_category_form
@@ -405,11 +416,6 @@ msgid "Manage leads, opportunities, meetings and activities"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
-msgid "Manage subscriptions and recurring invoicing"
-msgstr "管理订阅和再开具的发票"
-
-#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Manager"
 msgstr "管理员"
@@ -465,11 +471,6 @@ msgstr "下一步活动"
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "仅整型数值是合法的。"
-
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
 
 #. module: sales_team
 #. openerp-web
@@ -532,7 +533,7 @@ msgstr "销售"
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Channel"
-msgstr ""
+msgstr "销售渠道"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users_sale_team_id
@@ -588,6 +589,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "设置"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
+msgid "Subscriptions"
+msgstr "订阅"
 
 #. module: sales_team
 #. openerp-web
@@ -737,8 +743,8 @@ msgid "Type"
 msgstr "类型"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:122
-#: code:addons/sales_team/models/crm_team.py:125
+#: code:addons/sales_team/models/crm_team.py:124
+#: code:addons/sales_team/models/crm_team.py:127
 #, python-format
 msgid "Undefined graph model for Sales Channel: %s"
 msgstr ""

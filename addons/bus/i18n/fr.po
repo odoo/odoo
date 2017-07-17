@@ -10,16 +10,15 @@
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # ShevAbam <shevabam@gmail.com>, 2016
-# Fabien Pinckaers <fp@openerp.com>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,18 +42,9 @@ msgid "Channel"
 msgstr "Canal"
 
 #. module: bus
-#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
-msgid ""
-"Check this box to ensure every address created in that country has a 'City' "
-"chosen in the list of the country's cities."
-msgstr ""
-"Cochez cette case afin de s'assurer que chaque adresse ait une \"Ville\" "
-"sélectionnée dans la liste des villes du pays."
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_city_id
-msgid "Company"
-msgstr "Société"
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -71,36 +61,6 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
 msgstr "Nom affiché"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
-msgid "Door Number"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
-msgid "Enforce Cities"
-msgstr "Appliquer les villes"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Latitude"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Longitude"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr "Date de géolocalisation"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number
-msgid "House Number"
-msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
@@ -155,16 +115,6 @@ msgstr "Hors ligne"
 #: selection:bus.presence,status:0
 msgid "Online"
 msgstr "En ligne"
-
-#. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Partenaire"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_name
-msgid "Street Name"
-msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

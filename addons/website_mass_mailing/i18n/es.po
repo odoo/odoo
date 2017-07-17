@@ -10,14 +10,13 @@
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
 # Gelo Joga Landoo <gj@landoo.es>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
-# Carlos rodriguez <carlosalbertor436@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Carlos rodriguez <carlosalbertor436@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,15 +53,6 @@ msgid "Add a Newsletter Subscribe Popup"
 msgstr "Añadir un Popup de suscripción al boletín de noticias"
 
 #. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Allow the use of a pop-up snippet on website to encourage visitors to sign "
-"up on a mass mailing list"
-msgstr ""
-"Permite el uso de un snippet \"pop-up\" en el website para motivar a los "
-"visitantes a darse de alta en el mailing list."
-
-#. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "Cambiar boletín de noticias"
@@ -79,12 +69,9 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Do not add extra content on website pages to encourage visitors to sign up"
+#: model:ir.ui.view,arch_db:website_mass_mailing.inherited_view_mass_mailing_configuration
+msgid "Encourage to subscribe to mailing lists with a popup"
 msgstr ""
-"No añadir contenido extra en las páginas de sitios web para animar a los "
-"visitantes a registrarse"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -131,6 +118,14 @@ msgid "Thanks for your subscription!"
 msgstr "¡Gracias por su suscripción!"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.inherited_view_mass_mailing_configuration
+msgid ""
+"This adds a new Newsletter Popup snippet to drag & drop on on your website "
+"pages. It triggers a popup when visitors land on the page. This popup "
+"prompts them to enter their email address to join a mailing list."
+msgstr ""
+
+#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:80
 #, python-format
@@ -144,8 +139,8 @@ msgstr "Usa la ventana emergente de suscripción en el website"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
-msgid "Website Pop-up"
-msgstr "Ventana Emergente del Website"
+msgid "Website Popup"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
@@ -163,9 +158,13 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr "No estás suscrito a ninguna de nuestras listas de mailing"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr ""
+
+#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:154
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
 #, python-format
 msgid "Your changes have been saved."
 msgstr "Tus cambios han sido guardados"

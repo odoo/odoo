@@ -3,12 +3,12 @@
 # * stock_picking_wave
 # 
 # Translators:
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
@@ -41,7 +41,7 @@ msgstr "Toplama listesini gruba ekle"
 #: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
 msgid "Add to Wave"
-msgstr "Dalga Ekle"
+msgstr "Gruba Ekle"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
@@ -62,7 +62,7 @@ msgstr "İptal Edildi"
 #. module: stock_picking_wave
 #: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
 msgid "Click to create a Picking Wave."
-msgstr "Bir Toplama Dalgası oluşturmak için tıklayın."
+msgstr "Bir Toplama Listesi Grubu oluşturmak için tıklayın."
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -84,13 +84,13 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_create_date
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_create_date
 msgid "Created on"
-msgstr "Oluşturulma zamanı"
+msgstr "Oluşturulma"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_to_wave_display_name
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -161,7 +161,7 @@ msgstr "Yazdırılacak bir şey yok."
 #. module: stock_picking_wave
 #: model:ir.model.fields,help:stock_picking_wave.field_stock_picking_wave_user_id
 msgid "Person responsible for this wave"
-msgstr "Bu dalgadan sorumlu kişi"
+msgstr "Bu toplama grubundan sorumlu kişi"
 
 #. module: stock_picking_wave
 #: code:addons/stock_picking_wave/models/stock_picking_wave.py:64
@@ -171,7 +171,7 @@ msgstr "Bu dalgadan sorumlu kişi"
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_filter
 #, python-format
 msgid "Picking Wave"
-msgstr "Toplama Listesi"
+msgstr "Toplama Listesi Grubu"
 
 #. module: stock_picking_wave
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_name
@@ -198,7 +198,7 @@ msgstr "Bu Toplama Listesinin Kullanıldığı Toplama Listesi Grubu"
 #: model:ir.model.fields,field_description:stock_picking_wave.field_stock_picking_wave_picking_ids
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
 msgid "Pickings"
-msgstr "Toplamalar"
+msgstr "Toplama Listeleri"
 
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_picking_wave_form
@@ -223,7 +223,7 @@ msgstr "Toplama Listesi Gruplarını Arama"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.picking_to_wave_form
 msgid "Select a wave"
-msgstr "Bir dalga seç"
+msgstr "Bir grup seç"
 
 #. module: stock_picking_wave
 #: code:addons/stock_picking_wave/models/stock_picking_wave.py:59
@@ -281,4 +281,4 @@ msgstr "Kullanıcı"
 #. module: stock_picking_wave
 #: model:ir.ui.view,arch_db:stock_picking_wave.view_stock_picking_wave_search_inherit
 msgid "Wave"
-msgstr "Dalga"
+msgstr "Grup"

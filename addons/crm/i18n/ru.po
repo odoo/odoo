@@ -20,10 +20,10 @@
 # Denis Baranov <baranov@itlibertas.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Denis Baranov <baranov@itlibertas.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -118,10 +118,10 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
 "                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
@@ -131,109 +131,10 @@ msgid ""
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
-"\n"
-"\n"
-"            <div style=\"margin: 10px auto;\">\n"
-"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
-"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:2px;width:30%;\">\n"
-"                            <img src=\"web/static/src/img/logo.png\"/>\n"
-"                        </td>\n"
-"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
-"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Авто вход</a>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
-"                <tbody>\n"
-"                    <tr>\n"
-"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
-"                            <p style=\"color:#875A7B;margin:0\" >Ура!</p><br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                <span>Приложение Odoo CRM запущено и работает.</span></p><br>\n"
-"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-size:13px;font-weight:bold; \">Что дальше?</span></p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Попробуйте создать руководство, отправив электронное письмо </span>\n"
-"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
-"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
-"                                        </a>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>Отслеживайте свои возможности в своей рекламной последовательности, просто перетаскивая карты из одной колонки в другую</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul> <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Откройте для себя </span>\n"
-"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
-"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM планировщик</span></a></span>\n"
-"                                <span> активировать дополнительные функции</span>\n"
-"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
-"                            </p>\n"
-"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Автоматически назначайте свои лидеры своим продавцам с помощью свинцового счета, </span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Поддерживайте связь с потенциальным клиентом с эффективными кампаниями электронной почты,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Получите качественную информацию из обзоров,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
-"                                        <span>Получите умные отчеты и точные информационные панели,</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                                <li dir=\"ltr\">\n"
-"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                        <span>И многое другое...</span>\n"
-"                                    </p>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span style=\"font-weight:bold;\">Нужна помощь?</span>\n"
-"                                <span style=\"font-style:italic;\">Ты не один</span>\n"
-"                            </p>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
-"                                <span>Мы будем рады помочь вам на этом пути. Свяжитесь с нами через наш\n"
-"                                <a href=\"https://www.odoo.com/help\">форма поддержки</a> если у вас есть вопросы.\n"
-"                                Вы также можете узнать, как получить лучшее из Odoo CRM с помощью нашего </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
-"                                <span style=\"text-decoration:underline;\">Документация пользователя</span></a>\n"
-"                                </span><span> или с нашими </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
-"                                <span style=\"text-decoration:underline;\">API Документация</span></a>\n"
-"                            </p>\n"
-"                            <br>\n"
-"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Наслаждайтесь своим опытом Odoo,</span></p>\n"
-"                        </td>\n"
-"                    </tr>\n"
-"                </tbody>\n"
-"            </table>\n"
-"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>Команда Odoo<br/>PS: Люди любят Odoo, проверnt</span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">что они говорят об этом.</span></a></span>\n"
-"            </div>\n"
-"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -1037,7 +938,7 @@ msgstr ""
 " может объединить договоры с разными адресами."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:848
+#: code:addons/crm/models/crm_lead.py:844
 #, python-format
 msgid ""
 "All email incoming to %s will automatically\n"
@@ -1304,7 +1205,7 @@ msgid "Click on an opportunity to zoom to it."
 msgstr "Нажмите на возможность для масштабирования."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:851
+#: code:addons/crm/models/crm_lead.py:847
 #, python-format
 msgid "Click to add a new opportunity"
 msgstr "Нажмите, чтобы добавить новую возможность."
@@ -1422,6 +1323,11 @@ msgid "Consumers, Retailers"
 msgstr "Потребители, продавцы"
 
 #. module: crm
+#: model:ir.model,name:crm.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 msgid "Contact Information"
 msgstr "Контактная информация"
@@ -1482,7 +1388,7 @@ msgid "Convert to opportunities"
 msgstr "Преобразовать в предложения"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1022
+#: code:addons/crm/models/crm_lead.py:1018
 #: selection:crm.lead2opportunity.partner,name:0
 #: selection:crm.lead2opportunity.partner.mass,name:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
@@ -1667,7 +1573,7 @@ msgid "Current Line"
 msgstr "Текущая строка"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1057
+#: code:addons/crm/models/crm_lead.py:1062
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_partner_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2projectissue_wizard_partner_id
@@ -1683,7 +1589,7 @@ msgid "Customer"
 msgstr "Заказчик"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1059
+#: code:addons/crm/models/crm_lead.py:1064
 #, python-format
 msgid "Customer Email"
 msgstr "Email заказчика"
@@ -1706,7 +1612,7 @@ msgid "Customizations"
 msgstr "Индивидуальная настройка"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:84
+#: code:addons/crm/models/crm_team.py:83
 #, python-format
 msgid ""
 "Dashboard graph content cannot be Pipeline if the sales channel doesn't use "
@@ -1742,11 +1648,6 @@ msgstr "Дедуплицировать другие контакты"
 #: model:ir.model.fields,field_description:crm.field_sale_config_settings_alias_prefix
 msgid "Default Alias Name for Leads"
 msgstr "Псевдоним по умолчанию для инициатив"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_sale_config_settings_default_generate_lead_from_alias
-msgid "Default Generate Lead From Alias"
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_alias_defaults
@@ -1895,11 +1796,6 @@ msgstr "Адрес электронной почты контакта"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sale_config_settings_view_form_inherit_crm
-msgid "Emails"
-msgstr "Эл.почта"
-
-#. module: crm
-#: model:ir.ui.view,arch_db:crm.sale_config_settings_view_form_inherit_crm
 msgid ""
 "Emails received to that address generate new leads not assigned to any sales"
 " channel yet. This can be made when converting them into opportunities. "
@@ -1999,7 +1895,7 @@ msgid "Expected Closing Date"
 msgstr "Ожидаемая дата закрытия"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:191
+#: code:addons/crm/models/crm_team.py:190
 #: model:ir.model.fields,field_description:crm.field_crm_lead_planned_revenue
 #, python-format
 msgid "Expected Revenue"
@@ -2090,7 +1986,7 @@ msgid "Force assignation"
 msgstr "Назначение группы"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:519
+#: code:addons/crm/models/crm_lead.py:515
 #, python-format
 msgid "From %s : %s"
 msgstr "От %s: %s"
@@ -2117,7 +2013,9 @@ msgstr "Игрофикация"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.sale_config_settings_view_form_inherit_crm
-msgid "Generate leads from incoming emails"
+msgid ""
+"Generate unassigned leads from incoming emails. Leads coming from\n"
+"                                that email will be assigned manually."
 msgstr ""
 
 #. module: crm
@@ -2432,7 +2330,7 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:825
+#: code:addons/crm/models/crm_lead.py:821
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report_lead_id
@@ -2502,7 +2400,7 @@ msgid "Leads & Opportunities"
 msgstr "Инициативы и возможности"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:57
+#: code:addons/crm/models/crm_lead.py:56
 #, python-format
 msgid "Leads / Opportunities"
 msgstr "Инициативы / возможности"
@@ -2617,7 +2515,7 @@ msgstr "Список возможных болевых точек сегмент
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/models/crm_lead.py:1028
+#: code:addons/crm/models/crm_lead.py:1024
 #: code:addons/crm/static/src/js/web_planner_crm.js:33
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2647,6 +2545,16 @@ msgstr "Причины отказа"
 #: selection:crm.lead,priority:0 selection:crm.opportunity.report,priority:0
 msgid "Low"
 msgstr "Низкий"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_sale_config_settings_default_generate_lead_from_alias
+msgid "Manual Assignation of Emails"
+msgstr ""
+
+#. module: crm
+#: model:ir.ui.view,arch_db:crm.sale_config_settings_view_form_inherit_crm
+msgid "Manually Assignation of Incoming Emails"
+msgstr ""
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_oppor
@@ -2681,7 +2589,7 @@ msgid "Medium"
 msgstr "Средний"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:867
+#: code:addons/crm/models/crm_lead.py:863
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr "Встреча назначена на '%s'<br> Тема: %s <br> длительность: %s hour(s)"
@@ -2766,25 +2674,25 @@ msgid "Merge with existing opportunities"
 msgstr "Объединить с существующими предложениями"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:467
+#: code:addons/crm/models/crm_lead.py:466
 #, python-format
 msgid "Merged lead"
 msgstr "Объединённые инициативы"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:501
+#: code:addons/crm/models/crm_lead.py:497
 #, python-format
 msgid "Merged leads"
 msgstr "Объединенные инициативы"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:501
+#: code:addons/crm/models/crm_lead.py:497
 #, python-format
 msgid "Merged opportunities"
 msgstr "Объединенные предложения"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:467
+#: code:addons/crm/models/crm_lead.py:466
 #, python-format
 msgid "Merged opportunity"
 msgstr "Объединенные предложения"
@@ -2910,7 +2818,7 @@ msgid "Next activity late"
 msgstr "Следующее мероприятие в конце"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:1079
+#: code:addons/crm/models/crm_lead.py:1084
 #, python-format
 msgid "No Subject"
 msgstr "Без темы"
@@ -3115,7 +3023,7 @@ msgid "Opportunities that are assigned to me"
 msgstr "Возможности, назначенные мне"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:800
+#: code:addons/crm/models/crm_lead.py:796
 #: selection:crm.activity.report,lead_type:0 selection:crm.lead,type:0
 #: selection:crm.opportunity.report,type:0
 #: model:ir.model.fields,field_description:crm.field_calendar_event_opportunity_id
@@ -3250,7 +3158,6 @@ msgstr ""
 "задача (model))"
 
 #. module: crm
-#: model:ir.model,name:crm.model_res_partner
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_partner_id
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Partner"
@@ -3294,7 +3201,7 @@ msgid "Phone scripts"
 msgstr "Телефонный скрипт"
 
 #. module: crm
-#: code:addons/crm/models/crm_team.py:135
+#: code:addons/crm/models/crm_team.py:134
 #: model:ir.model.fields,field_description:crm.field_crm_team_use_opportunities
 #: model:ir.ui.menu,name:crm.crm_opportunity_report_menu
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3347,7 +3254,7 @@ msgid "Planner"
 msgstr "Планировщик"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:573
+#: code:addons/crm/models/crm_lead.py:569
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list "
@@ -3490,11 +3397,9 @@ msgstr "Прочитайте документацию о цене и скидк�
 #: code:addons/crm/static/src/js/tour.js:13
 #, python-format
 msgid ""
-"Ready to boost you sales? Your <b>sales pipeline</b> can be found here, "
+"Ready to boost your sales? Your <b>sales pipeline</b> can be found here, "
 "under this app."
 msgstr ""
-"Готовы к росту продаж? Всё, что относится к <b>продажам</b>, находится "
-"здесь, в этом приложении."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -4153,7 +4058,7 @@ msgstr ""
 "Если в этом этапе нет доступных записей, то он скрыт в отображении канбан."
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:994
+#: code:addons/crm/models/crm_lead.py:990
 #, python-format
 msgid "This target does not exist."
 msgstr "Эта цель не существует."
@@ -4356,11 +4261,6 @@ msgstr ""
 "Используйте хлебные крошки, чтобы <b>вернуться к вашей воронке продаж</b>."
 
 #. module: crm
-#: model:ir.model.fields,help:crm.field_crm_team_resource_calendar_id
-msgid "Used to compute open days"
-msgstr "Используется для подсчёта открытых дней"
-
-#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_user_login
 msgid "Used to log into the system"
 msgstr "Используется для входа в систему"
@@ -4536,7 +4436,7 @@ msgstr "Мастер"
 
 #. module: crm
 #. openerp-web
-#: code:addons/crm/models/crm_lead.py:1027
+#: code:addons/crm/models/crm_lead.py:1023
 #: code:addons/crm/static/src/js/web_planner_crm.js:15
 #: code:addons/crm/static/src/js/web_planner_crm.js:22
 #: code:addons/crm/static/src/js/web_planner_crm.js:27
@@ -4560,11 +4460,6 @@ msgstr "Побед по стране"
 #: model:ir.model.fields,field_description:crm.field_res_users_target_sales_won
 msgid "Won in Opportunities Target"
 msgstr "Выиграл в целевых возможностях"
-
-#. module: crm
-#: model:ir.model.fields,field_description:crm.field_crm_team_resource_calendar_id
-msgid "Working Time"
-msgstr "Рабочее время"
 
 #. module: crm
 #. openerp-web
@@ -4741,7 +4636,7 @@ msgid "e.g. www.odoo.com"
 msgstr "например www.odoo.com"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:855
+#: code:addons/crm/models/crm_lead.py:851
 #, python-format
 msgid "opportunities"
 msgstr "потенциальные сделки"
@@ -4811,7 +4706,7 @@ msgstr ""
 "имя (например: sales@yourcompany.com)"
 
 #. module: crm
-#: code:addons/crm/models/crm_lead.py:861
+#: code:addons/crm/models/crm_lead.py:857
 #, python-format
 msgid "unknown"
 msgstr "неизвестно"

@@ -7,10 +7,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -152,6 +152,13 @@ msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Kon reactie- aanvraag aanbieder niet encrypteren"
 
 #. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:357
+#, python-format
+msgid "Could not read card"
+msgstr "Kan kaart niet lezen"
+
+#. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_mercury_transaction_create_uid
 msgid "Created by"
@@ -202,6 +209,13 @@ msgstr "Electronische betaling"
 #, python-format
 msgid "Empty Command String"
 msgstr "Lege commando string"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:638
+#, python-format
+msgid "Error"
+msgstr "Fout"
 
 #. module: pos_mercury
 #. openerp-web
@@ -574,6 +588,11 @@ msgid "Merchant Password"
 msgstr "Handelaar wachtwoord"
 
 #. module: pos_mercury
+#: model:ir.ui.view,arch_db:pos_mercury.pos_config_settings_view_form_inherit_pos_mercury
+msgid "Mercury Configuration"
+msgstr "Mercury configuratie"
+
+#. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
@@ -608,6 +627,18 @@ msgstr "Naam"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
 msgstr "Naam van deze Mercury configuratie"
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr "Geen mercury configuratie geassocieerd met het dagboek."
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr "Geen geopende kassa sessie gevonden voor gebruiker %s"
 
 #. module: pos_mercury
 #. openerp-web
@@ -705,8 +736,8 @@ msgstr "Zet aub uw Mercury handelaar account op."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale"
-msgstr "Kassa"
+msgid "Point of Sale Orders"
+msgstr "Kassa orders"
 
 #. module: pos_mercury
 #. openerp-web

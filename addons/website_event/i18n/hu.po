@@ -8,10 +8,10 @@
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -123,6 +123,11 @@ msgid "All Events"
 msgstr "Minden esemény"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_config_settings_view_form_inherit_website
+msgid "Ask questions to attendees when registering online"
+msgstr ""
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
 msgstr "Résztvevő #%s"
@@ -131,6 +136,13 @@ msgstr "Résztvevő #%s"
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Cancel Registration"
 msgstr "Regisztráció törlése"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
+msgid ""
+"Check this option to have menus for your event on the\n"
+"                                website: registrations, schedule, map, ..."
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -177,7 +189,7 @@ msgstr ""
 "pl: Technikai Tréning"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_show_menu
+#: model:ir.model.fields,help:website_event.field_event_event_website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
@@ -186,9 +198,14 @@ msgstr ""
 "oldalán."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
 msgid "Dedicated Menu"
 msgstr "Ide vonatkozó menü"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+msgid "Display a dedicated menu on Website"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -203,7 +220,7 @@ msgid "E-mail"
 msgstr "E-mail"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.view_event_sale_form
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
 msgstr "Jelvény szerkesztése"
 
@@ -216,6 +233,11 @@ msgstr "Jelentkezés vége"
 #: model:ir.model,name:website_event.model_event_event
 msgid "Event"
 msgstr "Esemény"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_type
+msgid "Event Category"
+msgstr "Esemény kategória"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -305,7 +327,7 @@ msgid "Free"
 msgstr "Szabad"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Introduction"
 msgstr "Bemutatás"
@@ -316,7 +338,7 @@ msgid "Is Participating"
 msgstr "Résztvevő"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:55
+#: code:addons/website_event/models/event.py:64
 #, python-format
 msgid "Location"
 msgstr "Helyszín"
@@ -333,7 +355,7 @@ msgstr "Név"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:182
+#: code:addons/website_event/controllers/main.py:185
 #: code:addons/website_event/static/src/js/website_event.editor.js:14
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
@@ -428,12 +450,17 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_config_settings_view_form_inherit_website
+msgid "Questions"
+msgstr "Kérdések"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Reference"
 msgstr "Hivatkozás"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:65
 #, python-format
 msgid "Register"
 msgstr "Regisztráció"
@@ -502,11 +529,6 @@ msgid "Today"
 msgstr "Ma"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_twitter_hashtag
-msgid "Twitter Hashtag"
-msgstr "Twitter hivatkozó címke"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
@@ -532,6 +554,11 @@ msgstr "Örömmel igazoljuk vissza az eseményünkre a feliratkozását"
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
 msgstr "Weboldal kezdőlap"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Website Menu"
+msgstr "Honlap menü"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids

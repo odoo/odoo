@@ -12,13 +12,14 @@
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Levent Karakaş <levent@mektup.at>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,9 +46,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid ""
 "<strong>No logo found!</strong>\n"
-"                        To get a beautiful report, you might review your\n"
+"                        To get a beautiful document, you should review your\n"
 "                        company data: upload a logo, set\n"
-"                        bank accounts, phone numbers, etc."
+"                        your address, etc."
 msgstr ""
 
 #. module: report
@@ -193,19 +194,19 @@ msgstr "C5E 24  163 x 229 mm"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Change Report Template"
+msgid "Change Document Template"
 msgstr ""
 
 #. module: report
 #: code:addons/report/models/base_config_settings.py:30
 #: code:addons/report/models/report.py:278
 #, python-format
-msgid "Choose Your Report Layout"
+msgid "Choose Your Document Layout"
 msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Choose your reports's header and footer layout."
+msgid "Choose your document's header and footer layout"
 msgstr ""
 
 #. module: report
@@ -273,12 +274,20 @@ msgstr "Vazgeç"
 #: model:ir.model.fields,field_description:report.field_report_display_name
 #: model:ir.model.fields,field_description:report.field_report_paperformat_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Bir başlık satırı görüntüleme"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Document Template"
+msgstr ""
 
 #. module: report
 #. openerp-web
@@ -450,6 +459,7 @@ msgstr "Kağıt Biçimi Genel Yapılandırma"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -492,6 +502,11 @@ msgid "Preview Clean Template"
 msgstr ""
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Document"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 msgid "Preview External Report"
 msgstr "Dış Rapor Önizleme"
@@ -505,11 +520,6 @@ msgstr "İç Rapor Önizleme"
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid "Preview Minimalist Template"
 msgstr ""
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Preview Report"
-msgstr "Çıktı Önizleme"
 
 #. module: report
 #. openerp-web
@@ -535,13 +545,6 @@ msgstr ""
 #, python-format
 msgid "Report"
 msgstr "Çıktı"
-
-#. module: report
-#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
-#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Report Template"
-msgstr "Rapor Şablonu"
 
 #. module: report
 #: model:ir.ui.menu,name:report.reporting_menuitem
@@ -574,7 +577,7 @@ msgstr "Uygun Sayfa Boyutu Seçin"
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
 msgid "Set the paper format of printed documents"
-msgstr ""
+msgstr "Çıktılar için kağıt biçimini belirleyin"
 
 #. module: report
 #: selection:res.company,external_report_layout:0
@@ -659,7 +662,15 @@ msgid "Web:"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:464
+#: code:addons/report/models/report.py:485
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:487
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf başarısız oldu (hata kodu: %s). Mesaj: %s"
@@ -713,7 +724,7 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.view_company_report_form

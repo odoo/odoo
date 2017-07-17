@@ -12,10 +12,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15+e\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-28 13:36+0000\n"
-"PO-Revision-Date: 2017-04-28 13:36+0000\n"
+"POT-Creation-Date: 2017-07-17 08:45+0000\n"
+"PO-Revision-Date: 2017-07-17 08:45+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -638,6 +638,16 @@ msgstr ""
 "Lange omschrijving van de module zijn doel"
 
 #. module: base
+#: model:ir.module.module,description:base.module_hr_expense_check
+msgid ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
+"    "
+msgstr ""
+"\n"
+"Druk bedrag woordelijk as op cheques aangemaakt voor declaraties."
+
+#. module: base
 #: model:ir.module.module,summary:base.module_voip
 msgid ""
 "\n"
@@ -780,6 +790,8 @@ msgid ""
 "        This module provides the core of the Odoo Mobile App.\n"
 "        "
 msgstr ""
+"\n"
+"Deze module biedt de core van Odoo mobiele apps aan."
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -923,6 +935,8 @@ msgid ""
 "    Resource management for Project\n"
 "    "
 msgstr ""
+"\n"
+"Resource beheer voor project"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -6544,6 +6558,10 @@ msgid ""
 "=======================================================================\n"
 " "
 msgstr ""
+"\n"
+"Door deze applicatie te gebruiken kan u verkoopkanalen beheren met CRM en/of verkoop \n"
+"=======================================================================\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_vat
@@ -7724,11 +7742,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "Voegt afleverkosten toe aan online verkopen"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Volgers toevoegen"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast_grid
 msgid "Add Grid view on Project Forecasts"
 msgstr "Grid weergave toevoegen aan project prognoses"
@@ -7984,6 +7997,11 @@ msgid "Algeria"
 msgstr "Algerije"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.ir_cron_view_search
+msgid "All"
+msgstr "Alle"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
@@ -8044,6 +8062,13 @@ msgid ""
 msgstr ""
 "Laat u facturen maken en de betalingen volgen. Het is een simpeler versie "
 "van de boekhoud module voor managers die geen boekhouders zijn."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -8392,11 +8417,6 @@ msgid "Auto Search"
 msgstr "Automatisch Zoeken"
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr "Geautomatiseerde actie"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "Automatische actie regels"
@@ -8512,12 +8532,6 @@ msgstr "Bankrekeningen gerelateerd aan dit bedrijf"
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
 msgstr "Banken"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner_barcode
-#: model:ir.model.fields,help:base.field_res_users_barcode
-msgid "BarCode"
-msgstr "Barcode"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -9116,6 +9130,11 @@ msgid "Check Printing Base"
 msgstr "Afdrukbasis voor cheques"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_check
+msgid "Check Printing in Expenses"
+msgstr "Cheque afdrukken in declaraties"
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
 #: model:ir.model.fields,help:base.field_res_users_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
@@ -9257,14 +9276,14 @@ msgid "City Addresses"
 msgstr "Stad adressen"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "Klik hier om een nieuw document toe te voegen."
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Klik hier om een gepersonaliseerde weergave aan te maken."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -9854,7 +9873,6 @@ msgstr "Maak contextuele actie"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Aanmaakdatum"
 
@@ -10086,6 +10104,7 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -10421,28 +10440,6 @@ msgstr "Dag: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Dagen"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Geachte heer / mevrouw,\n"
-"\n"
-"Uit onze gegevens blijkt dat sommige rekeningen nog niet zijn betaald. Hieronder vindt u meer informatie.\n"
-"Indien het bedrag reeds is betaald, dan kunt u dit bericht negeren. Anders willen wij u vragen het totale bedrag hieronder vermeld, over te maken.\n"
-"\n"
-"Als u vragen hebt over uw facturen, neem dan contact met ons op.\n"
-"\n"
-"Dank u bij voorbaat voor uw medewerking.\n"
-"Met vriendelijke groet,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -11077,7 +11074,6 @@ msgstr "Personeelsbestand"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "Werknemers"
 
@@ -11905,6 +11901,11 @@ msgid "France - Accounting"
 msgstr "Frankrijk  - Boekhouding"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - Accounting - Certified CGI 286 I-3 bis"
+msgstr "Frankrijk - Boekhouding - Certified CGI 286 I-3 bis"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "Frankrijk - Boekhoudkundige rapporten"
@@ -12725,12 +12726,6 @@ msgstr "IBAN bankrekeningen"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_id
 msgid "ID"
 msgstr "ID"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-#: model:ir.model.fields,help:base.field_ir_cron_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "ID van de actie indien gedefinieerd in een XML bestand"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
@@ -14645,16 +14640,22 @@ msgid "Missing document(s)"
 msgstr "Ontbrekend(e) document(en)"
 
 #. module: base
-#: code:addons/models.py:5104
+#: code:addons/models.py:5107
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Ontbrekende verplichte waarde voor het veld '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:5101
+#: code:addons/models.py:5104
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Ontbrekende verplichte waarde voor het veld '%s'."
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:379
+#, python-format
+msgid "Missing view architecture."
+msgstr "Weergave ontbreekt"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -16149,6 +16150,11 @@ msgid "Print US Checks"
 msgstr "VS cheques afdrukken"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_check
+msgid "Print amount in words on checks issued for expenses"
+msgstr "Druk bedrag woordelijk as op cheques aangemaakt voor declaraties"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
 msgid "Print and Send Invoices with DocsAway.com"
 msgstr "Afdruken en verzenden facturen met DocsAway.com"
@@ -17253,11 +17259,6 @@ msgid "Sell based on timesheets"
 msgstr "Verkoop gebaseerd op urenstaten"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Verzend e-mail"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
 msgstr "Stuur facturen en volg betalingen op"
@@ -18142,12 +18143,11 @@ msgstr "Technische naam"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Technische instellingen"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:738
+#: code:addons/base/ir/ir_translation.py:749
 #, python-format
 msgid "Technical Translations"
 msgstr "Technische vertaling"
@@ -21116,15 +21116,6 @@ msgstr "test_convert"
 #: selection:ir.model.fields,ttype:0
 msgid "text"
 msgstr "tekst"
-
-#. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
-"de gebruiker is in staat om zijn eigen HR zaken te regelen (verlofaanvragen,"
-" urenstaten, ....), als hij is gekoppeld aan een werknemer in het systeem."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

@@ -6,17 +6,18 @@
 # Mateus Lopes <mateus1@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
-# falexandresilva <falexandresilva@gmail.com>, 2016
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2016
+# falexandresilva <falexandresilva@gmail.com>, 2016
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # Andre Gustavo Castro <agcastro.py@yahoo.com>, 2017
+# Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Andre Gustavo Castro <agcastro.py@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
+"Last-Translator: Cezar José Sant Anna Junior <cezar.santanna@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,8 +94,8 @@ msgstr "<strong>Endereço de envio:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>Total Sem Taxas</strong>"
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>Subtotal</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -120,6 +121,11 @@ msgstr "Adicionar notas de cotação"
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
 msgstr "Depois de ser Reparado"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Amount"
+msgstr "Montante"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -189,8 +195,8 @@ msgid "Confirmed"
 msgstr "Confirmado"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:508
-#: code:addons/mrp_repair/models/mrp_repair.py:570
+#: code:addons/mrp_repair/models/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:573
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -463,8 +469,8 @@ msgid "No Invoice"
 msgstr "Não Faturar"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:499
-#: code:addons/mrp_repair/models/mrp_repair.py:561
+#: code:addons/mrp_repair/models/mrp_repair.py:502
+#: code:addons/mrp_repair/models/mrp_repair.py:564
 #, python-format
 msgid "No Pricelist!"
 msgstr "Sem Lista de Preço!"
@@ -489,8 +495,8 @@ msgid "No product defined on Fees!"
 msgstr "Nenhum produto definido no valor!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:506
-#: code:addons/mrp_repair/models/mrp_repair.py:568
+#: code:addons/mrp_repair/models/mrp_repair.py:509
+#: code:addons/mrp_repair/models/mrp_repair.py:571
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "Não foi encontrada uma lista de preço válida!"
@@ -520,11 +526,6 @@ msgstr "Atividades em Atraso"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Partner"
 msgstr "Parceiro"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Price"
-msgstr "Preço"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
@@ -772,11 +773,6 @@ msgid "Subtotal"
 msgstr "Subtotal"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Tax"
-msgstr "Imposto"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
@@ -920,8 +916,8 @@ msgstr ""
 "Você precisa selecionar um Endereço do Parceiro no formulário de reparo!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:501
-#: code:addons/mrp_repair/models/mrp_repair.py:563
+#: code:addons/mrp_repair/models/mrp_repair.py:504
+#: code:addons/mrp_repair/models/mrp_repair.py:566
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"

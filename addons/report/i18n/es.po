@@ -17,13 +17,14 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,9 +51,9 @@ msgstr ""
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid ""
 "<strong>No logo found!</strong>\n"
-"                        To get a beautiful report, you might review your\n"
+"                        To get a beautiful document, you should review your\n"
 "                        company data: upload a logo, set\n"
-"                        bank accounts, phone numbers, etc."
+"                        your address, etc."
 msgstr ""
 
 #. module: report
@@ -198,19 +199,19 @@ msgstr "C5E 24 163 x 229 mm"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Change Report Template"
+msgid "Change Document Template"
 msgstr ""
 
 #. module: report
 #: code:addons/report/models/base_config_settings.py:30
 #: code:addons/report/models/report.py:278
 #, python-format
-msgid "Choose Your Report Layout"
+msgid "Choose Your Document Layout"
 msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Choose your reports's header and footer layout."
+msgid "Choose your document's header and footer layout"
 msgstr ""
 
 #. module: report
@@ -284,6 +285,14 @@ msgstr "Nombre a mostrar"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Mostrar una línea de cabecera"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Document Template"
+msgstr "Plantilla del documento"
 
 #. module: report
 #. openerp-web
@@ -457,6 +466,7 @@ msgstr "Configuración general del formato de papel"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -499,6 +509,11 @@ msgid "Preview Clean Template"
 msgstr ""
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Document"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 msgid "Preview External Report"
 msgstr "Vista previa Reporte Externo"
@@ -512,11 +527,6 @@ msgstr "Vista previa de Reporte Interno"
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid "Preview Minimalist Template"
 msgstr ""
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Preview Report"
-msgstr "Vista previa del informe"
 
 #. module: report
 #. openerp-web
@@ -542,13 +552,6 @@ msgstr "Vistas QWeb"
 #, python-format
 msgid "Report"
 msgstr "Informe"
-
-#. module: report
-#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
-#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Report Template"
-msgstr "Plantilla del informe"
 
 #. module: report
 #: model:ir.ui.menu,name:report.reporting_menuitem
@@ -672,7 +675,17 @@ msgid "Web:"
 msgstr ""
 
 #. module: report
-#: code:addons/report/models/report.py:464
+#: code:addons/report/models/report.py:485
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+"Wkhtmltopdf falló (código de error: %s). Límite de memoria demasiado bajo o "
+"alcanzado el límite de archivos máximos del subproceso. Mensaje : %s"
+
+#. module: report
+#: code:addons/report/models/report.py:487
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf falló (error code: %s). Mensaje: %s"

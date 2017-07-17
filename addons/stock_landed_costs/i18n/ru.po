@@ -13,10 +13,10 @@
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -26,10 +26,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:354
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:358
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:375
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:379
 #, python-format
 msgid " already out"
 msgstr "уже выбыл"
@@ -248,6 +248,11 @@ msgid "Landed Cost Type"
 msgstr "Тип стоимости с издержками"
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_config_settings_inherit_landed_cost
+msgid "Landed Cost Types"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
@@ -321,7 +326,7 @@ msgid "Pickings"
 msgstr "Сборки"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:321
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Пожалуйста, сконфигурируйте счёт складских расходов для продукта: %s."
@@ -395,7 +400,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Строки оценочной корректировки запасов"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:172
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "

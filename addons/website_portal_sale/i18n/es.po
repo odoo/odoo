@@ -10,15 +10,18 @@
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# José Vicente <txusev@gmail.com>, 2017
 # maitaoriana <maitaoriana@gmail.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Antonio Trueba <atgayol@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: maitaoriana <maitaoriana@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,13 +30,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
-msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Pagar Ahora"
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
-msgid "<span class=\"h3\">Your Invoices and Payments</span>"
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
+"Now</span>"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+msgid "<span class=\"h3\">Your Invoices</span>"
 msgstr ""
 
 #. module: website_portal_sale
@@ -49,29 +59,30 @@ msgstr ""
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
-"<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/> "
-"Problem</span>"
+"<span class=\"hidden-xs\">Sales Order #</span>\n"
+"                      <span class=\"visible-xs\">Ref.</span>"
 msgstr ""
-"<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/> "
-"Problema</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> "
-"Done</span>"
+"<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/><span "
+"class=\"hidden-xs\"> Problem</span></span>"
 msgstr ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
-"check\"/>Hecho</span>"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid ""
+"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/> "
-"Paid</span>"
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-check\"/><span "
+"class=\"hidden-xs\"> Paid</span></span>"
 msgstr ""
-"<span class=\"label label-default\"><i class=\"fa fa-fw fa-"
-"check\"/>Pagado</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
@@ -83,7 +94,6 @@ msgstr ""
 "clock-o\"/>Expirado</span>"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
@@ -91,6 +101,13 @@ msgid ""
 msgstr ""
 "<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
 "Cancelado</span>"
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
+msgid ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/><span "
+"class=\"hidden-xs\"> Cancelled</span></span>"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -104,20 +121,16 @@ msgstr ""
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid ""
-"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> "
-"Invoiced</span>"
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Invoiced</span></span>"
 msgstr ""
-"<span class=\"label label-info\"><i class=\"fa fa-fw fa-"
-"clock-o\"/>Facturado</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 msgid ""
-"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/> Waiting "
-"for Payment</span>"
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
-"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/>A la "
-"espera del Pago</span>"
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
@@ -204,7 +217,7 @@ msgid "Awaiting Payment"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:222
+#: code:addons/website_portal_sale/controllers/main.py:228
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
@@ -212,7 +225,7 @@ msgid ""
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:225
+#: code:addons/website_portal_sale/controllers/main.py:231
 #, python-format
 msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
@@ -220,11 +233,22 @@ msgid ""
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:177
+#: code:addons/website_portal_sale/controllers/main.py:183
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 #, python-format
 msgid "Due Date"
 msgstr "Fecha vencimiento"
+
+#. module: website_portal_sale
+#: model:ir.model.fields,help:website_portal_sale.field_sale_order_line_product_image
+msgid ""
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
+msgstr ""
+"Imagen de la variante del producto (Imagen grande de la plantilla del "
+"producto en caso de que esté vacía). Se redimensionará automáticamente como "
+"una imagen 1024x1024px, manteniendo la proporción."
 
 #. module: website_portal_sale
 #: model:ir.model,name:website_portal_sale.model_account_invoice
@@ -237,7 +261,7 @@ msgid "Invoice #"
 msgstr "Factura #"
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:176
+#: code:addons/website_portal_sale/controllers/main.py:182
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 #, python-format
 msgid "Invoice Date"
@@ -259,14 +283,6 @@ msgid "My Quotations"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:59
-#: code:addons/website_portal_sale/controllers/main.py:109
-#: code:addons/website_portal_sale/controllers/main.py:178
-#, python-format
-msgid "Name"
-msgstr "Nombre"
-
-#. module: website_portal_sale
 #: model:ir.model.fields,field_description:website_portal_sale.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
 msgstr ""
@@ -283,7 +299,7 @@ msgstr "Pedido"
 
 #. module: website_portal_sale
 #: code:addons/website_portal_sale/controllers/main.py:58
-#: code:addons/website_portal_sale/controllers/main.py:108
+#: code:addons/website_portal_sale/controllers/main.py:109
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 #, python-format
@@ -316,6 +332,11 @@ msgid "Pending Payment Transactions"
 msgstr ""
 
 #. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_sale_order_line_product_image
+msgid "Product Image"
+msgstr ""
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Quotation"
 msgstr "Presupuesto"
@@ -331,6 +352,14 @@ msgid "Quotations"
 msgstr "Presupuestos"
 
 #. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:59
+#: code:addons/website_portal_sale/controllers/main.py:110
+#: code:addons/website_portal_sale/controllers/main.py:184
+#, python-format
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: website_portal_sale
 #: model:ir.model,name:website_portal_sale.model_crm_team
 msgid "Sales Channel"
 msgstr "Canal de Ventas"
@@ -342,12 +371,12 @@ msgid "Sales Order"
 msgstr "Aviso para pedido de venta"
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
-msgid "Sales Order #"
-msgstr ""
+#: model:ir.model,name:website_portal_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de pedido de venta"
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:179
+#: code:addons/website_portal_sale/controllers/main.py:185
 #, python-format
 msgid "Status"
 msgstr "Estado"
@@ -356,6 +385,11 @@ msgstr "Estado"
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
 msgid "Taxes:"
 msgstr "Impuestos:"
+
+#. module: website_portal_sale
+#: model:ir.model.fields,help:website_portal_sale.field_sale_order_website_url
+msgid "The full URL to access the document through the website."
+msgstr "La URL completa para acceder al documento a través del sitio web."
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
@@ -404,9 +438,14 @@ msgid "Valid Until"
 msgstr "Válido hasta"
 
 #. module: website_portal_sale
+#: model:ir.model.fields,field_description:website_portal_sale.field_sale_order_website_url
+msgid "Website URL"
+msgstr "URL del sitio web"
+
+#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-msgid "Your Invoices and Payments"
-msgstr "Sus facturas y pagos"
+msgid "Your Invoices"
+msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale

@@ -31,10 +31,10 @@
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
 "Last-Translator: Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -99,7 +99,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -185,7 +185,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -272,7 +272,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -305,7 +305,7 @@ msgstr ""
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:95
+#: code:addons/calendar/static/src/js/base_calendar.js:98
 #, python-format
 msgid " [Me]"
 msgstr " [Moi]"
@@ -331,7 +331,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: Date modifiée"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:644
+#: code:addons/calendar/models/calendar.py:658
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -341,7 +341,7 @@ msgstr ""
 "%s à %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:642
+#: code:addons/calendar/models/calendar.py:656
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "Le %s à (%s pour %s) (%s)"
@@ -383,7 +383,7 @@ msgstr "Actif"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:75
+#: code:addons/calendar/static/src/js/base_calendar.js:78
 #, python-format
 msgid "Add Favorite Calendar"
 msgstr "Suivre un calendrier"
@@ -394,7 +394,7 @@ msgid "All Day"
 msgstr "Toute la journée"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:639
+#: code:addons/calendar/models/calendar.py:653
 #, python-format
 msgid "AllDay , %s"
 msgstr "Toute la journée , %s"
@@ -433,7 +433,7 @@ msgid "Availability"
 msgstr "Disponibilité"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1481
+#: code:addons/calendar/models/calendar.py:1506
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -499,6 +499,7 @@ msgid "Confirmed"
 msgstr "Confirmée"
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
 msgid "Contact"
 msgstr "Contact"
@@ -583,7 +584,7 @@ msgstr "Nom affiché"
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:156
+#: code:addons/calendar/static/src/js/base_calendar.js:159
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
 msgstr "Voulez-vous vraiment supprimer ce filtre de vos favoris ?"
@@ -638,13 +639,13 @@ msgid "Ending at"
 msgstr "Heure de fin"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:834
+#: code:addons/calendar/models/calendar.py:848
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "La date de fin ne peut pas être antérieure à la date de début."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:832
+#: code:addons/calendar/models/calendar.py:846
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -667,14 +668,14 @@ msgid "Event alarm"
 msgstr "Alarme de l'événement"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1072
+#: code:addons/calendar/models/calendar.py:1097
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "L'intervalle de récurrence d'un événement ne peut pas être négatif."
 
 #. module: calendar
 #. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:96
+#: code:addons/calendar/static/src/js/base_calendar.js:99
 #, python-format
 msgid "Everybody's calendars"
 msgstr "Calendriers de tout le monde"
@@ -695,7 +696,7 @@ msgid "First"
 msgstr "Premier"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:874
+#: code:addons/calendar/models/calendar.py:888
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "D'abord, vous devez indiquer la date de l'invitation."
@@ -732,7 +733,7 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1428
+#: code:addons/calendar/models/calendar.py:1453
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -1003,12 +1004,7 @@ msgid "Participant"
 msgstr "Participant(e)"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_res_partner
-msgid "Partner"
-msgstr "Partenaire"
-
-#. module: calendar
-#: code:addons/calendar/models/calendar.py:1085
+#: code:addons/calendar/models/calendar.py:1110
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "Sélectionner un jour correct du mois."
@@ -1355,7 +1351,7 @@ msgid "e.g. Business Lunch"
 msgstr "ex: Repas de travail"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1070
+#: code:addons/calendar/models/calendar.py:1095
 #, python-format
 msgid "interval cannot be negative."
 msgstr "L'intervalle ne peut être négatif."

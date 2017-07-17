@@ -5,18 +5,16 @@
 # Translators:
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
-# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
-# Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Viktor Pogrebniak <vp@aifil.ru>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Viktor Pogrebniak <vp@aifil.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -61,11 +59,6 @@ msgstr "Яблоко в день держит доктора вдали"
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr "Еще один хороший рабочий день! Скоро увидимся!"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Применить "
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -131,13 +124,13 @@ msgstr ""
 "уже был зарегистрирован на %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr "Не удается выполнить вход или выход нескольких сотрудников."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -176,6 +169,11 @@ msgstr "Вход"
 #, python-format
 msgid "Check out"
 msgstr "Выйти"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Check-In/Out"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -239,11 +237,13 @@ msgstr ""
 "здесь и выполнить его регистрацию / выезд."
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
 msgid "Created by"
 msgstr "Создано"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_create_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
 msgid "Created on"
 msgstr "Создан"
@@ -259,6 +259,7 @@ msgid "Department"
 msgstr "Подразделение"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
 msgid "Display Name"
 msgstr "Отображаемое Имя"
@@ -292,7 +293,8 @@ msgid "Employee Image"
 msgstr "Изображение сотрудника"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Employee PIN"
 msgstr "PIN сотрудника"
 
@@ -314,31 +316,9 @@ msgid "Employees"
 msgstr "Сотрудники"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-"Сотрудникам не нужно вводить свой PIN, чтобы вручную войти в \"Режиме "
-"киоска\"."
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-"Сотрудники должны ввести свой PIN-код, чтобы вручную войти в \"Режиме "
-"киоска\"."
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "Включить использование PIN"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr ""
-"Включение и отключение идентификации PIN-кода сотрудника при регистрации"
 
 #. module: hr_attendance
 #. openerp-web
@@ -450,6 +430,7 @@ msgid "Hr Attendance Search"
 msgstr "Поиск по посещаемости"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
 msgid "ID"
 msgstr "Номер"
@@ -484,24 +465,38 @@ msgid "Last Attendance"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings___last_update
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
 msgid "Last Updated by"
 msgstr "Последний раз обновил"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_write_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_module_hr_holidays
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Leave Management"
+msgstr "Отгулы/отпуски"
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
 msgstr "Управление посещаемостью"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Manage leave allocations and requests"
+msgstr ""
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -510,6 +505,7 @@ msgstr "Менеджер"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Ручная посещаемость"
 
@@ -595,9 +591,19 @@ msgid "Print Badge"
 msgstr "Печать бейджа"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Recommended Apps"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
 msgstr "Отчетность"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Save"
+msgstr "Сохранить"
 
 #. module: hr_attendance
 #. openerp-web
@@ -615,8 +621,8 @@ msgstr "Выберите сотрудника"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Settings"
-msgstr "Настройки"
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -654,6 +660,15 @@ msgstr ""
 " из своей сессии"
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"Пользователь получит доступ к меню посещаемости кадров, что позволяет ему "
+"управлять своим собственным присутствием."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -661,6 +676,12 @@ msgid ""
 msgstr ""
 "Пользователь должен будет ввести свой PIN, чтобы вручную войти на экране "
 "компании."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_module_hr_timesheet
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Timesheets"
+msgstr "Табели"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -671,6 +692,16 @@ msgstr "Для того, чтобы создать сотрудников пер
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Сегодня"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Track time spent by employees and compare with attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -717,9 +748,9 @@ msgid "You cannot duplicate an attendance."
 msgstr "Вы не можете дублировать посещаемость."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
+#: model:ir.model,name:hr_attendance.model_attendance_config_settings
+msgid "attendance.config.settings"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web

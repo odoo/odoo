@@ -15,13 +15,14 @@
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Sébastien Le Ray <sebastien-github@orniz.org>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"Last-Translator: Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,12 +46,17 @@ msgid "Accounting Information"
 msgstr "Informations comptables"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid ""
-"Allows to configure inventory valuations on products and product categories."
+"Affect landed costs on receipt operations and split them among products to "
+"update their cost price."
 msgstr ""
-"Permet de paramétrer la valorisation de stock sur les articles et les "
-"catégories d'articles."
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Allow perpetual stock valuation in accounting"
+msgstr ""
 
 #. module: stock_account
 #: selection:wizard.valuation.history,compute_at_date:0
@@ -70,7 +76,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:252
+#: code:addons/stock_account/models/stock.py:260
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -81,7 +87,7 @@ msgstr ""
 "d'effectuer cette opération."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:254
+#: code:addons/stock_account/models/stock.py:262
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -138,13 +144,7 @@ msgid "Compute"
 msgstr "Calculer"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average cost"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:327
+#: code:addons/stock_account/models/stock.py:335
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -163,6 +163,11 @@ msgid "Cost Method"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Costing &amp; Valuation"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
@@ -172,6 +177,11 @@ msgstr "Méthode de coût"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
+msgid "Counter-Part Account Required"
 msgstr ""
 
 #. module: stock_account
@@ -254,18 +264,9 @@ msgstr ""
 "présenteront la contrepartie des mouvements."
 
 #. module: stock_account
-#: selection:stock.config.settings,module_stock_landed_costs:0
-msgid "Include landed costs in product costing computation"
-msgstr "Inclure les frais de débarquement dans le calcul du coût produit"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
-msgid ""
-"Install the module that allows to affect landed costs on pickings, and split"
-" them onto the different products."
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Include landed costs in product cost"
 msgstr ""
-"Installer le module qui permet d'imputer les frais de douane sur les "
-"réceptions et les répartir sur les différents articles."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -281,7 +282,6 @@ msgstr "Emplacements de stock"
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Inventory Valuation"
 msgstr "Valorisation de l'inventaire"
@@ -359,11 +359,6 @@ msgid "No difference between standard price and new price!"
 msgstr "Aucune différence entre le prix standard et le nouveau prix!"
 
 #. module: stock_account
-#: selection:stock.config.settings,module_stock_landed_costs:0
-msgid "No landed costs"
-msgstr "Pas de frais de douane."
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
 msgid "Operation Date"
 msgstr "Date de l'opération"
@@ -375,23 +370,35 @@ msgid "Periodic (manual)"
 msgstr "Périodique (manuel)"
 
 #. module: stock_account
-#: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid "Periodic inventory valuation (recommended)"
-msgstr "Valorisation d'inventaire périodique (recommandé)"
-
-#. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
 msgstr "Perpétuel (automatisé)"
 
 #. module: stock_account
-#: selection:stock.config.settings,group_stock_inventory_valuation:0
-msgid ""
-"Perpetual inventory valuation (stock move generates accounting entries)"
+#: model:ir.model.fields,field_description:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid "Perpetual Valuation"
 msgstr ""
-"Valorisation d'inventaire perpéturl (chaque mouvement de stock produit des "
-"écritures comptables)"
+
+#. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid ""
+"Perpetual valuation allows to get an up-to-date stock valuation in your "
+"accounting whenever products are transferred. It is only tailored for big "
+"companies where such a need matters. It requires extra configuration and "
+"testing to make sure accounting is impacted the right way for every kind of "
+"stock move. This must be set on product categories. The Periodic mode is "
+"applied by default (i.e. manual accounting entries at the end of the fiscal "
+"year). This last mode is recommended for starters and small/medium-size "
+"companies."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_config_settings_group_stock_inventory_valuation
+msgid ""
+"Perpetual valuation allows to get up-to-date books whenever products are transferred. It is only tailored for big companies where such a need matters. It requires extra configuration and testing to make sure accounting is impacted the right way for every kind of stock move. \n"
+" This must be set on product categories. The Periodic mode is applied by default (i.e. manual accounting entries at the end of the fiscal year). This last mode is recommended for starters and small/medium-size companies."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -441,6 +448,13 @@ msgid "Retrieve the Inventory Value"
 msgstr "Valoriser le stock "
 
 #. module: stock_account
+#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+"Enregistrez cette page, vous pouvez y revenir pour appliquer vos nouvelles "
+"fonctionnalités."
+
+#. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard cost"
@@ -479,11 +493,6 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
-msgid "Stock Accounting"
 msgstr ""
 
 #. module: stock_account
@@ -550,7 +559,7 @@ msgid "Templates for Account Chart"
 msgstr "Modèles pour le plan comptable"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:281
+#: code:addons/stock_account/models/stock.py:289
 #, python-format
 msgid ""
 "The found valuation amount for product %s is zero. Which means there is "
@@ -690,7 +699,7 @@ msgid "Wizard that opens the stock valuation history table"
 msgstr "Assistant qui ouvre le tableau de l'historique de la valorisation"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:250
+#: code:addons/stock_account/models/stock.py:258
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -701,7 +710,7 @@ msgstr ""
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:110
-#: code:addons/stock_account/models/stock.py:256
+#: code:addons/stock_account/models/stock.py:264
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

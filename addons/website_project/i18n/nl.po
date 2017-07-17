@@ -9,10 +9,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,7 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Gerapporteerd door</strong>"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:84
+#: code:addons/website_project/controllers/main.py:88
 #, python-format
 msgid "All"
 msgstr "Alle"
@@ -84,7 +84,7 @@ msgid "Edit Task"
 msgstr "Wijzig taak"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:81
+#: code:addons/website_project/controllers/main.py:85
 #, python-format
 msgid "Last Stage Update"
 msgstr "Laatste fase aanpassing"
@@ -101,7 +101,6 @@ msgstr "Mijn taken"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:31
-#: code:addons/website_project/controllers/main.py:79
 #: model:ir.ui.view,arch_db:website_project.my_projects
 #, python-format
 msgid "Name"
@@ -109,7 +108,7 @@ msgstr "Naam"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:30
-#: code:addons/website_project/controllers/main.py:78
+#: code:addons/website_project/controllers/main.py:82
 #, python-format
 msgid "Newest"
 msgstr "Nieuwste"
@@ -130,7 +129,7 @@ msgid "Projects"
 msgstr "Projecten"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:80
+#: code:addons/website_project/controllers/main.py:84
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 #, python-format
 msgid "Stage"
@@ -153,14 +152,19 @@ msgid "Tasks"
 msgstr "Taken"
 
 #. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task_website_url
+msgid "The full URL to access the document through the website."
+msgstr "De volledige URL om het document te kunnen raadplegen via de website."
+
+#. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
 msgid "There are currently no projects."
 msgstr "Er zijn momenteel geen projecten."
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
-msgid "There are currently no quotes."
-msgstr "Er zijn momenteel geen offertes."
+msgid "There are currently no tasks."
+msgstr ""
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.my_projects
@@ -171,6 +175,17 @@ msgstr "Er zijn geen projecten."
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 msgid "There are no tasks."
 msgstr "Er zijn geen taken."
+
+#. module: website_project
+#: code:addons/website_project/controllers/main.py:83
+#, python-format
+msgid "Title"
+msgstr "Titel"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task_website_url
+msgid "Website URL"
+msgstr "Website URL"
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.my_projects

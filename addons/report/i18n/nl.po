@@ -9,10 +9,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -40,14 +40,10 @@ msgstr "<i class=\"fa fa-building-o\"/> BTW:"
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid ""
 "<strong>No logo found!</strong>\n"
-"                        To get a beautiful report, you might review your\n"
+"                        To get a beautiful document, you should review your\n"
 "                        company data: upload a logo, set\n"
-"                        bank accounts, phone numbers, etc."
+"                        your address, etc."
 msgstr ""
-"<strong>Geen logo gevonden!</strong>\n"
-"Om een mooi rapport te krijgen wilt u mogelijk uw\n"
-"bedrijfsdata bekijken: upload een logo, stel\n"
-"bankrekeningen in, telefoonnummers, enz."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -192,20 +188,20 @@ msgstr "C5E 24  163 x 229 mm"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Change Report Template"
-msgstr "Wijzig rapportsjabloon"
+msgid "Change Document Template"
+msgstr ""
 
 #. module: report
 #: code:addons/report/models/base_config_settings.py:30
 #: code:addons/report/models/report.py:278
 #, python-format
-msgid "Choose Your Report Layout"
-msgstr "Kies uw rapport layout"
+msgid "Choose Your Document Layout"
+msgstr ""
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Choose your reports's header and footer layout."
-msgstr "Kies uw rapport zijn hoofding en voet lay-out."
+msgid "Choose your document's header and footer layout"
+msgstr ""
 
 #. module: report
 #: selection:res.company,external_report_layout:0
@@ -278,6 +274,14 @@ msgstr "Schermnaam"
 #: model:ir.model.fields,field_description:report.field_report_paperformat_header_line
 msgid "Display a header line"
 msgstr "Kopregel weergeven"
+
+#. module: report
+#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_external_report_layout
+#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Document Template"
+msgstr "Documentsjabloon"
 
 #. module: report
 #. openerp-web
@@ -454,6 +458,7 @@ msgstr "Papier formaat algemene instellingen"
 
 #. module: report
 #: model:ir.model.fields,field_description:report.field_base_config_settings_paperformat_id
+#: model:ir.model.fields,field_description:report.field_hr_timesheet_config_settings_paperformat_id
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_paperformat_id
 #: model:ir.model.fields,field_description:report.field_res_company_paperformat_id
 msgid "Paper format"
@@ -496,6 +501,11 @@ msgid "Preview Clean Template"
 msgstr "Voorbeeld mooi sjabloon"
 
 #. module: report
+#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
+msgid "Preview Document"
+msgstr ""
+
+#. module: report
 #: model:ir.actions.report.xml,name:report.action_report_externalpreview
 msgid "Preview External Report"
 msgstr "Voorbeeldweergave extern rapport"
@@ -509,11 +519,6 @@ msgstr "Voorbeeldweergave intern rapport"
 #: model:ir.ui.view,arch_db:report.view_company_report_form
 msgid "Preview Minimalist Template"
 msgstr "Voorbeeld minimaal sjabloon"
-
-#. module: report
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Preview Report"
-msgstr "Rapport voorbeeldweergave"
 
 #. module: report
 #. openerp-web
@@ -539,13 +544,6 @@ msgstr "Qweb weergaven"
 #, python-format
 msgid "Report"
 msgstr "Rapport"
-
-#. module: report
-#: model:ir.model.fields,field_description:report.field_base_config_settings_external_report_layout
-#: model:ir.model.fields,field_description:report.field_res_company_external_report_layout
-#: model:ir.ui.view,arch_db:report.base_config_settings_view_form_inherit_report
-msgid "Report Template"
-msgstr "Rapportsjabloon"
 
 #. module: report
 #: model:ir.ui.menu,name:report.reporting_menuitem
@@ -668,7 +666,17 @@ msgid "Web:"
 msgstr "Web:"
 
 #. module: report
-#: code:addons/report/models/report.py:464
+#: code:addons/report/models/report.py:485
+#, python-format
+msgid ""
+"Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
+"number of subprocess reached. Message : %s"
+msgstr ""
+"Wkhtmltopdf fout (error code: %s). Te weinig geheugen or maximum aantal "
+"bestanden tegelijk bereikt. Bericht: %s"
+
+#. module: report
+#: code:addons/report/models/report.py:487
 #, python-format
 msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"

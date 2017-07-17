@@ -19,10 +19,10 @@
 # Marko Carević <marko.carevic@live.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Marko Carević <marko.carevic@live.com>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -119,10 +119,10 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
 "                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
@@ -132,7 +132,7 @@ msgid ""
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -168,8 +168,8 @@ msgid "# of Tasks"
 msgstr " # zadataka"
 
 #. module: project
-#: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:407
+#: code:addons/project/models/project.py:242
+#: code:addons/project/models/project.py:428
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -475,15 +475,6 @@ msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
 msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Ove postavke odnose se na poduzeće u koje ste trenutno "
-"prijavljeni.</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1014,6 +1005,12 @@ msgid "Active"
 msgstr "Aktivan"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
+#: model:ir.ui.menu,name:project.project_menu_config_activity_type
+msgid "Activity Types"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Dodaj opis..."
@@ -1129,9 +1126,9 @@ msgstr ""
 " želite li primati obavijesti za ostale događaje ili ne."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Apply"
-msgstr "Primjeni"
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Apple App Store"
+msgstr "Apple App Store"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1200,6 +1197,11 @@ msgid "Attachments"
 msgstr "Privitci"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet_attendance
+msgid "Attendances"
+msgstr "Prisutnosti"
+
+#. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
 msgstr "Automatski izradi e-mail alias pri kreiranju projekta"
@@ -1208,6 +1210,11 @@ msgstr "Automatski izradi e-mail alias pri kreiranju projekta"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
 msgstr "Dostupno na Apple Store"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1252,6 +1259,11 @@ msgstr ""
 " sat vremena ili manje."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Billing"
+msgstr "Izdavanje računa"
+
+#. module: project
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -1289,8 +1301,8 @@ msgid "By Responsible"
 msgstr "Po odgovornom"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
-#: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -1378,8 +1390,8 @@ msgid "Click to create a new project.<br>"
 msgstr "Kliknite za kreiranje novog projekta.<br>"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Collaborative rich text on task description"
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Collaborative Pads"
 msgstr ""
 
 #. module: project
@@ -1429,7 +1441,7 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Opcije postavki su dostupne u aplikaciji Postavke"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_config_settings
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 msgid "Configure Project"
 msgstr "Podesi projekt"
 
@@ -1452,6 +1464,7 @@ msgid "Consulting mission"
 msgstr ""
 
 #. module: project
+#: model:ir.model,name:project.model_res_partner
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1593,7 +1606,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1602,10 +1615,15 @@ msgid "Customer"
 msgstr "Kupac"
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #, python-format
 msgid "Customer Email"
 msgstr "Email kupca"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Customer Satisfaction"
+msgstr "Zadovoljstvo kupaca"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1865,7 +1883,7 @@ msgid "Ending Date"
 msgstr "Završni datum"
 
 #. module: project
-#: code:addons/project/models/project.py:415
+#: code:addons/project/models/project.py:436
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr "Greška! Datum početka zadatka mora biti manji od datuma završetka."
@@ -1907,6 +1925,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "Primjeri"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_expense
+msgid "Expenses"
+msgstr "Troškovi"
 
 #. module: project
 #. openerp-web
@@ -2006,14 +2029,9 @@ msgstr ""
 "(npr. Scrum)."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts"
 msgstr "Predviđanja"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
-msgid "Forecasts, planning and Gantt charts"
-msgstr ""
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2074,6 +2092,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr "Sretno!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "Google Chrome Store"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Play Store"
+msgstr "Trgovina Play"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2141,7 +2169,7 @@ msgstr ""
 "ako je web stranica aktivirana, korisnici portala mogu vidjeti projekte, zadatke ili probleme koje prate oni ili netko iz njihove tvrtke\n"
 
 #. module: project
-#: code:addons/project/models/project.py:564
+#: code:addons/project/models/project.py:585
 #, python-format
 msgid "I take it"
 msgstr "Uzimam"
@@ -2323,6 +2351,16 @@ msgstr ""
 " kao obavijest u dolaznim porukama Odoo."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Issue Management"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue
+msgid "Issue Tracking"
+msgstr "Praćenje problema"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issue Tracking app."
 msgstr "Aplikacija za praćenje problema"
@@ -2494,6 +2532,11 @@ msgstr ""
 "projekte, zadatke, probleme i evidencije rada."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_holidays
+msgid "Leave Management"
+msgstr "Upravljanje odsustvom"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
@@ -2501,10 +2544,10 @@ msgid "Let's create your first project."
 msgstr "Kreirajmo Vaš prvi projekt."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
-"-This installs the module pad."
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://ietherpad.com/)."
 msgstr ""
 
 #. module: project
@@ -2522,6 +2565,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
 msgstr "Nabrojite, isplanirajte i pratite stvari koje se moraju obaviti"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Manage your resources with Gantt charts"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2592,11 +2640,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Više <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "More Info"
-msgstr "Više informacija"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Efikasnija komunikacija među zaposlenicima"
@@ -2656,11 +2699,6 @@ msgstr "Sljedeće aktivnosti"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 msgid "Next Task Activities"
 msgstr ""
-
-#. module: project
-#: selection:project.config.settings,module_rating_project:0
-msgid "No customer rating"
-msgstr "Bez ocjene gostiju"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2730,7 +2768,7 @@ msgstr ""
 "dokumente itd."
 
 #. module: project
-#: code:addons/project/models/project.py:203
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2838,11 +2876,6 @@ msgid "Owner"
 msgstr "Vlasnik"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
-msgid "Pads"
-msgstr "Ploče"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
 msgstr "Ishodni Model"
@@ -2864,11 +2897,6 @@ msgstr ""
 "zadatka (model))"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
 msgstr "Planirajte Vaše dnevne aktivnosti"
@@ -2879,7 +2907,7 @@ msgid "Planner"
 msgstr "Kalendar"
 
 #. module: project
-#: code:addons/project/models/project.py:718
+#: code:addons/project/models/project.py:738
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2941,11 +2969,6 @@ msgid "Project Count"
 msgstr "Broj projekata"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Project Management"
-msgstr "Upravljanje projektima"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_manager_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -2979,11 +3002,6 @@ msgid "Project Tasks"
 msgstr "Zadaci projekta"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
-msgid "Project Time Unit *"
-msgstr "Vremenska jedinica projekta *"
-
-#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "Zadatak projekta"
@@ -3012,8 +3030,8 @@ msgstr "Projekti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
-msgid "Rating on task"
-msgstr "Ocjenjivanje zadatka"
+msgid "Rating on Tasks"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_data_0
@@ -3082,6 +3100,11 @@ msgid "Record Thread ID"
 msgstr "ID niti zapisa"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Record time with mobile Timesheet app"
+msgstr ""
+
+#. module: project
 #: selection:project.task,kanban_state:0
 msgid "Red"
 msgstr "Crveno"
@@ -3100,6 +3123,11 @@ msgstr "Crveno: zadatak je blokiran (postoji problem)"
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
 msgstr "Vezna oznaka"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Reimburse employee expenses and invoice customers"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3168,6 +3196,16 @@ msgid "Runs outside Odoo, always available"
 msgstr "Radi van Odoo, uvijek dostupno"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save"
+msgstr "Spremi"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
 msgstr "SCRUM metodologija"
@@ -3188,6 +3226,11 @@ msgstr "Traži projekt"
 #, python-format
 msgid "Select"
 msgstr "Odaberi"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3229,7 +3272,7 @@ msgid "Set a Cover Image"
 msgstr "Postavi naslovnu sliku"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
@@ -3313,7 +3356,7 @@ msgstr "Promijenjen status"
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr ""
+msgstr "Opis faze i tooltips"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_name
@@ -3449,11 +3492,6 @@ msgid "Task blocked"
 msgstr "Zadatak blokiran"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Task description is plain text"
-msgstr "Opis zadatka je običan tekst"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
@@ -3544,6 +3582,11 @@ msgstr "Zadaci prema korisniku i projektu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Team Collaboration"
 msgstr ""
 
 #. module: project
@@ -3652,11 +3695,6 @@ msgstr ""
 "zadatak sa slikom u privitku."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
-msgid "This allows customers to give rating on provided services"
-msgstr "Ovo kupcima omogućava ocjenjivanje obavljenih usluga"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This is particularly useful to manage help and support: all incoming email  "
@@ -3665,6 +3703,13 @@ msgid ""
 msgstr ""
 "Ovo je osobito korisno za upravljanje pomoći i podrške: svi dolazni "
 "e-mailovi kupaca pretvaraju se u problem kojeg možete lako pratiti!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid ""
+"This replaces task's description text field by a collaborative rich text "
+"pad. This is advised if tasks involve several people."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3708,7 +3753,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
-#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
@@ -3720,9 +3764,19 @@ msgstr ""
 "Ako koristite raspored povezan s projektima, ne zaboravite postaviti ispravnu jedinicu mjere na Vašim zaposlenicima."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_timesheet
+msgid "Time Billing"
+msgstr ""
+
+#. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
 msgstr "Procjena vremena na zadacima"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Time Management"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3734,6 +3788,11 @@ msgstr "Raspoređivanje vremena"
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
 msgstr "Evidencija radnog vremena UoM"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet
+msgid "Timesheets"
+msgstr "Kontrolne kartice"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3801,9 +3860,29 @@ msgstr ""
 "Ukupno preostalo vrijeme, periodično ga može procjenjivati nositelj zadatka."
 
 #. module: project
-#: selection:project.config.settings,module_rating_project:0
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track and solve issues from a Kanban view"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track attendances and compare with timesheets"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
 msgstr "Pratite zadovoljstvo kupca na zadacima"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track leaves to optimize your scheduling"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track time spent on projects and tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3837,6 +3916,11 @@ msgstr "Koristi zadatke kao"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
 msgstr "Koristi evidenciju radnog vremena"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Use collaborative rich text pads in tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3908,14 +3992,14 @@ msgid "View statistics for the week"
 msgstr "Pogledaj tjednu statistiku"
 
 #. module: project
-#: code:addons/project/models/project.py:204
+#: code:addons/project/models/project.py:206
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "Vidljivo svim zaposlenicima"
 
 #. module: project
-#: code:addons/project/models/project.py:205
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -4067,6 +4151,8 @@ msgid ""
 "You can also give a tooltip about the use of the stars available in the "
 "kanban and form views."
 msgstr ""
+"Možete dodati i kratki tooltip opis o korištenju zvjezdica na kanban ili "
+"forma pogledu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -4194,7 +4280,7 @@ msgid "send us an email"
 msgstr "pošaljite nam e-mail"
 
 #. module: project
-#: code:addons/project/models/project.py:463
+#: code:addons/project/models/project.py:484
 #, python-format
 msgid "tasks"
 msgstr "zadaci"

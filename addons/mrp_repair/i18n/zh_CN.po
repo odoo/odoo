@@ -6,13 +6,14 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
+# Luke <cialuo@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: 卓忆科技 <zhanghao@jointd.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
+"Last-Translator: Luke <cialuo@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,8 +84,8 @@ msgstr "<strong>送货地址 :</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>不含税总计</strong>"
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>小计</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -110,6 +111,11 @@ msgstr "添加报价单备注..."
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
 msgstr "修理后"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Amount"
+msgstr "金额"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -179,8 +185,8 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:508
-#: code:addons/mrp_repair/models/mrp_repair.py:570
+#: code:addons/mrp_repair/models/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:573
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -452,8 +458,8 @@ msgid "No Invoice"
 msgstr "不开票"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:499
-#: code:addons/mrp_repair/models/mrp_repair.py:561
+#: code:addons/mrp_repair/models/mrp_repair.py:502
+#: code:addons/mrp_repair/models/mrp_repair.py:564
 #, python-format
 msgid "No Pricelist!"
 msgstr "无价格表！"
@@ -478,8 +484,8 @@ msgid "No product defined on Fees!"
 msgstr "没有定义费用产品"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:506
-#: code:addons/mrp_repair/models/mrp_repair.py:568
+#: code:addons/mrp_repair/models/mrp_repair.py:509
+#: code:addons/mrp_repair/models/mrp_repair.py:571
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "无合法的价格表行！"
@@ -509,11 +515,6 @@ msgstr "逾期活动"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Partner"
 msgstr "业务伙伴"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Price"
-msgstr "价格"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
@@ -757,11 +758,6 @@ msgid "Subtotal"
 msgstr "小计"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Tax"
-msgstr "税金"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
@@ -895,8 +891,8 @@ msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr "你必须在修理单上选择业务伙伴的发票地址！"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:501
-#: code:addons/mrp_repair/models/mrp_repair.py:563
+#: code:addons/mrp_repair/models/mrp_repair.py:504
+#: code:addons/mrp_repair/models/mrp_repair.py:566
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"

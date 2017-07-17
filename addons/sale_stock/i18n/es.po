@@ -6,7 +6,6 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2016
@@ -14,13 +13,14 @@
 # Miguel Orueta <mo@landoo.es>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Carles Antoli <carlesantoli@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,6 +153,9 @@ msgstr "Facturación"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
 #: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_default_new_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
 "for procurement and delivery that many days earlier than the actual promised"
@@ -162,6 +165,11 @@ msgstr ""
 "serán planificados para el abastecimiento y entrega días antes de la fecha "
 "prometida actual, para lidiar con posibles retrasos inesperados en la cadena"
 " de suministro."
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Move forward expected delivery dates by"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -206,9 +214,13 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
-msgid "Product Template"
-msgstr "Plantilla de producto"
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid ""
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs. By default, the scheduler runs automatically "
+"every 24 hours."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -253,12 +265,23 @@ msgstr "Estadísticas pedidos de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_security_lead
 msgid "Sales Safety Days"
 msgstr "Días de seguridad para ventas"
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_new_security_lead
+msgid "Security Lead Time for Sales"
 msgstr ""
 
 #. module: sale_stock
@@ -272,9 +295,24 @@ msgid "Set a delivery date on orders"
 msgstr ""
 
 #. module: sale_stock
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
 msgstr "Información de envio"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
+msgid "Shipping Management"
+msgstr "Gestión de envío"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -296,7 +334,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:202
+#: code:addons/sale_stock/models/sale_order.py:203
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr "Este producto está empaquetado por%.2f %s. Debe vender %.2f %s."
@@ -330,10 +368,20 @@ msgid "Warehouse"
 msgstr "Almacén"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:201
+#: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to reserve sold products"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to start shipping"
+msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:157
@@ -356,9 +404,19 @@ msgstr ""
 "El stock disponible es %s %s."
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "days"
+msgstr "días"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_config_settings
+msgid "stock.config.settings"
+msgstr "Parámetros de configuración de existencias"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking_line

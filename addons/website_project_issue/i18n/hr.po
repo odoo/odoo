@@ -5,17 +5,15 @@
 # Translators:
 # Davor Bojkić <davor.bojkic@storm.hr>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Bole <bole@dajmi5.com>, 2017
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -50,10 +48,25 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Prijavio</strong>"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:38
+#: code:addons/website_project_issue/controllers/main.py:39
 #, python-format
 msgid "All"
 msgstr "Sve"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachment"
+msgstr "Prilog"
+
+#. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_attachment_ids
+msgid "Attachment that don't come from message."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachments"
+msgstr "Privitci"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
@@ -64,11 +77,6 @@ msgstr "Trenutna faza problema"
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
 msgstr "Trenutni status ovog problema"
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.my_issues
-msgid "Description"
-msgstr "Opis"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
@@ -87,10 +95,15 @@ msgid "Issues"
 msgstr "Predmeti"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:35
+#: code:addons/website_project_issue/controllers/main.py:36
 #, python-format
 msgid "Last Stage Update"
 msgstr "Posljednja faza ažuriranja"
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_attachment_ids
+msgid "Main Attachments"
+msgstr ""
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
@@ -99,12 +112,6 @@ msgstr "Moji predmeti"
 
 #. module: website_project_issue
 #: code:addons/website_project_issue/controllers/main.py:33
-#, python-format
-msgid "Name"
-msgstr "Naziv"
-
-#. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:32
 #, python-format
 msgid "Newest"
 msgstr "Najnoviji"
@@ -115,11 +122,40 @@ msgid "Project Issue"
 msgstr "Projektni predmeti"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:34
+#: code:addons/website_project_issue/controllers/main.py:42
+#, python-format
+msgid "Search <span class=\"nolabel\"> (in Content)</span>"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:45
+#, python-format
+msgid "Search in All"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:44
+#, python-format
+msgid "Search in Customer"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:43
+#, python-format
+msgid "Search in Messages"
+msgstr ""
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:35
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 #, python-format
 msgid "Stage"
 msgstr "Faza"
+
+#. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_website_url
+msgid "The full URL to access the document through the website."
+msgstr "Puni URL za pristup dokumentu putem web stranice."
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
@@ -130,6 +166,18 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "There are no issues."
 msgstr "Još nema problema."
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:34
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Title"
+msgstr "Naslov"
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_website_url
+msgid "Website URL"
+msgstr "URL web stranice"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues

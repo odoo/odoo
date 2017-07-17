@@ -20,7 +20,7 @@
 # liulixia <liu.lixia@elico-corp.com>, 2016
 # THL <wt39181819@gmail.com>, 2016
 # 卓忆科技 <zhanghao@jointd.com>, 2016
-# zhangpeiqing <zpq001@live.com>, 2016
+# zpq001 <zpq001@live.com>, 2016
 # Xu Lei <xulei8@qq.com>, 2016
 # Zamba Lee <zambalee@gmail.com>, 2016
 # Liping Wang <lynn.config@gmail.com>, 2016
@@ -38,14 +38,13 @@
 # 厦门-许舟 <windedge99@gmail.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # 朱仁杰 <johnson19960308@gmail.com>, 2017
-# 木头 <mynameisshiy@gmail.com>, 2017
 # 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15+e\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-28 13:36+0000\n"
-"PO-Revision-Date: 2017-04-28 13:36+0000\n"
+"POT-Creation-Date: 2017-07-17 08:45+0000\n"
+"PO-Revision-Date: 2017-07-17 08:45+0000\n"
 "Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -609,6 +608,14 @@ msgstr ""
 "\n"
 "        模块目的的长描述\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_hr_expense_check
+msgid ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -6863,11 +6870,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "添加交货成本到在线销售"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "添加关注者"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast_grid
 msgid "Add Grid view on Project Forecasts"
 msgstr ""
@@ -7086,6 +7088,11 @@ msgid "Algeria"
 msgstr "阿尔及利亚"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.ir_cron_view_search
+msgid "All"
+msgstr "全部"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
@@ -7140,6 +7147,13 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr "允许你创建发票，以及跟踪付款。这是为不是会计师的管理人员准备的简化版会计模块。"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -7479,11 +7493,6 @@ msgid "Auto Search"
 msgstr "自动搜索"
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "自动动作规则"
@@ -7595,12 +7604,6 @@ msgstr "与本公司相关的银行账户"
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
 msgstr "银行"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner_barcode
-#: model:ir.model.fields,help:base.field_res_users_barcode
-msgid "BarCode"
-msgstr "条码"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -8185,6 +8188,11 @@ msgid "Check Printing Base"
 msgstr "支票打印基础"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_check
+msgid "Check Printing in Expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
 #: model:ir.model.fields,help:base.field_res_users_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
@@ -8322,14 +8330,14 @@ msgid "City Addresses"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "单击此处附加新文档。"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "单击此处创建自定义视图"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8905,7 +8913,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -9129,6 +9136,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -9456,27 +9464,6 @@ msgstr "日: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "天数"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"尊敬的先生/女士,\n"
-"    我们的记录表明，你的账户仍有到期的付款。请查找下面的明细。\n"
-"    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n"
-"    如果有任何关于账户的疑问，请联系我们。\n"
-"\n"
-"    谢谢你的合作。\n"
-"    此致 ,\n"
-"           敬礼"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -10096,7 +10083,6 @@ msgstr "员工目录"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "员工"
 
@@ -10902,6 +10888,11 @@ msgid "France - Accounting"
 msgstr "法国-会计"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - Accounting - Certified CGI 286 I-3 bis"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
 msgid "France - Accounting Reports"
 msgstr "法国-会计报表"
@@ -11694,12 +11685,6 @@ msgstr "IBAN银行账号"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_id
 msgid "ID"
 msgstr "ID"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-#: model:ir.model.fields,help:base.field_ir_cron_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "在XML文件中定义的动作的ID"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
@@ -13543,16 +13528,22 @@ msgid "Missing document(s)"
 msgstr "文档(s)丢失"
 
 #. module: base
-#: code:addons/models.py:5104
+#: code:addons/models.py:5107
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "找不到字段 '%s' (%s)所需的值"
 
 #. module: base
-#: code:addons/models.py:5101
+#: code:addons/models.py:5104
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "找不到字段 '%s' 所需的值"
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:379
+#, python-format
+msgid "Missing view architecture."
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -15012,6 +15003,11 @@ msgid "Print US Checks"
 msgstr "打印美国支票"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_check
+msgid "Print amount in words on checks issued for expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
 msgid "Print and Send Invoices with DocsAway.com"
 msgstr "通过DocsAway.com打印和发送发票"
@@ -16097,11 +16093,6 @@ msgid "Sell based on timesheets"
 msgstr "基于工时单销售"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "发送电子邮件"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
 msgstr "发送发票并跟踪付款"
@@ -16970,12 +16961,11 @@ msgstr "技术名称"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "技术设置"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:738
+#: code:addons/base/ir/ir_translation.py:749
 #, python-format
 msgid "Technical Translations"
 msgstr "技术翻译"
@@ -19784,13 +19774,6 @@ msgstr "test_convert"
 #: selection:ir.model.fields,ttype:0
 msgid "text"
 msgstr ""
-
-#. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
-msgstr "如果在系统中管理到一个员工，用户能管理自己的人力资源资料(休假请求，工时表，... ... )。"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
