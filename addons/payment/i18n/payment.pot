@@ -255,6 +255,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
 msgstr ""
 
@@ -604,6 +605,18 @@ msgid "Ogone"
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:664
+#, python-format
+msgid "Only transactions in the Authorized status can be captured."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:671
+#, python-format
+msgid "Only transactions in the Authorized status can be voided."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
 msgid "Order Confirmation"
 msgstr ""
@@ -650,6 +663,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
@@ -824,6 +838,13 @@ msgid "The payment transaction reference must be unique!"
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:42
+#, python-format
+msgid "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
+"Please use a token from another provider than %s."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
 msgid "This field holds the image used for this provider, limited to 1024x1024px"
 msgstr ""
@@ -837,6 +858,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:166
+#, python-format
+msgid "Transaction Authorization is not supported by this payment provider."
 msgstr ""
 
 #. module: payment

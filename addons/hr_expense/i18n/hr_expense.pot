@@ -309,6 +309,7 @@ msgid "Business trip"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr ""
@@ -1356,6 +1357,7 @@ msgid "Setup your domain alias"
 msgstr ""
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr ""
@@ -1440,6 +1442,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "The next step is to settle an internal policy to"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
+#, python-format
+msgid "The payment amount must be strictly positive."
 msgstr ""
 
 #. module: hr_expense
@@ -1596,6 +1604,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_config_setting_view_form
 msgid "You can setup a generic email alias to create incoming expenses easily. Write an email with the receipt in attachment to create an expense line in one click. If the mail subject contains the product's internal reference between brackets, the product will be set automatically. Type the expense amount in the mail subject to set it on the expense too."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:563
+#, python-format
+msgid "You cannot add expense lines of another employee."
 msgstr ""
 
 #. module: hr_expense

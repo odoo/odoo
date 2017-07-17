@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-17 08:17+0000\n"
+"PO-Revision-Date: 2017-07-17 08:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -688,6 +688,12 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:31
+#, python-format
+msgid "Go to Internal Categories"
 msgstr ""
 
 #. module: product
@@ -1375,6 +1381,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr ""
 
@@ -1642,6 +1649,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
 msgstr ""
 
@@ -1857,7 +1865,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
-msgid "You have to set a logo for your company."
+msgid "You have to set a logo or a layout for your company."
 msgstr ""
 
 #. module: product
@@ -1884,6 +1892,12 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid "You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to customers."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:30
+#, python-format
+msgid "You must define at least one product category (that is not a view) in order to be able to create products."
 msgstr ""
 
 #. module: product

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2017-07-17 08:17+0000\n"
+"PO-Revision-Date: 2017-07-17 08:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,13 @@ msgid "%g remaining out of %g"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:334
+#: code:addons/hr_holidays/models/hr_holidays.py:335
+#, python-format
+msgid "%s : %.2f day(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "%s on %s : %.2f day(s)"
 msgstr ""
@@ -1115,6 +1121,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:107
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
 msgstr ""
 
 #. module: hr_holidays
