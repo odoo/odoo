@@ -11,7 +11,6 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Anthony CRESSON <contact@cresson-anthony.fr>, 2016
-# Henri Cornuau <hcornuau@gmail.com>, 2016
 # Florian Hatat <mininet@wanadoo.fr>, 2016
 # Clo <clo@odoo.com>, 2016
 # Leo Schmitt <inactive+lschmitt@transifex.com>, 2016
@@ -19,10 +18,10 @@
 # Richard Mathot <rim@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Richard Mathot <rim@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -35,11 +34,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:google_calendar.base_config_settings_view_form_inherit_google_calendar
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
-
-#. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
-msgid "API Configuration"
-msgstr "Configuration de l'API"
 
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
@@ -113,11 +107,13 @@ msgstr "Client Secret"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
+#: model:ir.model.fields,field_description:google_calendar.field_hr_timesheet_config_settings_cal_client_id
 msgid "Client_id"
 msgstr "Client_id"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_secret
+#: model:ir.model.fields,field_description:google_calendar.field_hr_timesheet_config_settings_cal_client_secret
 msgid "Client_key"
 msgstr "Client_key"
 
@@ -159,6 +155,11 @@ msgstr "Erreur de déconnexion d'événement"
 #, python-format
 msgid "Event disconnection success"
 msgstr "Succès de déconnexion de l'événement"
+
+#. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
+msgid "General Settings"
+msgstr "Paramètres Généraux"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
@@ -282,6 +283,7 @@ msgstr "Validité du Jeton d'Accès"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
+#: model:ir.model.fields,field_description:google_calendar.field_hr_timesheet_config_settings_server_uri
 msgid "URI for tuto"
 msgstr "URI du tutoriel"
 

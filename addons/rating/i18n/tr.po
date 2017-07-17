@@ -9,13 +9,14 @@
 # Ediz Duman <neps1192@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Levent Karakaş <levent@mektup.at>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,25 +28,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid ""
 "<br/>\n"
-"                        on our services on \""
+"                            on our services on \""
 msgstr ""
-"<br/>\n"
-"                        Talebiniz: \""
-
-#. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_kanban
-msgid "<span class=\"text-muted\">by </span>"
-msgstr "<span class=\"text-muted\">değerlendiren </span>"
-
-#. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_kanban
-msgid "<span class=\"text-muted\">for </span>"
-msgstr "<span class=\"text-muted\">Talep </span>"
-
-#. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_kanban
-msgid "<span class=\"text-muted\">on </span>"
-msgstr "<span class=\"text-muted\">Zaman </span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_access_token
@@ -66,6 +50,11 @@ msgid "Author of the rating"
 msgstr "Değerlendirmeyi yapan"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
+msgid "Comment"
+msgstr "Yorum"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_create_uid
 msgid "Created by"
 msgstr "Oluşturan"
@@ -77,12 +66,12 @@ msgstr "Oluşturulma zamanı"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_partner_id
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Day"
 msgstr "Gün"
 
@@ -90,7 +79,7 @@ msgstr "Gün"
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_res_id
@@ -108,11 +97,6 @@ msgid "Enabled if the rating has been filled."
 msgstr "Değerlendirme gönderildi ise aktif olur"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_feedback
-msgid "Feedback reason"
-msgstr "Geri bildirim nedeni"
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_consumed
 msgid "Filled Rating"
 msgstr "Gönderilmiş Değerlendirme"
@@ -123,14 +107,16 @@ msgid "Go to our website"
 msgstr "Websitemize gidin"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
 msgstr "Grupla"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
-msgid "Happy"
-msgstr "Mutlu"
+#: code:addons/rating/models/rating.py:58
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Highly dissatisfied"
+msgstr ""
 
 #. module: rating
 #. openerp-web
@@ -172,6 +158,11 @@ msgid "Identifier of the rated object"
 msgstr "Değerlendirilen nesneni belirteci"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_image
+msgid "Image"
+msgstr "Görsel"
+
+#. module: rating
 #. openerp-web
 #: code:addons/rating/static/src/js/rating_common.js:27
 #, python-format
@@ -200,24 +191,32 @@ msgid "Linked message"
 msgstr "Bağlantılı mesaj"
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating_res_model
-msgid "Model name of the rated object"
-msgstr "Değerlendirilen nesnenin model ismi"
+#: model:ir.model.fields,help:rating.field_rating_rating_res_model_id
+msgid "Model of the followed resource"
+msgstr "İzlenen kaynağın modeli"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Month"
 msgstr "Ay"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
 msgstr "Değerlendirmelerim"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
-msgid "Okay"
-msgstr "Tamam"
+#: code:addons/rating/models/rating.py:60
+#, python-format
+msgid "No rating yet"
+msgstr ""
+
+#. module: rating
+#: code:addons/rating/models/rating.py:58
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Not satisfied"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating_rated_partner_id
@@ -225,14 +224,14 @@ msgid "Owner of the rated resource"
 msgstr "Değerlendirilen kaynağın sahibi"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
-msgid "Rated Partner"
-msgstr "Değerlendirilen İş Ortağı"
-
-#. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
 msgstr "Değerlendirilen Kullanıcı"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating_rated_partner_id
+msgid "Rated person"
+msgstr ""
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -243,15 +242,36 @@ msgstr "Değerlendirilen Kullanıcı"
 #: model:ir.model.fields,field_description:rating.field_project_task_rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating_rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.model.fields,field_description:rating.field_rating_rating_rating_text
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "Değerlendirme"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_graph
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_pivot
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
 msgstr "Değerlendirme Ortalaması"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_project_issue_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_feedback
+#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_product_template_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_project_issue_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_project_task_rating_last_image
+#: model:ir.model.fields,field_description:rating.field_rating_mixin_rating_last_image
+msgid "Rating Last Image"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_channel_rating_last_value
@@ -282,34 +302,46 @@ msgid "Rating should be between 0 to 10"
 msgstr "Değerlendirme 0 ile 10 arasında olmalı."
 
 #. module: rating
-#: model:ir.model.fields,help:rating.field_mail_channel_rating_last_value
-#: model:ir.model.fields,help:rating.field_product_template_rating_last_value
-#: model:ir.model.fields,help:rating.field_project_issue_rating_last_value
-#: model:ir.model.fields,help:rating.field_project_task_rating_last_value
-#: model:ir.model.fields,help:rating.field_rating_mixin_rating_last_value
 #: model:ir.model.fields,help:rating.field_rating_rating_rating
 msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Değerlendirme değeri: 0=Mutsuz, 10=Mutlu"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "Değerlendirmeler"
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_mail_channel_rating_last_feedback
+#: model:ir.model.fields,help:rating.field_product_template_rating_last_feedback
+#: model:ir.model.fields,help:rating.field_project_issue_rating_last_feedback
+#: model:ir.model.fields,help:rating.field_project_task_rating_last_feedback
+#: model:ir.model.fields,help:rating.field_rating_mixin_rating_last_feedback
 #: model:ir.model.fields,help:rating.field_rating_rating_feedback
 msgid "Reason of the rating"
 msgstr "Değerlendirme nedeni"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.model.fields,field_description:rating.field_rating_rating_res_model_id
+msgid "Related Document Model"
+msgstr "İlgili Döküman Modeli"
+
+#. module: rating
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Resource"
 msgstr "Kaynak"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_res_name
-msgid "Resource Name"
-msgstr "Kaynak Adı"
+msgid "Resource name"
+msgstr ""
+
+#. module: rating
+#: code:addons/rating/models/rating.py:58
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
+#, python-format
+msgid "Satisfied"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating_access_token
@@ -320,6 +352,12 @@ msgstr "Güvenlik Belirteçi"
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
 msgstr "Geri Bildirim Gönder"
+
+#. module: rating
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_tree
+msgid "Submitted on"
+msgstr ""
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -337,11 +375,6 @@ msgid "There is no rating for this object at the moment."
 msgstr "Bu nesne için şu anda herhangi bir değerlendirme yok."
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
-msgid "Unhappy"
-msgstr "Mutsuz"
-
-#. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
 msgstr "Geri bildiriminiz bizim için çok değerli!"
@@ -352,7 +385,7 @@ msgid "Would be great if you can provide more information:"
 msgstr "Daha detaylı bilgi verebilirseniz çok memnun oluruz:"
 
 #. module: rating
-#: model:ir.ui.view,arch_db:rating.view_rating_rating_search
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Year"
 msgstr "Yıl"
 
@@ -363,8 +396,14 @@ msgstr "Değerlendirmeniz gönderildi."
 
 #. module: rating
 #: model:ir.ui.view,arch_db:rating.rating_external_page_submit
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
 msgstr "Talebi karşılayan: "
+
+#. module: rating
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "for"
+msgstr ""
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:21
@@ -377,6 +416,11 @@ msgstr "Memnun değil"
 #, python-format
 msgid "not satisfied"
 msgstr "Nötr"
+
+#. module: rating
+#: model:ir.ui.view,arch_db:rating.rating_rating_view_kanban
+msgid "on"
+msgstr "açık"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:22

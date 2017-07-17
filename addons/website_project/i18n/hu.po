@@ -5,13 +5,14 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# gezza <geza.nagy@oregional.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Által jelentve</strong>"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:84
+#: code:addons/website_project/controllers/main.py:88
 #, python-format
 msgid "All"
 msgstr "Összes"
@@ -82,7 +83,7 @@ msgid "Edit Task"
 msgstr "Feladat szerkesztése"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:81
+#: code:addons/website_project/controllers/main.py:85
 #, python-format
 msgid "Last Stage Update"
 msgstr "Utolsó szint frissítése"
@@ -99,7 +100,6 @@ msgstr "Feladataim"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:31
-#: code:addons/website_project/controllers/main.py:79
 #: model:ir.ui.view,arch_db:website_project.my_projects
 #, python-format
 msgid "Name"
@@ -107,7 +107,7 @@ msgstr "Név"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:30
-#: code:addons/website_project/controllers/main.py:78
+#: code:addons/website_project/controllers/main.py:82
 #, python-format
 msgid "Newest"
 msgstr "Legújabb"
@@ -128,7 +128,7 @@ msgid "Projects"
 msgstr "Projekt témák"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:80
+#: code:addons/website_project/controllers/main.py:84
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 #, python-format
 msgid "Stage"
@@ -151,13 +151,19 @@ msgid "Tasks"
 msgstr "Feladatok"
 
 #. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task_website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"A teljes elérési út/URL a dokumentum weboldalon keresztüli eléréséhez."
+
+#. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
 msgid "There are currently no projects."
 msgstr ""
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
-msgid "There are currently no quotes."
+msgid "There are currently no tasks."
 msgstr ""
 
 #. module: website_project
@@ -169,6 +175,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 msgid "There are no tasks."
 msgstr ""
+
+#. module: website_project
+#: code:addons/website_project/controllers/main.py:83
+#, python-format
+msgid "Title"
+msgstr "Megsz."
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task_website_url
+msgid "Website URL"
+msgstr "Honlap URL"
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.my_projects

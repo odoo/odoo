@@ -132,7 +132,7 @@ msgstr "Detaylar"
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_account_display_name
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_employee
@@ -491,6 +491,16 @@ msgstr "Onaylandıktan sonra bir zaman çizelgesini silemezsiniz."
 #, python-format
 msgid "You cannot duplicate a timesheet."
 msgstr "Bir zaman çizelgesi çift olamaz."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:85
+#, python-format
+msgid ""
+"You cannot have 2 timesheets that overlap!\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
+msgstr ""
+"Sen üst üste 2 zaman çizelgesi oluşturamazsın!\n"
+"Bu sorunu önlemek için menü'de 'Mevcut zaman çizelgesi' kullanın."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60

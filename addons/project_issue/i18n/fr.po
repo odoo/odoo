@@ -5,7 +5,6 @@
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Clo <clo@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
@@ -14,20 +13,22 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
-# Frédéric LIETART <stuff@tifred.fr>, 2016
+# Clo <clo@odoo.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Henri Cornuau <hcornuau@gmail.com>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2016
 # Fabri Yohann <psn@fabri.pw>, 2017
+# Lucas Deliege <lud@openerp.com>, 2017
+# Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Fabri Yohann <psn@fabri.pw>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"Last-Translator: Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgid "# of Issues"
 msgstr "Nb. d'incidents"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:146
+#: code:addons/project_issue/models/project_issue.py:150
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -65,11 +66,6 @@ msgstr "<b>Projet :</b>"
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-
-#. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Activate timesheets on issues"
-msgstr "Activez les feuilles de temps sur les incidents"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -174,6 +170,7 @@ msgid "Company"
 msgstr "Société"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_res_partner
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
@@ -210,16 +207,16 @@ msgstr "Date de création"
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "Actuellement, il n'y a aucune activité prévue"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:267
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "Customer"
 msgstr "Client"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:269
+#: code:addons/project_issue/models/project_issue.py:273
 #, python-format
 msgid "Customer Email"
 msgstr "Courriel client"
@@ -303,11 +300,6 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Do not track working hours on issues"
-msgstr "Ne pas suivre les heures de travail sur les incidents"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
 msgid "Duration"
 msgstr "Durée"
@@ -345,7 +337,7 @@ msgstr "Vert"
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Gris"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -354,18 +346,13 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Helpdesk & Support"
-msgstr "Support technique et assistance"
-
-#. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Élevé"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:242
+#: code:addons/project_issue/models/project_issue.py:246
 #, python-format
 msgid "I take it"
 msgstr "Je m'en occupe"
@@ -520,7 +507,7 @@ msgstr "Faible"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Mes activités"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -530,7 +517,7 @@ msgstr "Mes incidents"
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.project_issue_action_activity
 msgid "My Next Issue Activities"
-msgstr ""
+msgstr "Mes activités suivantes"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -550,18 +537,13 @@ msgstr "Activités suivantes"
 #. module: project_issue
 #: model:ir.ui.menu,name:project_issue.project_issue_menu_activity
 msgid "Next Issue Activities"
-msgstr ""
+msgstr "Activités suivantes"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:293
+#: code:addons/project_issue/models/project_issue.py:297
 #, python-format
 msgid "No Subject"
 msgstr "Pas de sujet"
-
-#. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
-msgid "No customer rating"
-msgstr "Pas d'évaluation client"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -612,11 +594,6 @@ msgstr ""
 "sélection kanban, quand la tâche ou l'incident est dans cette étape."
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_res_partner
-msgid "Partner"
-msgstr "Partenaire"
-
-#. module: project_issue
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
@@ -664,23 +641,26 @@ msgid "Project Issues"
 msgstr "Incidents"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
-msgid ""
-"Provides timesheet support for the issues/bugs management in project.\n"
-"-This installs the module project_issue_sheet."
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Provides timesheet support for the issues/bugs management in project."
 msgstr ""
-"Fournit une aide pour les feuilles de temps pour la gestion des incidents/bugs dans le projet.\n"
-"-Ceci install le module project_issue_sheet."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "Rating on issue"
-msgstr "Noter ce ticket"
+msgid "Rating on Issues"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Red"
 msgstr "Rouge"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+"Enregistrez cette page, vous pouvez y revenir pour appliquer vos nouvelles "
+"fonctionnalités."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -691,6 +671,8 @@ msgstr "Rechercher"
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
+"actions est pour aujourd'hui ou avant. "
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_stage_id
@@ -750,11 +732,6 @@ msgid "These people will receive email."
 msgstr "Ces personnes recevront un courriel."
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "This allows customers to give rating on issue"
-msgstr "Cela permet aux clients de donner une note à un ticket"
-
-#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
 msgid ""
@@ -769,11 +746,6 @@ msgstr ""
 "nombre d'emails à échanger et le temps passé en moyenne par incident."
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Timesheets"
-msgstr "Feuilles de temps"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
 msgstr "Feuilles de temps sur les Tickets"
@@ -784,9 +756,14 @@ msgid "Today Activities"
 msgstr "Activités du Jour"
 
 #. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Track customer satisfaction on issues"
 msgstr "Superviser la satisfaction client sur les tickets"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Track time spent to solve issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -803,7 +780,7 @@ msgstr "Messages non lus"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Acitivités suivantes (7 jours)"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
@@ -846,7 +823,7 @@ msgstr ""
 "nouvelle"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:181
+#: code:addons/project_issue/models/project_issue.py:185
 #, python-format
 msgid "issues"
 msgstr "incidents"

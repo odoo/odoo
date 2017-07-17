@@ -15,10 +15,10 @@
 # Jasmina Otročak <jasmina@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Jasmina Otročak <jasmina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -875,6 +875,13 @@ msgid "Add page in menu"
 msgstr "Dodaj stranicu u izbornik"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:55
+#, python-format
+msgid "Add this feature"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Adding relevant and popular keywords"
 msgstr "Dodavanje relevantnih i popularnih ključnih riječi"
@@ -1087,7 +1094,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:86
+#: code:addons/website/static/src/js/website.backendDashboard.js:92
 #: code:addons/website/static/src/xml/website.xml:57
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -1250,6 +1257,11 @@ msgid "Connect with us"
 msgstr "Povežite se s nama"
 
 #. module: website
+#: model:ir.model,name:website.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_crm
 msgid "Contact Form"
 msgstr "Forma kontakta"
@@ -1326,13 +1338,6 @@ msgid "Create a community"
 msgstr "Stvori zajednicu"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:137
-#, python-format
-msgid "Create page '%s'"
-msgstr "Kreiraj stranicu '%s'"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "Create several versions of your website pages"
 msgstr ""
@@ -1384,6 +1389,7 @@ msgstr ""
 "ovog banera."
 
 #. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
 msgstr "Kontrolna ploča"
@@ -1606,7 +1612,7 @@ msgstr "Uredi u pozadini"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:21
+#: code:addons/website/static/src/xml/website.backend.xml:73
 #, python-format
 msgid "Edit my Analytics Client ID"
 msgstr ""
@@ -1758,7 +1764,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:22
+#: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "Follow all the"
 msgstr "Prati sve"
@@ -1855,7 +1861,15 @@ msgstr "Idi na poveznicu"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:20
+#: code:addons/website/static/src/xml/website.backend.xml:22
+#, python-format
+msgid "Go to Website"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "Go to our"
 msgstr "Idi na"
@@ -1883,7 +1897,7 @@ msgstr "Google Adwords"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:73
+#: code:addons/website/static/src/js/website.backendDashboard.js:79
 #: model:ir.model.fields,field_description:website.field_website_config_settings_has_google_analytics
 #, python-format
 msgid "Google Analytics"
@@ -1970,8 +1984,8 @@ msgstr "Rast"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "HTML Editor"
-msgstr "HTML uređivač"
+msgid "HTML/CSS Editor"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -2005,7 +2019,7 @@ msgstr "Naslovna"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:20
+#: code:addons/website/static/src/xml/website.editor.xml:4
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.footer_custom
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2023,7 +2037,7 @@ msgstr "Siguran sam, definitivno želim obrisati ovu stranicu"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_1796
+#: model:ir.model.fields,field_description:website.field_website_menu_id_1831
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2056,7 +2070,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:96
+#: code:addons/website/static/src/js/website.backendDashboard.js:102
 #, python-format
 msgid "Incorrect Client ID"
 msgstr "Neispravan ID klijenta"
@@ -2178,6 +2192,13 @@ msgid "Last Modified on"
 msgstr "Zadnja promjena"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:102
+#, python-format
+msgid "Last Month"
+msgstr "Prošli mjesec"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu_write_uid
 #: model:ir.model.fields,field_description:website.field_website_write_uid
@@ -2190,6 +2211,20 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:website.field_website_write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:101
+#, python-format
+msgid "Last Week"
+msgstr "Prošli tjedan"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:103
+#, python-format
+msgid "Last Year"
+msgstr "Protekla godina"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2209,7 +2244,7 @@ msgstr "Lijevo"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:21
+#: code:addons/website/static/src/xml/website.editor.xml:5
 #, python-format
 msgid "Let's start designing."
 msgstr "Započnimo s dizajniranjem."
@@ -2221,7 +2256,7 @@ msgstr "Ograničena prilagodba"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:29
+#: code:addons/website/static/src/xml/website.backend.xml:81
 #, python-format
 msgid "Link my Analytics Account"
 msgstr ""
@@ -2285,7 +2320,7 @@ msgid "Medium"
 msgstr "Medij"
 
 #. module: website
-#: code:addons/website/models/website.py:323
+#: code:addons/website/models/website.py:327
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #, python-format
 msgid "Menu"
@@ -2293,17 +2328,17 @@ msgstr "Izbornik"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.contentMenu.js:326
+#, python-format
+msgid "Menu Label"
+msgstr "Tekst izbornika"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/website.mobile.js:42
 #, python-format
 msgid "Mobile preview"
 msgstr "Mobilni izgled"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:51
-#, python-format
-msgid "Month"
-msgstr "Mjesec"
 
 #. module: website
 #. openerp-web
@@ -2366,13 +2401,6 @@ msgstr "Novi prozor"
 msgid ""
 "New incoming messages are managed as leads or opportunities in your CRM app."
 msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:122
-#, python-format
-msgid "New or existing page"
-msgstr "Nova ili postojeća stranica"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -2586,15 +2614,13 @@ msgstr ""
 "svoj učinak."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/models/website.py:302
-#: code:addons/website/static/src/xml/website.editor.xml:10
+#: code:addons/website/models/website.py:306
 #, python-format
 msgid "Page"
 msgstr "Page"
 
 #. module: website
-#: code:addons/website/models/website.py:308
+#: code:addons/website/models/website.py:312
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
 msgstr "Stranica <b>%s</b> sadrži poveznicu za ovu stranicu"
@@ -2634,11 +2660,6 @@ msgstr "Nadređeni izbornik"
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_right
 msgid "Parent Rigth"
 msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_res_partner
-msgid "Partner"
-msgstr "Partner"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_partner_id
@@ -2848,6 +2869,13 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:58
+#, python-format
+msgid "Remove this suggestion from dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Rename Page"
 msgstr "Preimenuj stranicu"
@@ -2908,7 +2936,7 @@ msgstr "Uzorak slike"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:77
+#: code:addons/website/static/src/js/website.backendDashboard.js:83
 #: code:addons/website/static/src/js/website.seo.js:363
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 #, python-format
@@ -3138,7 +3166,7 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr "Reci što je vrijednosti za kupca<br/>za ovu značajku."
 
 #. module: website
-#: code:addons/website/models/website.py:313
+#: code:addons/website/models/website.py:317
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
 msgstr "Poveznica <b>%s (id:%s)</b> sadrži poveznicu na ovu stranicu"
@@ -3155,7 +3183,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:96
+#: code:addons/website/static/src/js/website.backendDashboard.js:102
 #, python-format
 msgid "The Google Analytics Client ID you have entered seems incorrect."
 msgstr "ID klijenta Google Analyticsa koji ste unijeli je pogrešan."
@@ -3250,7 +3278,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:28
+#: code:addons/website/static/src/xml/website.backend.xml:80
 #, python-format
 msgid "There is no data currently available."
 msgstr "Trenutno nema dostupnih podataka."
@@ -3281,7 +3309,7 @@ msgstr ""
 "Stranica ne postoji, ali možete ju kreirati jer ste administrator stranice."
 
 #. module: website
-#: code:addons/website/models/website.py:327
+#: code:addons/website/models/website.py:331
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr "Ova stranice je u izborniku <b>%s</b>"
@@ -3489,7 +3517,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "User Documentation"
 msgstr "Dokumentacija korisnika"
@@ -3539,7 +3567,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:18
+#: code:addons/website/static/src/xml/website.backend.xml:70
 #, python-format
 msgid "Visits"
 msgstr "Posjeti"
@@ -3582,7 +3610,7 @@ msgstr "Potruditi ćemo se da vam se javimo u najkraćem  mogućem roku."
 #: model:ir.model,name:website.model_website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view_website_id
 #: model:ir.model.fields,field_description:website.field_website_menu_website_id
-#: model:ir.ui.menu,name:website.menu_website
+#: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
@@ -3590,19 +3618,9 @@ msgid "Website"
 msgstr "Web stranica"
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_configuration
-msgid "Website Admin"
-msgstr "Administrator web stranice"
-
-#. module: website
 #: model:ir.actions.act_window,name:website.action_module_website
 msgid "Website Apps"
 msgstr "Website aplikacije"
-
-#. module: website
-#: model:ir.actions.client,name:website.backend_dashboard
-msgid "Website Dashboard"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
@@ -3746,6 +3764,11 @@ msgid "Website meta title"
 msgstr "Web meta naslov"
 
 #. module: website
+#: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
+msgid "Website: Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Web stranice"
@@ -3756,27 +3779,20 @@ msgid "Websites to translate"
 msgstr "Webstranice za prijevod"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:50
-#, python-format
-msgid "Week"
-msgstr "Tjedan"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Welcome"
 msgstr "Dobrodošli"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:20
+#: code:addons/website/static/src/xml/website.editor.xml:4
 #, python-format
 msgid "Welcome to your"
 msgstr "Dobrodošli na"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:26
+#: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "What do you want to do?"
 msgstr "Što želite učiniti?"
@@ -3863,13 +3879,6 @@ msgid ""
 msgstr "Napišite ono što kupac želi znati,<br/>ne ono što želite pokazati."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:52
-#, python-format
-msgid "Year"
-msgstr "Godina"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Yes"
 msgstr "Da"
@@ -3899,16 +3908,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:30
-#, python-format
-msgid ""
-"You do not have sufficient access rights to configure the Google Analytics "
-"account."
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:40
+#: code:addons/website/static/src/xml/website.backend.xml:91
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
 msgstr ""
@@ -3922,7 +3922,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:39
+#: code:addons/website/static/src/xml/website.backend.xml:90
 #, python-format
 msgid "You need to log in to your Google Account before:"
 msgstr "Trebate se prijaviti na Google račun prije:"
@@ -3940,7 +3940,7 @@ msgstr "Naslov vašeg banera"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:43
+#: code:addons/website/static/src/xml/website.backend.xml:94
 #, python-format
 msgid "Your Google Analytic Client ID:"
 msgstr "Vaš Google Analytic ID klijenta:"
@@ -3952,7 +3952,7 @@ msgstr "Naslov vaše webstranice"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:27
+#: code:addons/website/static/src/xml/website.editor.xml:11
 #, python-format
 msgid "Your current changes will be saved automatically."
 msgstr "Vaše trenutne promjene bit će automatski spremljene."
@@ -4192,7 +4192,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:22
+#: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr ""
@@ -4225,7 +4225,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "to get more information."
 msgstr "za više informacija."

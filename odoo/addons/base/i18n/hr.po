@@ -17,10 +17,10 @@
 # Filip Cuk <filipcuk2@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15+e\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-28 13:36+0000\n"
-"PO-Revision-Date: 2017-04-28 13:36+0000\n"
+"POT-Creation-Date: 2017-07-17 08:45+0000\n"
+"PO-Revision-Date: 2017-07-17 08:45+0000\n"
 "Last-Translator: Filip Cuk <filipcuk2@gmail.com>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -515,6 +515,14 @@ msgstr ""
 "\n"
 "       Dugi opis namjene modula\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_hr_expense_check
+msgid ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
@@ -5989,11 +5997,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "Dodaj troškove dostave online prodaji"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Dodaj sljedbenike"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast_grid
 msgid "Add Grid view on Project Forecasts"
 msgstr ""
@@ -6212,6 +6215,11 @@ msgid "Algeria"
 msgstr "Alžir"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.ir_cron_view_search
+msgid "All"
+msgstr "Sve"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
@@ -6270,6 +6278,13 @@ msgid ""
 msgstr ""
 "Omogućuje kreiranje faktura i praćenje plaćanja. To je jednostavnija verzija"
 " računovodstvenog modula za menadžere koji nisu računovođe."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -6613,11 +6628,6 @@ msgid "Auto Search"
 msgstr "Auto pretraživanje"
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "Automatska akcijska pravila"
@@ -6731,12 +6741,6 @@ msgstr "Bankovni računi povezani sa ovom tvrtkom"
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
 msgstr "Banke"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner_barcode
-#: model:ir.model.fields,help:base.field_res_users_barcode
-msgid "BarCode"
-msgstr "Barkod"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -7329,6 +7333,11 @@ msgid "Check Printing Base"
 msgstr "Provjeri osnovni ispis"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_check
+msgid "Check Printing in Expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
 #: model:ir.model.fields,help:base.field_res_users_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
@@ -7464,14 +7473,14 @@ msgid "City Addresses"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "Klikni ovdje za dodavanje novog dokumenta."
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Klikni ovdje za kreiranje prilagođenog pogleda"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -8051,7 +8060,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Kreiraj datum"
 
@@ -8279,6 +8287,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -8608,27 +8617,6 @@ msgstr "Dan: %(day)s"
 #: selection:ir.cron,interval_type:0
 msgid "Days"
 msgstr "Dani"
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Poštovani Gospodine/Gospođo,\n"
-"\n"
-"Naša evidencija pokazuje da nepodmiranih dugovanja. Molimo ispunite sljedeće podatke.\n"
-"Ukoliko je iznos već plaćen, molimo zanemarite ovu obavijest, u protivnom, molimo da uplatite ukupan navedeni iznos.\n"
-"Ukoliko imate pitanja vezanih za vaš račun, molimo da nas kontaktirate.\n"
-"\n"
-"Unaprijed zahvaljujemo na suradnji.\n"
-"Srdačan pozdrav,"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
@@ -9248,7 +9236,6 @@ msgstr "Imenik zaposlenika"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "Zaposlenici"
 
@@ -10020,6 +10007,11 @@ msgstr "Francuska"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
 msgstr "Francuska - računovodstvo"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - Accounting - Certified CGI 286 I-3 bis"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
@@ -10821,12 +10813,6 @@ msgstr "IBAN bankovni račun"
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_id
 msgid "ID"
 msgstr "ID"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-#: model:ir.model.fields,help:base.field_ir_cron_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "ID akcije je definiran u XML datoteci"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
@@ -12688,16 +12674,22 @@ msgid "Missing document(s)"
 msgstr "Nedostaje dokument(i)"
 
 #. module: base
-#: code:addons/models.py:5104
+#: code:addons/models.py:5107
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Nedostaje vrijednost za obavezno polje '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:5101
+#: code:addons/models.py:5104
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Nedostaje vrijednost za obavezno polje '%s'."
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:379
+#, python-format
+msgid "Missing view architecture."
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -14177,6 +14169,11 @@ msgid "Print US Checks"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_check
+msgid "Print amount in words on checks issued for expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
 msgid "Print and Send Invoices with DocsAway.com"
 msgstr ""
@@ -15266,11 +15263,6 @@ msgid "Sell based on timesheets"
 msgstr "Prodaja bazirana na kontrolnoj kartici"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Pošalji e-mail"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
 msgstr "Pošalji račune i prati plaćanja"
@@ -16142,12 +16134,11 @@ msgstr "Tehnički naziv"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Tehničke postavke"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:738
+#: code:addons/base/ir/ir_translation.py:749
 #, python-format
 msgid "Technical Translations"
 msgstr "Tehnički prijevodi"
@@ -19012,15 +19003,6 @@ msgstr "test_convert"
 #: selection:ir.model.fields,ttype:0
 msgid "text"
 msgstr ""
-
-#. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
-msgstr ""
-"korisnik će moći upravljati svojim ljudskim resursima (zahtjev za odsustvom,"
-" evidencije rada...), ako je povezan sa zaposlenikom u sustavu."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form

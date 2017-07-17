@@ -12,10 +12,10 @@
 # Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-28 13:13+0000\n"
+"PO-Revision-Date: 2017-04-28 13:13+0000\n"
 "Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -262,6 +262,14 @@ msgid "<strong>Total:</strong>"
 msgstr "<strong>Ukupno:</strong>"
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
 msgstr "O nama"
@@ -272,16 +280,14 @@ msgid "Add to order lines"
 msgstr "DOdaj stavkama narudžbe"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Amount"
+msgstr "Iznos"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "Iznos prije popusta"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
-msgid ""
-"An administrator can set up default Terms and conditions in your Company "
-"settings."
-msgstr "Administrator može postaviti zadane uvjete u postavkama poduzeća."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -369,11 +375,19 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
+msgstr "Opis za online ponude"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_quote_description
+#: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
 msgstr "Opis za ponudu"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
 msgstr "Opis za web stranicu"
@@ -456,8 +470,8 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:211
+#: code:addons/website_quote/controllers/main.py:77
+#: code:addons/website_quote/controllers/main.py:216
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -561,13 +575,13 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:169
+#: code:addons/website_quote/models/sale_order.py:188
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr "Narudžbu platio %s. Transakcija: %s. Količina: %s."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:90
+#: code:addons/website_quote/controllers/main.py:93
 #, python-format
 msgid "Order signed by %s"
 msgstr "Narudžbu potpisao %s"
@@ -593,8 +607,8 @@ msgid "Our Service"
 msgstr "Naša usluga"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:65
-#: code:addons/website_quote/controllers/main.py:204
+#: code:addons/website_quote/controllers/main.py:66
+#: code:addons/website_quote/controllers/main.py:209
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Plati i potvrdi"
@@ -611,9 +625,15 @@ msgid "Payment Method:"
 msgstr "Način plaćanja:"
 
 #. module: website_quote
+#: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
 #: model:ir.ui.view,arch_db:website_quote.sale_config_settings_view_form_inherit_website_quote
 msgid "Payment Methods"
 msgstr "Načini plaćanja"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Payment Terms:"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -622,7 +642,6 @@ msgstr "Pregled"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr "Cijena"
@@ -724,7 +743,7 @@ msgid "Quotation Viewed"
 msgstr "Ponuda pogledana"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:26
+#: code:addons/website_quote/controllers/main.py:27
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Ponuda pregledana od strane kupca"
@@ -851,6 +870,13 @@ msgid "Terms and conditions"
 msgstr "Uvijeti o korištenju"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid ""
+"These Terms & Conditions will replace the default ones set in the "
+"Configuration menu."
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
@@ -959,7 +985,7 @@ msgid ""
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:134
+#: code:addons/website_quote/controllers/main.py:137
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Ne možete dodati opcije na potvrđenu narudžbu."

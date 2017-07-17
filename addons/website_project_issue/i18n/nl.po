@@ -9,10 +9,10 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -47,10 +47,25 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Gerapporteerd door</strong>"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:38
+#: code:addons/website_project_issue/controllers/main.py:39
 #, python-format
 msgid "All"
 msgstr "Alle"
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachment"
+msgstr "Bijlage"
+
+#. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_attachment_ids
+msgid "Attachment that don't come from message."
+msgstr ""
+
+#. module: website_project_issue
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
+msgid "Attachments"
+msgstr "Bijlagen"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
@@ -61,11 +76,6 @@ msgstr "Huidige fase van dit issue"
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
 msgid "Current stage of this issue"
 msgstr "Huidig stadium van dit issue"
-
-#. module: website_project_issue
-#: model:ir.ui.view,arch_db:website_project_issue.my_issues
-msgid "Description"
-msgstr "Omschrijving"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
@@ -84,10 +94,15 @@ msgid "Issues"
 msgstr "Issues"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:35
+#: code:addons/website_project_issue/controllers/main.py:36
 #, python-format
 msgid "Last Stage Update"
 msgstr "Laatste fase aanpassing"
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_attachment_ids
+msgid "Main Attachments"
+msgstr ""
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues_issue
@@ -96,12 +111,6 @@ msgstr "Mijn issues"
 
 #. module: website_project_issue
 #: code:addons/website_project_issue/controllers/main.py:33
-#, python-format
-msgid "Name"
-msgstr "Naam"
-
-#. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:32
 #, python-format
 msgid "Newest"
 msgstr "Nieuwste"
@@ -112,21 +121,62 @@ msgid "Project Issue"
 msgstr "Project issues"
 
 #. module: website_project_issue
-#: code:addons/website_project_issue/controllers/main.py:34
+#: code:addons/website_project_issue/controllers/main.py:42
+#, python-format
+msgid "Search <span class=\"nolabel\"> (in Content)</span>"
+msgstr "Zoek <span class=\"nolabel\"> (in inhoud)</span>"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:45
+#, python-format
+msgid "Search in All"
+msgstr "Zoek in alle"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:44
+#, python-format
+msgid "Search in Customer"
+msgstr "Zoek in klanten"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:43
+#, python-format
+msgid "Search in Messages"
+msgstr "Zoek in berichten"
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:35
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 #, python-format
 msgid "Stage"
 msgstr "Fase"
 
 #. module: website_project_issue
+#: model:ir.model.fields,help:website_project_issue.field_project_issue_website_url
+msgid "The full URL to access the document through the website."
+msgstr "De volledige URL om het document te kunnen raadplegen via de website."
+
+#. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.portal_my_home
 msgid "There are currently no issues."
-msgstr ""
+msgstr "Er zijn momenteel geen problemen."
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues
 msgid "There are no issues."
 msgstr "Er zijn geen issues."
+
+#. module: website_project_issue
+#: code:addons/website_project_issue/controllers/main.py:34
+#: model:ir.ui.view,arch_db:website_project_issue.my_issues
+#, python-format
+msgid "Title"
+msgstr "Titel"
+
+#. module: website_project_issue
+#: model:ir.model.fields,field_description:website_project_issue.field_project_issue_website_url
+msgid "Website URL"
+msgstr "Website URL"
 
 #. module: website_project_issue
 #: model:ir.ui.view,arch_db:website_project_issue.my_issues

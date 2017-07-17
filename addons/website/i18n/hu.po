@@ -6,15 +6,15 @@
 # krnkris <krnkris@freemail.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Zsofia Biro <zsbiro1205@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Zsofia Biro <zsbiro1205@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -861,6 +861,13 @@ msgid "Add page in menu"
 msgstr "Oldal hozzáadása a menühöz"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:55
+#, python-format
+msgid "Add this feature"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Adding relevant and popular keywords"
 msgstr ""
@@ -1074,7 +1081,7 @@ msgstr "Használhatom a projektek irányítását  agilis módszertanok alapján
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:86
+#: code:addons/website/static/src/js/website.backendDashboard.js:92
 #: code:addons/website/static/src/xml/website.xml:57
 #: model:ir.ui.view,arch_db:website.500
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -1234,6 +1241,11 @@ msgid "Connect with us"
 msgstr "Kapcsolatfelvétel"
 
 #. module: website
+#: model:ir.model,name:website.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_module_website_crm
 msgid "Contact Form"
 msgstr "Kapcsolati űrlap"
@@ -1312,13 +1324,6 @@ msgid "Create a community"
 msgstr "Hozz létre egy közösséget"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:137
-#, python-format
-msgid "Create page '%s'"
-msgstr "'%s' oldal készítése"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 msgid "Create several versions of your website pages"
 msgstr ""
@@ -1370,6 +1375,7 @@ msgstr ""
 "hírdetés hátterét."
 
 #. module: website
+#: model:ir.actions.client,name:website.backend_dashboard
 #: model:ir.ui.menu,name:website.menu_dashboard
 msgid "Dashboard"
 msgstr "Műszerfal"
@@ -1592,7 +1598,7 @@ msgstr "Szerkesztés ablakban"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:21
+#: code:addons/website/static/src/xml/website.backend.xml:73
 #, python-format
 msgid "Edit my Analytics Client ID"
 msgstr ""
@@ -1746,7 +1752,7 @@ msgstr "Összecsukott lista"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:22
+#: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "Follow all the"
 msgstr ""
@@ -1845,7 +1851,15 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:20
+#: code:addons/website/static/src/xml/website.backend.xml:22
+#, python-format
+msgid "Go to Website"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "Go to our"
 msgstr ""
@@ -1871,7 +1885,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:73
+#: code:addons/website/static/src/js/website.backendDashboard.js:79
 #: model:ir.model.fields,field_description:website.field_website_config_settings_has_google_analytics
 #, python-format
 msgid "Google Analytics"
@@ -1958,8 +1972,8 @@ msgstr ""
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
-msgid "HTML Editor"
-msgstr "HTML szerkesztő"
+msgid "HTML/CSS Editor"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_http
@@ -1993,7 +2007,7 @@ msgstr "Kezdőlap"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:20
+#: code:addons/website/static/src/xml/website.editor.xml:4
 #: model:ir.ui.view,arch_db:website.403 model:ir.ui.view,arch_db:website.404
 #: model:ir.ui.view,arch_db:website.footer_custom
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2011,7 +2025,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_id
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_1796
+#: model:ir.model.fields,field_description:website.field_website_menu_id_1831
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata_id
 msgid "ID"
@@ -2049,7 +2063,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:96
+#: code:addons/website/static/src/js/website.backendDashboard.js:102
 #, python-format
 msgid "Incorrect Client ID"
 msgstr ""
@@ -2171,6 +2185,13 @@ msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:102
+#, python-format
+msgid "Last Month"
+msgstr "Előző hónap"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_config_settings_write_uid
 #: model:ir.model.fields,field_description:website.field_website_menu_write_uid
 #: model:ir.model.fields,field_description:website.field_website_write_uid
@@ -2183,6 +2204,20 @@ msgstr "Utoljára frissítette"
 #: model:ir.model.fields,field_description:website.field_website_write_date
 msgid "Last Updated on"
 msgstr "Utoljára frissítve "
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:101
+#, python-format
+msgid "Last Week"
+msgstr "Előző hét"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:103
+#, python-format
+msgid "Last Year"
+msgstr "Utolsó év"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
@@ -2201,7 +2236,7 @@ msgstr "Bal"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:21
+#: code:addons/website/static/src/xml/website.editor.xml:5
 #, python-format
 msgid "Let's start designing."
 msgstr ""
@@ -2213,7 +2248,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:29
+#: code:addons/website/static/src/xml/website.backend.xml:81
 #, python-format
 msgid "Link my Analytics Account"
 msgstr ""
@@ -2277,7 +2312,7 @@ msgid "Medium"
 msgstr "Közepes"
 
 #. module: website
-#: code:addons/website/models/website.py:323
+#: code:addons/website/models/website.py:327
 #: model:ir.model.fields,field_description:website.field_website_menu_name
 #, python-format
 msgid "Menu"
@@ -2285,17 +2320,17 @@ msgstr "Menü"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/website.contentMenu.js:326
+#, python-format
+msgid "Menu Label"
+msgstr "Menüelem címkéje"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/website.mobile.js:42
 #, python-format
 msgid "Mobile preview"
 msgstr "Mobil előnézet"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:51
-#, python-format
-msgid "Month"
-msgstr "Hónap"
 
 #. module: website
 #. openerp-web
@@ -2358,13 +2393,6 @@ msgstr "Új Ablak"
 msgid ""
 "New incoming messages are managed as leads or opportunities in your CRM app."
 msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/website.editor.js:122
-#, python-format
-msgid "New or existing page"
-msgstr "Új, vagy létező oldal"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -2575,15 +2603,13 @@ msgstr ""
 "                               optimalizálni  a teljesítményüket."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/models/website.py:302
-#: code:addons/website/static/src/xml/website.editor.xml:10
+#: code:addons/website/models/website.py:306
 #, python-format
 msgid "Page"
 msgstr "Oldal"
 
 #. module: website
-#: code:addons/website/models/website.py:308
+#: code:addons/website/models/website.py:312
 #, python-format
 msgid "Page <b>%s</b> contains a link to this page"
 msgstr ""
@@ -2623,11 +2649,6 @@ msgstr "Szülő menü"
 #: model:ir.model.fields,field_description:website.field_website_menu_parent_right
 msgid "Parent Rigth"
 msgstr ""
-
-#. module: website
-#: model:ir.model,name:website.model_res_partner
-msgid "Partner"
-msgstr "Partner"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_partner_id
@@ -2832,6 +2853,13 @@ msgid ""
 msgstr ""
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:58
+#, python-format
+msgid "Remove this suggestion from dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Rename Page"
 msgstr ""
@@ -2892,7 +2920,7 @@ msgstr "Példa képek"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:77
+#: code:addons/website/static/src/js/website.backendDashboard.js:83
 #: code:addons/website/static/src/js/website.seo.js:363
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
 #, python-format
@@ -3122,7 +3150,7 @@ msgid "Tell what's the value for the<br/>customer for this feature."
 msgstr ""
 
 #. module: website
-#: code:addons/website/models/website.py:313
+#: code:addons/website/models/website.py:317
 #, python-format
 msgid "Template <b>%s (id:%s)</b> contains a link to this page"
 msgstr ""
@@ -3139,7 +3167,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/website.backendDashboard.js:96
+#: code:addons/website/static/src/js/website.backendDashboard.js:102
 #, python-format
 msgid "The Google Analytics Client ID you have entered seems incorrect."
 msgstr ""
@@ -3238,7 +3266,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:28
+#: code:addons/website/static/src/xml/website.backend.xml:80
 #, python-format
 msgid "There is no data currently available."
 msgstr ""
@@ -3273,7 +3301,7 @@ msgstr ""
 "Ez az oldal nem létezik, de létre tudja hozzni, ha ön az oldal üzemeltetője."
 
 #. module: website
-#: code:addons/website/models/website.py:327
+#: code:addons/website/models/website.py:331
 #, python-format
 msgid "This page is in the menu <b>%s</b>"
 msgstr ""
@@ -3476,7 +3504,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "User Documentation"
 msgstr ""
@@ -3524,7 +3552,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:18
+#: code:addons/website/static/src/xml/website.backend.xml:70
 #, python-format
 msgid "Visits"
 msgstr ""
@@ -3574,7 +3602,7 @@ msgstr ""
 #: model:ir.model,name:website.model_website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view_website_id
 #: model:ir.model.fields,field_description:website.field_website_menu_website_id
-#: model:ir.ui.menu,name:website.menu_website
+#: model:ir.ui.menu,name:website.menu_website_configuration
 #: model:ir.ui.view,arch_db:website.user_navbar
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
 #: model:ir.ui.view,arch_db:website.website_config_settings_view_form
@@ -3582,19 +3610,9 @@ msgid "Website"
 msgstr "Weboldal"
 
 #. module: website
-#: model:ir.ui.menu,name:website.menu_website_configuration
-msgid "Website Admin"
-msgstr ""
-
-#. module: website
 #: model:ir.actions.act_window,name:website.action_module_website
 msgid "Website Apps"
 msgstr "Honlap modulok"
-
-#. module: website
-#: model:ir.actions.client,name:website.backend_dashboard
-msgid "Website Dashboard"
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_domain
@@ -3738,6 +3756,11 @@ msgid "Website meta title"
 msgstr "Honlap meta cím"
 
 #. module: website
+#: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
+msgid "Website: Dashboard"
+msgstr ""
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.view_website_tree
 msgid "Websites"
 msgstr "Honlapok"
@@ -3748,27 +3771,20 @@ msgid "Websites to translate"
 msgstr "Fordítandó weboldalak"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:50
-#, python-format
-msgid "Week"
-msgstr "Hét"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Welcome"
 msgstr "Üdvözlet"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:20
+#: code:addons/website/static/src/xml/website.editor.xml:4
 #, python-format
 msgid "Welcome to your"
 msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:26
+#: code:addons/website/static/src/xml/website.editor.xml:10
 #, python-format
 msgid "What do you want to do?"
 msgstr ""
@@ -3850,13 +3866,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:52
-#, python-format
-msgid "Year"
-msgstr "Év"
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
 msgid "Yes"
 msgstr "Igen"
@@ -3886,16 +3895,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:30
-#, python-format
-msgid ""
-"You do not have sufficient access rights to configure the Google Analytics "
-"account."
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:40
+#: code:addons/website/static/src/xml/website.backend.xml:91
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
 msgstr ""
@@ -3909,7 +3909,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:39
+#: code:addons/website/static/src/xml/website.backend.xml:90
 #, python-format
 msgid "You need to log in to your Google Account before:"
 msgstr ""
@@ -3927,7 +3927,7 @@ msgstr "A bannere címe"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:43
+#: code:addons/website/static/src/xml/website.backend.xml:94
 #, python-format
 msgid "Your Google Analytic Client ID:"
 msgstr ""
@@ -3939,7 +3939,7 @@ msgstr "Honlapja címe"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:27
+#: code:addons/website/static/src/xml/website.editor.xml:11
 #, python-format
 msgid "Your current changes will be saved automatically."
 msgstr ""
@@ -4177,7 +4177,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.editor.xml:22
+#: code:addons/website/static/src/xml/website.editor.xml:6
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr ""
@@ -4208,7 +4208,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/xml/website.backend.xml:45
+#: code:addons/website/static/src/xml/website.backend.xml:96
 #, python-format
 msgid "to get more information."
 msgstr ""

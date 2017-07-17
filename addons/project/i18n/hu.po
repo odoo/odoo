@@ -3,17 +3,17 @@
 # * project
 # 
 # Translators:
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Kisrobert <kisrobi@gmail.com>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -110,10 +110,10 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
-"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
 "                                <span style=\"text-decoration:underline;\">API Documentation</span></a>\n"
 "                            </p>\n"
 "                            <br>\n"
@@ -123,7 +123,7 @@ msgid ""
 "                </tbody>\n"
 "            </table>\n"
 "            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
-"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: People love Odoo, check </span><a target=\"_blank\" href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">what they say about it.</span></a></span>\n"
 "            </div>\n"
 "        </div>"
 msgstr ""
@@ -159,8 +159,8 @@ msgid "# of Tasks"
 msgstr "# számú feladat"
 
 #. module: project
-#: code:addons/project/models/project.py:240
-#: code:addons/project/models/project.py:407
+#: code:addons/project/models/project.py:242
+#: code:addons/project/models/project.py:428
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -466,15 +466,6 @@ msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
 msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid ""
-"<span>(*) This configuration is related to the company you're logged "
-"into.</span>"
-msgstr ""
-"<span>(*) Ez a konfiguráció összefügg a vállalattal, amelybe "
-"bejelentkezett.</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1029,6 +1020,12 @@ msgid "Active"
 msgstr "Aktív"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
+#: model:ir.ui.menu,name:project.project_menu_config_activity_type
+msgid "Activity Types"
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
 msgstr "Leírás hozzáadása..."
@@ -1146,9 +1143,9 @@ msgstr ""
 "létre, és kézzel eldöntheti, hogy értesülni szeretne más eseményekről is."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Apply"
-msgstr "Alkalmaz"
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Apple App Store"
+msgstr "Apple Alkalmazás áruház"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1221,6 +1218,11 @@ msgid "Attachments"
 msgstr "Mellékletek"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet_attendance
+msgid "Attendances"
+msgstr "Jelenlétek"
+
+#. module: project
 #: selection:project.config.settings,generate_project_alias:0
 msgid "Automatically generate an email alias at the project creation"
 msgstr ""
@@ -1230,6 +1232,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Available on the Apple Store"
 msgstr "Elérhető az Apple Store-ban"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1274,6 +1281,11 @@ msgstr ""
 " egy órán belül tartani"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Billing"
+msgstr "Számlázás"
+
+#. module: project
 #: model:project.task,legend_blocked:project.project_task_data_0
 #: model:project.task,legend_blocked:project.project_task_data_1
 #: model:project.task,legend_blocked:project.project_task_data_11
@@ -1311,8 +1323,8 @@ msgid "By Responsible"
 msgstr "Felelős szerint"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
-#: model:ir.ui.view,arch_db:project.view_config_settings
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1401,9 +1413,9 @@ msgid "Click to create a new project.<br>"
 msgstr "Kattintson egy új projekt téma létrehozásához.<br>"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Collaborative rich text on task description"
-msgstr "Segítségnyújtó szöveg a folyamat leíráshoz"
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
+msgid "Collaborative Pads"
+msgstr "Segélynyújtó szerkesztők"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_color
@@ -1452,7 +1464,7 @@ msgid "Configuration options are available in the Settings app."
 msgstr "Beállítási lehetőségeket a Beállítások alkalmazásban talál."
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_config_settings
+#: model:ir.actions.act_window,name:project.project_config_settings_action
 msgid "Configure Project"
 msgstr "Projekt téma beállítás"
 
@@ -1476,6 +1488,7 @@ msgid "Consulting mission"
 msgstr "Tanácsadó küldetés"
 
 #. module: project
+#: model:ir.model,name:project.model_res_partner
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_partner_id
 #: model:ir.ui.view,arch_db:project.view_project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1617,7 +1630,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1626,10 +1639,15 @@ msgid "Customer"
 msgstr "Vásárló"
 
 #. module: project
-#: code:addons/project/models/project.py:638
+#: code:addons/project/models/project.py:658
 #, python-format
 msgid "Customer Email"
 msgstr "Vevői e-mail"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Customer Satisfaction"
+msgstr "Vásárlói Elégedettség"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1894,7 +1912,7 @@ msgid "Ending Date"
 msgstr "Befejezési dátum"
 
 #. module: project
-#: code:addons/project/models/project.py:415
+#: code:addons/project/models/project.py:436
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr ""
@@ -1938,6 +1956,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
 msgstr "Példák"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_expense
+msgid "Expenses"
+msgstr "Kiadások"
 
 #. module: project
 #. openerp-web
@@ -2040,14 +2063,9 @@ msgstr ""
 "(például: Összecsapás)."
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
 msgid "Forecasts"
 msgstr "Előrejelzések"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_forecast
-msgid "Forecasts, planning and Gantt charts"
-msgstr "Előrejelzések, tervezés és Gantt listák"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_tasks_config
@@ -2108,6 +2126,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Good luck!"
 msgstr "Sok szerencsét!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "Google Chrome áruház"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Google Play Store"
+msgstr "Google Play árzház"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -2177,7 +2205,7 @@ msgstr ""
 "   feladatokat, bejelentett ügyeket\n"
 
 #. module: project
-#: code:addons/project/models/project.py:564
+#: code:addons/project/models/project.py:585
 #, python-format
 msgid "I take it"
 msgstr "Átveszem"
@@ -2362,6 +2390,16 @@ msgstr ""
 "értesít az Odoo rendszer Beérkező üzeneteiben."
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Issue Management"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_project_issue
+msgid "Issue Tracking"
+msgstr "Bejelentett ügy nyomon követése"
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issue Tracking app."
 msgstr "Ügy nyomon követési alk."
@@ -2540,6 +2578,11 @@ msgstr ""
 "Feladatok, Ügyek és Munkaidő-kiosztás használatával."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_holidays
+msgid "Leave Management"
+msgstr "Távollétek szervezése"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:18
 #, python-format
@@ -2547,13 +2590,11 @@ msgid "Let's create your first project."
 msgstr "Hozza létre első projekt témáját."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_pad
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid ""
-"Lets the company customize which Pad installation should be used to link to new pads (for example: http://ietherpad.com/).\n"
-"-This installs the module pad."
+"Lets the company customize which Pad installation should be used to link to "
+"new pads (for example: http://ietherpad.com/)."
 msgstr ""
-"A vállalat testre szabhatja, melyik Pad telepítőt használja az új pad-ok elérési útjához (például: http://ietherpad.com/).\n"
-"-Ez a pad modult telepíti."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -2570,6 +2611,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "List, plan and track things to do"
 msgstr "Elvégzendő feladatok listája, terve és követése"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Manage your resources with Gantt charts"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2641,11 +2687,6 @@ msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "More Info"
-msgstr "További információ"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr "Sokkal hatékonyabb munkavállaló közti kommunikáció"
@@ -2705,11 +2746,6 @@ msgstr "Következő tevékenységek"
 #: model:ir.ui.menu,name:project.project_task_menu_activity
 msgid "Next Task Activities"
 msgstr ""
-
-#. module: project
-#: selection:project.config.settings,module_rating_project:0
-msgid "No customer rating"
-msgstr "Nincs vásárló értékelés"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -2782,7 +2818,7 @@ msgstr ""
 "részletit, hozzáfűzhet dokumentumokat, stb. "
 
 #. module: project
-#: code:addons/project/models/project.py:203
+#: code:addons/project/models/project.py:205
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2892,11 +2928,6 @@ msgid "Owner"
 msgstr "Tulajdonos"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
-msgid "Pads"
-msgstr "Szerkesztők / Pad-ok"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_parent_model_id
 msgid "Parent Model"
 msgstr "Forrásmodell"
@@ -2918,11 +2949,6 @@ msgstr ""
 "(például: projekt (parent_model) és folyamat (model))"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Plan your activities for the day"
 msgstr "Tervezze meg a tevékenységét erre a napra"
@@ -2933,7 +2959,7 @@ msgid "Planner"
 msgstr "Tervező"
 
 #. module: project
-#: code:addons/project/models/project.py:718
+#: code:addons/project/models/project.py:738
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2995,11 +3021,6 @@ msgid "Project Count"
 msgstr "Projekt téma számláló"
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_config_settings
-msgid "Project Management"
-msgstr "Projekt téma kezelés"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_manager_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3033,11 +3054,6 @@ msgid "Project Tasks"
 msgstr "Projekt téma feladatok"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_config_settings_project_time_mode_id
-msgid "Project Time Unit *"
-msgstr "Projekt időegysége *"
-
-#. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
 msgstr "Projekt téma feladat"
@@ -3066,8 +3082,8 @@ msgstr "Projekt témák"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
-msgid "Rating on task"
-msgstr "Értékelés a feladatokon"
+msgid "Rating on Tasks"
+msgstr ""
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_data_0
@@ -3136,6 +3152,11 @@ msgid "Record Thread ID"
 msgstr "Feljegyzés összefűzési azonosító ID"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Record time with mobile Timesheet app"
+msgstr ""
+
+#. module: project
 #: selection:project.task,kanban_state:0
 msgid "Red"
 msgstr "Piros"
@@ -3154,6 +3175,11 @@ msgstr "Vörös: a Feladat blokkolt (probléma merült fel)"
 #: model:ir.model.fields,field_description:project.field_project_project_code
 msgid "Reference"
 msgstr "Hivatkozás"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Reimburse employee expenses and invoice customers"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -3222,6 +3248,16 @@ msgid "Runs outside Odoo, always available"
 msgstr "Odoo rendszeren kívül fut, mindig elérhető"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save"
+msgstr "Mentés"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
+
+#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Scrum Methodology"
 msgstr "Scrum módszertan"
@@ -3242,6 +3278,11 @@ msgstr "Projekt témák keresése"
 #, python-format
 msgid "Select"
 msgstr "Kiválaszt"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3282,7 +3323,7 @@ msgid "Set a Cover Image"
 msgstr "Egy borító kép beállítása"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_project_general_settings
+#: model:ir.ui.menu,name:project.project_config_settings_menu_action
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Settings"
@@ -3504,11 +3545,6 @@ msgid "Task blocked"
 msgstr "Feladat blokkolva"
 
 #. module: project
-#: selection:project.config.settings,module_pad:0
-msgid "Task description is plain text"
-msgstr "Feladat leírás egy egyszerű szöveg"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/web_planner_project.js:25
 #, python-format
@@ -3598,6 +3634,11 @@ msgstr "Feladatok a felhasználók és projekt témák szerint"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Team Collaboration"
 msgstr ""
 
 #. module: project
@@ -3708,13 +3749,6 @@ msgstr ""
 " egy kép melléklettel."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_config_settings_module_rating_project
-msgid "This allows customers to give rating on provided services"
-msgstr ""
-"Ez lehetővé teszi a felhasználóknak a szolgáltatói szolgáltatásokra "
-"szavazhassanak"
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "This is particularly useful to manage help and support: all incoming email  "
@@ -3723,6 +3757,13 @@ msgid ""
 msgstr ""
 "Ez főként a segítség és támogatás kezelésben hasznos: mindegyik vásárlótól "
 "beérkező email átalakításra kerül egy üggyé, melyet könnyen nyomon követhet!"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid ""
+"This replaces task's description text field by a collaborative rich text "
+"pad. This is advised if tasks involve several people."
+msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -3771,7 +3812,6 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_account_analytic_account_company_uom_id
-#: model:ir.model.fields,help:project.field_project_config_settings_project_time_mode_id
 #: model:ir.model.fields,help:project.field_project_project_company_uom_id
 #: model:ir.model.fields,help:project.field_res_company_project_time_mode_id
 #: model:ir.model.fields,help:project.project_time_mode_id_duplicate_xmlid
@@ -3783,9 +3823,19 @@ msgstr ""
 "Ha használja a projektekhez kapcsolt munkaidő-kiosztás /project_timesheet modul/, ne felejtse el beállítani a helyes mértékegységet az alkalmazotti űrlapon."
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_sale_timesheet
+msgid "Time Billing"
+msgstr ""
+
+#. module: project
 #: model:res.groups,name:project.group_time_work_estimation_tasks
 msgid "Time Estimation on Tasks"
 msgstr "Idő becslés a feladatra"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Time Management"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -3797,6 +3847,11 @@ msgstr "Idő ütemezés"
 #: model:ir.model.fields,field_description:project.project_time_mode_id_duplicate_xmlid
 msgid "Timesheet UoM"
 msgstr "Időbeosztás mértékegysége"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_config_settings_module_hr_timesheet
+msgid "Timesheets"
+msgstr "Munkaidő-beosztás"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3865,9 +3920,29 @@ msgstr ""
 "újrabecsülheti."
 
 #. module: project
-#: selection:project.config.settings,module_rating_project:0
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track and solve issues from a Kanban view"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track attendances and compare with timesheets"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
 msgid "Track customer satisfaction on tasks"
 msgstr "Vásárlói Elégedettségének követése a feladatokon"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track leaves to optimize your scheduling"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Track time spent on projects and tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3901,6 +3976,11 @@ msgstr "Használja a Feladatokat mint"
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
 msgstr "Munkaidő-kiosztás használata"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_config_settings_view_form
+msgid "Use collaborative rich text pads in tasks"
+msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3972,14 +4052,14 @@ msgid "View statistics for the week"
 msgstr "Nézzem meg a hét statisztikáját"
 
 #. module: project
-#: code:addons/project/models/project.py:204
+#: code:addons/project/models/project.py:206
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr "Összes alkalmazott által látható"
 
 #. module: project
-#: code:addons/project/models/project.py:205
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -4261,7 +4341,7 @@ msgid "send us an email"
 msgstr "küldjön nekünk egy e-mailt"
 
 #. module: project
-#: code:addons/project/models/project.py:463
+#: code:addons/project/models/project.py:484
 #, python-format
 msgid "tasks"
 msgstr "feladatok"

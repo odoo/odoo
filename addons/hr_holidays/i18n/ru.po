@@ -19,10 +19,10 @@
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-07-17 08:17+0000\n"
+"PO-Revision-Date: 2017-07-17 08:17+0000\n"
 "Last-Translator: Max Belyanin <maxbelyanin@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -63,7 +63,13 @@ msgid "%g remaining out of %g"
 msgstr "%g оставаясь вне %g"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:336
+#: code:addons/hr_holidays/models/hr_holidays.py:335
+#, python-format
+msgid "%s : %.2f day(s)"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:337
 #, python-format
 msgid "%s on %s : %.2f day(s)"
 msgstr "%s on %s : %.2f день(ей)"
@@ -210,6 +216,12 @@ msgid "Allocation for %s"
 msgstr "Распределение для %s"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:336
+#, python-format
+msgid "Allocation of %s : %.2f day(s) To %s"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr "Распределение утвердить"
@@ -264,21 +276,6 @@ msgstr "Утвержденные отпуска"
 #: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_leaves_assign_tree_view
 msgid "Assign Leaves"
 msgstr "Назначить отгулы"
-
-#. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
-msgid ""
-"Average hours of work per day.\n"
-"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
-"                It can be used to handle various contract types, e.g.:\n"
-"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
-"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
-msgstr ""
-"Среднее количество часов работы в день.\n"
-"                 Он используется в запросе на отпуск сотрудника, чтобы вычислить количество дней, потребляемых на основе календаря ресурсов.\n"
-"                 Он может использоваться для обработки различных типов контрактов, например:\n"
-"                 - 38 часов / неделя, 5 дней / неделя: 1 день = 7,6 часов\n"
-"                 - 45 часов / неделя, 5 дней / неделя: 1 день = 9,0 часов"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -582,11 +579,6 @@ msgid "HR Leaves Summary Report By Employee"
 msgstr "Итоговый отчет сотрудников об отгулах персонала"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
-msgid "Hours per Day"
-msgstr "Часов в день"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_remaining_leaves_user_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_id
@@ -860,7 +852,7 @@ msgstr "Отпуска/Распределения первичное согла�
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2017"
-msgstr ""
+msgstr "Легальные отпуска 2017"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -989,6 +981,12 @@ msgstr "Кол-во дней"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leaves_count
 msgid "Number of Leaves"
 msgstr "Количество отпуска"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_number_of_days_temp
+msgid ""
+"Number of days of the leave request according to your working schedule."
+msgstr ""
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -1159,11 +1157,6 @@ msgid "Reset to Draft"
 msgstr "Переместить в черновики"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_resource_calendar
-msgid "Resource Calendar"
-msgstr "Календарь ресурсов"
-
-#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "Поиск отгула"
@@ -1180,6 +1173,18 @@ msgid "Second Approval"
 msgstr "Второе утверждение"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:570
+#, python-format
+msgid "See Allocation"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:570
+#, python-format
+msgid "See Leave"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_holiday_type
 msgid "Select Leave Type"
 msgstr "Выберите тип отгула"
@@ -1188,6 +1193,12 @@ msgstr "Выберите тип отгула"
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
 msgstr "Отгулы по болезни"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:107
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_date_from
@@ -1234,7 +1245,7 @@ msgid "The number of days must be greater than 0."
 msgstr "Количество дней должно быть больше 0."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:258
+#: code:addons/hr_holidays/models/hr_holidays.py:261
 #, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
@@ -1424,7 +1435,7 @@ msgstr ""
 "              будет автоматически создавать и проверять запросов выделения."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:248
+#: code:addons/hr_holidays/models/hr_holidays.py:251
 #, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "Два ваших отгула не могу приходиться на один день!"

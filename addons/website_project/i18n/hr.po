@@ -11,10 +11,10 @@
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
 "Last-Translator: KRISTINA PALAŠ <kristina.palas@storm.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Prijavio</strong>"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:84
+#: code:addons/website_project/controllers/main.py:88
 #, python-format
 msgid "All"
 msgstr "Sve"
@@ -86,7 +86,7 @@ msgid "Edit Task"
 msgstr "Uredi zadatak"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:81
+#: code:addons/website_project/controllers/main.py:85
 #, python-format
 msgid "Last Stage Update"
 msgstr "Posljednja faza ažuriranja"
@@ -103,7 +103,6 @@ msgstr "Moji Zadaci"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:31
-#: code:addons/website_project/controllers/main.py:79
 #: model:ir.ui.view,arch_db:website_project.my_projects
 #, python-format
 msgid "Name"
@@ -111,7 +110,7 @@ msgstr "Naziv"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:30
-#: code:addons/website_project/controllers/main.py:78
+#: code:addons/website_project/controllers/main.py:82
 #, python-format
 msgid "Newest"
 msgstr "Najnoviji"
@@ -132,7 +131,7 @@ msgid "Projects"
 msgstr "Projekti"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:80
+#: code:addons/website_project/controllers/main.py:84
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 #, python-format
 msgid "Stage"
@@ -155,13 +154,18 @@ msgid "Tasks"
 msgstr "Zadaci"
 
 #. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task_website_url
+msgid "The full URL to access the document through the website."
+msgstr "Puni URL za pristup dokumentu putem web stranice."
+
+#. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
 msgid "There are currently no projects."
 msgstr ""
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
-msgid "There are currently no quotes."
+msgid "There are currently no tasks."
 msgstr ""
 
 #. module: website_project
@@ -173,6 +177,17 @@ msgstr "Nema projekata."
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 msgid "There are no tasks."
 msgstr "Nema zadataka."
+
+#. module: website_project
+#: code:addons/website_project/controllers/main.py:83
+#, python-format
+msgid "Title"
+msgstr "Naslov"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task_website_url
+msgid "Website URL"
+msgstr "URL web stranice"
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.my_projects

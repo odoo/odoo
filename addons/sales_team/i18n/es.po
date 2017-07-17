@@ -11,10 +11,10 @@
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Cristóbal Martí Oliver <info@moblesmarti.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
@@ -28,13 +28,14 @@
 # maitaoriana <maitaoriana@gmail.com>, 2017
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: David Arnold <blaggacao@users.noreply.github.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,6 +104,12 @@ msgid "Activities Done"
 msgstr "Actividades realizadas"
 
 #. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.mail_activity_type_action_config_sales
+#: model:ir.ui.menu,name:sales_team.sales_team_menu_config_activity_types
+msgid "Activity Types"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
 msgid "Archived"
 msgstr "Archivado"
@@ -124,7 +131,7 @@ msgid "Bar"
 msgstr ""
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:235
+#: code:addons/sales_team/models/crm_team.py:237
 #, python-format
 msgid "Big Pretty Button :)"
 msgstr ""
@@ -195,6 +202,11 @@ msgstr "Configuración"
 #: model:ir.ui.view,arch_db:sales_team.sale_config_settings_view_form
 msgid "Configure Sales"
 msgstr "Configurar Ventas"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_partner_category_form
@@ -423,11 +435,6 @@ msgid "Manage leads, opportunities, meetings and activities"
 msgstr ""
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
-msgid "Manage subscriptions and recurring invoicing"
-msgstr "Gestionar suscripciones y facturas recurrentes"
-
-#. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Manager"
 msgstr "Responsable"
@@ -483,11 +490,6 @@ msgstr "Siguientes actividades"
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "El único valor válido es un entero."
-
-#. module: sales_team
-#: model:ir.model,name:sales_team.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
 
 #. module: sales_team
 #. openerp-web
@@ -606,6 +608,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Settings"
 msgstr "Configuración"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_sale_config_settings_module_sale_contract
+msgid "Subscriptions"
+msgstr "Suscripciones"
 
 #. module: sales_team
 #. openerp-web
@@ -757,8 +764,8 @@ msgid "Type"
 msgstr "Tipo"
 
 #. module: sales_team
-#: code:addons/sales_team/models/crm_team.py:122
-#: code:addons/sales_team/models/crm_team.py:125
+#: code:addons/sales_team/models/crm_team.py:124
+#: code:addons/sales_team/models/crm_team.py:127
 #, python-format
 msgid "Undefined graph model for Sales Channel: %s"
 msgstr ""

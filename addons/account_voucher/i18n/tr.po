@@ -13,7 +13,6 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 # Alexander B. <road2monstercat@gmail.com>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# selim kartal <kartalselim37@gmail.com>, 2017
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 msgid ""
 msgstr ""
@@ -39,7 +38,7 @@ msgid ""
 msgstr ""
 "* 'Taslak' durumu, bir kullanıcı yeni yada onaylanmamış bir Makbuz hazırlıyorsa kullanılır.\n"
 "* 'Proforma' durumu, bir makbuzun numaralandırılmamış olması durumunda kullanılır.\n"
-"* 'Yollandı' durumu, kullanıcı bir makbuz oluştururken kullanılır, bir makbuz numarası oluşturulur ve makbuz girişleri hesapta oluşturulur.\n"
+"* 'Onaylı' durumu, kullanıcı bir makbuz oluştururken kullanılır, bir makbuz numarası oluşturulur ve makbuz girişleri hesapta oluşturulur.\n"
 "* 'İptal edildi' durumu kullanıcı bir makbuzu iptal ettiğinde kullanılır."
 
 #. module: account_voucher
@@ -155,7 +154,7 @@ msgstr "Oluşturulma zamanı"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_currency_id
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_currency_id
 msgid "Currency"
-msgstr "Kur"
+msgstr "Para Birimi"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
@@ -178,7 +177,7 @@ msgstr "Tanım"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_display_name
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -336,14 +335,14 @@ msgstr "Yevmiye için lütfen bir seri no tanımlayın."
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr "İşlenmiş"
+msgstr "Onaylı"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "İşlenmiş Makbuzlar"
+msgstr "Onaylı Makbuzlar"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -451,7 +450,7 @@ msgstr "Vergi Tutarı"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Vergi Düzeltmesi"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -571,4 +570,4 @@ msgstr ""
 #: code:addons/account_voucher/models/account_voucher.py:376
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Bir ortak seçmelisiniz ! "
+msgstr "Bir iş ortağı seçmelisiniz ! "

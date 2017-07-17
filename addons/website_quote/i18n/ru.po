@@ -10,15 +10,14 @@
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Denis Trepalin <zekarious@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
-# Vladimir Lukianov <lvm.mobile@gmail.com>, 2017
 # Artur Komishenko <Archi1792@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-04-28 13:13+0000\n"
+"PO-Revision-Date: 2017-04-28 13:13+0000\n"
 "Last-Translator: Masha Koc <mariya.kos.ua@gmail.com>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -314,6 +313,14 @@ msgid "<strong>Total:</strong>"
 msgstr "<strong>Итого:</strong>"
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
+msgid ""
+"A description of the Product that you want to communicate to your customers."
+" This description will be copied to every Sales Order, Delivery Order and "
+"Customer Invoice/Refund"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
 msgstr "О нас"
@@ -324,18 +331,14 @@ msgid "Add to order lines"
 msgstr "Добавить строки заказа"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.pricing
+msgid "Amount"
+msgstr "Сумма"
+
+#. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_order_amount_undiscounted
 msgid "Amount Before Discount"
 msgstr "Сумма без скидки"
-
-#. module: website_quote
-#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
-msgid ""
-"An administrator can set up default Terms and conditions in your Company "
-"settings."
-msgstr ""
-"Администратор может установить сроки и условия по умолчанию в настройках "
-"вашего предприятия."
 
 #. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
@@ -426,11 +429,19 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
+msgstr "Описание для Онлайн-предложения"
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_quote_description
+#: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
 msgstr "Описание страницы расценок"
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
 msgstr "Описание для веб-сайта"
@@ -524,8 +535,8 @@ msgstr ""
 "                         использовать этот измененный шаблон."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:76
-#: code:addons/website_quote/controllers/main.py:211
+#: code:addons/website_quote/controllers/main.py:77
+#: code:addons/website_quote/controllers/main.py:216
 #, python-format
 msgid ""
 "If we store your payment information on our server, subscription payments "
@@ -631,13 +642,13 @@ msgid "Optional Products Lines"
 msgstr "Строки дополнительных товаров"
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:169
+#: code:addons/website_quote/models/sale_order.py:188
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr "Заказ оплачен %s. Транзакция: %s. Сумма: %s."
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:90
+#: code:addons/website_quote/controllers/main.py:93
 #, python-format
 msgid "Order signed by %s"
 msgstr "Заказ подписан %s"
@@ -663,8 +674,8 @@ msgid "Our Service"
 msgstr "Наш сервис"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:65
-#: code:addons/website_quote/controllers/main.py:204
+#: code:addons/website_quote/controllers/main.py:66
+#: code:addons/website_quote/controllers/main.py:209
 #, python-format
 msgid "Pay & Confirm"
 msgstr "Оплатить & подтвердить"
@@ -681,9 +692,15 @@ msgid "Payment Method:"
 msgstr "Метод оплаты:"
 
 #. module: website_quote
+#: model:ir.ui.menu,name:website_quote.payment_acquirer_menu_sale
 #: model:ir.ui.view,arch_db:website_quote.sale_config_settings_view_form_inherit_website_quote
 msgid "Payment Methods"
 msgstr "Методы Оплаты"
+
+#. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.so_quotation_content
+msgid "Payment Terms:"
+msgstr ""
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
@@ -692,7 +709,6 @@ msgstr "Просмотр"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.optional_products
-#: model:ir.ui.view,arch_db:website_quote.pricing
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "Price"
 msgstr "Цена"
@@ -797,7 +813,7 @@ msgid "Quotation Viewed"
 msgstr "Ценовое предложение просмотренно"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:26
+#: code:addons/website_quote/controllers/main.py:27
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr "Предложение, просмотренное клиентом"
@@ -926,6 +942,13 @@ msgid "Terms and conditions"
 msgstr "Условия"
 
 #. module: website_quote
+#: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
+msgid ""
+"These Terms & Conditions will replace the default ones set in the "
+"Configuration menu."
+msgstr ""
+
+#. module: website_quote
 #: model:ir.model.fields,help:website_quote.field_sale_quote_template_mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
@@ -1052,7 +1075,7 @@ msgstr ""
 "                        использовали в вашем описании (заглавие 1, заглавие 2, ...)"
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:134
+#: code:addons/website_quote/controllers/main.py:137
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr "Нельзя добавить опции к подтвержденному заказу."

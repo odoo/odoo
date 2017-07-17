@@ -12,13 +12,14 @@
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2016
 # José Antonio Cuello <inactive+Yopli2k@transifex.com>, 2017
 # Gelo Joga Landoo <gj@landoo.es>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Gelo Joga Landoo <gj@landoo.es>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgid "<strong>Reported by</strong>"
 msgstr "<strong>Notificado por</strong>"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:84
+#: code:addons/website_project/controllers/main.py:88
 #, python-format
 msgid "All"
 msgstr "Todos"
@@ -89,7 +90,7 @@ msgid "Edit Task"
 msgstr "Editar Tarea"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:81
+#: code:addons/website_project/controllers/main.py:85
 #, python-format
 msgid "Last Stage Update"
 msgstr "última actualización de la etapa"
@@ -106,7 +107,6 @@ msgstr "Mis tareas"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:31
-#: code:addons/website_project/controllers/main.py:79
 #: model:ir.ui.view,arch_db:website_project.my_projects
 #, python-format
 msgid "Name"
@@ -114,7 +114,7 @@ msgstr "Nombre"
 
 #. module: website_project
 #: code:addons/website_project/controllers/main.py:30
-#: code:addons/website_project/controllers/main.py:78
+#: code:addons/website_project/controllers/main.py:82
 #, python-format
 msgid "Newest"
 msgstr "Más moderno"
@@ -135,7 +135,7 @@ msgid "Projects"
 msgstr "Proyectos"
 
 #. module: website_project
-#: code:addons/website_project/controllers/main.py:80
+#: code:addons/website_project/controllers/main.py:84
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 #, python-format
 msgid "Stage"
@@ -158,13 +158,18 @@ msgid "Tasks"
 msgstr "Tareas"
 
 #. module: website_project
+#: model:ir.model.fields,help:website_project.field_project_task_website_url
+msgid "The full URL to access the document through the website."
+msgstr "La URL completa para acceder al documento a través del sitio web."
+
+#. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
 msgid "There are currently no projects."
 msgstr ""
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.portal_my_home
-msgid "There are currently no quotes."
+msgid "There are currently no tasks."
 msgstr ""
 
 #. module: website_project
@@ -176,6 +181,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_project.my_tasks
 msgid "There are no tasks."
 msgstr ""
+
+#. module: website_project
+#: code:addons/website_project/controllers/main.py:83
+#, python-format
+msgid "Title"
+msgstr "Título"
+
+#. module: website_project
+#: model:ir.model.fields,field_description:website_project.field_project_task_website_url
+msgid "Website URL"
+msgstr "URL del sitio web"
 
 #. module: website_project
 #: model:ir.ui.view,arch_db:website_project.my_projects

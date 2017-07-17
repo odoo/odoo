@@ -24,10 +24,10 @@
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15+e\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-28 13:36+0000\n"
-"PO-Revision-Date: 2017-04-28 13:36+0000\n"
+"POT-Creation-Date: 2017-07-17 08:45+0000\n"
+"PO-Revision-Date: 2017-07-17 08:45+0000\n"
 "Last-Translator: Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -513,6 +513,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Long description of module's purpose\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_hr_expense_check
+msgid ""
+"\n"
+"        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
 
@@ -5608,11 +5616,6 @@ msgid "Add Delivery Costs to Online Sales"
 msgstr "Çevrimiçi Satış Dağıtım Maliyetleri ekle"
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Add Followers"
-msgstr "Takipçi Ekle"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_project_forecast_grid
 msgid "Add Grid view on Project Forecasts"
 msgstr ""
@@ -5831,6 +5834,11 @@ msgid "Algeria"
 msgstr "Cezayir"
 
 #. module: base
+#: model:ir.ui.view,arch_db:base.ir_cron_view_search
+msgid "All"
+msgstr "Hepsi"
+
+#. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_configuration_form
 msgid ""
 "All pending configuration wizards have been executed. You may restart "
@@ -5891,6 +5899,13 @@ msgstr ""
 "Faturalarınızı oluşturmanızı ve ödemelerinizi takip edebilmenize olanak "
 "sağlar. Muhasebe modülünün daha basitleştirilmiş halidir. Muhasebeci "
 "olmayanlar için tavsiye edilir."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid ""
+"Also you will find here all the related documents and download it by "
+"clicking on any individual document."
+msgstr ""
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:378
@@ -6236,11 +6251,6 @@ msgid "Auto Search"
 msgstr "Otomatik Arama"
 
 #. module: base
-#: selection:ir.actions.server,usage:0
-msgid "Automated Action"
-msgstr ""
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
 msgid "Automated Action Rules"
 msgstr "Otomatik İşlem Kuralları"
@@ -6354,12 +6364,6 @@ msgstr "Bu şirketle ilişkili banka hesapları"
 #: model:ir.ui.view,arch_db:base.view_res_bank_tree
 msgid "Banks"
 msgstr "Bankalar"
-
-#. module: base
-#: model:ir.model.fields,help:base.field_res_partner_barcode
-#: model:ir.model.fields,help:base.field_res_users_barcode
-msgid "BarCode"
-msgstr "Barkod"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -6945,6 +6949,11 @@ msgid "Check Printing Base"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_expense_check
+msgid "Check Printing in Expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
 #: model:ir.model.fields,help:base.field_res_users_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
@@ -7072,7 +7081,7 @@ msgstr "Christmas Adası"
 #: model:ir.ui.view,arch_db:base.view_partner_form
 #: model:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
-msgstr "Semt/Mahalle"
+msgstr "Semt/İlçe"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
@@ -7080,14 +7089,14 @@ msgid "City Addresses"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_attachment
-msgid "Click here to attach a new document."
-msgstr "Yeni bir belge eklemek için tıklayınız."
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view_custom
 msgid "Click here to create a customized view"
 msgstr "Özelleştirilmiş bir görünüm oluşturmak için tıklayınız"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_attachment
+msgid "Click here to create new documents."
+msgstr ""
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_base_module_update
@@ -7664,7 +7673,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging_create_date
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_create_date
-#: model:ir.model.fields,field_description:base.field_res_users_create_date
 msgid "Create Date"
 msgstr "Oluşturma Tarihi"
 
@@ -7893,6 +7901,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:base.field_res_partner_create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title_create_date
 #: model:ir.model.fields,field_description:base.field_res_request_link_create_date
+#: model:ir.model.fields,field_description:base.field_res_users_create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log_create_date
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_create_date
 msgid "Created on"
@@ -7967,25 +7976,25 @@ msgstr "Para Birimleri"
 #: model:ir.ui.view,arch_db:base.view_currency_form
 #: model:ir.ui.view,arch_db:base.view_currency_search
 msgid "Currency"
-msgstr "Kur"
+msgstr "Para Birimi"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_name
 msgid "Currency Code (ISO 4217)"
-msgstr "ParaNBirimi Kodu (ISO 4217)"
+msgstr "Para Birimi Kodu (ISO 4217)"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency_rate
 #: model:ir.ui.view,arch_db:base.view_currency_rate_form
 msgid "Currency Rate"
-msgstr "Para Birim Oranı"
+msgstr "Para Birimi Çevrim Oranı"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
 #: model:ir.ui.view,arch_db:base.view_currency_rate_search
 #: model:ir.ui.view,arch_db:base.view_currency_rate_tree
 msgid "Currency Rates"
-msgstr "Kur Değerleri"
+msgstr "Para Birimi Çevrim Değerleri"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_currency_symbol
@@ -8228,28 +8237,6 @@ msgid "Days"
 msgstr "Gün"
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Dear Sir/Madam,\n"
-"\n"
-"Our records indicate that some payments on your account are still due. Please find details below.\n"
-"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
-"If you have any queries regarding your account, Please contact us.\n"
-"\n"
-"Thank you in advance for your cooperation.\n"
-"Best Regards,"
-msgstr ""
-"Sayın Yetkili,\n"
-"\n"
-"Kayıtlarımıza göre hesabınızda halen yapılmamış ödemeler bulunmaktadır. Lütfen aşağıdaki ayrıntıları inceleyin.\n"
-"Eğer ödeme yaptıysanız, lütfen bu yazımızı dikkate almayın. Aksi durumda, aşağıda belirtilen tutarı tarafımıza ödemenizi rica ederiz.\n"
-"Hesabınızla ilgili herhangi bir sorunuz olursa, lütfen bize danışın.\n"
-"\n"
-"İşbirliğiniz için şimdiden teşekkür ederiz.\n"
-"\n"
-"Saygılarımızla,"
-
-#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server_smtp_debug
 msgid "Debugging"
 msgstr "Hata Ayıklama"
@@ -8308,7 +8295,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_contract_asset
 msgid "Deferred revenue management for contracts"
-msgstr ""
+msgstr "Sözleşmeler için ertelenmiş gelir yönetimi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_tax_python
@@ -8478,7 +8465,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_discuss
 #: model:ir.module.module,shortdesc:base.module_mail
 msgid "Discuss"
-msgstr "Tartışma"
+msgstr "Mesajlaşma"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mail
@@ -8581,7 +8568,7 @@ msgstr "Ekran"
 #: model:ir.model.fields,field_description:base.field_res_users_log_display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
+msgstr "Görünüm Adı"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
@@ -8869,7 +8856,6 @@ msgstr "Personel Dizini"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
 #: model:ir.module.category,name:base.module_category_human_resources
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Employees"
 msgstr "Personeller"
 
@@ -9638,6 +9624,11 @@ msgstr "Fransa"
 #: model:ir.module.module,shortdesc:base.module_l10n_fr
 msgid "France - Accounting"
 msgstr "Fransa - Muhasebe"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
+msgid "France - Accounting - Certified CGI 286 I-3 bis"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_reports
@@ -10447,12 +10438,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base
-#: model:ir.model.fields,help:base.field_ir_act_server_xml_id
-#: model:ir.model.fields,help:base.field_ir_cron_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "XML dosyasında tanımlanan tablo görünümünün ID si"
-
-#. module: base
 #: model:ir.model.fields,help:base.field_ir_model_data_res_id
 msgid "ID of the target record in the database"
 msgstr "Veritabanındaki hedef kaydın IDsi"
@@ -11071,22 +11056,22 @@ msgstr "Geçersiz görünüm tanımı"
 #. module: base
 #: model:ir.module.category,name:base.module_category_warehouse_management
 msgid "Inventory"
-msgstr "Envanter"
+msgstr "Stok"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock
 msgid "Inventory Management"
-msgstr "Envanter Yönetimi"
+msgstr "Stok Yönetimi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr "Envanter, Lojistik, Değerleme, Muhasebe"
+msgstr "Stok, Lojistik, Envanter Değerleme, Muhasebe"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock
 msgid "Inventory, Logistics, Warehousing"
-msgstr "Envanter, Lojistik, Depolama"
+msgstr "Stok, Lojistik, Depolama, Envanter"
 
 #. module: base
 #: selection:res.partner,type:0
@@ -11670,7 +11655,7 @@ msgstr "Aday Olay Kayıtları"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Leads, Opportunities, Activities"
-msgstr "Adaylar, Fırsatlar, Etkinlikler"
+msgstr "Adaylar, Fırsatlar, Aktiviteler"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
@@ -12314,16 +12299,22 @@ msgid "Missing document(s)"
 msgstr ""
 
 #. module: base
-#: code:addons/models.py:5104
+#: code:addons/models.py:5107
 #, python-format
 msgid "Missing required value for the field '%s' (%s)"
 msgstr "Alan için gerekli değer eksik  '%s' (%s)"
 
 #. module: base
-#: code:addons/models.py:5101
+#: code:addons/models.py:5104
 #, python-format
 msgid "Missing required value for the field '%s'."
 msgstr "Alan için gerekli değer eksik '%s'."
+
+#. module: base
+#: code:addons/base/ir/ir_ui_view.py:379
+#, python-format
+msgid "Missing view architecture."
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -13007,6 +12998,8 @@ msgid ""
 "                a customer: discussions, history of business opportunities,\n"
 "                documents, etc."
 msgstr ""
+"Odoo müşteri ile ilgili tüm etkinlikleri kolayca takip etmenizi sağlar: "
+"yapılan görüşmeler, tüm fırsat geçmişleri, dokümanlar, vb."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -13015,6 +13008,8 @@ msgid ""
 "                a supplier: discussions, history of purchases,\n"
 "                documents, etc."
 msgstr ""
+"Odoo, tedarikçileriniz ile ilgili tüm faaliyetleri kolayca izlemenize "
+"yardımcı olur: görüşmeler, satın alma geçmişi, belgeler vb."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_sequence_padding
@@ -13801,6 +13796,11 @@ msgid "Print US Checks"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_hr_expense_check
+msgid "Print amount in words on checks issued for expenses"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_print_docsaway
 msgid "Print and Send Invoices with DocsAway.com"
 msgstr ""
@@ -13906,7 +13906,7 @@ msgstr "Proje"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Forecast"
-msgstr ""
+msgstr "Proje Öngörüleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_rating_project
@@ -14701,7 +14701,7 @@ msgstr "Satış & Satınalma"
 #: model:ir.module.module,shortdesc:base.module_sales_team
 #: model:ir.module.module,summary:base.module_sales_team
 msgid "Sales Channels"
-msgstr ""
+msgstr "Satış Ekipleri"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -14892,11 +14892,6 @@ msgid "Sell based on timesheets"
 msgstr ""
 
 #. module: base
-#: selection:ir.actions.server,state:0
-msgid "Send Email"
-msgstr "Eposta Gönder"
-
-#. module: base
 #: model:ir.module.module,summary:base.module_account
 msgid "Send Invoices and Track Payments"
 msgstr "Faturaları Gönder ve Tahsilatları Takip Et"
@@ -15064,7 +15059,7 @@ msgstr "Paylaşım Grubu"
 #: model:ir.model.fields,field_description:base.field_res_partner_partner_share
 #: model:ir.model.fields,field_description:base.field_res_users_partner_share
 msgid "Share Partner"
-msgstr ""
+msgstr "Paylaşım İş Ortağı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_share
@@ -15768,12 +15763,11 @@ msgstr "Teknik Adı"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
 #: model:ir.module.category,name:base.module_category_technical_settings
-#: model:ir.ui.view,arch_db:base.user_groups_view
 msgid "Technical Settings"
 msgstr "Teknik Ayarları"
 
 #. module: base
-#: code:addons/base/ir/ir_translation.py:738
+#: code:addons/base/ir/ir_translation.py:749
 #, python-format
 msgid "Technical Translations"
 msgstr "Teknik Çeviriler"
@@ -18612,13 +18606,6 @@ msgstr "test_convert"
 #. module: base
 #: selection:ir.model.fields,ttype:0
 msgid "text"
-msgstr ""
-
-#. module: base
-#: model:res.groups,comment:base.group_user
-msgid ""
-"the user will be able to manage his own human resources stuff (leave "
-"request, timesheets, ...), if he is linked to an employee in the system."
 msgstr ""
 
 #. module: base

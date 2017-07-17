@@ -10,13 +10,14 @@
 # Liping Wang <lynn.config@gmail.com>, 2017
 # Bo Cao <cao.poobo@hotmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,11 +61,6 @@ msgstr "一天一苹果医生远离我"
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr ""
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "应用"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -126,13 +122,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -168,6 +164,11 @@ msgstr "签到"
 #, python-format
 msgid "Check out"
 msgstr "签退"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Check-In/Out"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -229,11 +230,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_uid
 msgid "Created by"
 msgstr "创建人"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_create_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_create_date
 msgid "Created on"
 msgstr "创建时间"
@@ -249,6 +252,7 @@ msgid "Department"
 msgstr "部门"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_display_name
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -280,7 +284,8 @@ msgid "Employee Image"
 msgstr "员工照片"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Employee PIN"
 msgstr "员工 PIN"
 
@@ -302,26 +307,9 @@ msgid "Employees"
 msgstr "员工"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "允许使用PIN"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -433,6 +421,7 @@ msgid "Hr Attendance Search"
 msgstr "人力资源考勤搜索"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_id
 msgid "ID"
 msgstr "ID"
@@ -467,24 +456,38 @@ msgid "Last Attendance"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings___last_update
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_write_date
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_write_date
 msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_module_hr_holidays
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Leave Management"
+msgstr "休假管理"
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manage Attendances"
 msgstr "管理出勤"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Manage leave allocations and requests"
+msgstr ""
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -493,6 +496,7 @@ msgstr "管理员"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "手动出勤"
 
@@ -575,9 +579,19 @@ msgid "Print Badge"
 msgstr "打印狗牌？"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Recommended Apps"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
 msgstr "报告"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Save"
+msgstr "保存"
 
 #. module: hr_attendance
 #. openerp-web
@@ -595,8 +609,8 @@ msgstr "选择员工"
 
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Settings"
-msgstr "设置"
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -631,11 +645,24 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr "用户将获得权限访问人力资源的考勤菜单，使他能够管理自己的考勤。"
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_attendance_config_settings_module_hr_timesheet
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Timesheets"
+msgstr "工时表"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -646,6 +673,16 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "今日"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Track time spent by employees and compare with attendances"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -690,9 +727,9 @@ msgid "You cannot duplicate an attendance."
 msgstr "你不能复制出勤记录。"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
+#: model:ir.model,name:hr_attendance.model_attendance_config_settings
+msgid "attendance.config.settings"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web

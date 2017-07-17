@@ -16,10 +16,10 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-04-18 14:45+0000\n"
+"PO-Revision-Date: 2017-04-18 14:45+0000\n"
 "Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgid "# of Issues"
 msgstr "Olay Kaydı Sayısı"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:146
+#: code:addons/project_issue/models/project_issue.py:150
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopya)"
@@ -58,11 +58,6 @@ msgstr "<b>Proje:</b>"
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
 msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">gibi </span>"
-
-#. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Activate timesheets on issues"
-msgstr "Sorunlar üzerinde zaman çizelgesini aktif et"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_active
@@ -166,6 +161,7 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: project_issue
+#: model:ir.model,name:project_issue.model_res_partner
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_partner_id
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_partner_id
 msgid "Contact"
@@ -205,13 +201,13 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:267
+#: code:addons/project_issue/models/project_issue.py:271
 #, python-format
 msgid "Customer"
 msgstr "Müşteri"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:269
+#: code:addons/project_issue/models/project_issue.py:273
 #, python-format
 msgid "Customer Email"
 msgstr "Müşteri Epostası"
@@ -290,12 +286,7 @@ msgstr "Son işlem tarihi ve geçerli tarih arasındaki fark"
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_display_name
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_report_display_name
 msgid "Display Name"
-msgstr "Ad Görünümü"
-
-#. module: project_issue
-#: selection:project.config.settings,module_project_issue_sheet:0
-msgid "Do not track working hours on issues"
-msgstr ""
+msgstr "Görünüm Adı"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_duration
@@ -344,18 +335,13 @@ msgid "Group By"
 msgstr "Grupla"
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Helpdesk & Support"
-msgstr "Yardım/Destek Masası"
-
-#. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "High"
 msgstr "Yüksek"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:242
+#: code:addons/project_issue/models/project_issue.py:246
 #, python-format
 msgid "I take it"
 msgstr "Ben alıyorum"
@@ -510,7 +496,7 @@ msgstr "Düşük"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Aktivitelerim"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -543,15 +529,10 @@ msgid "Next Issue Activities"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:293
+#: code:addons/project_issue/models/project_issue.py:297
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
-
-#. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
-msgid "No customer rating"
-msgstr "Müşteri reyting olmadan"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -602,11 +583,6 @@ msgstr ""
 "gösterilen varsayılan değerin üzerine yaz."
 
 #. module: project_issue
-#: model:ir.model,name:project_issue.model_res_partner
-msgid "Partner"
-msgstr "İş Ortağı"
-
-#. module: project_issue
 #: code:addons/project_issue/models/account_analytic_account.py:16
 #, python-format
 msgid ""
@@ -652,23 +628,24 @@ msgid "Project Issues"
 msgstr "Proje Olay Kayıtları"
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_project_issue_sheet
-msgid ""
-"Provides timesheet support for the issues/bugs management in project.\n"
-"-This installs the module project_issue_sheet."
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Provides timesheet support for the issues/bugs management in project."
 msgstr ""
-"Prode olay kayıtları yönetimi için zaman çizelgesi desteği sağlar.\n"
-"-project_issue_sheet modülünü kurar."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "Rating on issue"
-msgstr "Sorun Değerlendirme"
+msgid "Rating on Issues"
+msgstr ""
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
 msgid "Red"
 msgstr "Kırmızı"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Save this page and come back here to set up the feature."
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_report_filter
@@ -738,11 +715,6 @@ msgid "These people will receive email."
 msgstr "Bu kişilerden e-posta alacaksınız."
 
 #. module: project_issue
-#: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
-msgid "This allows customers to give rating on issue"
-msgstr "Bu müşterilerin sorunlara değerlendirme vermelerini sağlar"
-
-#. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report_filtered
 msgid ""
@@ -758,11 +730,6 @@ msgstr ""
 "süreyi inceleyebilirsiniz."
 
 #. module: project_issue
-#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
-msgid "Timesheets"
-msgstr "Zaman Çizelgeleri"
-
-#. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
 msgstr "Sorunlar Üzerinde Zaman Çizelgesi"
@@ -770,12 +737,17 @@ msgstr "Sorunlar Üzerinde Zaman Çizelgesi"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
 msgid "Today Activities"
-msgstr "Bu Gunkü Etkinlikler"
+msgstr "Bugünkü Etkinlikler"
 
 #. module: project_issue
-#: selection:project.config.settings,module_rating_project_issue:0
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
 msgid "Track customer satisfaction on issues"
 msgstr "Sorunlar üzerinde müşteri memnuniyetini takip et"
+
+#. module: project_issue
+#: model:ir.ui.view,arch_db:project_issue.project_config_settings_view_form_inherit_project_issue
+msgid "Track time spent to solve issues"
+msgstr ""
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -834,7 +806,7 @@ msgstr ""
 "Sorunu mevcut bir göreve atayabilir veya yeni bir tane yaratabilirsiniz"
 
 #. module: project_issue
-#: code:addons/project_issue/models/project_issue.py:181
+#: code:addons/project_issue/models/project_issue.py:185
 #, python-format
 msgid "issues"
 msgstr "Olay Kayıtları"

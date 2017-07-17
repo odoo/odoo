@@ -6,14 +6,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-04-18 14:47+0000\n"
+"PO-Revision-Date: 2017-04-18 14:47+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,8 +90,8 @@ msgstr "<strong>Szállítási cím :</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>Összesen adók nélkül</strong>"
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>Részösszeg</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -117,6 +117,11 @@ msgstr "Árajánlat megjegyzések hozzáadása..."
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
 msgstr "Javítás után"
+
+#. module: mrp_repair
+#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
+msgid "Amount"
+msgstr "Összeg"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -188,8 +193,8 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:508
-#: code:addons/mrp_repair/models/mrp_repair.py:570
+#: code:addons/mrp_repair/models/mrp_repair.py:511
+#: code:addons/mrp_repair/models/mrp_repair.py:573
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -462,8 +467,8 @@ msgid "No Invoice"
 msgstr "Nincs számla"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:499
-#: code:addons/mrp_repair/models/mrp_repair.py:561
+#: code:addons/mrp_repair/models/mrp_repair.py:502
+#: code:addons/mrp_repair/models/mrp_repair.py:564
 #, python-format
 msgid "No Pricelist!"
 msgstr "Nincs árlista!"
@@ -488,8 +493,8 @@ msgid "No product defined on Fees!"
 msgstr "Nincs termék meghatározva a díjakon!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:506
-#: code:addons/mrp_repair/models/mrp_repair.py:568
+#: code:addons/mrp_repair/models/mrp_repair.py:509
+#: code:addons/mrp_repair/models/mrp_repair.py:571
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "A rendszer nem talált érvényes árlista sort!"
@@ -519,11 +524,6 @@ msgstr "Lejárt tevékenységek"
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Partner"
 msgstr "Partner"
-
-#. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Price"
-msgstr "Ár"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_pricelist_id
@@ -772,11 +772,6 @@ msgid "Subtotal"
 msgstr "Részösszeg"
 
 #. module: mrp_repair
-#: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
-msgid "Tax"
-msgstr "Adó"
-
-#. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_amount_tax
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_tax_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_tax_id
@@ -919,8 +914,8 @@ msgid "You have to select a Partner Invoice Address in the repair form!"
 msgstr "A javítási űrlapon ki kell választania egy partner számlázási címet!"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/models/mrp_repair.py:501
-#: code:addons/mrp_repair/models/mrp_repair.py:563
+#: code:addons/mrp_repair/models/mrp_repair.py:504
+#: code:addons/mrp_repair/models/mrp_repair.py:566
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
