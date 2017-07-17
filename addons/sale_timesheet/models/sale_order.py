@@ -5,18 +5,20 @@ from odoo import api, fields, models, _
 
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
+from odoo.tools.safe_eval import safe_eval
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
-    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids')
+    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids', groups="hr_timesheet.group_hr_timesheet_user")
 
     tasks_ids = fields.Many2many('project.task', compute='_compute_tasks_ids', string='Tasks associated to this sale')
-    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids')
+    tasks_count = fields.Integer(string='Tasks', compute='_compute_tasks_ids', groups="project.group_project_user")
 
     project_project_id = fields.Many2one('project.project', compute='_compute_project_project_id', string='Project associated to this sale')
+    project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
 
     @api.multi
     @api.depends('analytic_account_id.line_ids')
@@ -86,15 +88,25 @@ class SaleOrder(models.Model):
         return result
 
     @api.multi
-    def action_view_project_project(self):
+    def action_view_project_ids(self):
         self.ensure_one()
-        action = self.env.ref('project.open_view_project_all').read()[0]
-        form_view_id = self.env.ref('project.edit_project').id
-
-        action['views'] = [(form_view_id, 'form')]
-        action['res_id'] = self.project_project_id.id
-        action.pop('target', None)
-
+        if len(self.project_ids) == 1:
+            if self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
+                action = self.project_ids.action_view_timesheet_plan()
+            else:
+                action = self.env.ref("project.act_project_project_2_project_task_all").read()[0]
+                action['context'] = safe_eval(action.get('context', '{}'), {'active_id': self.project_ids.id, 'active_ids': self.project_ids.ids})
+        else:
+            view_form_id = self.env.ref('project.edit_project').id
+            view_kanban_id = self.env.ref('project.view_project_kanban').id
+            action = {
+                'type': 'ir.actions.act_window',
+                'domain': [('id', 'in', self.project_ids.ids)],
+                'views': [(view_kanban_id, 'kanban'), (view_form_id, 'form')],
+                'view_mode': 'kanban,form',
+                'name': _('Projects'),
+                'res_model': 'project.project',
+            }
         return action
 
     @api.multi
