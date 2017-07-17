@@ -59,7 +59,7 @@
                             </h2>
                         </div>
                         <div class="col-md-6 col-sm-6 hidden-print o_payment_text_align" id="pay_button" t-ignore="true">
-                            <div>
+                            <div t-att-class="'o_payment_button' if not payment_request.invoice_id.date_due and not payment_request.amount_total and payment_request.state != 'paid' else ''">
                                 <ul class="list-inline o_payment_pull_align">
                                     <li class="o_divider">
                                          <h2>
@@ -79,7 +79,7 @@
                                             <i class="fa fa-print fa-2x" aria-hidden="true"/>
                                         </a>
                                     </li>
-                                    <li t-if="payment_request.state != 'paid'">
+                                    <li t-if="payment_request.state != 'paid' and payment_request.amount_total">
                                         <h3>
                                             <a class="btn btn-primary btn-lg o_paynow_button"  data-toggle="modal" data-target="#modalpayment">
                                                 <i class="fa fa-arrow fa-5x" aria-hidden="true"/>Pay Now
