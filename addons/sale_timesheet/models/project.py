@@ -42,7 +42,7 @@ class Project(models.Model):
     @api.multi
     def action_view_timesheet_plan(self):
         return {
-            'name': _('Overview of %s') % self.name,
+            'name': _('Overview'),
             'type': 'ir.actions.client',
             'tag': 'timesheet.plan',
             'context': {

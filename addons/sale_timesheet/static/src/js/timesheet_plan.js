@@ -18,6 +18,8 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
     events: {
         "click a[type='action']": "_onClickAction",
         "click .o_timesheet_plan_redirect": '_onRedirect',
+        "click .oe_stat_button": "_onClickStatButton",
+        "click .o_timesheet_plan_sale_timesheet_people_time .progress-bar": '_onClickEmployeeProgressbar',
     },
     init: function(parent, action, options) {
         this._super.apply(this, arguments);
@@ -184,6 +186,31 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
             res_model: $target.data('oe-model'),
             views: [[false, 'form']],
             res_id: $target.data('oe-id'),
+        });
+    },
+    _onClickStatButton: function(event){
+        var self = this;
+        var data = $(event.currentTarget).data();
+        return this._rpc({
+            route:"/timesheet/plan/action",
+            params: {
+                domain: data['domain'],
+                res_model: data['resModel'],
+            },
+        }).then(function(action){
+            self.do_action(action);
+        });
+    },
+    _onClickEmployeeProgressbar: function(event){
+        var domain = $(event.currentTarget).data('domain');
+        this.do_action({
+            name: 'Timesheets',
+            type: 'ir.actions.act_window',
+            res_model: 'account.analytic.line',
+            views: [[false, 'list'], [false, 'form']],
+            view_type: 'list',
+            view_mode: 'form',
+            domain: domain,
         });
     },
     _onSearch: function (search_event) {
