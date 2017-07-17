@@ -33,8 +33,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-09 13:04+0000\n"
-"PO-Revision-Date: 2016-12-09 13:04+0000\n"
+"POT-Creation-Date: 2017-06-26 14:46+0000\n"
+"PO-Revision-Date: 2017-06-26 14:46+0000\n"
 "Last-Translator: Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -837,6 +837,7 @@ msgid "Abandonned eCommerce Orders"
 msgstr "Ordenes eCommerce abandonades"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_accessory_product_ids
 msgid ""
@@ -855,6 +856,7 @@ msgid "Accessories: screen, mouse"
 msgstr "Accesorios: pantalla, ratón"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_accessory_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_accessory_product_ids
 msgid "Accessory Products"
@@ -894,6 +896,7 @@ msgid "Address"
 msgstr "Dirección"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_availability
 #: model:ir.model.fields,help:website_sale.field_product_product_availability
 #: model:ir.model.fields,help:website_sale.field_product_template_availability
 msgid "Adds an availability status on the web product page."
@@ -931,6 +934,7 @@ msgstr ""
 "                Ejemplo: 10% para los minoristas, promoción de 5 EUR en este producto, etc."
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_alternative_product_ids
 msgid "Alternative Products"
@@ -959,12 +963,14 @@ msgid "Apply multi-currencies"
 msgstr "Aplicar multi divisa"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability
 msgid "Availability"
 msgstr "Disponibilidad"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_product_availability_warning
 #: model:ir.model.fields,field_description:website_sale.field_product_template_availability_warning
 msgid "Availability Warning"
@@ -1027,6 +1033,7 @@ msgstr ""
 "través de la interfaz táctil."
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_public_categ_ids
 msgid ""
@@ -1306,12 +1313,7 @@ msgstr ""
 " efectiva en la dirección de su oficina o almacén (basada en el origen)."
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
-#: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
-msgid "Description for the website"
-msgstr "Descripción para el sitio web"
-
-#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,help:website_sale.field_product_template_website_sequence
 msgid "Determine the display order in the Website E-commerce"
@@ -1584,6 +1586,7 @@ msgid "Image Name"
 msgstr "Nombre de la imagen"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_product_image_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_product_image_ids
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1686,6 +1689,7 @@ msgstr "Última modificación en"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner_last_website_so_id
+#: model:ir.model.fields,field_description:website_sale.field_res_users_last_website_so_id
 msgid "Last Online Sale Order"
 msgstr "Última Orden de Venta en Línea"
 
@@ -2029,6 +2033,12 @@ msgid "Prefered by some customers"
 msgstr "Preferido por algunos clientes"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:65
+#, python-format
+msgid "Previous Sales"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Price"
@@ -2036,13 +2046,13 @@ msgstr "Precio"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Price <i class=\"fa fa-arrow-down\" aria-hidden=\"true\"/>"
-msgstr "Precio <i class=\"fa fa-arrow-down\" aria-hidden=\"true\"/>"
+msgid "Catalog price: decreasing order"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Price <i class=\"fa fa-arrow-up\" aria-hidden=\"true\"/>"
-msgstr "Precio <i class=\"fa fa-arrow-up\" aria-hidden=\"true\"/>"
+msgid "Catalog price: increasing order"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
@@ -2226,24 +2236,22 @@ msgstr "Radio"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_rating_rating
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_ids
 msgid "Rating"
 msgstr "Calificación"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_last_value
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_last_value
 msgid "Rating Last Value"
 msgstr "Clasificar Último Valor"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_rating_count
 #: model:ir.model.fields,field_description:website_sale.field_product_product_rating_count
 msgid "Rating count"
 msgstr "Clasificar conteo"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_product_rating_last_value
-msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "Valor Calificación: 0=Descontento, 10=Feliz"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image_product_tmpl_id
@@ -2269,6 +2277,12 @@ msgstr "Revisar tu catalogo"
 #: model:ir.ui.view,arch_db:website_sale.products_item
 msgid "Sale"
 msgstr "Venta"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/backend.py:61
+#, python-format
+msgid "Sales"
+msgstr "Ventas"
 
 #. module: website_sale
 #. openerp-web
@@ -2532,12 +2546,14 @@ msgid "Size"
 msgstr "Tamaño"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_x
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_x
 msgid "Size X"
 msgstr "Tamaño X"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_size_y
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_size_y
 msgid "Size Y"
@@ -2634,6 +2650,7 @@ msgid "Style Name"
 msgstr "Nombre de estilo"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_style_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_style_ids
 #: model:ir.ui.view,arch_db:website_sale.website_sale
@@ -2651,6 +2668,7 @@ msgid "Subtotal:"
 msgstr "Subtotal:"
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_product_alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template_alternative_product_ids
 msgid ""
@@ -2752,6 +2770,7 @@ msgstr ""
 "negocios impresos como ordenes y facturas, etc."
 
 #. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,help:website_sale.field_product_product_website_url
 msgid "The full URL to access the document through the website."
 msgstr "La URL completa para acceder al documento a través del sitio web."
@@ -2891,6 +2910,7 @@ msgid "View Cart ("
 msgstr "Ver cesta ("
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_published
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_published
 msgid "Visible in Website"
 msgstr "Visible en el sitio web"
@@ -2917,6 +2937,7 @@ msgid "Website Categories"
 msgstr "Categorías del Sitio Web"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_message_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_message_ids
 msgid "Website Comments"
@@ -2930,6 +2951,7 @@ msgstr "Categorías de Productos"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_product_public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template_public_categ_ids
 msgid "Website Product Category"

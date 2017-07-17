@@ -7,6 +7,7 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
+# Levent Karakaş <levent@mektup.at>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 msgid ""
@@ -66,6 +67,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Sayın ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set doc_name = 'fiyat teklifi' if object.state in ('draft', 'sent') else 'sipariş onayı'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and doc_name == 'fiyat teklifi' and 'Onayla ve%s yi  çevrimiçi öde' % doc_name or '%s yi görüntüle' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or None\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"${object.company_id.name}'nin<strong>${object.name}</strong> numaralı\n"
+"% if object.origin:\n"
+"(referans: ${object.origin} )\n"
+"% endif\n"
+"<strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"tutarındaki ${doc_name} buradadır.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(veya ekli PDF'i görüntüleyin)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Sorularınız varsa bu e-posta üzerinden sorabilirsiniz.</p>\n"
+"<p>Teşekkür ederiz,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -2389,7 +2429,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
-msgstr "KDV:"
+msgstr "Vergi No:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume

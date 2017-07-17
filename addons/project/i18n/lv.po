@@ -154,7 +154,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
 #: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
-msgstr ""
+msgstr "# Uzdevumi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
@@ -382,6 +382,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> Uzdevumi</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -400,6 +404,10 @@ msgid ""
 "                                        <strong> Issues</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
+"                                        <strong> Pieteikumi</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -615,7 +623,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For issues:</strong>"
-msgstr ""
+msgstr "<strong>Pieteikumiem:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1008,7 +1016,7 @@ msgstr "Piešķirts"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_assign
 msgid "Assigning Date"
-msgstr ""
+msgstr "Uzticēšanas datums"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -1549,7 +1557,7 @@ msgstr "Display Name"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Displayed Image"
-msgstr ""
+msgstr "Attēlotais attēls"
 
 #. module: project
 #. openerp-web
@@ -2044,7 +2052,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_planned_hours
 msgid "Initially Planned Hours"
-msgstr ""
+msgstr "Sākotnēji plānotās stundas"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_id
@@ -2069,7 +2077,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
-msgstr "Incidenta versija"
+msgstr "Pieteikuma versija"
 
 #. module: project
 #. openerp-web
@@ -2083,17 +2091,17 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:75
 #, python-format
 msgid "Issue is resolved"
-msgstr ""
+msgstr "Pieteikums ir atrisināts"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues"
-msgstr "Incidenti"
+msgstr "Pieteikumi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues analysis"
-msgstr ""
+msgstr "Pieteikumu analīze"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2159,7 +2167,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_kanban_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_state
 msgid "Kanban State"
-msgstr ""
+msgstr "Kanban statuss"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_legend_done
@@ -2196,7 +2204,7 @@ msgstr "Last Modified on"
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr "Pēdējā posma atjaunināšana"
+msgstr "Pēdējais posms atjaunots"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2294,7 +2302,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_favorite_user_ids
 msgid "Members"
-msgstr "Biedri"
+msgstr "Dalībnieki"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
@@ -2712,7 +2720,7 @@ msgstr "Projekti"
 #. module: project
 #: model:mail.channel,name:project.mail_channel_project_task
 msgid "Projects & Tasks"
-msgstr ""
+msgstr "Projekti & Uzdevumi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_rating_project
@@ -3044,7 +3052,7 @@ msgstr "Birkas"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Tags of project's tasks, issues..."
-msgstr ""
+msgstr "Projektu uzdevumu un pieteikumu birkas..."
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -3168,7 +3176,7 @@ msgstr "Uzdevumi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks &amp; Issues"
-msgstr ""
+msgstr "Uzdevumi &amp; Pieteikumi"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -3189,7 +3197,7 @@ msgstr "Uzdevumu posmi"
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Tasks analysis"
-msgstr ""
+msgstr "Uzdevumu analīze"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner

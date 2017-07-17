@@ -116,7 +116,7 @@ msgid ""
 "class=\"fa fa-truck\"/> Delivery</span>"
 msgstr ""
 "<span class=\"label label-default text-center odoo_purple\">点击 <span "
-"class=\"fa fa-truck\"/> 发货</span>"
+"class=\"fa fa-truck\"/> 交货</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -132,14 +132,14 @@ msgstr ""
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Order</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">订单确认</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">确认订单</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Confirm "
 "Sale</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">销售确认</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">确认销售</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -153,21 +153,21 @@ msgstr "<span class=\"label label-default text-center odoo_purple\">查找入向
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Process the "
 "products</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">移动产品</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">处理产品</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Delivery</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">>发货确认</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">验证交货</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Validate the "
 "Receipt Order</span>"
-msgstr "<span class=\"label label-default text-center odoo_purple\">确认收货单</span>"
+msgstr "<span class=\"label label-default text-center odoo_purple\">验证收货单</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -378,7 +378,7 @@ msgstr "<strong>条码</strong>"
 msgid ""
 "<strong>Buy:</strong> the product is bought from a vendor through a Purchase"
 " Order"
-msgstr "<strong>购买:</strong> 产品通过采购订单从供应商处购买"
+msgstr "<strong>购买:</strong> 产品是通过采购订单从供应商处购买的"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_picking
@@ -668,7 +668,7 @@ msgstr "高级"
 #. module: stock
 #: selection:stock.config.settings,group_stock_adv_location:0
 msgid "Advanced routing of products using rules"
-msgstr "产品使用规则的高级路线"
+msgstr "使用规则的产品高级路线"
 
 #. module: stock
 #: selection:stock.move,procure_method:0
@@ -770,7 +770,7 @@ msgstr "允许为产品选择和维护不同的计量单位"
 #. module: stock
 #: selection:stock.config.settings,group_warning_stock:0
 msgid "An informative or blocking warning can be set on a partner"
-msgstr "可以针对合作伙伴设置提示信息或者警告"
+msgstr "可以针对合作伙伴设置提示信息或者阻止警告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_ancestor_ids
@@ -943,7 +943,7 @@ msgstr "条码"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Barcode Interface"
-msgstr "条码接口"
+msgstr "条码界面"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_barcode_nomenclature_id
@@ -975,7 +975,7 @@ msgstr "超级供应商"
 #. module: stock
 #: selection:res.partner,picking_warn:0
 msgid "Blocking Message"
-msgstr "阻塞消息"
+msgstr "阻止消息"
 
 #. module: stock
 #: model:stock.inventory.line,product_name:stock.stock_inventory_line_15
@@ -4656,7 +4656,7 @@ msgstr "补货请求"
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
 msgid "Procurement Requisition"
-msgstr "补货请求"
+msgstr "补货申请"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_rule
@@ -5490,8 +5490,8 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "选择此“警告“选项，将通知用户此消息。\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
-"消息写入下一个字段。"
+"选择“阻止消息“选项，将在流程受阻时将抛出一个消息。\n"
+"消息必须被写入下一个字段。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_sequence
