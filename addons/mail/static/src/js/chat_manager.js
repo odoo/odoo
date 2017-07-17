@@ -716,7 +716,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
             })
             .then(function (msgs) {
                 if (!cache.all_history_loaded) {
-                    cache.all_history_loaded =  msgs.length < LIMIT;
+                    cache.all_history_loaded =  !(msgs.length == LIMIT && msgs.length < needaction_counter);
                 }
                 cache.loaded = true;
 
