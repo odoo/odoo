@@ -313,11 +313,17 @@ class account_payment(models.Model):
     def _onchange_amount(self):
         res = {}
         if self.amount == 0:
-            res['domain'] = {'journal_id': [
-                ('type', 'in', ('bank', 'cash', 'general'))
+            domain = {'journal_id': [
+                ('type', 'in', ['bank', 'cash', 'general']), ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)
             ]}
             self.payment_difference_handling = 'reconcile'
             self.journal_id = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
+            res['domain'] = domain
+        else:
+            domain = {'journal_id': [
+                ('type', 'in', ['bank', 'cash']), ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)
+            ]}
+            res['domain'] = domain
         return res
 
     @api.one
