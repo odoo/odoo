@@ -53,7 +53,7 @@
                 color: white;
                 background: @brand-primary;
                 font-weight: bold;
-                padding: 5px 0 5px 0.4em;
+                .padding(5px, 0, 5px, 0.4em);
 
                 .o_field_selector_title {
                     width: 100%;
@@ -63,15 +63,15 @@
                 }
                 .o_field_selector_popover_option {
                     .o-position-absolute(@top: 0);
-                    padding: 7px 8px 8px 6px;
+                    .padding(7px, 8px, 8px, 6px);
 
                     &.o_prev_page {
-                        left: 0;
-                        border-right: 1px solid darken(@brand-primary, 10%);
+                        .left(0);
+                        .border-right(1px solid darken(@brand-primary, 10%));
                     }
                     &.o_field_selector_close {
-                        right: 0;
-                        border-left: 1px solid darken(@brand-primary, 10%);
+                        .right(0);
+                        .border-left(1px solid darken(@brand-primary, 10%));
                     }
                     &:hover {
                         background: darken(@brand-primary, 10%);
@@ -80,8 +80,8 @@
                 &:before {
                     .o-position-absolute(@top: -@o-field-selector-arrow-height, @left: @o-field-selector-arrow-height);
                     content: "";
-                    border-left: @o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
-                    border-right: @o-field-selector-arrow-height solid rgba(0, 0, 0, 0);
+                    .border-left(@o-field-selector-arrow-height solid rgba(0, 0, 0, 0));
+                    .border-right(@o-field-selector-arrow-height solid rgba(0, 0, 0, 0));
                     border-bottom: @o-field-selector-arrow-height solid @brand-primary;
                 }
             }
@@ -96,7 +96,7 @@
                     > .o_field_selector_item {
                         list-style: none;
                         position: relative;
-                        padding: 5px 0 5px 0.4em;
+                        .padding(5px, 0, 5px, 0.4em);
                         cursor: pointer;
                         font-family: Arial;
                         font-size: 13px;
