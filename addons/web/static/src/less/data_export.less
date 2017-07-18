@@ -17,12 +17,12 @@
         display: inline-block;
 
         > div {
-            margin-left: 5px;
+            .margin-left(5px);
             .o-inline-flex-display();
             .o-align-items(center);
 
             > label, > input {
-                margin: 0 0 0 5px;
+                .margin(0, 0, 0, 5px);
             }
         }
     }
@@ -67,7 +67,7 @@
             .o_export_tree_item {
                 cursor: pointer;
                 position: relative;
-                padding-left: 20px;
+                .padding-left(20px);
                 .user-select(none);
 
                 &.o_selected > .o_tree_column {
