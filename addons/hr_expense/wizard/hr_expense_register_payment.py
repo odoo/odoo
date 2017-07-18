@@ -74,10 +74,12 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
         context = dict(self._context or {})
         active_ids = context.get('active_ids', [])
         expense_sheet = self.env['hr.expense.sheet'].browse(active_ids)
+        line = expense_sheet.account_move_id.line_ids.filtered(lambda l: l.account_id.internal_type == "payable")
 
         # Create payment and post it
         payment = self.env['account.payment'].create(self.get_payment_vals())
-        payment.post()
+        # To ensure that the destination account is the one set on the expense
+        payment.with_context(payable_expense_account=line.account_id.id).post()
 
         # Log the payment in the chatter
         body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
@@ -85,9 +87,17 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
         account_move_lines_to_reconcile = self.env['account.move.line']
+        test = payment.move_line_ids + expense_sheet.account_move_id.line_ids
         for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
             if line.account_id.internal_type == 'payable':
                 account_move_lines_to_reconcile |= line
         account_move_lines_to_reconcile.reconcile()
-
         return {'type': 'ir.actions.act_window_close'}
+
+class account_payment(models.Model):
+    _inherit = "account.payment"
+
+    def _get_counterpart_move_line_vals(self, invoice=False):
+        result = super(account_payment, self)._get_counterpart_move_line_vals(invoice=invoice)
+        result['account_id'] =  self.env.context.get('payable_expense_account') or result['account_id']
+        return result
