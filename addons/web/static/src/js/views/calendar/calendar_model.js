@@ -372,6 +372,7 @@ return AbstractModel.extend({
             selectHelper: true,
             editable: this.editable,
             droppable: true,
+            isRTL: _t.database.parameters.direction == 'rtl' ? true : false,
             navLinks: false,
             eventLimit: this.eventLimit, // allow "more" link when too many events
             snapMinutes: 15,
