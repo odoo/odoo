@@ -60,9 +60,9 @@ class AccountInvoiceLine(models.Model):
                 invoice_line.product_id.membership and \
                 not MemberLine.search([('account_invoice_line', '=', invoice_line.id)]):
             # Product line is a membership product
-            date_from = invoice_line.product_id.membership_date_from
-            date_to = invoice_line.product_id.membership_date_to
-            if invoice_line.invoice_id.date_invoice > date_from and invoice_line.invoice_id.date_invoice < date_to:
+            date_from = invoice_line.product_id.membership_date_from or '0000-00-00'
+            date_to = invoice_line.product_id.membership_date_to or '0000-00-00'
+            if date_from < (invoice_line.invoice_id.date_invoice or '0000-00-00') < date_to:
                 date_from = invoice_line.invoice_id.date_invoice
             MemberLine.create({
                 'partner': invoice_line.invoice_id.partner_id.id,

@@ -58,7 +58,7 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     epsilon = 2**(epsilon_magnitude-53)
     if rounding_method == 'HALF-UP':
         normalized_value += math.copysign(epsilon, normalized_value)
-        rounded_value = round(normalized_value) # round to integer
+        rounded_value = pycompat.round(normalized_value) # round to integer
 
     # TIE-BREAKING: UP (for ceiling operations)
     # When rounding the value up, we instead subtract the epsilon value

@@ -192,10 +192,10 @@ class AccountMove(models.Model):
     @api.multi
     def _check_lock_date(self):
         for move in self:
-            lock_date = max(move.company_id.period_lock_date, move.company_id.fiscalyear_lock_date)
+            lock_date = max(move.company_id.period_lock_date or '0000-00-00', move.company_id.fiscalyear_lock_date or '0000-00-00')
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
-            if move.date <= lock_date:
+            if move.date <= (lock_date or '0000-00-00'):
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
                 else:
@@ -1029,7 +1029,7 @@ class AccountMoveLine(models.Model):
         partial_rec_set = self.env['account.partial.reconcile']
         aml_id = False
         partial_rec_id = False
-        maxdate = None
+        maxdate = '0000-00-00'
         for aml in self:
             total_debit += aml.debit
             total_credit += aml.credit
@@ -1491,7 +1491,7 @@ class AccountPartialReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > self.company_id.fiscalyear_lock_date:
+        if (move_date or '0000-00-00' > self.company_id.fiscalyear_lock_date or '0000-00-00'):
             res['date'] = move_date
         return res
 
@@ -1689,7 +1689,7 @@ class AccountPartialReconcile(models.Model):
         #make sure that all partial reconciliations share the same secondary currency otherwise it's not
         #possible to compute the exchange difference entry and it has to be done manually.
         currency = list(partial_rec_set)[0].currency_id
-        maxdate = None
+        maxdate = '0000-00-00'
         aml_to_balance = None
         for partial_rec in partial_rec_set:
             if partial_rec.currency_id != currency:
