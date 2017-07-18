@@ -1,17 +1,17 @@
 .o_followers {
-    float: right;
+    .float(right);
     @media (max-width: @screen-xs-max) {
         display: none !important; // Hide the followers in mobile
     }
 
     .dropdown-menu {
-        right: 0;
-        left: auto;
+        .right(0);
+        .left(auto);
     }
 
     .o_followers_actions {
         position: relative;
-        float: right;
+        .float(right);
 
         .dropdown-toggle {
             opacity: 0.3;
@@ -37,7 +37,7 @@
 
         .o_followers_follow_button {
             width: 85px;
-            padding-right: 0;
+            .padding-right(0);
             color: @text-color;
             font-weight: bold;
 
@@ -71,18 +71,18 @@
         }
 
         .o_subtype {
-            padding-left: 10px;
+            .padding-left(10px);
         }
     }
 
     .o_followers_title_box {
         position: relative;
-        float: right;
-        margin-left: 25px;
+        .float(right);
+        .margin-left(25px);
 
         .dropdown-toggle {
             .o_followers_count {
-                padding-right: 5px;
+                .padding-right(5px);
                 font-weight: bold;
             }
         }
@@ -121,7 +121,7 @@
 
 // Edit subtypes in dialog
 .modal .modal-body > ul {
-    padding-left: 0;
+    .padding-left(0);
     > li.o_subtype {
         list-style: none;
     }
