@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 try:
     import cStringIO as StringIO
 except ImportError:
@@ -102,7 +101,7 @@ def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.
     resized_image = sharpener.enhance(factor)
     # create a transparent image for background and paste the image on it
     image = Image.new('RGBA', size, (255, 255, 255, 0))
-    image.paste(resized_image, ((size[0] - resized_image.size[0]) / 2, (size[1] - resized_image.size[1]) / 2))
+    image.paste(resized_image, ((size[0] - resized_image.size[0]) // 2, (size[1] - resized_image.size[1]) // 2))
     if image.mode != origin_mode:
         image = image.convert(origin_mode)
     return image
@@ -181,17 +180,17 @@ def crop_image(data, type='top', ratio=False, thumbnail_ratio=None, image_format
 
     if ratio:
         w_ratio, h_ratio = ratio
-        new_h = (w * h_ratio) / w_ratio
+        new_h = (w * h_ratio) // w_ratio
         new_w = w
         if new_h > h:
             new_h = h
-            new_w = (h * w_ratio) / h_ratio
+            new_w = (h * w_ratio) // h_ratio
 
     if type == "top":
         cropped_image = image_stream.crop((0, 0, new_w, new_h))
         cropped_image.save(output_stream, format=image_format)
     elif type == "center":
-        cropped_image = image_stream.crop(((w - new_w) / 2, (h - new_h) / 2, (w + new_w) / 2, (h + new_h) / 2))
+        cropped_image = image_stream.crop(((w - new_w) // 2, (h - new_h) // 2, (w + new_w) // 2, (h + new_h) // 2))
         cropped_image.save(output_stream, format=image_format)
     elif type == "bottom":
         cropped_image = image_stream.crop((0, h - new_h, new_w, h))
@@ -201,7 +200,7 @@ def crop_image(data, type='top', ratio=False, thumbnail_ratio=None, image_format
     # TDE FIXME: should not have a ratio, makes no sense -> should have maximum width (std: 64; 256 px)
     if thumbnail_ratio:
         thumb_image = Image.open(StringIO.StringIO(output_stream.getvalue()))
-        thumb_image.thumbnail((new_w / thumbnail_ratio, new_h / thumbnail_ratio), Image.ANTIALIAS)
+        thumb_image.thumbnail((new_w // thumbnail_ratio, new_h // thumbnail_ratio), Image.ANTIALIAS)
         thumb_image.save(output_stream, image_format)
     return output_stream.getvalue().encode('base64')
 

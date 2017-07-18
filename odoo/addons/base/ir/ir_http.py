@@ -323,7 +323,7 @@ class IrHttp(models.AbstractModel):
         headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
 
         # cache
-        etag = hasattr(request, 'httprequest') and request.httprequest.headers.get('If-None-Match')
+        etag = bool(request) and request.httprequest.headers.get('If-None-Match')
         retag = '"%s"' % hashlib.md5(last_update).hexdigest()
         status = status or (304 if etag == retag else 200)
         headers.append(('ETag', retag))
