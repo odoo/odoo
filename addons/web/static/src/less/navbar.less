@@ -7,10 +7,10 @@
     color: white;
 
     > a, > button {
-        float: left;
+        .float(left);
         height: @odoo-navbar-height;
         border: none;
-        padding: 0 @odoo-horizontal-padding - 4px 0 @odoo-horizontal-padding;
+        .padding(0, @odoo-horizontal-padding - 4px, 0, @odoo-horizontal-padding);
         line-height: @odoo-navbar-height;
         background-color: transparent;
         text-align: center;
@@ -30,8 +30,8 @@
 
     > .o_menu_brand {
         display: block;
-        float: left;
-        margin-right: 35px;
+        .float(left);
+        .margin-right(35px);
         .user-select(none);
         color: white;
         font-size: 22px;
@@ -47,12 +47,13 @@
     }
 
     > .o_menu_toggle {
-        margin-right: 5px;
+        .float(left);
+        .margin-right(5px);
     }
 
     > ul {
         display: block;
-        float: left;
+        .float(left);
         margin: 0;
         padding: 0;
         list-style: none;
@@ -60,7 +61,7 @@
         > li {
             position: relative;
             display: block;
-            float: left;
+            .float(left);
 
             > a {
                 display: block;
@@ -111,10 +112,10 @@
         }
 
         &.o_menu_systray {
-            float: right;
+            .float(right);
             .open .dropdown-menu {
-                left: auto;
-                right: 0;
+                .left(auto);
+                .right(0);
             }
         }
     }
@@ -127,7 +128,7 @@
 
         .o-menu-indentation(@index) when (@index < 6) {
             > li.o_menu_header_lvl_@{index}, > li .o_menu_entry_lvl_@{index} {
-                padding-left: @odoo-dropdown-hpadding + (@index - 2)*12px;
+                .padding-left(@odoo-dropdown-hpadding + (@index - 2)*12px);
             }
             .o-menu-indentation(@index + 1);
         }
@@ -190,7 +191,7 @@
             &.o_menu_systray {
                 .o-position-absolute(0px, @odoo-navbar-height, auto, @odoo-navbar-height);
                 height: @odoo-navbar-height;
-                text-align: right;
+                .text-align(right);
 
                 > li {
                     display: inline-block;
