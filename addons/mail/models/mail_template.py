@@ -513,7 +513,7 @@ class MailTemplate(models.Model):
                     if not report_name.endswith(ext):
                         report_name += ext
                     attachments.append((report_name, result))
-                    results[res_id]['attachments'] = attachments
+                    results[res_id]['attachment_ids'] = attachments
 
         return multi_mode and results or results[res_ids[0]]
 
