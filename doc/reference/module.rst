@@ -31,10 +31,12 @@ dictionary, where each key specifies module metadatum.
         # data files always loaded at installation
         'data': [
             'mymodule_view.xml',
+            'data/mymodule_data.xml'
         ],
         # data files containing optionally loaded demonstration data
         'demo': [
             'demo_data.xml',
+            'demo/extra_demo_data.xml'
         ],
     }
 
@@ -69,10 +71,10 @@ Available manifest fields are:
     it. Likewise dependencies are loaded before a module is loaded.
 ``data`` (``list(str)``)
     List of data files which must always be installed or updated with the
-    module. A list of paths from the module root directory
+    module. A list of paths from the module root directory, using a forward slash
 ``demo`` (``list(str)``)
     List of data files which are only installed or updated in *demonstration
-    mode*
+    mode*. Paths are from the module root directory, using a forward slash
 ``auto_install`` (``bool``, default: ``False``)
     If ``True``, this module will automatically be installed if all of its
     dependencies are installed.
