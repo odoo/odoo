@@ -136,15 +136,15 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
             return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
 
-    def get_tracking_link(self, pickings):
+    def get_tracking_link(self, picking):
         ''' Ask the tracking link to the service provider
 
-        :param pickings: A recordset of pickings
-        :return list: A list of string URLs, containing the tracking links for every picking
+        :param picking: record of stock.picking
+        :return str: an URL containing the tracking link or False
         '''
         self.ensure_one()
         if hasattr(self, '%s_get_tracking_link' % self.delivery_type):
-            return getattr(self, '%s_get_tracking_link' % self.delivery_type)(pickings)
+            return getattr(self, '%s_get_tracking_link' % self.delivery_type)(picking)
 
     def cancel_shipment(self, pickings):
         ''' Cancel a shipment
@@ -183,8 +183,8 @@ class DeliveryCarrier(models.Model):
                           'tracking_number': False}]
         return res
 
-    def fixed_get_tracking_link(self, pickings):
-        raise NotImplementedError()
+    def fixed_get_tracking_link(self, picking):
+        return False
 
     def fixed_cancel_shipment(self, pickings):
         raise NotImplementedError()
