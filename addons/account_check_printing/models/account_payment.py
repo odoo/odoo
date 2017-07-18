@@ -68,9 +68,7 @@ class AccountPayment(models.Model):
 
     @api.onchange('amount')
     def _onchange_amount(self):
-        res = {}
-        if hasattr(super(AccountPayment, self), '_onchange_amount'):
-            res = super(AccountPayment, self)._onchange_amount()
+        res = super(AccountPayment, self)._onchange_amount()
         self.check_amount_in_words = self._get_check_amount_in_words(self.amount)
         return res
 

@@ -57,7 +57,7 @@ class account_abstract_payment(models.AbstractModel):
     @api.constrains('amount')
     def _check_amount(self):
         if self.amount < 0:
-            raise ValidationError('The payment amount must be strictly non-negetive.')
+            raise ValidationError(_('The payment amount must be strictly non-negative.'))
 
     @api.multi
     @api.depends('payment_type', 'journal_id')
@@ -312,18 +312,15 @@ class account_payment(models.Model):
     @api.onchange('amount')
     def _onchange_amount(self):
         res = {}
+        journal_type = ['bank', 'cash']
         if self.amount == 0:
-            domain = {'journal_id': [
-                ('type', 'in', ['bank', 'cash', 'general']), ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)
-            ]}
+            journal_type.append('general')
             self.payment_difference_handling = 'reconcile'
             self.journal_id = self.env['account.journal'].search([('type', '=', 'bank')], limit=1)
-            res['domain'] = domain
-        else:
-            domain = {'journal_id': [
-                ('type', 'in', ['bank', 'cash']), ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)
-            ]}
-            res['domain'] = domain
+        res['domain'] = {'journal_id': [
+            ('type', 'in', journal_type),
+            self.payment_type == 'inbound' and ('at_least_one_inbound', '=', True) or ('at_least_one_outbound', '=', True)
+        ]}
         return res
 
     @api.one
