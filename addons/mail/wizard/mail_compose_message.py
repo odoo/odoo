@@ -4,6 +4,8 @@
 import base64
 import re
 
+import lxml
+
 from odoo import _, api, fields, models, SUPERUSER_ID, tools
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
@@ -396,13 +398,15 @@ class MailComposer(models.TransientModel):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
         for record in self:
+            body = record._extract_body() or record.body or False
+
             model = self.env['ir.model']._get(record.model or 'mail.message')
             model_name = model.name or ''
             template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
             values = {
                 'name': template_name,
                 'subject': record.subject or False,
-                'body_html': record.body or False,
+                'body_html': body,
                 'model_id': model.id or False,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
             }
@@ -443,7 +447,7 @@ class MailComposer(models.TransientModel):
             res_ids = [res_ids]
 
         subjects = self.render_template(self.subject, self.model, res_ids)
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True)
+        bodies = self.render_template(self.body, self.model, res_ids, post_process=True, use_default_layout=True)
         emails_from = self.render_template(self.email_from, self.model, res_ids)
         replies_to = self.render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
@@ -506,5 +510,11 @@ class MailComposer(models.TransientModel):
         return multi_mode and values or values[res_ids[0]]
 
     @api.model
-    def render_template(self, template, model, res_ids, post_process=False):
-        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process)
+    def render_template(self, template, model, res_ids, post_process=False, use_default_layout=False):
+        return self.env['mail.template'].render_template(template, model, res_ids, post_process=post_process, use_default_layout=use_default_layout)
+
+    def _extract_body(self):
+        self.ensure_one()
+        root = lxml.html.fromstring(self.body)
+        html = root.xpath("//div[@summary='o_mail_template_body']//div")
+        return len(html) and lxml.html.tostring(html[0]) or False

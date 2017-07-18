@@ -70,6 +70,7 @@
             <field name="subject">${object.subject or (object.record_name and 'Re: %s' % object.record_name) or (object.parent_id and object.parent_id.subject and 'Re: %s' % object.parent_id.subject) or (object.parent_id and object.parent_id.record_name and 'Re: %s' % object.parent_id.record_name)}</field>
             <field name="model_id" ref="mail.model_mail_message"/>
             <field name="auto_delete" eval="True"/>
+            <field name="use_default_layout" eval="False"/>
             <field name="body_html"><![CDATA[
 % set company = ctx.get('company', user.company_id)
 <div>
@@ -84,7 +85,7 @@
 % endif
 % if not ctx['is_discussion'] or not len(ctx['actions']) == 0 or ctx.get('has_button_access'):
 <div summary="o_mail_notification" style="padding: 0px; width:600px;">
-<table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+<table cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
 <tbody><tr>
     <td valign="center">
         % if ctx.get('has_button_access'):
@@ -116,8 +117,6 @@
 </tr>
 <tr>
     <td colspan="2" style="text-align:center;">
-        <hr width="100%"
-            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;">
         % if ctx.get('subtype') and ctx.get('subtype').internal:
         <p style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
             <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.

@@ -16,16 +16,12 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
+        <field name="use_default_layout" eval="False"/>
         <field name="body_html"><![CDATA[
-          <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-            <table style="width:600px;margin:10px auto;">
+          <div style="color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+            <table style="width:100%;margin:10px auto;">
                 <tbody>
                     <tr>
-                        <td>
-                            <a href="/">
-                                <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                            </a>
-                        </td>
                         <td style="text-align:right;vertical-align:middle;">
                             % if 'website_url' in object.job_id and object.job_id.website_url:
                                 <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
@@ -34,7 +30,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table style="width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;">
+            <table style="width:100%;margin:0px auto;background-color:white;padding:8px; border:0px solid #e1e1e1;">
             <tr>
                 <td style="font-size:16px; font-weight:300;">
                     <p style="font-size:16px;">
@@ -78,7 +74,7 @@
                 </td>
             </tr>
             </table>
-            <table style="width:600px;margin:0px auto;text-align:center;">
+            <table style="width:100%;margin:0px auto;text-align:center;">
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
@@ -105,25 +101,17 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
+        <field name="use_default_layout" eval="False"/>
         <field name="body_html"><![CDATA[
-          <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-            <table style="width:600px;margin:10px auto;">
-                <tbody>
-                    <tr>
-                        <td>
-                            <a href="/">
-                                <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                            </a>
-                        </td>
-                        <td style="text-align:right;vertical-align:middle;">
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                                <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
-                            % endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table style="width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;">
+          <div style="color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+            <table style="width:100%;margin:0px auto;background-color:white;padding:8px;border:0px solid #e1e1e1;">
+            <tr>
+                <td style="text-align:right;vertical-align:middle;">
+                    % if 'website_url' in object.job_id and object.job_id.website_url:
+                        <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
+                    % endif
+                </td>
+            </tr>
             <tr>
                 <td style="font-size:16px; font-weight:300;">
                     <div style="text-align: center">
@@ -219,13 +207,13 @@
             </table>
 
             % if object.job_id.address_id:
-            <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+            <div style="width:100%;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
                 <a href="https://maps.google.com/maps?q=${location}" target="new">
-                    <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
+                    <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom; width:100%"/>
                 </a>
             </div>
             % endif
-            <table style="width:600px;margin:0px auto;text-align:center;">
+            <table style="width:100%;margin:0px auto;text-align:center;">
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
@@ -239,8 +227,6 @@
                     </tr>
                 </tbody>
             </table>
-
-
           </div>
         ]]></field>
     </record>
@@ -253,25 +239,17 @@
         <field name="lang">${object.partner_id.lang or ''}</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="user_signature" eval="False"/>
+        <field name="use_default_layout" eval="False"/>
         <field name="body_html"><![CDATA[
-          <div style="background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-            <table style="width:600px;margin:10px auto;">
-                <tbody>
-                    <tr>
-                        <td>
-                            <a href="/">
-                                <img src="/logo" alt="${object.company_id.name}" style="vertical-align:baseline;max-width:100px;" />
-                            </a>
-                        </td>
-                        <td style="text-align:right;vertical-align:middle;">
-                            % if 'website_url' in object.job_id and object.job_id.website_url:
-                                <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
-                            % endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table style="width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;">
+          <div style="color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+            <table style="width:100%;margin:0px auto;background-color:white;padding:8px;border:0px solid #e1e1e1;">
+            <tr>
+                <td style="text-align:right; vertical-align:middle;">
+                    % if 'website_url' in object.job_id and object.job_id.website_url:
+                        <a href="${object.job_id.website_url}" style="background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;">Job Description</a>
+                    % endif
+                </td>
+            </tr>
             <tr>
                 <td style="font-size:16px; font-weight:300;">
                     <p style="font-size:16px;">
@@ -358,13 +336,13 @@
             </table>
 
             % if object.job_id.address_id:
-            <div style="width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
+            <div style="width:100%;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;">
                 <a href="https://maps.google.com/maps?q=${location}" target="new">
-                    <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom;"/>
+                    <img src="http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}" style="vertical-align:bottom; width:100%"/>
                 </a>
             </div>
             % endif
-            <table style="width:600px;margin:0px auto;text-align:center;">
+            <table style="width:100%;margin:0px auto;text-align:center;">
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
@@ -378,8 +356,6 @@
                     </tr>
                 </tbody>
             </table>
-
-
           </div>
         ]]></field>
     </record>

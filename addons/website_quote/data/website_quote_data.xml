@@ -99,26 +99,8 @@
             <field name="email_to">${ctx.get('email_to') or object.partner_id.email}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="body_html"><![CDATA[
-<div summary="o_mail_template" style="padding:0px; width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td valign="center" width="200" style="padding:0px 10px 5px 5px;font-size: 12px">
-                <img src="/logo.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}">
-            </td>
-        </tr></tbody>
-    </table>
-    <table cellspacing="0" cellpadding="0" style="width:600px; border-collapse:collapse; background:inherit; color:inherit">
-        <tbody><tr>
-            <td valign="top" style="width:600px; padding:0px 10px 5px 5px;">
-                <div>
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0;margin:15px auto;padding:0">
-                </div>
-            </td>
-        </tr></tbody>
-    </table>
-</div>
-<div style="padding:0px; width:600px; max-width:600px; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
-    <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
+<div style="padding:0px; width:100%; max-width:100%; margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777">
+    <table cellspacing="0" cellpadding="0" style="width:100% ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
             <td style="padding:0px 10px 5px 5px;font-size: 14px;">
                 <p>Dear ${object.partner_id.name},</p><br/>

@@ -33,19 +33,18 @@
             <field name="model_id" ref="project.model_project_task"/>
             <field name="partner_to" >${object.rating_get_partner_id().id}</field>
             <field name="auto_delete" eval="True"/>
+            <field name="use_default_layout" eval="False"/>
             <field name="body_html"><![CDATA[
-<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<div style="color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
     % set access_token = object.rating_get_access_token()
-    <table style="width:600px;margin:5px auto;">
+    <table style="width:100%;margin:5px auto;">
         <tbody>
-            <tr><td>
-                <a href="/"><img src="/web/binary/company_logo" style="vertical-align:baseline;max-width:100px;" /></a>
-            </td><td style="text-align:right;vertical-align:middle;">
+            <tr><td style="text-align:right;vertical-align:middle;">
                     Satisfaction Survey
             </td></tr>
         </tbody>
     </table>
-    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+    <table style="width:100%;margin:0px auto;background:white;border:1px solid #e1e1e1;">
         <tbody>
             <tr><td style="padding:15px 20px 10px 20px;">
                 <p>Hello,</p>
@@ -91,7 +90,7 @@
             <tr><td style="padding:15px 20px 10px 20px;">${(object.user_id.signature or '')| safe}</td></tr>
         </tbody>
     </table>
-    <table style="width:600px;margin:auto;text-align:center;font-size:12px;">
+    <table style="width:100%;margin:auto;text-align:center;font-size:12px;">
         <tbody>
             <tr><td style="padding-top:10px;color:#afafaf;">
                 % if object.project_id.rating_status == 'stage':
