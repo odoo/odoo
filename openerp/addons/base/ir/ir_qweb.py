@@ -1043,8 +1043,7 @@ class QwebWidgetMonetary(models.AbstractModel):
     def _format(self, inner, options, qwebcontext):
         inner = qwebcontext.env['ir.qweb'].eval(inner, qwebcontext)
         display = qwebcontext.env['ir.qweb'].eval_object(options['display_currency'], qwebcontext)
-        precision = int(round(math.log10(display.rounding)))
-        fmt = "%.{0}f".format(-precision if precision < 0 else 0)
+        fmt = "%.{0}f".format(display.decimal_places)
         lang_code = qwebcontext.context.get('lang') or 'en_US'
         lang = qwebcontext.env['res.lang']._lang_get(lang_code)
         formatted_amount = lang.format(fmt, inner, grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
