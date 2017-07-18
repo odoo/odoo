@@ -4,9 +4,9 @@
     overflow: auto;
     position: absolute; // Needed for chrome
     top: 0;
-    right: 0;
+    .right(0);
     bottom: 0;
-    left: 0;
+    .left(0);
     @media (max-width: @screen-xs-max) {
         position: static;
     }
@@ -23,7 +23,7 @@
     }
 
     .oe_import_advanced_mode {
-        margin-left: 20px;
+        .margin-left(20px);
     }
 
     .oe_import_box {
@@ -56,7 +56,7 @@
         label {
             width: 150px;
             line-height: 32px;
-            text-align: right;
+            .text-align(right);
         }
     }
     /* ----------- INITIAL SETUP ------------ */
