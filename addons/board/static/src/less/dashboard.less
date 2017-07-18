@@ -45,19 +45,19 @@
 
     // Layout selector
     .oe_dashboard_links {
-        text-align: right;
-        margin: 0 4px 6px 0;
+        .text-align(right);
+        .margin(0, 4px, 6px, 0);
     }
 
     // Dashboard content
     .oe_dashboard {
         width: 100%;
         .oe_action {
-            margin: 0 8px 8px 0;
+            .margin(0, 8px, 8px, 0);
             background-color: white;
             border: 1px solid;
             border-color: #e5e5e5 #dbdbdb #d2d2d2;
-            margin: 0 8px 8px 0;
+            .margin(0, 8px, 8px, 0);
            .oe_header {
                 font-size: 16px;
                 vertical-align: middle;
@@ -67,7 +67,7 @@
                     cursor: move;
                 }
                 .oe_icon {
-                    float: right;
+                    .float(right);
                     cursor: pointer;
                     color: #b3b3b3;
                     &:hover {
@@ -77,15 +77,15 @@
                 }
                 .oe_close:after {
                     content: "×";
-                    margin-left: 4px;
+                    .margin-left(4px);
                 }
                 .oe_minimize:after {
                     content: "-";
-                    margin-left: 4px;
+                    .margin-left(4px);
                 }
                 .oe_maximize:after {
                     content: "+";
-                    margin-left: 4px;
+                    .margin-left(4px);
                 }
                 .oe_header_text {
                     width: auto;
@@ -102,12 +102,12 @@
                 padding-bottom: 2px;
             }
             .oe_button_create {
-                margin-left: 4px;
-                padding: 0 4px 0 4px;
+                .margin-left(4px);
+                .padding(0, 4px, 0, 4px);
                 height: 16px !important;
             }
             .oe_content {
-                padding: 0 12px 12px 12px;
+                .padding(0, 12px, 12px, 12px);
                 &.oe_folded {
                     display: none;
                 }
@@ -135,10 +135,10 @@
         margin: 0;
         padding: 0;
         list-style-type: none;
-        float: left;
+        .float(left);
     }
     .oe_dashboard_selected_layout {
-        margin-left: -30px;
+        .margin-left(-30px);
         vertical-align: bottom;
         margin-bottom: 10px;
     }
