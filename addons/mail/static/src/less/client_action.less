@@ -26,12 +26,12 @@
             line-height: 40px;
             > a {
                 color: white;
-                margin-left: 5px;
+                .margin-left(5px);
                 text-decoration: underline;
             }
 
             &.fa-close {
-                margin-right: 10px;
+                .margin-right(10px);
                 cursor: pointer;
             }
         }
@@ -40,7 +40,7 @@
     .o_mail_chat_sidebar {
         width: @mail-chat-sidebar-width;
         height: 100%;
-        float: left;
+        .float(left);
         overflow: auto;
         padding: @odoo-horizontal-padding 0;
 
@@ -50,7 +50,7 @@
 
         .o_mail_sidebar_title {
             .o-flex-display();
-            padding: 6px @odoo-horizontal-padding 0 @odoo-horizontal-padding;
+            .padding(6px, @odoo-horizontal-padding, 0, @odoo-horizontal-padding);
             align-items: center;
             justify-content: space-between;
             h4 {
@@ -67,7 +67,7 @@
         .o_mail_chat_channel_item {
             .o-flex-display();
             width: 100%;
-            padding: 2px @odoo-horizontal-padding 2px (@odoo-horizontal-padding + 23px); // compensate icon
+            .padding(2px, @odoo-horizontal-padding, 2px, (@odoo-horizontal-padding + 23px)); // compensate icon
 
             .o_channel_name {
                 .o-flex(1, 1, auto);
@@ -77,13 +77,13 @@
                 .o-flex(0, 0, auto);
             }
             .o_mail_sidebar_needaction {
-                margin: 0 0 0 5px;
+                .margin(0, 0, 0, 5px);
             }
             .o_mail_partner_unpin {
                 padding: 2px 6px;
             }
             i.fa-envelope-o {
-                margin-left: 3px;
+                .margin-left(3px);
             }
 
             &.o_mail_chat_title_main {
@@ -115,20 +115,20 @@
         .o-flex-display();
         .o-flex-flow(column, nowrap);
         height: 100%;
-        margin-left: @mail-chat-sidebar-width;
+        .margin-left(@mail-chat-sidebar-width);
         position: relative;
         @media (min-width: @screen-sm-min) {
             overflow: auto;
         }
 
         @media (min-width: @screen-lg-min) {
-            margin-left: @mail-chat-sidebar-width + 50px;
+            .margin-left(@mail-chat-sidebar-width + 50px);
         }
 
         .o_mail_thread {
             .o-flex(1, 0, 0);
             overflow: auto;
-            padding: 0 0 15px 0;
+            .padding(0, 0, 15px, 0);
             -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
 
             .o_chat_help_message {
@@ -282,7 +282,7 @@
             z-index: 1; // so that box shaddow is above thread's images
             .o_searchview {
                 border: none;
-                padding: 5px 5px 0px 5px;
+                .padding(5px, 5px, 0px, 5px);
                 .o_searchview_input {
                     font-size: 15px;
                 }
@@ -321,7 +321,7 @@
 
         .o_mail_chat_content {
             .o-flex(1, 0, 0);
-            margin-left: 0;
+            .margin-left(0);
             background-color: transparent;
             .o_mail_no_content {
                 .o-position-absolute(@top: 30%);
@@ -345,7 +345,7 @@
                 > input {
                     border: none;
                     padding: 5px 8px;
-                    padding-left: 20px;
+                    .padding-left(20px);
                 }
             }
         }
@@ -447,7 +447,7 @@
         }
 
         .o_channel_info, .o_last_message_date {
-            margin-left: @o-mail-chatter-mobile-gap;
+            .margin-left(@o-mail-chatter-mobile-gap);
         }
 
         .o_channel_name {
@@ -476,7 +476,6 @@
             padding: @o-mail-chatter-mobile-gap @o-mail-chatter-mobile-gap*2;
             box-shadow: 1px 0 0 @gray-lighter-darker;
             text-align: center;
-
             > span {
                display: block;
                font-weight: 500;
