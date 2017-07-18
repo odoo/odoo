@@ -85,7 +85,6 @@ class StockQuant(models.Model):
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
         domain = [
             ('product_id', '=', product_id.id),
-            ('location_id', 'child_of', location_id.id),
         ]
         if not strict:
             if lot_id:
@@ -94,10 +93,12 @@ class StockQuant(models.Model):
                 domain = expression.AND([[('package_id', '=', package_id.id)], domain])
             if owner_id:
                 domain = expression.AND([[('owner_id', '=', owner_id.id)], domain])
+            domain = expression.AND([[('location_id', 'child_of', location_id.id)], domain])
         else:
             domain = expression.AND([[('lot_id', '=', lot_id and lot_id.id or False)], domain])
             domain = expression.AND([[('package_id', '=', package_id and package_id.id or False)], domain])
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
+            domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
         return self.search(domain, order=removal_strategy_order)
 
@@ -131,9 +132,9 @@ class StockQuant(models.Model):
         return sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None):
         self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
         for quant in quants:
             try:
                 with self._cr.savepoint():
@@ -157,7 +158,7 @@ class StockQuant(models.Model):
                 'package_id': package_id and package_id.id,
                 'owner_id': owner_id and owner_id.id,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False)
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):

@@ -245,6 +245,32 @@ class StockQuant(TransactionCase):
         self.env = self.env(user=self.env.ref('base.user_demo'))
         self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
 
+    def test_increase_available_quantity_5(self):
+        """ Increase the available quantity when no quants are already in stock.
+        Increase a subLocation and check that quants are in this location. Also test inverse.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        stock_sub_location = stock_location.child_ids[0]
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+        })
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(product1, stock_sub_location, 1.0)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 2.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_sub_location), 1.0)
+
+        self.env['stock.quant']._update_available_quantity(product2, stock_sub_location, 1.0)
+        self.env['stock.quant']._update_available_quantity(product2, stock_location, 1.0)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product2, stock_location), 2.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product2, stock_sub_location), 1.0)
+
     def test_decrease_available_quantity_1(self):
         """ Decrease the available quantity when no quants are already in a location.
         """
