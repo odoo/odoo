@@ -177,8 +177,6 @@ class Partner(models.Model):
     function = fields.Char(string='Job Position')
     type = fields.Selection(
         [('contact', 'Contact'),
-         ('invoice', 'Invoice address'),
-         ('delivery', 'Shipping address'),
          ('other', 'Other address')], string='Address Type',
         default='contact',
         help="Used to select automatically the right address according to the context in sales and purchases documents.")

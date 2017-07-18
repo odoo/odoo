@@ -6,6 +6,7 @@ var field_utils = require('web.field_utils');
 var relational_fields = require('web.relational_fields');
 
 var FieldSelection = relational_fields.FieldSelection;
+var FieldRadio = relational_fields.FieldRadio;
 var _t = core._t;
 
 
@@ -101,8 +102,38 @@ var FieldTimezoneMismatch = FieldSelection.extend({
     },
 });
 
+
+var FieldContactType = FieldRadio.extend({
+    supportedFieldTypes: ['selection'],
+    /*
+     * @override
+    */
+    start: function () {
+        var parentCompanyType = this.record.context.parent_company_type;
+        if (parentCompanyType === 'person') {
+            this._setValue('other');
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    _setValues: function () {
+        var parentCompanyType = this.record.context.parent_company_type;
+        // filter selection based on parent company type
+        if (parentCompanyType === 'person') {
+            this.values = _.filter(this.field.selection, function (data, index) {
+                return data[0] !== 'contact';
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
+    },
+});
+
 return {
     FieldTimezoneMismatch: FieldTimezoneMismatch,
+    FieldContactType: FieldContactType,
 };
 
 });
