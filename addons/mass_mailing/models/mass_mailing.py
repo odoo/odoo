@@ -4,6 +4,7 @@ from datetime import datetime
 from dateutil import relativedelta
 import random
 import re
+from urlparse import urlparse
 
 from openerp import tools
 from openerp import models, api, _
@@ -871,16 +872,13 @@ class MailMail(models.Model):
     @api.model
     def send_get_mail_body(self, mail, partner=None):
         """Override to add Statistic_id in shorted urls """
-
-        links_blacklist = ['/unsubscribe_from_list']
-
         if mail.mailing_id and mail.body_html and mail.statistics_ids:
             for match in re.findall(URL_REGEX, mail.body_html):
-
                 href = match[0]
                 url = match[1]
-                
-                if not [s for s in links_blacklist if s in href]:
+                parsed = urlparse(url, scheme='http')
+
+                if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(mail.statistics_ids[0].id))
                     mail.body_html = mail.body_html.replace(href, new_href)
 
