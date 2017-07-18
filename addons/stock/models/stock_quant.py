@@ -19,11 +19,8 @@ class StockQuant(models.Model):
     product_uom_id = fields.Many2one(
         'product.uom', 'Unit of Measure',
         readonly=True, related='product_id.uom_id')
-    company_id = fields.Many2one(
-        'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('stock.quant'),
-        help='The company to which the quants belong',
-        readonly=True, required=True)
+    company_id = fields.Many2one(related='location_id.company_id',
+        string='Company', store=True, readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         auto_join=True, ondelete='restrict', readonly=True, required=True)
