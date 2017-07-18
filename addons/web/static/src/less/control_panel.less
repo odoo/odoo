@@ -4,6 +4,7 @@
     .o-flex-display();
     .o-flex-flow(row, wrap);
     border-bottom: 1px solid darken(@odoo-control-panel-background-color, 20%);
+    direction: @lng-direction;
     .o-webclient-padding(@top: 10px, @bottom: 10px);
     background-color: @odoo-control-panel-background-color;
 
@@ -32,7 +33,7 @@
 
     .btn.o_enable_searchview {
         width: 10%;
-        margin-left: 2%;
+        .margin-left(2%);
         padding: 0px;
     }
 
@@ -43,7 +44,7 @@
         margin-top: 5px;
 
         > .o_cp_sidebar {
-            padding-right: 10px;
+            .padding-right(10px);
 
             .o_hidden_input_file {
                 position: relative;
@@ -66,7 +67,7 @@
                 padding: 0px;
                 position: absolute;
                 top: 5px;
-                right: 10px;
+                .right(10px);
             }
         }
     }
@@ -78,7 +79,7 @@
 
         > .o_cp_pager {
             margin: auto 0 auto auto;
-            padding-left: 5px;
+            .padding-left(5px);
             text-align: center;
             .user-select(none);
 
@@ -88,12 +89,12 @@
             }
 
             .o_pager_counter {
-                margin-right: 5px;
+                .margin-right(5px);
             }
         }
 
         > .o_cp_switch_buttons > .btn:first-child {
-            margin-left: @odoo-horizontal-padding;
+            .margin-left(@odoo-horizontal-padding);
         }
     }
 }
@@ -104,14 +105,14 @@
 
     .o_cp_buttons {
         .o-flex-display();
-        margin-right: auto;
+        .margin-right(auto);
         > div {
             margin-top: 5px;
         }
     }
     .o_cp_pager {
         .o-flex-display();
-        margin-left: auto;
+        .margin-left(auto);
     }
 }
 
@@ -119,7 +120,7 @@
 .o_pager_value > input {
     display: inline-block;
     width: 60px;
-    text-align: right;
+    .text-align(right);
 
     &:focus {
         outline: none;
