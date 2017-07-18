@@ -114,7 +114,7 @@ body {
 
             .pos_orderlines_list {
                 overflow-y: scroll;
-                padding-right: 1.5vw;
+                .padding-right(1.5vw);
                 position: relative;
                 height: 100%;
             }
@@ -139,33 +139,33 @@ body {
                     animation: none;
 
                     > div, > div:last-child {
-                        border-left-width: 0;
+                        .border-left-width(0);
                         text-align: center;
                         font-size: 70%;
                         font-weight: normal;
                     }
 
                     > div:last-child {
-                        text-align: left;
+                        .text-align(left);
                     }
                 }
 
                 > div {
                     width: 5%;
-                    text-align: left;
-                    margin-right: 4%;
+                    .text-align(left);
+                    .margin-right(4%);
                     font-size: 80%;
                     .flex-grow(1);
 
                     &:first-child {
-                        margin-right: 2%;
+                        .margin-right(2%);
                         .flex(1 1 1%);
                     }
 
                     &:nth-child(2) {
                         width: 40%;
-                        border-left: 1px solid;
-                        padding-left: 2%;
+                        .border-left(1px solid);
+                        .padding-left(2%);
                     }
 
                     &:nth-child(3) {
@@ -173,7 +173,7 @@ body {
                     }
 
                     &:last-child {
-                        margin-right: 0;
+                        .margin-right(0);
                         font-weight: bold;
                     }
 
@@ -189,7 +189,7 @@ body {
 
         .pos-payment_info {
             max-width: 30%;
-            padding: 2% 2% 1% 2%;
+            .padding(2%, 2%, 1%, 2%);
             .flex-direction(column);
             .justify-content(space-between);
 
@@ -223,7 +223,7 @@ body {
                         &:nth-child(even) {
                             font-weight: bold;
                             font-size: 120%;
-                            margin-right: 0
+                            .margin-right(0)
                         }
                     }
                 }
@@ -239,7 +239,7 @@ body {
                 }
 
                 .pos-odoo_logo_container {
-                    text-align: right;
+                    .text-align(right);
                     margin-top: 10%;
                     .flex(0 1 auto);
 
@@ -262,7 +262,7 @@ body {
                 content: "";
                 position: absolute;
                 top: 0;
-                left: 0;
+                .left(0);
                 width: 100%;
                 height: 17vh;
             }
@@ -271,7 +271,7 @@ body {
                 // Move ADV on top.
                 position: fixed;
                 top: 0;
-                left: 0;
+                .left(0);
                 height: 15vh;
                 width: 99vw;
                 margin:0.5vh;
@@ -306,7 +306,7 @@ body {
                     }
 
                     .pos_orderlines_list {
-                        padding-right: 1.5vh;
+                        .padding-right(1.5vh);
                         height: auto;
                         .pos_orderlines_item {
                             box-shadow: 0 .1vh .1vh darken(@color_gray_lighter, 10%);
@@ -332,7 +332,7 @@ body {
                 .pos-company_logo {
                     margin: 0;
                     background-position: left center;
-                    margin-right: 5%;
+                    .margin-right(5%);
                     height: 100%;
                     padding: 0;
                     .flex(1 1 20%);
@@ -357,7 +357,7 @@ body {
                     }
                     .pos-odoo_logo_container {
                         position: absolute;
-                        right: 3%;
+                        .right(3%);
                         bottom: 1%;
                     }
                 }
@@ -369,7 +369,7 @@ body {
         .pos-customer_facing_display {
             .pos-customer_products .pos_orderlines {
                 .pos_orderlines_list{
-                    padding-right: 0;
+                    .padding-right(0);
                     .pos_orderlines_item > div{
                         font-size: 70%;
                     }
@@ -510,9 +510,9 @@ body {
             content: "";
             position: absolute;
             top:0;
-            right: 0;
+            .right(0);
             bottom:0;
-            left: 50px;
+            .left(50px);
             background: @bg-info;
         }
 
