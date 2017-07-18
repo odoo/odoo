@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="frontend_layout" name="Main Frontend Layout">
+        <t t-call="web.layout">
+            <t t-set="head_website">
+                <script type="text/javascript">
+                    odoo.session_info = {
+                        is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
+                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                        is_frontend: true,
+                    };
+                </script>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </t>
+            <t t-set="head" t-value="head_website + (head or '')"/>
+
+            <div id="wrapwrap" t-att-class="pageName or ''">
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <a href="/" class="navbar-brand logo">
+                                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                                </a>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                    <li class="divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                                    <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <b>
+                                                <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
+                                                <span class="caret"></span>
+                                            </b>
+                                        </a>
+                                        <ul class="dropdown-menu js_usermenu" role="menu">
+                                            <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+                <footer >
+                    <div id="footer">
+                    </div>
+                </footer>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_layout" name="Portal Layout">
+        <t t-call="portal.frontend_layout">
+            <div class="container mt16 o_portal">
+                <div class="oe_structure">
+                    <div t-if="not no_breadcrumbs" class="row">
+                        <div class="col-sm-12">
+                            <ol class="breadcrumb o_portal_submenu">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li t-if="page_name == 'my_details'">Your Details</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="wrap" class='portal-wrap'>
+                <div class="container mb64">
+                    <div class="row">
+                        <div class="col-md-9 col-lg-8">
+                            <t t-raw="0"/>
+                        </div>
+                        <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_home" name="My Portal">
+        <t t-call="portal.portal_layout">
+            <div class="o_my_home_content">
+                <div class="oe_structure"></div>
+                <h3 class="page-header">Your Documents</h3>
+                <ul class="o_portal_docs list-group">
+                </ul>
+            </div>
+            <div class="col-md-12 oe_structure"/>
+        </t>
+    </template>
+</odoo>
