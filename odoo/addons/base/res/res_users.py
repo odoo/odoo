@@ -562,6 +562,11 @@ class Users(models.Model):
     has_group.clear_cache = _has_group.clear_cache
 
     @api.multi
+    def _is_public(self):
+        self.ensure_one()
+        return self.has_group('base.group_public')
+
+    @api.multi
     def _is_system(self):
         self.ensure_one()
         return self.has_group('base.group_system')
