@@ -1,0 +1,293 @@
+// ------------------------------------------
+// mixins for rtl and ltr
+
+// padding
+
+.padding-left(@distance) when (@lng-direction = ltr) {
+  padding-left: @distance;
+}
+.padding-right(@distance) when (@lng-direction = ltr) {
+  padding-right: @distance;
+}
+.padding(@top, @right, @bottom, @left) when (@lng-direction = ltr) {
+  padding: @top @right @bottom @left;
+}
+.padding-left(@distance) when (@lng-direction = rtl) {
+  padding-right: @distance;
+}
+.padding-right(@distance) when (@lng-direction = rtl) {
+  padding-left: @distance;
+}
+.padding(@top, @right, @bottom, @left) when (@lng-direction = rtl) {
+  padding: @top @left @bottom @right;
+}
+
+// margin
+
+.margin-left(@distance) when (@lng-direction = ltr) {
+  margin-left: @distance;
+}
+.margin-right(@distance) when (@lng-direction = ltr) {
+  margin-right: @distance;
+}
+.margin(@top, @right, @bottom, @left) when (@lng-direction = ltr) {
+  margin: @top @right @bottom @left;
+}
+.margin-left(@distance) when (@lng-direction = rtl) {
+  margin-right: @distance;
+}
+.margin-right(@distance) when (@lng-direction = rtl) {
+  margin-left: @distance;
+}
+.margin(@top, @right, @bottom, @left) when (@lng-direction = rtl) {
+  margin: @top @left @bottom @right;
+}
+
+// float
+
+.float(@direction) when (@lng-direction = ltr) {
+  float: @direction;
+}
+.float(@direction) when (@lng-direction = rtl) and (@direction = left) {
+      float: right;
+}
+.float(@direction) when (@lng-direction = rtl) and (@direction = right) {
+      float: left;
+}
+
+// clear
+
+.clear(@direction) when (@lng-direction = ltr) {
+  clear: @direction;
+}
+.clear(@direction) when (@lng-direction = rtl) and (@direction = left) {
+      clear: right;
+}
+.clear(@direction) when (@lng-direction = rtl) and (@direction = right) {
+      clear: left;
+}
+
+// left / right
+
+.left(@distance) when (@lng-direction = ltr) {
+  left: @distance;
+}
+.right(@distance) when (@lng-direction = ltr) {
+  right: @distance;
+}
+.left(@distance) when (@lng-direction = rtl) {
+  right: @distance;
+}
+.right(@distance) when (@lng-direction = rtl) {
+  left: @distance;
+}
+
+// text-align
+
+.text-align(@direction) when (@lng-direction = ltr) {
+  text-align: @direction;
+}
+.text-align(@direction) when (@lng-direction = rtl) and (@direction = left){
+  text-align: right;
+}
+.text-align(@direction) when (@lng-direction = rtl) and (@direction = right){
+  text-align: left;
+}
+
+//border
+
+// width
+//==============
+.border-left-width(@width) when (@lng-direction = ltr) {
+  border-left-width: @width;
+}
+.border-left-width(@width) when (@lng-direction = rtl) {
+  border-right-width: @width;
+}
+.border-right-width(@width) when (@lng-direction = ltr) {
+  border-right-width: @width;
+}
+.border-right-width(@width) when (@lng-direction = rtl) {
+  border-left-width: @width;
+}
+.border-width(@top, @right, @bottom, @left) when (@lng-direction = ltr) {
+  border-width: @top @right @bottom @left;
+}
+.border-width(@top, @right, @bottom, @left) when (@lng-direction = rtl) {
+  border-width: @top @left @bottom @right;
+}
+
+// style
+//=============
+.border-left-style(@style) when (@lng-direction = ltr) {
+  border-left-style: @style;
+}
+.border-left-style(@style) when (@lng-direction = rtl) {
+  border-right-style: @style;
+}
+.border-right-style(@style) when (@lng-direction = ltr) {
+  border-right-style: @style;
+}
+.border-right-style(@style) when (@lng-direction = rtl) {
+  border-left-style: @style;
+}
+.border-style(@top, @right, @bottom, @left) when (@lng-direction = ltr) {
+  border-style: @top @right @bottom @left;
+}
+.border-style(@top, @right, @bottom, @left) when (@lng-direction = rtl) {
+  border-style: @top @left @bottom @right;
+}
+
+// color
+//===============]
+.border-left-color(@color) when (@lng-direction = ltr) {
+  border-left-color: @color;
+}
+.border-left-color(@color) when (@lng-direction = rtl) {
+  border-right-color: @color;
+}
+.border-right-color(@color) when (@lng-direction = ltr) {
+  border-right-color: @color;
+}
+.border-right-color(@color) when (@lng-direction = rtl) {
+  border-left-color: @color;
+}
+.border-color(@top, @right, @bottom, @left) when (@lng-direction = ltr) {
+  border-color: @top @right @bottom @left;
+}
+.border-color(@top, @right, @bottom, @left) when (@lng-direction = rtl) {
+  border-color: @top @left @bottom @right;
+}
+
+// generic border
+//===================
+.border-left(@border) when (@lng-direction = ltr) {
+  border-left: @border;
+}
+.border-left(@border) when (@lng-direction = rtl) {
+  border-right: @border;
+}
+.border-right(@border) when (@lng-direction = ltr) {
+  border-right: @border;
+}
+.border-right(@border) when (@lng-direction = rtl) {
+  border-left: @border;
+}
+
+//radius
+//==============
+.border-top-left-radius(@radius) when (@lng-direction = ltr) {
+  -webkit-border-top-left-radius: @radius;
+      -moz-border-radius-topleft: @radius;
+          border-top-left-radius: @radius;
+}
+.border-top-left-radius(@radius) when (@lng-direction = rtl) {
+  -webkit-border-top-right-radius: @radius;
+      -moz-border-radius-topright: @radius;
+          border-top-right-radius: @radius;
+}
+.border-top-right-radius(@radius) when (@lng-direction = ltr) {
+  -webkit-border-top-right-radius: @radius;
+      -moz-border-radius-topright: @radius;
+          border-top-right-radius: @radius;
+}
+.border-top-right-radius(@radius) when (@lng-direction = rtl) {
+  -webkit-border-top-left-radius: @radius;
+      -moz-border-radius-topleft: @radius;
+          border-top-left-radius: @radius;
+}
+.border-bottom-left-radius(@radius) when (@lng-direction = ltr) {
+  -webkit-border-bottom-left-radius: @radius;
+      -moz-border-radius-bottomleft: @radius;
+          border-bottom-left-radius: @radius;
+ }
+.border-bottom-left-radius(@radius) when (@lng-direction = rtl) {
+  -webkit-border-bottom-right-radius: @radius;
+      -moz-border-radius-bottomright: @radius;
+          border-bottom-right-radius: @radius;
+}
+.border-bottom-right-radius(@radius) when (@lng-direction = ltr) {
+  -webkit-border-bottom-right-radius: @radius;
+      -moz-border-radius-bottomright: @radius;
+          border-bottom-right-radius: @radius;
+}
+.border-bottom-right-radius(@radius) when (@lng-direction = rtl) {
+  -webkit-border-bottom-left-radius: @radius;
+      -moz-border-radius-bottomleft: @radius;
+          border-bottom-left-radius: @radius;
+}
+.border-right-radius(@radius) {
+  .border-top-right-radius(@radius);
+  .border-bottom-right-radius(@radius);
+ }
+.border-left-radius(@radius) {
+  .border-top-left-radius(@radius);
+  .border-bottom-left-radius(@radius);
+}
+.border-top-radius(@radius) {
+  .border-top-left-radius(@radius);
+  .border-top-right-radius(@radius);
+}
+.border-bottom-radius(@radius) {
+  .border-bottom-left-radius(@radius);
+  .border-bottom-right-radius(@radius);
+ }
+.border-radius(@topLeft, @topRight: null, @bottomRight: null, @bottomLeft: null) when (@topRight = null) {
+  -webkit-border-radius: @topLeft;
+          border-radius: @topLeft;
+ }
+.border-radius(@topLeft, @topRight: null, @bottomRight: null, @bottomLeft: null) when not (@topRight = null) {
+  .border-top-left-radius(@topLeft);
+  .border-top-right-radius(@topRight);
+  .border-bottom-right-radius(@bottomRight);
+  .border-bottom-left-radius(@bottomLeft);
+} 
+
+//Transformations
+
+.scaleX(@ratio) when (@lng-direction = rtl) {
+  -webkit-transform: scaleX(-@ratio);
+      -ms-transform: scaleX(-@ratio); // IE9 only
+       -o-transform: scaleX(-@ratio);
+          transform: scaleX(-@ratio) !important;
+}
+.rotate(@degrees) when (@lng-direction = rtl) {
+  -webkit-transform: rotate(-@degrees);
+      -ms-transform: rotate(-@degrees); // IE9 only
+       -o-transform: rotate(-@degrees);
+          transform: rotate(-@degrees) !important;
+}
+.transform-origin(@originx, @originy) when (@lng-direction = rtl) and (@originx = left ){
+  -webkit-transform-origin: right @originy;
+     -moz-transform-origin: right @originy;
+      -ms-transform-origin: right @originy; // IE9 only
+          transform-origin: right @originy;
+}
+.transform-origin(@originx, @originy: null) when (@lng-direction = rtl) and (isnumber(@originx)) {
+  -webkit-transform-origin: -@originx @originy;
+     -moz-transform-origin: -@originx @originy;
+      -ms-transform-origin: -@originx @originy; // IE9 only
+          transform-origin: -@originx @originy;
+}
+.translate(@x, @y) when (@lng-direction = rtl) {
+  -webkit-transform: translate(-@x, @y);
+      -ms-transform: translate(-@x, @y); // IE9 only
+       -o-transform: translate(-@x, @y);
+          transform: translate(-@x, @y);
+}
+.translate3d(@x; @y; @z) when (@lng-direction = rtl) {
+  -webkit-transform: translate3d(-@x, @y, @z);
+          transform: translate3d(-@x, @y, @z);
+}
+
+// background-position
+
+.background-position(@distanceX, @distanceY: none) when (@lng-direction = ltr){
+  background-position: @distanceX @distanceY;
+}
+.background-position(@distanceX, @distanceY) when (@lng-direction = rtl) and (@distanceX = right) {
+  background-position: left @distanceY;
+}
+.background-position(@distanceX, @distanceY) when (@lng-direction = rtl) and (isnumber(@distanceX)) {
+  background-position: -@distanceX @distanceY;
+}
