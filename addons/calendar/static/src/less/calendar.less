@@ -52,7 +52,7 @@
         width: 15%;
     }
     .o_event_title {
-        margin-left: 20%;
+        .margin-left(20%);
 
         h2 {
             margin-top: 0;
@@ -63,10 +63,10 @@
         margin: 15px 0 0;
 
         th {
-            padding-right: 15px;
+            .padding-right(15px);
         }
         ul {
-            padding-left: 0;
+            .padding-left(0);
         }
     }
 
@@ -75,5 +75,41 @@
     }
     .o_declined {
         color: @brand-danger;
+    }
+}
+
+.o_cp_buttons > .o_calendar_buttons {
+    .o_calendar_button_prev{
+        .scaleX(1);
+    }
+    .o_calendar_button_next{
+        .scaleX(1);
+    }
+}
+
+.ui-datepicker {
+    .ui-datepicker-prev {
+        .scaleX(1);
+    }
+
+    .ui-datepicker-next {
+        .scaleX(1);
+    }
+}
+
+//=== for ltr to rtl group button
+.o_calendar_buttons {
+    .btn-group {
+        >.btn {
+            position: relative;
+            .float(left);
+        }
+    }
+}
+
+.btn-group-vertical {
+    >.btn {
+        position: relative;
+        .float(left);
     }
 }
