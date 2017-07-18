@@ -104,12 +104,12 @@ class ProviderGrid(models.Model):
             carrier = self._match_address(p.partner_id)
             if not carrier:
                 raise ValidationError(_('Error: no matching grid.'))
-            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id),  # TODO cleanme
+            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res
 
-    def base_on_rule__get_tracking_link(self, pickings):
-        raise NotImplementedError()
+    def base_on_rule_get_tracking_link(self, picking):
+        return False
 
-    def base_on_rule__cancel_shipment(self, pickings):
+    def base_on_rule_cancel_shipment(self, pickings):
         raise NotImplementedError()

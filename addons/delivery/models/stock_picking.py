@@ -84,11 +84,17 @@ class StockPicking(models.Model):
     volume = fields.Float(copy=False)
     weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
+    carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     number_of_packages = fields.Integer(string='Number of Packages', copy=False)
     weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
+
+    @api.depends('carrier_id', 'carrier_tracking_ref')
+    def _compute_carrier_tracking_url(self):
+        for picking in self:
+            picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
     @api.depends('product_id', 'move_lines')
     def _cal_weight(self):
@@ -129,6 +135,29 @@ class StockPicking(models.Model):
             return self._put_in_pack()
 
     @api.multi
+    def action_send_confirmation_email(self):
+        self.ensure_one()
+        delivery_template_id = self.env.ref('delivery.mail_template_data_delivery_confirmation').id
+        compose_form_id = self.env.ref('mail.email_compose_message_wizard_form').id
+        ctx = dict(
+            default_composition_mode='comment',
+            default_res_id=self.id,
+            default_model='stock.picking',
+            default_use_template=bool(delivery_template_id),
+            default_template_id=delivery_template_id,
+            custom_layout='delivery.mail_template_data_delivery_notification'
+        )
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+    @api.multi
     def send_to_shipper(self):
         self.ensure_one()
         res = self.carrier_id.send_shipping(self)[0]
@@ -148,15 +177,13 @@ class StockPicking(models.Model):
     @api.multi
     def open_website_url(self):
         self.ensure_one()
-        if self.carrier_id.get_tracking_link(self):
-            url = self.carrier_id.get_tracking_link(self)[0]
-        else:
+        if not self.carrier_tracking_url:
             raise UserError(_("Your delivery method has no redirect on courier provider's website to track this order."))
 
         client_action = {'type': 'ir.actions.act_url',
                          'name': "Shipment Tracking Page",
                          'target': 'new',
-                         'url': url,
+                         'url': self.carrier_tracking_url,
                          }
         return client_action
 

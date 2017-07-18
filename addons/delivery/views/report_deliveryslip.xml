@@ -3,6 +3,7 @@
         <xpath expr="//th[@name='td_sched_date_h']" position="after">
             <th t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id"><strong>Carrier</strong></th>
             <th t-if="o.weight"><strong>Weight</strong></th>
+            <th t-if="o.carrier_tracking_ref"><strong>Tracking Number</strong></th>
         </xpath>
         <xpath expr="//td[@name='td_sched_date']" position="after">
             <td t-if="o.picking_type_id.code == 'outgoing' and o.carrier_id">
@@ -11,6 +12,9 @@
             <td t-if="o.weight">
                 <span t-field="o.weight"/>
                 <span t-field="o.weight_uom_id"/>
+            </td>
+            <td t-if="o.carrier_tracking_ref">
+                <span t-field="o.carrier_tracking_ref"/>
             </td>
         </xpath>
     </template>
