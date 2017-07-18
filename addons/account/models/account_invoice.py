@@ -176,7 +176,7 @@ class AccountInvoice(models.Model):
             if payment_currency_id and payment_currency_id == self.currency_id:
                 amount_to_show = amount_currency
             else:
-                amount_to_show = payment.company_id.currency_id.with_context(date=payment.date).compute(amount,
+                amount_to_show = payment.company_id.currency_id.with_context(date=self.date).compute(amount,
                                                                                                         self.currency_id)
             if float_is_zero(amount_to_show, precision_rounding=self.currency_id.rounding):
                 continue
