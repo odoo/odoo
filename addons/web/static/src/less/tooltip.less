@@ -9,12 +9,12 @@
         max-width: 100vw;
         background-color: @odoo-tooltip-background-color;
         color: @odoo-tooltip-color;
-        border-radius: @border-radius-base;
+        .border-radius(@border-radius-base);
         box-shadow: 0px 0px 1px 1px @odoo-brand-secondary;
 
         padding: 5px;
 
-        text-align: left;
+        .text-align(left);
 
         .oe_tooltip_string {
             background-color: @odoo-brand-primary;
@@ -28,7 +28,7 @@
         }
         .oe_tooltip_technical {
             padding: 0;
-            margin: 5px 0 5px 20px;
+            .margin(5px, 0, 5px, 20px);
             list-style-type: circle;
 
             .oe_tooltip_technical_title {
@@ -51,9 +51,9 @@
         }
     }
     &.left .tooltip-arrow {
-        border-left-color: @odoo-tooltip-arrow-color!important;
+        .border-left-color(@odoo-tooltip-arrow-color) !important;
     }
     &.right .tooltip-arrow {
-        border-right-color: @odoo-tooltip-arrow-color!important;
+        .border-right-color(@odoo-tooltip-arrow-color) !important;
     }
 }
