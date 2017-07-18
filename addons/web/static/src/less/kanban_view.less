@@ -71,7 +71,7 @@
     margin-top: 0;
 }
 .o-kanban-dropdown(@padding-base: @o-kanban-inside-vgutter) {
-    margin: -1px -1px auto auto; // compensate border
+    .margin(-1px, -1px, auto, auto); // compensate border
     padding: @padding-base/2 @padding-base;
     border: 1px solid transparent;
     border-bottom: none;
@@ -98,11 +98,11 @@
 }
 .o-kanban-colorpicker() {
     max-width: 150px;
-    padding: 3px (@odoo-dropdown-hpadding - @o-kanban-inner-hmargin) 3px @odoo-dropdown-hpadding;
+    .padding(3px, (@odoo-dropdown-hpadding - @o-kanban-inner-hmargin), 3px, @odoo-dropdown-hpadding);
 
     > li {
         display: inline-block;
-        margin: @o-kanban-inner-hmargin @o-kanban-inner-hmargin 0 0;
+        .margin(@o-kanban-inner-hmargin, @o-kanban-inner-hmargin, 0, 0);
         border: 1px solid white;
         box-shadow: 0 0 0 1px @gray-lighter-dark;
 
@@ -159,7 +159,7 @@
 
     .o_kanban_quick_create {
         box-shadow: 0 0 20px -10px;
-        margin: 0 @o-kanban-record-margin -1px @o-kanban-record-margin;
+        .margin(0, @o-kanban-record-margin, -1px, @o-kanban-record-margin);
 
         input {
             width: 100%;
@@ -202,7 +202,7 @@
                 // flex-box
                 position: relative;
                 top: auto;
-                right: auto;
+                .right(auto);
             }
 
             .o_kanban_record_headings {
@@ -231,7 +231,7 @@
                 .o-flex(1, 0, auto);
 
                 > * {
-                    margin-right: 6px;
+                    .margin-right(6px);
                     line-height: 1;
                 }
 
@@ -246,7 +246,7 @@
                 .oe_kanban_avatar {
                     width: 20px;
                     height: 20px;
-                    margin-left: 6px;
+                    .margin-left(6px);
                 }
             }
             .o_link_muted {
@@ -276,14 +276,14 @@
 
             .dropdown-toggle {
                 .o-kanban-dropdown();
-                margin: (-@o-kanban-inside-vgutter - 1px) (-@o-kanban-inside-hgutter - 1px) 0 0;
+                .margin((-@o-kanban-inside-vgutter - 1px), (-@o-kanban-inside-hgutter - 1px), 0, 0);
             }
             &.open .dropdown-toggle {
                 .o-kanban-dropdown-open();
             }
             .dropdown-menu {
                 .o-kanban-dropdown-menu();
-                right: (-@o-kanban-inside-hgutter - 1);
+                .right((-@o-kanban-inside-hgutter - 1));
             }
         }
 
@@ -304,7 +304,7 @@
 
             .o_tag {
                 display: inline-block;
-                margin-right: 4px;
+                .margin-right(4px);
                 font-size: 11px;
                 font-weight: 500;
                 background-color: transparent;
@@ -314,7 +314,7 @@
                     display: inline-block;
                     width: 6px;
                     height: 6px;
-                    margin-right: 4px;
+                    .margin-right(4px);
                     border-radius: 100%;
                 }
             }
@@ -336,7 +336,7 @@
             > button, > a {
                 .o-position-absolute(@right: @o-kanban-record-margin, @bottom: @o-kanban-record-margin);
                 @media (max-width: @screen-xs-max) {
-                    right: @o-kanban-inside-hgutter-mobile;
+                    .right(@o-kanban-inside-hgutter-mobile);
                 }
             }
         }
@@ -373,22 +373,22 @@
                 .o-flex(0, 0, auto);
                 width: auto;
                 height: 100%;
-                text-align: right;
+                .text-align(right);
             }
             input.o_progressbar_value {
                 width: 15%;
-                margin-left: 8px;
+                .margin-left(8px);
             }
         }
 
         .o_kanban_image {
-            float: left;
+            .float(left);
             width: @o-kanban-image-width;
 
             + div {
-                padding-left: @o-kanban-image-width + @o-kanban-inside-hgutter;
+                .padding-left(@o-kanban-image-width + @o-kanban-inside-hgutter);
                 @media (max-width: @screen-xs-max) {
-                    padding-left:  @o-kanban-image-width + @o-kanban-inside-hgutter-mobile;
+                    .padding-left(@o-kanban-image-width + @o-kanban-inside-hgutter-mobile);
                 }
             }
         }
@@ -397,7 +397,7 @@
             width: 100%;
             ul {
                 margin-bottom: @o-kanban-inner-hmargin*0.5;;
-                padding-left: 0;
+                .padding-left(0);
                 list-style: none;
                 font-size: @font-size-small;
 
@@ -438,8 +438,8 @@
 
         .o_kanban_record, .o_kanban_quick_create {
             width: 100%;
-            margin-left: 0;
-            margin-right: 0;
+            .margin-left(0);
+            .margin-right(0);
         }
 
         &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
@@ -450,7 +450,7 @@
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
         .o-flex(0, 0, auto);
-        padding: 0 @o-kanban-group-padding*2 @o-kanban-group-padding @o-kanban-group-padding;
+        .padding(0, @o-kanban-group-padding*2, @o-kanban-group-padding, @o-kanban-group-padding);
 
         .o_kanban_header > .o_kanban_header_title {
             .o-kanban-header-title();
@@ -468,12 +468,12 @@
 
             .o_kanban_quick_add i {
                 .o-kanban-icon;
-                margin-left: @o-kanban-inside-hgutter*2;
+                .margin-left(@o-kanban-inside-hgutter*2);
             }
 
             &:hover .o_kanban_config, .o_kanban_config.open {
                 visibility: visible;
-                margin-left: @o-kanban-inside-hgutter;
+                .margin-left(@o-kanban-inside-hgutter);
             }
 
             .o_kanban_config {
@@ -518,7 +518,7 @@
         background-color: @gray-lighter-dark;
 
         & + .o_kanban_group.o_column_folded {
-            margin-left: 1px;
+            .margin-left(1px);
         }
 
         .o_kanban_header_title {
@@ -601,7 +601,7 @@
             margin: (@o-kanban-record-margin * 0.5) @o-kanban-record-margin;
 
             @media (max-width: @screen-xs-max) {
-                margin: 0 0 -1px 0;
+                .margin(0, 0, -1px, 0);
                 .o-flex(1, 0, 100%);
             }
 
