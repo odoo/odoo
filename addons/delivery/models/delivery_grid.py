@@ -108,8 +108,8 @@ class ProviderGrid(models.Model):
                           'tracking_number': False}]
         return res
 
-    def base_on_rule__get_tracking_link(self, pickings):
+    def base_on_rule_get_tracking_link(self, pickings):
         raise NotImplementedError()
 
-    def base_on_rule__cancel_shipment(self, pickings):
+    def base_on_rule_cancel_shipment(self, pickings):
         raise NotImplementedError()
