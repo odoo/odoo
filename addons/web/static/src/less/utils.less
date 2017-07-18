@@ -7,9 +7,9 @@
 // ------------------------------------------------------------------
 .o-webclient-padding(@top: 0px, @right: @odoo-horizontal-padding, @bottom: 0px, @left: @odoo-horizontal-padding) {
     padding-top: @top;
-    padding-right: @right;
+    .padding-right(@right);
     padding-bottom: @bottom;
-    padding-left: @left;
+    .padding-left(@left);
 }
 
 // ------------------------------------------------------------------
@@ -25,32 +25,32 @@
 .o-caret-down(@caret-width: @caret-width-base) {
     .utils-caret-boilerplate;
     border-bottom: 0;
-    border-left: @caret-width solid transparent;
-    border-right: @caret-width solid transparent;
+    .border-left(@caret-width solid transparent);
+    .border-right(@caret-width solid transparent);
     border-top: @caret-width solid;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
 .o-caret-up(@caret-width: @caret-width-base) {
     .utils-caret-boilerplate;
     border-bottom: @caret-width solid;
-    border-left: @caret-width solid transparent;
-    border-right: @caret-width solid transparent;
+    .border-left(@caret-width solid transparent);
+    .border-right(@caret-width solid transparent);
     border-top: 0;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
 .o-caret-left(@caret-width: @caret-width-base) {
     .utils-caret-boilerplate;
     border-bottom: @caret-width solid transparent;
-    border-left: 0;
-    border-right: @caret-width solid;
+    .border-left(0);
+    .border-right(@caret-width solid);
     border-top: @caret-width solid transparent;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
 .o-caret-right(@caret-width: @caret-width-base) {
     .utils-caret-boilerplate;
     border-bottom: @caret-width solid transparent;
-    border-left: @caret-width solid;
-    border-right: 0;
+    .border-left(@caret-width solid);
+    .border-right(0);
     border-top: @caret-width solid transparent;
     -moz-transform: scale(0.9999); // Smooth the caret on firefox
 }
@@ -139,7 +139,7 @@
                 &:before {
                     font-family: FontAwesome;
                     position: absolute;
-                    left: 6px;
+                    .left(6px);
                     content: "\f00c";
                 }
             }
@@ -201,9 +201,9 @@
 .o-position-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
     position: absolute;
     top: @top;
-    left: @left;
+    .left(@left);
     bottom: @bottom;
-    right: @right;
+    .right(@right);
 }
 
 // ------------------------------------------------------------------
