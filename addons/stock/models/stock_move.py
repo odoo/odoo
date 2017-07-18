@@ -52,7 +52,7 @@ class StockMove(models.Model):
     product_uom_qty = fields.Float(
         'Initial Demand',
         digits=dp.get_precision('Product Unit of Measure'),
-        default=1.0, required=True, states={'done': [('readonly', True)]},
+        default=0.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
@@ -498,8 +498,6 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-        if self.product_uom_qty:
-            self.product_uom_qty = 1.0
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
     @api.onchange('date')
