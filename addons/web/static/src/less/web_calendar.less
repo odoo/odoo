@@ -57,7 +57,7 @@
             }
             .o_fields img, .o_avatar_square {
                 vertical-align: middle;
-                margin-left: 1px;
+                .margin-left(1px);
                 width: 18px;
                 height: 18px;
             }
@@ -83,7 +83,7 @@
         position: relative;
 
         &.o_sidebar_hidden {
-            margin-right: -@odoo-horizontal-padding; // hack to display the toggler in the gutter
+            .margin-right(-@odoo-horizontal-padding); // hack to display the toggler in the gutter
             .o_calendar_sidebar_toggler {
                 padding: 4px;
                 color: darken(@odoo-webclient-background-color, 30%);
@@ -102,7 +102,7 @@
 
         .o_calendar_sidebar {
             width: 250px;
-            margin-left: 8px;
+            .margin-left(8px);
             background: @odoo-view-background-color;
         }
 
@@ -158,7 +158,7 @@
             }
             table {
                 td {
-                    padding: 0 2px 2px 0;
+                    .padding(0, 2px, 2px, 0);
                     background-color: @odoo-view-background-color;
                     a {
                         border: none;
@@ -211,7 +211,7 @@
 .modal {
     .o_attendee_head {
         width: 32px;
-        margin-right: 5px;
+        .margin-right(5px);
     }
 }
 
