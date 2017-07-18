@@ -369,6 +369,7 @@ return AbstractRenderer.extend({
             },
             height: 'parent',
             unselectAuto: false,
+            isRTL: _t.database.parameters.direction == 'rtl' ? true : false,
         });
 
         this.$calendar.fullCalendar(fc_options);
