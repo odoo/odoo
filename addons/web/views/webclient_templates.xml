@@ -7,8 +7,15 @@
         <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/clearfix.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/lib/bootstrap/less/mixins/size.less"/>
 
+        <t t-if="lang_direction == 'rtl' or (request and request.env['res.lang'].search([('code', '=', request.env.user.lang)]).direction == 'rtl')">
+            <link rel="stylesheet" type="text/less" href="/web/static/src/less/rtl.less"/>
+        </t>
+        <t t-else="">
+            <link rel="stylesheet" type="text/less" href="/web/static/src/less/ltr.less"/>
+        </t>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/variables.less"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/utils.less"/>
+        <link rel="stylesheet" type="text/less" href="/web/static/src/less/mixin_rtl_ltr.less"/>
     </template>
 
     <template id="web.assets_common" name="Common Assets (used in backend interface and website)">
