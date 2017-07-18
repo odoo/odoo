@@ -32,7 +32,7 @@
 
                 &.o_domain_delete_node_button {
                     font-size: 12px;
-                    padding-left: 5px;
+                    .padding-left(5px);
 
                     &:hover {
                         color: @brand-danger;
@@ -53,7 +53,7 @@
         }
 
         > .o_domain_node_children_container {
-            padding-left: @o-domain-selector-indent;
+            .padding-left(@o-domain-selector-indent);
         }
 
         // Rules specific to domain root
@@ -63,11 +63,11 @@
             }
 
             > .o_domain_node_children_container {
-                padding-left: 0;
+                .padding-left(0);
             }
 
             &.o_edit_mode > .o_domain_node_children_container {
-                padding-right: @o-domain-selector-panel-space; // delete button is over the row
+                .padding-right(@o-domain-selector-panel-space); // delete button is over the row
             }
 
             > .o_domain_debug_container {
@@ -93,7 +93,7 @@
     &.o_domain_leaf {
         &.o_read_mode {
             .o-inline-flex-display();
-            margin-right: 4px;
+            .margin-right(4px);
         }
 
         > .o_domain_leaf_info {
@@ -102,8 +102,8 @@
             padding: 2px 4px;
 
             > .o_field_selector {
-                float: left;
-                margin-right: 4px;
+                .float(left);
+                .margin-right(4px);
 
                 > .o_field_selector_value > .o_field_selector_chain_part {
                     border: none;
@@ -121,7 +121,7 @@
         > .o_domain_leaf_edition {
             .o-flex-display();
             width: 100%;
-            padding: 4px (@o-domain-selector-panel-space/2) 4px 0;
+            .padding(4px, (@o-domain-selector-panel-space/2), 4px, 0);
 
             > * {
                 .o-flex(1, 1, 15%); // operator select
@@ -137,7 +137,7 @@
                 }
 
                 + * {
-                    margin-left: 4px;
+                    .margin-left(4px);
                 }
 
                 input, select, .o_datepicker, .o_datepicker_input {
@@ -198,7 +198,7 @@
             .o-transition(max-height, .15s, ease, .5s);
         }
         &.o_hover_add_inset_node::after {
-            left: @o-domain-selector-indent;
+            .left(@o-domain-selector-indent);
         }
     }
 }
