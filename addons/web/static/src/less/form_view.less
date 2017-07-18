@@ -28,11 +28,11 @@
     }
     .oe_left {
         .oe_inline;
-        float: left!important;
+        .float(left) !important;
     }
     .oe_right {
         .oe_inline;
-        float: right!important;
+        .float(right) !important;
     }
 
     @media (min-width: @screen-xs-min) {
@@ -49,8 +49,8 @@
             > div, > span, > button, > label, > a, > input { // > * did not add a level of priority to the rule
                 .o-flex(0, 0, auto);
                 width: auto!important;
-                margin-right: @odoo-form-spacing-unit/2;
-                margin-left: @odoo-form-spacing-unit/2;
+                .margin-right(@odoo-form-spacing-unit/2);
+                .margin-left(@odoo-form-spacing-unit/2);
             }
 
             > .o_row {
@@ -128,7 +128,7 @@
         .o-webclient-padding(@top: @odoo-sheet-vpadding, @bottom: @odoo-sheet-vpadding);
 
         .o_form_statusbar {
-            margin: -@odoo-sheet-vpadding -@odoo-horizontal-padding @odoo-sheet-vpadding -@odoo-horizontal-padding;
+            .margin(-@odoo-sheet-vpadding, -@odoo-horizontal-padding, @odoo-sheet-vpadding, -@odoo-horizontal-padding);
         }
     }
 
@@ -146,7 +146,7 @@
         position: relative; // Needed for the "More" dropdown
         .o-flex-display();
         .o-justify-content(space-between);
-        padding-left: @odoo-horizontal-padding;
+        .padding-left(@odoo-horizontal-padding);
         border-bottom: 1px solid @gray-lighter-darker;
         background-color: @odoo-view-background-color;
 
@@ -165,7 +165,7 @@
             .o-flex-flow(row, wrap);
 
             > .btn {
-                margin-right: 3px;
+                .margin-right(3px);
                 padding-top: 2px;
                 padding-bottom: 2px;
             }
@@ -182,18 +182,18 @@
                 font-size: 11px;
                 font-weight: bold;
                 position: relative;
-                padding-left: @odoo-statusbar-arrow-width*2;
+                .padding-left(@odoo-statusbar-arrow-width*2);
                 color: @gray;
                 border-width: 0 0 0;
                 border-radius: 0;
                 .o-transition(all, 0.1s);
 
                 &:first-child {
-                    padding-right: @odoo-horizontal-padding; // Compensate container padding
+                    .padding-right(@odoo-horizontal-padding); // Compensate container padding
                 }
                 &:last-child {
-                    padding-left: @odoo-horizontal-padding - 1;
-                    border-left: 1px solid @gray-lighter-darker;
+                    .padding-left(@odoo-horizontal-padding - 1);
+                    .border-left(1px solid @gray-lighter-darker);
                 }
 
                 &:active {
@@ -204,18 +204,17 @@
                     opacity: 1.0;
                     color: @text-muted;
                     pointer-events: none;
-                    border-left: 1px solid @gray-lighter-dark;
+                    .border-left(1px solid @gray-lighter-dark);
                 }
 
                 &:before, &:after {
                     content: " ";
                     display: block;
                     .o-position-absolute(0, -@odoo-statusbar-arrow-width + 1);
-
                     border-top: floor(@odoo-statusbar-height/2) solid transparent;
                     border-bottom: ceil(@odoo-statusbar-height/2) solid transparent;
-                    border-right: none;
-                    border-left: @odoo-statusbar-arrow-width solid @odoo-view-background-color;
+                    .border-right(none);
+                    .border-left(@odoo-statusbar-arrow-width solid @odoo-view-background-color);
                     .o-transition(border, 0.2s);
                     -moz-transform: scale(0.9999); // Smooth the triangle on firefox
                 }
@@ -226,14 +225,14 @@
                         background-color: @gray-lighter;
 
                         &:after {
-                            border-left-color: @gray-lighter;
+                            .border-left-color(@gray-lighter);
                         }
                     }
                 }
 
                 &:before {
-                    right: -@odoo-statusbar-arrow-width;
-                    border-left-color: @gray-lighter-dark;
+                    .right(-@odoo-statusbar-arrow-width);
+                    .border-left-color(@gray-lighter-dark);
                 }
 
                 &.btn-primary.disabled {
@@ -243,7 +242,7 @@
                     cursor: default;
 
                     &:after {
-                        border-left-color: @gray-lighter;
+                        .border-left-color(@gray-lighter);
                     }
                 }
             }
@@ -253,7 +252,7 @@
                 min-width: 100px;
                 > li > button {
                     width: 100%;
-                    text-align: left;
+                    .text-align(left);
                 }
             }
         }
@@ -263,12 +262,12 @@
             > .dropdown-toggle {
                 &:after {
                     .o-caret-down();
-                    margin-left: @odoo-form-spacing-unit;
+                    .margin-left(@odoo-form-spacing-unit);
                 }
             }
 
             > .dropdown-menu {
-                padding: 5px 0 2px 0;
+                .padding(5px, 0, 2px, 0);
                 min-width: 100px;
 
                 > li > .btn {
@@ -327,7 +326,7 @@
             > tbody > tr > td {
                 &.o_td_label {
                     width: 0%;
-                    padding: 0 15px 0 0;
+                    .padding(0, 15px, 0, 0);
                     min-width: 150px;
                 }
                 vertical-align: top;
@@ -370,7 +369,7 @@
 
         .o_td_label .o_form_label {
             font-weight: bold;
-            margin-right: 0px;
+            .margin-right(0px);
         }
     }
 
@@ -392,10 +391,9 @@
             min-height: 100px;
         }
     }
-
     // Labels
     .o_form_label {
-        margin: 0 @odoo-form-spacing-unit 0 0;
+        .margin(0, @odoo-form-spacing-unit, 0, 0);
         font-size: @font-size-base; // The label muse have the same size whatever their position
         line-height: @line-height-base;
     }
@@ -447,11 +445,11 @@
             padding: 0;
 
             &.o_td_label {
-                text-align: right;
+                .text-align(right);
             }
 
             .o_form_label {
-                padding-right: 20px;
+                .padding-right(20px);
 
                 min-width: 0;
                 white-space: nowrap;
@@ -461,7 +459,7 @@
             }
 
             .o_field_widget {
-                text-align: right;
+                .text-align(right);
                 .o-justify-content(flex-end);
                 width: 100%;
             }
@@ -473,7 +471,7 @@
 
         .oe_subtotal_footer_separator {
             width: 100%;
-            text-align: right;
+            .text-align(right);
             border-top: 1px solid @gray-lighter-dark;
             font-weight: bold;
             font-size: 1.3em;
@@ -487,30 +485,30 @@
         }
 
         .o_address_city {
-            margin-right: 2%;
+            .margin-right(2%);
         }
         .o_address_state {
-            margin-right: 2%;
+            .margin-right(2%);
         }
         &.o_zip_city {
             .o_address_zip {
-                margin-right: 2%;
+                .margin-right(2%);
             }
             .o_address_city {
-                margin-right: 0;
+                .margin-right(0);
             }
             .o_address_state {
                 display: block;
-                margin-right: 0;
+                .margin-right(0);
             }
         }
         &.o_city_state {
             .o_address_state {
-                margin-right: 0;
+                .margin-right(0);
             }
             .o_address_zip {
                 display: block;
-                margin-right: 0;
+                .margin-right(0);
             }
         }
         > span.o_field_widget {
@@ -553,7 +551,7 @@
 
     // Boolean
     .o_field_boolean {
-        margin: 0 @odoo-form-spacing-unit 0 0;
+        .margin(0, @odoo-form-spacing-unit, 0, 0);
     }
 
     // Timezone widget warning
@@ -561,7 +559,7 @@
         color: @brand-danger;
         cursor: help;
         position: absolute;
-        margin-left: -40px;
+        .margin-left(-40px);
         margin-top: 5px;
     }
 
@@ -590,9 +588,10 @@
     .oe_attachment {
         display: inline-block;
         border: 1px solid @odoo-brand-lightsecondary;
-        margin: 0 @odoo-form-spacing-unit @odoo-form-spacing-unit 0;
+        .margin(0, @odoo-form-spacing-unit, @odoo-form-spacing-unit, 0);
         padding: @odoo-form-spacing-unit;
     }
+
 
     &.oe_form_configuration {
         .o_group .o_form_label {
@@ -645,8 +644,8 @@
 
 // Buttons in ControlPanel
 .o_control_panel .o_form_buttons_view > button:first-child {
-    float: left; // Unfortunately needed for the bounce effect
-    margin-right: 4px;
+    .float(left); // Unfortunately needed for the bounce effect
+    .margin-right(4px);
 }
 
 // Light labels (not in bold) for settings forms
@@ -659,7 +658,7 @@ label.o_light_label, .o_light_label label {
     .o-flex(0, 1, auto);
     .o-flex-flow(row, wrap);
     .o_setting_box:visible:nth-child(odd) {
-        clear: left;
+        .clear(left);
     }
     .text-muted {
         color: #aaaaaa;
@@ -669,17 +668,17 @@ label.o_light_label, .o_light_label label {
         margin-top: 8px;
         .o_setting_left_pane {
             width: 24px;
-            float: left;
+            .float(left);
             .o_enterprise_label {
                 position: absolute;
                 top: 0px;
-                right: 40px;
+                .right(40px);
             }
         }
         .o_setting_right_pane {
-            margin-left: 30px;
-            border-left: 1px solid #bbbbbb;
-            padding-left: 10px;
+            .margin-left(30px);
+            .border-left(1px solid #bbbbbb);
+            .padding-left(10px);
             .o_input_dropdown > .o_input {
                 width: 100%;
             }
