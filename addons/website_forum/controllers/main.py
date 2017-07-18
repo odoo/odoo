@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
 import json
 import lxml
@@ -547,9 +546,9 @@ class WebsiteForum(http.Controller):
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) / 3 + 1)]
+        users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
-            users[index / 3].append(user)
+            users[index // 3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)
