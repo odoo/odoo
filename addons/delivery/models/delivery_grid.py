@@ -104,7 +104,7 @@ class ProviderGrid(models.Model):
             carrier = self._match_address(p.partner_id)
             if not carrier:
                 raise ValidationError(_('Error: no matching grid.'))
-            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id),  # TODO cleanme
+            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res
 
