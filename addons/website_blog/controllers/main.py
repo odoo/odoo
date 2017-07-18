@@ -139,6 +139,12 @@ class WebsiteBlog(http.Controller):
         blog_posts = blog_posts[pager_begin:pager_end]
 
         all_tags = blog.all_tags()[blog.id]
+        # Build hierarchy from child to parent tag
+        for tag in all_tags:
+            parent = tag
+            while parent:
+                parent = parent.parent_id
+                all_tags |= parent
 
         # function to create the string list of tag ids, and toggle a given one.
         # used in the 'Tags Cloud' template.

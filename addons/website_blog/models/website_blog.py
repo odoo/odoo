@@ -10,6 +10,7 @@ from odoo import api, models, fields, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
+from odoo.exceptions import ValidationError
 
 
 class Blog(models.Model):
@@ -81,14 +82,33 @@ class BlogTag(models.Model):
     _name = 'blog.tag'
     _description = 'Blog Tag'
     _inherit = ['website.seo.metadata']
+    _rec_name = 'complete_name'
     _order = 'name'
 
     name = fields.Char('Name', required=True, translate=True)
+    complete_name = fields.Char('Tags', compute='_compute_complete_name', store=True)
     post_ids = fields.Many2many('blog.post', string='Posts')
 
+    parent_id = fields.Many2one('blog.tag', 'Parent Tag', index=True)
+    child_ids = fields.One2many('blog.tag', 'parent_id', string='Children Categories')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
+
+    @api.depends('name', 'parent_id.complete_name')
+    def _compute_complete_name(self):
+        for category in self:
+            category.complete_name = category.parent_id and '%s / %s' % (category.parent_id.complete_name, category.name) or category.name
+
+    @api.constrains('parent_id')
+    def _check_category_recursion(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error !, You cannot create a recursive tags.'))
+        return True
+
+    @api.model
+    def name_create(self, name):
+        return self.create({'name': name}).name_get()[0]
 
 
 class BlogPost(models.Model):
