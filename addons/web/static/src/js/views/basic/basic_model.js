@@ -2369,8 +2369,8 @@ var BasicModel = AbstractModel.extend({
      *        if given, this field's context is added to the context, instead of
      *        the element's context (except if options.full is true)
      * @param {boolean} [options.full=false]
-     *        if true and fieldName given in options, the element's context
-     *        is added to the context
+     *        if true or nor fieldName or additionalContext given in options,
+     *        the element's context is added to the context
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
@@ -2378,7 +2378,7 @@ var BasicModel = AbstractModel.extend({
         var context = new Context(session.user_context);
         context.set_eval_context(this._getEvalContext(element));
 
-        if (options.full || !options.fieldName) {
+        if (options.full || !(options.fieldName || options.additionalContext)) {
             context.add(element.context);
         }
         if (options.fieldName) {
