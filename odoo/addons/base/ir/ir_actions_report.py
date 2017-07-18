@@ -285,6 +285,7 @@ class IrActionsReport(models.Model):
             return {}
         layout = self.env['ir.ui.view'].browse(self.env['ir.ui.view'].get_view_id('web.minimal_layout'))
 
+        lang_direction = self.env['res.lang'].search([('code', '=', self.env.user.lang)]).direction
         root = lxml.html.fromstring(html)
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
 
@@ -303,7 +304,7 @@ class IrActionsReport(models.Model):
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
-            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
+            body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url, lang_direction=lang_direction))
             bodies.append(body)
             oemodelnode = node.find(".//*[@data-oe-model='%s']" % self.model)
             if oemodelnode is not None:
@@ -321,8 +322,8 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header = layout.render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url, lang_direction=lang_direction))
+        footer = layout.render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url, lang_direction=lang_direction))
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
