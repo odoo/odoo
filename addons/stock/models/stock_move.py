@@ -179,9 +179,10 @@ class StockMove(models.Model):
             if self.user_has_groups('stock.group_stock_multi_locations'):
                 multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
             has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
+            consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
             if move.picking_id.picking_type_id.show_operations is False\
                     and move.state not in ['cancel', 'draft', 'confirmed']\
-                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package):
+                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
                 move.show_details_visible = True
             else:
                 move.show_details_visible = False
