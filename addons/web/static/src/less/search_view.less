@@ -9,7 +9,7 @@
     .o-flex-flow(row, wrap);
     .o-align-items(flex-end);
     position: relative;
-    padding: 0 20px 1px 0;
+    .padding(0, 20px, 1px, 0);
 
     .o_searchview_facet {
         @o-searchview-facet-remove-width: 18px;
@@ -18,7 +18,7 @@
         max-width: 100%;
         .o-flex-display();
         position: relative;
-        margin: 1px 3px 0 0;
+        .margin(1px, 3px, 0, 0);
 
         .o_searchview_facet_label {
             .o-flex(0, 0, auto);
@@ -31,7 +31,7 @@
         }
             
         .o_facet_values {
-            padding: 0 @o-searchview-facet-remove-width 0 5px;
+            .padding(0, @o-searchview-facet-remove-width, 0, 5px);
             .o_facet_values_sep {
                 font-style: italic;
             }
@@ -58,19 +58,19 @@
     }
 
     .o_searchview_autocomplete {
-        .o-position-absolute(100%, @left: auto);
+        .o-position-absolute(100%, @left: 0);
         width: 100%;
 
         li {
-            padding-left: 25px;
+            .padding-left(25px);
             position: relative;
             &.o-indent {
-                padding-left: 50px;
+                .padding-left(50px);
             }
             a {
                 display: inline-block;
-                padding-left: 0px;
-                padding-right: 0px;
+                .padding-left(0px);
+                .padding-right(0px);
                 &:hover {
                     background-color: inherit;
                 }
@@ -96,7 +96,7 @@
     .dropdown-toggle:first-child {
         // apply the padding to the first element so that when the `favorites` menu goes under
         // the `filters` menu, they're still aligned
-        padding-right: 10px;
+        .padding-right(10px);
     }
 
     display: inline-block;
@@ -200,7 +200,7 @@
         .o-searchview-custom-public a:after {
             font-family: FontAwesome;
             content: "\f0c0";
-            margin-left: 5px;
+            .margin-left(5px);
             font-weight: normal;
         }
         .o_save_name { // save button
