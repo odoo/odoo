@@ -2202,3 +2202,21 @@ class StockMove(TransactionCase):
         (move1 + move2).write({'quantity_done': 1})
         self.assertEqual(move1.quantity_done, 1)
         self.assertEqual(move2.quantity_done, 1)
+
+    def test_initial_demand_1(self):
+        """ Check that the initial demand is set to 0 when creating a move by hand, and
+        that changing the product on the move do not reset the initial demand.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+        })
+        self.assertEqual(move1.state, 'draft')
+        self.assertEqual(move1.product_uom_qty, 0)
+        move1.product_uom_qty = 100
+        move1.product_id = self.product2
+        move1.onchange_product_id()
+        self.assertEqual(move1.product_uom_qty, 100)
