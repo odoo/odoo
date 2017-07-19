@@ -112,8 +112,10 @@ class FleetVehicleLogContract(models.Model):
         ('open', 'In Progress'),
         ('toclose', 'Expired'),
         ('closed', 'Closed')
-        ], 'Status', default='open', readonly=True, help='Choose wheter the contract is still valid or not',
-                              copy=False)
+        ], 'Status', default='open', readonly=True,
+        help='Choose wheter the contract is still valid or not',
+        track_visibility="onchange",
+        copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
     cost_generated = fields.Float('Recurring Cost Amount', 
         help="Costs paid at regular intervals, depending on the cost frequency."
