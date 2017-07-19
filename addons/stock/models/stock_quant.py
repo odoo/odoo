@@ -103,12 +103,6 @@ class StockQuant(models.Model):
         return self.search(domain, order=removal_strategy_order)
 
     @api.model
-    def _get_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        self = self.sudo()
-        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        return sum(quants.mapped('quantity'))
-
-    @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,

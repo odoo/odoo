@@ -80,10 +80,13 @@ class StockScrap(models.Model):
         for scrap in self:
             move = self.env['stock.move'].create(scrap._prepare_move_values())
             if self.product_id.type == 'product':
-                quantity_in_stock = self.env['stock.quant']._get_quantity(
-                    self.product_id, self.location_id, lot_id=self.lot_id,
-                    package_id=self.package_id, owner_id=self.owner_id, strict=True
-                )
+                quantity_in_stock = sum(self.env['stock.quant'].search([
+                    ('product_id', '=', self.product_id.id),
+                    ('lot_id', '=', self.lot_id and self.lot_id.id or False),
+                    ('package_id', '=', self.package_id and self.package_id.id or False),
+                    ('owner_id', '=', self.owner_id and self.owner_id.id or False),
+                    ('location_id', 'child_of', self.location_id.id)
+                ]).mapped('quantity'))
                 if quantity_in_stock < move.product_qty:  # FIXME: float compare
                     raise UserError(_('You cannot scrap a move without having available stock for %s. You can correct it with an inventory adjustment.') % move.product_id.name)
             move.action_done()
