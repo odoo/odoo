@@ -39,7 +39,7 @@ class PosOrderReport(models.Model):
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
 
     def _select(self):
-        select_str = """
+        return """
             SELECT
                 MIN(l.id) AS id,
                 COUNT(*) AS nbr_lines,
@@ -67,10 +67,9 @@ class PosOrderReport(models.Model):
                 s.session_id,
                 s.invoice_id IS NOT NULL AS invoiced
         """
-        return select_str
 
     def _from(self):
-        from_str = """
+        return """
             FROM pos_order_line AS l
                 LEFT JOIN pos_order s ON (s.id=l.order_id)
                 LEFT JOIN product_product p ON (l.product_id=p.id)
@@ -79,10 +78,9 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN pos_config pc ON (ps.config_id=pc.id)
         """
-        return from_str
 
     def _group_by(self):
-        group_by_str = """
+        return """
             GROUP BY
                 s.id, s.date_order, s.partner_id,s.state, pt.categ_id,
                 s.user_id, s.location_id, s.company_id, s.sale_journal,
@@ -93,14 +91,12 @@ class PosOrderReport(models.Model):
                 ps.config_id,
                 pc.stock_location_id
         """
-        return group_by_str
 
     def _having(self):
-        having_str = """
+        return """
             HAVING
                 SUM(l.qty * u.factor) != 0
         """
-        return having_str
 
     @api.model_cr
     def init(self):
