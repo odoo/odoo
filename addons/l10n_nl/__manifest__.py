@@ -15,6 +15,8 @@
         'base_vat',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'data/sbr_code.xml',
         'data/account_account_tag.xml',
         'data/account_chart_template.xml',
         'data/account.account.template.xml',
@@ -25,6 +27,7 @@
         'data/account_fiscal_position_account_template.xml',
         'data/account_chart_template.yml',
         'data/menuitem.xml',
+        'views/account_view.xml',
     ],
     'demo': [],
     'auto_install': False,

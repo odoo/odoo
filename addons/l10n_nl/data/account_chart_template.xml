@@ -8,6 +8,8 @@
            <field name="code">1060</field>
             <field name="reconcile" eval="True"/>
             <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_7')])]"/>
+            <field name="l10n_nl_sbr" ref="l10n_nl.sbr_code_BLimKruSto"/>
         </record>
 
         <record id="l10nnl_chart_template" model="account.chart.template">

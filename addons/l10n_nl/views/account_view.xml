@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_form_inherit_l10n_nl" model="ir.ui.view">
+            <field name="name">account.account.form.inherit.l10n_nl</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='currency_id']" position="after">
+                    <field name="l10n_nl_sbr"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
