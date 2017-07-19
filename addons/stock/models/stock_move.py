@@ -144,7 +144,6 @@ class StockMove(models.Model):
     string_availability_info = fields.Text(
         'Availability', compute='_compute_string_qty_information',
         readonly=True, help='Show various information on stock availability for this move')
-    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', help="Technical field used to depict a restriction on the lot/serial number of quants to consider when marking this move as 'done'")
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
@@ -647,7 +646,7 @@ class StockMove(models.Model):
             if move.picking_id and \
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
-                    not (move.restrict_lot_id or (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id)):
+                    not (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id):
                 raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
@@ -932,11 +931,10 @@ class StockMove(models.Model):
         return vals
 
     @api.multi
-    def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):
+    def split(self, qty, restrict_partner_id=False):
         """ Splits qty from move move into a new move
 
         :param qty: float. quantity to split (given in product UoM)
-        :param restrict_lot_id: optional production lot that can be given in order to force the new move to restrict its choice of quants to this lot.
         :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
         :returns: id of the backorder move created """
