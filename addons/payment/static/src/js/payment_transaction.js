@@ -5,7 +5,7 @@ var ajax = require('web.ajax');
 
 $(document).ready(function () {
     // When choosing an acquirer, display its Pay Now button
-    var $payment = $("#payment_method");
+    var $payment = $("#payment_validate");
     $payment.on("click", "input[name='acquirer'], a.btn_payment_token", function (ev) {
             var ico_off = 'fa-circle-o';
             var ico_on = 'fa-dot-circle-o';
