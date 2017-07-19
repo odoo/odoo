@@ -689,6 +689,17 @@ var MockServer = Class.extend({
         return result;
     },
     /**
+     * Simulate a 'search' operation on a model
+     *
+     * @private
+     * @param {string} model
+     * @param {Array} args
+     * @returns {number[]}
+     */
+    _mockSearch: function (model, args) {
+        return _.pluck(this._getRecords(model, args[0]), 'id');
+    },
+    /**
      * Simulate a 'search_count' operation
      *
      * @private
@@ -879,6 +890,9 @@ var MockServer = Class.extend({
 
             case 'read_group':
                 return $.when(this._mockReadGroup(args.model, args.kwargs));
+
+            case 'search':
+                return $.when(this._mockSearch(args.model, args.args, args.kwargs));
 
             case 'search_count':
                 return $.when(this._mockSearchCount(args.model, args.args));
