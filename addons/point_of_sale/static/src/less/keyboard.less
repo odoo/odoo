@@ -3,7 +3,7 @@
 .pos .keyboard_frame{
     display: none;
     position:absolute;
-    left:    0;
+    .left(0);
     bottom:  0px;
     margin:  0;
     padding: 0;
@@ -31,11 +31,11 @@
 	-webkit-border-radius: 5px;
     position:absolute;
     top:0;
-    right:15px;
+    .right(15px);
 	cursor: pointer;
 }
 .pos .keyboard li {
-	float: left;
+	.float(left);
 	text-align: center;
 	background-color: #fff;
 	border: 1px solid #f0f0f0;
@@ -50,7 +50,7 @@
 .pos .keyboard li:active{
 	position: relative;
 	top: 2px;
-	left: 0px;
+	.left(0px);
 	border-color: #ddd;
     background-color:#e5e5e5;
 	cursor: pointer;
@@ -65,10 +65,10 @@
 	display: none;
 }
 .pos .firstitem{
-	clear: left;
+	.clear(left);
 }
 .pos .keyboard .lastitem {
-	margin-right: 0 !important;
+	.margin-right(0) !important;
 }
 
 /* ---- full sized keyboard ---- */
@@ -78,11 +78,11 @@
     font-size: 14px;
     width: 685px;
     height: 100%;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    .margin-left(auto) !important;
+    .margin-right(auto) !important;
 }
 .pos .full_keyboard li{
-	margin: 0 5px 5px 0 !important;
+	.margin(0, 5px, 5px, 0) !important;
 	width: 40px;
 	height: 40px;
 	line-height: 40px;
@@ -103,7 +103,7 @@
 	width: 109px;
 }
 .pos .full_keyboard .space {
-	clear: left;
+	.clear(left);
 	width: 673px;
 }
 
@@ -114,20 +114,20 @@
     font-size: 16px;
     width: 555px;
     height: 220px;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    .margin-left(auto) !important;
+    .margin-right(auto) !important;
 }
 .pos .simple_keyboard li{
-    margin: 0 5px 5px 0 !important;
+    .margin(0, 5px, 5px, 0) !important;
     width: 49px;
     height: 49px;
     line-height: 49px;
 }
 .pos .simple_keyboard .firstitem.row_asdf{
-    margin-left:25px !important;
+    .margin-left(25px) !important;
 }
 .pos .simple_keyboard .firstitem.row_zxcv{
-    margin-left:55px !important;
+    .margin-left(55px) !important;
 }
 .pos .simple_keyboard .delete{
     width: 103px;
