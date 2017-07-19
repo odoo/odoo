@@ -22,7 +22,7 @@
     min-width: 48px;
 }
 .ui-dialog .ui-icon-closethick{
-    float: right;
+    .float(right);
 }
 div.modal.in {
     position: absolute;
@@ -33,9 +33,9 @@ div.modal.in {
     max-width: 600px;
     max-height: 400px;
     margin-top: -200px;
-    margin-left: -300px;
+    .margin-left(-300px);
     top: 50%;
-    left: 50%;
+    .left(50%);
 }
 
 /* --- Generic Restyling and Resets --- */
@@ -110,6 +110,7 @@ td {
 }
 
 .pos {
+    direction: @lng-direction;
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -117,7 +118,7 @@ td {
     color: #555555;
     font-size: 12px;
     position: absolute;
-    left: 0;
+    .left(0);
     top: 0;
     width: 100%;
     height: 100%;
@@ -133,7 +134,7 @@ td {
 .pos .loader{
     background-color: #222;
     position:absolute;
-    left:0px;
+    .left(0px);
     top:0px;
     width:100%;
     height:100%;
@@ -148,7 +149,8 @@ td {
     height: 160px;
     margin: -60px -200px;
     position: absolute;
-    left: 50%; top: 50%;
+    .left(50%);
+    top: 50%;
     text-align: center;
 }
 .pos .loader-feedback h1{
@@ -184,7 +186,7 @@ td {
 .pos .window{
     position: absolute;
     top: 0px;
-    left: 0px;
+    .left(0px);
     width: 100%;
     height: 100%;
     display: table;
@@ -232,8 +234,8 @@ td {
 .pos .scroller-container{
     position: absolute;
     top: 0px;
-    left: 0px;
-    right: 0px;
+    .left(0px);
+    .right(0px);
     bottom: 0px;
 }
 .pos .scroller{
@@ -256,9 +258,9 @@ td {
 }
 .pos .scroller-container ::-webkit-scrollbar-track{
     background: rgb(224,224,224);
-    border-left: solid 1px rgb(200,200,200);
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    .border-left(solid 1px rgb(200,200,200));
+    .border-top-right-radius(3px);
+    .border-bottom-right-radius(3px);
 }
 .pos .scroller-container ::-webkit-scrollbar-thumb{
     background: rgb(168,168,168);
@@ -288,7 +290,7 @@ td {
     list-style-type: none;
 }
 .pos .pos-right-align {
-    text-align: right;
+    .text-align(right);
 }
 .pos .pos-center-align {
     text-align: center;
@@ -304,7 +306,7 @@ td {
 
 .pos .pos-topheader {
     position:absolute;
-    left:0;
+    .left(0);
     top:0;
     width: 100%;
     height: 48px;
@@ -319,28 +321,28 @@ td {
 .pos .pos-branding{
     position: absolute;
     display: table-cell;
-    left:0;
+    .left(0);
     top:0;
     width:439px;
     height:100%;
     margin:0;
     padding:0;
-    border-right: 1px solid #373737;
-    text-align:left;
+    .border-right(1px solid #373737);
+    .text-align(left);
     line-height:100%;
     vertical-align: middle;
 }
 .pos .pos-logo {
     height: 35px;
-    margin-left: 7px;
+    .margin-left(7px);
     margin-top: 2px;
     vertical-align:middle;
 } 
 .pos .pos-branding .username{
-    float:right;
+    .float(right);
     color:#DDD;
     font-size:16px;
-    margin-right:32px;
+    .margin-right(32px);
     line-height: 48px;
     font-style:italic;
     cursor: pointer;
@@ -350,15 +352,15 @@ td {
 
 .pos .pos-rightheader {
     position: absolute;
-    left:440px;
-    right:0;
+    .left(440px);
+    .right(0);
     top:0;
     height:100%;
     display: -webkit-flex;
     display: flex;
 }
 .pos .pos-rightheader > * {
-    border-right: 1px solid #292929;
+    .border-right(1px solid #292929);
 }
 
 .pos .order-button{
@@ -370,11 +372,11 @@ td {
     padding: 4px 8px;
     margin: 3px;
     margin-bottom: 0px;
-    margin-right: 2px;
+    .margin-right(2px);
     padding-top: 0px;
     background: #8b8b8b;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+    .border-top-left-radius(3px);
+    .border-top-right-radius(3px);
     vertical-align: top;
     line-height: 42px;
     text-align: center;
@@ -384,7 +386,7 @@ td {
 }
 
 .pos .order-button:first-child {
-    margin-left: 0px;
+    .margin-left(0px);
 }
 
 .pos .order-button.selected{
@@ -410,12 +412,12 @@ td {
     line-height: 24px;
     min-width: 24px;
     border-radius: 12px;
-    margin-right: 4px;
-    margin-left: -4px;
+    .margin-right(4px);
+    .margin-left(-4px);
 }
 
 .pos .order-button.square{
-    margin-left:1px;
+    .margin-left(1px);
     background: #5c5c5c;
     color: rgb(160,160,160);
     font-size: 18px;
@@ -424,7 +426,7 @@ td {
 .pos .order-button:not(.square) > .fa {
     font-size: 16px;
     vertical-align: middle;
-    margin-right: 4px;
+    .margin-right(4px);
 }
 .pos .order-button .order-sequence{
     font-size: 16px;
@@ -441,7 +443,7 @@ td {
     display: -webkit-flex;
     display: flex;
     vertical-align: top;
-    margin-left: 0px;
+    .margin-left(0px);
     overflow: hidden;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -450,12 +452,12 @@ td {
 /*  c) The session buttons */
 
 .pos .pos-rightheader .header-button{
-    float: right;
+    .float(right);
     height: 48px;
-    padding-left: 16px;
-    padding-right: 16px;
-    border-right: 1px solid #292929;
-    border-left: 1px solid #292929;
+    .padding-left(16px);
+    .padding-right(16px);
+    .border-right(1px solid #292929);
+    .border-left(1px solid #292929);
     color: #DDD;
     line-height: 48px;
     text-align: center;
@@ -466,7 +468,7 @@ td {
     -webkit-transition-timing-function: ease-out;
 }
 .pos .pos-rightheader .header-button:last-child{
-    border-left:  1px solid #3a3a3a;
+    .border-left(1px solid #3a3a3a);
 }
 .pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
@@ -481,7 +483,7 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right; 
+    .float(right);
     color: rgba(255,255,255,0.4);
     padding: 14px;
     line-height: 20px;
@@ -496,7 +498,8 @@ td {
 .pos .oe_status .oe_icon{
     display:inline-block;
     cursor:pointer;
-    width:20px; height:16px;
+    width:20px;
+    height:16px;
     color: white;
 }
 .pos .oe_status .oe_red,
@@ -532,12 +535,12 @@ td {
         -ms-box-sizing: border-box;
             box-sizing: border-box;
     position:absolute;
-    left:0;
+    .left(0);
     width:440px;
     top:0px;
     bottom:0;
-    border-right: solid 1px #CECBCB;
-    border-right: solid 3px #787878;
+    .border-right(solid 1px #CECBCB);
+    .border-right(solid 3px #787878);
     background: #e2e2e2;
 }
 
@@ -552,7 +555,7 @@ td {
     display: flex;
     -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    padding: 8px 16px 0px 11px;
+    .padding(8px, 16px, 0px, 11px);
     margin-bottom: -6px;
 }
 .pos .control-button {
@@ -567,7 +570,7 @@ td {
     border-radius: 3px;
     padding: 0px 10px;
     font-size: 18px;
-    margin-left: 6px;
+    .margin-left(6px);
     margin-bottom: 6px;
     cursor: pointer;
     overflow: hidden;
@@ -582,7 +585,7 @@ td {
     border-color: black;
 }
 .pos .control-button .fa{
-    margin-right: 4px;
+    .margin-right(4px);
 }
 .pos .control-button .control-button-number {
     color: rgb(226, 226, 226);
@@ -595,14 +598,14 @@ td {
     width: 28px;
     border-radius: 50%;
     text-align: center;
-    margin-left: -16px;
-    margin-right: 4px;
+    .margin-left(-16px);
+    .margin-right(4px);
 }
 
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    border: solid 1px #64AF8A !important; 
+    border: solid 1px #64AF8A !important;
     color: white !important;
 }
 .pos .control-button.altlight,
@@ -624,21 +627,21 @@ td {
 
 .pos .actionpad {
     display: inline-block;
-    float: left;
+    .float(left);
     padding: 0;
     margin: 16px;
     margin-top: 8px;
-    margin-right: 0;
+    .margin-right(0);
     text-align: center;
     vertical-align: top;
     width: 186px;
     border: none;
     border-radius: 0;
     border-top: 1px solid;
-    border-left: 1px solid;
+    .border-left(1px solid);
     border-color: #bfbfbf;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    .border-top-left-radius(4px);
+    .border-bottom-left-radius(4px);
 }
 .pos .actionpad .button {
     position: relative;
@@ -651,7 +654,7 @@ td {
     font-size: 14px;
     border-radius: 0;
     border: none;
-    border-right: 1px solid;
+    .border-right(1px solid);
     border-bottom: 1px solid;
     border-color: #bfbfbf;
     transition: all 150ms linear;
@@ -665,10 +668,10 @@ td {
     color: white;
 }
 .pos .actionpad .button:first-child {
-    border-top-left-radius: 4px;
+    .border-top-left-radius(4px);
 }
 .pos .actionpad .button:last-child {
-    border-bottom-left-radius: 4px;
+    .border-bottom-left-radius(4px);
 }
 .pos .actionpad .button.pay {
     height: 162px;
@@ -688,22 +691,22 @@ td {
 .pos .actionpad .button.pay .pay-circle .fa {
     position: relative;
     top: -1px;
-    left: 3px;
+    .left(3px);
 }
 
 .pos .actionpad .button.set-customer{
-    padding-left: 40px;
-    padding-right: 40px;
+    .padding-left(40px);
+    .padding-right(40px);
 }
 .pos .actionpad .button.set-customer.decentered {
-    padding-left: 40px;
-    padding-right: 5px;
+    .padding-left(40px);
+    .padding-right(5px);
 }
 .pos .actionpad .button .fa-user {
     position: absolute;
-    left: 13px;
+    .left(13px);
     top: 13px;
-    margin-right: 8px;
+    .margin-right(8px);
     font-size: 18px;
     background: rgba(255, 255, 255, 0.5);
     line-height: 30px;
@@ -715,20 +718,20 @@ td {
 
 .pos .numpad {
     display: inline-block;
-    float: right;
+    .float(right);
     text-align: center;
     width: 216px;
     margin: 16px;
     margin-top: 8px;
-    margin-left: 0px;
+    .margin-left(0px);
     border: none;
     border-radius: 0;
     border-top: 1px solid;
     border-color: #bfbfbf;
-    border-top-right-radius: 4px;
+    .border-top-right-radius(4px);
 }
 .pos .numpad button {
-    float: left;
+    .float(left);
     height: 54px;
     width: 54px;
     font-weight: bold;
@@ -736,7 +739,7 @@ td {
     color: #555555;
     border-radius: 0;
     border: none;
-    border-right: 1px solid;
+    .border-right(1px solid);
     border-bottom: 1px solid;
     border-color: #bfbfbf;
     transition: all 150ms linear;
@@ -750,10 +753,10 @@ td {
     border-color: transparent;
 }
 .pos .numpad button:nth-child(4) {
-    border-top-right-radius: 4px;
+    .border-top-right-radius(4px);
 }
 .pos .numpad button:last-child {
-    border-bottom-right-radius: 4px;
+    .border-bottom-right-radius(4px);
 }
 .pos .input-button {
     font-size: 24px;
@@ -783,8 +786,8 @@ td {
     position: absolute;
     top: 0;
     bottom:0;
-    left: 440px;
-    right: 0;
+    .left(440px);
+    .right(0);
     vertical-align: top;
     -webkit-transform: translate3d(0,0,0);
 }
@@ -801,7 +804,7 @@ td {
 
 .pos .product-list {
     padding: 10px;
-    text-align: left;
+    .text-align(left);
     -webkit-transform: translate3d(0,0,0);
 }
 
@@ -822,27 +825,27 @@ td {
     position:absolute;
     top:0px;
     bottom:0px;
-    left:0px;
-    right:0px;
+    .left(0px);
+    .right(0px);
 }
 
 /*  a) the product list navigation bar */
 
 .pos .breadcrumbs{
     display: inline-block;
-    text-align: left;
-    float:left;
+    .text-align(left);
+    .float(left);
 }
 .pos .breadcrumb{
-    float: left;
+    .float(left);
     display: inline-block;
     line-height: 48px;
     height: 48px;
     min-width: 48px;
 }
 .pos .breadcrumb:last-child {
-    padding-right: 3px;
-    border-right: 1px solid #c5c5c5;
+    .padding-right(3px);
+    .border-right(1px solid #c5c5c5);
 }
 .pos .breadcrumb-button {
     display: inline-block;
@@ -872,13 +875,13 @@ td {
 
 .pos .searchbox {
     position: absolute;
-    right: 2px;
+    .right(2px);
 }
 .pos .searchbox input {
     width: 100px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
-    padding-left: 38px;
+    .padding-left(38px);
     margin: 6px;
     background: url("../img/search.png") no-repeat 15px;
     background-color: white;
@@ -896,7 +899,7 @@ td {
     width: 30px;
     height: 30px;
     top: 11px;
-    left: 11px;
+    .left(11px);
     cursor: pointer;
 }
 
@@ -925,7 +928,7 @@ td {
 
 }
 .pos .category-list {
-    text-align: left;
+    .text-align(left);
     padding: 10px;
     background: rgb(229, 229, 229);
     border-bottom: 1px solid #cecece;
@@ -962,7 +965,7 @@ td {
     position: relative;
     display: inline-block;
     font-size: 14px;
-    margin-right: 1px;
+    .margin-right(1px);
     margin-bottom: 1px;
     padding: 5px 12px;
     line-height: 32px;
@@ -1051,7 +1054,7 @@ td {
 .pos .product .price-tag {
     position: absolute;
     top: 2px;
-    right: 2px;
+    .right(2px);
     vertical-align: top;
     color: white;
     line-height: 13px;
@@ -1104,8 +1107,8 @@ td {
 }
 .pos .dialog{
     width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    .margin-left(auto);
+    .margin-right(auto);
     margin-top: 50px;
     text-align: center;
 }
@@ -1120,7 +1123,7 @@ td {
 .screen .screen-content{
     margin: 0px auto;
     max-width: 1024px;
-    text-align: left;
+    .text-align(left);
     height: 100%;
     overflow: hidden;
     position: relative;
@@ -1128,14 +1131,16 @@ td {
 
 @media screen and (min-width: 1024px) {
     .screen .screen-content{
-        border-left:  dashed 1px rgb(215,215,215);
-        border-right: dashed 1px rgb(215,215,215);
+        .border-left(dashed 1px rgb(215,215,215));
+        .border-right(dashed 1px rgb(215,215,215));
     }
 }
 
 .screen .top-content{
     position: absolute;
-    left: 0px; top: 0px; right: 0px;
+    .left(0px);
+    top: 0px;
+    .right(0px);
     height: 64px;
     border-bottom: dashed 1px rgb(215,215,215);
     text-align: center;
@@ -1170,47 +1175,55 @@ td {
     background: rgb(120,210,165);
 }
 .screen .top-content .button.back {
-    left: 0px;
-    margin-left: 16px;
+    .left(0px);
+    .margin-left(16px);
 }
 .screen .top-content .button.next{
-    right: 0px;
-    margin-right: 16px;
+    .right(0px);
+    .margin-right(16px);
 }
 .screen .left-content{
     position: absolute;
-    left:0px; top: 64px; bottom: 0px;
-    right:50%;
+    .left(0px);
+    top: 64px;
+    bottom: 0px;
+    .right(50%);
     overflow-x: hidden;
     overflow-y: auto;
-    border-right: dashed 1px rgb(215,215,215);
+    .border-right(dashed 1px rgb(215,215,215));
 }
 .screen .left-content.pc40{
-    right: 66%;
+    .right(66%);
 }
 .screen .right-content{
     position: absolute;
-    right:0px; top: 64px; bottom: 0px;
-    left:50%;
+    .right(0px);
+    top: 64px;
+    bottom: 0px;
+    .left(50%);
     overflow-x: hidden;
     overflow-y: auto;
 }
 .screen .right-content.pc60{
-    left:34%;
+    .left(34%);
 }
 .screen .centered-content{
     position: absolute;
-    right:25%; top: 64px; bottom: 0px;
-    left:25%;
-    border-right: dashed 1px rgb(215,215,215);
-    border-left: dashed 1px rgb(215,215,215);
+    .right(25%);
+    top: 64px;
+    bottom: 0px;
+    .left(25%);
+    .border-right(dashed 1px rgb(215,215,215));
+    .border-left(dashed 1px rgb(215,215,215));
     overflow-x: hidden;
     overflow-y: auto;
 }
 .screen .full-content{
     position: absolute;
-    right: 0%; top: 65px; bottom: 0px;
-    left: 0%;
+    .right(0%);
+    top: 65px;
+    bottom: 0px;
+    .left(0%);
 }
 
 /* a) Layout for the Product Screen */
@@ -1253,13 +1266,13 @@ td {
     box-sizing: border-box;
     padding: 16px;
     text-align: center;
-    float: left;
+    .float(left);
 }
 .pos .payment-numpad .numpad {
     float: none;
     border-radius: 4px;
     border-top: 1px solid;
-    border-left: 1px solid;
+    .border-left(1px solid);
     border-color: #cacaca;
     width: 296px;
     overflow: hidden;
@@ -1270,10 +1283,10 @@ td {
     height: 74px;
 }
 .pos .payment-numpad .numpad button:first-child {
-    border-top-left-radius: 4px;
+    .border-top-left-radius(4px);
 }
 .pos .payment-numpad .numpad button:nth-child(16) {
-    border-bottom-left-radius: 4px;
+    .border-bottom-left-radius(4px);
 }
 
 .pos .paymentlines-container {
@@ -1341,8 +1354,8 @@ td {
     width: 50%;
     box-sizing: border-box;
     padding: 16px;
-    padding-left: 0;
-    float: right;
+    .padding-left(0);
+    .float(right);
 }
 .payment-screen .payment-buttons .button {
     background: #e2e2e2;
@@ -1360,13 +1373,13 @@ td {
     background-color: #efefef;
 }
 .payment-screen .payment-buttons .button:first-child {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+    .border-top-left-radius(3px);
+    .border-top-right-radius(3px);
     border-top-width: 1px;
 }
 .payment-screen .payment-buttons .button:last-child {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
+    .border-bottom-left-radius(3px);
+    .border-bottom-right-radius(3px);
 }
 .payment-screen .payment-buttons .button.highlight:not(:first-child) {
     margin-top: -1px;
@@ -1383,7 +1396,7 @@ td {
 }
 .payment-screen .payment-buttons .button .fa {
     position: absolute;
-    left: 11px;
+    .left(11px);
     top: 50%;
     width: 48px;
     height: 48px;
@@ -1501,18 +1514,18 @@ td {
         background: white !important;
     }
     .pos .rightpane {
-        left: 0px !important;
+        .left(0px) !important;
         background-color: white;
     }
     .pos .receipt-screen {
-        text-align: left;
+        .text-align(left);
     }
     .pos .receipt-screen .centered-content{
         position: static;
         border: none;
     }
     .pos .pos-receipt-container {
-        text-align: left;
+        .text-align(left);
     }
     .pos-actionbar {
         display: none !important;
@@ -1527,8 +1540,8 @@ td {
     }
     .pos .pos-sale-ticket{
         margin: 0;
-        margin-left: auto !important;
-        margin-right: auto !important;
+        .margin-left(auto) !important;
+        .margin-right(auto) !important;
         border: none !important;
         font-size: 13px !important;
         width: 266px !important;
@@ -1553,7 +1566,7 @@ td {
 .pos .scale-screen .computed-price{
     font-size: 25px;
     display: inline-block;
-    text-align: right;
+    .text-align(right);
     margin: 16px;
     margin-top: 0px;
     padding: 16px;
@@ -1564,7 +1577,7 @@ td {
     font-weight: bold;
     text-shadow: 0px 2px 0px rgb(210,210,210);
     box-shadow: 0px 2px 0px rgb(225,225,225) inset;
-    float: right;
+    .float(right);
 }
 .pos .scale-screen .buy-product{
     text-align: center;
@@ -1578,11 +1591,11 @@ td {
 }
 
 .pos .scale-screen .weight{
-    text-align: right;
+    .text-align(right);
     margin: 16px;
     background: white;
     padding: 20px;
-    padding-right: 30px;
+    .padding-right(30px);
     font-size: 56px;
     border-radius: 3px;
     font-family: Inconsolata;
@@ -1633,8 +1646,8 @@ td {
     border-radius: 32px;
     overflow: hidden;
     text-align: center;
-    float: left;
-    margin-right: 16px;
+    .float(left);
+    .margin-right(16px);
     background: white;
     position: relative;
 }
@@ -1642,8 +1655,8 @@ td {
     position: absolute;
     top: -9999px;
     bottom: -9999px;
-    right: -9999px;
-    left: -9999px;
+    .right(-9999px);
+    .left(-9999px);
     max-height: 64px;
     margin: auto;
 }
@@ -1655,8 +1668,8 @@ td {
     position: absolute;
     z-index: 1000;
     top: 0;
-    left: 0;
-    right: 0;
+    .left(0);
+    .right(0);
     bottom: 0;
     opacity: 0;
     cursor: pointer;
@@ -1668,12 +1681,12 @@ td {
 }
 .pos .clientlist-screen .edit-buttons {
     position: absolute;
-    right: 16px;
+    .right(16px);
     top: 10px;
 }
 .pos .clientlist-screen .edit-buttons .button{
     display: inline-block;
-    margin-left: 16px;
+    .margin-left(16px);
     color: rgb(128,128,128);
     cursor: pointer;
     font-size: 36px;
@@ -1684,11 +1697,11 @@ td {
 }
 .pos .clientlist-screen .client-details-left{
     width: 50%;
-    float: left;
+    .float(left);
 }
 .pos .clientlist-screen .client-details-right{
     width: 50%;
-    float: right;
+    .float(right);
 }
 .pos .clientlist-screen .client-detail{
     line-height: 24px;
@@ -1697,8 +1710,8 @@ td {
     font-weight: bold;
     display: inline-block;
     width: 75px;
-    text-align: right;
-    margin-right: 8px;
+    .text-align(right);
+    .margin-right(8px);
 }
 .pos .clientlist-screen .client-details input,
 .pos .clientlist-screen .client-details select
@@ -1724,17 +1737,17 @@ td {
     opacity: 0.3;
 }
 .pos .clientlist-screen .searchbox{
-    right: auto;
-    margin-left: -90px;
+    .right(auto);
+    .margin-left(-90px);
     margin-top:8px;
-    left: 50%;
+    .left(50%);
 }
 .pos .clientlist-screen .searchbox input{
     width: 120px;
 }
 .pos .clientlist-screen .button.new-customer {
-    left: 50%;
-    margin-left: 120px;
+    .left(50%);
+    .margin-left(120px);
 }
 
 
@@ -1767,7 +1780,7 @@ td {
     padding-bottom: 8px;
     padding-top: 8px;
     font-size: 16px;
-    text-align: left;
+    .text-align(left);
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
 }
@@ -1786,15 +1799,15 @@ td {
 
 .pos .order .summary{
     width:100%;
-    text-align:right;
+    .text-align(right);
     font-weight: bold;
     margin-top:20px;
     margin-bottom:10px;
 }
 .pos .order .summary .line{
-    float: right;
-    margin-right:15px;
-    margin-left: 15px;
+    .float(right);
+    .margin-right(15px);
+    .margin-left(15px);
     padding-top:5px;
     border-top: solid 2px;
     border-color:#777;
@@ -1808,14 +1821,14 @@ td {
     text-align: center;
 }
 .pos .order .summary .line.empty{
-    text-align: right;
+    .text-align(right);
     border-color:#BBB;
     color:#999;
 }
 
 .pos .order .summary .fidpoints{
     position: absolute;
-    left: 20px;
+    .left(20px);
     padding: 10px;
     color: #6EC89B;
     background: rgba(110, 200, 155, 0.17);
@@ -1823,7 +1836,7 @@ td {
 }
 
 .submit-kitchen-button {
-    float: left;
+    .float(left);
     background: rgb(61, 235, 82);
     color: white;
     padding: 12px 20px;
@@ -1839,8 +1852,8 @@ td {
     margin:0px;
     padding-top:3px;
     padding-bottom:10px;
-    padding-left:15px;
-    padding-right:15px;
+    .padding-left(15px);
+    .padding-right(15px);
     cursor: pointer;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -1879,11 +1892,11 @@ td {
 .pos .order .orderline .price{
     padding:0;
     font-weight: bold;
-    float:right;
+    .float(right);
 }
 .pos .order .orderline .info-list{
     color: #888;
-    margin-left:10px;
+    .margin-left(10px);
 }
 .pos .order .orderline .info-list em{
     color: #777;
@@ -1906,14 +1919,14 @@ td {
     background: white;
     padding-bottom:15px;
     padding-top:15px;
-    margin-left:16px;
-    margin-right:16px;
+    .margin-left(16px);
+    .margin-right(16px);
     margin-top:16px;
     margin-bottom:16px;
     font-size:16px;
     border-radius: 3px;
     border: solid 1px rgb(220,220,220);
-    text-align: left;
+    .text-align(left);
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
 }
@@ -1950,12 +1963,12 @@ td {
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+    .border-top-left-radius(3px);
+    .border-top-right-radius(3px);
 }
 .paymentmethods .button:last-child {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
+    .border-bottom-left-radius(3px);
+    .border-bottom-right-radius(3px);
 }
 .paymentmethods .button:active {
     background: black;
@@ -1986,8 +1999,8 @@ td {
 .pos .pos-actionbar-button-list{
     height: 100%;
     margin: 0px;
-    padding-left:3px;
-    padding-right:3px;
+    .padding-left(3px);
+    .padding-right(3px);
     overflow:hidden;
 }
 
@@ -1997,7 +2010,7 @@ td {
     text-align:center;
     margin:3px;
     margin-top:6px;
-    float:left;
+    .float(left);
 
     font-size:   14px;
     font-weight: bold;
@@ -2037,18 +2050,17 @@ td {
 }
 
 .pos .pos-actionbar .button.rightalign{
-    float:right;
+    .float(right);
 }
 /*  ********* The Debug Widget  ********* */
 
 .pos .debug-widget{
     z-index:100000;
     position: absolute;
-    right: 10px;
+    .right(10px);
     top: 10px;
     width: 200px;
     font-size: 10px;
-    
     background: rgba(0,0,0,0.82);
     color: white;
     padding-bottom: 10px;
@@ -2060,9 +2072,9 @@ td {
     font-size: 16px;
     cursor:pointer;
     top:0px;
-    right:0px;
+    .right(0px);
     padding:10px;
-    padding-right:15px;
+    .padding-right(15px);
 }
 .pos .debug-widget .content{
     overflow: hidden;
@@ -2070,13 +2082,13 @@ td {
 .pos .debug-widget h1{
     background:black;
     padding-top: 10px;
-    padding-left: 10px;
+    .padding-left(10px);
     margin-top:0;
     margin-bottom:0;
 }
 .pos .debug-widget .category{
     background: black;
-    padding-left: 10px;
+    .padding-left(10px);
     margin: 0px;
     font-weight: bold;
     padding-top:3px;
@@ -2084,7 +2096,7 @@ td {
 }
 .pos .debug-widget .button{
     padding: 5px;
-    padding-left: 15px;
+    .padding-left(15px);
     display: block;
     cursor:pointer;
 }
@@ -2092,7 +2104,7 @@ td {
     background: rgba(96,21,177,0.45);
 }
 .pos .debug-widget input{
-    margin-left:10px;
+    .margin-left(10px);
     margin-top:7px;
     padding: 4px;
     width: 180px;
@@ -2103,7 +2115,7 @@ td {
 }
 .pos .debug-widget .status{
     padding: 5px;
-    padding-left: 15px;
+    .padding-left(15px);
     display: block;
     cursor:default;
 }
@@ -2112,7 +2124,7 @@ td {
 }
 .pos .debug-widget .event{
     padding: 5px;
-    padding-left: 15px;
+    .padding-left(15px);
     display: block;
     cursor:default;
     background-color: #1E1E1E;
@@ -2122,7 +2134,7 @@ td {
 
 .pos .modal-dialog{
     position: absolute;
-    left: 0;
+    .left(0);
     top: 0;
     width: 100%;
     height:100%;
@@ -2131,7 +2143,10 @@ td {
 }
 .pos .modal-dialog .popup{
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    .left(0);
+    .right(0);
+    bottom: 0;
     margin: auto;
     width:500px;
     height:400px;
@@ -2156,7 +2171,7 @@ td {
     background: rgba(255,255,255,0.5);
     margin: 0;
     padding: 20px;
-    border-radius: 3px 3px 0px 0px;
+    .border-radius(3px, 3px, 0px, 0px);
     border-bottom: solid 1px rgba(60,60,60,0.1);
 }
 .pos .popup .body {
@@ -2170,7 +2185,7 @@ td {
     overflow: auto;
     font-size: 14px;
     white-space: pre-wrap;
-    text-align: left;
+    .text-align(left);
     font-family: 'Inconsolata';
     -webkit-user-select: text;
        -moz-user-select: text;
@@ -2179,20 +2194,20 @@ td {
 .pos .popup .footer{
     position:absolute;
     bottom:0;
-    left:0;
+    .left(0);
     width:100%;
     height:60px;
     border-top: solid 1px rgba(60,60,60,0.1);
 }
 .pos .popup .button{
-    float:right;
+    .float(right);
     width: 110px;
     height: 40px;
     line-height:40px;
     text-align:center;
     border-radius: 2px;
     margin-top:10px;
-    margin-right:10px;
+    .margin-right(10px);
 
     font-size:   14px;
     font-weight: bold;
@@ -2221,7 +2236,7 @@ td {
 .pos .popup .button.big-left{
     position:absolute;
     top: 120px;
-    left:40px;
+    .left(40px);
     width: 180px;
     height: 180px;
     line-height:180px;
@@ -2230,14 +2245,14 @@ td {
 .pos .popup .button.big-right{
     position:absolute;
     top: 120px;
-    right:40px;
+    .right(40px);
     width: 180px;
     height: 180px;
     line-height:180px;
 }
 .pos .popup input,
 .pos .popup-input {
-    text-align: left;
+    .text-align(left);
     display: inline-block;
     overflow: hidden;
     background: white;
@@ -2292,7 +2307,7 @@ td {
     width: auto;
     background: rgb(230,230,230);
     cursor: pointer;
-    text-align: left;
+    .text-align(left);
     padding: 0px 16px;
 }
 .pos .popup.popup-selection .selection-item:nth-child(odd) {
@@ -2311,8 +2326,8 @@ td {
 .pos .footer.centered .button {
     float: none;
     display: inline-block;
-    margin-left: 3px;
-    margin-right: 3px;
+    .margin-left(3px);
+    .margin-right(3px);
 }
 .pos .popup-numpad {
     margin: 12px auto;
@@ -2351,7 +2366,7 @@ td {
 }
 .pos .popup-password .popup-numpad {
     width: 190px;
-    text-align: left;
+    .text-align(left);
 }
 .pos .popup-password .popup-input {
     width: 70%;
@@ -2359,8 +2374,8 @@ td {
 
 .pos .popup .body ul,
 .pos .popup ul.body {
-    text-align: left;
-    margin-left: 1em;
+    .text-align(left);
+    .margin-left(1em);
 }
 .pos .popup .body li {
     text-indent: 1em;
@@ -2369,7 +2384,7 @@ td {
     content: '—';
     position: relative;
     font-size: 0.6em;
-    left: -1em;
+    .left(-1em);
     bottom: 0.2em;
 }
 
@@ -2382,7 +2397,7 @@ td {
 }
 .pos *::-webkit-scrollbar-track{
     background: rgb(224,224,224);
-    border-left: solid 1px rgb(200,200,200);
+    .border-left(solid 1px rgb(200,200,200));
 }
 .pos *::-webkit-scrollbar-thumb{
     background: rgb(168,168,168);
@@ -2396,7 +2411,7 @@ td {
 }
 .pos.big-scrollbars *::-webkit-scrollbar-track{
     background: rgb(224,224,224);
-    border-left: none;
+    .border-left(none);
 }
 .pos.big-scrollbars *::-webkit-scrollbar-thumb{
     background: rgb(168,168,168);
@@ -2423,14 +2438,16 @@ td {
 .pos .not-supported-browser{
     position: absolute;
     z-index: 100000;
-    top: 0; bottom: 0; left: 0; right: 0;
+    top: 0;
+    bottom: 0;.left(0);
+    .right(0);
     background: #2C2C2C;
 }
 .pos .not-supported-browser .message{
     width:600px;
     margin-top: 100px;
-    margin-left: auto;
-    margin-right: auto;
+    .margin-left(auto);
+    .margin-right(auto);
     text-align: center;
     color: #d3d3d3;
     font-size: 14px;
