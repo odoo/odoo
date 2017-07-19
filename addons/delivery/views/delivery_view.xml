@@ -73,23 +73,20 @@
                                     <field name="delivery_type" widget="radio"/>
                                     <button string="Install more Providers" name="install_more_provider" type="object" class="oe_link oe_edit_only"/>
                                 </div>
+                                <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                             </group>
                             <group>
-                                <field name="integration_level" widget="radio" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}"/>
                                 <label for="margin" string="Margin on Rate"/>
                                 <div>
                                     <field name="margin" class="oe_inline"/>%
                                 </div>
-                            </group>
-                            <group>
-                                <div class="o_row">
-                                    <label for="free_over"/>
+                                <div class="o_row o_td_label">
                                     <field name="free_over"/>
-                                    <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                    <label for="free_over"/>
                                 </div>
-                            </group>
-                            <group>
-                                <field name="company_id"/>
+                                <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
+                                <field name="product_id" context="{'default_type': 'service', 'sale_ok': False, 'purchase_ok': False}" />
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                         <notebook>
@@ -177,7 +174,6 @@
                             *
                             <field name="variable_factor" class="oe_inline"/>
                         </div>
-                        <field name="standard_price" invisible="1"/>
                     </group>
                 </form>
             </field>
