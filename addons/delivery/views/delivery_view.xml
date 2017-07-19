@@ -88,6 +88,9 @@
                                     <field nolabel="1" name="amount" attrs="{'required':[('free_over','!=', False)], 'invisible':[('free_over','=', False)]}"/>
                                 </div>
                             </group>
+                            <group>
+                                <field name="company_id"/>
+                            </group>
                         </group>
                         <notebook>
                             <page string="Pricing" attrs="{'invisible': [('delivery_type', 'not in', ['fixed', 'base_on_rule'])]}">

@@ -38,6 +38,7 @@ class DeliveryCarrier(models.Model):
     delivery_type = fields.Selection([('fixed', 'Fixed Price')], string='Provider', default='fixed', required=True)
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
+    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True)
 
     product_type = fields.Selection(related='product_id.type', default='service')
     product_sale_ok = fields.Boolean(related='product_id.sale_ok', default=False)
