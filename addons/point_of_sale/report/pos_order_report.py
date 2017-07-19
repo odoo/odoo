@@ -68,7 +68,7 @@ class PosOrderReport(models.Model):
                 s.invoice_id IS NOT NULL AS invoiced
         """
         return select_str
-    
+
     def _from(self):
         from_str = """
             FROM pos_order_line AS l
@@ -80,7 +80,7 @@ class PosOrderReport(models.Model):
                 LEFT JOIN pos_config pc ON (ps.config_id=pc.id)
         """
         return from_str
-    
+
     def _group_by(self):
         group_by_str = """
             GROUP BY
@@ -94,14 +94,14 @@ class PosOrderReport(models.Model):
                 pc.stock_location_id
         """
         return group_by_str
-    
+
     def _having(self):
         having_str = """
             HAVING
                 SUM(l.qty * u.factor) != 0
         """
         return having_str
-    
+
     @api.model_cr
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
