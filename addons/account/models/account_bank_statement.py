@@ -902,7 +902,7 @@ class AccountBankStatementLine(models.Model):
             counterpart_moves = (counterpart_moves | move)
 
             # Create The payment
-            payment = False
+            payment = self.env['account.payment']
             if abs(total)>0.00001:
                 partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False
