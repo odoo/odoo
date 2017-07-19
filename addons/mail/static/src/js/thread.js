@@ -193,12 +193,12 @@ var Thread = Widget.extend({
         });
     },
     update_timestamps: function () {
-        var is_at_bottom = this.is_at_bottom();
+        var isAtBottom = this.is_at_bottom();
         this.$('.o_mail_timestamp').each(function() {
             var date = $(this).data('date');
             $(this).html(time_from_now(date));
         });
-        if (is_at_bottom && !this.is_at_bottom()) {
+        if (isAtBottom && !this.is_at_bottom()) {
             this.scroll_to();
         }
     },
