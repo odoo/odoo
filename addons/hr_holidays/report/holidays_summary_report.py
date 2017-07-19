@@ -104,7 +104,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
     @api.model
     def render_html(self, docids, data=None):
         if not data.get('form'):
-            raise UserError(_("Some data are missing, this report cannot be printed."))
+            raise UserError(_("Form content is missing, this report cannot be printed."))
 
         Report = self.env['report']
         holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')

@@ -249,11 +249,12 @@ class Repair(models.Model):
         return self.env['report'].get_action(self, 'mrp_repair.report_mrprepairorder')
 
     def action_repair_invoice_create(self):
-        self.action_invoice_create()
-        if self.invoice_method == 'b4repair':
-            self.action_repair_ready()
-        elif self.invoice_method == 'after_repair':
-            self.write({'state': 'done'})
+        for repair in self:
+            repair.action_invoice_create()
+            if repair.invoice_method == 'b4repair':
+                repair.action_repair_ready()
+            elif repair.invoice_method == 'after_repair':
+                repair.write({'state': 'done'})
         return True
 
     @api.multi
