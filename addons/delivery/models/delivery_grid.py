@@ -35,9 +35,6 @@ class PriceRule(models.Model):
     list_price = fields.Float('Sale Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
     variable_factor = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], 'Variable Factor', required=True, default='weight')
 
-    # TODO remove me, should be replaced by fixed price
-    standard_price = fields.Float('Cost Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
-
 
 class ProviderGrid(models.Model):
     _inherit = 'delivery.carrier'
