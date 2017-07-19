@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase
 from odoo.exceptions import UserError
+from odoo.tests.common import TransactionCase
 
 
 class StockMove(TransactionCase):
@@ -28,6 +28,11 @@ class StockMove(TransactionCase):
             'name': 'Product A',
             'type': 'product',
             'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.product4 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'consu',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
@@ -2220,3 +2225,63 @@ class StockMove(TransactionCase):
         move1.product_id = self.product2
         move1.onchange_product_id()
         self.assertEqual(move1.product_uom_qty, 100)
+
+    def test_scrap_1(self):
+        """ Check the created stock move and the impact on quants when we scrap a
+        stockable product.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product1.id,
+            'product_uom_id':self.product1.uom_id.id,
+            'scrap_qty': 1,
+        })
+        self.assertEqual(scrap.state, 'done')
+        move = scrap.move_id
+        self.assertEqual(move.state, 'done')
+        self.assertEqual(move.quantity_done, 1)
+        self.assertEqual(move.scrapped, True)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+
+    def test_scrap_2(self):
+        """ Check the created stock move and the impact on quants when we scrap a
+        consumable product.
+        """
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product4.id,
+            'product_uom_id':self.product4.uom_id.id,
+            'scrap_qty': 1,
+        })
+        self.assertEqual(scrap.state, 'done')
+        move = scrap.move_id
+        self.assertEqual(move.state, 'done')
+        self.assertEqual(move.quantity_done, 1)
+        self.assertEqual(move.scrapped, True)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product4, self.stock_location), 0)
+
+    def test_scrap_3(self):
+        """ Scrap the product of a reserved move line. Check that the move line is
+        correctly deleted and that the associated stock move is not assigned anymore.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 1)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_set_quantity_done_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+
+        scrap = self.env['stock.scrap'].create({
+            'product_id': self.product1.id,
+            'product_uom_id':self.product1.uom_id.id,
+            'scrap_qty': 1,
+        })
+
+        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(len(move1.move_line_ids), 0)
