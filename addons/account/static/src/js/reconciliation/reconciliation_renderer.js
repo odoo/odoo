@@ -119,6 +119,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
                 fadeout: 'no',
                 message: $done,
                 click_close: false,
+                $el: this.$el,
             });
             this.$el.css('min-height', '450px');
         }
