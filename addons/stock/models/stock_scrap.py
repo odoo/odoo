@@ -109,7 +109,6 @@ class StockScrap(models.Model):
                                            'package_id': self.package_id.id, 
                                            'owner_id': self.owner_id.id,
                                            'lot_id': self.lot_id.id, })],
-#             'restrict_lot_id': self.lot_id.id,  # FIXME: JCO i asked you x times, should we drop this or not????
 #             'restrict_partner_id': self.owner_id.id,
             'picking_id': self.picking_id.id
         }
