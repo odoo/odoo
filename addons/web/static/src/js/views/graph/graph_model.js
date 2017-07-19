@@ -60,12 +60,13 @@ return AbstractModel.extend({
         this.modelName = params.modelName;
         this.chart = {
             data: [],
-            groupedBy: params.groupBys,
+            groupedBy: params.groupedBy.length ? params.groupedBy : params.groupBys,
             measure: params.measure,
             mode: params.mode,
             domain: params.domain,
             context: params.context,
         };
+        this.defaultGroupedBy = params.groupedBy;
         return this._loadGraph();
     },
     /**
@@ -88,11 +89,7 @@ return AbstractModel.extend({
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            if (!params.groupBy.length) {
-                this.chart.groupedBy = this.initialGroupBys;
-            } else {
-                this.chart.groupedBy = params.groupBy;
-            }
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
