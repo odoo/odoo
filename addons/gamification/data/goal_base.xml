@@ -113,7 +113,7 @@
                                 % if len(line['goals'])>2:
                                     <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:10px;">
                                         <tr><td style="padding:0 30px;">
-                                            <table cellspacing="0" cellpadding="0" width="100%">
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
                                                 <tr>
                                                     % set top_goals = [line['goals'][1], line['goals'][0], line['goals'][2]]
                                                     % for goal in top_goals:
@@ -145,9 +145,9 @@
                                                                     ${extra_div | safe}   
                                                                     <div style="height:55px;">
                                                                         % set path = object.env['res.users'].browse(goal['user_id']).partner_id.image_small
-                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" src="data:image/jpeg;base64,${path}" alt=""/>
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;" src="data:image/jpeg;base64,${path}" alt="${goal['name']}"/>
                                                                     </div> 
-                                                                    <div align="center" style ="color:${bgColor};">
+                                                                    <div align="center" style ="color:${bgColor};height:20px">
                                                                         ${goal['name']}
                                                                     </div 
                                                                 </div>
