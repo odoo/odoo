@@ -193,10 +193,10 @@ class account_voucher(osv.osv):
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
             if isinstance(l, dict):
-                debit += l['amount']
+                debit += l['amount_unreconciled'] if l['amount'] else 0.0
         for l in line_cr_ids:
             if isinstance(l, dict):
-                credit += l['amount']
+                credit += l['amount_unreconciled'] if l['amount'] else 0.0
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
