@@ -141,3 +141,27 @@ class TestInventory(TransactionCase):
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, lot_id=lot1, strict=True)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location, strict=True)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 2.0)
+
+    def test_inventory_5(self):
+        """ Check that assigning an owner does work.
+        """
+        owner1 = self.env['res.partner'].create({'name': 'test_inventory_5'})
+
+        inventory = self.env['stock.inventory'].create({
+            'name': 'remove product1',
+            'filter': 'product',
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'exhausted': True,
+        })
+        inventory.prepare_inventory()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 0)
+        inventory.line_ids.partner_id = owner1
+        inventory.line_ids.product_qty = 5
+        inventory.action_done()
+
+        quant = self.env['stock.quant']._gather(self.product1, self.stock_location)
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, 5)
+        self.assertEqual(quant.owner_id.id, owner1.id)
