@@ -128,7 +128,7 @@
                     <group name="inventory">
                         <group>
                             <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                            <field name="route_from_categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                            <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                         </group>
                         <group name="group_lots_and_weight">
                             <label for="weight" attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"/>

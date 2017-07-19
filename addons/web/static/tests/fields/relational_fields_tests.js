@@ -6156,32 +6156,44 @@ QUnit.module('relational_fields', {
 
     QUnit.module('FieldMany2ManyTags');
 
-    QUnit.test('fieldmany2many tags without color', function (assert) {
-        assert.expect(4);
+    QUnit.test('fieldmany2many tags with and without color', function (assert) {
+        assert.expect(5);
 
+        this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
         var form = createView({
             View: FormView,
             model: 'partner',
             data: this.data,
             arch:'<form string="Partners">' +
+                    '<field name="partner_ids" widget="many2many_tags" options="{\'color_field\': \'color\'}"/>' +
                     '<field name="timmy" widget="many2many_tags"/>' +
                 '</form>',
             mockRPC: function (route, args) {
                 if (args.method ==='read' && args.model === 'partner_type') {
                     assert.deepEqual(args.args , [[12], ['display_name']], "should not read any color field");
+                } else if (args.method ==='read' && args.model === 'partner') {
+                    assert.deepEqual(args.args , [[1], ['display_name', 'color']], "should read color field");
                 }
                 return this._super.apply(this, arguments);
             }
         });
-        var $input = form.$('.o_field_many2manytags input');
+
+        // add a tag on field partner_ids
+        var $input = form.$('.o_field_many2manytags[name="partner_ids"] input');
+        $input.click(); // opens the dropdown
+        $input.autocomplete('widget').find('li:first()').click(); // adds a tag
+
+        // add a tag on field timmy
+        $input = form.$('.o_field_many2manytags[name="timmy"] input');
         $input.click(); // opens the dropdown
         assert.strictEqual($input.autocomplete('widget').find('li').length, 3,
             "autocomplete dropdown should have 3 entries (2 values + 'Search and Edit...')");
         $input.autocomplete('widget').find('li:first()').click(); // adds a tag
-        assert.strictEqual(form.$('.o_field_many2manytags > span').length, 1,
+        assert.strictEqual(form.$('.o_field_many2manytags[name="timmy"] > span').length, 1,
             "should contain 1 tag");
-        assert.ok(form.$('.o_field_many2manytags > span:contains("gold")').length,
+        assert.ok(form.$('.o_field_many2manytags[name="timmy"] > span:contains("gold")').length,
             "should contain newly added tag 'gold'");
+
         form.destroy();
     });
 
