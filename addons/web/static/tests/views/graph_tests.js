@@ -344,6 +344,34 @@ QUnit.module('Views', {
             done();
         });
     });
+
+    QUnit.test('correctly use group_by key from the context', function (assert) {
+        var done = assert.async();
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph><field name="product_id" /></graph>',
+            groupBy: ['color_id'],
+            viewOptions: {
+                context: {
+                    graph_measure: 'foo',
+                    graph_mode: 'line',
+                },
+            },
+        });
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('text:contains(xphone)').length, 0,
+                        'should not contain a text element with product in legend');
+            assert.strictEqual(graph.$('text:contains(red)').length, 1,
+                        'should contain a text element with color in legend');
+            graph.destroy();
+            done();
+        });
+    });
+
 });
 
 });
