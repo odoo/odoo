@@ -1396,7 +1396,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_method">
+                            <div class="js_payment mb64 row" t-if="not website_sale_order.amount_total" id="payment_validate">
                                 <div class="col-sm-12">
                                     <form target="_self" action="/shop/payment/validate" method="post" class="pull-right">
                                         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
