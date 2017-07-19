@@ -44,6 +44,14 @@ class HrExpense(models.Model):
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", readonly=True, copy=False)
     reference = fields.Char(string="Bill Reference")
 
+    @api.model
+    def create(self, vals):
+        employee = self.env['hr.employee'].browse(vals['employee_id'])
+        account = self.env['account.account'].browse(vals['account_id'])
+        if account.internal_type == 'payable' and account.id != employee.address_home_id.property_account_payable_id.id:
+            raise UserError(_('You have to set the same payable account that the one set on partner %s.') % (employee.address_home_id.name,))
+        return super(HrExpense, self).create(vals)
+
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
         for expense in self:
