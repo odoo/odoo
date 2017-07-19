@@ -193,10 +193,14 @@ var Thread = Widget.extend({
         });
     },
     update_timestamps: function () {
+        var isAtBottom = this.is_at_bottom();
         this.$('.o_mail_timestamp').each(function() {
             var date = $(this).data('date');
             $(this).html(time_from_now(date));
         });
+        if (isAtBottom && !this.is_at_bottom()) {
+            this.scroll_to();
+        }
     },
     on_click_redirect: function (event) {
         var id = $(event.target).data('oe-id');
