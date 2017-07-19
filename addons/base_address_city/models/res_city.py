@@ -10,6 +10,7 @@ class City(models.Model):
     _order = 'name'
 
     name = fields.Char("Name", required=True, translate=True)
+    code = fields.Char()
     zipcode = fields.Char("Zip")
     country_id = fields.Many2one('res.country', string='Country', required=True)
     state_id = fields.Many2one(
