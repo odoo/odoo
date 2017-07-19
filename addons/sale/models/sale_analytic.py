@@ -17,16 +17,7 @@ class SaleOrderLine(models.Model):
             # To filter on analyic lines linked to an expense
             expense_type_id = self.env.ref('account.data_account_type_expenses', raise_if_not_found=False)
             expense_type_id = expense_type_id and expense_type_id.id
-            domain = [
-                ('so_line', 'in', self.ids),
-                '|',
-                    ('amount', '<', 0),
-                    '&',
-                        ('amount', '=', 0),
-                        '|',
-                            ('move_id', '=', False),
-                            ('move_id.account_id.user_type_id', '=', expense_type_id)
-            ]
+            domain = [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
 
         data = self.env['account.analytic.line'].read_group(
             domain,
