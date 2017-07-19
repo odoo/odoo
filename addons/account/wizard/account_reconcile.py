@@ -62,7 +62,7 @@ class AccountMoveLineReconcile(models.TransientModel):
         move_lines_filtered.with_context(skip_full_reconcile_check='amount_currency_excluded').reconcile()
 
         #then in second pass, consider the amounts in secondary currency (only if some lines are still not fully reconciled)
-        move_lines.compute_full_after_batch_reconcile()
+        move_lines.force_full_reconcile()
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -116,5 +116,5 @@ class AccountMoveLineReconcileWriteoff(models.TransientModel):
         #then in second pass, consider the amounts in secondary currency (only if some lines are still not fully reconciled)
         if not isinstance(writeoff, bool):
             move_lines += writeoff
-        move_lines.compute_full_after_batch_reconcile()
+        move_lines.force_full_reconcile()
         return {'type': 'ir.actions.act_window_close'}
