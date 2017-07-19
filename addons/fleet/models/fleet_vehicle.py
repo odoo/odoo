@@ -116,7 +116,7 @@ class FleetVehicle(models.Model):
             total = 0
             name = ''
             for element in record.log_contracts:
-                if element.state in ('open', 'toclose') and element.expiration_date:
+                if element.state in ('open', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
                     due_time_str = element.expiration_date
                     current_date = fields.Date.from_string(current_date_str)
@@ -131,7 +131,7 @@ class FleetVehicle(models.Model):
                     if overdue or due_soon:
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'toclose'))
+                            ('state', 'in', ('open', 'expired'))
                             ], limit=1, order='expiration_date asc')
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
@@ -159,7 +159,7 @@ class FleetVehicle(models.Model):
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date > %s
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
+                          AND contract.state IN ('open', 'expired')
                         GROUP BY cost.vehicle_id""", (today, limit_date))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))
@@ -179,7 +179,7 @@ class FleetVehicle(models.Model):
                         LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
+                          AND contract.state IN ('open', 'expired')
                         GROUP BY cost.vehicle_id ''', (today,))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))

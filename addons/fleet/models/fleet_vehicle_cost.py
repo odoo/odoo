@@ -110,7 +110,7 @@ class FleetVehicleLogContract(models.Model):
     state = fields.Selection([
         ('futur', 'Incoming'),
         ('open', 'In Progress'),
-        ('toclose', 'Expired'),
+        ('expired', 'Expired'),
         ('diesoon', 'Expiring Soon'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
@@ -156,7 +156,7 @@ class FleetVehicleLogContract(models.Model):
         otherwise return the number of days before the contract expires
         """
         for record in self:
-            if (record.expiration_date and (record.state == 'open' or record.state == 'toclose')):
+            if (record.expiration_date and (record.state == 'open' or record.state == 'expired')):
                 today = fields.Date.from_string(fields.Date.today())
                 renew_date = fields.Date.from_string(record.expiration_date)
                 diff_time = (renew_date - today).days
@@ -276,8 +276,8 @@ class FleetVehicleLogContract(models.Model):
             Vehicle.browse(vehicle).message_post(body=_('%s contract(s) will expire soon and should be renewed and/or closed!') % value)
         nearly_expired_contracts.write({'state': 'diesoon'})
 
-        expired_contracts = self.search([('state', '!=', 'toclose'), ('expiration_date', '<',fields.Date.today() )])
-        expired_contracts.write({'state': 'toclose'})
+        expired_contracts = self.search([('state', '!=', 'expired'), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts.write({'state': 'expired'})
 
         futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
         futur_contracts.write({'state': 'futur'})
