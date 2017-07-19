@@ -650,7 +650,7 @@ class PurchaseOrderLine(models.Model):
                                 move.state = 'draft'
                                 move.unlink()
                     else:
-                        raise UserError('You cannot decrease the ordered quantity below your receipt.\n'
+                        raise UserError('You cannot decrease the ordered quantity below the received quantity.\n'
                                         'Create a return first.')
 
     @api.multi
