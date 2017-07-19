@@ -164,9 +164,10 @@ var KanbanController = BasicController.extend({
     _onAddColumn: function (event) {
         var self = this;
         this.model.createGroup(event.data.value, this.handle).then(function () {
-            self.update({}, {reload: false});
+            return self.update({}, {reload: false});
+        }).then(function () {
             self._updateButtons();
-            self.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
+            self.renderer.quickCreateToggleFold();
         });
     },
     /**

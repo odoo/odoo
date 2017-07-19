@@ -1614,6 +1614,35 @@ QUnit.module('Views', {
                         "column should contain 1 records");
         kanban.destroy();
     });
+
+    QUnit.test('don\'t fold column quick create after creation', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        // add a new column
+        kanban.$('.o_kanban_group:first .o_kanban_quick_add').click();
+        var $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_add').click();
+        assert.strictEqual(this.data.partner.records.length, 5,
+            "should have created a 'new partner' column");
+
+        assert.strictEqual(kanban.$('.o_kanban_add:visible').length, 1,
+            "the add button should still be visible");
+        kanban.destroy();
+    });
 });
 
 });
