@@ -30,7 +30,8 @@ class HrExpense(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
-    account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=lambda self: self.env['ir.property'].get('property_account_expense_categ_id', 'product.category'))
+    account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=lambda self: self.env['ir.property'].get('property_account_expense_categ_id', 'product.category'),
+        help="An expense account is expected")
     description = fields.Text()
     payment_mode = fields.Selection([("own_account", "Employee (to reimburse)"), ("company_account", "Company")], default='own_account', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, string="Payment By")
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -418,10 +419,15 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
+        # Add the followers at creation, so they can be notified
+        if vals.get('employee_id'):
+            employee = self.env['hr.employee'].browse(vals['employee_id'])
+            users = self._get_users_to_subscribe(employee=employee) - self.env.user
+            vals['message_follower_ids'] = []
+            for partner in users.mapped('partner_id'):
+                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
         sheet = super(HrExpenseSheet, self).create(vals)
         self.check_consistency()
-        if vals.get('employee_id'):
-            sheet._add_followers()
         return sheet
 
     @api.multi
@@ -456,16 +462,20 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_paid'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
-    def _add_followers(self):
-        user_ids = []
-        employee = self.employee_id
+    def _get_users_to_subscribe(self, employee=False):
+        users = self.env['res.users']
+        employee = employee or self.employee_id
         if employee.user_id:
-            user_ids.append(employee.user_id.id)
+            users |= employee.user_id
         if employee.parent_id:
-            user_ids.append(employee.parent_id.user_id.id)
+            users |= employee.parent_id.user_id
         if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
-            user_ids.append(employee.department_id.manager_id.user_id.id)
-        self.message_subscribe_users(user_ids=user_ids)
+            users |= employee.department_id.manager_id.user_id
+        return users
+
+    def _add_followers(self):
+        users = self._get_users_to_subscribe()
+        self.message_subscribe_users(user_ids=users.ids)
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):

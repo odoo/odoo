@@ -24,7 +24,7 @@ class SaleQuoteTemplate(models.Model):
     ], 'Payment', help="Require immediate payment by the customer when validating the order from the website quote")
     mail_template_id = fields.Many2one('mail.template', 'Confirmation Mail',
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.",
-        domain=[('model', '=', 'sale.quote.template')])
+        domain=[('model', '=', 'sale.order')])
 
     @api.multi
     def open_template(self):
