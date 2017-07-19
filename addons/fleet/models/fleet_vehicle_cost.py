@@ -111,6 +111,7 @@ class FleetVehicleLogContract(models.Model):
         ('futur', 'Incoming'),
         ('open', 'In Progress'),
         ('toclose', 'Expired'),
+        ('diesoon', 'Expiring Soon'),
         ('closed', 'Closed')
         ], 'Status', default='open', readonly=True,
         help='Choose wheter the contract is still valid or not',
@@ -136,19 +137,6 @@ class FleetVehicleLogContract(models.Model):
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
     odometer = fields.Float(string='Odometer at creation', 
         help='Odometer measure of the vehicle at the moment of the contract creation')
-
-    @api.model
-    def update_contract_state(self):
-        all_contracts = self.search([
-            ('state', 'in', ['open', 'futur', 'toclose']), ('active', '=', True)])
-        today = fields.Date.today()
-        for contract in all_contracts:
-            if contract.start_date and contract.start_date > today:
-                contract.state = 'futur'
-            elif contract.expiration_date and contract.expiration_date < today:
-                contract.state = 'toclose'
-            else:
-                contract.state = 'open'
 
     @api.depends('vehicle_id', 'cost_subtype_id', 'date')
     def _compute_contract_name(self):
@@ -273,11 +261,11 @@ class FleetVehicleLogContract(models.Model):
     def scheduler_manage_contract_expiration(self):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
-        date_today = fields.Date.from_string(fields.Date.context_today(self))
-        limit_date = fields.Date.to_string(date_today + relativedelta(days=+15))
-        contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', limit_date)])
+        date_today = fields.Date.from_string(fields.Date.today())
+        in_fifteen_days = fields.Date.to_string(date_today + relativedelta(days=+15))
+        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', in_fifteen_days)])
         res = {}
-        for contract in contracts:
+        for contract in nearly_expired_contracts:
             if contract.vehicle_id.id in res:
                 res[contract.vehicle_id.id] += 1
             else:
@@ -285,8 +273,17 @@ class FleetVehicleLogContract(models.Model):
 
         Vehicle = self.env['fleet.vehicle']
         for vehicle, value in pycompat.items(res):
-            Vehicle.browse(vehicle).message_post(body=_('%s contract(s) need(s) to be renewed and/or closed!') % value)
-        return contracts.write({'state': 'toclose'})
+            Vehicle.browse(vehicle).message_post(body=_('%s contract(s) will expire soon and should be renewed and/or closed!') % value)
+        nearly_expired_contracts.write({'state': 'diesoon'})
+
+        expired_contracts = self.search([('state', '!=', 'toclose'), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts.write({'state': 'toclose'})
+
+        futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
+        futur_contracts.write({'state': 'futur'})
+
+        now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())])
+        now_running_contracts.write({'state': 'open'})
 
     @api.model
     def run_scheduler(self):

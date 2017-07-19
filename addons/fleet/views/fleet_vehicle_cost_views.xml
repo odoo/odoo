@@ -241,17 +241,6 @@
         view_type="form"
         />
 
-    <!-- Update contract status -->
-    <record id="ir_cron_data_contract_update_status" model="ir.cron">
-        <field name="name">Fleet contract: update state</field>
-        <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
-        <field name="type">ir.actions.server</field>
-        <field name="state">code</field>
-        <field name="code">model.update_contract_state()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-    </record>
     <record id='fleet_vehicle_log_contract_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.log.contract.tree</field>
         <field name="model">fleet.vehicle.log.contract</field>
@@ -291,6 +280,11 @@
             <search string="Vehicles Contracts">
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
+                <filter string="Expired" name="expired" domain="[('state', '=', 'toclose')]"/>
+                <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
+                </group>
             </search>
         </field>
     </record>
