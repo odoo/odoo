@@ -778,8 +778,6 @@ class Picking(models.Model):
     @api.multi
     def button_scrap(self):
         self.ensure_one()
-        # only stockable products are scrapeable
-        scrapeable_products = self.move_line_ids.mapped('product_id').filtered(lambda p: p.type == 'product')
         return {
             'name': _('Scrap'),
             'view_type': 'form',
@@ -787,7 +785,7 @@ class Picking(models.Model):
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_picking_id': self.id, 'product_ids': scrapeable_products.ids},
+            'context': {'default_picking_id': self.id, 'product_ids': self.move_line_ids.mapped('product_id').ids},
             'target': 'new',
         }
 
