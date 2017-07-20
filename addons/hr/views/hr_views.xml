@@ -87,9 +87,10 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <div class="text-danger">
+                                        <field name="address_home_has_company" invisible="1" />
+                                        <div class="text-danger" attrs="{'invisible': [('address_home_has_company','=', False)]}">
                                             Use here the home address of the employee.
-                                            This private address is used in the expense report reimboursement document.
+                                            This private address is used in the expense report reimbursement document.
                                             It should be different from the work address.
                                         </div>
                                     </group>
