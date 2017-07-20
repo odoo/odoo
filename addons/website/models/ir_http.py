@@ -17,7 +17,7 @@ from odoo.tools import config
 from odoo.exceptions import QWebException
 from odoo.tools.safe_eval import safe_eval
 
-from odoo.addons.base import ir
+from odoo.addons.web_routing.models.ir_http import ModelConverter
 from odoo.addons.website.models.website import url_for
 
 
@@ -330,7 +330,7 @@ class Http(models.AbstractModel):
         return super(Http, cls).binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
 
 
-class ModelConverter(ir.ir_http.ModelConverter):
+class ModelConverter(ModelConverter):
 
     def generate(self, uid, query=None, args=None):
         Model = request.env[self.model].sudo(uid)

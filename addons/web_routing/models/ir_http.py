@@ -89,6 +89,9 @@ class ModelConverter(ModelConverter):
         self.domain = domain
         self.regex = _UNSLUG_RE.pattern
 
+    def to_url(self, value):
+        return slug(value)
+
     def to_python(self, value):
         matching = re.match(self.regex, value)
         _uid = RequestUID(value=value, match=matching, converter=self)
