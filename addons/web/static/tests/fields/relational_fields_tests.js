@@ -2005,6 +2005,49 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many list: unlink one record', function (assert) {
+        assert.expect(5);
+        this.data.partner.records[0].p = [2, 4];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    var commands = args.args[1].p;
+                    assert.strictEqual(commands.length, 2,
+                        'should have generated two commands');
+                    assert.ok(commands[0][0] === 4 && commands[0][1] === 4,
+                        'should have generated the command 4 (LINK_TO) with id 4');
+                    assert.ok(commands[1][0] === 3 && commands[1][1] === 2,
+                        'should have generated the command 3 (UNLINK) with id 2');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('td.o_list_record_delete span').length, 2,
+            "should have 2 delete buttons");
+
+        form.$('td.o_list_record_delete span').first().click();
+
+        assert.strictEqual(form.$('td.o_list_record_delete span').length, 1,
+            "should have 1 delete button (a record is supposed to have been unlinked)");
+
+        // save and check that the correct command has been generated
+        form.$buttons.find('.o_form_button_save').click();
+        form.destroy();
+    });
+
     QUnit.test('one2many list: deleting one record', function (assert) {
         assert.expect(5);
         this.data.partner.records[0].p = [2, 4];

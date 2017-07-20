@@ -361,27 +361,27 @@ QUnit.module('Views', {
                 assert.strictEqual(record.data.product_ids.count, 2,
                     "there should be two records in the relation");
 
-                // trigger a 'REMOVE' command on the existing record
+                // trigger a 'DELETE' command on the existing record
                 var existingRecordID = record.data.product_ids.data[0].id;
-                model.notifyChanges(resultID, {product_ids: {operation: 'REMOVE', ids: [existingRecordID]}});
+                model.notifyChanges(resultID, {product_ids: {operation: 'DELETE', ids: [existingRecordID]}});
 
                 assert.deepEqual(model.localData[x2mListID]._changes, [{
                     operation: 'ADD', id: newRecordID,
                 }, {
                     operation: 'UPDATE', id: newRecordID,
                 }, {
-                    operation: 'REMOVE', id: existingRecordID,
+                    operation: 'DELETE', id: existingRecordID,
                 }],
                     "_changes should be correct");
                 record = model.get(resultID);
                 assert.strictEqual(record.data.product_ids.count, 1,
                     "there should be one record in the relation");
 
-                // trigger a 'REMOVE' command on the new record
-                model.notifyChanges(resultID, {product_ids: {operation: 'REMOVE', ids: [newRecordID]}});
+                // trigger a 'DELETE' command on the new record
+                model.notifyChanges(resultID, {product_ids: {operation: 'DELETE', ids: [newRecordID]}});
 
                 assert.deepEqual(model.localData[x2mListID]._changes, [{
-                    operation: 'REMOVE', id: existingRecordID,
+                    operation: 'DELETE', id: existingRecordID,
                 }], "_changes should be correct");
                 record = model.get(resultID);
                 assert.strictEqual(record.data.product_ids.count, 0,
@@ -827,7 +827,7 @@ QUnit.module('Views', {
             assert.ok(_.isObject(category_value), "category field should have been fetched");
             assert.strictEqual(category_value.data.length, 1, "category field should contain one record");
             model.notifyChanges(resultID, {category: {
-                operation: 'REMOVE',
+                operation: 'DELETE',
                 ids: [category_value.data[0].id],
             }});
             assert.ok(model.isDirty(resultID), "record should be considered dirty");
