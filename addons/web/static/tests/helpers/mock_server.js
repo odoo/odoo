@@ -465,25 +465,7 @@ var MockServer = Class.extend({
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
         var domain = (args && args[1]) || _kwargs.args || [];
-        var dom = domain[0];
-        var records = this.data[model].records;
-        if (dom) {
-            records = _.filter(records, function (record) {
-                var value = record[dom[0]];
-                if (value instanceof Array) {
-                    value = value[0];
-                }
-                if (dom[1] === 'not in') {
-                    return !_.contains(dom[2], value);
-                } else if (dom[1] === 'in') {
-                    return _.contains(dom[2], value);
-                } else if (dom[1] === '==') {
-                    return dom[2] == value;
-                } else if (dom[1] === '!=') {
-                    return dom[2] != value;
-                }
-            });
-        }
+        var records = this._getRecords(model, domain);
         if (str.length) {
             records = _.filter(records, function (record) {
                 return record.display_name.indexOf(str) !== -1;
@@ -632,7 +614,9 @@ var MockServer = Class.extend({
             var fieldName = groupByField.split(':')[0];
             var aggregateFunction = groupByField.split(':')[1] || 'month';
             if (fields[fieldName].type === 'date') {
-                if (aggregateFunction === 'day') {
+                if (!val) {
+                    return false;
+                } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else {
                     return moment(val).format('MMMM YYYY');

@@ -288,7 +288,7 @@ return AbstractRenderer.extend({
         if (field.type === "one2many" || field.type === "many2many") {
             return field_utils.format[field.type]({data: record[fieldName]}, field);
         } else {
-            return field_utils.format[field.type](record[fieldName], field);
+            return field_utils.format[field.type](record[fieldName], field, {forceString: true});
         }
     },
     /**

@@ -36,7 +36,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.value)" class="img-responsive"/>
+                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.raw_value)" class="img-responsive"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <strong><field name="name"/></strong>
@@ -108,7 +108,7 @@
                                             <div>
                                                 <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                                                 <div class="oe_group_details" style="min-height: 40px">
-                                                    <img t-att-src="kanban_image('res.users', 'image', record.id.value)"
+                                                    <img t-att-src="kanban_image('res.users', 'image', record.id.raw_value)"
                                                         class="oe_avatar oe_kanban_avatar_smallbox" style="float:left; margin-right: 10px;"/>
                                                     <h4><field name="name"/></h4>
                                                 </div>

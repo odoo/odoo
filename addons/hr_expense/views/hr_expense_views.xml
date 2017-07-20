@@ -60,7 +60,7 @@
                         </group><group>
                             <field name="reference"/>
                             <field name="date"/>
-                            <field name="account_id"/>
+                            <field name="account_id" domain="[('internal_type', '=', 'other')]"/>
                             <field name="employee_id"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>

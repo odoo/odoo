@@ -3555,10 +3555,13 @@ QUnit.module('Views', {
                     '</sheet>' +
                 '</form>',
             res_id: 2,
+            viewOptions: {
+                context: {some_context: true},
+            },
             intercepts: {
                 execute_action: function (e) {
                     assert.deepEqual(e.data.action_data.context, {test: 2},
-                        "button context should have been evaluated and given to the action");
+                        "button context should have been evaluated and given to the action, without previous context");
                 },
             },
         });

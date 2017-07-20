@@ -58,7 +58,7 @@ class ProviderGrid(models.Model):
             price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
 
         return {'success': True,
-                'price': self.fixed_price,
+                'price': price_unit,
                 'error_message': False,
                 'warning_message': False}
 

@@ -15,6 +15,7 @@ odoo.define('web.AbstractModel', function (require) {
  */
 
 var Class = require('web.Class');
+var fieldUtils = require('web.field_utils');
 var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
 
@@ -62,6 +63,30 @@ var AbstractModel = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      */
     reload: function (params) {
         return $.when();
+    },
+    /**
+     * Processes date(time) and selection field values sent by the server.
+     * Converts data(time) values to moment instances.
+     * Converts false values of selection fields to 0 if 0 is a valid key,
+     * because the server doesn't make a distinction between false and 0, and
+     * always sends false when value is 0.
+     *
+     * @param {Object} field the field description
+     * @param {*} value
+     * @returns {*} the processed value
+     */
+    _parseServerValue: function (field, value) {
+        if (field.type === 'date' || field.type === 'datetime') {
+            // process date(time): convert into a moment instance
+            value = fieldUtils.parse[field.type](value, field, {isUTC: true});
+        } else if (field.type === 'selection' && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            var hasKey0 = _.find(field.selection, function (option) {
+                return option[0] === 0;
+            });
+            value = hasKey0 ? 0 : value;
+        }
+        return value;
     },
 });
 

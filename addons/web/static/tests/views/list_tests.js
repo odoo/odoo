@@ -2466,6 +2466,23 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('list grouped by date:month', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="date"/></tree>',
+            groupBy: ['date:month'],
+        });
+
+        assert.strictEqual(list.$('tbody').text(), "January 2017 (1)Undefined (3)",
+            "the group names should be correct");
+
+        list.destroy();
+    });
 });
 
 });
