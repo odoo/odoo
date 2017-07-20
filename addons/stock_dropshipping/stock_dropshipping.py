@@ -15,7 +15,10 @@ class sale_order_line(models.Model):
         res = super(sale_order_line, self)._check_routing(product, warehouse)
         if not res:
             for line in self:
-                for pull_rule in line.route_id.pull_ids:
+                pull_rules = line.route_id.pull_ids.filtered(
+                    lambda x: x.warehouse_id == warehouse or not x.warehouse_id
+                )
+                for pull_rule in pull_rules:
                     if (pull_rule.picking_type_id.default_location_src_id.usage == 'supplier' and
                             pull_rule.picking_type_id.default_location_dest_id.usage == 'customer'):
                         res = True
