@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ubl_party">
+            <!-- This template must be called with a partner_id -->
+            <cac:Party
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:WebsiteURI
+                    t-if="record.website"
+                    t-esc="record.website"/>
+                <cac:PartyName>
+                    <cbc:Name t-esc="record.name"/>
+                </cac:PartyName>
+                <cac:Language t-if="record.lang">
+                    <cbc:LocaleCode t-esc="record.lang"/>
+                </cac:Language>
+                <cac:PostalAddress>
+                    <cbc:StreetName
+                        t-if="record.street"
+                        t-esc="record.street"/>
+                    <cbc:AdditionalStreetName
+                        t-if="record.street2"
+                        t-esc="record.street2"/>
+                    <cbc:CityName
+                        t-if="record.city"
+                        t-esc="record.city"/>
+                    <cbc:PostalZone
+                        t-if="record.zip"
+                        t-esc="record.zip"/>
+                    <cbc:CountrySubentity
+                        t-if="record.state_id"
+                        t-esc="record.state_id.name"/>
+                    <cbc:CountrySubentityCode
+                        t-if="record.state_id"
+                        t-esc="record.state_id.code"/>
+                    <cac:Country
+                        t-if="record.country_id">
+                        <cbc:IdentificationCode t-esc="record.country_id.code"/>
+                        <cbc:Name t-esc="record.country_id.name"/>
+                    </cac:Country>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme t-if="record.vat">
+                    <cbc:RegistrationName t-esc="record.name"/>
+                    <cbc:CompanyID t-esc="record.sanitized_vat"/>
+                    <cac:TaxScheme>
+                        <cbc:ID
+                            schemeID="UN/ECE 5153"
+                            schemeAgencyID="6"
+                            >VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:Contact>
+                    <cbc:Name t-esc="record.name"/>
+                    <cbc:Telephone
+                        t-if="record.phone"
+                        t-esc="record.phone"/>
+                    <cbc:ElectronicMail
+                        t-if="record.email"
+                        t-esc="record.email"/>
+                </cac:Contact>
+            </cac:Party>
+        </template>
+        
+        <template id="ubl_invoice_line">
+            <t t-set="values" t-value="record._l10n_be_edi_get_values()"/>
+            <cac:InvoiceLine
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:ID t-esc="record.id"/>
+                <cbc:Note
+                    t-foreach="values.notes"
+                    t-as="note"
+                    t-esc="note"/>
+                <cbc:InvoicedQuantity
+                    t-esc="record.quantity"/>
+                <cbc:LineExtensionAmount
+                    t-att-currencyID="record.currency_id.name"
+                    t-esc="record.price_subtotal"/>
+                <cac:TaxTotal
+                    t-foreach="values.taxes"
+                    t-as="tax">
+                    <cbc:TaxAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="tax['amount']"/>
+                </cac:TaxTotal>
+                <cac:Item>
+                    <cbc:Description t-esc="record.l10n_be_edi_description"/>
+                    <cbc:Name t-esc="record.l10n_be_edi_product_name"/>
+                    <cac:SellersItemIdentification t-if="record.product_id.default_code">
+                        <cbc:ID t-esc="record.product_id.default_code"/>
+                    </cac:SellersItemIdentification>
+                    <cac:AdditionalItemProperty
+                        t-foreach="record.product_id.attribute_value_ids"
+                        t-as="attribute_value_id">
+                        <cbc:Name t-esc="attribute_value_id.attribute_id.name"/>
+                        <cbc:Value t-esc="attribute_value_id.name"/>
+                    </cac:AdditionalItemProperty>
+                </cac:Item>
+                <cac:Price>
+                    <cbc:PriceAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.price_subtotal"/>
+                    <cbc:BaseQuantity t-esc="record.quantity"/>
+                </cac:Price>
+            </cac:InvoiceLine>
+        </template>
+
+        <template id="ubl_invoice">
+            <t t-set="values" t-value="record._l10n_be_edi_get_values()"/>
+            <Invoice
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:UBLVersionID t-esc="values.version_id"/>
+                <cbc:ID t-esc="record.number"/>
+                <cbc:IssueDate t-esc="record.date_invoice"/>
+                <cbc:InvoiceTypeCode t-esc="values.type_code"/>
+                <cbc:Note
+                    t-foreach="values.notes"
+                    t-as="note"
+                    t-esc="note"/>
+                <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
+                <cac:AccountingSupplierParty t-call="l10n_be_edi.ubl_party">
+                    <t t-set="record" t-value="values.supplier_partner_id"/>
+                </cac:AccountingSupplierParty>
+                <cac:AccountingCustomerParty t-call="l10n_be_edi.ubl_party">
+                    <t t-set="record" t-value="values.customer_partner_id"/>
+                </cac:AccountingCustomerParty>
+                <cac:PaymentMeans>
+                    <cbc:PaymentMeansCode
+                        listID="UN/ECE 4461"
+                        t-esc="values.payment_means_code"/>
+                    <cbc:PaymentDueDate t-esc="record.date_due"/>
+                    <cac:PayeeFinancialAccount t-if="values.bank_id and values.bank_id.acc_number">
+                        <cbc:ID schemeName="IBAN" t-esc="values.bank_id.acc_number"/>
+                        <cac:FinancialInstitutionBranch t-if="values.bank_id.bank_bic">
+                            <cac:FinancialInstitution>
+                                <cbc:ID schemeName="BIC" t-esc="values.bank_id.bank_bic"/>
+                            </cac:FinancialInstitution>
+                        </cac:FinancialInstitutionBranch>
+                    </cac:PayeeFinancialAccount>
+                </cac:PaymentMeans>
+                <cac:PaymentTerms t-if="record.payment_term_id">
+                    <cbc:Note t-esc="record.payment_term_id.name"/>
+                </cac:PaymentTerms>
+                <cac:TaxTotal t-if="not record.amount_tax == 0">
+                    <cbc:TaxAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.amount_tax"/>
+                </cac:TaxTotal>
+                <cac:LegalMonetaryTotal>
+                    <cbc:LineExtensionAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.amount_untaxed"/>
+                    <cbc:TaxExclusiveAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.amount_untaxed"/>
+                    <cbc:TaxInclusiveAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.amount_total"/>
+                    <cbc:PrepaidAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.amount_total - record.residual"/>
+                    <cbc:PayableAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="record.residual"/>
+                </cac:LegalMonetaryTotal>
+                <t
+                    t-foreach="record.invoice_line_ids"
+                    t-as="invoice_line_id"
+                    t-call="l10n_be_edi.ubl_invoice_line">
+                    <t t-set="record" t-value="invoice_line_id"/>
+                </t>
+            </Invoice>
+        </template>
+
+        <template id="ubl_invoice_e_fff" inherit_id="l10n_be_edi.ubl_invoice" primary="True">
+            <xpath expr=".//{urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2}DocumentCurrencyCode[1]" position="after">
+                <t t-if="attachment_binary">
+                    <t
+                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                        <cbc:LineCountNumeric t-esc="len(record.invoice_line_ids)"/>
+                        <cac:AdditionalDocumentReference>
+                            <cbc:ID t-esc="document_reference"/>
+                            <cac:Attachment>
+                                <cbc:EmbeddedDocumentBinaryObject
+                                    mimeCode="application/pdf"
+                                    t-esc="attachment_binary"/>
+                            </cac:Attachment>
+                        </cac:AdditionalDocumentReference>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

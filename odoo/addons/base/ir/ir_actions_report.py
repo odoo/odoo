@@ -237,19 +237,21 @@ class IrActionsReport(models.Model):
         '''
         with open(pdfreport_path, 'rb') as pdfreport:
             attachment_content = pdfreport.read()
-        attachment = {
+        attachment_vals = {
             'name': attachment_name,
             'datas': base64.encodestring(attachment_content),
             'datas_fname': attachment_name,
             'res_model': self.model,
             'res_id': res_id,
         }
+        attachment_id = None
         try:
-            self.env['ir.attachment'].create(attachment)
+            attachment_id = self.env['ir.attachment'].create(attachment_vals)
         except AccessError:
-            _logger.info("Cannot save PDF report %r as attachment", attachment['name'])
+            _logger.info("Cannot save PDF report %r as attachment", attachment_vals['name'])
         else:
-            _logger.info('The PDF document %s is now saved in the database', attachment['name'])
+            _logger.info('The PDF document %s is now saved in the database', attachment_vals['name'])
+        return attachment_id
 
     @api.model
     def get_wkhtmltopdf_state(self):
