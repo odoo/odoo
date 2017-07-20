@@ -244,11 +244,10 @@
                         <group>
                             <field name="min_date"/>
                             <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
-                            <!--<label for="owner_id" groups="stock.group_tracking_owner"/>-->
-                            <div groups="stock.group_tracking_owner">
-                                <!--<field name="owner_id"/>-->
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <div groups="stock.group_tracking_owner" colspan="2" col="2">
                                 <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"
-                                    class="oe_link oe_edit_only"/>
+                                    class="oe_link"/>
                             </div>
                         </group>
                     </group>

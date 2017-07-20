@@ -256,14 +256,14 @@ class TxAuthorize(models.Model):
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.capture(self.acquirer_reference, self.amount)
+        tree = transaction.capture(self.acquirer_reference or '', self.amount)
         return self._authorize_s2s_validate_tree(tree)
 
     @api.multi
     def authorize_s2s_void_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
-        tree = transaction.void(self.acquirer_reference)
+        tree = transaction.void(self.acquirer_reference or '')
         return self._authorize_s2s_validate_tree(tree)
 
     @api.multi

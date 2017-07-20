@@ -52,7 +52,7 @@ class StockMove(models.Model):
     product_uom_qty = fields.Float(
         'Initial Demand',
         digits=dp.get_precision('Product Unit of Measure'),
-        default=1.0, required=True, states={'done': [('readonly', True)]},
+        default=0.0, required=True, states={'done': [('readonly', True)]},
         help="This is the quantity of products from an inventory "
              "point of view. For moves in the state 'done', this is the "
              "quantity of products that were actually moved. For other "
@@ -144,7 +144,6 @@ class StockMove(models.Model):
     string_availability_info = fields.Text(
         'Availability', compute='_compute_string_qty_information',
         readonly=True, help='Show various information on stock availability for this move')
-    restrict_lot_id = fields.Many2one('stock.production.lot', 'Lot/Serial Number', help="Technical field used to depict a restriction on the lot/serial number of quants to consider when marking this move as 'done'")
     restrict_partner_id = fields.Many2one('res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'")
     route_ids = fields.Many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order")
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
@@ -179,9 +178,10 @@ class StockMove(models.Model):
             if self.user_has_groups('stock.group_stock_multi_locations'):
                 multi_locations_enabled = move.location_id.child_ids or move.location_dest_id.child_ids
             has_package = move.move_line_ids.mapped('package_id') | move.move_line_ids.mapped('result_package_id')
+            consignment_enabled = self.user_has_groups('stock.group_tracking_owner')
             if move.picking_id.picking_type_id.show_operations is False\
                     and move.state not in ['cancel', 'draft', 'confirmed']\
-                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package):
+                    and (multi_locations_enabled or move.has_tracking != 'none' or len(move.move_line_ids) > 1 or has_package or consignment_enabled):
                 move.show_details_visible = True
             else:
                 move.show_details_visible = False
@@ -498,8 +498,6 @@ class StockMove(models.Model):
         product = self.product_id.with_context(lang=self.partner_id.lang or self.env.user.lang)
         self.name = product.partner_ref
         self.product_uom = product.uom_id.id
-        if self.product_uom_qty:
-            self.product_uom_qty = 1.0
         return {'domain': {'product_uom': [('category_id', '=', product.uom_id.category_id.id)]}}
 
     @api.onchange('date')
@@ -646,7 +644,7 @@ class StockMove(models.Model):
             if move.picking_id and \
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
-                    not (move.restrict_lot_id or (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id)):
+                    not (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id):
                 raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
@@ -674,7 +672,7 @@ class StockMove(models.Model):
             )
         return vals
 
-    def _increase_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         """ Create or update move lines.
         """
         self.ensure_one()
@@ -689,7 +687,7 @@ class StockMove(models.Model):
         taken_quantity = min(available_quantity, need)
 
         # Find a candidate move line to update or create a new one.
-        quants = self.env['stock.quant']._increase_reserved_quantity(
+        quants = self.env['stock.quant']._update_reserved_quantity(
             self.product_id, location_id, taken_quantity, lot_id=lot_id,
             package_id=package_id, owner_id=owner_id, strict=strict
         )
@@ -733,7 +731,7 @@ class StockMove(models.Model):
                     if available_quantity <= 0:
                         continue
                     need = move.product_qty - move.reserved_availability
-                    taken_quantity = move._increase_reserved_quantity(need, available_quantity, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
                     if need == taken_quantity:
                         move.state = 'assigned'
                     else:
@@ -770,7 +768,7 @@ class StockMove(models.Model):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.product_qty
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('product_qty'))
-                        taken_quantity = move._increase_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
+                        taken_quantity = move._update_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
                         if need - taken_quantity == 0.0:
                             move.state = 'assigned'
                             break
@@ -931,11 +929,10 @@ class StockMove(models.Model):
         return vals
 
     @api.multi
-    def split(self, qty, restrict_lot_id=False, restrict_partner_id=False):
+    def split(self, qty, restrict_partner_id=False):
         """ Splits qty from move move into a new move
 
         :param qty: float. quantity to split (given in product UoM)
-        :param restrict_lot_id: optional production lot that can be given in order to force the new move to restrict its choice of quants to this lot.
         :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :param context: dictionay. can contains the special key 'source_location_id' in order to force the source location when copying the move
         :returns: id of the backorder move created """

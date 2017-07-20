@@ -84,10 +84,9 @@ odoo.define('web.BasicModel', function (require) {
 
 var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
-var core = require('web.core');
 var Context = require('web.Context');
+var core = require('web.core');
 var Domain = require('web.Domain');
-var fieldUtils = require('web.field_utils');
 var session = require('web.session');
 
 var _t = core._t;
@@ -2370,8 +2369,8 @@ var BasicModel = AbstractModel.extend({
      *        if given, this field's context is added to the context, instead of
      *        the element's context (except if options.full is true)
      * @param {boolean} [options.full=false]
-     *        if true and fieldName given in options, the element's context
-     *        is added to the context
+     *        if true or nor fieldName or additionalContext given in options,
+     *        the element's context is added to the context
      * @returns {Object} the evaluated context
      */
     _getContext: function (element, options) {
@@ -2379,7 +2378,7 @@ var BasicModel = AbstractModel.extend({
         var context = new Context(session.user_context);
         context.set_eval_context(this._getEvalContext(element));
 
-        if (options.full || !options.fieldName) {
+        if (options.full || !(options.fieldName || options.additionalContext)) {
             context.add(element.context);
         }
         if (options.fieldName) {
@@ -2656,8 +2655,14 @@ var BasicModel = AbstractModel.extend({
         var type = params.type || ('domain' in params && 'list') || 'record';
         var res_id, value;
         var res_ids = params.res_ids || [];
+        var data = params.data || (type === 'record' ? {} : []);
         if (type === 'record') {
-            res_id = params.res_id || (params.data && params.data.id) || _.uniqueId('virtual_');
+            res_id = params.res_id || (params.data && params.data.id);
+            if (res_id) {
+                data.id = res_id;
+            } else {
+                res_id = _.uniqueId('virtual_');
+            }
         } else {
             var isValueArray = params.value instanceof Array;
             res_id = isValueArray ? params.value[0] : undefined;
@@ -2675,7 +2680,7 @@ var BasicModel = AbstractModel.extend({
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
-            data: params.data || (type === 'record' ? {} : []),
+            data: data,
             domain: params.domain || [],
             fields: fields,
             fieldsInfo: params.fieldsInfo,
@@ -2941,30 +2946,6 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
-     * Processes date(time) and selection field values sent by the server.
-     * Converts data(time) values to moment instances.
-     * Converts false values of selection fields to 0 if 0 is a valid key,
-     * because the server doesn't make a distinction between false and 0, and
-     * always sends false when value is 0.
-     *
-     * @param {Object} field the field description
-     * @param {*} value
-     * @returns {*} the processed value
-     */
-    _parseServerValue: function (field, value) {
-        if (field.type === 'date' || field.type === 'datetime') {
-            // process date(time): convert into a moment instance
-            value = fieldUtils.parse[field.type](value, field, {isUTC: true});
-        } else if (field.type === 'selection' && value === false) {
-            // process selection: convert false to 0, if 0 is a valid key
-            var hasKey0 = _.find(field.selection, function (option) {
-                return option[0] === 0;
-            });
-            value = hasKey0 ? 0 : value;
-        }
-        return value;
-    },
-    /**
      * This method is quite important: it is supposed to perform the /onchange
      * rpc and apply the result.
      *
@@ -3087,7 +3068,8 @@ var BasicModel = AbstractModel.extend({
                 lazy: true,
             })
             .then(function (groups) {
-                var rawGroupBy = list.groupedBy[0].split(':')[0];
+                var groupByField = list.groupedBy[0];
+                var rawGroupBy = groupByField.split(':')[0];
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });
@@ -3098,13 +3080,13 @@ var BasicModel = AbstractModel.extend({
                 _.each(groups, function (group) {
                     var aggregateValues = {};
                     _.each(group, function (value, key) {
-                        if (_.contains(fields, key) && key !== list.groupedBy[0]) {
+                        if (_.contains(fields, key) && key !== groupByField) {
                             aggregateValues[key] = value;
                         }
                     });
                     // When a view is grouped, we need to display the name of each group in
                     // the 'title'.
-                    var value = group[rawGroupBy];
+                    var value = group[groupByField];
                     if (list.fields[rawGroupBy].type === "selection") {
                         var choice = _.find(list.fields[rawGroupBy].selection, function (c) {
                             return c[0] === value;

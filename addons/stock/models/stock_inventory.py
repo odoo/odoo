@@ -408,19 +408,21 @@ class InventoryLine(models.Model):
             'company_id': self.inventory_id.company_id.id,
             'inventory_id': self.inventory_id.id,
             'state': 'confirmed',
-            #'restrict_lot_id': self.prod_lot_id.id,
             'restrict_partner_id': self.partner_id.id,
             'location_id': location_id,
             'location_dest_id': location_dest_id,
-            'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
-                                           'lot_id': self.prod_lot_id.id, 
-                                           'product_uom_qty': 0,  # bypass reservation here
-                                           'product_uom_id': self.product_uom_id.id,
-                                           'qty_done': qty,
-                                           'package_id': out and self.package_id.id or False,
-                                           'result_package_id': (not out) and self.package_id.id or False,
-                                           'location_id': location_id, #TODO: owner stuff
-                                           'location_dest_id': location_dest_id,})]
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product_id.id,
+                'lot_id': self.prod_lot_id.id,
+                'product_uom_qty': 0,  # bypass reservation here
+                'product_uom_id': self.product_uom_id.id,
+                'qty_done': qty,
+                'package_id': out and self.package_id.id or False,
+                'result_package_id': (not out) and self.package_id.id or False,
+                'location_id': location_id,
+                'location_dest_id': location_dest_id,
+                'owner_id': self.partner_id.id,
+            })]
         }
 
     def _generate_moves(self):
