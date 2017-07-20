@@ -249,7 +249,7 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
-            raise UserError('You cannot decrease the ordered quantity below your delivered quantity.\n'
+            raise UserError('You cannot decrease the ordered quantity below the delivered quantity.\n'
                             'Create a return first.')
         for line in self:
             pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
