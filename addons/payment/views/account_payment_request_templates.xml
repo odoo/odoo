@@ -59,7 +59,7 @@
                             </h2>
                         </div>
                         <div class="col-md-6 col-sm-6 hidden-print" id="pay_button" t-ignore="true">
-                            <div t-att-class="'o_payment_text_align o_payment_button' if not payment_request.invoice_id.date_due and not payment_request.amount_total and payment_request.state != 'paid' else 'o_payment_text_align'">
+                            <div t-att-class="'o_payment_text_align o_payment_button' if not payment_request.invoice_id.date_due and ((payment_request.amount_total and payment_request.state == 'paid') or not payment_request.amount_total) else 'o_payment_text_align'">
                                 <ul class="list-inline o_payment_pull_align">
                                     <li class="o_divider">
                                          <h2>
