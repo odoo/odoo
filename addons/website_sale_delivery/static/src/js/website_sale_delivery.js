@@ -1,3 +1,4 @@
+'use strict';
 $(document).ready(function () {
 
     // When choosing an delivery carrier, update the quotation and the acquirers
@@ -11,7 +12,7 @@ $(document).ready(function () {
         var value = $(this).val();
         var $provider_free = $("select[name='country_id']:not(.o_provider_restricted), select[name='state_id']:not(.o_provider_restricted)");
         var $provider_restricted = $("select[name='country_id'].o_provider_restricted, select[name='state_id'].o_provider_restricted");
-        if (value == 0) {
+        if (value === 0) {
             // Ship to the same address : only show shipping countries available for billing
             $provider_free.hide().attr('disabled', true);
             $provider_restricted.show().attr('disabled', false).change();

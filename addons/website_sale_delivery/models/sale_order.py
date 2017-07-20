@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -61,7 +60,8 @@ class SaleOrder(models.Model):
                 self.write({'carrier_id': carrier.id})
             if carrier:
                 self.get_delivery_price()
-                self.set_delivery_line()
+                if self.delivery_rating_success:
+                    self.set_delivery_line()
             else:
                 self._remove_delivery_line()
 
@@ -84,9 +84,5 @@ class SaleOrder(models.Model):
         self.write({'carrier_id': False})
 
         values = super(SaleOrder, self)._cart_update(product_id, line_id, add_qty, set_qty, **kwargs)
-
-        if add_qty or set_qty is not None:
-            for sale_order in self:
-                self._check_carrier_quotation()
 
         return values
