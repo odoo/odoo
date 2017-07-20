@@ -5,6 +5,7 @@ var BasicController = require('web.BasicController');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var relational_fields = require('web.relational_fields')
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -469,6 +470,90 @@ var FormController = BasicController.extend({
             shouldSaveLocally: true,
             title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
+    },
+    open_defaults_dialog: function () {
+        var self = this;
+        this.fields = this.renderer.allFieldWidgets[this.handle];
+        var display = function (field, value) {
+            var FieldSelection = relational_fields.FieldSelection;
+            var FieldMany2One = relational_fields.FieldMany2One;
+            if (!value) { return value; }
+            if (field instanceof FieldMany2One) {
+                return field.m2o_value;
+            }
+            return value;
+        };
+        var fields = _.chain(this.fields)
+            .map(function (field) {
+                var value = field.value.res_id || field.value;
+                // ignore fields which are empty, invisible, readonly, o2m
+                // or m2m
+                if (!value
+                        || field.attrs.invisible
+                        || field.field.type === 'one2many'
+                        || field.field.type === 'many2many'
+                        || field.field.type === 'binary'
+                        || field.nodeOptions.isPassword) {
+                    return false;
+                }
+
+                return {
+                    name: field.name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                };
+            })
+            .compact()
+            .sortBy(function (field) { return field.string; })
+            .value();
+        var conditions = _.chain(this.fields)
+            .filter(function (field) { return field.field.change_default; })
+            .map(function (field) {
+                var value = field.value.res_id || field.value;
+                return {
+                    name: field.name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                };
+            })
+            .value();
+        var d = new Dialog(this, {
+            title: _t("Set Default"),
+            buttons: [
+                {text: _t("Close"), close: true},
+                {text: _t("Save default"), click: function () {
+                    var $defaults = d.$el.find('#formview_default_fields');
+                    var field_to_set = $defaults.val();
+                    if (!field_to_set) {
+                        $defaults.parent().addClass('o_form_invalid');
+                        return;
+                    }
+                    var condition = d.$el.find('#formview_default_conditions').val(),
+                        all_users = d.$el.find('#formview_default_all').is(':checked');
+                    this._rpc({
+                        model: 'ir.values',
+                        method: 'set_default',
+                        args: [
+                        self.modelName,
+                        field_to_set,
+                        fields[fields.map(function(x) {return x.name;}).indexOf(field_to_set)].value,
+                        all_users,
+                        true,
+                        condition || false
+                        ]
+                    })
+                    .done(function(){ d.close(); });
+                }}
+            ]
+        });
+        d.args = {
+            fields: fields,
+            conditions: conditions
+        };
+        d.template = 'FormView.set_default';
+        d.open();
     },
     /**
      * Open an existing record in a form view dialog
