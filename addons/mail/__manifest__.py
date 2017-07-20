@@ -6,24 +6,7 @@
     'category': 'Discuss',
     'sequence': 25,
     'summary': 'Discussions, Mailing Lists, News',
-    'description': """
-Business oriented Social Networking
-===================================
-The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete
-communication history on documents with a fully-integrated email and message management system.
-
-It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
-
-Main Features
--------------
-* Clean and renewed communication history for any Odoo document that can act as a discussion topic
-* Subscription mechanism to be updated about new messages on interesting documents
-* Unified feeds page to see recent messages and activity on followed documents
-* User communication through the feeds page
-* Threaded discussion design on documents
-* Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
-* Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
-    """,
+    'description': "",
     'website': 'https://www.odoo.com/page/enterprise-social-network',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [

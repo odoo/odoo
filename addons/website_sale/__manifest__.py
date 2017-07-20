@@ -5,11 +5,7 @@
     'summary': 'Sell Your Products Online',
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
-    'description': """
-Odoo E-Commerce
-==================
-
-        """,
+    'description': "",
     'depends': ['website', 'sale', 'payment', 'website_payment', 'website_portal_sale', 'website_account', 'website_mail', 'website_form', 'website_rating'],
     'data': [
         'security/ir.model.access.csv',

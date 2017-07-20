@@ -7,18 +7,7 @@
     'summary': 'Sponsors, Tracks, Agenda, Event News',
     'website': 'https://www.odoo.com/page/events',
     'version': '1.0',
-    'description': """
-Online Advanced Events
-======================
-
-Adds support for:
-- sponsors
-- dedicated menu per event
-- news per event
-- tracks
-- agenda
-- call for proposals
-        """,
+    'description': "",
     'depends': ['website_event'],
     'data': [
         'security/ir.model.access.csv',
