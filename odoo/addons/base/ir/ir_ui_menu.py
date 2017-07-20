@@ -126,17 +126,17 @@ class IrUiMenu(models.Model):
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        menus = super(IrUiMenu, self).search(args, offset=0, limit=None, order=order, count=False)
-        if menus:
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        ids = super(IrUiMenu, self)._search(args, offset=0, limit=None, order=order, count=False, access_rights_uid=access_rights_uid)
+        if ids:
             # menu filtering is done only on main menu tree, not other menu lists
             if not self._context.get('ir.ui.menu.full_list'):
-                menus = menus._filter_visible_menus()
+                ids = self.browse(ids)._filter_visible_menus().ids
             if offset:
-                menus = menus[offset:]
+                ids = ids[offset:]
             if limit:
-                menus = menus[:limit]
-        return len(menus) if count else menus
+                ids = ids[:limit]
+        return len(ids) if count else ids
 
     @api.multi
     def name_get(self):

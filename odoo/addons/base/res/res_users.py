@@ -130,14 +130,14 @@ class Groups(models.Model):
         return where
 
     @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         # add explicit ordering if search is sorted on full_name
         if order and order.startswith('full_name'):
-            groups = super(Groups, self).search(args)
+            groups = self.browse(super(Groups, self)._search(args, access_rights_uid=access_rights_uid))
             groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
             groups = groups[offset:offset+limit] if limit else groups[offset:]
             return len(groups) if count else groups.ids
-        return super(Groups, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        return super(Groups, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     @api.multi
     def copy(self, default=None):

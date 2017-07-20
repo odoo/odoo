@@ -1605,7 +1605,7 @@ class Meeting(models.Model):
         return result
 
     @api.model
-    def search(self, args, offset=0, limit=0, order=None, count=False):
+    def _search(self, args, offset=0, limit=0, order=None, count=False, access_rights_uid=None):
         if self._context.get('mymeetings'):
             args += [('partner_ids', 'in', self.env.user.partner_id.ids)]
 
@@ -1620,7 +1620,7 @@ class Meeting(models.Model):
             new_args.append(new_arg)
 
         if not self._context.get('virtual_id', True):
-            return super(Meeting, self).search(new_args, offset=offset, limit=limit, order=order, count=count)
+            return super(Meeting, self)._search(new_args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
         if any(arg[0] == 'start' for arg in args) and \
            not any(arg[0] in ('stop', 'final_date') for arg in args):
@@ -1635,13 +1635,13 @@ class Meeting(models.Model):
                 new_args.append(new_arg)
 
         # offset, limit, order and count must be treated separately as we may need to deal with virtual ids
-        events = super(Meeting, self).search(new_args, offset=0, limit=0, order=None, count=False)
-        events = self.browse(events.get_recurrent_ids(args, order=order))
+        ids = super(Meeting, self)._search(new_args, offset=0, limit=0, order=None, count=False, access_rights_uid=access_rights_uid)
+        ids = self.browse(ids).get_recurrent_ids(args, order=order)
         if count:
-            return len(events)
+            return len(ids)
         elif limit:
-            return events[offset: offset + limit]
-        return events
+            return ids[offset: offset + limit]
+        return ids
 
     @api.multi
     def copy(self, default=None):
