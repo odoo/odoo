@@ -918,109 +918,96 @@ class expression(object):
                     push(create_substitution_leaf(leaf, dom_leaf, model))
 
             elif field.type == 'one2many':
-                call_null = True
-
                 domain = field.domain
                 if callable(domain):
                     domain = domain(model)
-                is_integer_m2o = comodel._fields[field.inverse_name].type == 'integer'
+                inverse_is_int = comodel._fields[field.inverse_name].type == 'integer'
+                unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
+
                 if right is not False:
+                    # determine ids2 in comodel
                     if isinstance(right, pycompat.string_types):
-                        op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                        ids2 = [x[0] for x in comodel.name_search(right, domain or [], op, limit=None)]
-                        if ids2:
-                            operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                        op2 = (TERM_OPERATORS_NEGATION[operator]
+                               if operator in NEGATIVE_TERM_OPERATORS else operator)
+                        ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
+                    elif isinstance(right, collections.Iterable):
+                        ids2 = right
                     else:
-                        if isinstance(right, collections.Iterable):
-                            ids2 = right
-                        else:
-                            ids2 = [right]
-                        if ids2 and is_integer_m2o and domain:
-                            ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
+                        ids2 = [right]
+                    if ids2 and inverse_is_int and domain:
+                        ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
 
+                    # determine ids1 in model related to ids2
                     if not ids2:
-                        if operator in ['like', 'ilike', 'in', '=']:
-                            #no result found with given search criteria
-                            call_null = False
-                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
+                        ids1 = []
+                    elif comodel._fields[field.inverse_name].store:
+                        ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
                     else:
-                        # determine ids1 <-- field.inverse_name --- ids2
-                        if comodel._fields[field.inverse_name].store:
-                            ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
-                        else:
-                            recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
-                            ids1 = recs.mapped(field.inverse_name)
-                            if not is_integer_m2o:
-                                ids1 = ids1.ids
-                        if ids1:
-                            call_null = False
-                            o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
-                        elif operator in ('like', 'ilike', 'in', '='):
-                            # no match found with positive search operator => no result (FALSE_LEAF)
-                            call_null = False
-                            push(create_substitution_leaf(leaf, FALSE_LEAF, model))
+                        recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
+                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
 
-                if call_null:
-                    o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    # determine ids from field.inverse_name
-                    if comodel._fields[field.inverse_name].store and not (is_integer_m2o and domain):
+                    # rewrite condition in terms of ids1
+                    op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                    push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
+
+                else:
+                    # determine ids1 = records with lines
+                    if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
                         ids1 = select_distinct_from_where_not_null(cr, field.inverse_name, comodel._table)
                     else:
                         comodel_domain = [(field.inverse_name, '!=', False)]
-                        if is_integer_m2o and domain:
+                        if inverse_is_int and domain:
                             comodel_domain += domain
                         recs = comodel.search(comodel_domain).sudo().with_context(prefetch_fields=False)
-                        ids1 = recs.mapped(field.inverse_name)
-                        if not is_integer_m2o:
-                            ids1 = ids1.ids
-                    push(create_substitution_leaf(leaf, ('id', o2m_op, ids1), model))
+                        ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
+
+                    # rewrite condition to match records with/without lines
+                    op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
+                    push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
 
             elif field.type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field.relation, field.column1, field.column2
 
                 if operator in HIERARCHY_FUNCS:
+                    # determine ids2 in comodel
                     ids2 = to_ids(right, comodel)
-                    dom = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel.search(dom).ids
+                    domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
+                    ids2 = comodel.search(domain).ids
+
+                    # rewrite condition in terms of ids2
                     if comodel == model:
                         push(create_substitution_leaf(leaf, ('id', 'in', ids2), model))
                     else:
                         subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
                         push(create_substitution_leaf(leaf, ('id', 'inselect', (subquery, [tuple(ids2)])), internal=True))
-                else:
-                    call_null_m2m = True
-                    if right is not False:
-                        if isinstance(right, pycompat.string_types):
-                            op = {'!=': '=', 'not like': 'like', 'not ilike': 'ilike'}.get(operator, operator)
-                            domain = field.domain
-                            if callable(domain):
-                                domain = domain(model)
-                            res_ids = [x[0] for x in comodel.name_search(right, domain or [], op, limit=None)]
-                            if res_ids:
-                                operator = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                        else:
-                            if not isinstance(right, list):
-                                res_ids = [right]
-                            else:
-                                res_ids = right
-                        if not res_ids:
-                            if operator in ['like', 'ilike', 'in', '=']:
-                                #no result found with given search criteria
-                                call_null_m2m = False
-                                push(create_substitution_leaf(leaf, FALSE_LEAF, model))
-                            else:
-                                operator = 'in'  # operator changed because ids are directly related to main object
-                        else:
-                            call_null_m2m = False
-                            subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                            subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                            subparams = [tuple(it for it in res_ids if it)]
-                            push(create_substitution_leaf(leaf, ('id', subop, (subquery, subparams)), internal=True))
 
-                    if call_null_m2m:
-                        m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        push(create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), model))
+                elif right is not False:
+                    # determine ids2 in comodel
+                    if isinstance(right, pycompat.string_types):
+                        domain = field.domain
+                        if callable(domain):
+                            domain = domain(model)
+                        op2 = (TERM_OPERATORS_NEGATION[operator]
+                               if operator in NEGATIVE_TERM_OPERATORS else operator)
+                        ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
+                    elif isinstance(right, collections.Iterable):
+                        ids2 = right
+                    else:
+                        ids2 = [right]
+
+                    # rewrite condition in terms of ids2
+                    subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                    subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                    ids2 = tuple(it for it in ids2 if it) or (None,)
+                    push(create_substitution_leaf(leaf, ('id', subop, (subquery, [ids2])), internal=True))
+
+                else:
+                    # determine ids1 = records with relations
+                    ids1 = select_distinct_from_where_not_null(cr, rel_id1, rel_table)
+
+                    # rewrite condition to match records with/without relations
+                    op1 = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
+                    push(create_substitution_leaf(leaf, ('id', op1, ids1), model))
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
