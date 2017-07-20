@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
                 amount_matches = float_compare(tx.amount, tx.sale_order_id.amount_total, 2) == 0
                 if amount_matches:
                     if not acquirer_name:
-                        acquirer_name = tx.sale_order_id.payment_acquirer_id.provider or 'unknown'
+                        acquirer_name = tx.acquirer_id.provider or 'unknown'
                     if tx.state == 'authorized' and tx.acquirer_id.auto_confirm == 'authorize':
                         _logger.info('<%s> transaction authorized, auto-confirming order %s (ID %s)', acquirer_name, tx.sale_order_id.name, tx.sale_order_id.id)
                         tx.sale_order_id.with_context(send_email=True).action_confirm()
