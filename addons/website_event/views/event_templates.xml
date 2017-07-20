@@ -361,8 +361,41 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
+                    <div id="select_user_timezone" class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                                    <h3 class="modal-title" id="myModalLabel"><strong>Select Timezone</strong></h3>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <select class="form-control" id="timezone-container">
+                                            <t t-foreach="timezones" t-as="timezone">
+                                                <option t-att-value="timezone"><t t-esc="timezone"/></option>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="pull-left">
+                                        <button class="btn btn-primary o_set_timezone_btn">Set Timezone</button>
+                                        <button class="btn btn-default js_goto_event" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
                     <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <t t-if="event.show_timezone != 'unique'">
+                        <br/>
+                        <i class="fa fa-arrow-right" aria-hidden="true">
+                            <a href="#" class="o_paynow_button" data-toggle="modal" data-target="#select_user_timezone">
+                                Show time in another timezone
+                            </a>
+                        </i>
+                    </t>
                 </div>
             </div>
 

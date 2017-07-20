@@ -3,6 +3,7 @@
 import babel.dates
 import re
 import werkzeug
+import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -169,7 +170,8 @@ class WebsiteEventController(http.Controller):
             'event': event,
             'main_object': event,
             'range': range,
-            'registrable': event._is_event_registrable()
+            'registrable': event._is_event_registrable(),
+            'timezones': [timezone for timezone in pytz.all_timezones]
         }
         return request.render("website_event.event_description_full", values)
 
