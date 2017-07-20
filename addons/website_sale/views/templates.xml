@@ -174,7 +174,7 @@
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
-                                <t t-set="search_class">pagination form-inline o_website_sale_search</t>
+                                <t t-set="search_class" t-value="'pagination form-inline o_website_sale_search'"/>
                             </t>
                             <t t-call="website_sale.pricelist_list" />
                             <t t-call="website.pager" />

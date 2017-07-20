@@ -29,12 +29,20 @@ var _t = core._t;
 /**
  * @todo Really? it returns a jqueryElement...  We should try to move this to a
  * module with dom helpers functions, such as web.dom, maybe. And replace this
- * with a function that returns a string
+ * with a function that returns a string so we can get rid of the forceString.
  *
  * @param {boolean} value
- * @returns {jQueryElement}
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.forceString=false] if true, returns a string
+*    representation of the boolean rather than a jQueryElement
+ * @returns {jQueryElement | string}
  */
-function formatBoolean(value) {
+function formatBoolean(value, field, options) {
+    if (options && options.forceString) {
+        return value ? _t('True') : _t('False');
+    }
     var $input = $('<input/>', {
         type: 'checkbox',
     }).prop({

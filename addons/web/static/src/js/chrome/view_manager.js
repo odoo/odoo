@@ -53,7 +53,8 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
      */
     on_attach_callback: function() {
         this.is_in_DOM = true;
-        if (this.active_view && this.active_view.controller.on_attach_callback) {
+        var controller = this.active_view && this.active_view.controller;
+        if (controller && this.active_view.controller.on_attach_callback) {
             this.active_view.controller.on_attach_callback();
         }
     },
@@ -579,10 +580,11 @@ var ViewManager = Widget.extend(ControlPanelMixin, {
                 // Wrong default_* and search_default_* values will no give the expected result
                 // Wrong group_by values will simply fail and forbid rendering of the destination view
                 var ncontext = new Context(
-                    _.object(_.reject(_.pairs(_.extend({}, action_data.context, self.env.context)), function(pair) {
+                    _.object(_.reject(_.pairs(self.env.context), function(pair) {
                       return pair[0].match('^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids)$') !== null;
                     }))
                 );
+                ncontext.add(action_data.context || {});
                 ncontext.add({active_model: self.env.modelName});
                 if (res_ids) {
                     ncontext.add({

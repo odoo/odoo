@@ -1,11 +1,13 @@
 odoo.define('web.relational_fields_tests', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var relationalFields = require('web.relational_fields');
 var testUtils = require('web.test_utils');
+var Widget = require('web.Widget');
 
 var createView = testUtils.createView;
 
@@ -361,7 +363,6 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-
     QUnit.test('many2one readonly fields with option "no_open"', function (assert) {
         assert.expect(1);
 
@@ -564,10 +565,71 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one field with option standalone', function (assert) {
+        assert.expect(3);
+        var done = assert.async();
+
+        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
+        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+
+        var fixture = $('#qunit-fixture');
+        var self = this;
+
+        var model = testUtils.createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.makeRecord('coucou', [{
+            name: 'partner_id',
+            relation: 'partner',
+            type: 'many2one',
+            value: [1, 'first partner'],
+        }], {
+            partner_id: {
+                options: {
+                    no_open: true,
+                },
+            },
+        }).then(function (recordID) {
+            var record = model.get(recordID);
+            var parent = new Widget();
+            testUtils.addMockEnvironment(parent, {
+                data: self.data,
+                mockRPC: function (route, args) {
+                    assert.step(args.method);
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            var relField = new relationalFields.FieldMany2One(parent,
+                'partner_id',
+                record,
+                {
+                    mode: 'edit',
+                    standalone: true,
+            });
+
+            relField.appendTo(fixture);
+            $('input.o_input').val('xyzzrot').trigger('input');
+
+            concurrency.delay(0).then(function () {
+                var $dropdown = $('input.o_input').autocomplete('widget');
+                $dropdown.find('.o_m2o_dropdown_option:contains(Create)')
+                    .first().mouseenter().click();
+                assert.verifySteps(['name_search', 'name_create']);
+                parent.destroy();
+                model.destroy();
+                relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+                done();
+            });
+        });
+    });
+
     // QUnit.test('onchange on a many2one to a different model', function (assert) {
-        // This test is commented because the mock server does not give the correct response.
-        // It should return a couple [id, display_name], but I don't know the logic used
-        // by the server, so it's hard to emulate it correctly
+    // This test is commented because the mock server does not give the correct response.
+    // It should return a couple [id, display_name], but I don't know the logic used
+    // by the server, so it's hard to emulate it correctly
     //     assert.expect(2);
 
     //     this.data.partner.records[0].product_id = 41;
@@ -995,14 +1057,16 @@ QUnit.module('relational_fields', {
                     assert.deepEqual(
                         args.kwargs.context,
                         {hey: "ho", hello: "world", test: "yop"},
-                        'the field attr context should have been used for the '
-                        + 'RPC (evaluated and merged with the session one)');
+                        'the field attr context should have been used for the ' +
+                        'RPC (evaluated and merged with the session one)');
+                    return $.when([]);
                 }
                 if (args.method === 'name_search' && args.model === 'partner') {
                     assert.deepEqual(args.kwargs.args, [['id', 'in', [12]]],
                         'the field attr domain should have been used for the RPC (and evaluated)');
                     assert.deepEqual(args.kwargs.context, {hey: 'ho', timmy: [[6, false, [12]]]},
                         'the field attr context should have been used for the RPC (and evaluated)');
+                    return $.when([]);
                 }
                 return this._super.apply(this, arguments);
             },
@@ -3649,6 +3713,34 @@ QUnit.module('relational_fields', {
         form.$buttons.find('.o_form_button_edit').click();
         form.$('tbody td.o_field_x2many_list_row_add a').click();
         assert.verifySteps(['default_get', 'onchange', 'default_get', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('id in one2many obtained in onchange is properly set', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges.turtles = function (obj) {
+            obj.turtles = [
+                [5],
+                [1, 3, {turtle_foo: "kawa"}]
+            ];
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree>' +
+                            '<field name="id"/>' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('tr.o_data_row').text(), '3kawa',
+            "should have properly displayed id and foo field");
         form.destroy();
     });
 

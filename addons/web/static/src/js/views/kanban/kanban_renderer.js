@@ -113,6 +113,12 @@ var KanbanRenderer = BasicRenderer.extend({
         this.widgets[0].addQuickCreate();
     },
     /**
+     * Toggle fold/unfold the Column quick create widget
+     */
+    quickCreateToggleFold: function () {
+        this.quickCreate.toggleFold();
+    },
+    /**
      * Removes a widget (record if ungrouped, column if grouped) from the view.
      *
      * @param {Widget} widget the instance of the widget to remove
@@ -244,8 +250,8 @@ var KanbanRenderer = BasicRenderer.extend({
 
             // Enable column quickcreate
             if (this.columnOptions.group_creatable) {
-                var quickCreate = new ColumnQuickCreate(this);
-                quickCreate.appendTo(fragment);
+                this.quickCreate = new ColumnQuickCreate(this);
+                this.quickCreate.appendTo(fragment);
             }
         }
 

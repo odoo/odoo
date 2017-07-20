@@ -223,21 +223,25 @@ var FieldMany2One = AbstractField.extend({
     _quickCreate: function (name) {
         var self = this;
         var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
+        var action = function () {
+            return self._rpc({
+                model: self.field.relation,
+                method: 'name_create',
+                args: [name],
+                context: self.record.getContext(self.recordParams),
+            }).then(function (result) {
+                if (self.mode === "edit") {
+                    self.reinitialize({id: result[0], display_name: result[1]});
+                }
+            }, slowCreate);
+        };
+
         if (this.nodeOptions.quick_create) {
-            this.trigger_up('mutexify', {
-                action: function () {
-                    return self._rpc({
-                        model: self.field.relation,
-                        method: 'name_create',
-                        args: [name],
-                        context: self.record.getContext(self.recordParams),
-                    }).then(function (result) {
-                        if (self.mode === "edit") {
-                            self.reinitialize({id: result[0], display_name: result[1]});
-                        }
-                    }, slowCreate);
-                },
-            });
+            if (this.standalone) {
+                action();
+            } else {
+                this.trigger_up('mutexify', {action: action});
+            }
         } else {
             slowCreate();
         }

@@ -65,9 +65,12 @@ var AbstractField = Widget.extend({
      * @constructor
      * @param {Widget} parent
      * @param {string} name The field name defined in the model
-     * @param {Object} record A record object (result of the get method of a basic model)
+     * @param {Object} record A record object (result of the get method of 
+     *   a basic model)
      * @param {Object} [options]
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
+     * @param {string} [options.standalone=false] this flag indicates that the
+     *   field does not have a controller to delegate to
      */
     init: function (parent, name, record, options) {
         this._super(parent);
@@ -157,6 +160,10 @@ var AbstractField = Widget.extend({
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
         this.parseOptions = {};
+
+        // standalone is a flag indicating that the field does not have a
+        // controller to delegate actions to
+        this.standalone = options.standalone;
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,

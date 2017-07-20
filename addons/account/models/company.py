@@ -57,10 +57,16 @@ Best Regards,''')
         if (date.month < last_month or (date.month == last_month and date.day <= last_day)):
             date = date.replace(month=last_month, day=last_day)
         else:
-            date = date.replace(month=last_month, day=last_day, year=date.year + 1)
+            if last_month == 2 and last_day == 29 and (date.year + 1) % 4 != 0:
+                date = date.replace(month=last_month, day=28, year=date.year + 1)
+            else:
+                date = date.replace(month=last_month, day=last_day, year=date.year + 1)
         date_to = date
         date_from = date + timedelta(days=1)
-        date_from = date_from.replace(year=date_from.year - 1)
+        if date_from.month == 2 and date_from.day == 29:
+            date_from = date_from.replace(day=28, year=date_from.year - 1)
+        else:
+            date_from = date_from.replace(year=date_from.year - 1)
         return {'date_from': date_from, 'date_to': date_to}
 
     def get_new_account_code(self, current_code, old_prefix, new_prefix, digits):
