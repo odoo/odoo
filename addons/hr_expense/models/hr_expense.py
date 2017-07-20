@@ -408,7 +408,52 @@ class HrExpense(models.Model):
             'unit_amount': price,
             'company_id': employee.company_id.id,
         })
-        return super(HrExpense, self).message_new(msg_dict, custom_values)
+        if custom_values.get('employee_id'):
+            res = super(HrExpense, self).message_new(msg_dict, custom_values)
+            self.env.ref('hr_expense.hr_expense_success_email_template').send_mail(res.id)
+            # template_id.send_mail(res.id)
+            return res
+        else:
+            base_partner = self.env.ref('base.partner_root')
+            template_id = self.env.ref('hr_expense.hr_expense_falied_email_template')
+            template_id.write({'email_to': email_split(msg_dict.get('email_from', False))[0]})
+            template_id.sudo().send_mail(base_partner.id, force_send=True)
+            return False
+        # return super(HrExpense, self).message_new(msg_dict, custom_values)
+
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online expense. """
+        self.ensure_one()
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+
+        if user.share or self.env.context.get('force_website'):
+            try:
+                record.check_access_rule('read')
+            except exceptions.AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/expenses?',
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(HrExpense, self).get_access_action(access_uid)
+
+    def get_mail_url(self):
+        self.ensure_one()
+        params = {
+            'model': self._name,
+            'res_id': self.id,
+        }
+        params.update(self.employee_id.user_id.partner_id.signup_get_auth_param()[self.employee_id.user_id.partner_id.id])
+        res = ('/web?#id=%s&view_type=form&model=%s' %(self.id, params['model']))
+        return res
+>>>>>>> 184f043... [IMP] hr_expense: templates for creating successfull expense and expense failure has been created
 
 class HrExpenseSheet(models.Model):
 
