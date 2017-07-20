@@ -7,19 +7,7 @@
     'category': 'Human Resources',
     'sequence': 75,
     'summary': 'Jobs, Departments, Employees Details',
-    'description': """
-Human Resources Management
-==========================
-
-This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
-
-
-You can manage:
----------------
-* Employees and hierarchies : You can define your employee with User and display hierarchies
-* HR Departments
-* HR Jobs
-    """,
+    'description': "",
     'website': 'https://www.odoo.com/page/employees',
     'images': [
         'images/hr_department.jpeg',

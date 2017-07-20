@@ -7,11 +7,7 @@
     'sequence': 142,
     'version': '1.0',
     'summary': 'Job Descriptions And Application Forms',
-    'description': """
-Odoo Contact Form
-====================
-
-        """,
+    'description': "",
     'depends': ['website_partner', 'hr_recruitment', 'website_mail', 'website_form'],
     'data': [
         'security/ir.model.access.csv',
