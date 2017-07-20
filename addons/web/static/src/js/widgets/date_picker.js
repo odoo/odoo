@@ -63,7 +63,11 @@ var DateWidget = Widget.extend({
     },
     set_value_from_ui: function() {
         var value = this.$input.val() || false;
+        var previous_val = this.get('value');
         this.set_value(this.parse_client(value));
+        if (this.picker && value !== previous_val) {
+            this.picker.viewDate(value);
+        }
     },
     set_readonly: function(readonly) {
         this.readonly = readonly;
