@@ -192,7 +192,7 @@ var RecordQuickCreate = AbstractQuickCreate.extend({
 var ColumnQuickCreate = AbstractQuickCreate.extend({
     template: 'KanbanView.ColumnQuickCreate',
     events: _.extend({}, AbstractQuickCreate.prototype.events, {
-        'click': '_onClick',
+        'click': 'toggleFold',
         'click input': '_onInputClicked',
         'focusout': '_onFocusout',
     }),
@@ -211,6 +211,22 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
         this.$quick_create = this.$('.o_kanban_quick_create');
         this.$input = this.$('input');
         return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle fold/unfold the Column quick create widget
+     */
+    toggleFold: function () {
+        this.folded = !this.folded;
+        this._update();
+        if (!this.folded) {
+            this.$input.focus();
+            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -241,18 +257,6 @@ var ColumnQuickCreate = AbstractQuickCreate.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onClick: function () {
-        this.folded = !this.folded;
-        this._update();
-        if (!this.folded) {
-            this.$input.focus();
-            this.trigger_up('scrollTo', {selector: '.o_column_quick_create'});
-        }
-    },
     /**
      * @private
      */
