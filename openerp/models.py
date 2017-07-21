@@ -2003,6 +2003,12 @@ class BaseModel(object):
         if gb and gb['type'] in ('date', 'datetime') and value:
             if isinstance(value, basestring):
                 dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
+                if gb['type'] == 'date':
+                    # When a field is of type `date`, the strptime below
+                    # raises an error because PostgreSQL returns a
+                    # `datetime`. See PostgreSql `date_trunc`.  So, let's
+                    # remove the excess.
+                    value = value[:len(DEFAULT_SERVER_DATE_FORMAT)]
                 value = datetime.datetime.strptime(value, dt_format)
             if gb['tz_convert']:
                 value =  pytz.timezone(context['tz']).localize(value)
