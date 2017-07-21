@@ -235,6 +235,14 @@ class PurchaseOrder(models.Model):
             self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
 
+    @api.onchange('fiscal_position_id')
+    def _compute_tax_id(self):
+        """
+        Trigger the recompute of the taxes if the fiscal position is changed on the PO.
+        """
+        for order in self:
+            order.order_line._compute_tax_id()
+
     @api.onchange('partner_id')
     def onchange_partner_id_warning(self):
         if not self.partner_id:
@@ -524,6 +532,14 @@ class PurchaseOrderLine(models.Model):
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
+
+    @api.multi
+    def _compute_tax_id(self):
+        for line in self:
+            fpos = line.order_id.fiscal_position_id or line.order_id.partner_id.property_account_position_id
+            # If company_id is set, always filter taxes by the company
+            taxes = line.product_id.supplier_taxes_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
+            line.taxes_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_id) if fpos else taxes
 
     @api.depends('invoice_lines.invoice_id.state')
     def _compute_qty_invoiced(self):
