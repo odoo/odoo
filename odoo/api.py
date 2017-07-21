@@ -155,6 +155,27 @@ def constrains(*args):
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
         supported and will be ignored
+
+    .. warning::
+
+        ``@constrains`` will be triggered only if the declared fields in the
+        decorated method are included in the record returned when it is called.
+        If an implied method is called from a context that does not send in his
+        record all values related to his model, the constrain will not be
+        triggered if the constraint fields are not mentioned in the record.
+        e.g. A quick create option (like in relational fields).
+
+        i.e. In a creation form view if the fields are not filled, they are sent
+        with falsy values, otherwise, in a quick creation option the field names
+        are not sent, so, the constrain will not be triggered.
+        To get the triggering behaviour is needed to pass a field required in
+        the quick creation. e.g. ``name``::
+
+            @api.one
+            @api.constrains('mobile', 'phone', 'name')
+            def _check_partner_mobile_phone(self):
+                if not self.mobile and not self.phone:
+                raise ValidationError("At least one of 'mobile' and 'phone' fields must be filled.")
     """
     return attrsetter('_constrains', args)
 
