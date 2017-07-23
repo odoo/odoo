@@ -2,6 +2,374 @@
 <odoo>
 <menuitem id="account_reports_vn_statements_menu" name="Vietnam" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
 
+	<data>
+		<record id="transfer_account_id" model="account.account.template">
+			<field name="name">Tiền đang chuyển</field>
+			<field name="code">113</field>
+			<field name="reconcile" eval="True" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]" />
+		</record>
+
+		<!-- Account Chart Templates -->
+		<record id="vn_template" model="account.chart.template">
+			<field name="name">VN - Chart of Accounts</field>
+			<field name="code_digits">0</field>
+			<field name="currency_id" ref="base.VND" />
+			<field name="bank_account_code_prefix">112</field>
+			<field name="cash_account_code_prefix">111</field>
+			<field name="transfer_account_id" ref="transfer_account_id" />
+		</record>
+
+		<record id="transfer_account_id" model="account.account.template">
+			<field name="chart_template_id" ref="vn_template" />
+		</record>
+
+		<!-- Account Templates -->
+
+		<!-- Type 1: Current Assets -->
+		<record id="chart1112" model="account.account.template">
+			<field name="code">1112</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_liquidity" />
+			<field name="chart_template_id" ref="l10n_vn.vn_template" />
+			<field name="name">Foreign currencies</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_111')])]" />
+		</record>
+		<record id="chart1113" model="account.account.template">
+			<field name="code">1113</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_liquidity" />
+			<field name="chart_template_id" ref="l10n_vn.vn_template" />
+			<field name="name">Monetary Gold</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_111')])]" />
+		</record>
+
+		<record id="chart1122" model="account.account.template">
+			<field name="code">1122</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_liquidity" />
+			<field name="chart_template_id" ref="l10n_vn.vn_template" />
+			<field name="name">Foreign currencies</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_112')])]" />
+		</record>
+		<record id="chart1123" model="account.account.template">
+			<field name="code">1123</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_liquidity" />
+			<field name="chart_template_id" ref="l10n_vn.vn_template" />
+			<field name="name">Monetary Gold</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_112')])]" />
+		</record>
+
+		<record id="chart1131" model="account.account.template">
+			<field name="name">Vietnam Dong</field>
+			<field name="code">1131</field>
+			<field name="reconcile" eval="True" />
+			<field name="user_type_id" ref="account.data_account_type_liquidity" />
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]" />
+		</record>
+		<record id="chart1132" model="account.account.template">
+			<field name="name">Foreign Currencies</field>
+			<field name="code">1132</field>
+			<field name="reconcile" eval="True" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_113')])]" />
+		</record>
+
+		<record id="chart1211" model="account.account.template">
+			<field name="code">1211</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Shares</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]" />
+		</record>
+		<record id="chart1212" model="account.account.template">
+			<field name="code">1212</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Bonds</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]" />
+		</record>
+		<record id="chart1218" model="account.account.template">
+			<field name="code">1218</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Other securities and financial instruments</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_121')])]" />
+		</record>
+		<record id="chart1281" model="account.account.template">
+			<field name="code">1281</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Term deposits</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]" />
+		</record>
+		<record id="chart1282" model="account.account.template">
+			<field name="code">1282</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Bonds</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]" />
+		</record>
+		<record id="chart1283" model="account.account.template">
+			<field name="code">1283</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Lending Loans</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]" />
+		</record>
+
+		<record id="chart1288" model="account.account.template">
+			<field name="code">1288</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Other held to maturity investments</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_128')])]" />
+		</record>
+
+		<record id="chart131" model="account.account.template">
+			<field name="code">131</field>
+			<field name="reconcile" eval="True" />
+			<field name="user_type_id" ref="account.data_account_type_receivable" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Trade receivables</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_131')])]" />
+		</record>
+
+		<record id="chart1331" model="account.account.template">
+			<field name="code">1331</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">VAT on purchase of goods and services</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_133')])]" />
+		</record>
+		<record id="chart1332" model="account.account.template">
+			<field name="code">1332</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">VAT on purchase of fixed assets</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_133')])]" />
+		</record>
+
+		<record id="chart1361" model="account.account.template">
+			<field name="code">1361</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Working capital provided to sub-units</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]" />
+		</record>
+		<record id="chart1362" model="account.account.template">
+			<field name="code">1362</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Intra-company receivables on foreign exchange
+				defferences</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]" />
+		</record>
+		<record id="chart1363" model="account.account.template">
+			<field name="code">1363</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Intra-company receivables on borrowing costs
+				eligible to be capitalized</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]" />
+		</record>
+
+		<record id="chart1368" model="account.account.template">
+			<field name="code">1368</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Other intra-company receivables</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_136')])]" />
+		</record>
+
+		<record id="chart1381" model="account.account.template">
+			<field name="code">1381</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Shortage of assets awaiting resolution</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]" />
+		</record>
+		<record id="chart1385" model="account.account.template">
+			<field name="code">1385</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Receivables from equitization</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]" />
+		</record>
+		<record id="chart1388" model="account.account.template">
+			<field name="code">1388</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Other Receivables</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_138')])]" />
+		</record>
+
+		<record id="chart141" model="account.account.template">
+			<field name="code">141</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Advances for Employees</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_141')])]" />
+		</record>
+
+		<record id="chart151" model="account.account.template">
+			<field name="code">151</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Goods in transit</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_151')])]" />
+		</record>
+
+		<record id="chart152" model="account.account.template">
+			<field name="code">152</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Raw materials</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_152')])]" />
+		</record>
+
+		<record id="chart1531" model="account.account.template">
+			<field name="code">1531</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Tools and supplies</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]" />
+		</record>
+
+		<record id="chart1532" model="account.account.template">
+			<field name="code">1532</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Reusable packaging materials</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]" />
+		</record>
+
+		<record id="chart1533" model="account.account.template">
+			<field name="code">1533</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Instruments for renting</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]" />
+		</record>
+
+		<record id="chart1534" model="account.account.template">
+			<field name="code">1534</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Equipment and spare parts for replacement</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_153')])]" />
+		</record>
+
+		<record id="chart1541" model="account.account.template">
+			<field name="code">1541</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Construction Contracts</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]" />
+		</record>
+		<record id="chart1542" model="account.account.template">
+			<field name="code">1542</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Other Products</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]" />
+		</record>
+		<record id="chart1543" model="account.account.template">
+			<field name="code">1543</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Services</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]" />
+		</record>
+		<record id="chart1544" model="account.account.template">
+			<field name="code">1544</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Warranty costs</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_154')])]" />
+		</record>
+
+		<record id="chart1551" model="account.account.template">
+			<field name="code">1551</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Finished products - inventory</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_155')])]" />
+		</record>
+
+		<record id="chart1557" model="account.account.template">
+			<field name="code">1557</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Finished products - real estate</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_155')])]" />
+		</record>
+
+		<record id="chart1561" model="account.account.template">
+			<field name="code">1561</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Purchase costs</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]" />
+		</record>
+		<record id="chart1562" model="account.account.template">
+			<field name="code">1562</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Incident purchase costs</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]" />
+		</record>
+		<record id="chart1567" model="account.account.template">
+			<field name="code">1567</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Properties held for sale</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_156')])]" />
+		</record>
+
+		<record id="chart157" model="account.account.template">
+			<field name="code">157</field>
+			<field name="reconcile" eval="False" />
+			<field name="user_type_id" ref="account.data_account_type_current_assets" />
+			<field name="chart_template_id" ref="vn_template" />
+			<field name="name">Outward goods on consignment</field>
+			<field name="tag_ids" eval="[(6,0,[ref('account_tag_157')])]" />
+		</record>
+
 <data>
     <record id="transfer_account_id" model="account.account.template">
         <field name="name">Tiền đang chuyển</field>
