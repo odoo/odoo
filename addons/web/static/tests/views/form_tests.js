@@ -2,6 +2,7 @@ odoo.define('web.form_tests', function (require) {
 "use strict";
 
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
@@ -5386,6 +5387,34 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_field_widget').text(), 'first record',
             "should have come back to previous record");
 
+        form.destroy();
+    });
+
+    QUnit.test('display tooltips for buttons', function (assert) {
+        assert.expect(1);
+
+        var initialDebugMode = config.debug;
+        config.debug = true;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="some_method" class="oe_highlight" string="Button" type="object"/>' +
+                    '</header>' +
+                '</form>',
+        });
+
+        var $button = form.$('.o_form_statusbar button');
+        $button.tooltip('show', false);
+        $button.trigger($.Event('mouseenter'));
+
+        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
+            "should have rendered a tooltip");
+
+        config.debug = initialDebugMode;
         form.destroy();
     });
 });
