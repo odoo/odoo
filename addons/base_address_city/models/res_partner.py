@@ -24,6 +24,9 @@ class Partner(models.Model):
             return arch
         # render the partner address accordingly to address_view_id
         doc = etree.fromstring(arch)
+        # avoid replace city node if already exist city_id in arch
+        if doc.xpath("//field[@name='city_id']"):
+            return arch
         for city_node in doc.xpath("//field[@name='city']"):
             replacement_xml = """
             <div>
