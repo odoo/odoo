@@ -2073,7 +2073,7 @@ class stock_move(osv.osv):
                 raise UserError(_('Cannot unreserve a done move'))
             quant_obj.quants_unreserve(cr, uid, move, context=context)
             if not context.get('no_state_change'):
-                if self.find_move_ancestors(cr, uid, move, context=context):
+                if move.procure_method == 'make_to_order' or self.find_move_ancestors(cr, uid, move, context=context):
                     self.write(cr, uid, [move.id], {'state': 'waiting'}, context=context)
                 else:
                     self.write(cr, uid, [move.id], {'state': 'confirmed'}, context=context)
@@ -2572,7 +2572,7 @@ class stock_move(osv.osv):
             if len(reserved_quant_ids) == 0 and move.partially_available:
                 vals['partially_available'] = False
             if move.state == 'assigned':
-                if self.find_move_ancestors(cr, uid, move, context=context):
+                if move.procure_method == 'make_to_order' or self.find_move_ancestors(cr, uid, move, context=context):
                     vals['state'] = 'waiting'
                 else:
                     vals['state'] = 'confirmed'
