@@ -115,7 +115,7 @@ class DeliveryCarrier(models.Model):
             # apply margin on computed price
             res['price'] = res['price'] * (1.0 + (float(self.margin) / 100.0))
             # free when order is large enough
-            if res['success'] and self.free_over and order._compute_amount_total_without_delivery >= self.amount:
+            if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
                 res['warning_message'] = _('Warning:\nTotal amount of this order is over %.2f, free shipping!\n(actual cost: %.2f)') % (self.amount, res['price'])
                 res['price'] = 0.0
             return res
