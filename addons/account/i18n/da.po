@@ -16,13 +16,14 @@
 # jonas jensen <j.jensen@tcomp.dk>, 2016
 # Kenneth Hansen <kenneth@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgstr ""
 "% if object.partner_id.parent_id:\n"
 "(<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
-",</p>\n"
+"</p>\n"
 "<p>Hermed fremsendes faktura med fakturanummer <strong>${object.number}</strong>\n"
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
@@ -2086,7 +2087,7 @@ msgstr "Balance"
 #: model:ir.ui.menu,name:account.menu_account_report_bs
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Balance Sheet"
-msgstr "Konto udtog"
+msgstr "Balance"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_balance_end
@@ -2445,7 +2446,7 @@ msgstr "Fortryd valgte fakturaer"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: create refund and reconcile"
-msgstr "Annulér: opret kreditnota og udlign"
+msgstr "Annullér: opret kreditnota og udlign"
 
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
@@ -2839,7 +2840,7 @@ msgstr "Kommentar"
 #: model:ir.model.fields,field_description:account.field_account_invoice_commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report_commercial_partner_id
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Kommerciel enhed"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3481,7 +3482,7 @@ msgstr "Kunde moms"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Customer ref:"
-msgstr "Kunde refernce"
+msgstr "Kundens ref:"
 
 #. module: account
 #. openerp-web
@@ -3959,7 +3960,7 @@ msgstr "Forfaldne betalinger"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Due Type"
-msgstr ""
+msgstr "Forfaldstype"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_date_maturity
@@ -4013,7 +4014,7 @@ msgstr "Aktiver sammenligning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_reports_followup
 msgid "Enable payment followup management"
-msgstr ""
+msgstr "Aktiver funktionen betalingsopfølgning (rykkerprocedure)"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5838,7 +5839,7 @@ msgstr "Seneste dato for match af faktura og betaling"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Legal Name"
-msgstr ""
+msgstr "Juridisk navn"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_position_form
@@ -8098,6 +8099,10 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Hvis du vælger indstillingen \"Advarsel\", vises denne meddelelsen til "
+"brugeren. Hvis du vælger \"Blokerende meddelelse\", vil der blive sendt en "
+"undtagelse ud sammen meddelelsen og blokere strømmen. Meddelelsen skal "
+"skrives i det næste felt."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_template_action
@@ -8210,7 +8215,7 @@ msgstr "Vis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_display_on_footer
 msgid "Show in Invoices Footer"
-msgstr ""
+msgstr "Vis i footer på faktura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
@@ -8478,7 +8483,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Tax ID"
-msgstr ""
+msgstr "Moms ID"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_tax
@@ -8718,7 +8723,7 @@ msgstr "Betingelser"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Vilkår & amp; betingelser"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -9516,7 +9521,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Transaction"
-msgstr ""
+msgstr "Overførsel"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10530,7 +10535,7 @@ msgstr "eller"
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "outstanding debits"
-msgstr ""
+msgstr "udestående salg"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form

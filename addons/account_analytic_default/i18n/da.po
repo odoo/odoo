@@ -6,15 +6,15 @@
 # Morten Schou <ms@msteknik.dk>, 2016
 # Jesper Carstensen <jc@danodoo.dk>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 # jonas jensen <j.jensen@tcomp.dk>, 2016
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017\n"
+"Last-Translator: jonas jensen <j.jensen@tcomp.dk>, 2016\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,12 @@ msgstr "Analyse konto"
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "Analytiske standarder"
+msgstr "Analyse standarder"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Analytisk Distribution"
+msgstr "Analytisk fordeling"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -59,7 +59,7 @@ msgstr "Analytisk Distribution"
 #: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
 #: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
-msgstr "Analytiske regler"
+msgstr "Analyse regler"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
@@ -90,7 +90,7 @@ msgstr "Standard slutdato for denne analyse konto"
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_start
 msgid "Default start date for this Analytic Account."
-msgstr "Standard start dato for denne analytiske konto."
+msgstr "Standard start dato for denne analyse konto."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_display_name
@@ -106,8 +106,7 @@ msgstr "Slut dato"
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
-"Giver sekvensen orden, når der vises en liste over analytisk fordeling"
+msgstr "Giver rækkefølgen, når der vises en liste over analyse fordeling"
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -122,7 +121,7 @@ msgstr "ID"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Faktura linie"
+msgstr "Fakturalinje"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
@@ -150,7 +149,7 @@ msgstr "Kontakt"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
-msgstr "Vare"
+msgstr "Produkt"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_product_template
@@ -160,7 +159,7 @@ msgstr "Produktskabelon"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Salgsordrelinie"
+msgstr "Salgsordrelinje"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_company_id
@@ -169,9 +168,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "company, it will automatically take this as an analytic account)"
 msgstr ""
-"Vælg en virksomhed som vil bruge den analytiske konto i analytisk standard "
-"(f.eks. skabe ny kundefaktura eller salgsordre. Hvis vi vælger denne "
-"virksomhed, vil det automatisk vælge dette som en analytisk konto)"
+"Vælg en virksomhed som vil bruge analysekonto som standard (f.eks. hvis vi "
+"oprette en ny kundefaktura eller salgsordre og vælger denne virksomhed, vil "
+"den automatisk vælge denne som en analysekonto)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_partner_id
@@ -180,9 +179,9 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Vælg en partner som vil bruge den analytiske konto i analytisk standard "
-"(f.eks. skabe ny kundefaktura eller salgsordre. Hvis vi vælger denne "
-"partner, vil det automatisk vælge dette som en analytisk konto)"
+"Vælg en partner som vil bruge analysekonto som standard (f.eks. hvis vi "
+"opretter en ny kundefaktura eller salgsordre og vælger denne partner, vil "
+"den automatisk vælge denne som en analysekonto)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_product_id
@@ -191,16 +190,15 @@ msgid ""
 "default (e.g. create new customer invoice or Sales order if we select this "
 "product, it will automatically take this as an analytic account)"
 msgstr ""
-"Vælg et produkt som vil bruge den analytiske konto i analytisk standard "
-"(f.eks. skabe ny kundefaktura eller salgsordre. Hvis vi sælger dette "
-"produkt, vil det automatisk vælge dette som en analytisk konto)"
+"Vælg et produkt som vil bruge analysekonto som standard (f.eks. hvis vi "
+"oprette en ny kundefaktura eller salgsordre og vælger dette produkt, vil den"
+" automatisk vælge denne som en analysekonto)"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_user_id
 msgid ""
 "Select a user which will use analytic account specified in analytic default."
-msgstr ""
-"Vælg en bruger som vil bruge den analytiske konto i analytisk standard."
+msgstr "Vælg en bruger som vil bruge analysekonto som standard."
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_sequence
