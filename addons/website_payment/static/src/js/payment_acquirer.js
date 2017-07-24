@@ -67,6 +67,7 @@ odoo.define('website_payment.payment_acquirer', function (require) {
 
 var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
+var website = require('website.website');
 
     var payment_methods = $('#payment_tokens_list');
 
