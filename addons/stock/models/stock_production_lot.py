@@ -30,10 +30,10 @@ class ProductionLot(models.Model):
 
     @api.model
     def create(self, vals):
-        pack_id = self.env.context.get('active_pack_operation', False)
-        if pack_id:
-            pack = self.env['stock.move.line'].browse(pack_id)
-            if pack.picking_id and not pack.picking_id.picking_type_id.use_create_lots:
+        active_picking_id = self.env.context.get('active_picking_id', False)
+        if active_picking_id:
+            picking_id = self.env['stock.picking'].browse(active_picking_id)
+            if picking_id and not picking_id.picking_type_id.use_create_lots:
                 raise UserError(_("You are not allowed to create a lot for this picking type"))
         return super(ProductionLot, self).create(vals)
 
