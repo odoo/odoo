@@ -23,7 +23,7 @@ class TestPickShip(TestStockCommon):
             'location_dest_id': self.customer_location,
             'state': 'waiting',
         })
-        
+
         picking_pick = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
@@ -701,3 +701,48 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 2)
         self.assertEqual(move1.move_line_ids[0].lot_id.id, serial1.id)
         self.assertEqual(move1.move_line_ids[1].lot_id.id, serial2.id)
+
+    def test_add_move_when_picking_is_available_1(self):
+        """ Check that any move added in a picking once it's assigned is directly considered as
+        assigned and bypass the reservation.
+        """
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        # make some stock
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+
+        # add a move
+        move2 = self.MoveObj\
+            .with_context(default_picking_id=delivery_order.id)\
+            .create({
+                'name': self.productA.name,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': delivery_order.id,
+                'location_id': self.pack_location,
+                'location_dest_id': self.customer_location,
+            })
+
+        self.assertEqual(move2.state, 'assigned')
+        self.assertEqual(delivery_order.state, 'assigned')
