@@ -395,6 +395,10 @@ class PurchaseOrder(models.Model):
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves = moves.action_confirm()
+                seq = 0
+                for move in moves:
+                    seq += 5
+                    move.sequence = seq
                 moves.force_assign()
         return True
 
