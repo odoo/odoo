@@ -883,17 +883,7 @@ class StockMove(models.Model):
                 # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
                 move.move_line_ids.filtered(lambda x: x.qty_done == 0.0).write({'move_id': new_move})
                 self.browse(new_move).quantity_done = 0.0
-            for packop in move.move_line_ids:
-                if float_compare(packop.qty_done, 0, precision_rounding=rounding) > 0:
-                    if move.has_tracking != 'none' and (move.picking_type_id.use_create_lots or move.picking_type_id.use_existing_lots):
-                        if packop.lot_name and not packop.lot_id:
-                            lot = self.env['stock.production.lot'].create(
-                                {'name': packop.lot_name, 'product_id': packop.product_id.id})
-                            packop.write({'lot_id': lot.id})
-                        if not packop.lot_id:
-                            raise UserError(_('You need to supply a lot/serial number.'))
-                # execute `action_done` even if nothing was done, to free the reservation
-                packop.action_done()
+            move.move_line_ids.action_done()
         picking = self and self[0].picking_id or False
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
         moves_todo.mapped('move_dest_ids').action_assign()

@@ -1237,7 +1237,6 @@ class TestStockFlow(TestStockCommon):
 
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""
-
         # Change basic operation type not to get lots
         # Create product with lot tracking
         picking_in = self.env['stock.picking.type'].browse(self.picking_type_in)
@@ -1254,6 +1253,7 @@ class TestStockFlow(TestStockCommon):
             'product_uom_qty': 4,
             'product_uom': self.productA.uom_id.id,
             'picking_id': picking_in.id,
+            'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
 
