@@ -2548,7 +2548,8 @@ QUnit.module('Views', {
                         value: {},
                         warning: {
                             title: "Warning",
-                            message: "You must first select a partner"
+                            message: "You must first select a partner",
+                            warning_type: "block"
                         }
                     });
                 }

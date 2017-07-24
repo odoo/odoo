@@ -1322,6 +1322,7 @@ class AccountInvoiceLine(models.Model):
             warning = {
                     'title': _('Warning!'),
                     'message': _('You must first select a partner!'),
+                    'warning_type': 'block',
                 }
             return {'warning': warning}
 

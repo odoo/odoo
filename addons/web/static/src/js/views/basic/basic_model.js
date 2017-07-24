@@ -2885,11 +2885,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 return $.when.apply($, defs)
                     .then(function () {
-                        return self._performOnChange(record, fields_key).then(function () {
-                            if (record._warning) {
-                                return $.Deferred().reject();
-                            }
-                        });
+                        return self._performOnChange(record, fields_key);
                     })
                     .then(function () {
                         return self._fetchRelationalData(record);
@@ -2992,7 +2988,9 @@ var BasicModel = AbstractModel.extend({
                         title: result.warning.title,
                         type: 'dialog',
                     });
-                    record._warning = true;
+                    if (result.warning.warning_type === 'block') {
+                        return $.Deferred().reject();
+                    }
                 }
                 if (result.domain) {
                     var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
