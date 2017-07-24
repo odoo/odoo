@@ -70,23 +70,25 @@ KanbanRecord.include({
                     self._updateRecord({displayed_image_id: false});
                 }}, {text: _t("Discard"), close: true}],
                 $content: $content,
-            }).open();
-
-            var $selectBtn = dialog.$footer.find('.btn-primary');
-            $content.on('click', 'img', function (ev) {
-                $imgs.not(ev.currentTarget).removeClass('o_selected');
-                $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
             });
+            dialog.opened().then(function () {
+                var $selectBtn = dialog.$footer.find('.btn-primary');
+                $content.on('click', 'img', function (ev) {
+                    $imgs.not(ev.currentTarget).removeClass('o_selected');
+                    $selectBtn.prop('disabled', !$(ev.currentTarget).toggleClass('o_selected').hasClass('o_selected'));
+                });
 
-            $content.on('dblclick', 'img', function (ev) {
-                var $img  = $(ev.currentTarget);
-                var data = {
-                    id: $img.data('id'),
-                    display_name: $img.data('name')
-                };
-                self._updateRecord({displayed_image_id: data});
-                dialog.close();
+                $content.on('dblclick', 'img', function (ev) {
+                    var $img  = $(ev.currentTarget);
+                    var data = {
+                        id: $img.data('id'),
+                        display_name: $img.data('name')
+                    };
+                    self._updateRecord({displayed_image_id: data});
+                    dialog.close();
+                });
             });
+            dialog.open();
         }
     },
 });
