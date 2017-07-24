@@ -2,6 +2,7 @@ odoo.define('website_payment.website_payment', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
+var website = require('website.website');
 
 if(!$('.o_website_payment').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_website_payment'");
