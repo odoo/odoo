@@ -1061,6 +1061,12 @@ actual arch.
         qcontext = self._prepare_qcontext()
         qcontext.update(values or {})
 
+        #rde
+        print "\nHere  will follow qcontext and self.id "
+        # print qcontext
+        print self.id
+        print "\n\n"
+
         return self.env[engine].render(self.id, qcontext)
 
     @api.model

@@ -172,6 +172,9 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
+        # rde
+        # print "def _dispatch(cls) in IrHttp in ir_http.py"
+
         # locate the controller method
         try:
             rule, arguments = cls._find_handler(return_rule=True)

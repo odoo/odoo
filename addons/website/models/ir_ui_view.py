@@ -79,10 +79,18 @@ class View(models.Model):
                 _logger.warning("Could not find view object with xml_id '%s'", xml_id)
                 raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
             return view.id
+
+        # rde
+        print "get_view_id (View in ir_ui_view.py)"
+        print "for the xml_id [" + str(xml_id) + "] this method return : " + str(super(View, self).get_view_id(xml_id))
+
         return super(View, self).get_view_id(xml_id)
 
     @api.multi
     def render(self, values=None, engine='ir.qweb'):
+        # rde
+        print "def render(self, values..) in View in ir_ui_view.py"
+
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         new_context = dict(self._context)
         if request and getattr(request, 'website_enabled', False):

@@ -435,6 +435,26 @@ var RTE = Widget.extend({
         }
         var markup = this.getEscapedElement($el).prop('outerHTML');
 
+        // rde
+        console.log("$el.data('oe-id')");
+        console.log($el.data('oe-id'));
+        console.log("markup");
+        console.log(markup);
+        console.log("$el.data('oe-xpath') || null");
+        console.log($el.data('oe-xpath') || null);
+        console.log("_.omit(context || base.get_context(), 'lang')");
+        console.log(_.omit(context || base.get_context(), 'lang'));
+        ajax.jsonRpc('/web/dataset/call', 'call', {
+            model: 'website.page',
+            method: 'save',
+            args: [
+                $el.data('oe-id'),
+                markup,
+                //$el.data('oe-xpath') || null,
+                //_.omit(context || base.get_context(), 'lang')
+            ],
+        });
+
         return ajax.jsonRpc('/web/dataset/call', 'call', {
             model: 'ir.ui.view',
             method: 'save',

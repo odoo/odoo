@@ -101,6 +101,9 @@ class IrUiView(models.Model):
 
     @api.multi
     def save(self, value, xpath=None):
+        # rde
+        print "def save(self, values..) in IrUiView in ir_ui_view.py (website_editor)"
+
         """ Update a view section. The view section may embed fields to write
 
         :param str xpath: valid xpath to the tag to replace

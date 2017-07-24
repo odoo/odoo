@@ -294,7 +294,7 @@ class WebRequest(object):
     def _handle_exception(self, exception):
         """Called within an except block to allow converting exceptions
            to abitrary responses. Anything returned (except None) will
-           be used as response.""" 
+           be used as response."""
         self._failed = exception # prevent tx commit
         if not isinstance(exception, NO_POSTMORTEM) \
                 and not isinstance(exception, werkzeug.exceptions.HTTPException):
@@ -577,7 +577,7 @@ class JsonRequest(WebRequest):
         self.jsonp = jsonp
         request = None
         request_id = args.get('id')
-        
+
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             def handler():
@@ -657,6 +657,9 @@ class JsonRequest(WebRequest):
             return self._json_response(error=error)
 
     def dispatch(self):
+        # rde
+        # print "def dispatch(self) in jsonRequest in http.py"
+
         if self.jsonp_handler:
             return self.jsonp_handler()
         try:
@@ -1419,6 +1422,9 @@ class Root(object):
         return response
 
     def dispatch(self, environ, start_response):
+        # rde
+        # print "def dispatch(self, environ, start_response) in root in http.py"
+
         """
         Performs the actual WSGI dispatching for the application.
         """

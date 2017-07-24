@@ -906,6 +906,9 @@ class DataSet(http.Controller):
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):
+        # rde
+        print "def call(self, model..) in DataSet in web/controllers/main.py"
+
         return self._call_kw(model, method, args, {})
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user")

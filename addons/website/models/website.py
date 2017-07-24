@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-# RDE
+
 import inspect
 import logging
 import math
@@ -238,6 +238,16 @@ class Website(models.Model):
             'name': page_name,
             'page': ispage,
         })
+
+        # rde
+        print "def new_page(self, name..) in website in website.py"
+        print self.env['website.page'].create({
+            'name': page_name,
+            'path': '/test/rde',
+            'content': page.arch.replace(template, page_xmlid),
+            'website_id': self._context.get('website_id')
+        })
+
         return page_xmlid
 
     def key_to_view_id(self, view_id):
@@ -421,6 +431,11 @@ class Website(models.Model):
 
     @api.model
     def get_template(self, template):
+        # rde
+        # print "\ndef get_templte(self, template) in website in website.py"
+        # print template
+        # return self.env['website.page'].search([('name', '=', 'm')], limit=1)
+
         View = self.env['ir.ui.view']
         if isinstance(template, pycompat.integer_types):
             view_id = template
@@ -710,3 +725,28 @@ class WebsitePublishedMixin(models.AbstractModel):
             'url': self.website_url,
             'target': 'self',
         }
+
+
+# rde
+class Page(models.Model):
+    _name = "website.page"
+    _description = "Page"
+    # _inherit = ["website.seo.metadata"]
+
+    name = fields.Char('Page Name')
+    path = fields.Char('Page Path')
+    content = fields.Html(string='Page Content')
+    website_id = fields.Many2one('website', 'Website')
+
+    @api.model
+    def save(self, name, content):
+        # rde
+        print "def rde(self, name,aa) in Page in website.py"
+
+        print self.create({
+            'name': name,
+            'path': '/test/rde',
+            'content': content,
+            'website_id': self._context.get('website_id')
+        })
+        return True

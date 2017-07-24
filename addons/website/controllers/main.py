@@ -22,6 +22,11 @@ from odoo.addons.web.controllers.main import WebClient, Binary, Home
 
 from odoo.tools import pycompat, OrderedSet
 
+#rde
+from dateutil.relativedelta import relativedelta
+import datetime
+import time
+
 logger = logging.getLogger(__name__)
 
 # Completely arbitrary limits
@@ -108,6 +113,9 @@ class Website(Home):
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, cache=300)
     def page(self, page, **opt):
+        # rde
+        print "def page(self, page, **opt) in website in website/controllers/main.py" + "\n L'argument page vaut : " + page
+
         values = {
             'path': page,
             'deletable': True,  # used to add 'delete this page' in content menu
@@ -120,13 +128,38 @@ class Website(Home):
 
         try:
             request.website.get_template(page)
+            # rde
+            print "\n" * 3
+            print request.website.get_template(page)
         except ValueError as e:
             # page not found
+
+            # rde TODO : check base/ir/ir_ui_view def render()
+            """qcontext = dict(
+                env=request.env,
+                user_id=request.env["res.users"].browse(request.env.user.id),
+                res_company=request.env.user.company_id.sudo(),
+                # keep_query=keep_query,
+                request=request,  # might be unbound if we're not in an httprequest context
+                debug=False,
+                json=json,
+                quote_plus=werkzeug.url_quote_plus,
+                time=time,
+                datetime=datetime,
+                relativedelta=relativedelta,
+                xmlid=913,
+            )
+            return request.env['ir.qweb'].render(913, qcontext)"""
+            return request.env['website.page'].search([('name', '=', page[8:])], limit=1).content
+
             if request.website.is_publisher():
                 values.pop('deletable')
                 page = 'website.page_404'
             else:
                 return request.env['ir.http']._handle_exception(e, 404)
+
+        # rde
+        print "L'argument page après être passé dans la méthode vaut : ", page
 
         return request.render(page, values)
 
@@ -229,10 +262,14 @@ class Website(Home):
 
     @http.route('/website/add/<path:path>', type='http', auth="user", website=True)
     def pagenew(self, path, noredirect=False, add_menu=None, template=False):
+        # rde
+        print "def pagenew(self, path..) in website in website/controllers/main.py"
+
         if template:
             xml_id = request.env['website'].new_page(path, template=template)
         else:
             xml_id = request.env['website'].new_page(path)
+        print "XMLID : " + xml_id + " | path : " + path
         if add_menu:
             request.env['website.menu'].create({
                 'name': path,
@@ -240,6 +277,7 @@ class Website(Home):
                 'parent_id': request.website.menu_id.id,
                 'website_id': request.website.id,
             })
+
         # Reverse action in order to allow shortcut for /page/<website_xml_id>
         url = "/page/" + re.sub(r"^website\.", '', xml_id)
 
