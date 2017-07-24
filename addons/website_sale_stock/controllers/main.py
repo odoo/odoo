@@ -3,7 +3,7 @@
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.http import request
-
+from odoo.tools.pycompat import izip
 
 class WebsiteSale(WebsiteSale):
 
@@ -29,7 +29,7 @@ class WebsiteSale(WebsiteSale):
         variant_ids = [r[0] for r in res]
         # recordsets conserve the order
 
-        for r, variant in zip(res, request.env['product.product'].sudo().browse(variant_ids)):
+        for r, variant in izip(res, request.env['product.product'].sudo().browse(variant_ids)):
             r.extend([{
                 'virtual_available': variant.virtual_available,
                 'product_type': str(variant.type),

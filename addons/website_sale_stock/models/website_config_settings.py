@@ -8,10 +8,10 @@ class WebsiteConfigSettings(models.TransientModel):
     _inherit = 'website.config.settings'
 
     inventory_availability = fields.Selection([
-        ('never', 'Don\'t show anything'),
-        ('always', 'Show inventory'),
-        ('threshold', 'Only show below a threshold'),
-        ('custom', 'Show custom message'),
+        ('never', 'Sell regardless of inventory'),
+        ('always', 'Show inventory on website and prevent sales if not enough stock'),
+        ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
+        ('custom', 'Show product-specific notifications'),
     ], string='Inventory', default='never')
     available_threshold = fields.Float(string='Available Threshold')
 
