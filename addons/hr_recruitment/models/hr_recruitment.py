@@ -405,7 +405,7 @@ class Applicant(models.Model):
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
                     'name': applicant.partner_name,
-                    'email': applicant.user_email,
+                    'email': applicant.email_from,
                     'phone': applicant.partner_phone,
                     'mobile': applicant.partner_mobile
                 })
