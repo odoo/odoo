@@ -98,8 +98,9 @@ class StockMoveLine(models.Model):
         if ml.state == 'done':
             Quant = self.env['stock.quant']
             quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
+            in_date = None
             if ml.location_id.should_impact_quants() and ml.product_id.type == 'product':
-                available_qty = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
+                available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 if available_qty < 0 and ml.lot_id:
                     # see if we can compensate the negative quants with some untracked quants
                     untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
@@ -108,7 +109,7 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
             if ml.location_dest_id.should_impact_quants() and ml.product_id.type == 'product':
-                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id)
+                Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
             next_moves = ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
             next_moves.do_unreserve()
             next_moves.action_assign()
@@ -187,14 +188,16 @@ class StockMoveLine(models.Model):
         if updates or 'qty_done' in vals:
             for ml in self.filtered(lambda ml: ml.move_id.state == 'done'):
                 # undo the original move line
+                in_date = None
                 if ml.location_dest_id.should_impact_quants() and ml.product_id.type == 'product':
-                    Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -ml.qty_done, lot_id=ml.lot_id,
-                                                      package_id=ml.package_id, owner_id=ml.owner_id)
+                    in_date = Quant._update_available_quantity(ml.product_id, ml.location_dest_id, -ml.qty_done, lot_id=ml.lot_id,
+                                                      package_id=ml.package_id, owner_id=ml.owner_id)[1]
                 if ml.location_id.should_impact_quants() and ml.product_id.type == 'product':
                     Quant._update_available_quantity(ml.product_id, ml.location_id, ml.qty_done, lot_id=ml.lot_id,
-                                                      package_id=ml.package_id, owner_id=ml.owner_id)
+                                                      package_id=ml.package_id, owner_id=ml.owner_id, in_date=in_date)
 
                 # move what's been actually done
+                in_date = None
                 product_id = ml.product_id
                 location_id = updates.get('location_id', ml.location_id)
                 location_dest_id = updates.get('location_dest_id', ml.location_dest_id)
@@ -206,7 +209,7 @@ class StockMoveLine(models.Model):
                 quantity = ml.move_id.product_uom._compute_quantity(qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
                 if location_id.should_impact_quants() and ml.product_id.type == 'product':
                     ml._free_reservation(product_id, location_id, quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
-                    available_qty = Quant._update_available_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
+                    available_qty, in_date = Quant._update_available_quantity(product_id, location_id, -quantity, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
                     if available_qty < 0 and lot_id:
                         # see if we can compensate the negative quants with some untracked quants
                         untracked_qty = Quant._get_available_quantity(product_id, location_id, lot_id=False, package_id=package_id, owner_id=owner_id, strict=True)
@@ -216,7 +219,7 @@ class StockMoveLine(models.Model):
                             Quant._update_available_quantity(product_id, location_id, taken_from_untracked_qty, lot_id=lot_id, package_id=package_id, owner_id=owner_id)
                             ml._free_reservation(ml.product_id, location_id, untracked_qty, lot_id=False, package_id=package_id, owner_id=owner_id)
                 if location_dest_id.should_impact_quants() and ml.product_id.type == 'product' and qty_done:
-                    Quant._update_available_quantity(product_id, location_dest_id, quantity, lot_id=lot_id, package_id=result_package_id, owner_id=owner_id)
+                    Quant._update_available_quantity(product_id, location_dest_id, quantity, lot_id=lot_id, package_id=result_package_id, owner_id=owner_id, in_date=in_date)
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
         res = super(StockMoveLine, self).write(vals)
@@ -304,8 +307,9 @@ class StockMoveLine(models.Model):
 
                 # move what's been actually done
                 quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id, rounding_method='HALF-UP')
+                in_date = None
                 if ml.location_id.should_impact_quants() and ml.product_id.type == 'product':
-                    available_qty = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
+                    available_qty, in_date = Quant._update_available_quantity(ml.product_id, ml.location_id, -quantity, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                     if available_qty < 0 and ml.lot_id:
                         # see if we can compensate the negative quants with some untracked quants
                         untracked_qty = Quant._get_available_quantity(ml.product_id, ml.location_id, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
@@ -314,7 +318,7 @@ class StockMoveLine(models.Model):
                             Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                             Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 if ml.location_dest_id.should_impact_quants() and ml.product_id.type == 'product':
-                    Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id)
+                    Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None):
         """ When editing a done move line or validating one with some forced quantities, it is

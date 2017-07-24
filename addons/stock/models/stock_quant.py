@@ -57,6 +57,13 @@ class StockQuant(models.Model):
             if quant.quantity > 1 and quant.lot_id and quant.product_id.tracking == 'serial':
                 raise ValidationError(_('A serial number should only be linked to a single product.'))
 
+    @api.multi
+    @api.constrains('in_date', 'lot_id')
+    def check_in_date(self):
+        for quant in self:
+            if quant.in_date and not quant.lot_id:
+                raise ValidationError(_('An incoming date cannot be set to an untracked product.'))
+
     @api.one
     def _compute_name(self):
         self.name = '%s: %s%s' % (self.lot_id.name or self.product_id.code or '', self.quantity, self.product_id.uom_id.name)
@@ -126,14 +133,44 @@ class StockQuant(models.Model):
         return sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
 
     @api.model
-    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None):
+    def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
+        """ Increase or decrease `reserved_quantity` of a set of quants for a given set of
+        product_id/location_id/lot_id/package_id/owner_id.
+
+        :param product_id:
+        :param location_id:
+        :param quantity:
+        :param lot_id:
+        :param package_id:
+        :param owner_id:
+        :param datetime in_date: Should only be passed when calls to this method are done in
+                                 order to move a quant. When creating a tracked quant, the
+                                 current datetime will be used.
+        :return: tuple (available_quantity, in_date as a datetime)
+        """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+
+        if lot_id:
+            incoming_dates = quants.mapped('in_date')  # `mapped` already filtered out falsy items
+            incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
+            if in_date:
+                incoming_dates += [in_date]
+            # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
+            # consider only the oldest one as being relevant.
+            if incoming_dates:
+                in_date = fields.Datetime.to_string(min(incoming_dates))
+            else:
+                in_date = fields.Datetime.now()
+
         for quant in quants:
             try:
                 with self._cr.savepoint():
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
-                    quant.quantity += quantity
+                    quant.write({
+                        'quantity': quant.quantity + quantity,
+                        'in_date': in_date,
+                    })
                     # cleanup empty quants
                     if quant.quantity == 0 and quant.reserved_quantity == 0:
                         quant.unlink()
@@ -151,8 +188,9 @@ class StockQuant(models.Model):
                 'lot_id': lot_id and lot_id.id,
                 'package_id': package_id and package_id.id,
                 'owner_id': owner_id and owner_id.id,
+                'in_date': in_date,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False), fields.Datetime.from_string(in_date)
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
