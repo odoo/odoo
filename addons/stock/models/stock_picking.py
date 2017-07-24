@@ -553,6 +553,7 @@ class Picking(models.Model):
                     todo_moves |= new_move
                     #'qty_done': ops.qty_done})
         todo_moves.action_done()
+        self.write({'date_done': fields.Datetime.now()})
         return True
 
     do_transfer = action_done #TODO:replace later
