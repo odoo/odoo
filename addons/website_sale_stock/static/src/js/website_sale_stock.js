@@ -44,7 +44,7 @@ $('.oe_website_sale').each(function() {
                 var info = variant_ids[k][4];
                 if(_.contains(['always', 'threshold'], info['inventory_availability'])) {
                     info['virtual_available'] -= parseInt(info['cart_qty']);
-                    $parent.find('.js_add_cart_json.float_left').toggleClass('disabled btn', qty >= info['virtual_available']);
+                    //$parent.find('.js_add_cart_json.float_left').toggleClass('disabled btn', qty >= info['virtual_available']);
                     // Handle case when manually write in input
                     if(qty > info['virtual_available']) {
                         $parent.find('input[name="add_qty"]').val(info['virtual_available'] || 1);
