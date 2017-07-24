@@ -30,6 +30,9 @@ $('.oe_website_sale').each(function() {
         }
     });
 
+    /* Renders a specific message concerning the stock of the product 
+        for each of its variants on the product website page.
+    */
     $(oe_website_sale).on('change', 'input.js_variant_change, select.js_variant_change, ul[data-attribute_value_ids]', function(event) {
         var $ul = $(event.target).closest('.js_add_cart_variants');
         var $parent = $ul.closest('.js_product');
@@ -44,7 +47,6 @@ $('.oe_website_sale').each(function() {
                 var info = variant_ids[k][4];
                 if(_.contains(['always', 'threshold'], info['inventory_availability'])) {
                     info['virtual_available'] -= parseInt(info['cart_qty']);
-                    //$parent.find('.js_add_cart_json.float_left').toggleClass('disabled btn', qty >= info['virtual_available']);
                     // Handle case when manually write in input
                     if(qty > info['virtual_available']) {
                         $parent.find('input[name="add_qty"]').val(info['virtual_available'] || 1);
