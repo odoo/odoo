@@ -506,12 +506,14 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                taxes = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
+                # FORWARD-PORT UP TO SAAS-17
+                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
                                          product=line.product_id, partner=self.partner_shipping_id)['taxes']
                 for t in taxes:
                     res[group] += t['amount']
                 if tax.include_base_amount:
-                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
+                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = map(lambda l: (l[0].name, l[1]), res)
