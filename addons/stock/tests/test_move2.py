@@ -257,6 +257,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order.do_transfer()
+        self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
@@ -294,6 +295,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order.do_transfer()
+        self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
