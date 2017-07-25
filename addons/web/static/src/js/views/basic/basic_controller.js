@@ -362,17 +362,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         };
     },
     /**
-     * Used by list and kanban views to determine whether or not to display
-     * the no content helper (if there is no data in the state to display)
-     *
-     * @private
-     * @param {Object} state
-     * @returns {boolean}
-     */
-    _hasContent: function (state) {
-        return state.count !== 0;
-    },
-    /**
      * Helper function to display a warning that some fields have an invalid
      * value. This is used when a save operation cannot be completed.
      *

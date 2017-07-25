@@ -170,21 +170,8 @@ var PivotController = AbstractController.extend({
     /**
      * @private
      */
-    _update: function (state) {
+    _update: function () {
         this._updateButtons();
-        var hasNoContent = !state.has_data || !state.measures.length;
-
-        if (hasNoContent) {
-            if (!this.$('.oe_view_nocontent').length) {
-                this.renderer.$el.detach();
-                this.$el.append(QWeb.render('PivotView.nodata'));
-            }
-        } else {
-            if (!document.contains(this.renderer.el)) {
-                this.$('div.oe_view_nocontent').remove();
-                this.$el.append(this.renderer.$el);
-            }
-        }
         return this._super.apply(this, arguments);
     },
     /**

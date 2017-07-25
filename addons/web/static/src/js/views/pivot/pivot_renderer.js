@@ -2,7 +2,10 @@ odoo.define('web.PivotRenderer', function (require) {
 "use strict";
 
 var AbstractRenderer = require('web.AbstractRenderer');
+var core = require('web.core');
 var field_utils = require('web.field_utils');
+
+var QWeb = core.qweb;
 
 var PivotRenderer = AbstractRenderer.extend({
     tagName: 'table',
@@ -16,13 +19,30 @@ var PivotRenderer = AbstractRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Used to determine whether or not to display the no content helper.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasContent: function () {
+        return this.state.has_data && this.state.measures.length;
+    },
+    /**
      * @override
      * @private
      * @returns {Deferred}
      */
     _render: function () {
-        if (!this.state.has_data) {
+        if (!this._hasContent()) {
+            // display the nocontent helper
+            this.replaceElement(QWeb.render('PivotView.nodata'));
             return this._super.apply(this, arguments);
+        }
+
+        if (!this.$el.is('table')) {
+            // coming from the no content helper, so the root element has to be
+            // re-rendered before rendering and appending its content
+            this.renderElement();
         }
         var $fragment = $(document.createDocumentFragment());
         var $table = $('<table>').appendTo($fragment);

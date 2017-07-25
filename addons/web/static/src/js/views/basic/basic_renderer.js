@@ -318,6 +318,16 @@ var BasicRenderer = AbstractRenderer.extend({
         return _.findWhere(this.allModifiersData, {node: node});
     },
     /**
+     * Used by list and kanban renderers to determine whether or not to display
+     * the no content helper (if there is no data in the state to display)
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _hasContent: function () {
+        return this.state.count !== 0;
+    },
+    /**
      * Registers or updates the modifiers data associated to the given node.
      * This method is quiet complex as it handles all the needs of the basic
      * renderers:
@@ -485,6 +495,20 @@ var BasicRenderer = AbstractRenderer.extend({
         }, modifiersOptions || {}));
 
         return widget;
+    },
+    /**
+     * Renders the nocontent helper.
+     *
+     * This method is a helper for renderers that want to display a help
+     * message when no content is available.
+     *
+     * @private
+     */
+    _renderNoContentHelper: function () {
+        var $msg = $('<div>')
+            .addClass('oe_view_nocontent')
+            .html(this.noContentHelp);
+        this.$el.html($msg);
     },
     /**
      * Actual rendering. Supposed to be overridden by concrete renderers.

@@ -953,7 +953,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.ok(kanban.$el.hasClass('o_kanban_nocontent'),
+        assert.ok(kanban.$('.o_kanban_view').hasClass('o_kanban_nocontent'),
             "$el should have correct no content class");
 
         assert.strictEqual(kanban.$('.oe_view_nocontent').length, 1,

@@ -30,7 +30,6 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
-    className: 'table-responsive',
     events: {
         'click tbody tr': '_onRowClicked',
         'click tbody .o_list_record_selector': '_onSelectRecord',
@@ -577,12 +576,24 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
+        this.$el
+            .removeClass('table-responsive')
+            .empty();
+
         // destroy the previously instantiated pagers, if any
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        // display the no content helper if there is no data to display
+        if (!this._hasContent() && this.noContentHelp) {
+            this._renderNoContentHelper();
+            return this._super();
+        }
+
         var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
-        this.$el.empty().append($table);
+        this.$el
+            .addClass('table-responsive')
+            .append($table);
         var is_grouped = !!this.state.groupedBy.length;
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', is_grouped);
