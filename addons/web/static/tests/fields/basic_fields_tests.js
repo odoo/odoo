@@ -831,6 +831,122 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: change value before pending onchange returns', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            product_id: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="product_id"/>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === "onchange") {
+                    return $.when(def).then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
+            'should contain the default value');
+
+        def = $.Deferred();
+        form.$('.o_field_many2one input').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        // set foo before onchange
+        form.$('input[name="foo"]').val("tralala").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain tralala');
+
+        // complete the onchange
+        def.resolve();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain the same value as before onchange');
+
+        form.destroy();
+    });
+
+    QUnit.test('input field: change value before pending onchange renaming', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.foo = 'on change value';
+            },
+        };
+
+        var def = $.Deferred();
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === "onchange") {
+                    return $.when(def).then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'yop',
+            'should contain the correct value');
+
+        form.$('.o_field_many2one input').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        // set foo before onchange
+        form.$('input[name="foo"]').val("tralala").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain tralala');
+
+        // complete the onchange
+        def.resolve();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain the same value as before onchange');
+
+        form.destroy();
+    });
+
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {
