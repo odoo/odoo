@@ -26,7 +26,7 @@ QUnit.test('mobile basic rendering', function (assert) {
     // /mail/client_action route is always called when the test suite is
     // launched), and we must wait for this RPC to be done before starting to
     // test the interface. This should be refactored to facilitate the testing.
-    assert.expect(9);
+    assert.expect(7);
     var done = assert.async();
 
     createDiscuss({
@@ -37,10 +37,6 @@ QUnit.test('mobile basic rendering', function (assert) {
         services: this.services,
     }).then(function (discuss) {
         // test basic rendering in mobile
-        assert.strictEqual(discuss.$('.o_mail_chat_mobile_control_panel').length, 1,
-            "should have rendered a control panel");
-        assert.strictEqual(discuss.$('.o_mail_chat_content .o_mail_no_content').length, 1,
-            "should display the no content message");
         assert.strictEqual(discuss.$('.o_mail_mobile_tabs').length, 1,
             "should have rendered the tabs");
         assert.ok(discuss.$('.o_mail_mobile_tab[data-type=channel_inbox]').hasClass('active'),
