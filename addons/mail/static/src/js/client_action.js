@@ -411,10 +411,12 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         // Store scroll position of previous channel
         if (this.channel) {
             this.channels_scrolltop[this.channel.id] = this.thread.get_scrolltop();
+            this.set_composer_cache();
         }
         var new_channel_scrolltop = this.channels_scrolltop[channel.id];
 
         this.channel = channel;
+        this.get_composer_cache();
         this.messages_separator_position = undefined; // reset value on channel change
         this.unread_counter = this.channel.unread_counter;
         this.last_seen_message_id = this.channel.last_seen_message_id;
@@ -476,6 +478,34 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 active_id: self.channel.id,
             });
         });
+    },
+
+    set_composer_cache: function() {
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
+        var channel_cache = chat_manager.get_channel_cache(this.channel, 'composer');
+
+        channel_cache.composer_data = {
+            attachments: composer.get('attachment_ids'),
+            text: composer.$input.val(),
+            subject: this.channel.mass_mailing && composer.$subject_input.val()
+        };
+        composer.clear_composer();
+        if (this.channel.mass_mailing) {
+            composer.$subject_input.val('');
+        }
+    },
+
+    get_composer_cache: function () {
+        var composer = this.channel.mass_mailing ? this.extended_composer : this.basic_composer;
+        var composer_data = chat_manager.get_channel_cache(this.channel, 'composer').composer_data;
+
+        if (!_.isEmpty(composer_data)) {
+            composer.set('attachment_ids', composer_data.attachments);
+            composer.$input.val(composer_data.text);
+            if (this.channel.mass_mailing) {
+                composer.$subject_input.val(composer_data.subject);
+            }
+        }
     },
 
     get_thread_rendering_options: function (messages) {

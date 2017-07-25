@@ -292,6 +292,7 @@ function make_channel (data, options) {
             all_history_loaded: false,
             loaded: false,
             messages: [],
+            composer_data: {},
         }},
     };
     if (channel.type === "channel") {
@@ -337,6 +338,7 @@ function get_channel_cache (channel, domain) {
             all_history_loaded: false,
             loaded: false,
             messages: [],
+            composer_data: {},
         };
     }
     return channel.cache[stringified_domain];
@@ -919,6 +921,9 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
 
     all_history_loaded: function (channel, domain) {
         return get_channel_cache(channel, domain).all_history_loaded;
+    },
+    get_channel_cache: function (channel, domain) {
+        return get_channel_cache(channel, domain);
     },
 
     get_mention_partner_suggestions: function (channel) {
