@@ -17,13 +17,14 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Luke <cialuo@qq.com>, 2017
+# guohuadeng <guohuadeng@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-07-17 08:16+0000\n"
 "PO-Revision-Date: 2017-07-17 08:16+0000\n"
-"Last-Translator: Luke <cialuo@qq.com>, 2017\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -864,7 +865,7 @@ msgstr "扩展筛选"
 #: code:addons/sale/models/sale.py:697
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "更多明细 1%s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_delivery_fedex
@@ -927,7 +928,7 @@ msgstr "ID"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr ""
+msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具发票或交付。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1215,7 +1216,7 @@ msgid ""
 "Manually set the expiration date of your quotation (offer), or it will set "
 "the date automatically based on the template if online quotation is "
 "installed."
-msgstr ""
+msgstr "手动设置你的报价单过期时间，否则系统将根据已安装的在线报价模板自动生成日期"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
@@ -1362,13 +1363,16 @@ msgid ""
 "                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"一旦报价单被确认，它将成为一个销售订单。\n"
+"你可以为此开具发票并汇总付款信息。\n"
+"从<i>销售订单</i>菜单中，你可以跟踪推送的订单或服务"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:59
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
-msgstr ""
+msgstr "一旦你的报价单完成，你可以保存、打印或通过电子邮件发送。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1456,6 +1460,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"订购数量：基于客户订购的数量开具发票。\n"
+"交付数量：基于供应商交付的数量开具发票(可以是工时或者货物)。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1487,14 +1493,14 @@ msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
 "                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
-msgstr ""
+msgstr "追加销售的订单，是指在已开收据的订单基础上，又增加了销售并发货的订单，其数量超出<i>已预定数量</i>。"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:13
 #, python-format
 msgid "Organize your sales activities with the <b>Sales app</b>."
-msgstr ""
+msgstr "通过<b>移动销售应用</b>组织你的销售活动"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1563,12 +1569,12 @@ msgstr "降价"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "不含税价"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
 msgid "Price Reduce Tax inc"
-msgstr ""
+msgstr "减税后价格"
 
 #. module: sale
 #: selection:sale.config.settings,multi_sales_price_method:0
@@ -1792,7 +1798,7 @@ msgstr "报价单及销售"
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "重开发票手续费"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_config_settings_view_form_inherit_sale
@@ -2315,7 +2321,7 @@ msgstr ""
 msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
-msgstr ""
+msgstr "购数量减少了，请不要忘记考虑你的账单和收据。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:147
@@ -2552,14 +2558,14 @@ msgstr "为每个客户使用价格表来适配你的价格"
 #: code:addons/sale/static/src/js/tour.js:69
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
-msgstr ""
+msgstr "使用面包屑导航，<b>返回之前的页面</b>。"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "使用此菜单处理报价单，销售订单以及客户。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
@@ -2619,7 +2625,7 @@ msgstr ""
 msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
-msgstr ""
+msgstr "输入客户的名字进行创建，或者选择一个已存在的客户。"
 
 #. module: sale
 #. openerp-web
@@ -2634,7 +2640,7 @@ msgstr "错误值输入!"
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
-msgstr ""
+msgstr "你你不能删除一个已发送的报价单或销售订单！请先进行取消。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:927
@@ -2650,11 +2656,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"你可以选择所有的订单并进行合并开票，或者检查\n"
+"每一个订单并挨个进行开票。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "你能在这里找到所有等待开票的订单。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
