@@ -1025,8 +1025,8 @@ class Binary(http.Controller):
     # backward compatibility
     @http.route(['/web/binary/image'], type='http', auth="public")
     def content_image_backward_compatibility(self, model, id, field, resize=None, **kw):
-        width = None
-        height = None
+        width = 0
+        height = 0
         if resize:
             width, height = resize.split(",")
         return self.content_image(model=model, id=id, field=field, width=width, height=height)
