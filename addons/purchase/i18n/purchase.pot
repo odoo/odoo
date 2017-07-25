@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2017-07-25 10:03+0000\n"
+"PO-Revision-Date: 2017-07-25 10:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgid "\n"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:87
+#: code:addons/purchase/models/stock.py:89
 #, python-format
 msgid " Buy"
 msgstr ""
@@ -85,6 +85,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr ""
 
@@ -100,6 +101,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
 msgstr ""
 
@@ -363,7 +365,7 @@ msgid "Billed Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:578
+#: code:addons/purchase/models/purchase.py:579
 #, python-format
 msgid "Billed Quantity"
 msgstr ""
@@ -391,8 +393,8 @@ msgid "Blocking Message"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:835
-#: code:addons/purchase/models/stock.py:81
+#: code:addons/purchase/models/purchase.py:841
+#: code:addons/purchase/models/stock.py:83
 #: model:stock.location.route,name:purchase.route_warehouse0_buy
 #, python-format
 msgid "Buy"
@@ -419,13 +421,13 @@ msgid "Calls for tenders are used when you want to generate requests for quotati
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:851
+#: code:addons/purchase/models/purchase.py:857
 #, python-format
 msgid "Can not cancel a procurement related to a purchase order. Please cancel the purchase order first."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/stock.py:84
+#: code:addons/purchase/models/stock.py:86
 #, python-format
 msgid "Can't find any generic Buy route."
 msgstr ""
@@ -443,7 +445,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:701
+#: code:addons/purchase/models/purchase.py:707
 #, python-format
 msgid "Cannot delete a purchase order line which is in state '%s'."
 msgstr ""
@@ -682,7 +684,7 @@ msgid "Extended Filters"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:556
+#: code:addons/purchase/models/purchase.py:557
 #, python-format
 msgid "Extra line with %s "
 msgstr ""
@@ -891,6 +893,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr ""
 
@@ -933,11 +936,6 @@ msgid "My Activities"
 msgstr ""
 
 #. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "New Mail"
-msgstr ""
-
-#. module: purchase
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "No Message"
@@ -949,7 +947,7 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:996
+#: code:addons/purchase/models/purchase.py:1018
 #, python-format
 msgid "No vendor associated to product %s. Please set one to fix this procurement."
 msgstr ""
@@ -1022,7 +1020,7 @@ msgid "Order of Day"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:575
+#: code:addons/purchase/models/purchase.py:576
 #, python-format
 msgid "Ordered Quantity"
 msgstr ""
@@ -1033,7 +1031,7 @@ msgid "Ordered quantities"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:808
+#: code:addons/purchase/models/purchase.py:814
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -1211,6 +1209,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1282,7 +1281,7 @@ msgid "Purchase Orders Statistics"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:703
+#: code:addons/purchase/models/purchase.py:709
 #, python-format
 msgid "Purchase order line deleted."
 msgstr ""
@@ -1394,7 +1393,7 @@ msgid "Received Qty"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:577
+#: code:addons/purchase/models/purchase.py:578
 #, python-format
 msgid "Received Quantity"
 msgstr ""
@@ -1518,6 +1517,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:purchase.field_res_users_purchase_warn
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 msgstr ""
 
@@ -1611,6 +1611,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users_property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr ""
 
@@ -1637,7 +1638,7 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:571
+#: code:addons/purchase/models/purchase.py:572
 #, python-format
 msgid "The ordered quantity has been decreased. Do not forget to take it into account on your bills and receipts."
 msgstr ""
@@ -1693,6 +1694,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users_property_purchase_currency_id
 msgid "This currency will be used, instead of the default one, for purchases from the current partner"
 msgstr ""
 
@@ -1708,25 +1710,25 @@ msgid "This note will be displayed for vendors."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:1024
+#: code:addons/purchase/models/purchase.py:1035
 #, python-format
 msgid "This purchase order has been created from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:1037
+#: code:addons/purchase/models/purchase.py:1048
 #, python-format
 msgid "This purchase order has been modified from: <a href=# data-oe-model=procurement.order data-oe-id=%d>%s</a>"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:197
+#: code:addons/purchase/models/account_invoice.py:200
 #, python-format
 msgid "This vendor bill has been created from: %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/account_invoice.py:211
+#: code:addons/purchase/models/account_invoice.py:214
 #, python-format
 msgid "This vendor bill has been modified from: %s"
 msgstr ""
@@ -1811,6 +1813,11 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unlock"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Unread Messages"
 msgstr ""
 
 #. module: purchase
@@ -1935,7 +1942,7 @@ msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:253
-#: code:addons/purchase/models/purchase.py:769
+#: code:addons/purchase/models/purchase.py:775
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -1961,7 +1968,7 @@ msgid "When products are bought, they can be delivered to this warehouse"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:809
+#: code:addons/purchase/models/purchase.py:815
 #, python-format
 msgid "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."

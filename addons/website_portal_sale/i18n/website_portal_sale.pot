@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,13 +31,13 @@ msgid "<span class=\"h3\">Your Invoices</span>"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
-msgid "<span class=\"h3\">Your Orders</span>"
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
+msgid "<span class=\"h3\">Your Quotations</span>"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
-msgid "<span class=\"h3\">Your Quotations</span>"
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
+msgid "<span class=\"h3\">Your Sales Orders</span>"
 msgstr ""
 
 #. module: website_portal_sale
@@ -172,19 +172,19 @@ msgid "Awaiting Payment"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:228
+#: code:addons/website_portal_sale/controllers/main.py:247
 #, python-format
 msgid "Changing VAT number is not allowed once invoices have been issued for your account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:231
+#: code:addons/website_portal_sale/controllers/main.py:250
 #, python-format
 msgid "Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation."
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:183
+#: code:addons/website_portal_sale/controllers/main.py:184
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 #, python-format
 msgid "Due Date"
@@ -206,25 +206,25 @@ msgid "Invoice #"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:182
+#: code:addons/website_portal_sale/controllers/main.py:183
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_invoices
 #, python-format
 msgid "Invoice Date"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_invoice
 msgid "Invoices"
 msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Orders"
+msgid "My Quotations"
 msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.orders_followup
-msgid "My Quotations"
+msgid "My Sales Orders"
 msgstr ""
 
 #. module: website_portal_sale
@@ -243,17 +243,12 @@ msgid "Order"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:58
-#: code:addons/website_portal_sale/controllers/main.py:109
+#: code:addons/website_portal_sale/controllers/main.py:56
+#: code:addons/website_portal_sale/controllers/main.py:107
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 #, python-format
 msgid "Order Date"
-msgstr ""
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
-msgid "Orders"
 msgstr ""
 
 #. module: website_portal_sale
@@ -297,9 +292,9 @@ msgid "Quotations"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:59
-#: code:addons/website_portal_sale/controllers/main.py:110
-#: code:addons/website_portal_sale/controllers/main.py:184
+#: code:addons/website_portal_sale/controllers/main.py:57
+#: code:addons/website_portal_sale/controllers/main.py:108
+#: code:addons/website_portal_sale/controllers/main.py:185
 #, python-format
 msgid "Reference"
 msgstr ""
@@ -321,7 +316,12 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: website_portal_sale
-#: code:addons/website_portal_sale/controllers/main.py:185
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_menu_sale
+msgid "Sales Orders"
+msgstr ""
+
+#. module: website_portal_sale
+#: code:addons/website_portal_sale/controllers/main.py:186
 #, python-format
 msgid "Status"
 msgstr ""
@@ -342,11 +342,6 @@ msgid "There are currently no invoices and payments for your account."
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-msgid "There are currently no invoices and payments."
-msgstr ""
-
-#. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_orders
 msgid "There are currently no orders for your account."
 msgstr ""
@@ -359,11 +354,6 @@ msgstr ""
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr ""
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-msgid "There are currently no quotations."
 msgstr ""
 
 #. module: website_portal_sale
@@ -388,18 +378,18 @@ msgid "Website URL"
 msgstr ""
 
 #. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-msgid "Your Invoices"
-msgstr ""
-
-#. module: website_portal_sale
-#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
-msgid "Your Orders"
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_invoice
+msgid "Your Invoices and Payments"
 msgstr ""
 
 #. module: website_portal_sale
 #: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
 msgid "Your Quotations"
+msgstr ""
+
+#. module: website_portal_sale
+#: model:ir.ui.view,arch_db:website_portal_sale.portal_my_home_sale
+msgid "Your Sales Orders"
 msgstr ""
 
 #. module: website_portal_sale

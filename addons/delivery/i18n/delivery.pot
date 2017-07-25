@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,12 +82,12 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Refund"
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
 msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_description_purchase
-msgid "A description of the Product that you want to communicate to your vendors. This description will be copied to every Purchase Order, Receipt and Vendor Bill/Refund."
+msgid "A description of the Product that you want to communicate to your vendors. This description will be copied to every Purchase Order, Receipt and Vendor Bill/Credit Note."
 msgstr ""
 
 #. module: delivery
@@ -423,6 +423,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,field_description:delivery.field_res_users_property_delivery_carrier_id
 #: model:ir.model.fields,field_description:delivery.field_sale_order_carrier_id
 msgid "Delivery Method"
 msgstr ""
@@ -441,8 +442,15 @@ msgid "Delivery Package Selection Wizard"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
+#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
 #: model:ir.ui.menu,name:delivery.menu_delivery_packagings
+#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_tree
+msgid "Delivery Packages"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_delivery_packaging_id
+#: model:ir.ui.view,arch_db:delivery.product_packaging_delivery_form
 msgid "Delivery Packaging"
 msgstr ""
 
@@ -617,6 +625,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
 msgstr ""
 
@@ -652,6 +661,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,field_description:delivery.field_product_product_hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template_hs_code
 msgid "HS Code"
 msgstr ""
@@ -1034,7 +1044,7 @@ msgstr ""
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:36
-#: code:addons/delivery/models/stock_picking.py:128
+#: code:addons/delivery/models/stock_picking.py:129
 #, python-format
 msgid "Package Details"
 msgstr ""
@@ -1046,13 +1056,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_packaging
-#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
 msgid "Packaging"
-msgstr ""
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
-msgid "Packagings"
 msgstr ""
 
 #. module: delivery
@@ -1141,6 +1145,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_life_time
 msgid "Product Life Time"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
+msgid "Product Packages"
 msgstr ""
 
 #. module: delivery
@@ -1354,7 +1363,7 @@ msgid "Set to True if your credentials are certified for production."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:147
+#: code:addons/delivery/models/stock_picking.py:150
 #, python-format
 msgid "Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s"
 msgstr ""
@@ -1395,6 +1404,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_hs_code
+#: model:ir.model.fields,help:delivery.field_product_product_hs_code
 #: model:ir.model.fields,help:delivery.field_product_template_hs_code
 msgid "Standardized code for international shipping and goods declaration"
 msgstr ""
@@ -1521,6 +1531,7 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id
+#: model:ir.model.fields,help:delivery.field_res_users_property_delivery_carrier_id
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
 
@@ -1747,14 +1758,14 @@ msgid "Width must be positive"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:187
+#: code:addons/delivery/models/stock_picking.py:190
 #, python-format
 msgid "You are shipping different packaging types in the same shipment.\n"
 "Packaging Types: %s"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/models/stock_picking.py:163
+#: code:addons/delivery/models/stock_picking.py:166
 #, python-format
 msgid "Your delivery method has no redirect on courier provider's website to track this order."
 msgstr ""

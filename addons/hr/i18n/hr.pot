@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2017-07-25 10:03+0000\n"
+"PO-Revision-Date: 2017-07-25 10:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,11 +80,6 @@ msgid "Citizenship & Other Information"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_city
-msgid "City"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
 msgid "Click to add a new employee."
@@ -130,6 +125,11 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_config_settings_resource_calendar_id
 msgid "Company Working Hours"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
 msgstr ""
 
 #. module: hr
@@ -221,11 +221,6 @@ msgid "Email Aliases"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_thread
-msgid "Email Thread"
-msgstr ""
-
-#. module: hr
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee"
@@ -284,20 +279,20 @@ msgid "Employees Tags"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:260
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid "Enter here the private address of the employee, not the one linked to your company."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr.py:294
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/hr.py:164
+#: code:addons/hr/models/hr.py:181
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_event_count
-msgid "Events"
 msgstr ""
 
 #. module: hr
@@ -352,11 +347,6 @@ msgid "Hired Employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
-msgid "Home Address"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr ""
@@ -405,6 +395,8 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
 msgstr ""
 
@@ -419,12 +411,6 @@ msgid "Job Positions are used to define jobs and their requirements.\n"
 "                You can keep track of the number of employees you have per job\n"
 "                position and follow the evolution according to what you planned\n"
 "                for the future."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Title"
 msgstr ""
 
 #. module: hr
@@ -461,11 +447,6 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
 msgstr ""
@@ -490,7 +471,7 @@ msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married"
+msgid "Married (or similar)"
 msgstr ""
 
 #. module: hr
@@ -511,11 +492,6 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
-msgstr ""
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
 msgstr ""
 
 #. module: hr
@@ -546,11 +522,6 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_res_users_event_count
-msgid "Number of events the partner has participated."
 msgstr ""
 
 #. module: hr
@@ -596,11 +567,6 @@ msgid "Passport No"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Personal Information"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
 msgid "Photo"
 msgstr ""
@@ -611,13 +577,23 @@ msgid "Position"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Private Information"
+msgstr ""
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
 msgid "Prout prout prout"
 msgstr ""
 
 #. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Public Information"
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
 msgstr ""
 
 #. module: hr
@@ -679,6 +655,21 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
+msgid "Show organizational chart on employee form."
 msgstr ""
 
 #. module: hr
@@ -772,6 +763,16 @@ msgid "Users"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr ""
+
+#. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
 msgstr ""
@@ -795,6 +796,11 @@ msgid "Work Email"
 msgstr ""
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
 msgstr ""
@@ -807,6 +813,16 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_config_settings_view_form
 msgid "Work Organization"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
 msgstr ""
 
 #. module: hr
@@ -832,12 +848,6 @@ msgid "Your document has not been created because your email address is not reco
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "alias %s does not accept unknown employees"
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr ""
@@ -858,9 +868,8 @@ msgid "hr.config.settings"
 msgstr ""
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "skipping"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
 msgstr ""
 
 #. module: hr

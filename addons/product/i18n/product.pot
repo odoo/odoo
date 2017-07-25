@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgid "%s %% discount and %s surcharge"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:317
+#: code:addons/product/models/product_template.py:327
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -94,9 +94,7 @@ msgid "<strong>Warning</strong>: adding or deleting attributes\n"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:171
 #: sql_constraint:product.product:0
-#, python-format
 msgid "A barcode can only be assigned to one product !"
 msgstr ""
 
@@ -108,13 +106,13 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_sale
 #: model:ir.model.fields,help:product.field_product_template_description_sale
-msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Refund"
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
 msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_description_purchase
 #: model:ir.model.fields,help:product.field_product_template_description_purchase
-msgid "A description of the Product that you want to communicate to your vendors. This description will be copied to every Purchase Order, Receipt and Vendor Bill/Refund."
+msgid "A description of the Product that you want to communicate to your vendors. This description will be copied to every Purchase Order, Receipt and Vendor Bill/Credit Note."
 msgstr ""
 
 #. module: product
@@ -389,13 +387,18 @@ msgid "Company"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_category_complete_name
+msgid "Complete Name"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_compute_price
 #: model:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Compute Price"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:42
+#: code:addons/product/models/product_template.py:52
 #: selection:product.template,type:0
 #, python-format
 msgid "Consumable"
@@ -412,7 +415,7 @@ msgid "Conversion between Units of Measure can only occur if they belong to the 
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_uom.py:96
+#: code:addons/product/models/product_uom.py:98
 #, python-format
 msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!."
 msgstr ""
@@ -513,7 +516,7 @@ msgid "Day(s)"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/res_company.py:58
+#: code:addons/product/models/res_company.py:59
 #, python-format
 msgid "Default %(currency)s pricelist for %(company)s"
 msgstr ""
@@ -601,7 +604,7 @@ msgid "Ending valid for the pricelist item validation"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:43
+#: code:addons/product/models/product.py:57
 #, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr ""
@@ -613,7 +616,7 @@ msgid "Error ! You cannot use this attribute with the following value."
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:308
+#: code:addons/product/models/product.py:286
 #, python-format
 msgid "Error! It is not allowed to choose more than one value for a given attribute."
 msgstr ""
@@ -631,7 +634,7 @@ msgid "Error! You cannot assign the Main Pricelist as Other Pricelist in PriceLi
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:267
+#: code:addons/product/models/product_template.py:277
 #, python-format
 msgid "Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category."
 msgstr ""
@@ -688,6 +691,12 @@ msgstr ""
 #. module: product
 #: selection:product.pricelist.item,applied_on:0
 msgid "Global"
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:32
+#, python-format
+msgid "Go to Internal Categories"
 msgstr ""
 
 #. module: product
@@ -971,24 +980,15 @@ msgid "Other Pricelist"
 msgstr ""
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_packaging_name
+msgid "Package Type"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_packaging
-#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
-#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
-#: model:ir.ui.view,arch_db:product.product_packaging_form_view
-#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
 #: model:ir.ui.view,arch_db:product.product_template_form_view
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_packaging_name
-msgid "Packaging Type"
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,name:product.action_packaging_view
-msgid "Packagings"
 msgstr ""
 
 #. module: product
@@ -1198,6 +1198,19 @@ msgid "Product Name"
 msgstr ""
 
 #. module: product
+#: model:ir.actions.act_window,name:product.action_packaging_view
+#: model:ir.model.fields,field_description:product.field_product_product_packaging_ids
+#: model:ir.model.fields,field_description:product.field_product_template_packaging_ids
+#: model:ir.ui.view,arch_db:product.product_packaging_tree_view
+msgid "Product Packages"
+msgstr ""
+
+#. module: product
+#: model:ir.ui.view,arch_db:product.product_packaging_form_view
+msgid "Product Packaging"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_template
 #: model:ir.model.fields,field_description:product.field_product_attribute_line_product_tmpl_id
 #: model:ir.model.fields,field_description:product.field_product_attribute_price_product_tmpl_id
@@ -1272,7 +1285,7 @@ msgid "Products Price Search"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product.py:471
+#: code:addons/product/models/product.py:449
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -1375,6 +1388,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr ""
 
@@ -1412,7 +1426,7 @@ msgid "Sequence"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:43
+#: code:addons/product/models/product_template.py:53
 #: selection:product.template,type:0
 #, python-format
 msgid "Service"
@@ -1534,9 +1548,7 @@ msgid "The computed quantity will be a multiple of this value. Use 1.0 for a Uni
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_uom.py:43
 #: sql_constraint:product.uom:0
-#, python-format
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr ""
 
@@ -1582,9 +1594,7 @@ msgid "The product form contains information to simplify the sale process: price
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_uom.py:44
 #: sql_constraint:product.uom:0
-#, python-format
 msgid "The rounding precision must be greater than 0!"
 msgstr ""
 
@@ -1642,6 +1652,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid "This pricelist will be used, instead of the default one, for sales to the current partner"
 msgstr ""
 
@@ -1843,7 +1854,7 @@ msgid "Working Time"
 msgstr ""
 
 #. module: product
-#: code:addons/product/models/product_template.py:262
+#: code:addons/product/models/product_template.py:272
 #, python-format
 msgid "You cannot create a product with an Internal Category set as View. Please change the category or the category type."
 msgstr ""
@@ -1857,7 +1868,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
 #, python-format
-msgid "You have to set a logo for your company."
+msgid "You have to set a logo or a layout for your company."
 msgstr ""
 
 #. module: product
@@ -1884,6 +1895,12 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,help:product.product_template_action
 msgid "You must define a product for everything you sell, whether it's a physical product, a consumable or a service you offer to customers."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_template.py:31
+#, python-format
+msgid "You must define at least one product category (that is not a view) in order to be able to create products."
 msgstr ""
 
 #. module: product
