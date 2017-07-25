@@ -54,8 +54,16 @@ class WebsiteSaleOptions(WebsiteSale):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: request.env['res.currency']._compute(from_currency, to_currency, price)
         product = request.env['product.product'].with_context(product_context).browse(int(product_id))
+        main_product_attr_ids = self.get_attribute_value_ids(product)
+        for variant in main_product_attr_ids:
+            if variant[0] == product.id:
+                # We indeed need a list of lists (even with only 1 element)
+                main_product_attr_ids = [variant]
+                break
+
         return request.website._render("website_sale_options.modal", {
             'product': product,
             'compute_currency': compute_currency,
             'get_attribute_value_ids': self.get_attribute_value_ids,
+            'main_product_attr_ids': main_product_attr_ids,
         })
