@@ -509,6 +509,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (params.type === 'record' && params.res_id === undefined) {
+            params.allowWarning = true;
             return this._makeDefaultRecord(params.modelName, params);
         }
         var dataPoint = this._makeDataPoint(params);
@@ -2735,6 +2736,8 @@ var BasicModel = AbstractModel.extend({
      * @private
      * @param {any} params
      * @param {string} modelName model name
+     * @param {boolean} [params.allowWarning=false] if true, the default record
+     *   operation can complete, even if a warning is raised
      * @param {Object} params.context the context for the new record
      * @param {Object} params.fieldsInfo contains the fieldInfo of each view,
      *   for each field
@@ -2887,7 +2890,11 @@ var BasicModel = AbstractModel.extend({
                     .then(function () {
                         return self._performOnChange(record, fields_key).then(function () {
                             if (record._warning) {
-                                return $.Deferred().reject();
+                                if (params.allowWarning) {
+                                    delete record._warning;
+                                } else {
+                                    return $.Deferred().reject();
+                                }
                             }
                         });
                     })

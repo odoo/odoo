@@ -2526,6 +2526,42 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('can create record even if onchange returns a warning', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/><field name="int_field"/></group>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        value: { int_field: 10 },
+                        warning: {
+                            title: "Warning",
+                            message: "You must first select a partner"
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                warning: function (event) {
+                    assert.step('warning');
+                },
+            },
+        });
+        assert.strictEqual(form.$('input[name="int_field"]').val(), "10",
+            "record should have been created and rendered");
+
+        form.destroy();
+    });
+
     QUnit.test('do nothing if add a line in one2many result in a onchange with a warning', function (assert) {
         assert.expect(2);
 
