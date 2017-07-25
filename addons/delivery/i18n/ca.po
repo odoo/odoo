@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-06-07 14:13+0000\n"
+"PO-Revision-Date: 2017-07-18 11:17+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -624,7 +624,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si la valoració perpètua s'activa per un producte, el sistema crearà automàticament assentaments comptables corresponents als moviments d'estoc, amb el preu de producte indicat segons el \"mètode de cost\". El compte de valoració d'inventari establerta en la categoria de producte representarà el compte d'inventari actual, i els comptes d'entrada i sortida de mercaderia contindrà les contrapartides de moviment pels productes entrants i sortints."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_free_if_more_than
@@ -1558,7 +1558,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments d'entrada seran imputats en aquest compte, a menys que s'hagi establert un compte de valoració especifica en l'ubicació font. Quan no s'estableixi al producte, s'utilitza l'establerta en la categoria."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_output
@@ -1567,7 +1567,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments de sortida seran imputades en aquest compte, a menys que s'hagi establert un compte de valoració especifica en la ubicació de destí. Quan no s'estableixi en el producte, s'utilitza l'establerta en la categoria."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_email_template_id
