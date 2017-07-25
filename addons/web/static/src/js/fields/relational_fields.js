@@ -838,8 +838,10 @@ var FieldX2Many = AbstractField.extend({
      */
     _onDeleteRecord: function (ev) {
         ev.stopPropagation();
+        var shouldForget = this.attrs.widget === 'many2many' || this.field.type === 'many2many';
+        var operation = shouldForget ? 'FORGET' : 'DELETE';
         this._setValue({
-            operation: 'REMOVE',
+            operation: operation,
             ids: [ev.data.id],
         });
     },
@@ -1290,7 +1292,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var record = _.findWhere(this.value.data, {res_id: fileID});
         if (record) {
             this._setValue({
-                operation: 'REMOVE',
+                operation: 'FORGET',
                 ids: [record.id],
             });
             var metadata = this.metadata[record.id];
@@ -1469,7 +1471,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     _removeTag: function (id) {
         var record = _.findWhere(this.value.data, {res_id: id});
         this._setValue({
-            operation: 'REMOVE',
+            operation: 'FORGET',
             ids: [record.id],
         });
     },
