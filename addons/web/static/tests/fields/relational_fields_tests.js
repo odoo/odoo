@@ -6921,7 +6921,7 @@ QUnit.module('relational_fields', {
                 "should do a do_action with correct parameters");
         });
 
-        assert.strictEqual(form.$('a.o_form_uri:contains(xphone)').length, 1,
+        assert.strictEqual(form.$('a.o_form_uri:contains(first record)').length, 1,
                         "should contain a link");
         form.$('a.o_form_uri').click(); // click on the link in readonly mode (should trigger do_action)
 
@@ -6933,7 +6933,7 @@ QUnit.module('relational_fields', {
             "should contain one many2one");
         assert.strictEqual(form.$('.o_field_widget select').val(), "product",
             "widget should contain one select with the model");
-        assert.strictEqual(form.$('.o_field_widget input').val(), "xphone",
+        assert.strictEqual(form.$('.o_field_widget input').val(), "first record",
             "widget should contain one input with the record");
 
         var options = _.map(form.$('.o_field_widget select > option'), function (el) {
@@ -6941,7 +6941,6 @@ QUnit.module('relational_fields', {
         });
         assert.deepEqual(options, ['', 'product', 'partner_type', 'partner'],
             "the options should be correctly set");
-
 
         form.$('.o_external_button').click(); // click on the external button (should do an RPC)
 
@@ -6959,7 +6958,7 @@ QUnit.module('relational_fields', {
         $dropdown.find('li:first()').click();
 
         form.$buttons.find('.o_form_button_save').click();
-        assert.strictEqual(form.$('a.o_form_uri:contains(gold)').length, 1,
+        assert.strictEqual(form.$('a.o_form_uri').length, 1,
                         "should contain a link with the new value");
 
         form.destroy();
