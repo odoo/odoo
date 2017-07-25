@@ -209,7 +209,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('invisible fields are properly hidden', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -222,6 +222,10 @@ QUnit.module('Views', {
                             '<field name="bar"/>' +
                         '</group>' +
                         '<field name="qux" invisible="1"/>' +
+                        // x2many field without inline view: as it is always invisible, the view
+                        // should not be fetched. we don't specify any view in this test, so if it
+                        // ever tries to fetch it, it will crash, indicating that this is wrong.
+                        '<field name="p" invisible="True"/>' +
                     '</sheet>' +
                 '</form>',
             res_id: 1,
@@ -233,6 +237,8 @@ QUnit.module('Views', {
                         "should not contain span with field value");
         assert.strictEqual(form.$('.o_field_widget.o_invisible_modifier:contains(0.4)').length, 1,
                         "field qux should be invisible");
+        assert.ok(form.$('.o_field_widget[name=p]').hasClass('o_invisible_modifier'),
+                        "field p should be invisible");
         form.destroy();
     });
 
