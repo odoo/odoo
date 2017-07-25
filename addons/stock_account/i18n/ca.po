@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-01 06:26+0000\n"
-"PO-Revision-Date: 2017-06-30 10:48+0000\n"
+"PO-Revision-Date: 2017-07-18 11:25+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -192,7 +192,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si la valoració perpètua s'activa per un producte, el sistema crearà automàticament assentaments comptables corresponents als moviments d'estoc, amb el preu de producte indicat segons el \"mètode de cost\". El compte de valoració d'inventari establerta en la categoria de producte representarà el compte d'inventari actual, i els comptes d'entrada i sortida de mercaderia contindrà les contrapartides de moviment pels productes entrants i sortints."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -204,7 +204,7 @@ msgid ""
 "account set on the product category will represent the current inventory "
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
-msgstr ""
+msgstr "Si la valoració perpètua s'activa per un producte, el sistema crearà automàticament assentaments comptables corresponents als moviments d'estoc, amb el preu de producte indicat segons el \"mètode de cost\". El compte de valoració d'inventari establerta en la categoria de producte representarà el compte d'inventari actual, i els comptes d'entrada i sortida de mercaderia contindrà les contrapartides de moviment pels productes entrants i sortints."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
@@ -461,7 +461,7 @@ msgid ""
 "Standard Price: The cost price is manually updated at the end of a specific period (usually once a year).\n"
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
-msgstr ""
+msgstr "Preu estàndard: el preu de cost s'actualitza manualment al final d'un període específic (generalment un cop a l'any).Preu mitjà: el preu de cost es recalcula amb cada enviament entrant i s'utilitza per a la valoració del producte.Preu Real: el preu de cost és el preu de l'últim producte sortint (s'utilitzarà en cas de pèrdua d'inventari, per exemple)."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -543,7 +543,7 @@ msgid ""
 "being moved from an internal location into this location, instead of the "
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Utilitzat per una valoració en temps real de l'inventari. Quan està establert en una ubicació virtual (no de temps intern), aquest compte s'utilitzarà per mantenir el valor dels productes que són moguts d'una ubicació interna a aquesta ubicació, en lloc del compte de sortida d'existències genèric establert en el producte. No té efecte per ubicacions internes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -553,7 +553,7 @@ msgid ""
 "being moved out of this location and into an internal location, instead of "
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
-msgstr ""
+msgstr "Utilitzat per una valoració en temps real de l'inventari. Quan està establert en una ubicació virtual (no de temps intern), aquest compte s'utilitzarà per mantenir el valor dels productes que són moguts fora de la ubicació a una ubicació interna, en lloc del compte de sortida d'existències genèric establert en el producte. No té efecte per ubicacions internes."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -596,7 +596,7 @@ msgid ""
 "specific valuation account set on the source location. This is the default "
 "value for all products in this category. It can also directly be set on each"
 " product"
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments entrants seran imputats en aquest comte, a menys que s'hagi establert un compte de valoració especifica en la ubicació de sortida. Aquest és el valor per defecte per tots els productes en aquesta categoria. També es poden establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -606,7 +606,7 @@ msgid ""
 "incoming stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments d'entrada seran imputats en aquest compte, a menys que s'hagi establert un compte de valoració especifica en l'ubicació font. Quan no s'estableixi al producte, s'utilitza l'establerta en la categoria."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -616,7 +616,7 @@ msgid ""
 "specific valuation account set on the destination location. This is the "
 "default value for all products in this category. It can also directly be set"
 " on each product"
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments de sortida seran imputats en aquest comte, a menys que s'hagi establert un compte de valoració especifica en la ubicació de destí. Aquest és el valor per defecte per tots els productes en aquesta categoria. També es poden establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -626,7 +626,7 @@ msgid ""
 "outgoing stock moves will be posted in this account, unless there is a "
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
-msgstr ""
+msgstr "Quan es realitza una valoració d'inventari en temps real, la contrapartida per tots els moviments de sortida seran imputades en aquest compte, a menys que s'hagi establert un compte de valoració especifica en la ubicació de destí. Quan no s'estableixi en el producte, s'utilitza l'establerta en la categoria."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
