@@ -498,6 +498,7 @@ class AccountMoveLine(models.Model):
                         {2}
                     WHERE
                         a.reconcile IS TRUE
+                        AND l.full_reconcile_id is NULL
                         {3}
                         {4}
                         {5}
