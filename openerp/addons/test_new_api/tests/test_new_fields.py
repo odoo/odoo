@@ -476,6 +476,28 @@ class TestNewFields(common.TransactionCase):
         self.assertFalse(discussion.very_important_messages)
         self.assertFalse(message.exists())
 
+    def test_important_messages_changed(self):
+        discussion = self.env.ref("test_new_api.discussion_0")
+        Message = self.env["test_new_api.message"]
+        # There must be 3 messages, 0 important
+        self.assertEqual(len(discussion.messages), 3)
+        self.assertEqual(len(discussion.important_messages), 0)
+        self.assertEqual(len(discussion.very_important_messages), 0)
+        discussion.important_messages = [(0, 0, {
+            "body": "What's the answer?",
+        })]
+        # There must be 4 messages, 1 important
+        self.assertEqual(len(discussion.messages), 4)
+        self.assertEqual(len(discussion.important_messages), 1)
+        self.assertEqual(len(discussion.very_important_messages), 1)
+        discussion.very_important_messages |= Message.new({
+            "body": "42",
+        })
+        # There must be 5 messages, 2 important
+        self.assertEqual(len(discussion.messages), 5)
+        self.assertEqual(len(discussion.important_messages), 2)
+        self.assertEqual(len(discussion.very_important_messages), 2)
+
 
 class TestMagicFields(common.TransactionCase):
 
