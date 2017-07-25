@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 09:17+0000\n"
-"PO-Revision-Date: 2016-03-12 04:51+0000\n"
+"PO-Revision-Date: 2017-07-24 09:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Lao (http://www.transifex.com/odoo/odoo-9/language/lo/)\n"
 "MIME-Version: 1.0\n"
@@ -137,7 +137,7 @@ msgid ""
 "                                            <span class=\"fa fa-laptop\"/>\n"
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-laptop\"/>\n                                            <strong> ການດັດປັບໜ້າຈໍ</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -155,7 +155,7 @@ msgid ""
 "                                            <span class=\"fa fa-pencil-square-o\"/>\n"
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-pencil-square-o\"/>\n                                            <strong> ສ້າງລາຍງານທີ່ກຳນົດເອງ</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -173,7 +173,7 @@ msgid ""
 "                                            <span class=\"fa fa-sitemap\"/>\n"
 "                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
-msgstr ""
+msgstr "<span class=\"panel-title\">\n                                            <span class=\"fa fa-sitemap\"/>\n                                            <strong> ການປັບແຕ່ງຂັ້ນຕອນການທຳງານ</strong>\n                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -525,7 +525,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>ການດຳເນີນການທີ່ແນະນຳ:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -622,7 +622,7 @@ msgstr ""
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
+msgstr "ພົດຈະນານຸກົມ ຂອງ Python ທີ່ຈະໄດ້ຮັບການປະເມີນເພື່ອໃຫ້ເປັນຄ່າເລີ່ມຕົ້ນ ເມື່ອມີການສ້າງ ແຖວຂໍ້ມູນໃໝ໋ສໍາລັບນາມແຝງນີ້."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -651,7 +651,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Accept Emails From"
-msgstr ""
+msgstr "ຍອມຮັບຈົດໝາຍ ຈາກ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -687,7 +687,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_active
 #: model:ir.model.fields,field_description:project.field_project_task_active
 msgid "Active"
-msgstr ""
+msgstr "ໃຊ້ຢູ່"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -709,12 +709,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_id
 msgid "Alias"
-msgstr ""
+msgstr "ຊື່ ຫຼື ທີ່ຢູ່ສຳຮອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "ຄວາມປອດໄພຂອງທີ່ຢູ່ຕິດຕໍ່ສຳຮອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model
@@ -724,17 +724,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "ຊື່ສຳຮອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_domain
 msgid "Alias domain"
-msgstr ""
+msgstr "ໂດເມນສຳຮອງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "ແບບທີ່ສ້າງສຳຮອງ"
 
 #. module: project
 #: code:addons/project/project.py:121
@@ -778,7 +778,7 @@ msgstr ""
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project_name
 msgid "Analytic Account"
-msgstr ""
+msgstr "ບັນຊີວິເຄາະ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_line_ids
@@ -803,12 +803,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Archived"
-msgstr ""
+msgstr "ສຳເນົາໄວ້ແລ້ວ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
 msgid "Assignation Date"
-msgstr ""
+msgstr "ວັນທີມອບໝາຍ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1004,7 +1004,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project.xml:25
 #, python-format
 msgid "Close"
-msgstr ""
+msgstr "ອັດ"
 
 #. module: project
 #: selection:project.project,state:0
@@ -1021,7 +1021,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags_color
 #: model:ir.model.fields,field_description:project.field_project_task_color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1103,7 +1103,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1145,7 +1145,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງ ໂດຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_create_date
@@ -1153,7 +1153,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags_create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງ ເມື່ອ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1166,7 +1166,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Creation Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_credit
@@ -1204,7 +1204,7 @@ msgstr "ຄຸ່ຄ້າ"
 #: code:addons/project/project.py:829
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "ອີເມວລ໌ລູກຄ້າ"
 
 #. module: project
 #: code:addons/project/project.py:120
@@ -1264,7 +1264,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_date
 #: model:ir.model.fields,field_description:project.field_project_task_history_date
 msgid "Date"
-msgstr ""
+msgstr "ວັນທີ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_message_last_post
@@ -1275,12 +1275,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "Days to Assign"
-msgstr ""
+msgstr "ວັນທີທີ່ມອບໝາຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "Days to Close"
-msgstr ""
+msgstr "ມື້ທີ່ອັດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -1296,7 +1296,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_defaults
 msgid "Default Values"
-msgstr ""
+msgstr "ຄ່າໂດຍເລີ່ມຕົ້ນ"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -1315,7 +1315,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
-msgstr ""
+msgstr "ລຶບ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1335,7 +1335,7 @@ msgstr ""
 #: code:addons/project/static/src/js/web_planner_project.js:19
 #, python-format
 msgid "Deployment"
-msgstr ""
+msgstr "ການປັບໃຊ້"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_description
@@ -1361,7 +1361,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project.js:50
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "ປະລະ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -1373,7 +1373,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງອອກ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
@@ -1443,7 +1443,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Don't hesitate to"
-msgstr ""
+msgstr "ກະລຸນາຢ່າລັງເລໃຈ ທີ່ຈະ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1478,12 +1478,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit Task"
-msgstr ""
+msgstr "ແກ້ໄຂ ໜ້າທີ່"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr ""
+msgstr "ຊື່ສຳຮອງແີເມວລ໌"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1493,7 +1493,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "End"
-msgstr ""
+msgstr "ສິ້ນສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_end_date
@@ -1553,7 +1553,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Examples"
-msgstr ""
+msgstr "ຕົວຢ່າງ"
 
 #. module: project
 #. openerp-web
@@ -1572,17 +1572,17 @@ msgstr ""
 msgid ""
 "Explanation text to help users using the star and priority mechanism on "
 "stages or issues that are in this stage."
-msgstr ""
+msgstr "ຂໍ້ຄວາມອະທິບາຍ ທີ່ຈະຊ່ວຍໃຫ້ຜູ້ຊົມໃຊ້ ນໍາໃຊ້ ດາວ ແລະ ກົນໄກບຸລິມະສິດ ໃນຂັ້ນຕອນ ຫຼື ການຕີພິມອອກ ທີ່ຢູ່ໃນຂັ້ນຕອນນີ້."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Extended Filters"
-msgstr ""
+msgstr "ຕົວກັ່ນຕອງທີ່ຂະຫຍາຍອອກ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Extra Info"
-msgstr ""
+msgstr "ຂໍ້ມູນເພີ່ມ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1746,7 +1746,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr ""
+msgstr "ຈັດກຸ່ມ ໂດຍ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -1767,7 +1767,7 @@ msgstr ""
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "High"
-msgstr ""
+msgstr "ສູງ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_history
@@ -1803,14 +1803,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_id
 msgid "ID"
-msgstr ""
+msgstr "ເລກລຳດັບ"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_parent_thread_id
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr ""
+msgstr "ເລກກຳກັບຂອງແຖວຂໍ້ມູນຫຼັກ ທີ່ເກັບຊື່ແຝງໄວ້ (ຕົວຢ່າງ: ໂຄງການ ທີ່ມີຊື່ແຝງການສ້າງວຽກ)"
 
 #. module: project
 #. openerp-web
@@ -1980,7 +1980,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Issues"
-msgstr ""
+msgstr "ບັນຫາ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2096,13 +2096,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type___last_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_last_stage_update
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_last_stage_update
 msgid "Last Stage Update"
-msgstr ""
+msgstr "ປັບປຸງຂັ້ນຕອນລ້າສຸດ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_uid
@@ -2111,7 +2111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_write_date
@@ -2119,7 +2119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_tags_write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
 
 #. module: project
 #: model:web.planner,tooltip_planner:project.planner_project
@@ -2151,7 +2151,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "ຕໍ່າ"
 
 #. module: project
 #: selection:project.config.settings,group_time_work_estimation_tasks:0
@@ -2222,13 +2222,13 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 msgid "My Projects"
-msgstr ""
+msgstr "ໂຄງການຂ້ອຍ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_history_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
-msgstr ""
+msgstr "ໜ້າທີ່ຂ້ອຍ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags_name
@@ -2556,7 +2556,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_generate_project_alias
@@ -2632,7 +2632,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_project
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "ບັນດາໂຄງການ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -2795,7 +2795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_history_cumulative_user_id
 #: model:ir.model.fields,field_description:project.field_project_task_history_user_id
 msgid "Responsible"
-msgstr ""
+msgstr "ຮັບຜິດຊອບ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2846,7 +2846,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2930,7 +2930,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Stage"
-msgstr ""
+msgstr "ຂັ້ນ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
@@ -2965,7 +2965,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
 msgid "Start Date"
-msgstr ""
+msgstr "ວັນທີເລີ່ມ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_start
@@ -3017,7 +3017,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Task"
-msgstr ""
+msgstr "ໜ້າທີ່"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
@@ -3139,7 +3139,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 #: model:ir.ui.view,arch_db:project.view_task_tree2
 msgid "Tasks"
-msgstr ""
+msgstr "ບັນດາໜ້າທີ່"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3480,7 +3480,7 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_project_user
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_user_email
@@ -3694,7 +3694,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr ""
+msgstr "ບັນດາໂຄງການຂອງເຈົ້າ"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
