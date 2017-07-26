@@ -65,8 +65,8 @@ class AccountConfigSettings(models.TransientModel):
         res = super(AccountConfigSettings, self).get_values()
         params = self.env['ir.config_parameter'].sudo()
         res.update(
-            default_purchase_tax_id=params.get_param('account.default_purchase_tax_id', default=False),
-            default_sale_tax_id=params.get_param('account.default_sale_tax_id', default=False)
+            default_purchase_tax_id=int(params.get_param('account.default_purchase_tax_id', default=False)) or False,
+            default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
         )
         return res
 
