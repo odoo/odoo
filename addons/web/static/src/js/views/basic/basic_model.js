@@ -1616,7 +1616,7 @@ var BasicModel = AbstractModel.extend({
     _fetchRecord: function (record, options) {
         var self = this;
         var fieldNames = options && options.fieldNames ||
-                         _.uniq(record.getFieldNames().concat(['display_name']));
+                         _.uniq(record.getFieldNames().concat(['display_name', '__last_update']));
         return this._rpc({
                 model: record.model,
                 method: 'read',
@@ -2749,6 +2749,7 @@ var BasicModel = AbstractModel.extend({
         var fields = _.extend({
             display_name: {type: 'char'},
             id: {type: 'integer'},
+            __last_update: {type: 'datetime'},
         }, params.fields);
 
         var dataPoint = {
