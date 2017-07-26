@@ -4,6 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.addons.mail.tests.common import TestMail
+from odoo.tools.misc import mute_logger
 
 
 class TestMailFollowers(TestMail):
@@ -134,7 +135,7 @@ class TestMailFollowers(TestMail):
         test_channel = self.env['mail.channel'].create({
             'name': 'I used to be schizo, but now we are alright.'
         })
-        with self.assertRaises(IntegrityError):
+        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
             self.env['mail.followers'].create({
                 'res_model_id': self.env['ir.model']._get('mail.channel').id,
                 'res_id': test_channel.id,
