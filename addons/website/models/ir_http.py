@@ -72,17 +72,6 @@ class Http(models.AbstractModel):
             request.website = request.website.with_context(request.context)
 
     @classmethod
-    def _dispatch(cls):
-        # add signup token or login to the session if given
-        if 'auth_signup_token' in request.params:
-            request.session['auth_signup_token'] = request.params['auth_signup_token']
-        if 'auth_login' in request.params:
-            request.session['auth_login'] = request.params['auth_login']
-
-        resp = super(Http, cls)._dispatch()
-        return resp
-
-    @classmethod
     def _get_languages(cls):
         if getattr(request, 'website', False):
             return request.website.language_ids
