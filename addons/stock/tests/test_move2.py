@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.exceptions import UserError
 
 
 class TestPickShip(TestStockCommon):
@@ -23,7 +24,7 @@ class TestPickShip(TestStockCommon):
             'location_dest_id': self.customer_location,
             'state': 'waiting',
         })
-        
+
         picking_pick = self.env['stock.picking'].create({
             'location_id': self.stock_location,
             'location_dest_id': self.pack_location,
@@ -257,6 +258,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order.do_transfer()
+        self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
@@ -294,6 +296,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order.do_transfer()
+        self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
@@ -699,3 +702,222 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(move1.move_line_ids), 2)
         self.assertEqual(move1.move_line_ids[0].lot_id.id, serial1.id)
         self.assertEqual(move1.move_line_ids[1].lot_id.id, serial2.id)
+
+    def test_add_move_when_picking_is_available_1(self):
+        """ Check that any move added in a picking once it's assigned is directly considered as
+        assigned and bypass the reservation.
+        """
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        # make some stock
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+
+        # add a move
+        move2 = self.MoveObj\
+            .with_context(default_picking_id=delivery_order.id)\
+            .create({
+                'name': self.productA.name,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': delivery_order.id,
+                'location_id': self.pack_location,
+                'location_dest_id': self.customer_location,
+            })
+
+        self.assertEqual(move2.state, 'assigned')
+        self.assertEqual(delivery_order.state, 'assigned')
+
+    def test_use_create_lot_use_existing_lot_1(self):
+        """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
+        set to False and there's a move for a tracked product.
+        """
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_out)\
+            .write({
+                'use_create_lots': False,
+                'use_existing_lots': False,
+            })
+        self.productA.tracking = 'lot'
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        delivery_order.action_confirm()
+        delivery_order.force_assign()
+        delivery_order.move_lines.quantity_done = 2
+        # do not set a lot_id or lot_name, it should work
+        delivery_order.action_done()
+
+    def test_use_create_lot_use_existing_lot_2(self):
+        """ Check the behavior of a picking when `use_create_lot` and `use_existing_lot` are
+        set to True and there's a move for a tracked product.
+        """
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_out)\
+            .write({
+                'use_create_lots': True,
+                'use_existing_lots': True,
+            })
+        self.productA.tracking = 'lot'
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        delivery_order.action_confirm()
+        delivery_order.force_assign()
+        delivery_order.move_lines.quantity_done = 2
+        move_line = delivery_order.move_lines.move_line_ids
+
+        # not lot_name set, should raise
+        with self.assertRaises(UserError):
+            delivery_order.action_done()
+
+        # enter a new lot name, should work
+        move_line.lot_name = 'newlot'
+        delivery_order.action_done()
+
+    def test_use_create_lot_use_existing_lot_3(self):
+        """ Check the behavior of a picking when `use_create_lot` is set to True and
+        `use_existing_lot` is set to False and there's a move for a tracked product.
+        """
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_out)\
+            .write({
+                'use_create_lots': True,
+                'use_existing_lots': False,
+            })
+        self.productA.tracking = 'lot'
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        delivery_order.action_confirm()
+        delivery_order.force_assign()
+        delivery_order.move_lines.quantity_done = 2
+        move_line = delivery_order.move_lines.move_line_ids
+
+        # not lot_name set, should raise
+        with self.assertRaises(UserError):
+            delivery_order.action_done()
+
+        # enter a new lot name, should work
+        move_line.lot_name = 'newlot'
+        delivery_order.action_done()
+
+    def test_use_create_lot_use_existing_lot_4(self):
+        """ Check the behavior of a picking when `use_create_lot` is set to False and
+        `use_existing_lot` is set to True and there's a move for a tracked product.
+        """
+        self.env['stock.picking.type']\
+            .browse(self.picking_type_out)\
+            .write({
+                'use_create_lots': False,
+                'use_existing_lots': True,
+            })
+        self.productA.tracking = 'lot'
+
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        delivery_order.action_confirm()
+        delivery_order.force_assign()
+        delivery_order.move_lines.quantity_done = 2
+        move_line = delivery_order.move_lines.move_line_ids
+
+        # not lot_name set, should raise
+        with self.assertRaises(UserError):
+            delivery_order.action_done()
+
+        # creating a lot from the view should raise
+        with self.assertRaises(UserError):
+            self.env['stock.production.lot']\
+                .with_context(active_picking_id=delivery_order.id)\
+                .create({
+                    'name': 'lot1',
+                    'product_id': self.productA.id,
+                })
+
+        # enter an existing lot_id, should work
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.productA.id,
+        })
+        move_line.lot_id = lot1
+        delivery_order.action_done()

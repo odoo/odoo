@@ -11,13 +11,13 @@
                     <page string="Invoicing" name="invoicing">
                         <group name="properties">
                             <group string="Receivables">
-                                <field name="taxes_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_income_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
                             </group>
                             <group string="Payables" name="payables">
-                                <field name="supplier_taxes_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="supplier_taxes_id" widget="many2many_tags"/>
                                 <field name="property_account_expense_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>

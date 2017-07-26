@@ -99,7 +99,7 @@ var FieldMany2One = AbstractField.extend({
         this.nodeOptions = _.defaults(this.nodeOptions, {
             quick_create: true,
         });
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.m2o_value = this._formatValue(this.value);
         // 'recordParams' is a dict of params used when calling functions
         // 'getDomain' and 'getContext' on this.record
         this.recordParams = {fieldName: this.name, viewType: this.viewType};
@@ -838,8 +838,10 @@ var FieldX2Many = AbstractField.extend({
      */
     _onDeleteRecord: function (ev) {
         ev.stopPropagation();
+        var shouldForget = this.attrs.widget === 'many2many' || this.field.type === 'many2many';
+        var operation = shouldForget ? 'FORGET' : 'DELETE';
         this._setValue({
-            operation: 'REMOVE',
+            operation: operation,
             ids: [ev.data.id],
         });
     },
@@ -1290,7 +1292,7 @@ var FieldMany2ManyBinaryMultiFiles = AbstractField.extend({
         var record = _.findWhere(this.value.data, {res_id: fileID});
         if (record) {
             this._setValue({
-                operation: 'REMOVE',
+                operation: 'FORGET',
                 ids: [record.id],
             });
             var metadata = this.metadata[record.id];
@@ -1469,7 +1471,7 @@ var FieldMany2ManyTags = AbstractField.extend({
     _removeTag: function (id) {
         var record = _.findWhere(this.value.data, {res_id: id});
         this._setValue({
-            operation: 'REMOVE',
+            operation: 'FORGET',
             ids: [record.id],
         });
     },
@@ -2029,7 +2031,20 @@ var FieldReference = FieldMany2One.extend({
         // needs to be copied as it is an unmutable object
         this.field = _.extend({}, this.field);
         if (this.value) {
-            this._setRelation(this.value.model);
+            var model = null;
+            // The value of a Reference field can either be a string in the form
+            // of model,record_id or an object
+            if (typeof this.value === "string") {
+                var value = this.value.split(',');
+                model = value[0];
+                this.value = {
+                    res_id: parseInt(value[1]),
+                };
+            } else {
+                model = this.value.model;
+            }
+
+            this._setRelation(model);
         }
     },
     /**
@@ -2043,6 +2058,15 @@ var FieldReference = FieldMany2One.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Get the encompassing record's display_name
+     *
+     * @override
+     */
+    _formatValue: function () {
+        return this.recordData.display_name;
+    },
 
     /**
      * Add a select in edit mode (for the model).

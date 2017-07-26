@@ -1237,7 +1237,6 @@ class TestStockFlow(TestStockCommon):
 
     def test_30_check_with_no_incoming_lot(self):
         """ Picking in without lots and picking out with"""
-
         # Change basic operation type not to get lots
         # Create product with lot tracking
         picking_in = self.env['stock.picking.type'].browse(self.picking_type_in)
@@ -1254,6 +1253,7 @@ class TestStockFlow(TestStockCommon):
             'product_uom_qty': 4,
             'product_uom': self.productA.uom_id.id,
             'picking_id': picking_in.id,
+            'picking_type_id': self.picking_type_in,
             'location_id': self.supplier_location,
             'location_dest_id': self.stock_location})
 
@@ -1737,8 +1737,8 @@ class TestStockFlow(TestStockCommon):
         self.assertEquals(picking_out.state, "assigned")
 
     def test_74_move_state_waiting_mto(self):
-        """ This test will check that when a move is unreserved, it state change to 'waiting' if
-        it has ancestors or is has a 'procure_method' equal to 'make_to_order' else the state
+        """ This test will check that when a move is unreserved, its state changes to 'waiting' if
+        it has ancestors or if it has a 'procure_method' equal to 'make_to_order' else the state
         changes to 'confirmed'.
         """
         picking_out = self.PickingObj.create({
@@ -1763,7 +1763,7 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
-        the_ancestor = self.MoveObj.create({
+        self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,

@@ -69,36 +69,49 @@
         </li>
     </ul>
 </t>
-<t t-name="WidgetButton.tooltip" t-extend="WidgetLabel.tooltip">
-    <t t-jquery="div.oe_tooltip_string" t-operation="replace">
-        <div class="oe_tooltip_string" t-if="debug || widget.string">
-            <t t-if="debug">
-                Button
-                <t t-if="widget.string">: </t>
-                <t t-if="!widget.string"> (no string)</t>
-            </t>
-            <t t-esc="widget.string"/>
-        </div>
-    </t>
-    <t t-jquery="ul.oe_tooltip_technical" t-operation="append">
-        <li t-if="widget.node.attrs.special" data-item="special">
-            <span class="oe_tooltip_technical_title">Special:</span>
-            <t t-esc="widget.node.attrs.special"/>
+<t t-name="WidgetButton.tooltip">
+    <div class="oe_tooltip_string" t-if="debug || node.attrs.string">
+        <t t-if="debug">
+            Button
+            <t t-if="node.attrs.string">: </t>
+            <t t-if="!node.attrs.string"> (no string)</t>
+        </t>
+        <t t-esc="node.attrs.string"/>
+    </div>
+    <p t-if="node.attrs.help" class="oe_tooltip_help">
+        <t t-esc="node.attrs.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="object">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="state.model"/>
         </li>
-        <t t-set="button_type" t-value="widget.node.attrs.type"/>
+        <li t-if="node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="node.attrs.context || widget.field.context"/>
+        </li>
+        <li t-if="node.attrs.modifiers and node.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="node.attrs.modifiers"/>
+        </li>
+        <li t-if="node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="node.attrs.type"/>
         <li t-if="button_type" data-item="button_type">
             <span class="oe_tooltip_technical_title">Button Type:</span>
             <t t-esc="button_type"/>
         </li>
         <li t-if="button_type === 'object'" data-item="button_method">
             <span class="oe_tooltip_technical_title">Method:</span>
-            <t t-esc="widget.node.attrs.name"/>
+            <t t-esc="node.attrs.name"/>
         </li>
         <li t-if="button_type === 'action'" data-item="button_action">
             <span class="oe_tooltip_technical_title">Action ID:</span>
-            <t t-esc="widget.node.attrs.name"/>
+            <t t-esc="node.attrs.name"/>
         </li>
-    </t>
+    </ul>
 </t>
 
 <t t-name="Notification">

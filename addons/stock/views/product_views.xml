@@ -87,7 +87,7 @@
                     <group name="inventory">
                         <group string="Operations" name="operations">
                             <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible':[('type', 'in', ['service', 'digital'])]}"/>
-                            <field name="route_from_categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
+                            <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible':[('route_from_categ_ids', '=', [])]}"/>
                             <label for="sale_delay"/>
                             <div>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days

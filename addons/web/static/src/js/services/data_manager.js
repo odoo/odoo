@@ -349,7 +349,7 @@ return core.Class.extend({
             }
             if (attrs.Widget.prototype.fieldsToFetch) {
                 attrs.viewType = 'default';
-                attrs.relatedFields = attrs.Widget.prototype.fieldsToFetch;
+                attrs.relatedFields = _.extend({}, attrs.Widget.prototype.fieldsToFetch);
                 attrs.fieldsInfo = {
                     default: _.mapObject(attrs.Widget.prototype.fieldsToFetch, function () {
                         return {};
