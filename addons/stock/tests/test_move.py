@@ -831,6 +831,45 @@ class StockMove(TransactionCase):
         self.assertEqual(quants.reserved_quantity, 0.0)
         self.assertEqual(len(move1.move_line_ids), 0.0)
 
+    def test_unreserve_5(self):
+        """ Check the unreservation of a stock move reserved on multiple quants.
+        """
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 3)
+        self.env['stock.quant'].create({
+            'product_id': self.product1.id,
+            'location_id': self.stock_location.id,
+            'quantity': 2,
+        })
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 5)
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_unreserve_5',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        self.assertEqual(move1.state, 'draft')
+
+        # confirmation
+        move1.action_confirm()
+        self.assertEqual(move1.state, 'confirmed')
+
+        # assignment
+        move1.action_assign()
+        self.assertEqual(move1.state, 'assigned')
+        self.assertEqual(len(move1.move_line_ids), 1)
+        move1.do_unreserve()
+
+        quants = self.env['stock.quant']._gather(self.product1, self.stock_location)
+        self.assertEqual(len(quants), 2.0)
+        for quant in quants:
+            self.assertEqual(quant.reserved_quantity, 0)
+
     def test_link_assign_1(self):
         """ Test the assignment mechanism when two chained stock moves try to move one unit of an
         untracked product.
