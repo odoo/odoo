@@ -544,6 +544,53 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 0.0)
 
+    def test_mixed_tracking_reservation_7(self):
+        """ Similar test_mixed_tracking_reservation_2 but creates first the tracked quant, then the
+        untracked ones. When adding a lot to the untracked move line, it should not decrease the
+        untracked quant then increase a non-existing tracked one that will fallback on the
+        untracked quant.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product2.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product2.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 2.0)
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        self.assertEqual(len(move1.move_line_ids), 2)
+        for ml in move1.move_line_ids:
+            self.assertEqual(ml.product_qty, 1.0)
+
+        untracked_move_line = move1.move_line_ids.filtered(lambda ml: not ml.lot_id).lot_id = lot2
+        for ml in move1.move_line_ids:
+            self.assertEqual(ml.product_qty, 1.0)
+
+        move1.move_line_ids.write({'qty_done': 1.0})
+
+        move1.action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot2, strict=True), 0.0)
+        quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
+        self.assertEqual(len(quants), 0)
+
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
         the receipt move line.
