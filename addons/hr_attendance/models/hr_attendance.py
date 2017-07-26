@@ -91,7 +91,7 @@ class HrAttendance(models.Model):
                 # is the same as the one before our check_in time computed before, otherwise it overlaps
                 last_attendance_before_check_out = self.env['hr.attendance'].search([
                     ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<=', attendance.check_out),
+                    ('check_in', '<', attendance.check_out),
                     ('id', '!=', attendance.id),
                 ], order='check_in desc', limit=1)
                 if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
