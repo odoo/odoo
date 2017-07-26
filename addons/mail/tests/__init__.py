@@ -11,3 +11,4 @@ from . import test_mail_template
 from . import test_invite
 from . import test_ir_actions
 from . import test_update_notification
+from . import test_portal
