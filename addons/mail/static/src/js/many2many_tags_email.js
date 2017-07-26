@@ -39,7 +39,7 @@ BasicModel.include({
         var def;
         if (invalidPartnerIds) {
             // remove invalid partners
-            var changes = {operation: 'REMOVE', ids: _.pluck(invalidPartnerIds, 'id')};
+            var changes = {operation: 'DELETE', ids: _.pluck(invalidPartnerIds, 'id')};
             def = this._applyX2ManyChange(record, fieldName, changes);
         }
         return $.when(def).then(function () {

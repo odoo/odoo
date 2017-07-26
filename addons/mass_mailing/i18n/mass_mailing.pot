@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:47+0000\n"
-"PO-Revision-Date: 2017-04-18 14:47+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid "%<br/>\n"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:482
+#: code:addons/mass_mailing/models/mass_mailing.py:479
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -199,11 +199,6 @@ msgid "A/B Testing percentage"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
-msgid "AB Testing"
-msgstr ""
-
-#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.s_mail_block_event
 msgid "ALL DAY"
 msgstr ""
@@ -212,6 +207,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_active
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_list_active
 msgid "Active"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
+msgid "Allow A/B Testing"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+msgid "Anna Machiavelli"
 msgstr ""
 
 #. module: mass_mailing
@@ -274,7 +279,7 @@ msgid "Bounced Ratio"
 msgstr ""
 
 #. module: mass_mailing
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3844
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_campaign_id_3862
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Campaign"
 msgstr ""
@@ -522,6 +527,11 @@ msgid "Date when this email has bounced."
 msgstr ""
 
 #. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+msgid "Dear John,"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Delete"
@@ -576,7 +586,7 @@ msgid "Domain"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:490
+#: code:addons/mass_mailing/models/mass_mailing.py:487
 #: selection:mail.mass_mailing,state:0
 #: selection:mail.statistics.report,state:0
 #, python-format
@@ -732,11 +742,11 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_unique_ab_testing
-msgid "If checked, recipients will be mailed only once, allowing to send various mailings in a single campaign to test the effectiveness of the mailings."
+msgid "If checked, recipients will be mailed only once for the whole campaign. This lets you send different mailings to randomly selected recipients and test the effectiveness of the mailings, without causing duplicate messages."
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:490
+#: code:addons/mass_mailing/models/mass_mailing.py:487
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "In Queue"
@@ -879,7 +889,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids
-#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids_3868
+#: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_contact_list_ids_3886
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_lists
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_search
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_list_tree
@@ -1194,7 +1204,7 @@ msgid "Percentage of the contacts that will be mailed. Recipients will be taken 
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:671
+#: code:addons/mass_mailing/models/mass_mailing.py:668
 #, python-format
 msgid "Please select recipients."
 msgstr ""
@@ -1401,14 +1411,14 @@ msgid "Send to All"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:490
+#: code:addons/mass_mailing/models/mass_mailing.py:487
 #: selection:mail.mass_mailing,state:0
 #, python-format
 msgid "Sending"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:490
+#: code:addons/mass_mailing/models/mass_mailing.py:487
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mail_statistics_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_mass_mailing_sent
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_statistics_report_sent
@@ -1450,6 +1460,11 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing.menu_mass_mailing_global_settings
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_campaign_kanban
 msgid "Settings"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+msgid "Sincerely,<br/>"
 msgstr ""
 
 #. module: mass_mailing
@@ -1521,7 +1536,7 @@ msgid "Tags"
 msgstr ""
 
 #. module: mass_mailing
-#: code:addons/mass_mailing/models/mass_mailing.py:545
+#: code:addons/mass_mailing/models/mass_mailing.py:542
 #: model:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 #, python-format
 msgid "Test Mailing"
@@ -1596,7 +1611,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_campaign_id
-#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3844
+#: model:ir.model.fields,help:mass_mailing.field_mail_mass_mailing_campaign_id_3862
 msgid "This name helps you tracking your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 
@@ -1767,6 +1782,13 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_link_tracker_click
 msgid "link.tracker.click"
+msgstr ""
+
+#. module: mass_mailing
+#: model:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+msgid "lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br/>\n"
+"                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br/>\n"
+"                                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
 msgstr ""
 
 #. module: mass_mailing

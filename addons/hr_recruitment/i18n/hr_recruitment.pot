@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-07-25 10:03+0000\n"
+"PO-Revision-Date: 2017-07-25 10:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -385,14 +385,14 @@ msgid "Configure Recruitment"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:350
+#: code:addons/hr_recruitment/models/hr_recruitment.py:349
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_id
 #, python-format
 msgid "Contact"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:352
+#: code:addons/hr_recruitment/models/hr_recruitment.py:351
 #, python-format
 msgid "Contact Email"
 msgstr ""
@@ -600,6 +600,11 @@ msgid "Email Alias"
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Email alias"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
 msgid "Email alias for this job position. New emails will automatically create new applicants for this job position."
 msgstr ""
@@ -703,6 +708,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_department
 msgid "HR Department"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "HR Responsible"
 msgstr ""
 
 #. module: hr_recruitment
@@ -892,16 +902,6 @@ msgid "Mobile"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "Mobile:"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "My Activities"
 msgstr ""
@@ -948,7 +948,7 @@ msgid "New Applications"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:400
+#: code:addons/hr_recruitment/models/hr_recruitment.py:412
 #, python-format
 msgid "New Employee %s Hired"
 msgstr ""
@@ -980,7 +980,7 @@ msgid "Next Activities"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:368
+#: code:addons/hr_recruitment/models/hr_recruitment.py:367
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -1016,6 +1016,11 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "Odoo helps you track applicants in the recruitment\n"
 "            process and follow up all operations: meetings, interviews, etc."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Offer"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1085,6 +1090,11 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
 msgid "Partner"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "Person responsible of validating the employee's contracts."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1319,11 +1329,6 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "Specific Email Address"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1571,7 +1576,7 @@ msgid "With just a quick glance on the Odoo employee screen, you\n"
 msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:404
+#: code:addons/hr_recruitment/models/hr_recruitment.py:416
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr ""

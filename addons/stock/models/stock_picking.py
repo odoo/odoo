@@ -553,6 +553,7 @@ class Picking(models.Model):
                     todo_moves |= new_move
                     #'qty_done': ops.qty_done})
         todo_moves.action_done()
+        self.write({'date_done': fields.Datetime.now()})
         return True
 
     do_transfer = action_done #TODO:replace later
@@ -590,7 +591,6 @@ class Picking(models.Model):
     @api.multi
     def button_validate(self):
         self.ensure_one()
-        move_line_delete = self.env['stock.move.line']
         if not self.move_lines and not self.move_line_ids:
             raise UserError(_('Please add some lines to move'))
         # In draft or with no pack operations edited yet, ask if we can just do everything
@@ -632,16 +632,6 @@ class Picking(models.Model):
                 'res_id': wiz.id,
                 'context': self.env.context,
             }
-        for operation in self.move_line_ids:
-            if operation.qty_done < 0:
-                raise UserError(_('No negative quantities allowed'))
-            if operation.qty_done > 0:
-                pass
-                #operation.write({'product_qty': operation.qty_done})
-            else:
-                move_line_delete |= operation
-        if move_line_delete:
-            move_line_delete.unlink()
         self.action_done()
         return
 

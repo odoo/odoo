@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 
 from email.utils import formataddr
 
@@ -11,6 +12,7 @@ from odoo.osv import expression
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
 
 
 class Message(models.Model):
@@ -722,6 +724,28 @@ class Message(models.Model):
             values['reply_to'] = self._get_reply_to(values)
         if 'record_name' not in values and 'default_record_name' not in self.env.context:
             values['record_name'] = self._get_record_name(values)
+
+        if 'attachment_ids' not in values:
+            values.setdefault('attachment_ids', [])
+
+        # extract base64 images
+        if 'body' in values:
+            Attachments = self.env['ir.attachment']
+            data_to_url = {}
+            def base64_to_boundary(match):
+                key = match.group(2)
+                if not data_to_url.get(key):
+                    name = 'image%s' % len(data_to_url)
+                    attachment = Attachments.create({
+                        'name': name,
+                        'datas': match.group(2),
+                        'datas_fname': name,
+                        'res_model': 'mail.message',
+                    })
+                    values['attachment_ids'].append((4, attachment.id))
+                    data_to_url[key] = '/web/image/%s' % attachment.id
+                return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
+            values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'])
 
         message = super(Message, self).create(values)
         message._invalidate_documents()
