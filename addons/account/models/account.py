@@ -510,7 +510,10 @@ class AccountJournal(models.Model):
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
         args = args or []
-        recs = self.search(['|', ('code', operator, name), ('name', operator, name)] + args, limit=limit)
+        connector = '|'
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            connector = '&'
+        recs = self.search([connector, ('code', operator, name), ('name', operator, name)] + args, limit=limit)
         return recs.name_get()
 
     @api.multi

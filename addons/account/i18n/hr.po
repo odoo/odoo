@@ -16,15 +16,15 @@
 # Mario Jureša <mario.juresa@uvid.hr>, 2016
 # Marko Carević <marko.carevic@live.com>, 2016
 # Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2016
+# Tina Milas <tina@uvid.hr>, 2016
 # Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2016
-# Tina Milas <tina@uvid.hr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
+"Last-Translator: Stjepan Lovasić <stjepan.lovasic@storm.hr>, 2016\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1598,6 +1598,10 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"Struktura IOS-a partnera je detaljan izvještaj potraživanja po intervalima. "
+"Odoo izračunava tablicu salda potraživanja po početnom datumu. Ako želite "
+"interval od 30 dana Odoo generira analizu potraživanja za zadnji mjesec, "
+"zadnja dva mjeseca itd."
 
 #. module: account
 #. openerp-web
@@ -6237,7 +6241,7 @@ msgstr "Odgovarajuće"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_full_reconcile_id
 msgid "Matching Number"
-msgstr "Odgovarajući brojevi"
+msgstr "Oznaka zatvaranja"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -6812,7 +6816,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Otvori"
+msgstr "Otvoreno"
 
 #. module: account
 #. openerp-web
@@ -10534,7 +10538,7 @@ msgstr "Nije moguće brisati već proknjiženu uplatu"
 #: code:addons/account/models/account_invoice.py:1360
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
-msgstr ""
+msgstr "Stavke računa smijete brisati samo u statusu Nacrt."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -10973,7 +10977,7 @@ msgstr "za ovog dobavljača. Možete označiti ove račune kao plaćene."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -11002,7 +11006,7 @@ msgstr "pomirenja sa ctrl-enter prečicama."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "refund"
-msgstr ""
+msgstr "Odobrenje"
 
 #. module: account
 #. openerp-web

@@ -24,7 +24,7 @@
                 </div>
                 <group name="main_group">
                     <group>
-                        <field name="product_id"/>
+                        <field name="product_id" attrs="{'readonly':[('quant_ids','!=',[])]}"/>
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty"/>

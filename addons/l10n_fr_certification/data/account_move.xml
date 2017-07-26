@@ -1,0 +1,13 @@
+<odoo>
+    <record model="ir.actions.server" id="action_check_hash_integrity">
+        <field name="name">Intégrité des données comptables</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="type">ir.actions.server</field>
+        <field name="code">
+            action = env['account.move']._check_hash_integrity(env.user.company_id.id)
+        </field>
+    </record>
+
+    <menuitem action="action_check_hash_integrity" id="menu_check_move_integrity" parent="l10n_fr.account_reports_fr_statements_menu" sequence="90"/>
+
+</odoo>

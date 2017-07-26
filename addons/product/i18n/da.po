@@ -10,13 +10,14 @@
 # peso <peer.sommerlund@gmail.com>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
 # Visti Kristensen <visti@vkdata.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-26 13:35+0000\n"
-"PO-Revision-Date: 2017-04-26 13:35+0000\n"
-"Last-Translator: Visti Kristensen <visti@vkdata.dk>, 2017\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -621,7 +622,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:product.product_template_action_all
 #: model:ir.actions.act_window,help:product.product_variant_action
 msgid "Click to define a new product."
-msgstr ""
+msgstr "Klik for at oprette en nyt produkt."
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -746,7 +747,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr ""
+msgstr "Landegruppe"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_country_group_ids
@@ -807,7 +808,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_res_currency
 #: model:ir.model.fields,field_description:product.field_product_pricelist_currency_id
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item_currency_id
 #: model:ir.model.fields,field_description:product.field_product_product_currency_id
@@ -837,7 +837,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "Kunde ref."
 
 #. module: product
 #: model:product.product,name:product.product_delivery_02
@@ -1371,6 +1371,7 @@ msgstr "Intern"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_categ_id
 #: model:ir.model.fields,field_description:product.field_product_template_categ_id
+#: model:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Category"
 msgstr "Intern kategori"
 
@@ -1641,7 +1642,7 @@ msgstr "Ny pris ="
 #. module: product
 #: selection:base.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr ""
+msgstr "Ingen varianter på produkter"
 
 #. module: product
 #: selection:product.category,type:0
@@ -2023,6 +2024,8 @@ msgid ""
 "Products can have several attributes, defining variants (Example: size, "
 "color,...)"
 msgstr ""
+"Produktet kan have flere egenskaber der definere varianterne (f.eks. "
+"størrelse, farve,...)"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_search_view
@@ -2040,11 +2043,6 @@ msgstr "Varer "
 #: selection:product.pricelist.item,base:0
 msgid "Public Price"
 msgstr "Officiel pris"
-
-#. module: product
-#: model:product.pricelist,name:product.list0
-msgid "Public Pricelist"
-msgstr "Offentlig prisliste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_description_purchase
@@ -2177,6 +2175,7 @@ msgstr "Salgs pris"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,field_description:product.field_res_users_property_product_pricelist
 msgid "Sale Pricelist"
 msgstr "Salgs prisliste"
 
@@ -2691,6 +2690,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner_property_product_pricelist
+#: model:ir.model.fields,help:product.field_res_users_property_product_pricelist
 msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
@@ -2729,6 +2729,11 @@ msgstr "Type"
 msgid ""
 "USB port allows for software update to ensure ongoing Bluetooth device "
 "compatibility"
+msgstr ""
+
+#. module: product
+#: model:product.pricelist,name:product.list0
+msgid "USD"
 msgstr ""
 
 #. module: product
@@ -2840,7 +2845,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Tillæg for variant"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2877,7 +2882,7 @@ msgstr ""
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "Leverandørprisliste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_code
@@ -3009,14 +3014,6 @@ msgstr ""
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
 msgstr "Arbejdstid"
-
-#. module: product
-#: code:addons/product/models/res_currency.py:17
-#, python-format
-msgid ""
-"You cannot define a rounding factor for the company's main currency that is "
-"smaller than the decimal precision of 'Account'."
-msgstr ""
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:16

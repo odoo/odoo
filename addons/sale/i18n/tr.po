@@ -5,14 +5,17 @@
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2016
+# Levent Karakaş <levent@mektup.at>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-26 09:19+0000\n"
-"PO-Revision-Date: 2017-05-26 09:19+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Ramiz Deniz Öner <deniz@denizoner.com>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -64,6 +67,45 @@ msgid ""
 "% endif\n"
 "</p>\n"
 msgstr ""
+"\n"
+"<p>Sayın ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set doc_name = 'fiyat teklifi' if object.state in ('draft', 'sent') else 'sipariş onayı'\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_name = is_online and object.template_id and doc_name == 'fiyat teklifi' and 'Onayla ve%s yi  çevrimiçi öde' % doc_name or '%s yi görüntüle' % doc_name\n"
+"% set access_url = is_online and access_action['url'] or None\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"${object.company_id.name}'nin<strong>${object.name}</strong> numaralı\n"
+"% if object.origin:\n"
+"(referans: ${object.origin} )\n"
+"% endif\n"
+"<strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"tutarındaki ${doc_name} buradadır.\n"
+"</p>\n"
+"\n"
+"    <br/><br/>\n"
+"% if is_online:\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/>\n"
+"        <span style=\"color:#888888\">(veya ekli PDF'i görüntüleyin)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>Sorularınız varsa bu e-posta üzerinden sorabilirsiniz.</p>\n"
+"<p>Teşekkür ederiz,</p>\n"
+"\n"
+"<p style=\"color:#eeeeee;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -909,7 +951,7 @@ msgstr "Gelir Hesabı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_display_incoterm
 msgid "Incoterms"
-msgstr "Teslim Şekilleri"
+msgstr "Teslim Koşulları"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -1261,7 +1303,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr "Raporlarda Incoterm gösterme"
+msgstr "Raporlarda Teslimat Koşulu (Incoterm) gösterme"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
@@ -1269,7 +1311,6 @@ msgid "No variants on products"
 msgstr "Ürünlerde varyant özeliği olmadan (varyansız)"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
@@ -1277,6 +1318,13 @@ msgid ""
 msgstr ""
 "Teklif, Siparişe dönüştükten sonra, Teklifler listesinden, Siparişler "
 "listesine geçecektir."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Note that once a Quotation becomes a Sale Order, it will be moved\n"
+"            from the Quotations list to the Sales Order list."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1783,7 +1831,7 @@ msgstr "Satış fiyat listesi ayarı"
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
-msgstr "Satışlar"
+msgstr "Satış"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -2009,7 +2057,8 @@ msgstr "Firmanız için varsayılan sözleşme koşullarını belirleyiniz"
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr "Satış siparişleri ve faturalarda incoterms göster"
+msgstr ""
+"Satış siparişleri ve faturalarda Teslimat Koşulları (incoterms) göster"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -2164,8 +2213,8 @@ msgid ""
 "The printed reports will display the incoterms for the sales orders and the "
 "related invoices"
 msgstr ""
-"Çıktısı alınacak satış ve ona bağlı fatura raporlarında incoterms "
-"eklenecektir"
+"Çıktısı alınacak satış ve ona bağlı fatura raporlarında Teslimat Koşulları "
+"(incoterms) eklenecektir"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:148
@@ -2288,7 +2337,6 @@ msgid "Total"
 msgstr "Toplam"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
 msgstr "Toplam Fiyat"
@@ -2381,7 +2429,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "VAT:"
-msgstr "KDV:"
+msgstr "Vergi No:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
@@ -2477,7 +2525,6 @@ msgstr ""
 "Bu ekranda faturalandırlabilir Satış Siparişlerini görüntüleyebilirsiniz."
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
@@ -2485,6 +2532,13 @@ msgid ""
 msgstr ""
 "Bunda sonra yapılacaklar akıcı bir şekilde gerçekleşmeli: Fiyat Teklifini\n"
 "onaylayıp, Satış Siparişine döndür, daha sonra faturalandır ve ödemeyi al."
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
+msgid ""
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"            to a Sale Order, then create the Invoice and collect the Payment."
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order

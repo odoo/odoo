@@ -179,8 +179,8 @@ class Http(models.AbstractModel):
                 nearest_lang = not func and cls.get_nearest_lang(path[1])
                 url_lang = nearest_lang and path[1]
                 preferred_lang = ((cook_lang if cook_lang in langs else False)
-                                  or request.website.default_lang_code
-                                  or (not is_a_bot and cls.get_nearest_lang(request.lang)))
+                                  or (not is_a_bot and cls.get_nearest_lang(request.lang))
+                                  or request.website.default_lang_code)
 
                 request.lang = context['lang'] = nearest_lang or preferred_lang
                 # if lang in url but not the displayed or default language --> change or remove
@@ -205,7 +205,7 @@ class Http(models.AbstractModel):
                     path.pop(1)
                     request.context = context
                     return cls.reroute('/'.join(path) or '/')
-            if path[1] == request.website.default_lang_code:
+            if request.lang == request.website.default_lang_code:
                 context['edit_translations'] = False
             if not context.get('tz'):
                 context['tz'] = request.session.get('geoip', {}).get('time_zone')

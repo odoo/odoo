@@ -412,10 +412,15 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
+        # Add the followers at creation, so they can be notified
+        if vals.get('employee_id'):
+            employee = self.env['hr.employee'].browse(vals['employee_id'])
+            users = self._get_users_to_subscribe(employee=employee) - self.env.user
+            vals['message_follower_ids'] = []
+            for partner in users.mapped('partner_id'):
+                vals['message_follower_ids'] += self.env['mail.followers']._add_follower_command(self._name, [], {partner.id: None}, {})[0]
         sheet = super(HrExpenseSheet, self).create(vals)
         self.check_consistency()
-        if vals.get('employee_id'):
-            sheet._add_followers()
         return sheet
 
     @api.multi
@@ -450,16 +455,20 @@ class HrExpenseSheet(models.Model):
             return 'hr_expense.mt_expense_paid'
         return super(HrExpenseSheet, self)._track_subtype(init_values)
 
-    def _add_followers(self):
-        user_ids = []
-        employee = self.employee_id
+    def _get_users_to_subscribe(self, employee=False):
+        users = self.env['res.users']
+        employee = employee or self.employee_id
         if employee.user_id:
-            user_ids.append(employee.user_id.id)
+            users |= employee.user_id
         if employee.parent_id:
-            user_ids.append(employee.parent_id.user_id.id)
+            users |= employee.parent_id.user_id
         if employee.department_id and employee.department_id.manager_id and employee.parent_id != employee.department_id.manager_id:
-            user_ids.append(employee.department_id.manager_id.user_id.id)
-        self.message_subscribe_users(user_ids=user_ids)
+            users |= employee.department_id.manager_id.user_id
+        return users
+
+    def _add_followers(self):
+        users = self._get_users_to_subscribe()
+        self.message_subscribe_users(user_ids=users.ids)
 
     @api.onchange('employee_id')
     def _onchange_employee_id(self):
@@ -467,9 +476,12 @@ class HrExpenseSheet(models.Model):
         self.department_id = self.employee_id.department_id
 
     @api.one
-    @api.depends('expense_line_ids', 'expense_line_ids.total_amount')
+    @api.depends('expense_line_ids', 'expense_line_ids.total_amount', 'expense_line_ids.currency_id')
     def _compute_amount(self):
-        self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        if len(self.expense_line_ids.mapped('currency_id')) < 2:
+            self.total_amount = sum(self.expense_line_ids.mapped('total_amount'))
+        else:
+            self.total_amount = 0.0
 
     # FIXME: A 4 command is missing to explicitly declare the one2many relation
     # between the sheet and the lines when using 'default_expense_line_ids':[ids]

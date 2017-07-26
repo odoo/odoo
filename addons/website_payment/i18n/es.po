@@ -8,13 +8,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
 "PO-Revision-Date: 2016-09-07 08:57+0000\n"
-"Last-Translator: Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2016\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "Configurar métodos de pago"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_config_settings_default_acquirer
 msgid "Default Acquirer"
-msgstr ""
+msgstr "Comprador por defecto"
 
 #. module: website_payment
 #: model:ir.model.fields,help:website_payment.field_account_config_settings_default_acquirer
@@ -59,6 +60,8 @@ msgid ""
 "Default payment acquirer for website payments; your provider needs to be "
 "visible in the website."
 msgstr ""
+"Método de pago por defecto para compras web; su proveedor necesita "
+"visibilidad en el sitio web."
 
 #. module: website_payment
 #: model:ir.ui.view,arch_db:website_payment.pay_methods
@@ -84,6 +87,12 @@ msgstr "De"
 #: model:ir.ui.view,arch_db:website_payment.pay_meth_link
 msgid "Manage your payment methods"
 msgstr "Gestione sus métodos de pago"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
 
 #. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
@@ -134,6 +143,14 @@ msgid "Website"
 msgstr "Sitio web"
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
+
+#. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings
 msgid "account.config.settings"
 msgstr "account.config.settings"
@@ -142,4 +159,4 @@ msgstr "account.config.settings"
 #: model:ir.ui.view,arch_db:website_payment.confirm
 #: model:ir.ui.view,arch_db:website_payment.pay
 msgid "payment_provider_logo"
-msgstr ""
+msgstr "payment_provider_logo"

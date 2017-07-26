@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ProductionLot(models.Model):
@@ -26,6 +27,15 @@ class ProductionLot(models.Model):
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, product_id)', 'The combination of serial number and product must be unique !'),
     ]
+
+    @api.model
+    def create(self, vals):
+        pack_id = self.env.context.get('active_pack_operation', False)
+        if pack_id:
+            pack = self.env['stock.pack.operation'].browse(pack_id)
+            if pack.picking_id and not pack.picking_id.picking_type_id.use_create_lots:
+                raise UserError(_("You are not allowed to create a lot for this picking type"))
+        return super(ProductionLot, self).create(vals)
 
     @api.one
     @api.depends('quant_ids.qty')

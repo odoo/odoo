@@ -8,10 +8,10 @@
 # Manuela Silva <manuela.silva@sky.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-14 14:52+0000\n"
-"PO-Revision-Date: 2016-12-14 14:52+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Manuela Silva <manuela.silva@sky.com>, 2017\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_transfer
-#: code:addons/payment_transfer/models/payment_acquirer.py:32
+#: code:addons/payment_transfer/models/payment.py:63
+#, python-format
+msgid "; multiple order found"
+msgstr "; encontradas múltiplas encomendas"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:61
+#, python-format
+msgid "; no order found"
+msgstr "; nenhuma encomenda encontrada"
+
+#. module: payment_transfer
+#: code:addons/payment_transfer/models/payment.py:28
 #, python-format
 msgid ""
 "<div>\n"
@@ -32,18 +44,6 @@ msgid ""
 "<p>Please use the order name as communication reference.</p>\n"
 "</div>"
 msgstr ""
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:63
-#, python-format
-msgid "; multiple order found"
-msgstr "; encontras múltiplas encomendas"
-
-#. module: payment_transfer
-#: code:addons/payment_transfer/models/payment.py:61
-#, python-format
-msgid "; no order found"
-msgstr "; nenhuma encomenda encontrada"
 
 #. module: payment_transfer
 #: code:addons/payment_transfer/models/payment.py:26

@@ -42,7 +42,7 @@
               </tr>
           </thead>
           <tbody>
-              <tr id="product_confirmation">
+              <tr id="product_confirmation" class="js_product">
                 <td width="100">
                   <span t-field="product.image_medium" t-options='{"widget": "image" }'/>
                 </td>
@@ -54,16 +54,18 @@
                   </div>
                 </td>
                 <td>
-                  <span t-attf-class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
+                  <ul class="hidden js_add_cart_variants" t-att-data-attribute_value_ids="main_product_attr_ids"></ul>
+                  <div class="hidden oe_unchanged_value_ids" t-att-data-unchanged_value_ids="main_product_attr_ids[0][1]" ></div>
+                  <span t-attf-class="text-danger oe_default_price oe_striked_price {{ (compute_currency(product.lst_price) - product.website_price) &lt; 0.01 and 'hidden' }}"
                     t-field="product.lst_price"
                     t-options='{
                       "widget": "monetary",
                       "from_currency": product.currency_id,
                       "display_currency": website.currency_id
                    }'/>
-                  <span class="oe_price" style="white-space: nowrap;"
+                  <span class="oe_price product_id" style="white-space: nowrap;"
                     t-att-data-product-id="product.id"
-                    t-field="product.with_context(quantity=1).website_price"
+                    t-esc="product.website_price / quantity"
                     t-options='{
                        "widget": "monetary",
                        "display_currency": website.currency_id

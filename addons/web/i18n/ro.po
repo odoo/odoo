@@ -8,10 +8,10 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:28+0000\n"
+"PO-Revision-Date: 2017-06-23 13:28+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -73,52 +73,45 @@ msgstr "%(view_type)s vizualizare"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:105
+#: code:addons/web/static/src/js/framework/translation.js:103
 #, python-format
 msgid "%d days ago"
 msgstr "%d zile în urmă"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:103
+#: code:addons/web/static/src/js/framework/translation.js:101
 #, python-format
 msgid "%d hours ago"
 msgstr "%d ore în urmă"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:101
+#: code:addons/web/static/src/js/framework/translation.js:99
 #, python-format
 msgid "%d minutes ago"
 msgstr " %d minute în urmă"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:107
+#: code:addons/web/static/src/js/framework/translation.js:105
 #, python-format
 msgid "%d months ago"
 msgstr "%d luni în urmă"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/widgets/debug_manager.js:137
+#: code:addons/web/static/src/js/widgets/debug_manager.js:136
 #, python-format
 msgid "%d requests (%d ms) %d queries (%d ms)"
 msgstr "%d cereri (%d ms) %d interogări (%d ms)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/framework/translation.js:109
+#: code:addons/web/static/src/js/framework/translation.js:107
 #, python-format
 msgid "%d years ago"
 msgstr "%d ani în urmă"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/list_view.js:1405
-#, python-format
-msgid "%s (%d)"
-msgstr "%s (%d)"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.webclient_bootstrap
@@ -1110,32 +1103,41 @@ msgstr "ID:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:1248
+#: code:addons/web/static/src/js/views/form_widgets.js:1252
 #, python-format
 msgid "Image"
 msgstr "Imagine"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1091
+#: code:addons/web/static/src/xml/base.xml:1093
 #, python-format
 msgid "Import-Compatible Export"
 msgstr "Compatibil Import-Export"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_widgets.js:635
+#: code:addons/web/static/src/js/views/form_widgets.js:637
 #, python-format
 msgid "Inactive"
 msgstr "Inactiv(ă)"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph_widget.js:199
-#: code:addons/web/static/src/js/views/graph_widget.js:206
+#: code:addons/web/static/src/js/views/graph_widget.js:209
+#: code:addons/web/static/src/js/views/graph_widget.js:217
 #, python-format
 msgid "Invalid data"
 msgstr "Date invalide"
+
+#. module: web
+#: code:addons/web/controllers/main.py:653
+#: code:addons/web/controllers/main.py:667
+#, python-format
+msgid ""
+"Invalid database name. Only alphanumerical characters, underscore, hyphen "
+"and dot are allowed."
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1411,7 +1413,7 @@ msgid ""
 " there is no active filter in the search bar."
 msgstr ""
 "Nu sunt date disponibile pentru acest grafic. Încercați să adaugați câteva "
-"înregistrări, sau asigurați-vă că există cel putin un indicativ și ca nu "
+"înregistrări, sau asigurați-vă că există cel puțin un indicativ și ca nu "
 "sunt filtre active în bara de căutare."
 
 #. module: web
@@ -1423,7 +1425,7 @@ msgid ""
 "        that there is at least one measure and no active filter in the search bar."
 msgstr ""
 "Nu sunt date disponibile pentru acest grafic. Încercați să adaugați câteva "
-"înregistrări, sau asigurați-vă că există cel putin un indicativ și ca nu "
+"înregistrări, sau asigurați-vă că există cel puțin un indicativ și ca nu "
 "sunt filtre active în bara de căutare."
 
 #. module: web
@@ -1463,17 +1465,10 @@ msgstr "Nici o înregistrare selectată"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form_relational_widgets.js:324
+#: code:addons/web/static/src/js/views/form_relational_widgets.js:328
 #, python-format
 msgid "No value found for the field %s for value %s"
 msgstr "Nici o valoare pentru câmpul %s pentru valoarea %s"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/framework/utils.js:144
-#, python-format
-msgid "Node [%s] is not a JSONified XML node"
-msgstr "Nodul [%s] nu este un nod JSONified XML"
 
 #. module: web
 #. openerp-web
@@ -2470,14 +2465,14 @@ msgstr "Poate nu credeți,<br />dar aplicația se încarcă..."
 #: code:addons/web/static/src/js/widgets/sidebar.js:128
 #, python-format
 msgid "You must choose at least one record."
-msgstr "Trebuie să alegeți cel putin o înregistrare."
+msgstr "Trebuie să alegeți cel puțin o înregistrare."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list_view.js:673
 #, python-format
 msgid "You must select at least one record."
-msgstr "Trebuie să selectați cel putin o înregistrare."
+msgstr "Trebuie să selectați cel puțin o înregistrare."
 
 #. module: web
 #. openerp-web

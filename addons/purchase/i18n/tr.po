@@ -7,6 +7,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
 # Ediz Duman <neps1192@gmail.com>, 2016
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2016
 # Cem Uygur <cemuygur.beb@gmail.com>, 2016
@@ -15,17 +16,16 @@
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2016
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2016
 # selim kartal <kartalselim37@gmail.com>, 2016
 # Mehmet Öztürk <mozturk357@gmail.com>, 2016
 # cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2016
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-29 13:59+0000\n"
-"PO-Revision-Date: 2016-09-29 13:59+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -114,6 +114,9 @@ msgid ""
 "Creates the dropship Route and add more complex tests\n"
 "-This installs the module stock_dropshipping."
 msgstr ""
+"\n"
+"Transit ticaret rotası oluşturur ve daha karmaşık testler ekler\n"
+"-stock_dropshipping modülünü yükler."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:87
@@ -129,6 +132,7 @@ msgstr "Satınalma Sayısı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_supplier_invoice_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Tedarikçi Faturaları"
 
@@ -144,6 +148,7 @@ msgstr "Satır sayısı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
 msgstr "Satınalma Siparişi Sayısı"
 
@@ -369,6 +374,12 @@ msgstr "Fatura Satırları"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_qty_invoiced
 msgid "Billed Qty"
 msgstr "Faturalanan Miktar"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:581
+#, python-format
+msgid "Billed Quantity"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_invoice_status
@@ -649,7 +660,7 @@ msgstr "Tamamlanmış"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_double_validation_amount
 msgid "Double validation amount"
-msgstr ""
+msgstr "Çift onay tutarı"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_config_settings_po_double_validation_amount
@@ -659,7 +670,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Draft RFQ"
-msgstr ""
+msgstr "Taslak Teklif Talebi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_dest_address_id
@@ -677,11 +688,6 @@ msgid "Email composition wizard"
 msgstr "Eposta yazma sihirbazı"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_survey_mail_compose_message
-msgid "Email composition wizard for Survey"
-msgstr "Anket için e-mail sihirbazını aç"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_invoice_purchase_id
 msgid ""
 "Encoding help. When selected, the associated purchase order lines are added "
@@ -697,6 +703,12 @@ msgstr "Tahmini Tarih"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
 msgstr "Genişletilmiş Filtreler"
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:559
+#, python-format
+msgid "Extra line with %s "
+msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_fiscal_position_id
@@ -754,7 +766,7 @@ msgstr "Gelen Sevkiyatlar"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_incoterm_id
 msgid "Incoterm"
-msgstr "Teslim Şekli"
+msgstr "Teslimat Koşulu"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_incoterm_id
@@ -868,6 +880,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn_msg
 msgid "Message for Purchase Order"
 msgstr "Satınalma Siparişi için Mesaj"
 
@@ -894,11 +907,8 @@ msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
 msgstr ""
-
-#. module: purchase
-#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
-msgid "New Mail"
-msgstr "Yeni Posta"
+"Satın alma taleplerinin çoğu öneri olarak stok ihtiyaçlarına göre Odoo "
+"tarafından otomatik oluşturulur."
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -940,6 +950,8 @@ msgid ""
 "On ordered quantities: control bills based on ordered quantities.\n"
 "On received quantities: control bills based on received quantity."
 msgstr ""
+"Sipariş edilen miktarlarda: Sipariş edilen miktarlara dayalı faturaları kontrol edin.\n"
+"Alınan miktarlarda: Alınan miktara dayalı faturaları kontrol edin."
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -982,20 +994,21 @@ msgid "Order of Day"
 msgstr "Sipariş Günü"
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:769
+#: code:addons/purchase/models/purchase.py:578
+#, python-format
+msgid "Ordered Quantity"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:816
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Sipariş edilen miktar azaldı!"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Orders"
 msgstr "Siparişler"
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_mail_mail
-msgid "Outgoing Mails"
-msgstr "Giden Postalar"
 
 #. module: purchase
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
@@ -1174,6 +1187,7 @@ msgstr "Satınalma Tedarik Süresi *"
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_line_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_procurement_order_purchase_id
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users_purchase_warn
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_graph
 #: model:ir.ui.view,arch_db:purchase.purchase_order_pivot
@@ -1285,7 +1299,7 @@ msgstr "Satınalma-Standart Fiyat"
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 #: model:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid "Purchases"
-msgstr "Satınalımlar"
+msgstr "Satınalma"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -1361,6 +1375,12 @@ msgid "Received Qty"
 msgstr "Alınan Miktar"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:580
+#, python-format
+msgid "Received Quantity"
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_open_picking
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_count
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_picking_ids
@@ -1414,7 +1434,7 @@ msgstr "Teklif İsteği #"
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Teklifin Talepleri"
+msgstr "Alım Teklif Talebi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_move_ids
@@ -1444,6 +1464,7 @@ msgstr "Satınalma Siparişi Ara"
 #: model:ir.model.fields,help:purchase.field_product_product_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_product_template_purchase_line_warn
 #: model:ir.model.fields,help:purchase.field_res_partner_purchase_warn
+#: model:ir.model.fields,help:purchase.field_res_users_purchase_warn
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -1529,13 +1550,14 @@ msgstr "Ara Toplam"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,field_description:purchase.field_res_users_property_purchase_currency_id
 msgid "Supplier Currency"
 msgstr "Tedarikçi Para Birimi"
 
 #. module: purchase
 #: selection:purchase.config.settings,module_stock_dropshipping:0
 msgid "Suppliers always deliver to your warehouse(s)"
-msgstr ""
+msgstr "Tedarikçiler her zaman deponuza teslimat yapar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_tax
@@ -1560,6 +1582,14 @@ msgid "Terms and Conditions"
 msgstr "Şartlar ve Koşullar"
 
 #. module: purchase
+#: code:addons/purchase/models/purchase.py:574
+#, python-format
+msgid ""
+"The ordered quantity has been decreased. Do not forget to take it into "
+"account on your bills and receipts."
+msgstr ""
+
+#. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
 msgid ""
 "The product form contains detailed information to improve the\n"
@@ -1582,6 +1612,9 @@ msgid ""
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
 msgstr ""
+"Teklif, tedarikçiniz ile yaptığınız mesajlaşma / iletişim geçmişini içerir. "
+"Onaylandıktan sonra, alım teklif talebi bir satınalma siparişine "
+"dönüştürülür."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -1615,6 +1648,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner_property_purchase_currency_id
+#: model:ir.model.fields,help:purchase.field_res_users_property_purchase_currency_id
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
@@ -1712,6 +1746,8 @@ msgid ""
 "Unable to cancel this purchase order. You must first cancel related vendor "
 "bills."
 msgstr ""
+"Bu satınalma siparişi iptal edilemiyor. Önce ilgili tedarikçi faturalarını "
+"iptal etmeniz gerekir."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_price_unit
@@ -1735,6 +1771,11 @@ msgid "Unlock"
 msgstr "Kilidini Aç"
 
 #. module: purchase
+#: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+msgid "Unread Messages"
+msgstr ""
+
+#. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_tree
 msgid "Untaxed"
 msgstr "Vergisiz"
@@ -1747,7 +1788,7 @@ msgstr "Vergisiz Tutar"
 #. module: purchase
 #: selection:purchase.config.settings,group_costing_method:0
 msgid "Use a 'Fixed', 'Real' or 'Average' price costing method"
-msgstr ""
+msgstr "'Sabit', 'Gerçek' veya 'Ortalama' fiyat yöntemlerini kullanın"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -1757,6 +1798,8 @@ msgid ""
 "            and Odoo will fill the bill automatically according to ordered\n"
 "            or received quantities."
 msgstr ""
+"Bu menüyü tedarikçinizden alacağınız faturalarınızı denetlemek\n"
+"            için kullanın. Yeni bir fatura kaydederken, satınalma siparişini ayarlayın ve Odoo, sipariş edilen veya alınan miktarlara göre otomatik olarak fatura oluşturacaktır."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1766,6 +1809,10 @@ msgid ""
 "                you can track the related discussion with the vendor, control\n"
 "                the products received and control the vendor bills."
 msgstr ""
+"Bu menüyü satınalma siparişleriniz içinde referanslara, tedarikçiye, ürüne,\n"
+"                v.b göre aramak için kullanın. Her satınalma siparişi için tedarikçinizle yapılan\n"
+"                ilgili görüşmeleri izleyebilir, kabul edilen ürünleri ve tedarikçi faturalarını\n"
+"                denetleyebilirsiniz."
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_user
@@ -1837,6 +1884,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"Tedarikçi faturaları, satınalma siparişlerine veya alımlara dayanarak "
+"önceden oluşturulabilir. Bu, Odoo'daki taslak dokümana göre satıcınızdan "
+"aldığınız faturaları kontrol etmenizi sağlar."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_volume
@@ -1847,7 +1897,7 @@ msgstr "Hacim"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr ""
+msgstr "Bekleyen Faturalar"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse
@@ -1890,6 +1940,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same "
 "products, an ease the product management in the ecommerce for example"
 msgstr ""
+"Ürün varyantıyla çalışmak, örneğin, e-ticarette ürün yönetimini "
+"kolaylaştıran, aynı ürünlerin bazı varyantlarını tanımlamanıza izin verir."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:770
@@ -1898,6 +1950,8 @@ msgid ""
 "You are decreasing the ordered quantity!\n"
 "You must update the quantities on the reception and/or bills."
 msgstr ""
+"Sipariş edilen miktarı azaltıyorsanız!\n"
+"Alım ve / veya faturadaki miktarları güncellemelisiniz."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_open_invoice
@@ -1905,6 +1959,8 @@ msgid ""
 "You can control the invoice from your vendor according to\n"
 "            what you purchased (services) or received (products)."
 msgstr ""
+"Tedarikçinizden satın aldığınız (hizmet) veya (ürünleri) \n"
+"faturasından kontrol edebilirsiniz."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_product_action
@@ -1913,6 +1969,9 @@ msgid ""
 "                it's a physical product, a consumable or services you buy to\n"
 "                subcontractors."
 msgstr ""
+"Satınaldığınız her şey için bir ürün tanımlamalısınız, alt\n"
+"            yüklenicilerden satın alınacak fiziki bir ürün, bir tüketim malı ya da\n"
+"            bir hizmet de olabilir."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1921,19 +1980,15 @@ msgid ""
 "            it's a physical product, a consumable or services you buy to\n"
 "            subcontractors."
 msgstr ""
+"Satınaldığınız her şey için bir ürün tanımlamalısınız, alt\n"
+"            yüklenicilerden satın alınacak fiziki bir ürün, bir tüketim malı ya da\n"
+"            bir hizmet de olabilir."
 
 #. module: purchase
-#: code:addons/purchase/models/purchase.py:385
+#: code:addons/purchase/models/purchase.py:389
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/models/purchase.py:315
-#, python-format
-msgid ""
-"You need purchase manager access rights to validate an order above %.2f %s."
-msgstr ""
+msgstr "Bu iş ortağı %s için bir tedarikçi konumu belirlemelisiniz"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings

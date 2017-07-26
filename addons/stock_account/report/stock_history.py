@@ -41,7 +41,7 @@ class StockHistory(models.Model):
                 self._cr.execute("""SELECT DISTINCT ON (product_id, company_id) product_id, company_id, cost
                     FROM product_price_history
                     WHERE product_id in %s AND datetime <= %s
-                    ORDER BY product_id, company_id, datetime DESC""", (tuple(not_real_cost_method_products.ids), date))
+                    ORDER BY product_id, company_id, datetime DESC, id DESC""", (tuple(not_real_cost_method_products.ids), date))
                 for history in self._cr.dictfetchall():
                     histories_dict[(history['product_id'], history['company_id'])] = history['cost']
 

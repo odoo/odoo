@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-import urllib
+import urllib2
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
 def geo_find(addr):
+    if not addr:
+        return None
     url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
-    url += urllib.quote(addr.encode('utf8'))
+    url += urllib2.quote(addr.encode('utf8'))
 
     try:
-        result = json.load(urllib.urlopen(url))
+        result = json.load(urllib2.urlopen(url))
     except Exception as e:
         raise UserError(_('Cannot contact geolocation servers. Please make sure that your Internet connection is up and running (%s).') % e)
 

@@ -6,9 +6,9 @@
 # salmemik <salmemik@gmail.com>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 msgid ""
 msgstr ""
@@ -88,6 +88,12 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid "Oops! There was a problem with your payment."
+msgstr ""
+
+#. module: website_payment
 #: code:addons/website_payment/controllers/main.py:45
 #, python-format
 msgid "Pay Now"
@@ -133,7 +139,15 @@ msgstr ""
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_website
 msgid "Website"
-msgstr "Kotisivu"
+msgstr "Verkkosivu"
+
+#. module: website_payment
+#: code:addons/website_payment/controllers/main.py:82
+#, python-format
+msgid ""
+"Your payment was successful! It may take some time to be validated on our "
+"end."
+msgstr ""
 
 #. module: website_payment
 #: model:ir.model,name:website_payment.model_account_config_settings

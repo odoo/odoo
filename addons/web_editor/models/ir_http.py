@@ -15,7 +15,7 @@ class IrHttp(models.AbstractModel):
             context['editable'] = True
         if 'edit_translations' in request.httprequest.args and 'edit_translations' not in context:
             context['edit_translations'] = True
-        if context.get('lang') != "en_US" and 'translatable' not in context:
+        if context.get('edit_translations') and 'translatable' not in context:
             context['translatable'] = True
         request.context = context
         return super(IrHttp, cls)._dispatch()

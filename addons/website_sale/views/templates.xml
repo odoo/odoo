@@ -168,7 +168,7 @@
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
-                                <t t-set="search_class">pagination form-inline o_website_sale_search</t>
+                                <t t-set="search_class" t-value="'pagination form-inline o_website_sale_search'"/>
                             </t>
                             <t t-call="website_sale.pricelist_list" />
                             <t t-call="website.pager" />
@@ -217,8 +217,8 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
-            <t t-set="list_price_desc_label">Price <i class="fa fa-arrow-up" aria-hidden="true"/></t>
-            <t t-set="list_price_asc_label">Price <i class="fa fa-arrow-down" aria-hidden="true"/></t>
+            <t t-set="list_price_desc_label">Catalog price: decreasing order</t>
+            <t t-set="list_price_asc_label">Catalog price: increasing order</t>
             <t t-set="name_asc_label">Name</t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
@@ -443,7 +443,8 @@
                         <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
-                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
+                            <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">

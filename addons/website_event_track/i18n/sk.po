@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_event_track
-#
+# 
 # Translators:
-# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2016
+# Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-04-24 17:31+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>\n"
-"Language-Team: Slovak (http://www.transifex.com/odoo/odoo-9/language/sk/)\n"
-"Language: sk\n"
+"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2017\n"
+"Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sk\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #. module: website_event_track
@@ -36,6 +38,26 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Phone</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Proposed By</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Speakers Biography</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Talk Introduction</b>:"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Title</b>:"
 msgstr ""
 
 #. module: website_event_track
@@ -65,8 +87,7 @@ msgstr "<span id=\"search_number\">0</span> Nájdené"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are "
-"accepted in lightning talks."
+"                                    different topics. Most topics are accepted in lightning talks."
 msgstr ""
 "<strong>Bleskové rozhovory</strong>. Toto sú 30 minútove rozhovory na mnohé\n"
 "rôzne témy. Väčšina tém je akceptovaných v bleskových rozhovoroch."
@@ -82,8 +103,7 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
-"<strong>Regulérne rozhovory</strong>. Toto sú štandardné rozhovory s "
-"prezentáciami,\n"
+"<strong>Regulérne rozhovory</strong>. Toto sú štandardné rozhovory s prezentáciami,\n"
 "s pridelenými 60 minútovym priestorom. "
 
 #. module: website_event_track
@@ -91,7 +111,8 @@ msgstr ""
 msgid ""
 "A technical explanation of Odoo as a CMS and a eCommerce platform for "
 "version 8."
-msgstr "Technická vysvetlenie Odoo ako CMS a eCommerce platformy pre verziu 8."
+msgstr ""
+"Technická vysvetlenie Odoo ako CMS a eCommerce platformy pre verziu 8."
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -101,7 +122,7 @@ msgstr "O autorovi"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_active
 msgid "Active"
-msgstr ""
+msgstr "Aktívny"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -128,8 +149,7 @@ msgstr "Všetky menovky"
 #: model:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our "
-"website."
+"                                    presentation, for publishing on our website."
 msgstr ""
 "Povoliť video a audo nahrávky ich\n"
 "prezentácií, pre zverejnenie na našej stránke."
@@ -147,7 +167,7 @@ msgstr "Aplikácia"
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
-msgstr ""
+msgstr "Archivovaný"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_allowed_track_tag_ids
@@ -193,7 +213,7 @@ msgstr "Potvrdené"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_create_uid
 msgid "Created by"
-msgstr "Vytvoril"
+msgstr "Created by "
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_create_date
@@ -202,7 +222,7 @@ msgstr "Vytvoril"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_create_date
 msgid "Created on"
-msgstr "Vytvorené"
+msgstr "Created on "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -241,7 +261,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_display_name
 msgid "Display Name"
-msgstr "Zobraziť meno"
+msgstr "Názov obrazovky "
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -335,12 +355,12 @@ msgstr ""
 #. module: website_event_track
 #: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
 msgid "Gold"
-msgstr "Alebo"
+msgstr "Zlato"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "Zoskupiť podľa"
+msgstr "Zoskupiť podľa..."
 
 #. module: website_event_track
 #: selection:event.track,priority:0
@@ -530,6 +550,11 @@ msgid "New Track Created"
 msgstr "Nové sledovanie vytvorené"
 
 #. module: website_event_track
+#: model:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "New track proposal"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.tracks
 msgid "No tracks found!"
 msgstr "Žiadne sledovania neboli nájdené!"
@@ -608,7 +633,7 @@ msgstr "Navrhol"
 #. module: website_event_track
 #: selection:event.track,state:0
 msgid "Published"
-msgstr "Publikovaný"
+msgstr "Publikované"
 
 #. module: website_event_track
 #: model:ir.ui.view,arch_db:website_event_track.track_view
@@ -640,7 +665,7 @@ msgstr "Zamietnuté"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_user_id
 #: model:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Responsible"
-msgstr "Zodpovedná osoba"
+msgstr "Zodpovedný"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location_id_8539
@@ -652,7 +677,7 @@ msgstr "Miestnosť"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type_sequence
 msgid "Sequence"
-msgstr "Postupnosť"
+msgstr "Sekvencia"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event_show_tracks
@@ -870,8 +895,8 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.actions.act_window,help:website_event_track.action_event_track
 msgid ""
-"Tracks define the agenda of your event. These can bea talk, a round table, a "
-"meeting, etc."
+"Tracks define the agenda of your event. These can bea talk, a round table, a"
+" meeting, etc."
 msgstr ""
 "Sledovania definujú agendu vašej akcie. Tie môžu byť reč, okrúhly stôl, "
 "stretnutia, atď. "
