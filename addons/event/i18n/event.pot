@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -412,6 +412,11 @@ msgid "Archived"
 msgstr ""
 
 #. module: event
+#: model:ir.ui.view,arch_db:event.view_event_form
+msgid "Are you sure you want to cancel this event? All the linked attendees will be cancelled as well."
+msgstr ""
+
+#. module: event
 #: model:ir.ui.view,arch_db:event.event_config_settings_view_form
 msgid "Attendance"
 msgstr ""
@@ -562,7 +567,7 @@ msgid "Company"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:467
+#: code:addons/event/models/event.py:480
 #, python-format
 msgid "Compose Email"
 msgstr ""
@@ -655,13 +660,13 @@ msgid "Created on"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:444
+#: code:addons/event/models/event.py:443
 #, python-format
 msgid "Customer"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:446
+#: code:addons/event/models/event.py:445
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -741,7 +746,7 @@ msgid "Event"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:333
+#: code:addons/event/models/event.py:332
 #, python-format
 msgid "Event Attendees"
 msgstr ""
@@ -840,6 +845,7 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
 #: model:ir.model.fields,field_description:event.field_res_partner_event_count
+#: model:ir.model.fields,field_description:event.field_res_users_event_count
 #: model:ir.ui.menu,name:event.event_event_menu_pivot_report
 #: model:ir.ui.menu,name:event.event_main_menu
 #: model:ir.ui.menu,name:event.menu_event_event
@@ -1104,7 +1110,7 @@ msgid "No more available seats."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:363
+#: code:addons/event/models/event.py:362
 #, python-format
 msgid "No more seats available for this event."
 msgstr ""
@@ -1121,6 +1127,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_res_partner_event_count
+#: model:ir.model.fields,help:event.field_res_users_event_count
 msgid "Number of events the partner has participated."
 msgstr ""
 
@@ -1383,6 +1390,12 @@ msgid "The email address of the organizer is likely to be put here, with the eff
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event.py:309
+#, python-format
+msgid "There are already attendees who attended this event. Please reset it to draft if you want to cancel this event."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 #: model:ir.model.fields,help:event.field_event_type_mail_template_id
 msgid "This field contains the template of the mail that will be automatically sent"
@@ -1496,19 +1509,13 @@ msgid "Week(s)"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:310
-#, python-format
-msgid "You have already set a registration for this event as 'Attended'. Please reset it to draft if you want to cancel this event."
-msgstr ""
-
-#. module: event
-#: code:addons/event/models/event.py:420
+#: code:addons/event/models/event.py:419
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:422
+#: code:addons/event/models/event.py:421
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr ""
@@ -1539,37 +1546,37 @@ msgid "event.confirm"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:489
+#: code:addons/event/models/event.py:502
 #, python-format
 msgid "in %d days"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:493
+#: code:addons/event/models/event.py:506
 #, python-format
 msgid "next month"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:491
+#: code:addons/event/models/event.py:504
 #, python-format
 msgid "next week"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:495
+#: code:addons/event/models/event.py:508
 #, python-format
 msgid "on "
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:485
+#: code:addons/event/models/event.py:498
 #, python-format
 msgid "today"
 msgstr ""
 
 #. module: event
-#: code:addons/event/models/event.py:487
+#: code:addons/event/models/event.py:500
 #, python-format
 msgid "tomorrow"
 msgstr ""

@@ -509,6 +509,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (params.type === 'record' && params.res_id === undefined) {
+            params.allowWarning = true;
             return this._makeDefaultRecord(params.modelName, params);
         }
         var dataPoint = this._makeDataPoint(params);
@@ -1294,9 +1295,12 @@ var BasicModel = AbstractModel.extend({
                     defs.push(this._applyChange(command.id, command.data));
                 }
                 break;
-            case 'REMOVE':
+            case 'FORGET':
+                // Unlink the record of list.
+                list._forceM2MUnlink = true;
+            case 'DELETE':
                 // filter out existing operations involving the current
-                // dataPoint, and add a 'REMOVE' operation only if there is
+                // dataPoint, and add a 'DELETE' or 'FORGET' operation only if there is
                 // no 'ADD' operation for that dataPoint, as it would mean
                 // that the record wasn't in the relation yet
                 var idsToRemove = command.ids;
@@ -1308,7 +1312,8 @@ var BasicModel = AbstractModel.extend({
                     return idInCommands;
                 });
                 _.each(idsToRemove, function (id) {
-                    list._changes.push({operation: 'REMOVE', id: id});
+                    var operation = list._forceM2MUnlink ? 'FORGET': 'DELETE';
+                    list._changes.push({operation: operation, id: id});
                 });
                 break;
             case 'REPLACE_WITH':
@@ -1332,7 +1337,7 @@ var BasicModel = AbstractModel.extend({
                         return self.localData[localId];
                     });
                     removedDef = this._applyX2ManyChange(record, fieldName, {
-                        operation: 'REMOVE',
+                        operation: 'DELETE',
                         ids: _.map(removedIds, function (resID) {
                             return _.findWhere(listData, {res_id: resID}).id;
                         }),
@@ -1349,7 +1354,7 @@ var BasicModel = AbstractModel.extend({
     },
     /**
      * In dataPoints of type list for x2manys, the changes are stored as a list
-     * of operations (being of type 'ADD', 'REMOVE', 'UPDATE' or 'REMOVE_ALL').
+     * of operations (being of type 'ADD', 'DELETE', 'FORGET', UPDATE' or 'REMOVE_ALL').
      * This function applies the operation of such a dataPoint without altering
      * the original dataPoint. It returns a copy of the dataPoint in which the
      * 'count', 'data' and 'res_ids' keys have been updated.
@@ -1383,7 +1388,8 @@ var BasicModel = AbstractModel.extend({
                         list.res_ids.push(resID);
                     }
                     break;
-                case 'REMOVE':
+                case 'FORGET':
+                case 'DELETE':
                     list.count--;
                     list.res_ids = _.without(list.res_ids, relRecord.res_id);
                     break;
@@ -2348,7 +2354,11 @@ var BasicModel = AbstractModel.extend({
                     }
                     // add delete commands
                     for (i = 0; i < removedIds.length; i++) {
-                        commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                        if (list._forceM2MUnlink) {
+                            commands[fieldName].push(x2ManyCommands.forget(removedIds[i]));
+                        } else {
+                            commands[fieldName].push(x2ManyCommands.delete(removedIds[i]));
+                        }
                     }
                 }
             }
@@ -2601,7 +2611,9 @@ var BasicModel = AbstractModel.extend({
         var isValid = true;
         var element = this.localData[id];
         _.each(element._changes, function (command) {
-            if (command.operation === 'REMOVE' || command.operation === 'REMOVE_ALL') {
+            if (command.operation === 'DELETE' ||
+                    command.operation === 'FORGET' ||
+                    command.operation === 'REMOVE_ALL') {
                 return;
             }
             var recordData = self.get(command.id, {raw: true}).data;
@@ -2735,6 +2747,8 @@ var BasicModel = AbstractModel.extend({
      * @private
      * @param {any} params
      * @param {string} modelName model name
+     * @param {boolean} [params.allowWarning=false] if true, the default record
+     *   operation can complete, even if a warning is raised
      * @param {Object} params.context the context for the new record
      * @param {Object} params.fieldsInfo contains the fieldInfo of each view,
      *   for each field
@@ -2887,7 +2901,11 @@ var BasicModel = AbstractModel.extend({
                     .then(function () {
                         return self._performOnChange(record, fields_key).then(function () {
                             if (record._warning) {
-                                return $.Deferred().reject();
+                                if (params.allowWarning) {
+                                    delete record._warning;
+                                } else {
+                                    return $.Deferred().reject();
+                                }
                             }
                         });
                     })

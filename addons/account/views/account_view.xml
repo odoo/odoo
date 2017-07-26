@@ -304,8 +304,8 @@
                                 <group>
                                     <group string="Control-Access" groups="base.group_no_one">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                        <field name="account_control_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="account_control_ids" widget="many2many_tags"/>
                                     </group>
                                     <group string="Miscellaneous">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
@@ -2046,8 +2046,8 @@
                     <field name="name"/>
                     <field name="attribute_value_ids" widget="many2many_tags" groups="product.group_product_variant"/>
                     <field name="lst_price"/>
-                    <field name="taxes_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="supplier_taxes_id" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
                 </tree>
             </field>
         </record>

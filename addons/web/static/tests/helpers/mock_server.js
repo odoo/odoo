@@ -947,6 +947,8 @@ var MockServer = Class.extend({
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
                         ids = _.without(ids, command[1]);
+                    } else if (command[0] === 3) { // FORGET
+                        ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
                         if (!_.contains(ids, command[1])) {
                             ids.push(command[1]);
