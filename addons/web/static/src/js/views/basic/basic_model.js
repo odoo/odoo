@@ -2203,7 +2203,7 @@ var BasicModel = AbstractModel.extend({
             // remove readonly fields from the list of changes
             if (!withReadonly && fieldName in changes || fieldName in commands) {
                 var editionViewType = record._editionViewType[fieldName] || viewType;
-                if (this._isFieldReadonly(record, fieldName, editionViewType)) {
+                if (this._isFieldProtected(record, fieldName, editionViewType)) {
                     delete changes[fieldName];
                     continue;
                 }
@@ -2562,9 +2562,10 @@ var BasicModel = AbstractModel.extend({
         return context;
     },
     /**
-     * Returns true if the field is readonly (checking first in the modifiers,
-     * and if there is no readonly modifier, checking the readonly attribute of
-     * the field).
+     * Returns true if the field is protected against changes, looking for a
+     * readonly modifier unless there is a force_save modifier (checking first
+     * in the modifiers, and if there is no readonly modifier, checking the
+     * readonly attribute of the field).
      *
      * @private
      * @param {Object} record an element from the localData
@@ -2573,12 +2574,12 @@ var BasicModel = AbstractModel.extend({
      *   main viewType from the record
      * @returns {boolean}
      */
-    _isFieldReadonly: function (record, fieldName, viewType) {
+    _isFieldProtected: function (record, fieldName, viewType) {
         var fieldInfo = record.fieldsInfo[viewType || record.viewType][fieldName];
         if (fieldInfo) {
             var rawModifiers = JSON.parse(fieldInfo.modifiers || "{}");
             var modifiers = this._evalModifiers(record, rawModifiers);
-            return modifiers.readonly;
+            return modifiers.readonly && !fieldInfo.force_save;
         } else {
             return false;
         }
