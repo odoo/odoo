@@ -286,7 +286,7 @@
                             </div>
                             <div>
                               <t t-foreach="invoices" t-as="i">
-                                <t t-set="report_url" t-value="'/my/invoices/%s' % i.id"/>
+                                <t t-set="report_url" t-value="'/my/invoices/pdf/%s' % i.id"/>
                                 <div>
                                   <a t-att-href="report_url"><span class="fa fa-download"/></a>
                                   <a t-att-href="report_url"><span t-esc="i.number"/></a>
