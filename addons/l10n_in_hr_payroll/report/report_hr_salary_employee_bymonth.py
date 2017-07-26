@@ -3,7 +3,7 @@
 
 from datetime import date
 
-from odoo import api, models
+from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
