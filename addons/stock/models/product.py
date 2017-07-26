@@ -251,6 +251,10 @@ class Product(models.Model):
         if value == 0.0 and operator in ('=', '>=', '<='):
             return self._search_product_quantity(operator, value, 'qty_available')
         product_ids = self._search_qty_available_new(operator, value, self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'))
+        if (value > 0 and operator in ('<=', '<')) or (value < 0 and operator in ('>=', '>')):
+            # include also unavailable products
+            domain = self._search_product_quantity(operator, value, 'qty_available')
+            product_ids += domain[0][2]
         return [('id', 'in', product_ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):

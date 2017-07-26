@@ -86,18 +86,19 @@
             display: inline-block;
         }
 
-        .o_form_uri { // FIXME maybe global?
-            display: inline-block;
+    }
 
-            color: @odoo-main-text-color;
+    .o_form_uri {
+        display: inline-block;
+
+        color: @odoo-main-text-color;
+        &:first-line {
+            color: @link-color;
+        }
+        &:hover {
+            color: darken(@odoo-main-text-color, 1%); // hack required on chrome
             &:first-line {
-                color: @link-color;
-            }
-            &:hover {
-                color: darken(@odoo-main-text-color, 1%); // hack required on chrome
-                &:first-line {
-                    color: darken(@link-color, 15%);
-                }
+                color: darken(@link-color, 15%);
             }
         }
     }

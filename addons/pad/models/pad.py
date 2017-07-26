@@ -119,6 +119,16 @@ class PadCommon(models.AbstractModel):
 
     # Set the pad content in vals
     def _set_pad_value(self, vals):
+
+        # Update the pad if the `pad_content_field` is modified
+        for k, field in pycompat.items(self._fields):
+            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field):
+                company = self.env.user.sudo().company_id
+                myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
+                path = self[k].split('/p/')[1]
+                myPad.setText(path, (html2plaintext(vals[field.pad_content_field]).encode('utf-8')))
+
+        # Update the `pad_content_field` if the pad is modified
         for k, v in list(pycompat.items(vals)):
             field = self._fields[k]
             if hasattr(field, 'pad_content_field'):

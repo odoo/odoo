@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:46+0000\n"
-"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"POT-Creation-Date: 2017-07-25 10:04+0000\n"
+"PO-Revision-Date: 2017-07-25 10:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -220,6 +220,11 @@ msgid "<strong>Total:</strong>"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,help:website_quote.field_delivery_carrier_website_description
+msgid "A description of the Product that you want to communicate to your customers. This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note"
+msgstr ""
+
+#. module: website_quote
 #: model:sale.quote.template,website_description:website_quote.website_quote_template_default
 msgid "About us"
 msgstr ""
@@ -324,11 +329,19 @@ msgid "Description"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_website_description
+msgid "Description for Online Quotations"
+msgstr ""
+
+#. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_delivery_carrier_quote_description
+#: model:ir.model.fields,field_description:website_quote.field_product_product_quote_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_quote_description
 msgid "Description for the quote"
 msgstr ""
 
 #. module: website_quote
+#: model:ir.model.fields,field_description:website_quote.field_product_product_website_description
 #: model:ir.model.fields,field_description:website_quote.field_product_template_website_description
 msgid "Description for the website"
 msgstr ""
@@ -409,8 +422,8 @@ msgid "If edit a quotation from the 'Preview' of a quotation, you will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:77
-#: code:addons/website_quote/controllers/main.py:216
+#: code:addons/website_quote/controllers/main.py:80
+#: code:addons/website_quote/controllers/main.py:219
 #, python-format
 msgid "If we store your payment information on our server, subscription payments will be made automatically."
 msgstr ""
@@ -512,13 +525,13 @@ msgid "Optional Products Lines"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/models/sale_order.py:188
+#: code:addons/website_quote/models/sale_order.py:195
 #, python-format
 msgid "Order paid by %s. Transaction: %s. Amount: %s."
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:93
+#: code:addons/website_quote/controllers/main.py:96
 #, python-format
 msgid "Order signed by %s"
 msgstr ""
@@ -544,8 +557,8 @@ msgid "Our Service"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:66
-#: code:addons/website_quote/controllers/main.py:209
+#: code:addons/website_quote/controllers/main.py:69
+#: code:addons/website_quote/controllers/main.py:212
 #, python-format
 msgid "Pay & Confirm"
 msgstr ""
@@ -679,7 +692,7 @@ msgid "Quotation Viewed"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:27
+#: code:addons/website_quote/controllers/main.py:29
 #, python-format
 msgid "Quotation viewed by customer"
 msgstr ""
@@ -900,7 +913,7 @@ msgid "You can <strong>set a description per product</strong>. Odoo will\n"
 msgstr ""
 
 #. module: website_quote
-#: code:addons/website_quote/controllers/main.py:137
+#: code:addons/website_quote/controllers/main.py:140
 #, python-format
 msgid "You cannot add options to a confirmed order."
 msgstr ""

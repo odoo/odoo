@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-07-25 10:03+0000\n"
+"PO-Revision-Date: 2017-07-25 10:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,13 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:399
+#: code:addons/account_asset/models/account_asset.py:404
 #, python-format
 msgid " (copy)"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:534
+#: code:addons/account_asset/models/account_asset.py:538
 #, python-format
 msgid " (grouped)"
 msgstr ""
@@ -75,6 +75,13 @@ msgid "Account used to record the purchase of the asset at its original price."
 msgstr ""
 
 #. module: account_asset
+#. openerp-web
+#: code:addons/account_asset/static/src/js/account_asset.js:41
+#, python-format
+msgid "Accounting entries waiting for manual verification"
+msgstr ""
+
+#. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_active
 msgid "Active"
@@ -86,7 +93,7 @@ msgid "Additional Options"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:591
+#: code:addons/account_asset/models/account_asset.py:595
 #, python-format
 msgid "Amount"
 msgstr ""
@@ -155,6 +162,7 @@ msgstr ""
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_name
+#: model:ir.model.fields,field_description:account_asset.field_product_product_asset_category_id
 #: model:ir.model.fields,field_description:account_asset.field_product_template_asset_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Asset Type"
@@ -187,7 +195,7 @@ msgid "Asset depreciation line"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:319
+#: code:addons/account_asset/models/account_asset.py:318
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
@@ -375,7 +383,7 @@ msgid "Cumulative Depreciation"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:591
+#: code:addons/account_asset/models/account_asset.py:595
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -418,6 +426,7 @@ msgid "Deferred Revenue Account"
 msgstr ""
 
 #. module: account_asset
+#: model:ir.model.fields,field_description:account_asset.field_product_product_deferred_revenue_category_id
 #: model:ir.model.fields,field_description:account_asset.field_product_template_deferred_revenue_category_id
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Deferred Revenue Type"
@@ -504,7 +513,7 @@ msgid "Depreciation board modified"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:594
+#: code:addons/account_asset/models/account_asset.py:598
 #, python-format
 msgid "Depreciation line posted."
 msgstr ""
@@ -520,19 +529,19 @@ msgid "Display Name"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:322
+#: code:addons/account_asset/models/account_asset.py:327
 #, python-format
 msgid "Disposal Move"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:325
+#: code:addons/account_asset/models/account_asset.py:330
 #, python-format
 msgid "Disposal Moves"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:573
+#: code:addons/account_asset/models/account_asset.py:577
 #, python-format
 msgid "Document closed."
 msgstr ""
@@ -657,7 +666,7 @@ msgid "Journal"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:433
+#: code:addons/account_asset/models/account_asset.py:438
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 #, python-format
 msgid "Journal Entries"
@@ -764,7 +773,7 @@ msgid "One Entry Every"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:593
+#: code:addons/account_asset/models/account_asset.py:597
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #, python-format
@@ -789,7 +798,7 @@ msgstr ""
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:28
+#: code:addons/account_asset/static/src/js/account_asset.js:38
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_posted_check
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_move_check
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -819,7 +828,7 @@ msgid "Prorata Temporis"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:365
+#: code:addons/account_asset/models/account_asset.py:370
 #, python-format
 msgid "Prorata temporis can be applied only for time method \"number of depreciations\"."
 msgstr ""
@@ -965,7 +974,7 @@ msgstr ""
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:28
+#: code:addons/account_asset/static/src/js/account_asset.js:44
 #, python-format
 msgid "Unposted"
 msgstr ""
@@ -1007,13 +1016,13 @@ msgid "You cannot delete a document that contains posted entries."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:602
+#: code:addons/account_asset/models/account_asset.py:606
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:604
+#: code:addons/account_asset/models/account_asset.py:608
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr ""

@@ -1737,8 +1737,8 @@ class TestStockFlow(TestStockCommon):
         self.assertEquals(picking_out.state, "assigned")
 
     def test_74_move_state_waiting_mto(self):
-        """ This test will check that when a move is unreserved, it state change to 'waiting' if
-        it has ancestors or is has a 'procure_method' equal to 'make_to_order' else the state
+        """ This test will check that when a move is unreserved, its state changes to 'waiting' if
+        it has ancestors or if it has a 'procure_method' equal to 'make_to_order' else the state
         changes to 'confirmed'.
         """
         picking_out = self.PickingObj.create({
@@ -1763,7 +1763,7 @@ class TestStockFlow(TestStockCommon):
             'picking_id': picking_out.id,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
-        the_ancestor = self.MoveObj.create({
+        self.MoveObj.create({
             'name': self.productA.name,
             'product_id': self.productA.id,
             'product_uom_qty': 2,

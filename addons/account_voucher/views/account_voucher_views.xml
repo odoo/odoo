@@ -253,7 +253,7 @@
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('type_tax_use','=','sale')]"/>
+                                    <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
@@ -369,7 +369,7 @@
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('type_tax_use','=','purchase')]"/>
+                                    <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>
                                     <field name="price_subtotal"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
