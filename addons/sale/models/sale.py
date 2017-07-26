@@ -892,16 +892,17 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _get_display_price(self, product):
         # TO DO: move me in master/saas-16 on sale.order
-        if self.order_id.pricelist_id.discount_policy == 'with_discount':
-            return product.with_context(pricelist=self.order_id.pricelist_id.id).price
+        from_currency = self.order_id.company_id.currency_id
         price, rule_id = self.order_id.pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
-        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
-        if (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
-            price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        if self.order_id.pricelist_id.discount_policy == 'with_discount':
+            price = rule_id and price or from_currency.compute(price, self.order_id.pricelist_id.currency_id)
             return price
-        else:
-            from_currency = self.order_id.company_id.currency_id
+        pricelist_item = self.env['product.pricelist.item'].browse(rule_id)
+        if not (pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id.discount_policy == 'with_discount'):
             return from_currency.compute(product.lst_price, self.order_id.pricelist_id.currency_id)
+        price, rule_id = pricelist_item.base_pricelist_id.get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        price = rule_id and price or from_currency.compute(price, self.order_id.pricelist_id.currency_id)
+        return price
 
     @api.multi
     @api.onchange('product_id')
