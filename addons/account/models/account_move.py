@@ -112,6 +112,13 @@ class AccountMove(models.Model):
         string='Tax Cash Basis Entry of',
         help="Technical field used to keep track of the tax cash basis reconciliation."
         "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
+    reverse_mode = fields.Selection([
+        ('none', 'No reverse entry'),
+        ('reverse_unposted', 'Reverse entry with state "Unposted"'),
+        ('reverse_posted', 'Reverse entry with state "Posted"')], string='Automatic reverse',
+        default='none')
+    reverse_date = fields.Date(string='Reversal date')
+    reverse_automatic_done = fields.Boolean(default=False, copy=False)
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
@@ -233,7 +240,8 @@ class AccountMove(models.Model):
         reversed_move = self.copy(default={
             'date': date,
             'journal_id': journal_id.id if journal_id else self.journal_id.id,
-            'ref': _('reversal of: ') + self.name})
+            'ref': _('reversal of: ') + self.name,
+            'reverse_mode': 'none'})
         for acm_line in reversed_move.line_ids.with_context(check_move_validity=False):
             acm_line.write({
                 'debit': acm_line.credit,
@@ -243,7 +251,7 @@ class AccountMove(models.Model):
         return reversed_move
 
     @api.multi
-    def reverse_moves(self, date=None, journal_id=None):
+    def reverse_moves(self, date=None, journal_id=None, post=True):
         date = date or fields.Date.today()
         reversed_moves = self.env['account.move']
         for ac_move in self:
@@ -270,6 +278,18 @@ class AccountMove(models.Model):
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
 
+    @api.model
+    def _run_reverses_entries(self):
+        ''' This method is called from a cron job. '''
+        records = self.search([
+            ('state', '=', 'posted'),
+            ('reverse_mode', '!=', 'none'),
+            ('reverse_date', '<=', fields.Date.today()),
+            ('reverse_automatic_done', '=', False)])
+        for move in records:
+            post = False if move.reverse_mode == 'reverse_unposted' else True
+            move.reverse_moves(post=post)
+            move.reverse_automatic_done = True
 
 class AccountMoveLine(models.Model):
     _name = "account.move.line"

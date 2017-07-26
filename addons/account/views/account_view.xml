@@ -1478,6 +1478,13 @@
                             </field>
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
                         </page>
+                        <page string="Other Info">
+                            <group>
+                                <field name="reverse_mode" widget="radio" modifiers="{'readonly':[('reverse_automatic_done', '=', True)]}" attrs="{'readonly':[('reverse_automatic_done', '=', True)]}"/>
+                                <field name="reverse_date" attrs="{'invisible':[('reverse_mode', '=', 'none')], 'required':[('reverse_mode', '!=', 'none')],'readonly':[('reverse_automatic_done', '=', True)]}"/>
+                                <field name="reverse_automatic_done" attrs="{'invisible':True}"/>    
+                            </group>
+                        </page>
                     </notebook>
                     </sheet>
                 </form>
