@@ -111,7 +111,7 @@ var FieldPad = AbstractField.extend({
                 // We need to write the url of the pad to trigger
                 // the write function which updates the actual value
                 // of the field to the value of the pad content
-                self._setValue(result.url);
+                self._setValue(result.url, {doNotSetDirty: true});
             });
         }
     },

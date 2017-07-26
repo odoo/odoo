@@ -628,12 +628,12 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} record_id
      * @param {Object} changes a map field => new value
-     * @param {string} [viewType] current viewType. If not set, we will assume
-     *   main viewType from the record
+     * @param {Object} [options] will be transferred to the applyChange method
+     *   @see _applyChange
      * @returns {string[]} list of changed fields
      */
-    notifyChanges: function (record_id, changes, viewType) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, viewType));
+    notifyChanges: function (record_id, changes, options) {
+        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, options));
     },
     /**
      * Reload all data for a given resource
@@ -956,23 +956,30 @@ var BasicModel = AbstractModel.extend({
      *
      * @param {string} recordID
      * @param {Object} changes
-     * @param {string} [viewType] current viewType. If not set, we will assume
+     * @param {Object} [options]
+     * @param {boolean} [options.doNotSetDirty=false] if this flag is set to
+     *   true, then we will not tag the record as dirty.  This should be avoided
+     *   for most situations.
+     * @param {string} [options.viewType] current viewType. If not set, we will assume
      *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyChange: function (recordID, changes, viewType) {
+    _applyChange: function (recordID, changes, options) {
         var self = this;
         var record = this.localData[recordID];
         var field;
         var defs = [];
+        options = options || {};
         record._changes = record._changes || {};
-        record._isDirty = true;
+        if (!options.doNotSetDirty) {
+            record._isDirty = true;
+        }
 
         // apply changes to local data
         for (var fieldName in changes) {
             field = record.fields[fieldName];
             if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], viewType));
+                defs.push(this._applyX2ManyChange(record, fieldName, changes[fieldName], options.viewType));
             } else if (field.type === 'many2one' || field.type === 'reference') {
                 defs.push(this._applyX2OneChange(record, fieldName, changes[fieldName]));
             } else {
@@ -993,7 +1000,7 @@ var BasicModel = AbstractModel.extend({
             }
             var onchangeDef;
             if (onChangeFields.length) {
-                onchangeDef = self._performOnChange(record, onChangeFields, viewType).then(function (result) {
+                onchangeDef = self._performOnChange(record, onChangeFields, options.viewType).then(function (result) {
                     delete record._warning;
                     return _.keys(changes).concat(Object.keys(result && result.value || {}));
                 });
