@@ -280,7 +280,7 @@ class Website(Home):
     def get_website_translations(self, lang, mods=None):
         Modules = request.env['ir.module.module'].sudo()
         modules = Modules.search([
-            ('name', 'ilike', 'website'),
+            '|', ('name', 'ilike', 'website'), ('name', '=', 'web_editor'),
             ('state', '=', 'installed')
         ]).mapped('name')
         if mods:
