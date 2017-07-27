@@ -11,7 +11,6 @@ odoo.define('website.website', function (require) {
 
     var qweb = core.qweb;
     var _t = core._t;
-    base.url_translations = '/website/translations';
 
     /* --- Set the browser into the dom for css selectors --- */
     var browser;
