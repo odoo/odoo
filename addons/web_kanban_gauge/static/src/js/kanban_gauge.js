@@ -6,7 +6,7 @@ var field_registry = require('web.field_registry');
 var utils = require('web.utils');
 
 /**
- * Kanban widgets: GaugeWidget
+ * Field widget: GaugeWidget
  * options
  * - max_value: maximum value of the gauge [default: 100]
  * - max_field: get the max_value from the field that must be present in the
@@ -26,7 +26,15 @@ var utils = require('web.utils');
 var GaugeWidget = AbstractField.extend({
     className: "oe_gauge",
 
-    render: function() {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
         // parameters
         var max_value = this.nodeOptions.max_value || 100;
         if (this.nodeOptions.max_field) {
@@ -123,5 +131,7 @@ var GaugeWidget = AbstractField.extend({
 });
 
 field_registry.add("gauge", GaugeWidget);
+
+return GaugeWidget;
 
 });
