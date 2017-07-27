@@ -2483,6 +2483,34 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('grouped list edition with toggle_button widget', function (assert) {
+        assert.expect(3);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="bar" widget="toggle_button"/></tree>',
+            groupBy: ['m2o'],
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {bar: false},
+                        "should write the correct value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        list.$('.o_group_header:first').click(); // open the first group
+        assert.strictEqual(list.$('.o_data_row:first .o_toggle_button_success').length, 1,
+            "boolean value of the first record should be true");
+        list.$('.o_data_row:first .o_icon_button').click(); // toggle the value
+        assert.strictEqual(list.$('.o_data_row:first .text-muted:not(.o_toggle_button_success)').length, 1,
+            "boolean button should have been updated");
+
+        list.destroy();
+    });
 });
 
 });
