@@ -135,7 +135,7 @@ var KanbanRecord = Widget.extend({
         options = options || {};
         var url;
         if (this.record[field] && this.record[field].value && !utils.is_bin_size(this.record[field].value)) {
-            url = 'data:image/png;base64,' + this.record[field].value;
+            url = 'data:image/png;base64,' + this.record[field].value.replace(/\n/g, '');
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
