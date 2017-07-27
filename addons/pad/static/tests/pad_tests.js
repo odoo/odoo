@@ -112,7 +112,7 @@ QUnit.module('pad widget', {
     });
 
     QUnit.test('pad widget works, with existing data', function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         var contentDef = $.Deferred();
 
@@ -129,9 +129,16 @@ QUnit.module('pad widget', {
                 '</form>',
             res_id: 2,
             mockRPC: function (route, args) {
+                if (_.str.startsWith(route, 'http')) {
+                    return $.when(true);
+                }
                 var result = this._super.apply(this, arguments);
                 if (args.method === 'pad_get_content') {
                     return contentDef.then(_.constant(result));
+                }
+                if (args.method === 'write') {
+                    assert.ok('description' in args.args[1],
+                        "should always send the description value");
                 }
                 return result;
             },
@@ -144,6 +151,9 @@ QUnit.module('pad widget', {
         contentDef.resolve();
         assert.strictEqual(form.$('.oe_pad_content').text(), "we should rewrite this server in haskell",
             "should display proper value");
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$buttons.find('.o_form_button_save').click();
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });

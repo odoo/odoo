@@ -39,6 +39,25 @@ var FieldPad = AbstractField.extend({
             this.$(".oe_configured").addClass('hidden');
             return;
         }
+        if (this.mode === 'edit' && _.str.startsWith(this.value, 'http')) {
+            this.url = this.value;
+            // please close your eyes and look elsewhere...
+            // Since the pad value (the url) will not change during the edition
+            // process, we have a problem: the description field will not be
+            // properly updated.  We need to explicitely write the value each
+            // time someone edit the record in order to force the server to read
+            // the updated value of the pad and put it in the description field.
+            //
+            // However, the basic model optimizes away the changes if they are
+            // not really different from the current value. So, we need to
+            // either add special configuration options to the basic model, or
+            // to trick him into accepting the same value as being different...
+            // Guess what we decided...
+            var url = {};
+            url.toJSON = _.constant(this.url);
+            this._setValue(url);
+        }
+
         return this._super.apply(this, arguments);
     },
 
@@ -75,11 +94,11 @@ var FieldPad = AbstractField.extend({
      * @private
      */
     _renderEdit: function () {
-        if (_.str.startsWith(this.value, 'http')) {
+        if (this.url) {
             // here, we have a valid url, so we can simply display an iframe
             // with the correct src attribute
             var userName = encodeURIComponent(this.getSession().userName);
-            var url = this.value + '?showChat=false&userName=' + userName;
+            var url = this.url + '?showChat=false&userName=' + userName;
             var content = '<iframe width="100%" height="100%" frameborder="0" src="' + url + '"></iframe>';
             this.$('.oe_pad_content').html(content);
         } else if (this.value) {
@@ -111,6 +130,7 @@ var FieldPad = AbstractField.extend({
                 // We need to write the url of the pad to trigger
                 // the write function which updates the actual value
                 // of the field to the value of the pad content
+                self.url = result.url;
                 self._setValue(result.url, {doNotSetDirty: true});
             });
         }
