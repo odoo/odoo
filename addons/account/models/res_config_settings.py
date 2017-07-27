@@ -63,18 +63,20 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        params = self.env['ir.config_parameter'].sudo()
+
+        ir_values_obj = self.env['ir.values']
+        taxes_id = ir_values_obj.sudo().get_default('product.template', "taxes_id", for_all_users=True, company_id=self.env.user.company_id.id) or False
+        supplier_taxes_id = ir_values_obj.sudo().get_default('product.template', "supplier_taxes_id", for_all_users=True, company_id=self.env.user.company_id.id) or False
+
         res.update(
-            default_purchase_tax_id=int(params.get_param('account.default_purchase_tax_id', default=False)) or False,
-            default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
+            default_purchase_tax_id=int(taxes_id[0]) if taxes_id else False,
+            default_sale_tax_id=int(supplier_taxes_id[0]) if taxes_id else False
         )
         return res
 
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
-        self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ Set the product taxes if they have changed """
