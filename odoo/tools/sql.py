@@ -53,7 +53,11 @@ def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
     """
-    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
+    # Do not select the field `character_octet_length` from `information_schema.columns`
+    # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
+    # might prevent a postgres user to read this field.
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+               FROM information_schema.columns WHERE table_name=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 
