@@ -66,12 +66,11 @@ class BaseWSGIServerNoBind(LoggingBaseWSGIServerMixIn, werkzeug.serving.BaseWSGI
     use this class, sets the socket and calls the process_request() manually
     """
     def __init__(self, app):
-        werkzeug.serving.BaseWSGIServer.__init__(self, "1", "1", app)
-    def server_bind(self):
-        # we dont bind beause we use the listen socket of PreforkServer#socket
-        # instead we close the socket
+        werkzeug.serving.BaseWSGIServer.__init__(self, "127.0.0.1", 0, app)
+        # Directly close the socket. It will be replaced by WorkerHTTP when processing requests
         if self.socket:
             self.socket.close()
+
     def server_activate(self):
         # dont listen as we use PreforkServer#socket
         pass
