@@ -334,7 +334,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         var data = e.data || {};
         var type = data.type || 'rainbow_man';
         if (type === 'rainbow_man') {
-            new RainbowMan(data).appendTo( data.$el || this.$el.first());
+            new RainbowMan(data).appendTo(this.$el);
         } else {
             throw new Error('Unknown effect type: ' + type);
         }
