@@ -13,5 +13,5 @@ class ProductTemplate(models.Model):
         ('threshold', 'Show inventory below a threshold and prevent sales if not enough stock'),
         ('custom', 'Show product-specific notifications'),
     ], string='Inventory Availability', help='Adds an inventory availability status on the web product page.', default='never')
-    available_threshold = fields.Float(string='Available Threshold', default=5.0)
+    available_threshold = fields.Float(string='Availability Threshold', default=5.0)
     custom_message = fields.Text(string='Custom Message', default='')
