@@ -114,13 +114,13 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadGraph: function () {
-        var fields = _.map(this.chart.groupedBy, function (groupBy) {
+        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
+        var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
         if (this.chart.measure !== '__count__') {
             fields = fields.concat(this.chart.measure);
         }
-        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
         return this._rpc({
                 model: this.modelName,
                 method: 'read_group',
