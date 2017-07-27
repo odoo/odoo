@@ -58,14 +58,12 @@ class AccountConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_tax_fields(self, fields):
-        default_purchase_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_purchase_tax_id', default=False)
-        default_sale_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
-        return dict(default_purchase_tax_id=int(default_purchase_tax_id), default_sale_tax_id=int(default_sale_tax_id))
-
-    @api.multi
-    def set_default_tax_fields(self):
-        self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
-        self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
+        #import pudb; pu.db
+        taxes_id = self.env['ir.values'].sudo().get_default('product.template', "taxes_id", for_all_users=True, company_id=self.env.user.company_id.id) or False
+        supplier_taxes_id = self.env['ir.values'].sudo().get_default('product.template', "supplier_taxes_id", for_all_users=True, company_id=self.env.user.company_id.id) or False
+        default_purchase_tax_id = int(supplier_taxes_id[0]) if supplier_taxes_id else False
+        default_sale_tax_id = int(taxes_id[0]) if taxes_id else False
+        return dict(default_purchase_tax_id=default_purchase_tax_id, default_sale_tax_id=default_sale_tax_id)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
@@ -124,7 +122,7 @@ class AccountConfigSettings(models.TransientModel):
     def create(self, values):
         # Optimisation purpose, saving a res_config even without changing any values will trigger the write of all
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
-        # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
+        # of account_move_line related field company_currency_id which can be slow depending on the number of entries
         # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
         # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
         # code the missing characters to complete the desired number of digit, leading to a sql_constraint.
