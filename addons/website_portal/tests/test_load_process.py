@@ -10,7 +10,6 @@ class TestUi(odoo.tests.HttpCase):
         self.phantom_js(
             "/",
             "odoo.__DEBUG__.services['web_tour.tour'].run('portal_load_homepage')",
-            "",
+            "odoo.__DEBUG__.services['web_tour.tour'].tours.portal_load_homepage.ready",
             login="portal"
         )
-
