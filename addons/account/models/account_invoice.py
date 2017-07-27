@@ -363,7 +363,7 @@ class AccountInvoice(models.Model):
         return res
 
     def _sanitize_data(self, vals):
-        if 'reference' in vals:
+        if 'reference' in vals and vals['reference']:
             vals['reference'] = vals['reference'].strip()
 
     @api.model
