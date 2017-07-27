@@ -328,6 +328,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def create(self, vals):
+        self._sanitize_data(vals)
         onchanges = {
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
@@ -351,6 +352,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _write(self, vals):
+        self._sanitize_data(vals)
         pre_not_reconciled = self.filtered(lambda invoice: not invoice.reconciled)
         pre_reconciled = self - pre_not_reconciled
         res = super(AccountInvoice, self)._write(vals)
@@ -359,6 +361,10 @@ class AccountInvoice(models.Model):
         (reconciled & pre_reconciled).filtered(lambda invoice: invoice.state == 'open').action_invoice_paid()
         (not_reconciled & pre_not_reconciled).filtered(lambda invoice: invoice.state == 'paid').action_invoice_re_open()
         return res
+
+    def _sanitize_data(self, vals):
+        if 'reference' in vals:
+            vals['reference'] = vals['reference'].strip()
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
