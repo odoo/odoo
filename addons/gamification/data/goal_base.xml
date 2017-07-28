@@ -13,7 +13,7 @@
         <strong>Reminder <t t-value="record.name"/></strong>
     </p>
     
-    <p>You have not updated your progress for the goal <t t-esc="record.definition_id.name"/> (currently reached at <t t-esc="record.completeness"/>%) for at least <t t-esc="record.remind_update_delay"/> days. Do not forget to do it.</p>
+    <p>You have not updated your progress for the goal <span t-field="record.definition_id.name"/> (currently reached at <span t-field="record.completeness"/>%) for at least <span t-field="record.remind_update_delay"/> days. Do not forget to do it.</p>
             </field>
         </record>
         
