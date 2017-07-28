@@ -195,7 +195,7 @@ class Post(models.Model):
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
-    content = fields.Html('Content', strip_style=True)
+    content = fields.Html('Content', sanitize=False)
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     content_link = fields.Char('URL', help="URL of Link Articles")
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
@@ -713,7 +713,7 @@ class Post(models.Model):
         question = self.parent_id
         values = {
             'author_id': self.sudo().create_uid.partner_id.id,  # use sudo here because of access to res.users model
-            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_style=True, strip_classes=True),
+            'body': tools.html_sanitize(self.content, sanitize_attributes=True, strip_classes=True),
             'message_type': 'comment',
             'subtype': 'mail.mt_comment',
             'date': self.create_date,
