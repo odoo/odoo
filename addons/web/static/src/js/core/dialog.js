@@ -39,6 +39,9 @@ var Dialog = Widget.extend({
      * @param {boolean} [options.buttons[].close=false]
      * @param {function} [options.buttons[].click]
      * @param {boolean} [options.buttons[].disabled]
+     * @param {boolean} [options.technical=true]
+     *        If set to false, the modal will have the standard frontend style
+     *        (use this for non-editor frontend features)
      */
     init: function (parent, options) {
         this._super(parent);
@@ -49,7 +52,8 @@ var Dialog = Widget.extend({
             size: 'large',
             dialogClass: '',
             $content: false,
-            buttons: [{text: _t("Ok"), close: true}]
+            buttons: [{text: _t("Ok"), close: true}],
+            technical: true,
         });
 
         this.$content = options.$content;
@@ -58,6 +62,7 @@ var Dialog = Widget.extend({
         this.dialogClass = options.dialogClass;
         this.size = options.size;
         this.buttons = options.buttons;
+        this.technical = options.technical;
     },
     /**
      * Wait for XML dependencies and instantiate the modal structure (except
@@ -69,7 +74,11 @@ var Dialog = Widget.extend({
         var self = this;
         return this._super.apply(this, arguments).then(function () {
             // Render modal once xml dependencies are loaded
-            self.$modal = $(QWeb.render('Dialog', {title: self.title, subtitle: self.subtitle}));
+            self.$modal = $(QWeb.render('Dialog', {
+                title: self.title,
+                subtitle: self.subtitle,
+                technical: self.technical,
+            }));
             switch (self.size) {
                 case 'large':
                     self.$modal.find('.modal-dialog').addClass('modal-lg');
@@ -209,7 +218,7 @@ Dialog.confirm = function (owner, message, options) {
             text: _t("Ok"),
             classes: 'btn-primary',
             close: true,
-            click: options && options.confirm_callback
+            click: options && options.confirm_callback,
         },
         {
             text: _t("Cancel"),
