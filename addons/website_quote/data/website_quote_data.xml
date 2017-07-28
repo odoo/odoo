@@ -121,8 +121,8 @@
     <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
             <td style="padding:0px 10px 5px 5px;font-size: 14px;">
-                <p>Dear <t t-esc="record.partner_id.name"/>,</p><br/>
-                <p>Your order <a t-attf-href="/quote/#{record.id}/#{record.access_token}" t-esc="record.name"/> has been validated!</p><br/>
+                <p>Dear <span t-field="record.partner_id.name"/>,</p><br/>
+                <p>Your order <a t-attf-href="/quote/#{record.id}/#{record.access_token}" t-field="record.name"/> has been validated!</p><br/>
                 
                 <t t-if="record.partner_id.user_ids">
                 <p>You can view your quotes, sales orders and invoices online by going to our <a style="text-decoration:none; color: #875A7B;" href="/my/home">Online Portal</a>.</p><br/>
@@ -136,7 +136,7 @@
                 <p style="font-size: 14px;" t-if="user.signature" t-raw="user.signature"/>
                 <p style="font-size: 11px;"><strong>Sent by
                 <a t-att-href="user.company_id.website" style="text-decoration:none; color: #875A7B;">
-                    <strong t-esc="user.company_id.name"/>
+                    <strong t-field="user.company_id.name"/>
                 </a> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;"><strong>Odoo</strong></a>
                 </strong></p>
             </td>
