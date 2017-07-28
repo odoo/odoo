@@ -326,48 +326,34 @@ def exp_db_exist(db_name):
 def list_dbs(force=False):
     if not odoo.tools.config['list_db'] and not force:
         raise odoo.exceptions.AccessDenied()
+
     if not odoo.tools.config['dbfilter'] and odoo.tools.config['db_name']:
         # In case --db-filter is not provided and --database is passed, Odoo will not
         # fetch the list of databases available on the postgres server and instead will
         # use the value of --database as comma seperated list of exposed databases.
-        res = [db.strip() for db in odoo.tools.config['db_name'].split(',')]
-    else:
-        chosen_template = odoo.tools.config['db_template']
-        templates_list = tuple(set(['postgres', chosen_template]))
-        db = odoo.sql_db.db_connect('postgres')
-        with closing(db.cursor()) as cr:
-            try:
-                db_user = odoo.tools.config["db_user"]
-                if not db_user and os.name == 'posix':
-                    import pwd
-                    db_user = pwd.getpwuid(os.getuid())[0]
-                if not db_user:
-                    cr.execute('''
-                        SELECT usename FROM pg_user
-                        WHERE usesysid=(SELECT datdba FROM pg_database WHERE datname=%s)
-                    ''', (odoo.tools.config["db_name"],))
-                    res = cr.fetchone()
-                    db_user = res and str(res[0])
-                if db_user:
-                    cr.execute('''
-                        SELECT datname FROM pg_database
-                        WHERE datdba=(SELECT usesysid FROM pg_user WHERE usename=%s)
-                            AND NOT datistemplate
-                            AND datallowconn
-                            AND datname NOT IN %s
-                        ORDER BY datname
-                    ''', (db_user, templates_list))
-                else:
-                    cr.execute('''
-                        SELECT datname FROM pg_database
-                        WHERE NOT datistemplate
-                            AND datallowconn
-                            AND datname NOT IN %s
-                        ORDER BY datname
-                    ''', (templates_list,))
-                res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
-            except Exception:
-                res = []
+        res = sorted(db.strip() for db in odoo.tools.config['db_name'].split(','))
+        return res
+
+    chosen_template = odoo.tools.config['db_template']
+    templates_list = tuple(set(['postgres', chosen_template]))
+    db = odoo.sql_db.db_connect('postgres')
+    with closing(db.cursor()) as cr:
+        try:
+            db_user = odoo.tools.config["db_user"]
+            if not db_user and os.name == 'posix':
+                import pwd
+                db_user = pwd.getpwuid(os.getuid())[0]
+            if not db_user:
+                cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (odoo.tools.config["db_name"],))
+                res = cr.fetchone()
+                db_user = res and str(res[0])
+            if db_user:
+                cr.execute("select datname from pg_database where datdba=(select usesysid from pg_user where usename=%s) and not datistemplate and datallowconn and datname not in %s order by datname", (db_user, templates_list))
+            else:
+                cr.execute("select datname from pg_database where not datistemplate and datallowconn and datname not in %s order by datname", (templates_list,))
+            res = [odoo.tools.ustr(name) for (name,) in cr.fetchall()]
+        except Exception:
+            res = []
     res.sort()
     return res
 
