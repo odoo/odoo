@@ -109,12 +109,12 @@
     </table>
 </div>
 <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-    <p>Dear <t t-esc="record.name"/>,</p>
+    <p>Dear <span t-field="record.name"/>,</p>
     <p>
         Your account has been successfully created!
     </p>
     <p>
-        Your login: <t t-esc="record.email"/>,
+        Your login: <span t-field="record.email"/>
         <br/>
         Your password: <t t-esc="ctx.get('password')"/>
     </p>
@@ -129,7 +129,7 @@
 <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
     <t t-raw="user.signature"/>
     <p style="font-size: 11px; margin-top: 10px;">
-        <strong>Sent by <t t-esc="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
+        <strong>Sent by <span t-field="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
     </p>
 </div></field>
             <field name="user_signature" eval="False"/>
