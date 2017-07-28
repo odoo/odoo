@@ -76,8 +76,8 @@ class StockMove(models.Model):
     last_done_remaining_qty = fields.Float()
     last_done_qty = fields.Float()
 
-    # TODO: add constraints remaining_qty > 0
-    # TODO: add constrain price_unit = 0 on done move?
+    # TODO: add constraints remaining_qty >= 0
+    # TODO: add constrain price_unit = 0 on done move? -> no
 
     @api.multi
     def _get_price_unit(self):
@@ -259,6 +259,8 @@ class StockMove(models.Model):
         self.replay()
         self.product_id._compute_stock_value()
         new_value = self.product_id.stock_value
+        if self.product_id.valuation == 'real_time':
+            self._account_entry_move_adapt_value(new_value - old_value)
 
     def replay(self):
         if self.product_id.cost_method == 'fifo':
@@ -471,14 +473,17 @@ class StockMove(models.Model):
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id, value_adapt = 0.0):
         self.ensure_one()
         AccountMove = self.env['account.move']
-        move_lines = self._prepare_account_move_line(self.product_qty, abs(self.value), credit_account_id, debit_account_id)
+        if not value_adapt:
+            value_adapt = self.value
+        move_lines = self._prepare_account_move_line(self.product_qty, abs(value_adapt), credit_account_id, debit_account_id)
         if move_lines:
             date = self._context.get('force_period_date', fields.Date.context_today(self))
             new_account_move = AccountMove.create({
                 'journal_id': journal_id,
                 'line_ids': move_lines,
                 'date': date,
-                'ref': self.picking_id.name})
+                'ref': self.picking_id.name,
+                'company_id': self.company_id.id})
             new_account_move.post()
 
     def _account_entry_move(self):
@@ -516,7 +521,61 @@ class StockMove(models.Model):
         if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+            self._create_account_move_line(acc_src, acc_dest, journal_id)
+            
+
+    def _account_entry_move_adapt_value(self, value_adapt):
+        """ Adapt value stuff"""
+        self.ensure_one()
+        if self.product_id.type != 'product' or self.restrict_partner_id: #Owner could be about some quantities only?
+            return False
+        
+        in_move = self._is_in_move()
+        out_move = self._is_out_move()
+        in_move_normal = False
+        in_move_return = False
+        out_move_normal = False
+        out_move_return = False
+        if in_move or out_move:
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            if value_adapt > 0.0 and in_move:
+                if self.location_id.usage == 'customer':
+                    in_move_return = True
+                else:
+                    in_move_normal = True
+            elif value_adapt < 0.0 and out_move:
+                if self.location_dest_id.usage == 'supplier':
+                    out_move_return = True
+                else:
+                    out_move_normal = True
+            elif value_adapt < 0.0 and in_move:
+                if self.location_id.usage == 'customer':
+                    out_move_normal =True
+                else:
+                    out_move_return = True
+            elif value_adapt > 0.0 and out_move:
+                if self.location_dest_id.usage == 'supplier':
+                    in_move_normal = True
+                else:
+                    in_move_return = True
+
+        if in_move_return:  # goods returned from customer
+            self._create_account_move_line_adapt_value(acc_valuation, acc_src, journal_id, value_adapt=value_adapt)
+        elif in_move_normal:
+            self._create_account_move_line(acc_valuation, acc_dest, journal_id, value_adapt=value_adapt)
+        elif out_move_return:
+            self._create_account_move_line(acc_valuation, acc_src, journal_id, value_adapt=value_adapt)
+        elif out_move_normal:
+            self._create_account_move_line(acc_valuation, acc_dest, journal_id, value_adapt=value_adapt)
+        # Dropship
+        if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
+            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
+            if value_adapt > 0.0:
+                self._create_account_move_line(acc_src, acc_dest, journal_id, value_adapt=value_adapt)
+            else:
+                self._create_account_move_line(acc_dest, acc_src, journal_id, value_adapt=value_adapt)
+            
 
 
 class StockReturnPicking(models.TransientModel):
