@@ -12,8 +12,8 @@
   vertical-align: middle;
   border-top:   @caret-width-base dashed;
   border-top:   @caret-width-base solid ~"\9"; // IE8
-  border-right: @caret-width-base solid transparent;
-  border-left:  @caret-width-base solid transparent;
+  .border-right(@caret-width-base solid transparent);
+  .border-left(@caret-width-base solid transparent);
 }
 
 // The dropdown wrapper (div)
@@ -34,13 +34,13 @@
   left: 0;
   z-index: @zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
-  float: left;
+  .float(left);
   min-width: 160px;
   padding: 5px 0;
   margin: 2px 0 0; // override default ul
   list-style: none;
   font-size: @font-size-base;
-  text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
+  .text-align(left); // Ensures proper alignment if parent has it changed (e.g., modal footer)
   background-color: @dropdown-bg;
   border: 1px solid @dropdown-fallback-border; // IE8 fallback
   border: 1px solid @dropdown-border;
@@ -52,8 +52,8 @@
   //
   // Deprecated as of 3.1.0 in favor of `.dropdown-menu-[dir]`
   &.pull-right {
-    right: 0;
-    left: auto;
+    .right(0);
+    .left(auto);
   }
 
   // Dividers (basically an hr) within the dropdown
@@ -135,8 +135,8 @@
 // Add extra class to `.dropdown-menu` to flip the alignment of the dropdown
 // menu with the parent.
 .dropdown-menu-right {
-  left: auto; // Reset the default from `.dropdown-menu`
-  right: 0;
+  .left(auto); // Reset the default from `.dropdown-menu`
+  .right(0);
 }
 // With v3, we enabled auto-flipping if you have a dropdown within a right
 // aligned nav component. To enable the undoing of that, we provide an override
@@ -145,8 +145,8 @@
 // This is only for left-aligning a dropdown menu within a `.navbar-right` or
 // `.pull-right` nav component.
 .dropdown-menu-left {
-  left: 0;
-  right: auto;
+  .left(0);
+  .right(auto);
 }
 
 // Dropdown section headers
@@ -162,8 +162,8 @@
 // Backdrop to catch body clicks on mobile, etc.
 .dropdown-backdrop {
   position: fixed;
-  left: 0;
-  right: 0;
+  .left(0);
+  .right(0);
   bottom: 0;
   top: 0;
   z-index: (@zindex-dropdown - 10);
@@ -171,8 +171,8 @@
 
 // Right aligned dropdowns
 .pull-right > .dropdown-menu {
-  right: 0;
-  left: auto;
+  .right(0);
+  .left(auto);
 }
 
 // Allow for dropdowns to go bottom up (aka, dropup-menu)
