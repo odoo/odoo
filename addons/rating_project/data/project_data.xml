@@ -49,8 +49,8 @@
         <tbody>
             <tr><td style="padding:15px 20px 10px 20px;">
                 <p>Hello,</p>
-                <p>Please take a moment to rate our services related to the task "<strong t-esc="record.name"/>"
-                   assigned to <strong t-esc="record.rating_get_rated_partner_id().name"/>.</p>
+                <p>Please take a moment to rate our services related to the task "<strong t-field="record.name"/>"
+                   assigned to <strong t-field="record.rating_get_rated_partner_id().name"/>.</p>
                 <p>We appreciate your feedback. It helps us to improve continuously.</p>
             </td></tr>
             <tr><td style="padding:10px 20px">
@@ -94,9 +94,9 @@
     <table style="width:600px;margin:auto;text-align:center;font-size:12px;">
         <tbody>
             <tr><td style="padding-top:10px;color:#afafaf;">
-                <p t-if="record.project_id.rating_status == 'stage'">This customer survey has been sent because your task has been moved to the stage <b><t t-esc="record.stage_id.name"/></b></p>
-                <p t-if="record.project_id.rating_status == 'periodic'">This customer survey is sent <b><t t-esc="record.project_id.rating_status_period"/></b> as long as the task is in the <b><t t-esc="record.stage_id.name"/></b> stage.</p>
-                <p>Email automatically sent by <a target="_blank" href="https://www.odoo.com/page/project-management" style="color:#875A7B;text-decoration:none;">Odoo Project</a> for <a t-att-href="record.project_id.company_id.website" style="color:#875A7B;text-decoration:none;"><t t-esc="record.project_id.company_id.name"/></a></p>
+                <p t-if="record.project_id.rating_status == 'stage'">This customer survey has been sent because your task has been moved to the stage <b t-field="record.stage_id.name"/></p>
+                <p t-if="record.project_id.rating_status == 'periodic'">This customer survey is sent <b t-field="record.project_id.rating_status_period"/> as long as the task is in the <b t-field="record.stage_id.name"/> stage.</p>
+                <p>Email automatically sent by <a target="_blank" href="https://www.odoo.com/page/project-management" style="color:#875A7B;text-decoration:none;">Odoo Project</a> for <a t-att-href="record.project_id.company_id.website" style="color:#875A7B;text-decoration:none;" t-field="record.project_id.company_id.name"/></p>
             </td></tr>
         </tbody>
     </table>
