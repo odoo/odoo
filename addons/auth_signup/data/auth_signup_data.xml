@@ -70,22 +70,22 @@
     </table>
 </div>
 <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-<p>Dear <t t-esc="record.name"/>,</p>
+<p>Dear <span t-field="record.name"/>,</p>
     <p>
-        You have been invited to connect to &quot;<t t-esc="record.company_id.name"/>&quot; in order to get access to your documents in Odoo.
+        You have been invited to connect to &quot;<span t-field="record.company_id.name"/>&quot; in order to get access to your documents in Odoo.
     </p>
     <p>
         To accept the invitation, click on the following link:
     </p>
     <div style="text-align: center; margin-top: 16px;">
-         <a t-att-href="record.signup_url" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept invitation to "<t t-esc="record.company_id.name"/>"</a>
+         <a t-att-href="record.signup_url" style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">Accept invitation to "<span t-field="record.company_id.name"/>"</a>
     </div>
     <p>Best regards,</p>
 </div>
 <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
     <t t-raw="user.signature"/>
     <p style="font-size: 11px; margin-top: 10px;">
-        <strong>Sent by <t t-esc="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
+        <strong>Sent by <span t-field="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
     </p>
 </div></field>
             <field name="user_signature" eval="False"/>
