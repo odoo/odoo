@@ -166,12 +166,12 @@
     <table cellspacing="0" cellpadding="0" style="width:600px ;text-align:justify; margin:0 auto; border-collapse:collapse; background:inherit; color:inherit">
         <tbody><tr>
             <td style="padding:0px 10px 5px 5px;font-size: 14px;">
-                <p>Dear <t t-esc="record.name"/>,</p>
+                <p>Dear <span t-field="record.name"/>,</p>
                 <p>You have been invited to validate your email in order to get access to
-                &quot;<t t-esc="record.company_id.name"/>&quot; Q/A Forums.</p>
+                &quot;<span t-field="record.company_id.name"/>&quot; Q/A Forums.</p>
                 <p>To validate your email, please click on the following link:</p>
-                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" t-att-href="ctx.get('token_url')">
-                    Validate my account for &quot;<t t-esc="record.company_id.name"/>&quot; Q/A Forums
+                <a style="margin-left: 15px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;" t-attf-href="ctx.get('token_url')">
+                    Validate my account for &quot;<span t-field="record.company_id.name"/>&quot; Q/A Forums
                 </a>
                 <p>Thanks for your participation!</p>
             </td>
