@@ -41,7 +41,7 @@
                         Hi,
                     </p><p style="font-size:16px;">
                         Thank you for your interest in joining the
-                        <b><t t-esc="record.company_id.name"/></b> team.  We wanted to
+                        <b><span t-field="record.company_id.name"/></b> team.  We wanted to
                         let you know that, although your resume is competitive,
                         our hiring team reviewed your application and <b>did not
                         select it for further consideration</b>.
@@ -66,12 +66,12 @@
 
                     <p style="color:grey;">-- <br/>
                     <t t-if="record.user_id">
-                        <strong t-esc="record.user_id.name"/><br/>
+                        <strong t-field="record.user_id.name"/><br/>
                         Email: <t t-esc="record.user_id.email or ''"/><br/>
                         Phone: <t t-esc="record.user_id.phone or ''"/>
                     </t>
                     <t t-else="">
-                        <t t-esc="record.company_id.name"/><br/>
+                        <span t-field="record.company_id.name"/><br/>
                         The HR Team
                     </t>
                     </p>
@@ -83,7 +83,7 @@
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
-                            <div>Sent by <t t-esc="record.company_id.name"/></div>
+                            <div>Sent by <span t-field="record.company_id.name"/></div>
                             <div t-if="'website_url' in record.job_id and record.job_id.website_url">
                                 Discover <a href="/jobs" style="text-decoration:none;color:#717188;">our others jobs</a>.
                             </div>
