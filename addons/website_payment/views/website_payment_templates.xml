@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Acquirers">
+        <template id="header_footer_custom_payment" inherit_id="website.footer_default" customize_show="True" active="False" name="Payment Methods">
             <xpath expr="//div[@id='info']" position="inside">
                 <h4 class="payment_method_title">Payment Acquirer</h4>
                 <ul class="payment_method_list list-inline">
@@ -24,45 +24,28 @@
       </xpath>
     </template>
 
-    <template id="pay_methods" name="Payment Acquirers">
+    <template id="pay_methods" name="Payment Methods">
         <t t-call="website.layout">
-            <t t-set="additional_title">Payment Acquirers</t>
+            <t t-set="additional_title">Payment Methods</t>
             <div class="wrap">
                 <div class="container">
                   <div class="row">
                         <div class="col-sm-6">
                             <ol class="breadcrumb mt8">
                                 <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                                <li>Payment Acquirers</li>
+                                <li>Payment Methods</li>
                             </ol>
                         </div>
                     </div>
-                    <h1>Payment Acquirers</h1>
-                    <h4 t-if="acquirers">Add a new payment acquirer:</h4>
-                    <div t-if="acquirers" class="row">
-                        <div class="col-sm-8">
-                            <div t-if="error_message" class="alert alert-danger">
-                              <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                    <div class="clearfix">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h3>Manage your Payment Methods</h3>
+                                <t t-call="payment.payment_tokens_list">
+                                    <t t-set="mode" t-value="'manage'"/>
+                                    <t t-set="verify_validity" t-value="True"/>
+                                </t>
                             </div>
-                            <div t-if='len(acquirers)&gt;1'>
-                                <label class="control-label" for="pm_acquirer_id">Acquirer</label>
-                                <select name="pm_acquirer_id" class="form-control">
-                                    <t t-foreach="acquirers" t-as="acquirer">
-                                        <option t-att-value="acquirer.id" t-esc="acquirer.name"/>
-                                    </t>
-                                </select>
-                            </div>
-                            <t t-foreach="acquirers" t-as="acquirer">
-                                <div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id" t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}"/>
-                            </t>
-                        </div>
-                    </div>
-                    <div t-if="pms" class="clearfix">
-                    <h4>Your payment Methods</h4>
-                        <t t-set="show_delete" t-value="True"/>
-                        <t t-set="form_action" t-value="'/website_payment/delete/'"/>
-                        <div class="col-sm-8">
-                            <t t-call="payment.payment_tokens_list"/>
                         </div>
                     </div>
                 </div>
@@ -73,7 +56,7 @@
     <template id="pay_meth_link" inherit_id="website_portal.portal_layout" customize_show="True">
         <xpath expr="//div[@class='o_my_details']" position="inside">
             <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
-                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment acquirers</a></div>
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your Payment Methods</a></div>
             </t>
         </xpath>
     </template>

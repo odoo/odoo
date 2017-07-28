@@ -18,15 +18,8 @@ class WebsitePayment(http.Controller):
         }
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
-            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True, 'verify_validity': True})
+            acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True})
         return request.render("website_payment.pay_methods", values)
-
-    @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
-    def delete(self, delete_pm_id=None):
-        if delete_pm_id:
-            pay_meth = request.env['payment.token'].browse(int(delete_pm_id))
-            pay_meth.unlink()
-        return request.redirect('/my/payment_method')
 
     @http.route(['/website_payment/pay'], type='http', auth='public', website=True)
     def pay(self, reference='', amount=False, currency_id=None, acquirer_id=None, **kw):
@@ -90,25 +83,3 @@ class WebsitePayment(http.Controller):
             return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
-
-    @http.route(['/website_payment/get_linked_records'], type='json', auth='user', website=True)
-    def get_linked_records(self, payment_token_id):
-        payment_token_id = int(payment_token_id)
-
-        res = []
-        token = request.env['payment.token'].search([('id','=',payment_token_id)])
-        # if the payment token is valid
-        if token:
-            # then we retrieve the description for the model sale.subscription
-            subscription_description = request.env['sale.subscription']._description
-            # we retrieve all the linked records for the token
-            records = token._get_linked_records()
-            # transform the list of tuple into a dict so we can search easily
-            records = dict(records[payment_token_id])
-            # if there's subscriptions linked to that token
-            if records.get(subscription_description):
-                subscriptions = records[subscription_description]
-                # we create our json with all the info needed
-                for r in subscriptions:
-                    res.append({'id': r.id, 'name': r.name})
-        return res
