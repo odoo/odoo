@@ -81,7 +81,7 @@ from <span t-field="record.company_id.name"/>.
                             <tr>
                               <td valign="middle">
                                   <span style="font-size:20px; color:white; font-weight: bold;">
-                                      <t t-esc="record.record_name"/>
+                                      <span t-field="record.record_name"/>
                                   </span>
                               </td>
                               <td valign="middle" align="right">
@@ -111,11 +111,11 @@ from <span t-field="record.company_id.name"/>.
                           <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px;">
                             <tr>
                               <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                <t t-esc="company.name"/><br/>
+                                <span t-field="company.name"/><br/>
                                 <t t-esc="company.phone or ''"/>
                               </td>
                               <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                                <a t-if="company.email" t-attf-href="mailto:#{company.email}" style="text-decoration:none; color: white;" t-esc="company.email"/><br/>
+                                <a t-if="company.email" t-attf-href="mailto:#{company.email}" style="text-decoration:none; color: white;" t-field="company.email"/><br/>
                                 <a t-if="company.website" t-att-href="company.website" style="text-decoration:none; color: white;" t-esc="company.website"/>
                               </td>
                             </tr>
