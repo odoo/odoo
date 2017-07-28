@@ -81,7 +81,7 @@
             <field name="body_html" type="html">
             <meta charset="utf-8"/>
 <p>Hello <t t-esc="record.user_id and record.user_id.name or ''"/>,</p>
-<p>The opportunity <strong t-esc="record.name"/> did not have any activity since at least 5 days.</p>
+<p>The opportunity <strong t-field="record.name"/> did not have any activity since at least 5 days.</p>
 <p t-if="record.description">Here is the description about the opportunity : </p><p><i t-esc="record.description"/>
 </p><p>Thank you!</p>
 </field>
