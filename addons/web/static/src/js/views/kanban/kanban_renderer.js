@@ -100,6 +100,8 @@ var KanbanRenderer = BasicRenderer.extend({
             viewType: 'kanban',
         });
         this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
+
+        this._setState(state);
     },
 
     //--------------------------------------------------------------------------
@@ -167,11 +169,31 @@ var KanbanRenderer = BasicRenderer.extend({
             record.update(recordState);
         }
     },
+    /**
+     * @override
+     */
+    updateState: function (state) {
+        this._setState(state);
+        return this._super.apply(this, arguments);
+    },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * The nocontent helper should be displayed in kanban:
+     *   - ungrouped: if there is no records
+     *   - grouped: if there is no groups and no column quick create
+     *
+     * @override
+     * @private
+     */
+    _hasContent: function () {
+        return this._super.apply(this, arguments) ||
+               this.createColumnEnabled ||
+               (this.state.groupedBy.length && this.state.data.length);
+    },
     /**
      * Renders empty invisible divs in a document fragment.
      *
@@ -193,28 +215,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     _renderGrouped: function (fragment) {
         var self = this;
-        var groupByFieldAttrs = this.state.fields[this.state.groupedBy[0]];
-        var groupByFieldInfo = this.state.fieldsInfo.kanban[this.state.groupedBy[0]];
-        // Deactivate the drag'n'drop if the groupedBy field:
-        // - is a date or datetime since we group by month or
-        // - is readonly
-        var draggable = true;
-        if (groupByFieldAttrs) {
-            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
-                draggable = false;
-            } else if (groupByFieldAttrs.readonly !== undefined) {
-                draggable = !(groupByFieldAttrs.readonly);
-            }
-        }
-        var groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
-        var grouped_by_field = groupedByM2O && groupByFieldAttrs.relation;
-        var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
-        this.columnOptions = _.extend(this.columnOptions, {
-            draggable: draggable,
-            group_by_tooltip: groupByTooltip,
-            grouped_by_m2o: groupedByM2O,
-            relation: grouped_by_field,
-        });
 
         // Render columns
         _.each(this.state.data, function (group) {
@@ -228,7 +228,7 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
-        if (groupedByM2O) {
+        if (this.groupedByM2O) {
             // Enable column sorting
             this.$el.sortable({
                 axis: 'x',
@@ -249,7 +249,7 @@ var KanbanRenderer = BasicRenderer.extend({
             });
 
             // Enable column quickcreate
-            if (this.columnOptions.group_creatable) {
+            if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this);
                 this.quickCreate.appendTo(fragment);
             }
@@ -280,19 +280,61 @@ var KanbanRenderer = BasicRenderer.extend({
     _renderView: function () {
         var oldWidgets = this.widgets;
         this.widgets = [];
-        var isGrouped = !!this.state.groupedBy.length;
-        this.$el.toggleClass('o_kanban_grouped', isGrouped);
-        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
         this.$el.empty();
 
-        var fragment = document.createDocumentFragment();
-        if (isGrouped) {
-            this._renderGrouped(fragment);
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
+        this.$el.toggleClass('o_kanban_nocontent', displayNoContentHelper);
+        if (displayNoContentHelper) {
+            // display the no content helper if there is no data to display
+            this._renderNoContentHelper();
         } else {
-            this._renderUngrouped(fragment);
+            var isGrouped = !!this.state.groupedBy.length;
+            this.$el.toggleClass('o_kanban_grouped', isGrouped);
+            this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+            var fragment = document.createDocumentFragment();
+            // render the kanban view
+            if (isGrouped) {
+                this._renderGrouped(fragment);
+            } else {
+                this._renderUngrouped(fragment);
+            }
+            this.$el.append(fragment);
         }
-        this.$el.append(fragment);
+
         return this._super.apply(this, arguments).then(_.invoke.bind(_, oldWidgets, 'destroy'));
+    },
+    /**
+     * Sets the current state and updates some internal attributes accordingly.
+     *
+     * @private
+     * @param {Object} state
+     */
+    _setState: function (state) {
+        this.state = state;
+
+        var groupByFieldAttrs = state.fields[state.groupedBy[0]];
+        var groupByFieldInfo = state.fieldsInfo.kanban[state.groupedBy[0]];
+        // Deactivate the drag'n'drop if the groupedBy field:
+        // - is a date or datetime since we group by month or
+        // - is readonly
+        var draggable = true;
+        if (groupByFieldAttrs) {
+            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
+                draggable = false;
+            } else if (groupByFieldAttrs.readonly !== undefined) {
+                draggable = !(groupByFieldAttrs.readonly);
+            }
+        }
+        this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
+        var grouped_by_field = this.groupedByM2O && groupByFieldAttrs.relation;
+        var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
+        this.columnOptions = _.extend(this.columnOptions, {
+            draggable: draggable,
+            group_by_tooltip: groupByTooltip,
+            grouped_by_m2o: this.groupedByM2O,
+            relation: grouped_by_field,
+        });
+        this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },
 });
 

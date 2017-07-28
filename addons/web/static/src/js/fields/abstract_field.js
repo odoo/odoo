@@ -379,6 +379,11 @@ var AbstractField = Widget.extend({
      * @private
      * @param {any} value
      * @param {Object} [options]
+     * @param {boolean} [options.doNotSetDirty=false] if true, the basic model
+     *   will not consider that this field is dirty, even though it was changed.
+     *   Please do not use this flag unless you really need it.  Our only use
+     *   case is currently the pad widget, which does a _setValue in the
+     *   renderEdit method.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
      * @returns {Deferred}
@@ -407,6 +412,7 @@ var AbstractField = Widget.extend({
             dataPointID: this.dataPointID,
             changes: changes,
             viewType: this.viewType,
+            doNotSetDirty: options && options.doNotSetDirty,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });

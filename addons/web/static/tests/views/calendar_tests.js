@@ -32,7 +32,7 @@ QUnit.module('Views', {
                 fields: {
                     id: {string: "ID", type: "integer"},
                     user_id: {string: "user", type: "many2one", relation: 'user'},
-                    parnter_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.parnter_id'},
+                    partner_id: {string: "user", type: "many2one", relation: 'partner', related: 'user_id.partner_id'},
                     name: {string: "name", type: "char"},
                     start_date: {string: "start date", type: "date"},
                     stop_date: {string: "stop date", type: "date"},
@@ -58,7 +58,7 @@ QUnit.module('Views', {
                 fields: {
                     id: {string: "ID", type: "integer"},
                     display_name: {string: "Displayed name", type: "char"},
-                    parnter_id: {string: "partner", type: "many2one", relation: 'partner'},
+                    partner_id: {string: "partner", type: "many2one", relation: 'partner'},
                     image: {string: "image", type: "integer"},
                 },
                 records: [
@@ -158,7 +158,7 @@ QUnit.module('Views', {
                 'all_day="allday" '+
                 'mode="week" '+
                 'attendee="partner_ids" '+
-                'color="parnter_id">'+
+                'color="partner_id">'+
                     '<field name="name"/>'+
                     '<filter name="user_id" avatar_field="image"/>'+
                     '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
@@ -194,7 +194,7 @@ QUnit.module('Views', {
 
         var $typeFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(user))');
         assert.ok($typeFilter.length, "should display 'user' filter");
-        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 1, "should display 1 filter items for 'user'");
+        assert.strictEqual($typeFilter.find('.o_calendar_filter_item').length, 2, "should display 2 filter items for 'user'");
 
         var $attendeesFilter =  $sidebar.find('.o_calendar_filter:has(h3:contains(attendees))');
         assert.ok($attendeesFilter.length, "should display 'attendees' filter");
@@ -938,6 +938,47 @@ QUnit.module('Views', {
         calendar.destroy();
 
         assert.strictEqual($('#ui-datepicker-div:empty').length, 0, "should have a clean body");
+    });
+
+    QUnit.test('"all" filter', function (assert) {
+        assert.expect(3);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="week" '+
+                'attendee="partner_ids" '+
+                'color="partner_id">'+
+                    '<field name="name"/>'+
+                    '<filter name="user_id" avatar_field="image"/>'+
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>'+
+            '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event').length, 9,
+            "should display 9 events on the week");
+
+        // Select the events only associated with partner 2
+        calendar.$('.o_calendar_filter_item[data-id=2] input').click();
+        assert.strictEqual(calendar.$('.fc-event').length, 4,
+            "should display 4 events on the week");
+
+        // Click on the 'all' filter to reload all events
+        calendar.$('.o_calendar_filter_item[data-value=all] input').click();
+        assert.strictEqual(calendar.$('.fc-event').length, 9,
+            "should display 9 events on the week");
+
+        calendar.destroy();
     });
 
 });
