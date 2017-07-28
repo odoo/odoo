@@ -367,15 +367,16 @@ class GeventServer(CommonServer):
         import gevent
         from gevent.wsgi import WSGIServer
 
-        # Set process memory limit as an extra safeguard
-        _, hard = resource.getrlimit(resource.RLIMIT_AS)
-        resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
-
         if os.name == 'posix':
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
-
-        gevent.spawn(self.watchdog)
+            # Set process memory limit as an extra safeguard
+            _, hard = resource.getrlimit(resource.RLIMIT_AS)
+            resource.setrlimit(resource.RLIMIT_AS, (config['limit_memory_hard'], hard))
+            gevent.spawn(self.watchdog)
+        else:
+            gevent.spawn()
+            
         self.httpd = WSGIServer((self.interface, self.port), self.app)
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
