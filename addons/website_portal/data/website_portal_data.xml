@@ -11,11 +11,12 @@
             <field name="auto_delete" eval="True"/>
             <field name="user_signature" eval="True"/>
             <field name="body_html" type="html">
+            <meta charset="utf-8"/>
 <p>
-    Dear <t t-esc="record.user_id.name"/>,
+    Dear <span t-field="record.user_id.name"/>,
 </p>
 <p>
-    You have been given access to <t t-esc="user.company_id.name"/>'s <t t-esc="record.wizard_id.portal_id.name"/>.
+    You have been given access to <span t-field="user.company_id.name"/>'s <span t-field="record.wizard_id.portal_id.name"/>.
 </p>
 <p>
     Your login account data is:
