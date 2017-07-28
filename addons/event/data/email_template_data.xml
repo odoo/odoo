@@ -220,8 +220,8 @@
                     </p>
                     <p style="font-size:16px;">
                         We are excited to remind you that the event
-                        <a t-if="'website_url' in record.event_id and record.event_id.website_url" t-att-href="record.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-esc="record.event_id.name"/>
-                        <t t-else="" t-esc="record.event_id.name"/>
+                        <a t-if="'website_url' in record.event_id and record.event_id.website_url" t-att-href="record.event_id.website_url" style="color:#875A7B;text-decoration:none;" t-field="record.event_id.name"/>
+                        <span t-else="" t-field="record.event_id.name"/>
                         is starting
                         <strong t-esc="record.get_date_range_str()"/>.
                     </p><p style="font-size:16px;">
@@ -229,7 +229,7 @@
                     </p><p style="font-size:16px; margin-bottom: 30px">
                         <i>
                            -- <br/>
-                        <t t-if="record.event_id.organizer_id" t-esc="record.event_id.organizer_id.name"/>
+                        <span t-if="record.event_id.organizer_id" t-field="record.event_id.organizer_id.name"/>
                         <t t-else="">
                             The organizers.
                         </t>
@@ -246,9 +246,9 @@
                                 <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34"/>
                             </td>
                             <td style="padding:25px 10px 25px 10px;width:50%;line-height:20px;vertical-align:top;">
-                                <div><strong>From</strong> <t t-esc="record.event_id.date_begin_located"/></div>
-                                <div><strong>To</strong> <t t-esc="record.event_id.date_end_located"/></div>
-                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> <t t-esc="record.event_id.date_tz"/></i></div>
+                                <div><strong>From</strong> <span t-field="record.event_id.date_begin_located"/></div>
+                                <div><strong>To</strong> <span t-field="record.event_id.date_end_located"/></div>
+                                <div style="font-size:12px;color:#9e9e9e"><i><strong>TZ</strong> <span t-field="record.event_id.date_tz"/></i></div>
                             </td>
                             <t t-if="record.event_id.address_id">
                                 <td style="padding:25px 0px;vertical-align:top;">
@@ -256,32 +256,32 @@
                                 </td>
                                 <td style="padding:30px 10px 25px 10px;width:50%;vertical-align:top;">
                                     <t t-if="record.event_id.address_id.name">
-                                        <p style="margin:0px 0px 0px 0px;" t-esc="record.event_id.address_id.name"/>
+                                        <p style="margin:0px 0px 0px 0px;" t-field="record.event_id.address_id.name"/>
                                     </t>
                                     <t t-if="record.event_id.address_id.street">
-                                        <p style="margin:0px 0px 0px 0px;" t-esc="record.event_id.address_id.street"/>
+                                        <p style="margin:0px 0px 0px 0px;" t-field="record.event_id.address_id.street"/>
                                         <t t-set="location" t-value="record.event_id.address_id.street"/>
                                     </t>
                                     <t t-if="record.event_id.address_id.street2">
-                                        <p style="margin:0px 0px 0px 0px;" t-esc="record.event_id.address_id.street2"/>
+                                        <p style="margin:0px 0px 0px 0px;" t-field="record.event_id.address_id.street2"/>
                                         <t t-set="location" t-value="'%s, %s' % (location, record.event_id.address_id.street2)"/>
                                     </t>
                                     <p style="margin:0px 0px 0px 0px;">
                                     <t t-if="record.event_id.address_id.city">
-                                        <t t-esc="record.event_id.address_id.city"/>,
+                                        <span t-field="record.event_id.address_id.city"/>,
                                         <t t-set="location" t-value="'%s, %s' % (location, record.event_id.address_id.city)"/>
                                     </t>
                                     <t t-if="record.event_id.address_id.state_id.name">
-                                        <t t-esc="record.event_id.address_id.state_id.name"/>,
+                                        <span t-field="record.event_id.address_id.state_id.name"/>,
                                         <t t-set="location" t-value="'%s, %s' % (location, record.event_id.address_id.state_id.name)"/>
                                     </t>
                                     <t t-if="record.event_id.address_id.zip">
-                                        <t t-esc="record.event_id.address_id.zip"/>
+                                        <span t-field="record.event_id.address_id.zip"/>
                                         <t t-set="location" t-value="'%s, %s' % (location, record.event_id.address_id.zip)"/>
                                     </t>
                                     </p>
                                     <t t-if="record.event_id.address_id.country_id.name">
-                                        <p style="margin:0px 0px 0px 0px;" t-esc="record.event_id.address_id.country_id.name"/>
+                                        <p style="margin:0px 0px 0px 0px;" t-field="record.event_id.address_id.country_id.name"/>
                                         <t t-set="location" t-value="'%s, %s' % (location, record.event_id.address_id.country_id.name)"/>
                                     </t>
                                 </td>
@@ -297,7 +297,7 @@
                                     <ul>
                                         <li t-esc="record.event_id.organizer_id.name"/>
                                         <li t-if="record.event_id.organizer_id.email">Mail: <a t-attf-href="mailto:#{record.event_id.organizer_id.email}" style="text-decoration:none;color:#875A7B;" t-esc="record.event_id.organizer_id.email"/></li>
-                                        <li t-if="record.event_id.organizer_id.phone">Phone: <t t-esc="record.event_id.organizer_id.phone"/></li>
+                                        <li t-if="record.event_id.organizer_id.phone">Phone: <span t-field="record.event_id.organizer_id.phone"/></li>
                                     </ul>
                                 </td>
                             </tr>
@@ -328,7 +328,7 @@
         <tbody>
             <tr>
                 <td style="padding-top:10px;font-size: 12px;">
-                    <p style="margin:0px 0px 9px 0px;padding-top:10px;">Sent by <t t-esc="record.company_id.name"/></p>
+                    <p style="margin:0px 0px 9px 0px;padding-top:10px;">Sent by <span t-field="record.company_id.name"/></p>
                     <div t-if="'website_url' in record.event_id and record.event_id.website_url">
                         Discover <a href="/event" style="text-decoration:none;color:#717188;">all our events</a>.
                     </div>
