@@ -147,7 +147,7 @@
                         <td width="75">
                             <img t-attf-src="/web/image/res.users/#{record.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
                         </td><td style="font-size:15px;">
-                            <strong><t t-esc="record.user_id.name"/></strong><br/>
+                            <strong t-field="record.user_id.name"/><br/>
                             <span>Email: <t t-esc="record.user_id.email or ''"/></span><br/>
                             <span>Phone: <t t-esc="record.user_id.phone or ''"/></span>
                         </td>
@@ -182,32 +182,32 @@
                     <hr style="margin: 30px 0"/>
 
                     <t t-if="record.job_id.address_id.name">
-                        <p style="margin:0px 0px 0px 0px;"><strong><t t-esc="record.job_id.address_id.name"/></strong></p>
+                        <p style="margin:0px 0px 0px 0px;"><strong><span t-field="record.job_id.address_id.name"/></strong></p>
                     </t>
                     <t t-if="record.job_id.address_id.street">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.street"/></p>
+                        <p style="margin:0px 0px 0px 0px;"><span t-field="record.job_id.address_id.street"/></p>
                         <t t-set="location" t-value="record.job_id.address_id.street"/>
                     </t>
                     <t t-if="record.job_id.address_id.street2">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.street2"/></p>
+                        <p style="margin:0px 0px 0px 0px;"><span t-field="record.job_id.address_id.street2"/></p>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.street2)"/>
                     </t>
                     <p style="margin:0px 0px 0px 0px;">
                     <t t-if="record.job_id.address_id.city">
-                        <t t-esc="record.job_id.address_id.city"/>,
+                        <span t-field="record.job_id.address_id.city"/>,
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.city)"/>
                     </t>
                     <t t-if="record.job_id.address_id.state_id.name">
-                        <t t-esc="record.job_id.address_id.state_id.name"/>,
+                        <span t-field="record.job_id.address_id.state_id.name"/>,
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.state_id.name)"/>
                     </t>
                     <t t-if="record.job_id.address_id.zip">
-                        <t t-esc="record.job_id.address_id.zip"/>
+                        <span t-field="record.job_id.address_id.zip"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.zip)"/>
                     </t>
                     </p>
                     <t t-if="record.job_id.address_id.country_id.name">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.country_id.name"/></p>
+                        <p style="margin:0px 0px 0px 0px;"><span t-field="record.job_id.address_id.country_id.name"/></p>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.country_id.name)"/>
                     </t>
                 </td>
@@ -225,7 +225,7 @@
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
-                            <div>Sent by <t t-esc="record.company_id.name"/></div>
+                            <div>Sent by <span t-field="record.company_id.name"/></div>
                             <t t-if="'website_url' in record.job_id and record.job_id.website_url">
                             <div>
                                 Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.
@@ -271,8 +271,8 @@
                     </p><p style="font-size:16px;">
                         We confirm we successfully received your application to the job
 
-                        "<a t-attf-href="record.job_id.website_url" style="color:#9A6C8E;"><strong><t t-esc="record.job_id.name"/></strong></a>"
-                        at <strong><t t-esc="record.company_id.name"/></strong>.
+                        "<a t-attf-href="record.job_id.website_url" style="color:#9A6C8E;"><strong t-esc="record.job_id.name"/></a>"
+                        at <strong t-esc="record.company_id.name"/>.
                     </p>
                     <p style="font-size:16px;">
                         We will come back to you shortly.
@@ -286,7 +286,7 @@
                         <td width="75">
                             <img t-attf-src="/web/image/res.users/#{record.user_id.id}/image_small" alt="Avatar" style="vertical-align:baseline;max-width:64px;" />
                         </td><td style="font-size:15px;">
-                            <strong><t t-esc="record.user_id.name"/></strong><br/>
+                            <strong t-esc="record.user_id.name"/><br/>
                             <span>Email: <t t-esc="record.user_id.email or ''"/></span><br/>
                             <span>Phone: <t t-esc="record.user_id.phone or ''"/></span>
                         </td>
@@ -315,14 +315,14 @@
                     <hr style="margin: 30px 0"/>
 
                     <t t-if="record.job_id.address_id.name">
-                        <p style="margin:0px 0px 0px 0px;"><strong><t t-esc="record.job_id.address_id.name"/></strong></p>
+                        <p style="margin:0px 0px 0px 0px;"><strong t-esc="record.job_id.address_id.name"/></p>
                     </t>
                     <t t-if="record.job_id.address_id.street">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.street"/></p>
+                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.street"/>
                         <t t-set="location" t-value="record.job_id.address_id.street"/>
                     </t>
                     <t t-if="record.job_id.address_id.street2">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.street2"/></p>
+                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.street2"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.street2)"/>
                     </t>
                     <p style="margin:0px 0px 0px 0px;">
@@ -340,7 +340,7 @@
                     </t>
                     </p>
                     <t t-if="record.job_id.address_id.country_id.name">
-                        <p style="margin:0px 0px 0px 0px;"><t t-esc="record.job_id.address_id.country_id.name"/></p>
+                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.country_id.name"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.country_id.name)"/>
                     </t>
                 </td>
