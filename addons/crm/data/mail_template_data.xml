@@ -41,8 +41,8 @@
                                     <p dir="ltr" style="margin-top:0pt;margin-bottom:0pt;">
                                         <span>Try creating a lead by sending an email to </span>
                                         <a t-attf-href="mailto:#{last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}">
-                                            <span t-if="last_created_team.alias_id.alias_domain" style="font-weight:bold; text-decoration:underline;" t-esc="last_created_team.alias_id.name_get()[0][1]"/>
-                                            <span t-else="" style="font-weight:bold; text-decoration:underline;" t-esc="user.company_id.email"/>
+                                            <span t-if="last_created_team.alias_id.alias_domain" style="font-weight:bold; text-decoration:underline;" t-field="last_created_team.alias_id.name_get()[0][1]"/>
+                                            <span t-else="" style="font-weight:bold; text-decoration:underline;" t-field="user.company_id.email"/>
                                         </a>
                                     </p>
                                 </li>
