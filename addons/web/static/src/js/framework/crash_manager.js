@@ -175,7 +175,7 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
     }
 });
 
-core.crash_registry.add('openerp.exceptions.RedirectWarning', RedirectWarningHandler);
+core.crash_registry.add('odoo.exceptions.RedirectWarning', RedirectWarningHandler);
 
 return CrashManager;
 });
