@@ -702,7 +702,7 @@ if record:
             <field name="view_id" ref="crm_case_tree_view_leads"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
-                    'default_type':'lead',
+                    'default_crm_lead_type':'lead',
                     'search_default_type': 'lead',
                     'needaction_menu_ref': 'crm.menu_crm_opportunities',
                     'search_default_to_process':1,
@@ -736,7 +736,7 @@ if record:
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
-                    'default_type': 'opportunity',
+                    'default_crm_lead_type': 'opportunity',
                     'default_user_id': uid
                 }
             </field>
@@ -787,7 +787,7 @@ if record:
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
             <field name="domain">[('type','=','opportunity')]</field>
             <field name="context">{
-                    'default_type': 'opportunity',
+                    'default_crm_lead_type': 'opportunity',
                     'default_user_id': uid,
                     'search_default_assigned_to_me': 1,
             }</field>
@@ -832,7 +832,7 @@ if record:
                           (0, 0, {'view_mode': 'kanban'}), (0, 0, {'view_mode': 'calendar'}), (0, 0, {'view_mode': 'pivot'}), (0, 0, {'view_mode': 'graph'})]"/>
             <field name="domain">[('type','=','opportunity'), ('activity_date_deadline', '!=', False)]</field>
             <field name="context">{
-                    'default_type': 'opportunity',
+                    'default_crm_lead_type': 'opportunity',
                     'default_user_id': uid,
                     'search_default_assigned_to_me': 1
                 }
