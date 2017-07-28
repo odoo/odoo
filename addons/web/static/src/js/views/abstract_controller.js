@@ -32,7 +32,6 @@ var AbstractController = Widget.extend({
      * @param {string} params.modelName
      * @param {any} [params.handle] a handle that will be given to the model (some id)
      * @param {any} params.initialState the initialState
-     * @param {string} [params.noContentHelp]
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
@@ -42,7 +41,6 @@ var AbstractController = Widget.extend({
         this.handle = params.handle;
         this.activeActions = params.activeActions;
         this.initialState = params.initialState;
-        this.noContentHelp = params.noContentHelp;
     },
     /**
      * Simply renders and updates the url.
@@ -222,31 +220,6 @@ var AbstractController = Widget.extend({
      */
     _pushState: function (state) {
         this.trigger_up('push_state', state || {});
-    },
-    /**
-     * Hide or show the nocontent helper.  For this, it also remove the renderer
-     * from the dom, and reattach it when necessary.
-     *
-     * This method is a helper for controllers that want to display a help
-     * message when no content is available.  It is suggested to override
-     * _update to call this method.
-     *
-     * @private
-     * @param {boolean} hasNoContent
-     */
-    _toggleNoContentHelper: function (hasNoContent) {
-        if (hasNoContent && this.noContentHelp) {
-            this.renderer.$el.detach();
-            var $msg = $('<div>')
-                .addClass('oe_view_nocontent')
-                .html(this.noContentHelp);
-            this.$el.html($msg);
-        } else {
-            if (!document.contains(this.renderer.el)) {
-                this.$('div.oe_view_nocontent').remove();
-                this.$el.append(this.renderer.$el);
-            }
-        }
     },
     /**
      * This method is called after each update or when the start method is

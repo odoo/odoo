@@ -21,12 +21,12 @@ class test_model(models.Model):
         (4, "réponse <D>"),
     ])
     selection_str = fields.Selection([
-        ('A', "Qu'il n'est pas arrivé à Toronto"),
-        ('B', "Qu'il était supposé arriver à Toronto"),
-        ('C', "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"),
-        ('D', "La réponse D"),
-    ], string="Lorsqu'un pancake prend l'avion à destination de Toronto et "
-              "qu'il fait une escale technique à St Claude, on dit:")
+        ('A', u"Qu'il n'est pas arrivé à Toronto"),
+        ('B', u"Qu'il était supposé arriver à Toronto"),
+        ('C', u"Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"),
+        ('D', u"La réponse D"),
+    ], string=u"Lorsqu'un pancake prend l'avion à destination de Toronto et "
+              u"qu'il fait une escale technique à St Claude, on dit:")
     html = fields.Html()
     text = fields.Text()
 

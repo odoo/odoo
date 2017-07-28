@@ -13,6 +13,7 @@ odoo.define('web.EditableListRenderer', function (require) {
  */
 var core = require('web.core');
 var ListRenderer = require('web.ListRenderer');
+var utils = require('web.utils');
 
 var _t = core._t;
 
@@ -153,12 +154,32 @@ ListRenderer.include({
      */
     setRowMode: function (recordID, mode) {
         var self = this;
-        var rowIndex = _.findIndex(this.state.data, {id: recordID});
+
+        // find the record and its row index (handles ungrouped and grouped cases
+        // as even if the grouped list doesn't support edition, it may contain
+        // a widget allowing the edition in readonly (e.g. priority), so it
+        // should be able to update a record as well)
+        var record;
+        var rowIndex;
+        if (this.state.groupedBy.length) {
+            rowIndex = -1;
+            var count = 0;
+            utils.traverse_records(this.state, function (r) {
+                if (r.id === recordID) {
+                    record = r;
+                    rowIndex = count;
+                }
+                count++;
+            });
+        } else {
+            rowIndex = _.findIndex(this.state.data, {id: recordID});
+            record = this.state.data[rowIndex];
+        }
+
         if (rowIndex < 0) {
             return $.when();
         }
         var editMode = (mode === 'edit');
-        var record = this.state.data[rowIndex];
 
         this.currentRow = editMode ? rowIndex : null;
         var $row = this.$('.o_data_row:nth(' + rowIndex + ')');

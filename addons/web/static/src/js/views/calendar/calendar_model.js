@@ -302,44 +302,38 @@ return AbstractModel.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Converts this.data.filters into a domain
+     *
+     * @private
+     * @returns {Array}
+     */
     _getFilterDomain: function () {
-        var domain = [];
-        _.each(this.data.filters, function (filter) {
-            if (filter.all) return;
-            var nb = {};
-            var not = {};
-            var contains = {};
-            _.each(filter.filters, function (f) {
-                if (!contains[filter.fieldName]) {
-                    contains[filter.fieldName] = [];
-                    not[filter.fieldName] = [];
-                    nb[filter.fieldName] = 0;
-                }
-                if (f.value === 'all' && f.active) {
-                    contains[filter.fieldName].all = true;
-                } else {
-                    nb[filter.fieldName]++;
-                }
+        // List authorized values for every field
+        // fields with an active 'all' filter are skipped
+        var authorizedValues = {};
 
-                if (f.active && contains[filter.fieldName].indexOf(f.value) === -1) {
-                    contains[filter.fieldName].push(f.value);
-                }
-                if (!f.active && not[filter.fieldName].indexOf(f.value) === -1) {
-                    not[filter.fieldName].push(f.value);
+        _.each(this.data.filters, function (filter) {
+            // Skip 'all' filters because they do not affect the domain
+            if (filter.all) return;
+
+            // Loop over subfilters to complete authorizedValues
+            _.each(filter.filters, function (f) {
+                if (!authorizedValues[filter.fieldName])
+                    authorizedValues[filter.fieldName] = [];
+
+                if (f.active) {
+                    authorizedValues[filter.fieldName].push(f.value);
                 }
             });
-
-            for (var field in contains) {
-                if (contains[field].all || contains[field].length === nb[field]) {
-                    continue;
-                }
-                if (contains[field].length) {
-                    domain.push([field, 'in', contains[field]]);
-                } else if (not[field].length && not[field].length !== nb[field]) {
-                    domain.push([field, 'not in', not[field]]);
-                }
-            }
         });
+
+        // Compute the domain
+        var domain = [];
+        for (var field in authorizedValues) {
+            domain.push([field, 'in', authorizedValues[field]]);
+        }
+
         return domain;
     },
     /**
