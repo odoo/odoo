@@ -73,11 +73,6 @@ class ProductTemplate(models.Model):
     def _set_cost_method(self):
         return self.write({'property_cost_method': self.cost_method})
 
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
-
     @api.multi
     def _get_product_accounts(self):
         """ Add the stock accounts related to product to the result of super()
@@ -113,11 +108,6 @@ class ProductProduct(models.Model):
         help="Calculated average cost")
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
-
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
@@ -168,7 +158,6 @@ class ProductProduct(models.Model):
 
     def _get_latest_cumulated_value(self, not_move=False):
         self.ensure_one()
-        # TODO: only filter on IN and OUT stock.move
         domain = [
             ('product_id', '=', self.id),
             ('state', '=', 'done'),
@@ -234,32 +223,77 @@ class ProductProduct(models.Model):
                     value += move.remaining_qty * move.price_unit
                 product.stock_value = value
 
+    def update_remaining_qty(self, price):
+        self.ensure_one()
+        # Reset remaining_qty
+        candidates = self._get_candidates_move()
+        candidates.write({'remaining_qty': 0.0})
+        # Search candidates
+        candidates = self.env['stock.move'].search([
+            ('product_id', '=', self.id),
+            ('location_dest_id.usage', 'in', ('transit', 'internal')),
+            ('location_id.usage', 'not in', ('transit', 'internal')),
+            ('state', '=', 'done'), 
+            ('company_id', '=', self.company_id.id)], order='date desc, id desc')
+        qty_todo = self.with_context(internal=True).qty_available
+        for candidate in candidates:
+            if qty_todo > candidate.product_qty:
+                candidate.remaining_qty = candidate.product_qty
+                qty_todo -= candidate.product_qty
+                candidate.price_unit = price
+                candidate.value = price * candidate.product_qty
+            else:
+                candidate.remaining_qty = qty_todo
+                candidate.value = candidate.value * (candidate.product_qty - qty_todo) / candidate.product_qty + price * qty_todo
+                qty_todo = 0
+                break
+
 
 class ProductCategory(models.Model):
     _inherit = 'product.category'
+    
+    def write(self, vals):
+        if 'property_cost_method' in vals:
+            for cat in self:
+                if cat.property_cost_method != 'fifo' and vals['property_cost_method'] == 'fifo':
+                    products = self.env['product.product'].search([('categ_id', '=', cat.id)])
+                    for product in products:
+                        if product.with_context(internal=True).qty_available < 0: 
+                            raise UserError(_('No changing with negative quantities'))
+                        if cat.property_cost_method == 'standard':
+                            product.update_remaining_qty(product.standard_price)
+                        elif cat.property_cost_method == 'average':
+                            product.update_remaining_qty(product.average_price)
+        return super(ProductCategory, self).write(vals)
+
+    @api.onchange('property_cost_method')
+    def onchange_cost_method(self):
+        #if self.property_cost_method != self.previous_cost_method:
+        if self.property_cost_method == 'fifo' and self._origin and self._origin.property_cost_method != 'fifo':
+            return {'warning': {
+                    'title': _('You can not undo average to FIFO!'),
+                    'message':
+                        _('When you change to FIFO, it might alter the valuation of the incoming shipments!')}}
+
 
     property_valuation = fields.Selection([
-        ('manual_periodic', 'Periodic (manual)'),
-        ('real_time', 'Perpetual (automated)')], string='Inventory Valuation',
+        ('manual_periodic', 'Manual'),
+        ('real_time', 'Automated')], string='Post Journal Entries',
         company_dependent=True, copy=True, required=True,
-        help="If perpetual valuation is enabled for a product, the system "
-             "will automatically create journal entries corresponding to "
-             "stock moves, with product price as specified by the 'Costing "
-             "Method'. The inventory variation account set on the product "
-             "category will represent the current inventory value, and the "
-             "stock input and stock output account will hold the counterpart "
-             "moves for incoming and outgoing products.")
+        help="Manual: The accounting entries to value "
+             "the inventory are not posted automatically. \n"
+             "Automated: An accounting entry is automatically created "
+             "to value the inventory when a product enters or leaves the company. ")
     property_cost_method = fields.Selection([
         ('standard', 'Standard Price'),
-        ('fifo', '(financial) FIFO)'),
-        ('average', 'AVCO')], string="Costing Method",
+        ('fifo', 'First In First Out (FIFO)'),
+        ('average', 'Average Cost (AVCO)')], string="Costing Method",
         company_dependent=True, copy=True, required=True,
-        help="Standard Price: The cost price is manually updated at the end "
-             "of a specific period (usually once a year).\nAverage Price: "
-             "The cost price is recomputed at each incoming shipment and "
-             "used for the product valuation.\nReal Price: The cost price "
-             "displayed is the price of the last outgoing product (will be "
-             "used in case of inventory loss for example).""")
+        help="Standard Price: The products are valued at their standard cost "
+             "defined on the product. \n Average Cost (AVCO): "
+             "The products are valued at weighted average cost. \n"
+             "First In First Out (FIFO): The products are valued "
+             "supposing those that enter the company first will also leave it first. ")
     property_stock_journal = fields.Many2one(
         'account.journal', 'Stock Journal', company_dependent=True,
         help="When doing real-time inventory valuation, this is the Accounting Journal in which entries will be automatically posted when stock moves are processed.")
