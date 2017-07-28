@@ -54,7 +54,7 @@ var CrashManager = core.Class.extend({
             new (handler)(this, error).display();
             return;
         }
-        if (error.data.name === "openerp.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
+        if (error.data.name === "odoo.http.SessionExpiredException" || error.data.name === "werkzeug.exceptions.Forbidden") {
             this.show_warning({type: "Session Expired", data: { message: _t("Your Odoo session expired. Please refresh the current web page.") }});
             return;
         }
@@ -175,7 +175,7 @@ var RedirectWarningHandler = Dialog.extend(ExceptionHandler, {
     }
 });
 
-core.crash_registry.add('openerp.exceptions.RedirectWarning', RedirectWarningHandler);
+core.crash_registry.add('odoo.exceptions.RedirectWarning', RedirectWarningHandler);
 
 return CrashManager;
 });
