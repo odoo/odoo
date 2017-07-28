@@ -8,6 +8,7 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
+from odoo.tools.float_utils import float_compare
 
 
 class StockMove(models.Model):
@@ -328,39 +329,16 @@ class AdjustmentLines(models.Model):
                               quantity=1.0,
                               account_id=credit_account_id)
             credit_line = dict(base_line,
-                               name=(self.name + ": " + str(qty_out) + _(' already out')),
-                               quantity=qty_out,
-                               account_id=debit_account_id)
-            diff = diff * qty_out / self.quantity
-            if diff > 0:
-                debit_line['debit'] = diff
-                credit_line['credit'] = diff
+                               name=(self.name + _(' already out')),
+                               quantity=1.0,
+                               account_id=already_out_account_id)
+            if extra_cost > 0:
+                debit_line['debit'] = extra_cost
+                credit_line['credit'] = extra_cost
             else:
                 # negative cost, reverse the entry
-                debit_line['credit'] = -diff
-                credit_line['debit'] = -diff
+                debit_line['credit'] = - extra_cost
+                credit_line['debit'] = - extra_cost
             AccountMoveLine.create(debit_line)
             AccountMoveLine.create(credit_line)
-
-            # TDE FIXME: oh dear
-            if self.env.user.company_id.anglo_saxon_accounting:
-                debit_line = dict(base_line,
-                                  name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                  quantity=qty_out,
-                                  account_id=credit_account_id)
-                credit_line = dict(base_line,
-                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                   quantity=qty_out,
-                                   account_id=already_out_account_id)
-
-                if diff > 0:
-                    debit_line['debit'] = diff
-                    credit_line['credit'] = diff
-                else:
-                    # negative cost, reverse the entry
-                    debit_line['credit'] = -diff
-                    credit_line['debit'] = -diff
-                AccountMoveLine.create(debit_line)
-                AccountMoveLine.create(credit_line)
-
         return True
