@@ -10,9 +10,9 @@
             <field name="body_html" type="html">
 <div>
     <p>
-        Dear <t t-esc="record.partner_name"/>
+        Dear <span t-field="record.partner_name"/>
     </p><p>
-        We are pleased to inform you that your proposal <t t-esc="record.name"/> has been accepted and confirmed for the event <t t-esc="record.event_id.name"/>.
+        We are pleased to inform you that your proposal <span t-field="record.name"/> has been accepted and confirmed for the event <span t-field="record.event_id.name"/>.
     </p><p>
         You will find more details here:
         <div style="margin-top: 16px;">
