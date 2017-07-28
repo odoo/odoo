@@ -278,13 +278,6 @@ odoo.define('website.website', function (require) {
     // enable magnify on zommable img
     $('.zoomable img[data-zoom]').zoomOdoo();
 
-    Dialog.include({
-        start: function () {
-            this.$modal.addClass("o_website_modal");
-            return this._super.apply(this, arguments);
-        },
-    });
-
     var data = {
         prompt: prompt,
         error: error,
