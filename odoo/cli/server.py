@@ -140,7 +140,8 @@ def main(args):
                 odoo.service.db._create_empty_database(db_name)
             except ProgrammingError as err:
                 if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
-                    _logger.warning("Could not determine if database exists: %s" % err)
+                    _logger.info("Could not determine if database %s exists, "
+                                 "skipping auto-creation: %s", db_name, err)
                 else:
                     raise err
             except odoo.service.db.DatabaseExists:
