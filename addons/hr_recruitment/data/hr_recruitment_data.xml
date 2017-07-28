@@ -271,8 +271,8 @@
                     </p><p style="font-size:16px;">
                         We confirm we successfully received your application to the job
 
-                        "<a t-attf-href="record.job_id.website_url" style="color:#9A6C8E;"><strong t-esc="record.job_id.name"/></a>"
-                        at <strong t-esc="record.company_id.name"/>.
+                        "<a t-attf-href="record.job_id.website_url" style="color:#9A6C8E;"><strong t-field="record.job_id.name"/></a>"
+                        at <strong t-field="record.company_id.name"/>.
                     </p>
                     <p style="font-size:16px;">
                         We will come back to you shortly.
@@ -315,32 +315,32 @@
                     <hr style="margin: 30px 0"/>
 
                     <t t-if="record.job_id.address_id.name">
-                        <p style="margin:0px 0px 0px 0px;"><strong t-esc="record.job_id.address_id.name"/></p>
+                        <p style="margin:0px 0px 0px 0px;"><strong t-field="record.job_id.address_id.name"/></p>
                     </t>
                     <t t-if="record.job_id.address_id.street">
-                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.street"/>
+                        <p style="margin:0px 0px 0px 0px;" t-field="record.job_id.address_id.street"/>
                         <t t-set="location" t-value="record.job_id.address_id.street"/>
                     </t>
                     <t t-if="record.job_id.address_id.street2">
-                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.street2"/>
+                        <p style="margin:0px 0px 0px 0px;" t-field="record.job_id.address_id.street2"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.street2)"/>
                     </t>
                     <p style="margin:0px 0px 0px 0px;">
                     <t t-if="record.job_id.address_id.city">
-                        <t t-esc="record.job_id.address_id.city"/>,
+                        <span t-field="record.job_id.address_id.city"/>,
                             <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.city)"/>
                     </t>
                     <t t-if="record.job_id.address_id.state_id.name">
-                        <t t-esc="record.job_id.address_id.state_id.name"/>,
+                        <span t-field="record.job_id.address_id.state_id.name"/>,
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.state_id.name)"/>                        
                     </t>
                     <t t-if="record.job_id.address_id.zip">
-                        <t t-esc="record.job_id.address_id.zip"/>
+                        <span t-field="record.job_id.address_id.zip"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.zip)"/>
                     </t>
                     </p>
                     <t t-if="record.job_id.address_id.country_id.name">
-                        <p style="margin:0px 0px 0px 0px;" t-esc="record.job_id.address_id.country_id.name"/>
+                        <p style="margin:0px 0px 0px 0px;" t-field="record.job_id.address_id.country_id.name"/>
                         <t t-set="location" t-value="'%s, %s' % (location, record.job_id.address_id.country_id.name)"/>
                     </t>
                 </td>
@@ -358,7 +358,7 @@
                 <tbody>
                     <tr>
                         <td style="padding-top:10px;font-size: 12px;">
-                            <div>Sent by <t t-esc="record.company_id.name"/></div>
+                            <div>Sent by <span t-field="record.company_id.name"/></div>
                             <div t-if="'website_url' in record.job_id and record.job_id.website_url">
                                 Discover <a href="/jobs" style="text-decoration:none;color:#717188;">all our jobs</a>.
                             </div>
