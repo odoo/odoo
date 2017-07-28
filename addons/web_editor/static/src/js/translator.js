@@ -207,7 +207,7 @@ var Translate = Widget.extend({
             var trans = self.getTranlationObject(this);
             trans.value = (trans.value ? trans.value : $node.html() ).replace(/[ \t\n\r]+/, ' ');
         });
-        this.$target.parent().prependEvent('click', this, this.__unbind_click);
+        this.$target.parent().prependEvent('click.translator', this, this.__unbind_click);
 
         // attributes
 
@@ -221,14 +221,14 @@ var Translate = Widget.extend({
             });
         });
 
-        this.$target_attr.prependEvent('mousedown click mouseup', this, this.__translate_attribute);
+        this.$target_attr.prependEvent('mousedown.translator click.translator mouseup.translator', this, this.__translate_attribute);
 
         console.info('Click on CTRL when you click in an translatable area to have the default behavior');
     },
     unarkTranslatableNode: function () {
         this.$target.removeClass('o_editable').removeAttr('contentEditable');
-        this.$target.parent().off('click', this.__unbind_click);
-        this.$target_attr.off('mousedown click mouseup', this.__translate_attribute);
+        this.$target.parent().off('.translator');
+        this.$target_attr.off('.translator');
     },
     save_and_reload: function () {
         return this.save().then(function () {
