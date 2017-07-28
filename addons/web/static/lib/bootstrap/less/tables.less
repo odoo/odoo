@@ -10,10 +10,10 @@ caption {
   padding-top: @table-cell-padding;
   padding-bottom: @table-cell-padding;
   color: @text-muted;
-  text-align: left;
+  .text-align(left);
 }
 th {
-  text-align: left;
+  .text-align(left);
 }
 
 
@@ -207,11 +207,11 @@ table {
         > tr {
           > th:first-child,
           > td:first-child {
-            border-left: 0;
+            .border-left(0);
           }
           > th:last-child,
           > td:last-child {
-            border-right: 0;
+            .border-right(0);
           }
         }
       }
