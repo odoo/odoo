@@ -34,7 +34,7 @@
     </table>
 </div>
 <div style="padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777">
-    <p>Dear <t t-esc="record.name"/>,</p>
+    <p>Dear <span t-field="record.name"/>,</p>
     <p>A password reset was requested for the Odoo account linked to this email.</p>
     <p>You may change your password by following this link which will remain valid during 24 hours:</p>
     <div style="text-align: center; margin-top: 16px;">
@@ -46,7 +46,7 @@
 <div style="padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777">
     <t t-raw="user.signature"/>
     <p style="font-size: 11px; margin-top: 10px;">
-        <strong>Sent by <t t-esc="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
+        <strong>Sent by <span t-field="user.company_id.name"/> using <a href="www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a></strong>
     </p>
 </div></field>
             <field name="user_signature" eval="False"/>
