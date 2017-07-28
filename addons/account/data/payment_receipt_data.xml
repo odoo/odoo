@@ -13,8 +13,8 @@
             <field name="report_name">${(object.name or '').replace('/','-')}</field>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="body_html" type="html">
-<p>Dear <t t-esc="record.partner_id.name"/>,</p>
-<p>Thank you for your payment.<br />Here is your payment receipt <strong t-esc="(record.name or '').replace('/','-')"/> amounting to <strong t-esc="'%s %s' % (record.amount, record.currency_id.name)"/> from <t t-esc="record.company_id.name"/>.</p>
+<p>Dear <span t-field="record.partner_id.name"/>,</p>
+<p>Thank you for your payment.<br />Here is your payment receipt <strong t-esc="(record.name or '').replace('/','-')"/> amounting to <strong t-field="record.amount"/> from <span t-field="record.company_id.name"/>.</p>
 <p>If you have any questions, please do not hesitate to contact us.</p>
 <p>Best regards,
 <t t-if="user and user.signature" t-raw="user.signature"/>
