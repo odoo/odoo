@@ -5,7 +5,8 @@ var BasicController = require('web.BasicController');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var relational_fields = require('web.relational_fields')
+var relational_fields = require('web.relational_fields');
+var basic_fields = require('web.basic_fields')
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -471,32 +472,37 @@ var FormController = BasicController.extend({
             title: (record ? _t("Open: ") : _t("Create ")) + (event.target.string || data.field.string),
         }).open();
     },
-    open_defaults_dialog: function () {
+    openDefaultsDialog: function () {
         var self = this;
-        this.fields = this.renderer.allFieldWidgets[this.handle];
+        var fieldWidgets = this.renderer.allFieldWidgets[this.handle];
         var display = function (field, value) {
-            var FieldSelection = relational_fields.FieldSelection;
             var FieldMany2One = relational_fields.FieldMany2One;
+            var StateSelectionWidget = basic_fields.StateSelectionWidget;
             if (!value) { return value; }
             if (field instanceof FieldMany2One) {
                 return field.m2o_value;
             }
+            if (field instanceof StateSelectionWidget) {
+                return _(field.field.selection).find(function (option) {
+                    return option[0] === value;
+                })[1];
+            }
             return value;
         };
-        var fields = _.chain(this.fields)
+        var fields = _.chain(fieldWidgets)
             .map(function (field) {
                 var value = field.value.res_id || field.value;
-                // ignore fields which are empty, invisible, readonly, o2m
+                // ignore fields which are empty, invisible, readonly, password field, o2m
                 // or m2m
                 if (!value
                         || field.attrs.invisible
+                        || field.field.readonly
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many'
                         || field.field.type === 'binary'
                         || field.nodeOptions.isPassword) {
                     return false;
                 }
-
                 return {
                     name: field.name,
                     string: field.string,
@@ -507,7 +513,7 @@ var FormController = BasicController.extend({
             .compact()
             .sortBy(function (field) { return field.string; })
             .value();
-        var conditions = _.chain(this.fields)
+        var conditions = _.chain(fieldWidgets)
             .filter(function (field) { return field.field.change_default; })
             .map(function (field) {
                 var value = field.value.res_id || field.value;
@@ -524,22 +530,22 @@ var FormController = BasicController.extend({
             buttons: [
                 {text: _t("Close"), close: true},
                 {text: _t("Save default"), click: function () {
-                    var $defaults = d.$el.find('#formview_default_fields');
-                    var field_to_set = $defaults.val();
-                    if (!field_to_set) {
-                        $defaults.parent().addClass('o_form_invalid');
+                    var $defaults = d.$('#formview_default_fields');
+                    var fieldToSet = $defaults.val();
+                    if (!fieldToSet) {
+                        $defaults.parent().addClass('o_field_invalid o_input');
                         return;
                     }
                     var condition = d.$el.find('#formview_default_conditions').val(),
-                        all_users = d.$el.find('#formview_default_all').is(':checked');
+                        allUsers = d.$el.find('#formview_default_all').is(':checked');
                     this._rpc({
                         model: 'ir.values',
                         method: 'set_default',
                         args: [
                         self.modelName,
-                        field_to_set,
-                        fields[fields.map(function(x) {return x.name;}).indexOf(field_to_set)].value,
-                        all_users,
+                        fieldToSet,
+                        _.find(fields, function (field) { return field.name === fieldToSet; }).value,
+                        allUsers,
                         true,
                         condition || false
                         ]
