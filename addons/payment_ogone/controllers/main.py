@@ -33,6 +33,40 @@ class OgoneController(http.Controller):
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
+    @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
+    def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+
+        if not token:
+            res = {
+                'result': False,
+            }
+            return res
+
+        res = {
+            'result': True,
+            'id': token.id,
+            'short_name': token.short_name,
+            '3d_secure': False,
+            'verified': False,
+        }
+
+        if verify_validity != False:
+            baseurl = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            params = {
+                'accept_url': baseurl + '/payment/ogone/validate/accept',
+                'decline_url': baseurl + '/payment/ogone/validate/decline',
+                'exception_url': baseurl + '/payment/ogone/validate/exception',
+                'return_url': kwargs.get('return_url', baseurl)
+                }
+            tx = token.validate(**params)
+            res['verified'] = token.verified
+
+            if tx and tx.html_3ds:
+                res['3d_secure'] = tx.html_3ds
+
+        return res
+
     @http.route(['/payment/ogone/s2s/create'], type='http', auth='public', methods=["POST"], csrf=False)
     def ogone_s2s_create(self, **post):
         error = ''

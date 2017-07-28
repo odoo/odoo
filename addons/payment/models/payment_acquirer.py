@@ -786,7 +786,7 @@ class PaymentToken(models.Model):
             return False
 
         reference = "VALIDATION-%s-%s" % (self.id, datetime.datetime.now().strftime('%y%m%d_%H%M%S'))
-        tx = self.env['payment.transaction'].create({
+        tx = self.env['payment.transaction'].sudo().create({
             'amount': amount,
             'acquirer_id': self.acquirer_id.id,
             'type': 'validation',
@@ -816,6 +816,17 @@ class PaymentToken(models.Model):
             token.short_name = token.name.replace('XXXXXXXXXXXX', '***')
 
     @api.multi
-    def _get_linked_records(self):
-        """ Returns the list of records currently using the records in self as payment token. """
-        return {}
+    def get_linked_records(self):
+        """ This method returns a dict containing all the records linked to the payment.token (e.g Subscriptions),
+            the key is the id of the payment.token and the value is an array that must follow the scheme below.
+
+            {
+                token_id: [
+                    'description': The model description (e.g 'Sale Subscription'),
+                    'id': The id of the record,
+                    'name': The name of the record,
+                    'url': The url to access to this record.
+                ]
+            }
+        """
+        return {r.id:[] for r in self}

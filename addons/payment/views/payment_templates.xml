@@ -9,59 +9,71 @@
     <template id="payment_tokens_list" name="Payment Tokens list">
         <!--
         Variables description:
-            - 'payment' set this variable when you're doing a payment, this will allow to display the radio buttons for each tokens and show the submit button
-            - 'show_delete' when you want to display the delete button for each token
-            - 'show_radio' when you want to display the radio button for each token
-            - 'show_submit' when you want to display the submit button at the bottom of the form
             - 'submit_txt' the text displayed inside the submit button
             - 'submit_class' the css classes to style the submit button
+            - 'icon_class' font awesome class (e.g. 'fa-trash', 'fa-lock')
             - 'form_action' the URI to the page that will handle the form values
             - 'pms' the tokens
             - 'checked_pm_id' the payment token that should be checked (for radio buttons)
+            - 'mode' can take two values, either 'payment' or 'manage'. 'manage' displays the add a new card and delete buttons. 'payment'
+                display a form that is used to pay and send the information to the form action url.
+            - 'acquirers' the list of the acquirers
+            - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
         -->
-        <form id="payment_tokens_list" method="post" t-att-action="form_action if form_action else '#'">
+        <form method="post" t-att-action="form_action if form_action else '#'" class="o_payment_form">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <table class="table table-hover table-striped table-condensed">
-                <thead>
-                    <tr>
-                        <th>Payment Methods</th>
-                        <th t-if="show_verification_status">Status</th>
-                        <th t-if="show_delete"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-foreach="pms" t-as="pm">
-                        <tr>
-                            <td>
-                                <t t-if="show_radio or payment">
-                                        <div class="radio">
-                                        <label><input type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/><t t-esc="pm.short_name"/></label>
-                                        </div>
-                                </t>
-                                <t t-else="1">
-                                    <p><t t-esc="pm.short_name"/></p>
-                                </t>
-                            </td>
-                            <td t-if="show_verification_status"><t t-esc="'Verified' if pm.verified else 'Not Verified'"/></td>
-                            <td t-if="show_delete"><button type="submit" name="delete_pm_id" t-att-value="pm.id" class="btn btn-xs btn-primary pull-right"><i class="fa fa-trash"> Delete</i></button></td>
-                        </tr>
+            <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
+            <div class="panel panel-default">
+                <t t-foreach="acquirers" t-as="acq">
+                    <div class="panel-body">
+                        <label>
+                            <t t-if="mode == 'manage'">
+                                <input type="radio" t-att-data-acquirer-id="acq.id" name="pm_id" t-attf-value="new_{{acq.id}}" t-att-class="'hidden' if (len(acquirers)==1) else ''" t-att-checked="len(acquirers) == 1"/>
+                            </t>
+                            <t t-else="">
+                                <input type="radio" t-att-data-acquirer-id="acq.id" name="pm_id" t-attf-value="new_{{acq.id}}" t-att-class="'hidden' if (len(acquirers)==1 and len(pms)==0) else ''" t-att-checked="len(acquirers)==1 and len(pms)==0"/>
+                            </t>
+                            <t t-esc="acq.name"/>
+                        </label>
+                    </div>
+                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if (len(acquirers)&gt;1 and len(pms)==0 and acquirers[0]!=acq) else 'hidden' if len(pms)&gt;0 else ''}}">
+                        <div class="clearfix">
+                            <t t-raw="acq.form" t-att-data-acquirer-id="acquirer.id"/>
+                        </div>
+                    </div>
+                </t>
+                <t t-foreach="pms" t-as="pm">
+                    <div class="panel-body">
+                        <label>
+                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
+                            <t t-esc="pm.name"/>
+                            <t t-if="pm.verified">
+                                <i class="fa fa-check text-success" title="This payment method is verified by our system."></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system."></i>
+                            </t>
+                        </label>
+                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-xs pull-right">
+                            <i class="fa fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </t>
+            </div>
+            <div class="pull-right">
+                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
+                    <t t-if="submit_txt">
+                        <i t-if="icon_class" t-attf-class="fa {{icon_class}}"/>
+                        <t t-esc="submit_txt"/>
                     </t>
-                    <tr t-if="(payment or show_submit) and not delete">
-                        <th t-if="show_verification_status"></th>
-                        <th t-if="show_delete"></th>
-                        <th>
-                            <button type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-sm mb8 mt8 pull-right'">
-                                <t t-if="submit_txt">
-                                    <t t-raw="submit_txt"/>
-                                </t>
-                                <t t-else="1">
-                                    <span class="fa fa-lock"></span> Pay
-                                </t>
-                            </button>
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
+                    <t t-else="">
+                        <i class="fa fa-lock"> Pay</i>
+                    </t>
+                </button>
+                <button t-if="mode == 'manage'" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
+                    <i class="fa fa-plus-circle"> Add new card</i>
+                </button>
+            </div>
         </form>
     </template>
 </odoo>
