@@ -222,7 +222,7 @@ input[type="search"] {
 
   label {
     min-height: @line-height-computed; // Ensure the input doesn't jump when there is no text
-    padding-left: 20px;
+    .padding-left(20px);
     margin-bottom: 0;
     font-weight: normal;
     cursor: pointer;
@@ -233,7 +233,7 @@ input[type="search"] {
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
   position: absolute;
-  margin-left: -20px;
+  .margin-left(-20px);
   margin-top: 4px \9;
 }
 
@@ -247,7 +247,7 @@ input[type="search"] {
 .checkbox-inline {
   position: relative;
   display: inline-block;
-  padding-left: 20px;
+  .padding-left(20px);
   margin-bottom: 0;
   vertical-align: middle;
   font-weight: normal;
@@ -256,7 +256,7 @@ input[type="search"] {
 .radio-inline + .radio-inline,
 .checkbox-inline + .checkbox-inline {
   margin-top: 0;
-  margin-left: 10px; // space out consecutive inline controls
+  .margin-left(10px); // space out consecutive inline controls
 }
 
 // Apply same disabled cursor tweak as for inputs
@@ -306,8 +306,8 @@ input[type="checkbox"] {
 
   &.input-lg,
   &.input-sm {
-    padding-left: 0;
-    padding-right: 0;
+    .padding-left(0);
+    .padding-right(0);
   }
 }
 
@@ -387,14 +387,14 @@ input[type="checkbox"] {
 
   // Ensure icons don't overlap text
   .form-control {
-    padding-right: (@input-height-base * 1.25);
+    .padding-right((@input-height-base * 1.25));
   }
 }
 // Feedback icon (requires .glyphicon classes)
 .form-control-feedback {
   position: absolute;
   top: 0;
-  right: 0;
+  .right(0);
   z-index: 2; // Ensure icon is above input groups
   display: block;
   width: @input-height-base;
@@ -519,13 +519,13 @@ input[type="checkbox"] {
       vertical-align: middle;
 
       label {
-        padding-left: 0;
+        .padding-left(0);
       }
     }
     .radio input[type="radio"],
     .checkbox input[type="checkbox"] {
       position: relative;
-      margin-left: 0;
+      .margin-left(0);
     }
 
     // Re-override the feedback icon.
@@ -570,7 +570,7 @@ input[type="checkbox"] {
   // labels on narrow viewports stack the same as a default form example.
   @media (min-width: @screen-sm-min) {
     .control-label {
-      text-align: right;
+      .text-align(right);
       margin-bottom: 0;
       padding-top: (@padding-base-vertical + 1); // Default padding plus a border
     }
@@ -581,7 +581,7 @@ input[type="checkbox"] {
   // Reposition the icon because it's now within a grid column and columns have
   // `position: relative;` on them. Also accounts for the grid gutter padding.
   .has-feedback .form-control-feedback {
-    right: floor((@grid-gutter-width / 2));
+    .right(floor((@grid-gutter-width / 2)));
   }
 
   // Form group sizes
