@@ -26,21 +26,11 @@ function get_running_delay_key() {
 function get_first_visible_element($elements) {
     for (var i = 0 ; i < $elements.length ; i++) {
         var $i = $elements.eq(i);
-        if ($i.is(":visible") && _has_visibility($i)) {
+        if ($i.is(':visible:hasVisibility')) {
             return $i;
         }
     }
     return $();
-
-    function _has_visibility($elem) {
-        if ($elem.css("visibility") === "hidden") {
-            return false;
-        }
-        if ($elem.is("html")) {
-            return true;
-        }
-        return _has_visibility($elem.parent());
-    }
 }
 
 function do_before_unload(if_unload_callback, if_not_unload_callback) {
@@ -503,5 +493,4 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         },
     },
 });
-
 });

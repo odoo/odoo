@@ -726,20 +726,8 @@ data.Class = Widget.extend({
     activate_overlay_zones: function ($targets) {
         var self = this;
 
-        function is_visible($el) {
-            return     $el.css('display')    !== 'none'
-                    && $el.css('opacity')    !== '0'
-                    && $el.css('visibility') !== 'hidden';
-        }
-
         // filter out invisible elements
-        $targets = $targets.filter(function () { return is_visible($(this)); });
-
-        // filter out elements with invisible parents
-        $targets = $targets.filter(function () {
-            var parents = $(this).parents().filter(function () { return !is_visible($(this)); });
-            return parents.length === 0;
-        });
+        $targets = $targets.filter(':visible:hasVisibility:hasOpacity');
 
         $targets.each(function () {
             var $target = $(this);

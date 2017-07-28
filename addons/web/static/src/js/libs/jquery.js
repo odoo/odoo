@@ -41,6 +41,28 @@ $.extend($.expr[':'], {
     data: function (element, index, matches) {
         return $(element).data(matches[3]);
     },
+    hasVisibility: function (element, index, matches) {
+        var $element = $(element);
+        if ($(element).css('visibility') === 'hidden') {
+            return false;
+        }
+        var $parent = $element.parent();
+        if (!$parent.length || $element.is('html')) {
+            return true;
+        }
+        return $parent.is(':hasVisibility');
+    },
+    hasOpacity: function (element, index, matches) {
+        var $element = $(element);
+        if (parseFloat($(element).css('opacity')) <= 0.01) {
+            return false;
+        }
+        var $parent = $element.parent();
+        if (!$parent.length || $element.is('html')) {
+            return true;
+        }
+        return $parent.is(':hasOpacity');
+    },
 });
 
 // jQuery functions extensions
