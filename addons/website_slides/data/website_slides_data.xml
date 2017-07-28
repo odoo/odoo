@@ -22,7 +22,7 @@
             <field name="body_html" type="html">
 <p>Hello,</p>
 <p>
-    A new <t t-esc="record.slide_type"/> <strong t-esc="record.name"/> has been published on <t t-esc="record.channel_id.name"/> at <t t-esc="format_tz(record.write_date, tz=user.tz)"/>
+    A new <span t-field="record.slide_type"/> <strong t-field="record.name"/> has been published on <span t-field="record.channel_id.name"/> at <t t-esc="format_tz(record.write_date, tz=user.tz)"/>
 </p>
 <p style="text-align: center; margin-top: 10px;">
     <a t-att-href="record.website_url">
@@ -31,7 +31,7 @@
 </p>
 <p style="text-align: center; margin-top: 10px;">
     <a style="-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px" class="o_default_snippet_text" t-att-href="record.website_url">
-        View <strong t-esc="record.name"/>
+        View <strong t-field="record.name"/>
     </a>
 </p>
 </field>
