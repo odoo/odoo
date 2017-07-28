@@ -377,10 +377,10 @@
         <field name="body_html" type="html">
         <meta charset="utf-8"/>
 <p>Dear all,</p>
-<p>I’m very pleased to announce that <strong t-esc="record.name"/> will be
-joining us as a <t t-esc="record.job_id.name"/>
+<p>I’m very pleased to announce that <strong t-field="record.name"/> will be
+joining us as a <span t-field="record.job_id.name"/>
 <t t-if="record.department_id">
-    in <t t-esc="record.department_id.name"/>.
+    in <span t-field="record.department_id.name"/>.
 </t>
 .</p>
 <p>Please welcome him/her and help him/her finding his/her marks.</p></field>
