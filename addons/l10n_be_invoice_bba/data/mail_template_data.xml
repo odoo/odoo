@@ -3,27 +3,27 @@
     <data noupdate="1">
         <record id="account.email_template_edi_invoice" model="mail.template">
         <field name="body_html" type="html">
-<p>Dear <t t-esc="record.partner_id.name"/>
+<p>Dear <span t-field="record.partner_id.name"/>
 <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
 <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
 <t t-set="access_url" t-value="is_online and '/mail/view?model=account.invoice&amp;res_id=%d' % (record.id) or '/report/pdf/account.report_invoice/' + str(record.id)"/>
 
 <t t-if="record.partner_id.parent_id">
-    (<i t-esc="record.partner_id.parent_id.name"/>)
+    (<i t-field="record.partner_id.parent_id.name"/>)
 </t>
 ,</p>
 <p>Here is your 
 <t t-if="record.number">
-invoice <strong t-esc="record.number"/>
+invoice <strong t-field="record.number"/>
 </t>
 <t t-else="">
 pro-forma invoice
 </t>
 <t t-if="record.origin">
-(with reference: <t t-esc="record.origin"/> )
+(with reference: <span t-field="record.origin"/> )
 </t>
-amounting in <strong t-esc="'%s %s' % (record.amount_total, record.currency_id.name)"/>
-from <t t-esc="record.company_id.name"/>.
+amounting in <strong t-field="record.amount_total"/>
+from <span t-field="record.company_id.name"/>.
 </p>
 
 <t t-if="is_online">
@@ -34,7 +34,7 @@ from <t t-esc="record.company_id.name"/>.
 </t>
     <br/><br/>
 
-<p t-if="record.reference_type=='bba' and record.reference">Please use the following communication for your payment : <b t-esc="record.reference"/></p>
+<p t-if="record.reference_type=='bba' and record.reference">Please use the following communication for your payment : <b t-field="record.reference"/></p>
 
 <p>Please remit payment at your earliest convenience.</p>
 <p>Thank you,</p>
