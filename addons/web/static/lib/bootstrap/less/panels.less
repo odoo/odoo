@@ -8,7 +8,7 @@
   margin-bottom: @line-height-computed;
   background-color: @panel-bg;
   border: 1px solid transparent;
-  border-radius: @panel-border-radius;
+  .border-radius(@panel-border-radius);
   .box-shadow(0 1px 1px rgba(0,0,0,.05));
 }
 
@@ -113,8 +113,8 @@
     margin-bottom: 0;
 
     caption {
-      padding-left: @panel-body-padding;
-      padding-right: @panel-body-padding;
+      .padding-left(@panel-body-padding);
+      .padding-right(@panel-body-padding);
     }
   }
   // Add border top radius for first one
@@ -125,16 +125,16 @@
     > thead:first-child,
     > tbody:first-child {
       > tr:first-child {
-        border-top-left-radius: (@panel-border-radius - 1);
-        border-top-right-radius: (@panel-border-radius - 1);
+        .border-top-left-radius((@panel-border-radius - 1));
+        .border-top-right-radius((@panel-border-radius - 1));
 
         td:first-child,
         th:first-child {
-          border-top-left-radius: (@panel-border-radius - 1);
+          .border-top-left-radius((@panel-border-radius - 1));
         }
         td:last-child,
         th:last-child {
-          border-top-right-radius: (@panel-border-radius - 1);
+          .border-top-right-radius((@panel-border-radius - 1));
         }
       }
     }
@@ -147,16 +147,16 @@
     > tbody:last-child,
     > tfoot:last-child {
       > tr:last-child {
-        border-bottom-left-radius: (@panel-border-radius - 1);
-        border-bottom-right-radius: (@panel-border-radius - 1);
+        .border-bottom-left-radius((@panel-border-radius - 1));
+        .border-bottom-right-radius((@panel-border-radius - 1));
 
         td:first-child,
         th:first-child {
-          border-bottom-left-radius: (@panel-border-radius - 1);
+          .border-bottom-left-radius((@panel-border-radius - 1));
         }
         td:last-child,
         th:last-child {
-          border-bottom-right-radius: (@panel-border-radius - 1);
+          .border-bottom-right-radius((@panel-border-radius - 1));
         }
       }
     }
@@ -180,11 +180,11 @@
       > tr {
         > th:first-child,
         > td:first-child {
-          border-left: 0;
+          .border-left(0);
         }
         > th:last-child,
         > td:last-child {
-          border-right: 0;
+          .border-right(0);
         }
       }
     }
@@ -225,7 +225,7 @@
   // Tighten up margin so it's only between panels
   .panel {
     margin-bottom: 0;
-    border-radius: @panel-border-radius;
+    .border-radius(@panel-border-radius);
 
     + .panel {
       margin-top: 5px;
