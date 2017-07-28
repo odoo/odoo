@@ -87,8 +87,8 @@ mark,
 }
 
 // Alignment
-.text-left           { text-align: left; }
-.text-right          { text-align: right; }
+.text-left           { .text-align(left); }
+.text-right          { .text-align(right); }
 .text-center         { text-align: center; }
 .text-justify        { text-align: justify; }
 .text-nowrap         { white-space: nowrap; }
@@ -169,19 +169,19 @@ ol {
 
 // Unstyled keeps list items block level, just removes default browser padding and list-style
 .list-unstyled {
-  padding-left: 0;
+  .padding-left(0);
   list-style: none;
 }
 
 // Inline turns list items into inline-block
 .list-inline {
   .list-unstyled();
-  margin-left: -5px;
+  .margin-left(-5px);
 
   > li {
     display: inline-block;
-    padding-left: 5px;
-    padding-right: 5px;
+    .padding-left(5px);
+    .padding-right(5px);
   }
 }
 
@@ -198,7 +198,7 @@ dt {
   font-weight: bold;
 }
 dd {
-  margin-left: 0; // Undo browser default
+  .margin-left(0); // Undo browser default
 }
 
 // Horizontal description lists
@@ -213,14 +213,14 @@ dd {
 
   @media (min-width: @grid-float-breakpoint) {
     dt {
-      float: left;
+      .float(left);
       width: (@dl-horizontal-offset - 20);
-      clear: left;
-      text-align: right;
+      .clear(left);
+      .text-align(right);
       .text-overflow();
     }
     dd {
-      margin-left: @dl-horizontal-offset;
+      .margin-left(@dl-horizontal-offset);
     }
   }
 }
@@ -246,7 +246,7 @@ blockquote {
   padding: (@line-height-computed / 2) @line-height-computed;
   margin: 0 0 @line-height-computed;
   font-size: @blockquote-font-size;
-  border-left: 5px solid @blockquote-border-color;
+  .border-left(5px solid @blockquote-border-color);
 
   p,
   ul,
@@ -277,11 +277,11 @@ blockquote {
 // Heads up: `blockquote.pull-right` has been deprecated as of v3.1.0.
 .blockquote-reverse,
 blockquote.pull-right {
-  padding-right: 15px;
-  padding-left: 0;
-  border-right: 5px solid @blockquote-border-color;
-  border-left: 0;
-  text-align: right;
+  .padding-right(15px);
+  .padding-left(0);
+  .border-right(5px solid @blockquote-border-color);
+  .border-left(0);
+  .text-align(right);
 
   // Account for citation
   footer,
