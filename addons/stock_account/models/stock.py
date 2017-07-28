@@ -87,7 +87,8 @@ class StockMove(models.Model):
             move = self.search([('product_id', '=', self.product_id.id),
                          ('state', '=', 'done'), 
                          ('location_id.usage', '=', 'internal'), 
-                         ('location_dest_id.usage', '!=', 'internal')], order='date desc', limit=1)
+                         ('location_dest_id.usage', '!=', 'internal'),
+                         ('company_id', '=', self.company_id.id)], order='date desc', limit=1)
             if move:
                 return move.price_unit or self.product_id.standard_price
         return self.product_id.standard_price
@@ -95,19 +96,45 @@ class StockMove(models.Model):
     def _update_future_cumulated_value(self, value):
         self.ensure_one()
         moves = self.search([('state', '=', 'done'), 
-                     ('date', '>',  self.date), 
-                     ('product_id', '=', self.product_id.id)])
+                     ('date', '>=',  self.date),
+                     ('id', '>', self.id), 
+                     ('product_id', '=', self.product_id.id), 
+                     ('company_id', '=', self.company_id.id),
+                     '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
+                    ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
+                    '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
+                    ('location_dest_id.usage', 'in', ('internal', 'transit'))])
         for move in moves:
-            move.value += value
+            move.cumulated_value += value
 
-#     def change_move_value_in_the_past(self, value):
-#         self.ensure_one()
-#         if self.product_id.cost_method == 'fifo':
-#             moves = self.search([('state', '=', 'done'),
-#                          ('date', '>',  self.date), 
-#                          ('product_id', '=', self.product_id.id)])
-#             if self.location_id.usage not in ('internal', 'transit'):
-#                 if move.last_done_move_id and move.last_done_remaining_qty:
+    def _get_in_domain(self):
+        return [('product_id', '=', self.product_id.id), 
+                ('state', '=', 'done'), 
+                ('company_id', '=', self.company_id.id), 
+                ('location_id.usage', 'not in', ('internal', 'transit')), 
+                ('location_dest_id.usage', 'in', ('internal', 'transit'))]
+
+    def _get_out_domain(self):
+        return [('product_id', '=', self.product_id.id), 
+                ('state', '=', 'done'), 
+                ('company_id', '=', self.company_id.id), 
+                ('location_id.usage', 'in', ('internal', 'transit')), 
+                ('location_dest_id.usage', 'not in', ('internal', 'transit'))]
+
+    def _get_all_domain(self):
+        return [('product_id', '=', self.product_id.id), 
+                 ('state', '=', 'done'), 
+                 ('company_id', '=', self.company_id.id),
+                 '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
+                    ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
+                    '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
+                    ('location_dest_id.usage', 'in', ('internal', 'transit'))]
+        
+    def _is_in_move(self):
+        return self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage in ('internal', 'transit')
+
+    def _is_out_move(self):
+        return self.location_id.usage in ('internal', 'transit') and self.location_dest_id.usage not in ('internal', 'transit')
 
     @api.multi
     def replay(self):
@@ -150,20 +177,29 @@ class StockMove(models.Model):
 
     @api.multi
     def action_done(self):
+        """
+            For incoming moves, it will put the value corresponding with that move on the stock move, 
+            except for standard cost price, where it will put the standard price.  
+            For FIFO, it will also check if there was negative stock and compensate the corresponding out moves.   
+            For outgoing moves, average price, will apply the average price formula, FIFO will search the 
+            corresponding incoming moves where it can reduce the remaining_qty while standard takes the cost from the product
+        """
         qty_available = {}
         for move in self:
-            #Should write move.price_unit here maybe, certainly on incoming
+            #Should write move.price_unit here maybe, certainly on incoming moves
             if move.product_id.cost_method == 'average':
-                qty_available[move.product_id.id] = move.product_id.qty_available
+                qty_available[move.product_id.id] = move.product_id.with_context(internal=True).qty_available
         res = super(StockMove, self).action_done()
         for move in res:
-            if move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage in ('internal', 'transit'):
+            if move._is_in_move():
                 if move.product_id.cost_method in ['fifo', 'average']:
                     if not move.price_unit:
                         move.price_unit = move._get_price_unit()
-                    move.value = move.price_unit * move.product_qty
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
-                    move.remaining_qty = move.product_qty
+                    move_value = move.price_unit * move.product_qty
+                    move.write({'value': move_value, 
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) + move_value, 
+                                'remaining_qty': move.product_qty, 
+                                'last_done_qty': move.product_id.with_context(internal=True).qty_available,})
                     if move.product_id.cost_method == 'fifo':
                         # If you find an out with qty_remaining (because of negative stock), you can change it over there
                         candidates_out = move.product_id._get_candidates_out_move()
@@ -173,18 +209,22 @@ class StockMove(models.Model):
                                 qty_taken_on_candidate = candidate.remaining_qty
                             else:
                                 qty_taken_on_candidate = qty_to_take
-                            candidate.remaining_qty -= qty_taken_on_candidate
                             move.remaining_qty -= qty_taken_on_candidate
                             qty_to_take -= qty_taken_on_candidate
-                            candidate.value += move.price_unit * qty_taken_on_candidate
-                            candidate.cumulated_value += move.price_unit * qty_taken_on_candidate
+                            candidate_value = candidate.value - move.price_unit * qty_taken_on_candidate
+                            candidate.write({'value': candidate_value, 
+                                             'cumulated_value': candidate.cumulated_value - move.price_unit * qty_taken_on_candidate, 
+                                             'price_unit': - (candidate_value / candidate.product_qty),
+                                             'last_done_move_id': move.id,
+                                             'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate})
+                            # Might be replaced be reusable code
                             candidate._update_future_cumulated_value(move.price_unit * qty_taken_on_candidate)
-                            candidate.price_unit = candidate.value / candidate.product_qty
-                    move.last_done_qty = move.product_id.qty_available
+                            if qty_to_take <= 0:
+                                break
                 else:
-                    move.price_unit = move.product_id.standard_price
-                    move.value = move.price_unit * move.product_qty
-            elif move.location_id.usage in ('internal', 'transit') and move.location_dest_id.usage not in ('internal', 'transit'):
+                    move.write({'price_unit': move.product_id.standard_price,
+                                'value': move.product_id.standard_price * move.product_qty})
+            elif move._is_out_move():
                 if move.product_id.cost_method == 'fifo':
                     qty_to_take = move.product_qty
                     tmp_value = 0
@@ -201,23 +241,26 @@ class StockMove(models.Model):
                         if qty_to_take == 0:
                             break
                         last_candidate = candidate
-                    if last_candidate:
-                        move.last_done_move_id = last_candidate.id
-                        move.last_done_remaining_qty = last_candidate.remaining_qty
-                    if qty_to_take > 0:
-                        move.remaining_qty = qty_to_take # In case there are no candidates to match, put standard price on it
-                    move.value = -tmp_value
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
-                    move.last_done_qty = move.product_id.qty_available
+                    move.write({'value': -tmp_value,
+                                'price_unit': tmp_value / move.product_qty,
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) - tmp_value,
+                                'last_done_qty': move.product_id.with_context(internal=True).qty_available,
+                                'remaining_qty': qty_to_take if qty_to_take > 0 else 0.0, #TODO: price is 0 on it, because it is the easiest, but it might use the standard price e.g.
+                                'last_done_move_id': last_candidate and last_candidate.id or False,
+                                'last_done_remaining_qty': last_candidate and last_candidate.remaining_qty or 0.0,
+                                })
                 elif move.product_id.cost_method == 'average':
                     curr_rounding = move.company_id.currency_id.rounding
                     avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(not_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
-                    move.value = float_round(-avg_price_unit * move.product_qty, precision_rounding=curr_rounding)
-                    move.remaining_qty = 0
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
-                    move.last_done_qty = move.product_id.qty_available
-                elif move.product_id.cost_method == 'standard':
-                    move.value = - move.product_id.standard_price * move.product_qty
+                    move_value = float_round(-avg_price_unit * move.product_qty, precision_rounding=curr_rounding)
+                    move.write({'value': move_value,
+                                'price_unit': move_value / move.product_qty,
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) + move_value,
+                                'last_done_qty': move.product_id.with_context(internal=True).qty_available,
+                                })
+                else:
+                    move.write({'price_unit': move.product_id.standard_price,
+                                'value': - move.product_id.standard_price * move.product_qty})
                 
         for move in res.filtered(lambda m: m.product_id.valuation == 'real_time'):
             move._account_entry_move()

@@ -172,6 +172,11 @@ class ProductProduct(models.Model):
         domain = [
             ('product_id', '=', self.id),
             ('state', '=', 'done'),
+            ('company_id', '=', self.company_id.id), 
+            '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
+            ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
+            '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
+            ('location_dest_id.usage', 'in', ('internal', 'transit'))
             ]
         if not_move:
             domain += [('id', '!=', not_move.id)]
@@ -188,7 +193,8 @@ class ProductProduct(models.Model):
             ('location_dest_id.usage', 'not in', ('transit', 'internal')),
             ('location_id.usage', 'in', ('transit', 'internal')),
             ('remaining_qty', '>', 0),
-            ('state', '=', 'done')
+            ('state', '=', 'done'),
+            ('company_id', '=', self.company_id.id)
         ], order='date, id') #TODO: case
         return candidates
 
@@ -200,7 +206,8 @@ class ProductProduct(models.Model):
             ('location_dest_id.usage', 'in', ('transit', 'internal')),
             ('location_id.usage', 'not in', ('transit', 'internal')),
             ('remaining_qty', '>', 0),
-            ('state', '=', 'done')
+            ('state', '=', 'done'), 
+            ('company_id', '=', self.company_id.id)
         ], order='date, id') #TODO: case where 
         return candidates
 

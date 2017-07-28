@@ -17,6 +17,65 @@ class TestStockValuation(TransactionCase):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
+    def test_fifo_negative_1(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        # Beginning Inventory: 68 units @ 15.00 per unit
+        move1 = self.env['stock.move'].create({
+            'name': '50 out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 50.0,
+            'price_unit': 0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.stock_location.id,
+                                      'location_dest_id': self.customer_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 50.0})]
+        })
+        move1.action_confirm()
+        move1.action_done()
+        
+        move2 = self.env['stock.move'].create({
+            'name': '40 in @15',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 40.0,
+            'price_unit': 15.0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.supplier_location.id,
+                                      'location_dest_id': self.stock_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 40.0})]
+        })
+        move2.action_confirm()
+        move2.action_done()
+        move3 = self.env['stock.move'].create({
+            'name': '20 in @25',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20.0,
+            'price_unit': 25.0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.supplier_location.id,
+                                      'location_dest_id': self.stock_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 20.0})]
+        })
+        move3.action_confirm()
+        move3.action_done()
+        
+        self.assertEqual(self.product1.stock_value, 250.0, 'Stock value should be 250')
+        self.assertEqual(move1.value, -850.0, 'Stock value should be -850')
+        self.assertEqual(move2.value, 600.0, 'Stock value should be 600')
+        self.assertEqual(move3.value, 500.0, 'Stock value should be 500')
+
+
     def test_fifo_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/fifo-method
         self.product1.product_tmpl_id.cost_method = 'fifo'
@@ -75,8 +134,6 @@ class TestStockValuation(TransactionCase):
         move3.action_assign()
         move3.move_line_ids.qty_done = 94.0
         move3.action_done()
-
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
         # so its value should be -((68*15) + (26*15.5)) = -1423
@@ -246,7 +303,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 15.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 10 units from move1 and 5 from move2
         # so its value should be -((10*100) + (5*80)) = -1423
@@ -362,7 +418,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 190.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         self.assertEqual(move3.value, -2916.5)
         self.assertEqual(move3.cumulated_value, 153.5)

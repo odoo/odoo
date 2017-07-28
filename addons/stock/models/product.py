@@ -76,7 +76,7 @@ class Product(models.Model):
     reordering_min_qty = fields.Float(compute='_compute_nbr_reordering_rules')
     reordering_max_qty = fields.Float(compute='_compute_nbr_reordering_rules')
 
-    @api.depends('stock_quant_ids', 'stock_move_ids')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_quantities(self):
         res = self._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         for product in self:
@@ -154,8 +154,13 @@ class Product(models.Model):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, force_company, compute_child
         '''
-        # TDE FIXME: clean that brol, context seems overused
         Warehouse = self.env['stock.warehouse']
+
+        if self.env.context.get('internal', False):
+            company_id = self.env.user.company_id.id
+            return ([('location_id.usage', 'in', ('internal', 'transit')), ('company_id', '=', company_id)], 
+                    [('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit')), ('company_id', '=', company_id)],
+                    [('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit')), ('company_id', '=', company_id)])
 
         location_ids = []
         if self.env.context.get('location', False):
