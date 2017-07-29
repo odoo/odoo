@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2017-07-25 08:54+0000\n"
+"PO-Revision-Date: 2017-07-28 08:12+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -118,7 +118,7 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n\nЕрөнхий тойм:\n---------\n\n* Япон дахь компаниудын Дансны Жагсаалт ба Татварын үлгэр.\n* Үүнд компаний бүх шаардлагатай данс ороогүй байж магадгүй. Та энэ үлгэр дээр суурилан дансыг нэмэх/устгах/өөрчлөх шаардлагатай.\n\nТэмдэглэл:\n-----\n\n* ПОС уялдуулалтаас үүсч болох тусгай шаардлагыг хангахын тулд '内税' ба '外税' гэсэн төсвийн байдлуудыг нэмсэн. [1]  Энгийн тохиолдолд та эдгээрийг хэрэглэх шаардлагагүй.\n\n[1] Дэлгэрэнгүй: https://github.com/odoo/odoo/pull/6470 \n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_deferred_revenue
@@ -175,7 +175,7 @@ msgid ""
 "generated if no algorithm is specified on the Partner record. \n"
 "\n"
 "    "
-msgstr ""
+msgstr "\n    \nИрсэн гарсан нэхэмжлэлийн Белги нутагшуулалт (prereq to account_coda):\n============================================================================\n    - 'лавлагаа' талбарын шошгийг 'Харилцаа' болгосон\n    - Белги бүтэцтэй харилцааг нэмсэн\n\nБүтэцжүүлсэн харилцааг дараах алгоритмын дагуу гарч буй нэхэмжлэл дээр автоматаар үүсгэх боломжтой:\n---------------------------------------------------------------------------------------------------------------------\n    1) Санамсаргүй : +++RRR/RRRR/RRRDD+++\n        **R..R =** Random Digits, **DD =** Check Digits\n    2) Огноо : +++DOY/YEAR/SSSDD+++\n        **DOY =** Day of the Year, **SSS =** Sequence Number, **DD =** Check Digits\n    3) Захиалагчийн лавлагаа : +++RRR/RRRR/SSSDDD+++\n        **R..R =** Customer Reference without non-numeric characters, **SSS =** Sequence Number, **DD =** Check Digits  \n        \nБүтэцжүүлсэн Харилцаа ба холбоотой Алгоритмын илүүд үзсэн төрлийг Харилцагчийн \nрекорд дээр тодорхойлох боломжтой. Хэрэв харилцагчийн рекорд дээр алгоритм тодорхойлоогүй бол 'санамсаргүй' бүтэцжүүлсэн харилцааг үүсгэнэ. \n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_tax_python
@@ -377,7 +377,7 @@ msgid ""
 "        The calendars we use are on weekly basis.  It is possible however to have a start date and end date for e.g. the Tuesday delivery.\n"
 "        It is also possible to put exceptions for days when there is none.\n"
 "    "
-msgstr ""
+msgstr "\n        stock_calendar модуль нь худалдан авалт ба хүргэлтийн цагалбарын дагуу хамгийн бага агуулахын дүрмийг (=захиалгын цэгүүд / дахин захиалгын дүрмүүд) өөрөөр хариуцдаг.\n\n        Энгийн үед төлөвлөгч нь бүх захиалгын цэгүүдээр явж одоогийн агуулах ба ирээдүйн бүх агуулахын хөдөлгөөнийг харгалзсан тоогоор худалдан авалт үүсгэдэг.  Шинэ бараатай ажилладаг компаниудын хувьд энэ бол асуудал, учир нь хэрэв та одоогоос 2 долоо хоногийн дараа хэрэг болох барааг захиалахад бараанууд нь маргааш ирвэл хоёр долоо хоногийн дараа гэхэд хуучирчихсан байна.\n\n        Үүнийг шийдэхийн тулд бид захиалгын цэг дээр хүргэлтийн цагалбар нэмсэн.  Ирээдүйн агуулахын хөдөлгөөнүүд (хэрэгцээг илэрхийлнэ) цагалбарын дагуу хоёр дахь хүргэлт хүртэл хязгаарлагдах болно.\n        Тэгхээр хэрэв миний захиалга долоо хоног бүрийн Мягмар ба Баасан гаригт ирдэг бол намайг Даваа гаригт захиалга өгөх үед Мягмар гаригт Баасан хүртэлх бүгдийг нийлүүлж хүргэнэ.\n\n        Гэхдээ ирээдүйн хэрэгцээ өөрчлөгдөх магадлалтай болохоор зөвхөн хүргэлтийн өдрийн өмнө л худалдан авалтын захиалгыг үүсгэх шаардлага гарах тул энэ нь хангалттай биш юм.  (эсвэл та хэт ихийг захиалчихаж болох)  Үүнд зориулж бид худалдан авалтын цагалбар оруулсан ба түүний тодорхойлсон цаг дотор төлөвлөгч ажиллах үед л зөвхөн захиалгын цэгийг эхлүүлнэ.  (энэ хугацаанд амжиж эхэлсэн эсэхийг сүүлийн гүйцэтгэлийн огноо шалгана)\n\n        Гэсэн хэдий ч, заримдаа бидэнд давхар захиалга орж ирдэг: Баасан гаригт бид хоёр дахин захиалах шаардлагатай боллоо гэж бодоё: Даваа ба Мягмарт нэг, нэг худалдан авах захиалга.  Тэгвэл бид нэг зэрэг хоёр захиалга өгөх хэрэгтэй болно.\n        Үүнийг зохицуулахын тулд бид цагалбарын мөр дээр худалдан авалтын бүлэг тавина, тэгээд хийх хэрэгтэй мөр дээр бид холбогдох хүргэлтийн мөрийг шалгана.  Худалдан авалтын бүлгийг өөрсдөө худалдан авалт руу задрахаар тохируулж болно, ингэснээр Даваад нэг, Мягмарт нэг захиалга хийх боломжтой болдог.\n\n        Энгийн захиалгын цэгийн хувьд, худалдан авалтын захиалга дээр тавигдсан огноо нь бараа/компаний системийн саатал дээр суурилдаг.\n        Энэ нь нэгэнт цагалбар дээр хийгдсэн зүйлсд хамаарахгүй, тиймээс худалдан авалт/хүргэлтийн огноог мөн цагалбарын дагуу тохируулна.\n\n        Бидний хэрэглэдэг цагалбар долоо хоногоор байдаг.  Гэхдээ ж.нь. Мягмарын хүргэлтэд эхлэл ба төгсгөл өдрийг тохируулах боломжтой.\n        Мөн байхгүй бол өдрийг үл тооцож болно.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode
@@ -1156,7 +1156,7 @@ msgid ""
 "\n"
 "Thai accounting chart and localization.\n"
 "    "
-msgstr ""
+msgstr "\nТайланд дансны жагсаалт.\n===============================\n\nТайланд дансны жагсаалт ба нутагшуулалт.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cr
@@ -1174,7 +1174,7 @@ msgid ""
 "Everything is in English with Spanish translation. Further translations are welcome,\n"
 "please go to http://translations.launchpad.net/openerp-costa-rica.\n"
 "    "
-msgstr ""
+msgstr "\nКоста Рика дансны жагсаалт.\n=================================\n\nДараах орно:\n---------\n    * account.account.template\n    * account.tax.template\n    * account.chart.template\n\nБүгд испани орчуулгатай англи хэл дээр байгаа. Орчуулга нэмэх боломжтой, ийш орно уу http://translations.launchpad.net/openerp-costa-rica.\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl
@@ -1247,7 +1247,7 @@ msgid ""
 "=====================================================\n"
 "\n"
 "        "
-msgstr ""
+msgstr "\nБогино, мөшгих боломжтой URL - ууд үүсгэх\n=====================================================\n\n        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_sale
@@ -2785,7 +2785,7 @@ msgid ""
 " * Statistics of Presentation\n"
 " * Channel Subscription\n"
 " * Supported document types : PDF, images, YouTube videos and Google Drive documents)\n"
-msgstr ""
+msgstr "\nВидео, Танилцуулга, Баримт түгээж нийтлэх\n======================================================\n\n * Вэбсайт аппликэшн\n * Сувгийн удирдлага\n * Шүүлтүүр ба пайз\n * Танилцуулгын статистик\n * Сувгийн захиалга\n * Дэмжигдсэн баримтын төрлүүд : PDF, зураг, YouTube видео мөн Google Drive баримтууд)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sign
@@ -3833,7 +3833,7 @@ msgid ""
 "This module display project customer satisfaction on your website.\n"
 "==================================================================================================\n"
 "    "
-msgstr ""
+msgstr "\nЭнэ модуль таны вэбсайт дээр төслийн захиалагчийн сэтгэл ханамжийг харуулна.\n==================================================================================================\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_setup
@@ -8003,7 +8003,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sign
 msgid "Digital Signatures"
-msgstr ""
+msgstr "Дижитал гарын үсгүүд"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang_direction
@@ -9200,7 +9200,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_category_complete_name
 msgid "Full Name"
-msgstr ""
+msgstr "Бүтэн Нэр"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu_complete_name
@@ -15333,7 +15333,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_summary
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_act_client_params
@@ -16209,7 +16209,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner_title_name
 #: model:ir.model.fields,field_description:base.field_res_users_title
 msgid "Title"
-msgstr ""
+msgstr "Гарчиг"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence_date_range_date_to
@@ -16487,7 +16487,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "Type"
-msgstr ""
+msgstr "Төрөл"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_state
