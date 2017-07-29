@@ -341,7 +341,14 @@ class Slide(models.Model):
         #link_tracker is not in dependencies, so use it to shorten url only if installed.
         if self.env.registry.get('link.tracker'):
             LinkTracker = self.env['link.tracker']
-            res.update({(slide.id, LinkTracker.sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url) for slide in self})
+            res.update({
+                (slide.id,
+                 LinkTracker.sudo().create({
+                     'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
+                     'title': slide.name,
+                 }).short_url)
+                for slide in self
+            })
         else:
             res.update({(slide.id, '%s/slides/slide/%s' % (base_url, slug(slide))) for slide in self})
         return res
