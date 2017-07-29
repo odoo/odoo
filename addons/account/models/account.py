@@ -793,9 +793,11 @@ class AccountTax(models.Model):
                 base -= tax_amount
             else:
                 total_included += tax_amount
-
+                
+            #TRESCLOUD: Ponemos un metodo para que sea heredable para casos especiales de bases imponibles
             # Keep base amount used for the current tax
-            tax_base = base
+            #tax_base = base
+            tax_base = self._compute_base_amount(tax, base, total_excluded, price_unit, currency=currency, quantity=quantity, product=product, partner=partner)                
 
             if tax.include_base_amount:
                 base += tax_amount
@@ -818,6 +820,13 @@ class AccountTax(models.Model):
             'base': base,
         }
 
+
+    def _compute_base_amount(self, tax, base, total_excluded, price_unit, currency=None, quantity=1.0, product=None, partner=None):
+        """"Calcula base imponible para casos especiales
+        """
+        tax_base = base
+        return tax_base    
+    
     @api.model
     def _fix_tax_included_price(self, price, prod_taxes, line_taxes):
         """Subtract tax amount from price when corresponding "price included" taxes do not apply"""
