@@ -17,7 +17,7 @@ class FleetVehicle(models.Model):
         return state and state.id or False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean(default=True, track_visibility='onchange')
     company_id = fields.Many2one('res.company', 'Company')
     license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
@@ -67,6 +67,7 @@ class FleetVehicle(models.Model):
         multi='contract_info')
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
     residual_value = fields.Float()
+    kanban_color = fields.Integer(compute='_compute_set_kanban_color', default = 0)
 
     _sql_constraints = [
         ('driver_id_unique', 'UNIQUE(driver_id)', 'Only one car can be assigned to the same employee!')
@@ -252,6 +253,15 @@ class FleetVehicle(models.Model):
         )
         return res
 
+    @api.depends('log_contracts')
+    def _compute_set_kanban_color(self):
+        log_contracts = self.env['fleet.vehicle.log.contract'].read_group([('vehicle_id', 'in', self.ids), ('state', '=', 'open')
+            , ('expiration_date', '<', fields.Date.context_today(self))], ['vehicle_id'], ['vehicle_id'])
+        contract_data = dict([(contract['vehicle_id'][0], contract['vehicle_id_count']) for contract in log_contracts])
+        for vehicle in self:
+            vehicle.kanban_color = 7 if contract_data.get(vehicle.id) else 0
+
+
 
 class FleetVehicleOdometer(models.Model):
     _name = 'fleet.vehicle.odometer'
@@ -307,6 +317,5 @@ class FleetServiceType(models.Model):
     name = fields.Char(required=True, translate=True)
     category = fields.Selection([
         ('contract', 'Contract'),
-        ('service', 'Service'),
-        ('both', 'Both')
+        ('service', 'Service')
         ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
