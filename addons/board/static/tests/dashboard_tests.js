@@ -99,7 +99,7 @@ QUnit.test('display the no content helper', function (assert) {
 });
 
 QUnit.test('basic functionality, with one sub action', function (assert) {
-    assert.expect(24);
+    assert.expect(25);
 
     var form = createView({
         View: FormView,
@@ -108,17 +108,20 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
         arch: '<form string="My Dashboard">' +
                 '<board style="2-1">' +
                     '<column>' +
-                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>' +
+                        '<action context="{}" view_mode="list" string="ABC" name="51" domain="[[\'foo\', \'!=\', \'False\']]"></action>' +
                     '</column>' +
                 '</board>' +
             '</form>',
-        mockRPC: function (route) {
+        mockRPC: function (route, args) {
             if (route === '/web/action/load') {
                 assert.step('load action');
                 return $.when({
                     res_model: 'partner',
                     views: [[4, 'list']],
                 });
+            }
+            if (route === '/web/dataset/search_read') {
+                assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
             }
             if (route === '/board/static/src/img/layout_1-1-1.png') {
                 return $.when();

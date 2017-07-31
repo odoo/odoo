@@ -282,7 +282,7 @@ tour.register('main_flow_tour', {
     position: "bottom",
 }, {
 // Create a quotation
-    trigger: ".o_statusbar_buttons > button:contains('New Quotation')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('New Quotation')",
     content: _t('<p><b>Create a quotation</p>'),
     position: "right"
 }, {
@@ -329,11 +329,11 @@ tour.register('main_flow_tour', {
         }
     },
 }, {
-    trigger: ".o_statusbar_buttons > button.o_sale_print",
+    trigger: ".o_statusbar_buttons > button.o_sale_print:enabled",
     content: _t("<p><b>Print this quotation.</b></p>"),
     position: "bottom"
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Send by Email')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Send by Email')",
     extra_trigger: ".o_statusbar_status .btn-primary:contains('Quotation Sent')",
     content: _t("Try to send it to email"),
     position: "bottom",
@@ -351,7 +351,7 @@ tour.register('main_flow_tour', {
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Confirm Sale')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm Sale')",
     content: _t("<p>Confirm this quotation</p>"),
     position: "bottom"
 }, {
@@ -434,15 +434,15 @@ tour.register('main_flow_tour', {
     content: _t('Select the generated request for quotation'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Confirm Order')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Confirm Order')",
     content: _t("Confirm quotation"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Receive Products')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Receive Products')",
     content: _t("Receive Product"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Validate')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -463,11 +463,11 @@ tour.register('main_flow_tour', {
     content: _t("Let's create a new vendor bill"),
     position: "right",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Validate')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
     content: _t("Try to send it to email"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Register Payment')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Register Payment')",
     content: _t("Register Payment"),
     position: "bottom",
 }, {
@@ -495,11 +495,11 @@ tour.register('main_flow_tour', {
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Check availability')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Check availability')",
     content: _t("Check availability"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button.oe_highlight:contains('Produce')",
+    trigger: ".o_statusbar_buttons > button.oe_highlight:enabled:contains('Produce')",
     content: _t("Produce"),
     position: "bottom",
 }, {
@@ -507,7 +507,7 @@ tour.register('main_flow_tour', {
     content: _t('Record Production'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Mark as Done')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Mark as Done')",
     content: _t("Mark as Done"),
     position: "bottom",
 }, {
@@ -578,7 +578,7 @@ tour.register('main_flow_tour', {
     content: _t('Back to the sale order'),
     position: 'bottom',
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Create Invoice')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Create Invoice')",
     content: _t("Validate"),
     position: "bottom",
 }, {
@@ -586,11 +586,11 @@ tour.register('main_flow_tour', {
     content: _t("Create and View Invoices"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Validate')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Validate')",
     content: _t("Validate"),
     position: "bottom",
 }, {
-    trigger: ".o_statusbar_buttons > button:contains('Register Payment')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Register Payment')",
     content: _t("Register Payment"),
     position: "bottom",
 }, {
@@ -665,7 +665,7 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_statusbar_buttons > button:contains('Reconcile')",
+    trigger: ".o_statusbar_buttons > button:enabled:contains('Reconcile')",
     content: _t('<p><b>Reconcile</p>'),
     position: "bottom",
 }, {
