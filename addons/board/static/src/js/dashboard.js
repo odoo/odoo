@@ -232,6 +232,7 @@ FormRenderer.include({
                     var view = new View(viewInfo, {
                         action: action,
                         context: context,
+                        domain: params.domain,
                         groupBy: context.group_by,
                         modelName: action.res_model,
                         hasSelectors: false,
