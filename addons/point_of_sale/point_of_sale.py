@@ -1731,6 +1731,7 @@ class res_partner(osv.osv):
             del partner['id']
             self.write(cr, uid, [partner_id], partner, context=context)
         else:
+            partner['lang'] = self.pool['res.users'].browse(cr, uid, [uid]).lang
             partner_id = self.create(cr, uid, partner, context=context)
         
         return partner_id
