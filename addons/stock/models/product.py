@@ -267,9 +267,9 @@ class Product(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'qty'], ['product_id'])
+        quants_groupby = self.env['stock.quant'].read_group(domain_quant, ['product_id', 'quantity'], ['product_id'])
         for quant in quants_groupby:
-            if OPERATORS[operator](quant['qty'], value):
+            if OPERATORS[operator](quant['quantity'], value):
                 product_ids.add(quant['product_id'][0])
         return list(product_ids)
 
