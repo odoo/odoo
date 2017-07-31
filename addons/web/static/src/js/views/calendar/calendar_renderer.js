@@ -330,11 +330,12 @@ return AbstractRenderer.extend({
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
-            height: 'auto',
+            height: 'parent',
             unselectAuto: false,
         });
 
         this.$calendar.fullCalendar(fc_options);
+        window.dispatchEvent(new Event('resize'));
     },
     /**
      * Initialize the mini calendar in the sidebar

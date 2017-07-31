@@ -30,5 +30,6 @@ class ResPartner(models.Model):
         if partner_id:  # Modifying existing partner
             self.browse(partner_id).write(partner)
         else:
+            partner['lang'] = self.env.user.lang
             partner_id = self.create(partner).id
         return partner_id

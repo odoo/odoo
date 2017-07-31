@@ -645,7 +645,7 @@ class StockMove(models.Model):
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
                     not (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id):
-                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % ("%s (%s)" % (move.product_id.name, move.picking_id.name)))
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()
