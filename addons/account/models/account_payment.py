@@ -146,6 +146,7 @@ class account_register_payments(models.TransientModel):
         # Look if we are mixin multiple commercial_partner or customer invoices with vendor bills
         multi = any(inv.commercial_partner_id != invoices[0].commercial_partner_id
             or MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type] != MAP_INVOICE_TYPE_PARTNER_TYPE[invoices[0].type]
+            or inv.account_id != invoices[0].account_id
             for inv in invoices)
 
         total_amount = self._compute_payment_amount(invoices)
@@ -164,14 +165,18 @@ class account_register_payments(models.TransientModel):
 
     @api.multi
     def _groupby_invoices(self):
-        '''Split the invoices linked to the wizard according to their commercial partner and their type.
+        '''Split the invoices linked to the wizard according to their commercial partner,
+         their account and their type.
 
-        :return: a dictionary mapping (commercial_partner_id, type) => invoices recordset.
+        :return: a dictionary mapping (partner_id, account_id, invoice_type) => invoices recordset.
         '''
         results = {}
         # Create a dict dispatching invoices according to their commercial_partner_id and type
         for inv in self.invoice_ids:
-            key = (inv.commercial_partner_id.id, MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type])
+            partner_id = inv.commercial_partner_id.id
+            account_id = inv.account_id.id
+            invoice_type = MAP_INVOICE_TYPE_PARTNER_TYPE[inv.type]
+            key = (partner_id, account_id, invoice_type)
             if not key in results:
                 results[key] = self.env['account.invoice']
             results[key] += inv
