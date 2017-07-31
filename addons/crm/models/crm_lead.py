@@ -111,6 +111,7 @@ class Lead(models.Model):
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
+    partner_address_phone = fields.Char('Partner Contact Phone', related='partner_id.phone', readonly=True)
     company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
@@ -1218,7 +1219,7 @@ class Lead(models.Model):
                 emails = email_re.findall(partner_info['full_name'] or '')
                 email = emails and emails[0] or ''
                 if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = '%s <%s>' % (self.partner_name or self.contact_name, email)
+                    partner_info['full_name'] = '%s <%s>' % (self.contact_name or self.partner_name, email)
                     break
         return result
 
