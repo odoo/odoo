@@ -552,7 +552,7 @@ class StockMove(models.Model):
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
                     not (move.restrict_lot_id or (pack_operation and (pack_operation.product_id and pack_operation.pack_lot_ids)) or (pack_operation and not pack_operation.product_id)):
-                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % ("%s (%s)" % (move.product_id.name, move.picking_id.name)))
 
     @api.multi
     def action_assign(self, no_prepare=False):
