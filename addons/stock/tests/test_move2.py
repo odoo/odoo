@@ -224,6 +224,61 @@ class TestPickShip(TestStockCommon):
         # Check if run action_assign does not crash
         picking_client.action_assign()
 
+    def test_chained_move_with_uom(self):
+        """ Create pick ship with a different uom than the once used for quant.
+        Check that reserved quantity and flow work correctly.
+        """
+        picking_client = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        dest = self.MoveObj.create({
+            'name': self.gB.name,
+            'product_id': self.gB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.uom_kg.id,
+            'picking_id': picking_client.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'state': 'waiting',
+        })
+
+        picking_pick = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        self.MoveObj.create({
+            'name': self.gB.name,
+            'product_id': self.gB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.uom_kg.id,
+            'picking_id': picking_pick.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'move_dest_ids': [(4, dest.id)],
+            'state': 'confirmed',
+        })
+        location = self.env['stock.location'].browse(self.stock_location)
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.gB, location, 10000.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.gB, pack_location), 0.0)
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 5.0
+        picking_pick.action_done()
+
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.gB, location), 5000.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.gB, pack_location).quantity, 5000.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.gB, pack_location), 0.0)
+        self.assertEqual(picking_client.state, 'assigned')
+        self.assertEqual(picking_client.move_lines.reserved_availability, 5.0)
+
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):

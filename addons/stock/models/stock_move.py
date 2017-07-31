@@ -739,12 +739,18 @@ class StockMove(models.Model):
                 else:
                     # Check what our parents brought and what our siblings took in order to
                     # determine what we can distribute.
+                    # `qty_done` is in `ml.product_uom_id` and, as we will later increase
+                    # the reserved quantity on the quants, convert it here in
+                    # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     move_lines_in = move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
                     keys_in = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
                     grouped_move_lines_in = {}
                     for k, g in groupby(sorted(move_lines_in, key=itemgetter(*keys_in)), key=itemgetter(*keys_in)):
-                        grouped_move_lines_in[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('qty_done'))
-
+                        # `qty_done` is in `ml.product_uom_id` and, as we will later increase the
+                        qty_done = 0
+                        for ml in g:
+                            qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                        grouped_move_lines_in[k] = qty_done
                     move_lines_out_done = (move.move_orig_ids.mapped('move_dest_ids') - move)\
                         .filtered(lambda m: m.state in ['done'])\
                         .mapped('move_line_ids')
@@ -754,7 +760,10 @@ class StockMove(models.Model):
                     keys_out = ['location_id', 'lot_id', 'package_id', 'owner_id']
                     grouped_move_lines_out = {}
                     for k, g in groupby(sorted(move_lines_out_done, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
-                        grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('qty_done'))
+                        qty_done = 0
+                        for ml in g:
+                            qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                        grouped_move_lines_out[k] = qty_done
                     for k, g in groupby(sorted(move_lines_out_reserved, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
                         grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                     available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in.keys()}
