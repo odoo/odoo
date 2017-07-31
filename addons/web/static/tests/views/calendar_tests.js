@@ -1012,6 +1012,28 @@ QUnit.module('Views', {
         }
     });
 
+    QUnit.test('ensure events are still shown if filters give an empty domain', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar mode="week" date_start="start">' +
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>' +
+                '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.strictEqual(calendar.$('.fc-event').length, 5,
+            "should display 5 events");
+        calendar.$('.o_calendar_filter_item[data-value=all] input[type=checkbox]').click();
+        assert.strictEqual(calendar.$('.fc-event').length, 5,
+            "should display 5 events");
+        calendar.destroy();
+    });
 });
 
 });
