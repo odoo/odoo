@@ -3608,6 +3608,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('clicking on a stat button with no context', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" type="action" name="1">' +
+                                '<field name="qux" widget="statinfo"/>' +
+                            '</button>' +
+                        '</div>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {
+                context: {some_context: true},
+            },
+            intercepts: {
+                execute_action: function (e) {
+                    assert.deepEqual(e.data.action_data.context, {},
+                        "button context should have been evaluated and given to the action, without previous context");
+                },
+            },
+        });
+
+        form.$('.oe_stat_button').click();
+
+        form.destroy();
+    });
+
     QUnit.test('diplay a stat button outside a buttonbox', function (assert) {
         assert.expect(3);
 
