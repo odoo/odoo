@@ -27,11 +27,11 @@ FormController.include({
             form_view: {
                 commands: {
                     'O-CMD.NEW': function () { return this.createRecord(this.handle); },
-                    'O-CMD.EDIT': 'toEditMode',
-                    'O-CMD.CANCEL': 'discardChange',
+                    'O-CMD.EDIT': function () { return this._setMode('edit'); },
+                    'O-CMD.CANCEL': function () { return this.discardChanges(this.handle); },
                     'O-CMD.SAVE': function () { return this.saveRecord(this.handle, {reload: true}); },
-                    'O-CMD.PAGER-PREV': 'previousPage',
-                    'O-CMD.PAGER-NEXT': 'nextPage',
+                    'O-CMD.PAGER-PREV': function(){ return this.mutex.exec(function () {}).then(this.pager.previous()); },
+                    'O-CMD.PAGER-NEXT': function(){ return this.mutex.exec(function () {}).then(this.pager.next()); },
                 }
             }
         };
