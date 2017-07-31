@@ -52,7 +52,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     if not base64_source:
         return False
     if size == (None, None):
-        return base64_source
+        return base64_source.replace("\n", "")
     image_stream = StringIO.StringIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
     # store filetype here, as Image.new below will lose image.format
@@ -71,7 +71,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
 
     # check image size: do not create a thumbnail if avoiding smaller images
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
-        return base64_source
+        return base64_source.replace("\n", "")
 
     if image.size != size:
         image = image_resize_and_sharpen(image, size)
@@ -80,7 +80,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
 
     background_stream = StringIO.StringIO()
     image.save(background_stream, filetype)
-    return background_stream.getvalue().encode(encoding)
+    return background_stream.getvalue().encode(encoding).replace("\n", "")
 
 def image_resize_and_sharpen(image, size, preserve_aspect_ratio=False, factor=2.0):
     """
