@@ -21,7 +21,7 @@ class PriceRule(models.Model):
             elif rule.list_price and not rule.list_base_price:
                 name = '%s %s times %s' % (name, rule.list_price, rule.variable_factor)
             else:
-                name = '%s fixed price %s and %s times %s Extra' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
+                name = '%s fixed price %s plus %s times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
