@@ -73,6 +73,7 @@ class HrPayrollAdvice(models.Model):
                     self.env['hr.payroll.advice.line'].create({
                         'advice_id': advice.id,
                         'name': slip.employee_id.bank_account_id.acc_number,
+                        'ifsc_code': slip.employee_id.bank_account_id.bank_bic or '',
                         'employee_id': slip.employee_id.id,
                         'bysal': payslip_line.total
                     })
@@ -147,6 +148,7 @@ class HrPayslipRun(models.Model):
                     self.env['hr.payroll.advice.line'].create({
                         'advice_id': advice.id,
                         'name': slip.employee_id.bank_account_id.acc_number,
+                        'ifsc_code': slip.employee_id.bank_account_id.bank_bic or '',
                         'employee_id': slip.employee_id.id,
                         'bysal': payslip_line.total
                     })
