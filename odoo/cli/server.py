@@ -21,6 +21,8 @@ import threading
 import traceback
 import time
 
+from psycopg2 import ProgrammingError, errorcodes
+
 import odoo
 
 from . import Command
@@ -136,6 +138,15 @@ def main(args):
         for db_name in preload:
             try:
                 odoo.service.db._create_empty_database(db_name)
+            except ProgrammingError as err:
+                if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
+                    # We use an INFO loglevel on purpose in order to avoid
+                    # reporting unnecessary warnings on build environment
+                    # using restricted database access.
+                    _logger.info("Could not determine if database %s exists, "
+                                 "skipping auto-creation: %s", db_name, err)
+                else:
+                    raise err
             except odoo.service.db.DatabaseExists:
                 pass
 
