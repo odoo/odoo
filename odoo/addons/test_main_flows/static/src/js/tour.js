@@ -97,6 +97,10 @@ tour.register('main_flow_tour', {
     content: _t('Check Make To Order'),
     position: 'right',
 }, {
+    trigger: '.o_notebook a:contains("Purchase")',
+    content: _t('Go to purchase tab'),
+    position: 'top',
+}, {
     trigger:  ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
     content: _t('Let\'s enter the cost price'),
     position: 'right',
@@ -144,8 +148,8 @@ tour.register('main_flow_tour', {
     content: _t("Click here to edit your component"),
     position: "right",
 }, {
-    trigger: '.o_notebook a:contains("Inventory")',
-    content: _t('Go to inventory tab'),
+    trigger: '.o_notebook a:contains("Purchase")',
+    content: _t('Go to purchase tab'),
     position: 'top',
 }, {
     trigger:  ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > a",
