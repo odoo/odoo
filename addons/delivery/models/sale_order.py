@@ -25,6 +25,11 @@ class SaleOrder(models.Model):
             # We do not want to recompute the shipping price of an already validated/done SO
             # or on an SO that has no lines yet
             order.delivery_rating_success = False
+
+            # delivery address phone number not exist take it to customer address phone number
+            if not order.partner_shipping_id.phone:
+                order.partner_shipping_id.write({'phone': order.partner_id.phone})
+
             res = order.carrier_id.rate_shipment(order)
             if res['success']:
                 order.delivery_rating_success = True
