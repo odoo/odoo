@@ -981,6 +981,37 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('ensure calendar adapts to screen size', function (assert) {
+        assert.expect(2);
+
+        // We want to be able to restore changes on 'body'
+        var bodyStyle = $('body').attr('style');
+
+        // Force the view height to be smaller than the natural calendar height
+        // (FullCalendar requires that the height be modified on body not $target)
+        var height = 500;
+        $('body').height(height);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar mode="week" date_start="start" />',
+        });
+
+        var $scroller = calendar.$('.fc-scroller')
+        assert.strictEqual($scroller.height() < height, true,
+            "the scroller should be smaller than the view height");
+        assert.strictEqual($scroller.prop('scrollHeight') > height, true,
+            "the scroller should have a scrollbar");
+        calendar.destroy();
+
+        $('body').removeAttr('style');
+        if (bodyStyle) {
+            $('body').attr('style', bodyStyle);
+        }
+    });
+
 });
 
 });

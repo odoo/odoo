@@ -366,7 +366,10 @@ class Slide(models.Model):
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
-                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+                    url = self.env['link.tracker'].sudo().create({
+                        'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
+                        'title': slide.name,
+                    }).short_url
                 else:
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
