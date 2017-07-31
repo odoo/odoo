@@ -149,6 +149,8 @@ var ChatterComposer = composer.BasicComposer.extend({
                     res_model: 'res.partner',
                     res_id: partner_id,
                     context: {
+                        active_model: self.model,
+                        active_id: self.context.default_res_id,
                         force_email: true,
                         ref: "compound_context",
                         default_name: parsed_email[0],
