@@ -238,7 +238,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context}),
+                context: record.getContext({additionalContext: attrs.context || {}}),
             }),
             model: record.model,
             res_ids: [recordID],
