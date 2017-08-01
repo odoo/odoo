@@ -60,7 +60,7 @@
                         </group><group>
                             <field name="reference"/>
                             <field name="date"/>
-                            <field name="account_id" domain="[('internal_type', '=', 'other')]"/>
+                            <field name="account_id" domain="[('internal_type', '=', 'other')]" groups="account.group_account_user"/>
                             <field name="employee_id"/>
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
@@ -298,7 +298,7 @@
                                 </div>
                             </group>
                             <group string="Accounting">
-                                <field name="property_account_expense_id"/>
+                                <field name="property_account_expense_id" groups="account.group_account_user"/>
                                 <field name="supplier_taxes_id" widget="many2many_tags"/>
                             </group>
                         </group>
@@ -407,11 +407,11 @@
                 <form string="Expense Reports" class="o_expense_sheet">
                  <header>
                     <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_user" class="oe_highlight o_expense_sheet_approve"/>
-                    <button name="action_sheet_move_create" states="approve" string="Post Journal Entries" type="object" groups="account.group_account_user" class="oe_highlight o_expense_sheet_post"/>
-                    <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_user"/>
+                    <button name="action_sheet_move_create" states="approve" string="Validate" type="object" groups="account.group_account_manager" class="oe_highlight o_expense_sheet_post"/>
+                    <button name="%(hr_expense.hr_expense_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
                     <button name="reset_expense_sheets" states="cancel" string="Resubmit" type="object"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit" string="Refuse" type="action" groups="hr_expense.group_hr_expense_user" />
-                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="account.group_account_user"/>
+                    <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="approve" string="Refuse" type="action" groups="hr_expense.group_hr_expense_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
                 </header>
                 <sheet>
@@ -462,8 +462,8 @@
                             <group>
                                 <group>
                                     <field name="journal_id" domain="[('type', '=', 'purchase')]" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'own_account')]}"/>
-                                    <field name="bank_journal_id" groups="account.group_account_user" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
-                                    <field name="accounting_date" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
+                                    <field name="bank_journal_id" groups="account.group_account_invoice" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('payment_mode', '!=', 'company_account')]}" domain="[('type', 'in', ['cash', 'bank'])]"/>
+                                    <field name="accounting_date" attrs="{'invisible': [('state', 'not in', ['approve', 'post', 'done'])]}"/>
                                 </group>
                                 <group>
                                     <field name="account_move_id" groups="account.group_account_user" attrs="{'invisible': [('state', 'not in', ['post', 'done'])]}" readonly="1"/>

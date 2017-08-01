@@ -3,7 +3,7 @@
 
 {
     'name': 'Assets Management',
-    'depends': ['account_accountant'],
+    'depends': ['account'],
     'description': """
 Assets management
 =================

@@ -197,13 +197,13 @@
                         <group string="Fiscal Information" name="fiscal_information">
                             <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
                         </group>
-                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_manager">
+                        <group string="Accounting Entries" name="accounting_entries" groups="account.group_account_user">
                             <field name="property_account_receivable_id"/>
                             <field name="property_account_payable_id"/>
                         </group>
                     </group>
                 </page>
-                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                <page string="Invoicing" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
                     <div>
                         <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
                     </div>

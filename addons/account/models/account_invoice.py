@@ -193,6 +193,8 @@ class AccountInvoice(models.Model):
                 'position': currency_id.position,
                 'date': payment.date,
                 'payment_id': payment.id,
+                'account_payment_id': payment.payment_id.id,
+                'invoice_id': payment.invoice_id.id,
                 'move_id': payment.move_id.id,
                 'ref': payment_ref,
             })

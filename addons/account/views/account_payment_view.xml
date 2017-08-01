@@ -120,7 +120,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="button_journal_entries"
                                     string="Journal Items" type="object"
-                                    groups="account.group_account_manager"
+                                    groups="account.group_account_user"
                                     attrs="{'invisible':[('move_line_ids','=',[])]}" icon="fa-bars"/>
                             <field name="move_line_ids" invisible="1"/>
                             <button class="oe_stat_button" name="button_invoices"
@@ -214,8 +214,8 @@
             </field>
         </record>
 
-        <menuitem action="action_account_payments" id="menu_action_account_payments_receivable" parent="menu_finance_receivables" sequence="20" groups="group_account_user"/>
-        <menuitem action="action_account_payments_payable" id="menu_action_account_payments_payable" parent="menu_finance_payables" sequence="20" groups="group_account_user"/>
+        <menuitem action="action_account_payments" id="menu_action_account_payments_receivable" parent="menu_finance_receivables" sequence="20"/>
+        <menuitem action="action_account_payments_payable" id="menu_action_account_payments_payable" parent="menu_finance_payables" sequence="20"/>
 
         <record id="view_account_payment_invoice_form" model="ir.ui.view">
             <field name="name">account.payment.invoice.form</field>
