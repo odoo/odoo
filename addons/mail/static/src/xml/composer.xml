@@ -11,7 +11,14 @@
                 <div class="o_composer_input">
                     <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
                     <div class="o_chatter_composer_tools">
-                        <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                        <!--
+                            Safari browser not supported focus event on buttons.
+                            So replacing <button> to the <a> tag works for bootstrap popover.
+
+                            https://github.com/twbs/bootstrap/issues/15935
+                            https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Button#Clicking_and_focus
+                         -->
+                        <a tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
                         <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
                         <button t-if="widget.options.isMobile" tabindex="3" class="btn btn-sm btn-icon fa fa-paper-plane-o o_composer_button_send" type="button"/>
                     </div>
