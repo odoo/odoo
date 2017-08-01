@@ -160,6 +160,8 @@ class TransactionCase(BaseCase):
             self.cr.rollback()
             self.cr.close()
 
+        self.patch(type(self.env['res.partner']), '_get_gravatar_image', lambda *a: False)
+
     def patch(self, obj, key, val):
         """ Do the patch ``setattr(obj, key, val)``, and prepare cleanup. """
         old = getattr(obj, key)
