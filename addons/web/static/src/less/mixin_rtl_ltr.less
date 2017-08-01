@@ -291,3 +291,12 @@
 .background-position(@distanceX, @distanceY) when (@lng-direction = rtl) and (isnumber(@distanceX)) {
   background-position: -@distanceX @distanceY;
 }
+
+// font-awesome icons
+
+.fa-rotate(@deg) when (@lng-direction = rtl) {
+  -webkit-transform: rotate(@deg);
+      -ms-transform: rotate(@deg); // IE9 only
+       -o-transform: rotate(@deg);
+          transform: rotate(@deg);
+}
