@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-22 13:18+0000\n"
-"PO-Revision-Date: 2017-06-22 16:02+0000\n"
+"PO-Revision-Date: 2017-07-14 11:55+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-8/language/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -580,7 +580,7 @@ msgstr "Обраний рядок проведень було автоматич
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
 msgid "A tax fiscal position could be defined only once time on same taxes."
-msgstr ""
+msgstr "Податковий стан може бути визначений лише один раз за однаковими податками."
 
 #. module: account
 #: view:website:account.report_centraljournal
@@ -773,7 +773,7 @@ msgstr "Назва рахунку."
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
 msgid "Account Partner Ledger"
-msgstr ""
+msgstr "Підпис власника рахунку"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
@@ -789,7 +789,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr ""
+msgstr "Друк  рахунку журналу"
 
 #. module: account
 #: view:product.category:account.view_category_property_form
@@ -931,7 +931,7 @@ msgid ""
 "Account Type is used for information purpose, to generate country-specific "
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
-msgstr ""
+msgstr "Тип облікового запису має інформаційне призначення, для створення звітів, відповідно до законодавства конкретних країн і встановлення правил для закриття фінансового року та створення відкритих записів."
 
 #. module: account
 #: field:account.financial.report,account_type_ids:0
@@ -1288,7 +1288,7 @@ msgid ""
 "journal. In that case, they will behave as journal entries automatically "
 "created by the system on document validation (invoices, bank statements...) "
 "and will be created in 'Posted' status."
-msgstr ""
+msgstr "Усі створені вручну записи нових журналів зазвичай мають статус «Неопубліковані», але ви можете встановити параметр, щоб пропустити цей статус у відповідному журналі. У такому випадку вони будуть поводитися як записи журналів, автоматично створювані системою при перевірці документів (рахунки-фактури, банківські виписування ...) і будуть створені в статусі \"Опубліковано\"."
 
 #. module: account
 #: view:validate.account.move.lines:account.validate_account_move_line_view
@@ -1402,7 +1402,7 @@ msgstr "Тип суми"
 #: sql_constraint:account.fiscal.position.account:0
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
-msgstr ""
+msgstr "Фіскальна позиція облікового запису може бути визначена лише один раз на тих самих рахунках."
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -1832,7 +1832,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Opening Balance and transaction lines"
-msgstr ""
+msgstr "Баланс обчислюється на основі відкритого балансу та ліній транзакції"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -1917,12 +1917,12 @@ msgstr "Банківські виписки"
 #. module: account
 #: help:account.config.settings,company_footer:0
 msgid "Bank accounts as printed in the footer of each printed document"
-msgstr ""
+msgstr "Банківські рахунки, як показано в нижньому колонтитулі кожного друкованого документа"
 
 #. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
-msgstr ""
+msgstr "Попередній перегляд нижнього колонтитула банківських рахунків"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -2044,7 +2044,7 @@ msgstr "По продавцю"
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
+msgstr "Знімаючи прапорець біля активного поля, ви можете приховати фіскальну позицію, не видаляючи її."
 
 #. module: account
 #: field:account.chart.template,visible:0
@@ -2189,7 +2189,7 @@ msgstr ""
 #: code:addons/account/account.py:1550
 #, python-format
 msgid "Cannot create moves for different companies."
-msgstr ""
+msgstr "Не вдається створити рух для різних компаній."
 
 #. module: account
 #: code:addons/account/account_invoice.py:830
@@ -2207,7 +2207,7 @@ msgstr ""
 msgid ""
 "Cannot find a chart of accounts for this company, You should configure it. \n"
 "Please go to Account Configuration."
-msgstr ""
+msgstr "Не вдається знайти схему облікових записів цієї компанії, її слід налаштувати.Будь ласка, перейдіть до конфігурації облікового запису."
 
 #. module: account
 #: code:addons/account/account_move_line.py:551
@@ -2491,7 +2491,7 @@ msgstr ""
 #. module: account
 #: help:account.config.settings,expects_chart_of_accounts:0
 msgid "Check this box if this company is a legal entity."
-msgstr ""
+msgstr "Позначте цей прапорець, якщо ця компанія є юридичною особою."
 
 #. module: account
 #: help:account.move,to_check:0
@@ -2542,7 +2542,7 @@ msgstr ""
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr ""
+msgstr "Перевірте це, якщо ціна, яку ви використовуєте у товарі та рахунку-фактурі, включає цей податок."
 
 #. module: account
 #: help:account.account.template,reconcile:0
@@ -3349,7 +3349,7 @@ msgstr "Курс валюти"
 #. module: account
 #: help:wizard.multi.charts.accounts,currency_id:0
 msgid "Currency as per company's country."
-msgstr ""
+msgstr "Валюта за країною компанії."
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
@@ -3677,7 +3677,7 @@ msgstr ""
 #. module: account
 #: view:cash.box.out:account.cash_box_out_form
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Опишіть, чому ви берете гроші з каси:"
 
 #. module: account
 #. openerp-web
@@ -4726,7 +4726,7 @@ msgid ""
 "the sign of the balance; e.g.: Expense account. The same applies for "
 "accounts that are typically more credited than debited and that you would "
 "like to print as positive amounts in your reports; e.g.: Income account."
-msgstr ""
+msgstr "Для облікових записів, які, як правило, більше дебетованих, ніж зарахування коштів та які ви хочете надрукувати як негативні суми у своїх звітах, ви повинні повернути знак балансу; Наприклад, рахунок витрат. Те саме стосується й облікових записів, які зазвичай більше зараховуються, ніж зараховані на дебетування, і що ви хочете надрукувати як позитивні суми у своїх звітах; Наприклад, обліковий запис доходів."
 
 #. module: account
 #: view:account.automatic.reconcile:account.account_automatic_reconcile_view
@@ -4772,7 +4772,7 @@ msgstr ""
 #: help:account.account.template,currency_id:0
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
-msgstr ""
+msgstr "Змушені переміщуватися для цього облікового запису, щоб мати цю додаткову валюту."
 
 #. module: account
 #: field:account.account,foreign_balance:0
@@ -4828,7 +4828,7 @@ msgstr ""
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, "
 "etc."
-msgstr ""
+msgstr "Повні функції обліку: журнали, юридичні заяви, схема рахунків і т. Д."
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -4928,18 +4928,18 @@ msgstr ""
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "Дає послідовність цього рядка при відображенні рахунку-фактури."
 
 #. module: account
 #: help:account.bank.statement.line,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of bank statement lines."
-msgstr ""
+msgstr "Дає порядок послідовності при відображенні списку банківських виписок."
 
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr ""
+msgstr "Дає порядок послідовності під час показу списку податків на рахунки-фактури."
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -5131,7 +5131,7 @@ msgstr "Значок"
 #: code:addons/account/account_bank_statement.py:428
 #, python-format
 msgid "If \"Amount Currency\" is specified, then \"Amount\" must be as well."
-msgstr ""
+msgstr "Якщо вказано \"Валюту суми\", то також має бути \"Сума\"."
 
 #. module: account
 #: help:account.bank.statement,message_unread:0
@@ -5150,7 +5150,7 @@ msgstr ""
 #: help:account.account.template,nocreate:0
 msgid ""
 "If checked, the new chart of accounts will not contain this by default."
-msgstr ""
+msgstr "Якщо позначено цей пункт, нова схема облікових записів не буде містити це за замовчуванням."
 
 #. module: account
 #: help:account.tax,applicable_type:0
@@ -5194,7 +5194,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr ""
+msgstr "Якщо активне поле встановлено на False, це дозволить вам сховати термін платежу, не видаливши його."
 
 #. module: account
 #: help:account.tax,active:0
@@ -5235,7 +5235,7 @@ msgid ""
 "this total tax amount will be rounded. If you sell with tax included, you "
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
-msgstr ""
+msgstr "При виборі «Округлити по рядку»: для кожного податку, сума податку буде першою обчислюватися і округлятися для кожного PO / SO / рахунки рядку, а потім ці округлені суми будуть підсумовані, що призводить до загальної суми для цього податку. Якщо ви виберете «Округлити глобально»: для кожного податку сума податку буде обчислена за кожним рядком PO / SO / фактури, після чого ці суми будуть підсумовані, і в кінцевому рахунку ця сума податку буде округлена. Якщо ви продаєте з включеним податком, вам слід вибрати \"Округлити по рядку\", оскільки ви, звичайно, хочете, щоб ваша підсумкова сума, включена до податків, була рівною загальній сумі з податками."
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -5280,7 +5280,7 @@ msgid ""
 " generation of accounting entries. If you keep the payment term and the due "
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
-msgstr ""
+msgstr "Я"
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -5290,7 +5290,7 @@ msgid ""
 "dates, for example 50% now and 50% in one month, but if you want to force a "
 "due date, make sure that the payment term is not set on the invoice. If you "
 "keep the payment term and the due date empty, it means direct payment."
-msgstr ""
+msgstr "Якщо ви використовуєте терміни платежу, термін сплати буде автоматично обчислюватися при створенні бухгалтерських записів. Термін оплати може розраховувати кілька термінів, наприклад, 50% зараз і 50% протягом одного місяця, але якщо ви бажаєте встановити дату, переконайтеся, що термін платежу не встановлено в рахунку-фактурі. Якщо у Вас термін оплати і термін його погашення буде порожнім, це означає прямий платіж."
 
 #. module: account
 #: help:account.journal,cash_control:0
@@ -5341,7 +5341,7 @@ msgstr ""
 msgid ""
 "In order to delete a bank statement line, you must first cancel it to delete"
 " related journal items."
-msgstr ""
+msgstr "Щоб видалити рядок банківської виписки, спочатку потрібно скасувати його, щоб видалити пов'язані елементи журналу."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:392
@@ -5349,7 +5349,7 @@ msgstr ""
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
-msgstr ""
+msgstr "Щоб видалити виписку з банківського рахунку, спочатку потрібно скасувати його, щоб видалити пов'язані елементи журналу."
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -5735,14 +5735,14 @@ msgstr "Використовується, як типовий дебетовий
 msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
-msgstr ""
+msgstr "Якщо валюта відрізняється від валюти компанії, вона додає валюту у звіті."
 
 #. module: account
 #: help:account.invoice,reconciled:0
 msgid ""
 "It indicates that the invoice has been paid and the journal entry of the "
 "invoice has been reconciled with one or several journal entries of payment."
-msgstr ""
+msgstr "Це вказує на те, що рахунок-фактура сплачена, а запис журналу рахунка-фактури був узгоджений з одним або декількома реєстраційними записами платежу."
 
 #. module: account
 #: help:account.invoice,sent:0
@@ -5759,7 +5759,7 @@ msgstr "Ви витратили"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "Курсив (мілкий)"
 
 #. module: account
 #: view:website:account.report_analyticcostledger
@@ -5974,7 +5974,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.report:account.view_account_invoice_report_search
 msgid "Journal invoices with period in current year"
-msgstr ""
+msgstr "Рахунки в журналі з періодом поточного року"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -6473,7 +6473,7 @@ msgstr "Ліквідність"
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
 msgid "List of all the taxes that have to be installed by the wizard"
-msgstr ""
+msgstr "Перелік усіх податків, які майстер повинен встановити"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:306
@@ -6512,12 +6512,12 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Main Title 1 (bold, underlined)"
-msgstr ""
+msgstr "Основний титул 1 (напівжирний, підкреслений)"
 
 #. module: account
 #: help:account.config.settings,currency_id:0
 msgid "Main currency of the company."
-msgstr ""
+msgstr "Основна валюта компанії."
 
 #. module: account
 #: field:account.config.settings,module_account_followup:0
@@ -6548,7 +6548,7 @@ msgstr "Ручні податки інвойса"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "Ручне узгодження"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -6658,7 +6658,7 @@ msgstr "Модель"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "Зміни: створити відшкодування, узгодити та створити новий рахунок-фактуру"
 
 #. module: account
 #: view:account.treasury.report:account.view_account_treasury_report_search
@@ -6724,7 +6724,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1232
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "Перемістити ім'я (id): %s(%s)"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
@@ -6923,7 +6923,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_bank_statement_reconciliation.xml:122
 #, python-format
 msgid "No result matching '"
-msgstr ""
+msgstr "Немає результатів пошуку \""
 
 #. module: account
 #: help:account.chart.template,code_digits:0
@@ -6980,7 +6980,7 @@ msgstr ""
 #: code:addons/account/wizard/account_report_common.py:169
 #, python-format
 msgid "Not implemented."
-msgstr ""
+msgstr "Не впроваджений."
 
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
@@ -7084,7 +7084,7 @@ msgid ""
 "                        to modify them. The invoices will receive a unique\n"
 "                        number and journal items will be created in your chart\n"
 "                        of accounts."
-msgstr ""
+msgstr "Після того, як чорнові рахунки будуть підтверджені, ви не зможете\nзмінити їх. Рахунки-фактури отримають унікальний\nномер та елементи журналу будуть створені у вашому плані\nрахунків"
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -7107,7 +7107,7 @@ msgstr "Тільки адміністратор може змінювати на
 #: code:addons/account/static/src/js/account_widgets.js:539
 #, python-format
 msgid "Only use the ctrl-enter shortcut to validate reconciliations."
-msgstr ""
+msgstr "Використовуйте лише комбінацію клавіш ctrl-enter для підтвердження узгодження."
 
 #. module: account
 #: view:account.analytic.account:account.view_account_analytic_account_search
@@ -7239,7 +7239,7 @@ msgstr ""
 #. module: account
 #: help:account.cashbox.line,number_opening:0
 msgid "Opening Unit Numbers"
-msgstr ""
+msgstr "Відкриття одиниць номерів "
 
 #. module: account
 #: field:account.journal,with_last_closing_balance:0
@@ -7342,7 +7342,7 @@ msgstr ""
 #. module: account
 #: field:account.chart.template,parent_id:0
 msgid "Parent Chart Template"
-msgstr ""
+msgstr "Джерело планових шаблонів"
 
 #. module: account
 #: field:account.tax.code,parent_id:0
@@ -7784,25 +7784,25 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Перевірте, чи вказано поле \"Журнал\" у звіті Банку"
 
 #. module: account
 #: code:addons/account/account_invoice.py:799
 #, python-format
 msgid "Please create some invoice lines."
-msgstr ""
+msgstr "Будь-ласка, створіть кілька рядків-фактур."
 
 #. module: account
 #: code:addons/account/account.py:1321
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Будь ласка, визначте послідовність в журналі."
 
 #. module: account
 #: code:addons/account/account_invoice.py:797
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "Будь-ласка, визначте послідовність в журналі, пов'язану з цим рахунком-фактурою."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:330
@@ -7902,7 +7902,7 @@ msgstr "Друк рахунку"
 msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
-msgstr ""
+msgstr "Стовпець валюти, якщо валюта відрізняється від валюти компанії при друку звіту."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
@@ -8471,7 +8471,7 @@ msgstr ""
 msgid ""
 "Refund base on this type. You can not Modify and Cancel if the invoice is "
 "already reconciled"
-msgstr ""
+msgstr "База відшкодування на цей тип. Ви не можете змінити та скасувати, якщо рахунок вже узгоджено"
 
 #. module: account
 #: view:account.tax:account.view_tax_form
@@ -8784,7 +8784,7 @@ msgstr "Пошук виписки"
 #. module: account
 #: view:account.chart.template:account.view_account_chart_template_seacrh
 msgid "Search Chart of Account Templates"
-msgstr ""
+msgstr "Пошук шаблонів облікового запису"
 
 #. module: account
 #: view:account.fiscalyear:account.view_account_fiscalyear_search
@@ -8799,7 +8799,7 @@ msgstr "Пошук рахунку"
 #. module: account
 #: view:account.move.line:account.view_account_move_line_filter
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Пошук елементів журналу"
 
 #. module: account
 #: view:account.move:account.view_account_move_filter
@@ -8958,7 +8958,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr ""
+msgstr "Вибрані рахунки-фактури не можна скасувати, оскільки вони вже в статусі \"Скасовано\" або \"Готово\"."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:41
@@ -8966,7 +8966,7 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr ""
+msgstr "Вибрані рахунки-фактури не можуть бути підтверджені, оскільки вони відсутні в статусі \"Чернетка\" або \"Профілі\"."
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -9074,7 +9074,7 @@ msgid ""
 " wizard that generate Chart of Accounts from templates, this is useful when "
 "you want to generate accounts of this template only when loading its child "
 "template."
-msgstr ""
+msgstr "Якщо цей шаблон не буде активно використовуватися у майстрі, який створює таблицю облікових записів із шаблонів, встановіть це значення на «Невірно», це буде корисним, якщо ви хочете створити облікові записи цього шаблону лише під час завантаження його дочірнього шаблону."
 
 #. module: account
 #: view:account.invoice:account.invoice_supplier_form
@@ -9125,7 +9125,7 @@ msgstr "Ситуативний"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
-msgstr ""
+msgstr "Найменший текст"
 
 #. module: account
 #: code:addons/account/account_move_line.py:971
@@ -9285,7 +9285,7 @@ msgstr "Виписка банку"
 #: code:addons/account/account_bank_statement.py:352
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
-msgstr ""
+msgstr "Заява %sпідтверджена, журнальні статті створені."
 
 #. module: account
 #: view:account.statement.operation.template:account.view_account_statement_operation_template_form
@@ -9770,12 +9770,12 @@ msgstr "Шаблон "
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Фіскальне відображення шаблону облікового запису"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Template Tax Fiscal Position"
-msgstr ""
+msgstr "Шаблон податкових позицій"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -9858,7 +9858,7 @@ msgstr ""
 msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency"
 " entry."
-msgstr ""
+msgstr "Сума, зазначена необов'язковою іншою валютою, якщо це мультивалютна позиція."
 
 #. module: account
 #: help:account.model.line,amount_currency:0
@@ -9870,14 +9870,14 @@ msgstr ""
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
-msgstr ""
+msgstr "Сума, зазначена в пов'язаній валюті рахунку, якщо не є валютою компанії компанії."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The amount expressed in the secondary currency must be positive when account"
 " is debited and negative when account is credited."
-msgstr ""
+msgstr "Сума, зазначена в вторинній валюті, повинна бути позитивною, коли обліковий запис списаний і негативний, коли обліковується кредит."
 
 #. module: account
 #: help:account.statement.operation.template,amount:0
@@ -9925,7 +9925,7 @@ msgstr ""
 #: help:account.invoice,commercial_partner_id:0
 msgid ""
 "The commercial entity that will be used on Journal Entries for this invoice"
-msgstr ""
+msgstr "Комерційна організація, яка буде використовуватися в журналі для цього рахунку-фактури"
 
 #. module: account
 #: constraint:account.config.settings:0
@@ -9994,7 +9994,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "Облік доходів або витрат, пов'язаних із вибраним товаром."
 
 #. module: account
 #: constraint:account.bank.statement:0
@@ -10042,14 +10042,14 @@ msgstr ""
 #: help:account.bank.statement.line,currency_id:0
 #: help:account.move.line,currency_id:0
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr ""
+msgstr "Необов'язкова інша валюта, якщо вона входить у мультивалюту."
 
 #. module: account
 #: help:account.move.line,quantity:0
 msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
-msgstr ""
+msgstr "Необов'язкова кількість, вказана в цьому рядку, наприклад: кількість проданих продуктів. Ця кількість не є юридичною вимогою, але дуже корисна для деяких звітів."
 
 #. module: account
 #: help:account.model.line,quantity:0
@@ -10116,7 +10116,7 @@ msgstr ""
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
 "the product."
-msgstr ""
+msgstr "Обрана одиниця вимірювання несумісна з одиницею виміру продукту."
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -10269,7 +10269,7 @@ msgstr ""
 msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
-msgstr ""
+msgstr "Ці типи визначаються відповідно до вашої країни. Тип містить більше інформації про обліковий запис та його особливості."
 
 #. module: account
 #: view:account.entries.report:account.view_account_entries_report_search
@@ -10291,24 +10291,24 @@ msgstr "Поточного року"
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product."
-msgstr ""
+msgstr "Цей аккаунт буде використовуватися для рахунків-фактур, а не за замовчуванням, щоб оцінити витрати на поточний продукт."
 
 #. module: account
 #: help:product.template,property_account_income:0
 msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product."
-msgstr ""
+msgstr "Цей обліковий запис буде використовуватися для рахунків-фактур, а не за замовчуванням, щоб оцінити обсяги продажу поточного продукту."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used for invoices to value expenses."
-msgstr ""
+msgstr "Цей рахунок буде використовуватися для рахунків-фактур для визначення витрат."
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used for invoices to value sales."
-msgstr ""
+msgstr "Цей рахунок буде використано для рахунків-фактур, щоб оцінити продажі."
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -10329,7 +10329,7 @@ msgstr "Цей рахунок буде використовуватися як �
 msgid ""
 "This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account.\n"
 "-This installs the module account_budget."
-msgstr ""
+msgstr "Це дозволяє бухгалтерам керувати аналітичними та перехресними бюджетами. Після визначення основних бюджетів та бюджетів керівники проектів можуть встановлювати планове розміщення на кожному аналітичному рахунку.\n-Це встановлює модуль account_budget."
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -10368,7 +10368,7 @@ msgid ""
 "This boolean helps you to choose if you want to propose to the user to "
 "encode the sale and purchase rates or choose from list of taxes. This last "
 "choice assumes that the set of tax defined on this template is complete"
-msgstr ""
+msgstr "Цей логічний елемент допомагає вам вибрати, чи бажаєте ви запропонувати користувачеві кодувати курси продажу та покупки, або вибрати один із наведених податків. Цей останній вибір передбачає, що сукупність податків, визначених у цьому шаблоні, є повною"
 
 #. module: account
 #: help:account.config.settings,complete_tax_set:0
@@ -10378,7 +10378,7 @@ msgid ""
 "encode the sales and purchase rates or use the usual m2o fields. This last "
 "choice assumes that the set of tax defined for the chosen template is "
 "complete"
-msgstr ""
+msgstr "Цей логічний елемент допомагає вам вибрати, чи потрібно запропонувати користувачеві кодувати курси продажу та покупки або використовувати звичайні поля m2o. Цей останній вибір передбачає, що сукупність податків, визначених для вибраного шаблону, є повною"
 
 #. module: account
 #: view:account.invoice:account.invoice_form
@@ -10395,7 +10395,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,expects_chart_of_accounts:0
 msgid "This company has its own chart of accounts"
-msgstr ""
+msgstr "Ця компанія має власну схему рахунків"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -10423,7 +10423,7 @@ msgstr "Це поле використовується лише тоді, кол
 msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
-msgstr ""
+msgstr "Це поле використовується для записів журналу, що підлягають сплаті та дебіторської заборгованості. Ви можете встановити обмеження для оплати цього рядка."
 
 #. module: account
 #: help:account.account.type,report_type:0
@@ -10510,7 +10510,7 @@ msgstr ""
 msgid ""
 "This label will be displayed on report to show the balance computed for the "
 "given comparison filter."
-msgstr ""
+msgstr "Цей журнал вже містить елементи, тому ви не можете змінити його коротке ім'я."
 
 #. module: account
 #: view:account.vat.declaration:account.view_account_vat_declaration
@@ -10534,7 +10534,7 @@ msgid ""
 "This option allows you to get more details about the way your balances are "
 "computed. Because it is space consuming, we do not allow to use it while "
 "doing a comparison."
-msgstr ""
+msgstr "Ця опція дозволяє отримати більше інформації про спосіб, яким розраховуються ваші баланси. Оскільки цеп широкий простір, ми не дозволяємо використовувати її під час порівняння."
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -10544,7 +10544,7 @@ msgid ""
 " allow you to define chart templates that extend another and complete it "
 "with few new accounts (You don't need to define the whole structure that is "
 "common to both several times)."
-msgstr ""
+msgstr "Це необов'язкове поле дозволяє пов'язати шаблон облікового запису з певним шаблоном плану, який може відрізнятися від того, до якого належить його породжувач. Це дає змогу визначати шаблони графіків, які розширюють інше та завершують його кількома новими обліковими записами (вам не потрібно визначати всю структуру, яка є спільною для кількох разів)."
 
 #. module: account
 #. openerp-web
@@ -10553,7 +10553,7 @@ msgstr ""
 msgid ""
 "This page displays all the bank transactions that are to be reconciled and "
 "provides with a neat interface to do so."
-msgstr ""
+msgstr "На цій сторінці відображаються всі транзакції банку, які потрібно узгодити, і забезпечує точний інтерфейс для цього."
 
 #. module: account
 #: help:res.partner,property_supplier_payment_term:0
@@ -10567,17 +10567,17 @@ msgstr ""
 msgid ""
 "This payment term will be used instead of the default one for sale orders "
 "and customer invoices"
-msgstr ""
+msgstr "Цей платіжний термін буде використано замість замовчуванням для замовлень на продаж та рахунків-фактур клієнтів"
 
 #. module: account
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
-msgstr ""
+msgstr "Цей податок на покупку буде призначено за замовчуванням на нові продукти."
 
 #. module: account
 #: help:account.config.settings,default_sale_tax:0
 msgid "This sale tax will be assigned by default on new products."
-msgstr ""
+msgstr "Цей податок з продажу буде призначений за замовчуванням на нові продукти."
 
 #. module: account
 #: help:account.bank.statement.line,account_id:0
@@ -10585,7 +10585,7 @@ msgid ""
 "This technical field can be used at the statement line creation/import time "
 "in order to avoid the reconciliation process on it later on. The statement "
 "line will simply create a counterpart on this account"
-msgstr ""
+msgstr "Це технічне поле може бути використане на час створення / імпорту рядка заяви, щоб у подальшому не виконувати процес узгодження. Рядок заявок просто створить аналог цього облікового запису"
 
 #. module: account
 #: help:account.account.template,type:0 help:account.entries.report,type:0
@@ -10644,12 +10644,12 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
+msgstr "Заголовок 2 (жирний шрифт)"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr ""
+msgstr "Заголовок 3 (жирний, дрібний)"
 
 #. module: account
 #: field:account.analytic.chart,to_date:0
@@ -11138,7 +11138,7 @@ msgstr ""
 #. module: account
 #: field:account.fiscal.position,vat_required:0
 msgid "VAT required"
-msgstr ""
+msgstr "ПДВ обов'язковий"
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -11404,7 +11404,7 @@ msgstr ""
 msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
-msgstr ""
+msgstr "Цей прапорець позначає в журналі  судовий процес із пов'язаним партнером"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1246
@@ -11457,7 +11457,7 @@ msgid ""
 "You can set up here the format you want this record to be displayed. If you "
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
-msgstr ""
+msgstr "Ви можете налаштувати тут формат, в якому ви хочете бачити цей запис. Якщо залишити автоматичне форматування, воно буде обчислено на підставі ієрархії фінансових звітів (автоматично обчислений рівень \"поля\")."
 
 #. module: account
 #: help:account.tax.code,sign:0
@@ -11486,7 +11486,7 @@ msgstr ""
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
 "unreconcile related payment entries first."
-msgstr ""
+msgstr "Ви не можете скасувати частково сплачений рахунок-фактуру. Потрібно спочатку занести пов'язані платіжні записи."
 
 #. module: account
 #: code:addons/account/account.py:691
@@ -11500,7 +11500,7 @@ msgstr ""
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "Ви не можете змінити власника облікового запису, який вже міститься в елементах журналу."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1171
@@ -11590,7 +11590,7 @@ msgstr ""
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "refund it instead."
-msgstr ""
+msgstr "и не можете видалити рахунок-фактуру, яка не є чернеткою або скасованою. Ви повинні відшкодувати його."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1234
@@ -11606,7 +11606,7 @@ msgstr ""
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change some non legal fields or you must unreconcile first.\n"
 "%s."
-msgstr ""
+msgstr "Ви не можете зробити цю модифікацію на узгоджений запис. Ви можете просто змінити деякі не правові поля, або ви повинні спочатку узгодити."
 
 #. module: account
 #: code:addons/account/account.py:1352
@@ -11614,7 +11614,7 @@ msgstr ""
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
-msgstr ""
+msgstr "Ви не можете змінити публікацію цього журналу.\nСпочатку потрібно встановити журнал, щоб дозволити скасування записів."
 
 #. module: account
 #: code:addons/account/account.py:1124
@@ -11633,7 +11633,7 @@ msgstr ""
 #: code:addons/account/wizard/pos_box.py:45
 #, python-format
 msgid "You cannot put/take money in/out for a bank statement which is closed."
-msgstr ""
+msgstr "Ви не можете переказати / взяти гроші в / в банк для виписки, яка закрита."
 
 #. module: account
 #: code:addons/account/account.py:669
@@ -11671,7 +11671,7 @@ msgstr ""
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal."
-msgstr ""
+msgstr "Ви не можете скористатися цим загальним обліковим записом у цьому журналі, перевірте вкладку \"Контроль надходження\" у відповідному журналі."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1096
@@ -11821,7 +11821,7 @@ msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Ви повинні налаштувати параметр \"Придбання обмінного курсу обміну\" у налаштуваннях обліку, щоб автоматично керувати бронюванням записів про бухгалтерський облік, що стосуються різниці між курсами обміну."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:686
@@ -11830,7 +11830,7 @@ msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
-msgstr ""
+msgstr "Вам слід налаштувати «Обліковий курс обміну втрат» у налаштуваннях обліку, щоб автоматично керувати бронюванням бухгалтерських записів, пов'язаними з відмінностями між обмінними курсами."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:57
@@ -11839,7 +11839,7 @@ msgstr ""
 msgid ""
 "You should have defined an 'Internal Transfer Account' in your cash "
 "register's journal!"
-msgstr ""
+msgstr "Ви повинні визначити \"внутрішній рахунок переказу\" у своєму касовому журналі!"
 
 #. module: account
 #. openerp-web

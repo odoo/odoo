@@ -9,9 +9,9 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2015-05-29 11:51+0000\n"
+"PO-Revision-Date: 2017-07-26 02:20+0000\n"
 "Last-Translator: Martin Trigaux\n"
-"Language-Team: Mongolian (http://www.transifex.com/projects/p/odoo-8/language/mn/)\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,19 +29,19 @@ msgid ""
 "Date by which the customer has requested the items to be delivered.\n"
 "When this Order gets confirmed, the Delivery Order's expected date will be computed based on this date and the Company's Security Delay.\n"
 "Leave this field empty if you want the Delivery Order to be processed as soon as possible. In that case the expected date will be computed using the default method: based on the Product Lead Times and the Company's Security Delay."
-msgstr ""
+msgstr "Захиалагч барааг хүлээж авахаар шаардсан огноо.\nЭнэ захиалгыг баталсаны дараа хүргэх захиалгын хүлээсэн огноог энэ огноо ба компаний аюулгүй байдлын хүлээлт дээр үндэслэн тооцоолно.\nХэрэв та хүргэх захиалгыг аль болох хурдан боловсруулахыг хүсвэл энэ талбарыг хоосон үлдээнэ үү. Тэгсэн тохиолдолд хүлээсэн огноог үндсэн аргаар тооцоолно: барааг боловсруулах огноо, компаний аюулгүй байдлын хүлээлт дээр суурилна."
 
 #. module: sale_order_dates
 #: help:sale.order,commitment_date:0
 msgid ""
 "Date by which the products are sure to be delivered. This is a date that you"
 " can promise to the customer, based on the Product Lead Times."
-msgstr ""
+msgstr "Барааг найдвартай хүргэсэн байх огноо. Энэ бол Барааг боловсруулах хугацаа дээр суурилсан захиалагчид амлаж болох огноо юм."
 
 #. module: sale_order_dates
 #: help:sale.order,effective_date:0
 msgid "Date on which the first Delivery Order was created."
-msgstr ""
+msgstr "Эхний хүргэх захиалга үүсгэгдсэн огноо."
 
 #. module: sale_order_dates
 #: view:sale.order:sale_order_dates.view_sale_orderfor
@@ -62,7 +62,7 @@ msgstr "Хүсэлт гаргасан Огноо"
 #: code:addons/sale_order_dates/sale_order_dates.py:76
 #, python-format
 msgid "Requested date is too soon!"
-msgstr ""
+msgstr "Шаардсан огноо хэт эрт байна!"
 
 #. module: sale_order_dates
 #: model:ir.model,name:sale_order_dates.model_sale_order
@@ -75,4 +75,4 @@ msgstr "Борлуулалтын захиалга"
 msgid ""
 "The date requested by the customer is sooner than the commitment date. You "
 "may be unable to honor the customer's request."
-msgstr ""
+msgstr "Захиалагчийн шаардсан огноо амласан огноогоос эрт байна. Та захиалагчийн шаардлагыг хангах боломжгүй байх магадлалтай."

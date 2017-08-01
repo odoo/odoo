@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-21 14:08+0000\n"
-"PO-Revision-Date: 2017-03-08 10:17+0000\n"
+"PO-Revision-Date: 2017-07-20 22:43+0000\n"
 "Last-Translator: hoxhe Aits <hoxhe0@gmail.com>\n"
 "Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -44,12 +44,12 @@ msgid ""
 "${object.company_id.email or ''}\n"
 "${object.company_id.phone or ''}\n"
 "</pre>"
-msgstr ""
+msgstr "\n<p>\n    مرحباً ${object.name},\n</p>\n<p>\n    تمت دعوتك لتأكيد عنوان بريدك الإلكتروني لتتمكن من الوصول إلى منتديات \"${object.company_id.name}\"\n</p>\n<p>\n    لتأكيد عنوان بريدك الإلكتروني، انقر الرابط أدناه:\n</p>\n<ul>\n    <li><a href=\"${ctx.get('token_url')}\">تأكيد بريدي الإلكتروني في منتديات \"${object.company_id.name}\" </a></li>\n</ul>\n<p>\n    مع أطيب أمنياتنا,\n</p>\n<pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n</pre>"
 
 #. module: website_forum
 #: model:email.template,subject:website_forum.validation_email
 msgid "${object.company_id.name} Forums validation"
-msgstr ""
+msgstr "${object.company_id.name} تفعيل المنتدى"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -82,7 +82,7 @@ msgstr "-1"
 msgid ""
 "<p>A new answer for <i>%s</i> has been posted. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the post.</a></p>"
-msgstr ""
+msgstr "<p>تم إضافة إجابةعلى السؤال <i>%s</i>. <a href=\"%s/forum/%s/question/%s\">انقر هنا للإطلاع عليها.</a></p>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:380
@@ -90,7 +90,7 @@ msgstr ""
 msgid ""
 "<p>A new question <i>%s</i> has been asked on %s. <a "
 "href=\"%s/forum/%s/question/%s\">Click here to access the question.</a></p>"
-msgstr ""
+msgstr "<p>طُرح سؤال جديد: <i>%s</i> في %s. <a href=\"%s/forum/%s/question/%s\">انقر هنا للإطلاع عليه.</a></p>"
 
 #. module: website_forum
 #: model:forum.forum,description:website_forum.forum_help
@@ -168,17 +168,17 @@ msgstr "الإجابة مقبولة"
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_downvote:0
 msgid "Answer downvoted"
-msgstr ""
+msgstr "التصويت سلباً على إجابة"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_flagged:0
 msgid "Answer flagged"
-msgstr ""
+msgstr "الإجابة مُبلغ عنها"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_answer_upvote:0
 msgid "Answer upvoted"
-msgstr ""
+msgstr "التصويت إيجاباً على إجابة"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -206,17 +206,17 @@ msgstr "اطرح سؤالك"
 #: field:forum.post,create_date:0
 #: view:website:website_forum.post_description_full
 msgid "Asked on"
-msgstr ""
+msgstr "سُئل في"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Asked:"
-msgstr ""
+msgstr "سُئل:"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_new:0
 msgid "Asking a question"
-msgstr ""
+msgstr "يطرح سؤالاً"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
@@ -236,7 +236,7 @@ msgstr "رجوع الى"
 #. module: website_forum
 #: view:website:website_forum.badge_user
 msgid "Badge \""
-msgstr ""
+msgstr "الشارة \""
 
 #. module: website_forum
 #: field:res.users,badge_ids:0 view:website:website_forum.badge
@@ -291,7 +291,7 @@ msgstr "يمكن التحويل لتعليق"
 #. module: website_forum
 #: field:forum.post,can_downvote:0
 msgid "Can Downvote"
-msgstr ""
+msgstr "يمكنه التصويت السلبي"
 
 #. module: website_forum
 #: field:forum.post,can_edit:0
@@ -306,7 +306,7 @@ msgstr "يمكن إلغاء ربط"
 #. module: website_forum
 #: field:forum.post,can_upvote:0
 msgid "Can Upvote"
-msgstr ""
+msgstr "يمكنه التصويت الإيجابي"
 
 #. module: website_forum
 #: field:forum.forum,karma_retag:0
@@ -316,7 +316,7 @@ msgstr "تغير علامات السؤال"
 #. module: website_forum
 #: view:website:website_forum.user_badges
 msgid "Check available badges"
-msgstr ""
+msgstr "مشاهدة الشارات المتاحة"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_4
@@ -334,7 +334,7 @@ msgstr "المدينة"
 msgid ""
 "Click here to send a verification email allowing you to participate to the "
 "forum."
-msgstr ""
+msgstr "انقر هنا لإرسال رسالة تأكيد البريد الإلكتروني لتتمكن من المشاركة في هذا المجتمع."
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_clickable_link:0
@@ -380,7 +380,7 @@ msgstr "تعليق"
 #. module: website_forum
 #: field:forum.forum,karma_comment_all:0
 msgid "Comment all posts"
-msgstr ""
+msgstr "التعليق على كافة المشاركات"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_own:0
@@ -390,7 +390,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.post_comment
 msgid "Comment this post..."
-msgstr ""
+msgstr "التعليق على هذه المشاركة.."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_p_2
@@ -407,7 +407,7 @@ msgstr "التعليقات"
 #. module: website_forum
 #: help:forum.post,website_message_ids:0
 msgid "Comments on forum post"
-msgstr ""
+msgstr "التعليقات على مشاركات المجتمع"
 
 #. module: website_forum
 #: model:gamification.challenge,name:website_forum.challenge_configure_profile
@@ -435,7 +435,7 @@ msgstr "المحتوى"
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_all:0
 msgid "Convert all answers to comments and vice versa"
-msgstr ""
+msgstr "تحويل كافة الإجابات إلى تعليقات والعكس"
 
 #. module: website_forum
 #: field:forum.forum,karma_comment_convert_own:0
@@ -479,14 +479,14 @@ msgstr "إنشاؤه في"
 #: model:gamification.badge,name:website_forum.badge_q_4
 #: model:gamification.challenge,name:website_forum.challenge_favorite_question_1
 msgid "Credible Question"
-msgstr ""
+msgstr "سؤال موثوق"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_5
 #: model:gamification.challenge,name:website_forum.challenge_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr ""
+msgstr "ناقد"
 
 #. module: website_forum
 #: help:forum.forum,message_last_post:0 help:forum.post,message_last_post:0
@@ -513,12 +513,12 @@ msgstr "الوصف"
 #: model:gamification.challenge,name:website_forum.challenge_disciplined
 #: model:gamification.goal.definition,name:website_forum.definition_disciplined
 msgid "Disciplined"
-msgstr ""
+msgstr "منضبط"
 
 #. module: website_forum
 #: field:forum.forum,karma_downvote:0
 msgid "Downvote"
-msgstr ""
+msgstr "التصويت سلباً"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
@@ -577,7 +577,7 @@ msgstr "البريد الإلكتروني"
 #: model:gamification.challenge,name:website_forum.challenge_enlightened
 #: model:gamification.goal.definition,name:website_forum.definition_enlightened
 msgid "Enlightened"
-msgstr ""
+msgstr "مستنير"
 
 #. module: website_forum
 #: view:website:website_forum.ask_question
@@ -593,7 +593,7 @@ msgstr "سؤال مشهور"
 #. module: website_forum
 #: field:forum.post,favourite_count:0
 msgid "Favorite Count"
-msgstr ""
+msgstr "عدد التفضيلات"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_5
@@ -629,22 +629,22 @@ msgstr "أسئلة مفضلة"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Filter on"
-msgstr ""
+msgstr "فرز حسب"
 
 #. module: website_forum
 #: field:forum.forum,karma_flag:0
 msgid "Flag a post as offensive"
-msgstr ""
+msgstr "تبليغ عن مشاركة لإساءتها"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Followed"
-msgstr ""
+msgstr "تتابعه"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
 msgid "Followed Questions"
-msgstr ""
+msgstr "الأسئلة المتبوعة"
 
 #. module: website_forum
 #: field:forum.forum,message_follower_ids:0
@@ -666,24 +666,24 @@ msgstr "منتدى"
 #. module: website_forum
 #: field:gamification.badge,level:0
 msgid "Forum Badge Level"
-msgstr ""
+msgstr "مستوى شارة المجتمع"
 
 #. module: website_forum
 #: view:res.users:website_forum.view_users_form_forum
 msgid "Forum Karma"
-msgstr ""
+msgstr "نقاط موثوقية المجتمع"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_form
 #: model:ir.model,name:website_forum.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "مشاركة المجتمع"
 
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_list
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Posts"
-msgstr ""
+msgstr "مشاركات المجتمع"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_list
@@ -701,7 +701,7 @@ msgstr "شارة التلعيب"
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification challenge"
-msgstr ""
+msgstr "تحدي المنافسة"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_3
@@ -751,17 +751,17 @@ msgstr "المبادئ التوجيهية"
 #: model:gamification.badge,name:website_forum.badge_a_6
 #: model:gamification.challenge,name:website_forum.challenge_guru
 msgid "Guru"
-msgstr ""
+msgstr "مخضرم"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_guru
 msgid "Guru (15)"
-msgstr ""
+msgstr "مخضرم (15)"
 
 #. module: website_forum
 #: field:forum.post,uid_has_answered:0
 msgid "Has Answered"
-msgstr ""
+msgstr "تم إجابته"
 
 #. module: website_forum
 #: field:forum.post,has_validated_answer:0
@@ -818,12 +818,12 @@ msgstr ""
 #. module: website_forum
 #: field:res.users,karma:0 view:website:website_forum.user_detail_full
 msgid "Karma"
-msgstr ""
+msgstr "الموثوقية"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
 msgid "Karma Gains"
-msgstr ""
+msgstr "مكتسبات الموثوقية"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -848,12 +848,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,karma_close:0
 msgid "Karma to close"
-msgstr ""
+msgstr "الموثوقية للإغلاق"
 
 #. module: website_forum
 #: field:forum.post,karma_comment:0
 msgid "Karma to comment"
-msgstr ""
+msgstr "الموثوقية للتعليق"
 
 #. module: website_forum
 #: field:forum.post,karma_downvote:0
@@ -863,12 +863,12 @@ msgstr ""
 #. module: website_forum
 #: field:forum.post,karma_edit:0
 msgid "Karma to edit"
-msgstr ""
+msgstr "الموثوقية للتحرير"
 
 #. module: website_forum
 #: field:forum.post,karma_unlink:0
 msgid "Karma to unlink"
-msgstr ""
+msgstr "الموثوقية للحذف"
 
 #. module: website_forum
 #: field:forum.post,karma_upvote:0
@@ -878,7 +878,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Keep Informed"
-msgstr ""
+msgstr "ابق على إطلاع"
 
 #. module: website_forum
 #: field:forum.forum,message_last_post:0 field:forum.post,message_last_post:0
@@ -900,12 +900,12 @@ msgstr "آخر تحديث فى"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Last activity date"
-msgstr ""
+msgstr "تاريخ آخر نشاط"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Last updated:"
-msgstr ""
+msgstr "آخر تحديث:"
 
 #. module: website_forum
 #: field:forum.forum,karma_editor_link_files:0
@@ -925,12 +925,12 @@ msgstr "الرسائل و سجل التواصل"
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most answered"
-msgstr ""
+msgstr "الأكثر إجابة"
 
 #. module: website_forum
 #: view:website:website_forum.forum_index
 msgid "Most voted"
-msgstr ""
+msgstr "الأكثر تصويتاً"
 
 #. module: website_forum
 #: field:forum.post,user_favourite:0
@@ -945,7 +945,7 @@ msgstr "ملفي الشخصي"
 #. module: website_forum
 #: field:forum.post,user_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "تصويتي"
 
 #. module: website_forum
 #: field:forum.forum,name:0 view:forum.post:website_forum.view_forum_post_form
@@ -1057,7 +1057,7 @@ msgstr "منتدياتنا"
 #: model:gamification.challenge,name:website_forum.challenge_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr ""
+msgstr "ضغط الأقران"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1176,7 +1176,7 @@ msgstr "سؤال"
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
 msgid "Question Edited"
-msgstr ""
+msgstr "تم تحرير السؤال"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_downvote:0
@@ -1191,7 +1191,7 @@ msgstr ""
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Question tools"
-msgstr ""
+msgstr "أدوات السؤال"
 
 #. module: website_forum
 #: field:forum.forum,karma_gen_question_upvote:0
@@ -1213,17 +1213,17 @@ msgstr "أسئلة"
 #: code:addons/website_forum/models/forum.py:376
 #, python-format
 msgid "Re: %s"
-msgstr ""
+msgstr "رد: %s"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Read Guidelines"
-msgstr ""
+msgstr "اقرأ الإرشادات"
 
 #. module: website_forum
 #: view:website:website_forum.edit_profile
 msgid "Real name"
-msgstr ""
+msgstr "الاسم الحقيقي"
 
 #. module: website_forum
 #: field:forum.post,closed_reason_id:0
@@ -1238,7 +1238,7 @@ msgstr "السبب:"
 #. module: website_forum
 #: view:website:website_forum.404 view:website:website_forum.private_profile
 msgid "Return to the question list."
-msgstr ""
+msgstr "عودة إلى قائمة الأسئلة"
 
 #. module: website_forum
 #: view:website:website_forum.edit_post
@@ -1250,7 +1250,7 @@ msgstr "حفظ"
 #: model:gamification.challenge,name:website_forum.challenge_scholar
 #: model:gamification.goal.definition,name:website_forum.definition_scholar
 msgid "Scholar"
-msgstr ""
+msgstr "باحث"
 
 #. module: website_forum
 #: view:website:website_forum.header
@@ -1265,19 +1265,19 @@ msgstr ""
 #. module: website_forum
 #: view:forum.post:website_forum.view_forum_post_search
 msgid "Search in Post"
-msgstr ""
+msgstr "بحث المشاركات"
 
 #. module: website_forum
 #: view:website:website_forum.header
 msgid "Seen:"
-msgstr ""
+msgstr "شوهد: "
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
 #: model:gamification.challenge,name:website_forum.challenge_self_learner
 #: model:gamification.goal.definition,name:website_forum.definition_self_learner
 msgid "Self-Learner"
-msgstr ""
+msgstr "ذاتي التعلم"
 
 #. module: website_forum
 #: view:forum.forum:website_forum.view_forum_forum_form
@@ -1315,7 +1315,7 @@ msgstr ""
 #: model:gamification.badge,name:website_forum.badge_q_7
 #: model:gamification.challenge,name:website_forum.challenge_student
 msgid "Student"
-msgstr ""
+msgstr "طالب"
 
 #. module: website_forum
 #: field:forum.forum,message_summary:0 field:forum.post,message_summary:0
@@ -1327,7 +1327,7 @@ msgstr "الملخّص"
 #: model:gamification.challenge,name:website_forum.challenge_supporter
 #: model:gamification.goal.definition,name:website_forum.definition_supporter
 msgid "Supporter"
-msgstr ""
+msgstr "داعم"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_tag
@@ -1353,7 +1353,7 @@ msgstr ""
 #: model:gamification.challenge,name:website_forum.challenge_teacher
 #: model:gamification.goal.definition,name:website_forum.definition_teacher
 msgid "Teacher"
-msgstr ""
+msgstr "مُعلم"
 
 #. module: website_forum
 #: view:website:website_forum.post_description_full
@@ -1423,7 +1423,7 @@ msgstr "محدث"
 #. module: website_forum
 #: field:forum.forum,karma_upvote:0
 msgid "Upvote"
-msgstr ""
+msgstr "التصويت إيجاباً"
 
 #. module: website_forum
 #: model:gamification.goal.definition,name:website_forum.definition_student
@@ -1604,7 +1604,7 @@ msgstr "من قبل أكبر عدد من الأصوات"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_7
 msgid "contains offensive or malicious remarks"
-msgstr ""
+msgstr "يتضمن إشارات مسيئة أو مشبوهة"
 
 #. module: website_forum
 #: view:website:website_forum.user_detail_full
@@ -1746,7 +1746,7 @@ msgstr "الموضعي جدا"
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_3
 msgid "too subjective and argumentative"
-msgstr ""
+msgstr "جدلي جداً"
 
 #. module: website_forum
 #: field:forum.post,self_reply:0
