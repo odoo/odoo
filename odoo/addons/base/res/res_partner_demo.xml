@@ -202,6 +202,24 @@
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>
+        <record id="res_partner_address_3" model="res.partner">
+            <field name="function">Functional Consultant</field>
+            <field name="parent_id" eval="ref('res_partner_2')"/>
+            <field name="name">Thomas Passot</field>
+            <field name="email">thomas.passot@agrolait.example.com</field>
+        </record>
+        <record id="res_partner_address_4" model="res.partner">
+            <field name="function">Analyst</field>
+            <field name="parent_id" eval="ref('res_partner_2')"/>
+            <field name="name">Michel Fletcher</field>
+            <field name="email">michel.fletcher@agrolait.example.com</field>
+        </record>
+        <record id="res_partner_address_5" model="res.partner">
+            <field name="function">Marketing Manager</field>
+            <field name="parent_id" eval="ref('res_partner_3')"/>
+            <field name="name">Chao Wang</field>
+            <field name="email">chao.wang@chinaexport.example.com</field>
+        </record>
         <record id="res_partner_address_7" model="res.partner">
             <field name="name">Richard Ellis</field>
             <field name="parent_id" eval="ref('res_partner_4')"/>
@@ -210,12 +228,90 @@
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>
+        <record id="res_partner_address_10" model="res.partner">
+            <field name="function">Senior Consultant</field>
+            <field name="parent_id" eval="ref('res_partner_3')"/>
+            <field name="name">David Simpson</field>
+            <field name="email">david.simpson@epic.example.com</field>
+        </record>
+        <record id="res_partner_address_11" model="res.partner">
+            <field name="function">Director</field>
+            <field name="parent_id" eval="ref('res_partner_3')"/>
+            <field name="name">John M. Brown</field>
+            <field name="email">john.brown@epic.example.com</field>
+        </record>
         <record id="res_partner_address_12" model="res.partner">
             <field name="name">James Miller</field>
             <field name="parent_id" eval="ref('res_partner_1')"/>
             <field name="function">Electrical Supervisor</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_13" model="res.partner">
+            <field name="function">Senior Associate</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Charlie Bernard</field>
+            <field name="email">charlie.bernard@wealthyandsons.example.com</field>
+        </record>
+        <record id="res_partner_address_14" model="res.partner">
+            <field name="function">Analyst</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Jessica Dupont</field>
+            <field name="email">jessica.dupont@wealthyandsons.example.com</field>
+        </record>
+        <record id="res_partner_address_15" model="res.partner">
+            <field name="function">Creative Director</field>
+            <field name="parent_id" eval="ref('res_partner_12')"/>
+            <field name="name">Phillipp Miller</field>
+            <field name="email">phillipp.miller@mediapole.example.com</field>
+        </record>
+        <record id="res_partner_address_16" model="res.partner">
+            <field name="function">Director</field>
+            <field name="parent_id" eval="ref('res_partner_12')"/>
+            <field name="name">Ayaan Agarwal</field>
+            <field name="email">ayaan.agarwal@bestdesigners.example.com</field>
+        </record>
+        <record id="res_partner_address_17" model="res.partner">
+            <field name="function">Managing Partner</field>
+            <field name="parent_id" eval="ref('res_partner_10')"/>
+            <field name="name">Daniel Jackson</field>
+            <field name="email">daniel.jackson@jackson.example.com</field>
+        </record>
+        <record id="res_partner_address_18" model="res.partner">
+            <field name="function">Senior Consultant</field>
+            <field name="parent_id" eval="ref('res_partner_10')"/>
+            <field name="name">William Thomas</field>
+            <field name="email">william.jackson@jackson.example.com</field>
+        </record>
+        <record id="res_partner_address_22" model="res.partner">
+            <field name="function">Director</field>
+            <field name="parent_id" eval="ref('res_partner_2')"/>
+            <field name="name">Laith Jubair</field>
+            <field name="email">laith.jubair@axelor.example.com</field>
+        </record>
+        <record id="res_partner_address_24" model="res.partner">
+            <field name="function">System Analyst</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Robert Anderson</field>
+            <field name="email">robert.anderson@chamberworks.example.com</field>
+        </record>
+        <record id="res_partner_address_25" model="res.partner">
+            <field name="function">Order Clerk</field>
+            <field name="parent_id" eval="ref('res_partner_3')"/>
+            <field name="name">Jacob Taylor</field>
+            <field name="email">jacob.taylor@millennium.example.com</field>
+        </record>
+        <record id="res_partner_address_28" model="res.partner">
+            <field name="function">Business Executive</field>
+            <field name="parent_id" eval="ref('res_partner_12')"/>
+            <field name="name">Benjamin Flores</field>
+            <field name="email">benjamin.flores@nebula.example.com</field>
+        </record>
+        <record id="res_partner_address_30" model="res.partner">
+            <field name="function">Functional Consultant</field>
+            <field name="parent_id" eval="ref('res_partner_18')"/>
+            <field name="name">Lucas Jones</field>
+            <field name="email">lucas.jones@thinkbig.example.com</field>
         </record>
         <record id="res_partner_address_31" model="res.partner">
             <field name="name">Edward Foster</field>
@@ -224,6 +320,24 @@
             <field name="email">efoster@seagate.com</field>
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
+        </record>
+        <record id="res_partner_address_32" model="res.partner">
+            <field name="function">Sales Manager</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Robin Smith</field>
+            <field name="email">robin.smith@globalsolutions.example.com</field>
+        </record>
+        <record id="res_partner_address_33" model="res.partner">
+            <field name="function">Financial Manager</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Morgan Rose</field>
+            <field name="email">morgan.rose@globalsolutions.example.com</field>
+        </record>
+        <record id="res_partner_address_34" model="res.partner">
+            <field name="function">Knowledge Manager</field>
+            <field name="parent_id" eval="ref('res_partner_4')"/>
+            <field name="name">Kevin Clarke</field>
+            <field name="email">kevin.clarke@globalsolutions.example.com</field>
         </record>
         <record id="res_partner_address_27" model="res.partner">
             <field name="name">Arthur Gomez</field>
@@ -246,6 +360,19 @@
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
         </record>
+        <record id="res_partner_main1" model="res.partner">
+          <field name="customer" eval="False"/>
+          <field name="parent_id" eval="ref('main_partner')"/>
+          <field name="function">Chief Executive Officer (CEO)</field>
+          <field name="name">Mark Davis</field>
+          <field name="email">mark.davis@yourcompany.example.com</field>
+        </record>
+        <record id="res_partner_main2" model="res.partner">
+          <field name="customer" eval="False"/>
+          <field name="parent_id" eval="ref('main_partner')"/>
+          <field name="function">Chief Operations Officer (COO)</field>
+          <field name="name">Roger Scott</field>
+          <field name="email">roger.scott@yourcompany.example.com</field>
+        </record>
     </data>
 </odoo>
-
