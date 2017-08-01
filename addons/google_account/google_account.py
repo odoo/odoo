@@ -103,6 +103,9 @@ class google_service(osv.osv_memory):
         res = False
         client_id = self.get_client_id(cr, uid, service, context)
         client_secret = self.get_client_secret(cr, uid, service, context)
+        
+        if not client_id or not client_secret:
+            return res
 
         params = {
             'refresh_token': refresh_token,
