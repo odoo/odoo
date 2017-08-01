@@ -27,7 +27,7 @@ class MrpBomCost(models.AbstractModel):
                 total = 0.0
                 for bom_line in result:
                     line_product = self.env['product.product'].browse(bom_line['product_id'])
-                    price_uom = self.env['product.uom']._compute_qty(line_product.uom_id.id, line_product.standard_price, bom_line['product_uom'])
+                    price_uom = self.env['product.uom']._compute_price(line_product.uom_id.id, line_product.standard_price, bom_line['product_uom'])
                     line = {
                         'product_id': line_product,
                         'product_uom_qty': bom_line['product_qty'],
