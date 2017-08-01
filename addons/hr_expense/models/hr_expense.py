@@ -378,7 +378,7 @@ class HrExpenseSheet(models.Model):
     _order = "accounting_date desc, id desc"
 
     name = fields.Char(string='Expense Report Summary', required=True)
-    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
+    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'approve': [('readonly', True)], 'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
     state = fields.Selection([('submit', 'Submitted'),
                               ('approve', 'Approved'),
                               ('post', 'Posted'),
