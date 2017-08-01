@@ -395,6 +395,24 @@
                 <pivot string="Event" disable_linking="True">
                     <field name="name" type="row"/>
                     <field name="seats_reserved" type="measure"/>
+                    <field name="organizer_id" groups="group_event_manager"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="message_last_post" groups="base.group_no_one"/>
+                    <field name="date_end" groups="base.group_no_one"/>
+                    <field name="twitter_hashtag" groups="base.group_no_one"/>
+                    <field name="write_uid" groups="base.group_no_one"/>
+                    <field name="website_meta_keywords" groups="base.group_no_one"/>
+                    <field name="user_id" groups="group_event_user"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="__last_update" groups="base.group_no_one"/>
+                    <field name="menu_id" groups="base.group_no_one"/>
+                    <field name="date_tz" groups="base.group_no_one"/>
+                    <field name="auto_confirm" groups="base.group_no_one"/>
+                    <field name="write_date" groups="base.group_no_one"/>
+                    <field name="date_begin" groups="base.group_no_one"/>
+                    <field name="color" groups="base.group_no_one"/>
+                    <field name="seats_used" groups="base.group_no_one"/>
+                    <field name="seats_unconfirmed" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>
@@ -506,7 +524,17 @@
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
                 <pivot string="Registration" display_quantity="True">
-                    <field name="event_id" type="row"/>
+                    <field name="event_id" type="row" groups="base.group_no_one"/>
+                    <field name="date_closed" groups="base.group_no_one"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="write_uid" groups="base.group_no_one"/>
+                    <field name="create_uid" groups="base.group_no_one"/>
+                    <field name="date_open" groups="base.group_no_one"/>
+                    <field name="message_last_post" groups="base.group_no_one"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="email" groups="group_event_user"/>
+                    <field name="phone" groups="group_event_user"/>
+                    <field name="write_date" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>

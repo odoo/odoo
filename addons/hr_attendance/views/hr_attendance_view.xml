@@ -88,9 +88,13 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <pivot string="Attendance">
-                <field name="employee_id" type="row"/>
+                <field name="employee_id" type="row" />
                 <field name="check_in" type="col"/>
-                <field name="worked_hours" type="measure"/>
+                <field name="worked_hours" type="measure" groups="group_hr_attendance_user"/>
+                <field name="create_uid" groups="base.group_no_one"/>
+                <field name="write_date" groups="base.group_no_one"/>
+                <field name="write_uid" groups="base.group_no_one"/>
+                <field name="create_date" groups="base.group_no_one"/>
             </pivot>
         </field>
     </record>
