@@ -396,7 +396,7 @@ class PurchaseOrder(models.Model):
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 moves = moves.action_confirm()
                 seq = 0
-                for move in moves:
+                for move in sorted(moves, key=lambda move: move.date_expected):
                     seq += 5
                     move.sequence = seq
                 moves.force_assign()
