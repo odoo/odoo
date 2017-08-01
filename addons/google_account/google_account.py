@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import openerp
+from openerp.exceptions import UserError
 from openerp.http import request
 from openerp.osv import osv
 from openerp import SUPERUSER_ID
@@ -103,6 +104,9 @@ class google_service(osv.osv_memory):
         res = False
         client_id = self.get_client_id(cr, uid, service, context)
         client_secret = self.get_client_secret(cr, uid, service, context)
+
+        if not client_id or not client_secret:
+            raise UserError(_("The account for the Google service '%s' is not configured") % service)
 
         params = {
             'refresh_token': refresh_token,
