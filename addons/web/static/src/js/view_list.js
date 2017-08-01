@@ -1628,7 +1628,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.view.$pager.find('.oe_page_group').css('display', '');
+                self.view.$pager.find('.oe_pager_group').css('display', '');
                 self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
