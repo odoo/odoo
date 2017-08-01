@@ -219,8 +219,11 @@ class StockMove(models.Model):
 
     @api.constrains('product_uom')
     def _check_uom(self):
-        if any(move.product_id.uom_id.category_id.id != move.product_uom.category_id.id for move in self):
-            raise UserError(_('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.'))
+        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id.id != move.product_uom.category_id.id)
+        if moves_error:
+            user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+            user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
+            raise UserError(user_warning)
 
     @api.model_cr
     def init(self):
