@@ -539,7 +539,7 @@ class ProductTemplate(models.Model):
     def action_view_stock_moves(self):
         products = self.mapped('product_variant_ids')
         action = self.env.ref('stock.act_product_stock_move_open').read()[0]
-        if self:
+        if products:
             action['context'] = {'default_product_id': products.ids[0]}
         action['domain'] = [('product_id.product_tmpl_id', 'in', self.ids)]
         return action
