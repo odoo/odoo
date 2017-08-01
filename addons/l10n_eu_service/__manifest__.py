@@ -52,7 +52,7 @@ References
 - Council Implementing Regulation (EU) No 1042/2013
 
     """,
-    'depends': ['account_accountant'],
+    'depends': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/wizard.xml',

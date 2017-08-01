@@ -3,4 +3,77 @@
         <menuitem id="menu_product_product_categories"
         action="product.product_category_action_form"
         parent="account.product_configuration_menu" sequence="2"/>
+
+        <!--
+            The following menuitems and elements in views are hidden by the group_account_user.
+            Now that we want to show them, we set the correct group on them (example: group_account_manager)
+        -->
+        <record id="account.menu_finance_entries" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('account.group_account_user')), (4, ref('account.group_account_manager'))]"/>
+        </record>
+
+        <record id="account.menu_finance_configuration" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('account.group_account_manager')), (4, ref('account.group_account_user'))]"/>
+        </record>
+
+        <record id="account.menu_finance_reports" model="ir.ui.menu">
+            <field name="groups_id" eval="[(3, ref('account.group_account_manager')), (4, ref('account.group_account_user'))]"/>
+        </record>
+
+        <record id="res_partner_view_form" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='accounting_entries']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                </xpath>
+                <xpath expr="//page[@name='accounting_disabled']" position="attributes">
+                    <attribute name="string">Accounting</attribute>
+                </xpath> 
+                <xpath expr="//page[@name='accounting']" position="attributes">
+                    <attribute name="string">Accounting</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_payment_view_form" model="ir.ui.view">
+            <field name="name">account.payment.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_journal_entries']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_invoice_view_form_supplier" model="ir.ui.view">
+            <field name="name">account.invoice.form.supplier</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']//field[@name='account_id']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_info']//field[@name='move_id']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                </xpath>
+                <xpath expr="//field[@name='tax_line_ids']//tree//field[@name='account_id']" position="attributes">
+                    <attribute name="groups">account.group_account_invoice</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_invoice_view_form_customer" model="ir.ui.view">
+            <field name="name">account.invoice.form.customer</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='other_info']//field[@name='move_id']" position="attributes">
+                    <attribute name="groups">account.group_account_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+
 </odoo>
