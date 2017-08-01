@@ -562,7 +562,7 @@ class module(osv.osv):
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'installed'})
+        self.write(cr, uid, ids, {'state': 'installed'}, context=context)
         return True
 
     def button_immediate_upgrade(self, cr, uid, ids, context=None):
@@ -605,7 +605,7 @@ class module(osv.osv):
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'installed'})
+        self.write(cr, uid, ids, {'state': 'installed'}, context=context)
         return True
 
     @staticmethod
