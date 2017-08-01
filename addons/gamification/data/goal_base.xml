@@ -45,7 +45,7 @@
                 <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
                     <tr><td style="padding: 15px;">
                             <t t-if="record.visibility_mode == 'personal'">
-                                <span style="color:#666666;font-size:13px;">Here is your current progress in the challenge <strong t-esc="record.name"/>.
+                                <span style="color:#666666;font-size:13px;">Here is your current progress in the challenge <strong t-field="record.name"/>.
                                 </span>
                                 <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:20px;">
                                     <tr>
@@ -96,7 +96,7 @@
                             </t>              
                             <t t-else="">
                                 <span style="color:#A8A8A8;font-size:13px;">
-                                    The following message contains the current progress for the challenge <strong><t t-esc="record.name"/></strong>.
+                                    The following message contains the current progress for the challenge <strong t-field="record.name"/>.
                                 </span>
                             </t>
                             <t t-foreach="challenge_lines" t-as="line">
