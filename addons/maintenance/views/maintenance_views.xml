@@ -84,15 +84,15 @@
                             <field name="maintenance_type" widget="radio"/>
                         </group>
                         <group>
-                            <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="technician_user_id" string="Responsible"/>
+                            <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+                            <field name="technician_user_id" string="Responsible" readonly="1"/>
                             <label for="schedule_date"/>
                             <div class="o_row">
                                 <field name="schedule_date" readonly="1"/>
                                 <label string="for"/>
                                 <field name="duration" readonly="1" class="oe_inline"/> hours
                             </div>
-                            <field name="priority" widget="priority"/>
+                            <field name="priority" widget="priority" readonly="1"/>
                         </group>
                     </group>
                     <field name='description' placeholder="Internal Note ......."/>
@@ -154,7 +154,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
-                                        <field name="priority" widget="priority"/>
+                                        <field name="priority" widget="priority" readonly="1"/>
                                         <t t-if="record.message_needaction_counter.raw_value">
                                             <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
                                         </t>
@@ -226,8 +226,8 @@
         </field>
     </record>
 
-   <record id="hr_equipment_request_view_form_readonly_emp" model="ir.ui.view">
-        <field name="name">hr.equipment.request.view.form.readonly.emp</field>
+   <record id="hr_equipment_request_view_form_readonly_manager" model="ir.ui.view">
+        <field name="name">hr.equipment.request.view.form.readonly.manager</field>
         <field name="model">maintenance.request</field>
         <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
         <field name="groups_id" eval="[(6, 0, [ref('maintenance.group_equipment_manager') ])]"/>
@@ -235,15 +235,36 @@
             <field name='stage_id' position="attributes">
                 <attribute name="clickable">1</attribute>
             </field>
+            <field name="maintenance_team_id" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+            <field name="technician_user_id" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
             <field name='schedule_date' position="attributes">
                 <attribute name="readonly">0</attribute>
             </field>
             <field name="duration" position="attributes">
                 <attribute name="readonly">0</attribute>
             </field>
+            <field name="priority" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
             <field name="equipment_id" position="attributes">
                 <attribute name="options">{'no_create': False}</attribute>
             </field>
+        </field>
+    </record>
+
+    <record id="hr_equipment_request_view_kanban_readonly_manger" model="ir.ui.view">
+        <field name="name">hr.equipment.request.view.kanban.readonly.manager</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_kanban"/>
+        <field name="groups_id" eval="[(6, 0, [ref('maintenance.group_equipment_manager') ])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div/field[@name='priority']" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -253,7 +274,7 @@
         <field name="res_model">maintenance.request</field>
         <field name="view_mode">kanban,tree,form,pivot,graph,calendar</field>
         <field name="view_id" ref="hr_equipment_request_view_kanban"/>
-        <field name="context">{'default_technician_user_id': uid, 'search_default_my_requests': 1,}</field>
+        <field name="context">{'default_technician_user_id': uid}</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to add a new maintenance request.
@@ -374,7 +395,7 @@
                         <page string="Maintenance">
                             <group>
                                 <group name="maintenance">
-                                    <field name="next_action_date" class="oe_read_only" string="Next Preventive Maintenance"/>
+                                    <field name="next_action_date" class="oe_read_only" string="Next Maintenance"/>
                                     <label for="period" string="Maintenance Frequency"/>
                                     <div class="o_row">
                                         <field name="period"/> days
@@ -962,21 +983,14 @@
         id="menu_m_dashboard"
         name="Dashboard"
         parent="menu_maintenance_title"
-        groups="group_equipment_manager,base.group_user"
+        groups="group_equipment_manager"
         action="maintenance_dashboard_action"
         sequence="0"/>
 
     <menuitem
-        id="menu_m_request"
-        name="Maintenance"
-        parent="menu_maintenance_title"
-        groups="group_equipment_manager,base.group_user"
-        sequence="1"/>
-
-    <menuitem
         id="menu_m_request_form"
         name="Maintenance Requests"
-        parent="menu_m_request"
+        parent="menu_maintenance_title"
         action="hr_equipment_request_action"
         groups="group_equipment_manager,base.group_user"
         sequence="1"/>

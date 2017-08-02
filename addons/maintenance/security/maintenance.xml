@@ -13,6 +13,10 @@
         <field name="comment">The user will be able to manage equipments.</field>
     </record>
 
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4,ref('maintenance.group_equipment_manager'))]"/>
+    </record>
+
     <!-- Rules -->
     <record id="equipment_request_rule_user" model="ir.rule">
         <field name="name">Users are allowed to access their own maintenance requests</field>
