@@ -45,6 +45,7 @@ class ResConfigSettings(models.TransientModel):
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
     external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
+    address_justification = fields.Selection(related="company_id.address_justification", readonly=False)
 
     @api.model
     def get_values(self):

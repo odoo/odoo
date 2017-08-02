@@ -57,6 +57,7 @@ class Company(models.Model):
     company_registry = fields.Char()
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
+    address_justification = fields.Selection([('left', 'Left'), ('right', 'Right')], string="Address Justification", default='right')
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]

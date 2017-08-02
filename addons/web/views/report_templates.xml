@@ -121,17 +121,17 @@
     <template id="address_layout">
         <t t-set="colclass" t-value="('col-md-5' if report_type == 'html' else 'col-5') + ' ml-auto'"/>
         <t t-if="address">
-            <div class="address row">
+            <div t-att-class="(not address_justification and 'row ' or '') + 'address'">
                 <t t-if="information_block">
-                    <t t-set="colclass" t-value="'col-5 offset-1'"/>
-                    <div name="information_block" class="col-6">
+                    <div name="information_block" t-att-class="address_justification and (company.address_justification == 'right' and 'float-left pl-0 ' or 'float-right ') + colclass or 'col-6'">
                         <t t-raw="information_block"/>
                     </div>
                 </t>
-                <div name="address" t-att-class="colclass">
+                <div name="address" t-att-class="address_justification and (company.address_justification == 'right' and 'float-right ' or 'float-left pl-0 ') + colclass or colclass">
                     <t t-raw="address"/>
                 </div>
             </div>
+         <div class="clearfix mb8" t-if="address_justification"/>
         </t>
     </template>
 
