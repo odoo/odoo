@@ -26,9 +26,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return 'delivered'
 
     def _get_order_currency(self):
-        sale_obj = self.env['sale.order']
-        order = sale_obj.browse(self._context.get('active_ids'))[0]
-        return order.pricelist_id.currency_id.id or self.env.user.company_id.currency_id.id
+        if self._context.get('active_ids'):
+            sale_obj = self.env['sale.order']
+            order = sale_obj.browse(self._context.get('active_ids'))[0]
+            return order.pricelist_id.currency_id.id
+        return self.env.user.company_id.currency_id.id
 
     @api.model
     def _default_product_id(self):
