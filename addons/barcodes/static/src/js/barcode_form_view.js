@@ -171,6 +171,10 @@ FormController.include({
             candidate: this.activeBarcode[name] && this.activeBarcode[name].handle === this.handle ?
                 this.activeBarcode[name].candidate : null,
         };
+
+        // we want to disable autofocus when activating the barcode to avoid
+        // putting the scanned value in the focused field
+        this.disableAutofocus = true;
     },
     /**
      * @private

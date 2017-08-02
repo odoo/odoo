@@ -4197,6 +4197,32 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('no autofocus with disable_autofocus option [REQUIRE FOCUS]', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="int_field"/>' +
+                        '<field name="foo"/>' +
+                '</form>',
+            viewOptions: {
+                disable_autofocus: true,
+            },
+        });
+        assert.notStrictEqual(document.activeElement, form.$('input[name="int_field"]')[0],
+            "int_field field should not have focus");
+
+        form.update({});
+
+        assert.notStrictEqual(document.activeElement, form.$('input[name="int_field"]')[0],
+            "int_field field should not have focus");
+
+        form.destroy();
+    });
+
     QUnit.test('open one2many form containing many2many_tags', function (assert) {
             assert.expect(4);
 

@@ -28,6 +28,7 @@ var FormController = BasicController.extend({
         this._super.apply(this, arguments);
 
         this.actionButtons = params.actionButtons;
+        this.disableAutofocus = params.disableAutofocus;
         this.footerToButtons = params.footerToButtons;
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
@@ -42,7 +43,9 @@ var FormController = BasicController.extend({
      * Calls autofocus on the renderer
      */
     autofocus: function () {
-        this.renderer.autofocus();
+        if (!this.disableAutofocus) {
+            this.renderer.autofocus();
+        }
     },
     /**
      * This method switches the form view in edit mode, with a new record.
@@ -305,7 +308,7 @@ var FormController = BasicController.extend({
         this.set('title', title);
         this._updateButtons();
         this._updateSidebar();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(this.autofocus.bind(this));
     },
     /**
      * @private
