@@ -5,12 +5,12 @@
             <field name="model">mail.statistics.report</field>
             <field name="arch" type="xml">
                 <pivot string="Mass Mailing Statistics" disable_linking="True">
-                    <field name="campaign" type="row" groups="group_mass_mailing_campaign"/>
-                    <field name="sent" type="measure" groups="group_mass_mailing_user"/>
+                    <field name="campaign" type="row" />
+                    <field name="sent" type="measure" />
                     <field name="delivered" type="measure"/>
                     <field name="opened" type="measure"/>
-                    <field name="bounced" type="measure" groups="group_mass_mailing_user"/>
-                    <field name="replied" type="measure" groups="group_mass_mailing_user"/>
+                    <field name="bounced" type="measure" />
+                    <field name="replied" type="measure" />
                     <field name="email_from" groups="base.group_no_one"/>
                     <field name="scheduled_date" groups="base.group_no_one"/>
                 </pivot>
