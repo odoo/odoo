@@ -677,11 +677,7 @@ var StatementModel = BasicModel.extend({
                         reconciliation_proposition.push(tax_prop);
                     }));
             } else {
-                var currencyData = {
-                    currency_id: line.st_line.currency_id
-                };
-
-                prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, currencyData);
+                prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
                 prop.display = self._isDisplayedProposition(prop);
                 prop.invalid = !self._isValid(prop);
             }

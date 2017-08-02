@@ -128,13 +128,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
-    @api.model
-    def reconciliation_create_move_lines_propositions(self, order_ids, invoice_ids):
-        sale_orders = self.env['sale.order'].browse(order_ids)
-        self.env['account.invoice'].browse(invoice_ids).action_invoice_open()
-        move_lines = self.env['account.bank.statement.line'].get_move_lines_for_reconciliation(additional_domain=[('invoice_id', 'in', invoice_ids)])
-        return move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=sale_orders[0].currency_id)
-
     @api.multi
     def create_invoices(self):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))

@@ -166,6 +166,7 @@ ReconciliationClientAction.StatementAction.include({
      */
     _reconcileWithSaleOrderCreateInvoices: function (handle, record, saleOrderIds, orders) {
         var self = this;
+        var line = this.model.getLine(handle);
         var props = [];
         var defs = _.map(orders, function (order) {
             var def = $.Deferred();
@@ -222,7 +223,7 @@ ReconciliationClientAction.StatementAction.include({
                         return self._rpc({
                             model: 'account.reconciliation',
                             method: 'reconciliation_create_move_lines_propositions',
-                            args: [[order.id], createdInvoices]
+                            args: [[order.id], createdInvoices, line.st_line.currency_id]
                         });
                     }).then(function (prop) {
                         props.push.apply(props, prop);
@@ -281,7 +282,7 @@ ReconciliationClientAction.ManualAction.include({
         var line = this.model.getLine(handle);
         var record = _.extend({}, line.reconciliation_proposition[0]);
         if (!record.currency_id) {
-            record.currency_id = line.currency_id;
+            record.currency_id = line.st_line.currency_id;
         }
         this._openReconcileWithSaleOrderView(handle, record);
     },

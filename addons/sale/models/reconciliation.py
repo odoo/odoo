@@ -34,8 +34,8 @@ class Reconciliation(models.AbstractModel):
         return lines
 
     @api.model
-    def reconciliation_create_move_lines_propositions(self, order_ids, invoice_ids):
+    def reconciliation_create_move_lines_propositions(self, order_ids, invoice_ids, target_currency):
         sale_orders = self.env['sale.order'].browse(order_ids)
         self.env['account.invoice'].browse(invoice_ids).action_invoice_open()
         move_lines = self.get_move_lines_for_reconciliation(additional_domain=[('invoice_id', 'in', invoice_ids)])
-        return self.prepare_move_lines_for_reconciliation_widget(move_lines, target_currency=sale_orders[0].currency_id)
+        return self.prepare_move_lines_for_reconciliation_widget(move_lines, target_currency=target_currency)
