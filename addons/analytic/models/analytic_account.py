@@ -52,6 +52,15 @@ class AccountAnalyticCategory(models.Model):
     description = fields.Text(string='Description')
     parent_id = fields.Many2one('account.analytic.category', string="Parent")
     children_ids = fields.One2many('account.analytic.category', 'parent_id', string="Childrens")
+    display_name = fields.Char(compute='_compute_display_name', string='Name')
+
+    @api.multi
+    def _compute_display_name(self):
+        for r in self:
+            if r.parent_id:
+                r.display_name = r.parent_id.display_name + ' / ' + r.name
+            else:
+                r.display_name = r.name
 
 class AccountAnalyticAccount(models.Model):
     _name = 'account.analytic.account'
