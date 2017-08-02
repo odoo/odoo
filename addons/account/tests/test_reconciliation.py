@@ -15,6 +15,7 @@ class TestReconciliation(AccountingTestCase):
 
     def setUp(self):
         super(TestReconciliation, self).setUp()
+        self.account_reconciliation_model = self.env['account.reconciliation']
         self.account_invoice_model = self.env['account.invoice']
         self.account_invoice_line_model = self.env['account.invoice.line']
         self.acc_bank_stmt_model = self.env['account.bank.statement']
@@ -262,9 +263,8 @@ class TestReconciliation(AccountingTestCase):
         # For instance, with a company set in EUR, and a USD rate set to 0.033,
         # the reconciliation of an invoice of 2.00 USD (60.61 EUR) and a bank statement of two lines of 1.00 USD (30.30 EUR)
         # will lead to an exchange loss, that should be handled correctly within the journal items.
-        env = api.Environment(self.cr, self.uid, {})
         # We update the currency rate of the currency USD in order to force the gain/loss exchanges in next steps
-        rateUSDbis = env.ref("base.rateUSDbis")
+        rateUSDbis = self.env.ref("base.rateUSDbis")
         rateUSDbis.write({
             'name': time.strftime('%Y-%m-%d') + ' 00:00:00',
             'rate': 0.033,
@@ -274,11 +274,11 @@ class TestReconciliation(AccountingTestCase):
             'partner_id': self.partner_agrolait_id,
             'currency_id': self.currency_usd_id,
             'name': 'Foreign invoice with exchange gain',
-            'account_id': self.account_rcv_id,
+            'account_id': self.account_rcv.id,
             'type': 'out_invoice',
             'date_invoice': time.strftime('%Y-%m-%d'),
-            'journal_id': self.bank_journal_usd_id,
-            'invoice_line': [
+            'journal_id': self.bank_journal_usd.id,
+            'invoice_line_ids': [
                 (0, 0, {
                     'name': 'line that will lead to an exchange gain',
                     'quantity': 1,
@@ -289,7 +289,7 @@ class TestReconciliation(AccountingTestCase):
         invoice.action_invoice_open()
         # We create a bank statement with two lines of 1.00 USD each.
         statement = self.acc_bank_stmt_model.create({
-            'journal_id': self.bank_journal_usd_id,
+            'journal_id': self.bank_journal_usd.id,
             'date': time.strftime('%Y-%m-%d'),
             'line_ids': [
                 (0, 0, {
@@ -310,7 +310,7 @@ class TestReconciliation(AccountingTestCase):
         # We process the reconciliation of the invoice line with the two bank statement lines
         line_id = None
         for l in invoice.move_id.line_id:
-            if l.account_id.id == self.account_rcv_id:
+            if l.account_id.id == self.account_rcv.id:
                 line_id = l
                 break
         for statement_line in statement.line_ids:
@@ -477,3 +477,85 @@ class TestReconciliation(AccountingTestCase):
             self.assertEquals(round(aml.credit, 2), line['credit'])
             self.assertEquals(round(aml.amount_currency, 2), line['amount_currency'])
             self.assertEquals(aml.currency_id.id, line['currency_id'])
+
+    def test_reconcile_reconciliation(self):
+        default_company = self.env['res.company']._company_default_get('account.journal')
+        journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', default_company.id)], limit=1)
+        statement_id = self.env.ref('account.demo_bank_statement_1').id
+        self.assertDictEqual(self.account_reconciliation_model.reconciliation_widget_preprocess([statement_id]), {
+            'num_already_reconciled_lines': 0,
+            'notifications': [],
+            'journal_id': journal.id,
+            'st_lines_ids': [
+                self.env.ref('account.demo_bank_statement_line_1').id,
+                self.env.ref('account.demo_bank_statement_line_2').id,
+                self.env.ref('account.demo_bank_statement_line_3').id,
+                self.env.ref('account.demo_bank_statement_line_4').id
+            ],
+            'statement_name': u'BNK/2014/001'
+        })
+
+        statement_line = self.env.ref('account.demo_bank_statement_line_1')
+        data = self.account_reconciliation_model.get_move_lines_for_reconciliation_widget(statement_line.id)
+        self.assertEquals(len(data), 6)
+        account_id =  self.env['account.account'].search([('name', '=', 'Account Payable')], limit=1)[0].id
+        journal = self.env['account.journal'].search([('name', '=', 'Vendor Bills')])
+        # test without date
+        data[0].pop('date_maturity')
+        data[0].pop('date')
+        data[0].pop('name')
+        data[0].pop('id')
+
+        self.assertDictEqual(data[0], {
+            'account_type': u'payable',
+            'account_id': [account_id, u'111100 Account Payable'],
+            'amount_currency_str': '',
+            'currency_id': False,
+            'total_amount_str': u'5,749.99 \u20ac',
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'account_name': u'Account Payable',
+            'partner_name': u'ASUSTeK',
+            'total_amount_currency_str': '',
+            'journal_id': [journal.id, u'Vendor Bills (EUR)'],
+            'credit': 5749.99,
+            'amount_str': u'5,749.99 \u20ac',
+            'debit': 0.0,
+            'account_code': u'111100',
+            'ref': '',
+            'already_paid': False
+        })
+
+        data = self.account_reconciliation_model.get_move_lines_for_reconciliation()
+        self.assertEquals(len(data.ids), 6)
+        self.assertEquals(data._name, 'account.move.line')
+
+        data = self.account_reconciliation_model.get_data_for_reconciliation_widget([statement_line.id])
+        data[0]['st_line'].pop('date')
+        data[0]['st_line'].pop('id')
+        data[0].pop('order_ids', None) # for idempotent
+
+        account = self.env['account.account'].search([('code', '=', '101401'), ('name', '=', 'Bank')])
+        journal = self.env['account.journal'].search([('code', '=', 'BNK1')])
+
+        self.assertDictEqual(data[0], {
+            'st_line': {
+                'currency_id': 1,
+                'communication_partner_name': False,
+                'open_balance_account_id': statement_line.partner_id.property_account_receivable_id.id,
+                'name': u'SAJ/2014/002 and SAJ/2014/003',
+                'partner_name': u'Agrolait',
+                'partner_id': self.env.ref('base.res_partner_2').id,
+                'has_no_partner': False,
+                'journal_id': journal.id,
+                'account_id': [account.id, u'101401 Bank'],
+                'account_name': u'Bank',
+                'note': '',
+                'amount': 1175.0,
+                'amount_str': u'1,175.00 \u20ac',
+                'amount_currency_str': '',
+                'account_code': u'101401',
+                'ref': u'',
+                'statement_id': statement_id
+            },
+            'reconciliation_proposition': []
+        })

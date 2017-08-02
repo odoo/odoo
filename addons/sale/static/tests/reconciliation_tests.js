@@ -3,7 +3,6 @@ odoo.define('sale.reconciliation_tests.data', function (require) {
 
 var demoData = require('account.reconciliation_tests.data');
 
-var get_data_for_manual_reconciliation_widget = demoData.params.data['account.move.line'].get_data_for_manual_reconciliation_widget;
 
 demoData.params.data['ir.model.data'] = {
     fields: {},
@@ -68,55 +67,39 @@ demoData.params.data['sale.advance.payment.inv'] = {
         demoData.current.data['sale.order'].records[1].invoice_status = 'invoiced';
         return $.Deferred().resolve({'type': 'ir.actions.act_window_close'});
     },
-    reconciliation_create_move_lines_propositions: function () {
-        return $.Deferred().resolve([
-            {
-                'account_type': "receivable",
-                'amount_currency_str': "",
-                'currency_id': false,
-                'date_maturity': "2017-02-07",
-                'date': "2017-01-08",
-                'total_amount_str': "$ 1175.00",
-                'partner_id': 12,
-                'account_name': "Account Receivable",
-                'name': "INV for SO 2",
-                'partner_name': "Camptocamp",
-                'total_amount_currency_str': "",
-                'id': 133,
-                'credit': 0.0,
-                'journal_id': [1, "Customer Invoices"],
-                'amount_str': "$ 1175.00",
-                'debit': 1175,
-                'account_id': [287, "101200 Account Receivable"],
-                'account_code': "101200",
-                'ref': "",
-                'already_paid': false
-            },
-        ]);
-    },
+};
+
+demoData.params.data['account.reconciliation'].reconciliation_create_move_lines_propositions = function () {
+    return $.Deferred().resolve([
+        {
+            'account_type': "receivable",
+            'amount_currency_str': "",
+            'currency_id': false,
+            'date_maturity': "2017-02-07",
+            'date': "2017-01-08",
+            'total_amount_str': "$ 1175.00",
+            'partner_id': 12,
+            'account_name': "Account Receivable",
+            'name': "INV for SO 2",
+            'partner_name': "Camptocamp",
+            'total_amount_currency_str': "",
+            'id': 133,
+            'credit': 0.0,
+            'journal_id': [1, "Customer Invoices"],
+            'amount_str': "$ 1175.00",
+            'debit': 1175,
+            'account_id': [287, "101200 Account Receivable"],
+            'account_code': "101200",
+            'ref': "",
+            'already_paid': false
+        },
+    ]);
 };
 
 demoData.params.data_widget[0].order_ids = [1,5];
 demoData.params.data_widget[1].order_ids = [1,2,5];
 demoData.params.data_widget[2].order_ids = [2];
 demoData.params.data_widget[3].order_ids = [2];
-
-demoData.params.data['account.move.line'].get_data_for_manual_reconciliation_widget = function (args) {
-    return get_data_for_manual_reconciliation_widget.call(this, args).then(function (datas) {
-        if (datas instanceof Array) {
-            _.each(data, function (data) {
-                data.order_ids = [];
-            });
-        } else {
-            _.each(datas, function (data) {
-                _.each(data, function (data) {
-                    data.order_ids = [];
-                });
-            });
-        }
-        return datas;
-    });
-};
 
 });
 

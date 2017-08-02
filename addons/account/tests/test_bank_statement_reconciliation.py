@@ -5,6 +5,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
     def setUp(self):
         super(TestBankStatementReconciliation, self).setUp()
         self.i_model = self.env['account.invoice']
+        self.r_model = self.env['account.reconciliation']
         self.il_model = self.env['account.invoice.line']
         self.bs_model = self.env['account.bank.statement']
         self.bsl_model = self.env['account.bank.statement.line']
@@ -15,7 +16,7 @@ class TestBankStatementReconciliation(AccountingTestCase):
         st_line = self.create_statement_line(100)
 
         # exact amount match
-        rec_prop = st_line.get_reconciliation_proposition()
+        rec_prop = self.r_model.get_statement_line_reconciliation_proposition(st_line)
         self.assertEqual(len(rec_prop), 1)
         self.assertEqual(rec_prop[0].id, rcv_mv_line.id)
 

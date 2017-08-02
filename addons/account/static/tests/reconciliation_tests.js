@@ -101,12 +101,6 @@ var data = {
             {id: 9, display_name: "Delta PC - Delta PC"},
         ]
     },
-    'account.bank.statement': {
-        fields: {},
-        reconciliation_widget_preprocess: function () {
-            return $.when(data_preprocess);
-        },
-    },
     'account.bank.statement.line': {
         fields: {
             id: {string: "ID", type: 'integer'},
@@ -119,70 +113,6 @@ var data = {
             {id: 7, display_name: "Prepayment"},
             {id: 8, display_name: "First 2000 \u20ac of SAJ/2014/001"},
         ],
-        get_move_lines_for_reconciliation_widget: function (args) {
-            var partner_id = args.splice(1, 1)[0];
-            var excluded_ids = args.splice(1, 1)[0];
-            var key = JSON.stringify(args);
-            if (!mv_lines[key]) {
-                throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
-            }
-            return $.when(_.filter(mv_lines[key], function (line) {
-                return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
-            }));
-        },
-        get_data_for_reconciliation_widget: function (args) {
-            var ids = args[0];
-            return $.when(_.filter(data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
-        },
-        reconciliation_widget_auto_reconcile: function () {
-            return $.when(auto_reconciliation);
-        },
-        process_reconciliations: function (args) {
-            var datas = args[1];
-            var ids = _.flatten(_.pluck(_.pluck(datas, 'counterpart_aml_dicts'), 'counterpart_aml_id'));
-            ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
-            ids = _.compact(ids);
-
-            for (var key in move_lines_for_manual_reconciliation) {
-                move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
-                    return ids.indexOf(mv_line.id) === -1;
-                });
-            }
-            return $.when();
-        },
-    },
-    'account.move.line': {
-        fields: {},
-        get_data_for_manual_reconciliation_widget: function (args) {
-            var key = JSON.stringify(args);
-            if (!data_for_manual_reconciliation_widget[key]) {
-                throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
-            }
-            return $.when(data_for_manual_reconciliation_widget[key]);
-        },
-        get_move_lines_for_manual_reconciliation: function (args) {
-            var excluded_ids = args.splice(2, 1)[0];
-            var key = JSON.stringify(args);
-            if (!move_lines_for_manual_reconciliation[key]) {
-                throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
-            }
-            return $.when(_.filter(move_lines_for_manual_reconciliation[key], function (line) {
-                return excluded_ids.indexOf(line.id) === -1;
-            }));
-        },
-        // for manual reconciliation
-        process_reconciliations: function (args) {
-            var datas = args[0];
-            for (var i in datas) {
-                var data = datas[i];
-                for (var key in move_lines_for_manual_reconciliation) {
-                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
-                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
-                    });
-                }
-            }
-            return $.when();
-        },
     },
     'account.reconcile.model': {
         fields: {
@@ -212,6 +142,74 @@ var data = {
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 3, 'analytic_account_id': false, 'display_name': "ATOS", 'second_tax_id': 7, 'has_second_line': true, 'journal_id': false, 'label': "ATOS Banque", 'second_label': "ATOS Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': 6, 'amount_type': "percentage", 'name': "ATOS", 'amount': 97.5, 'second_amount': 2.5},
             {'second_analytic_account_id': false, 'second_amount_type': "percentage", 'second_journal_id': false, 'id': 10, 'analytic_account_id': false, 'display_name': "Double", 'second_tax_id': false, 'has_second_line': true, 'journal_id': false, 'label': "Double Banque", 'second_label': "Double Frais", 'second_account_id': 286, 'account_id': 285, 'company_id': [1, "Demo SPRL"], 'tax_id': false, 'amount_type': "percentage", 'name': "Double", 'amount': 97.5, 'second_amount': 2.5},
         ]
+    },
+    // abstract model who contains helpers
+    'account.reconciliation': {
+        fields: {},
+        reconciliation_widget_preprocess: function () {
+            return $.when(data_preprocess);
+        },
+        get_move_lines_for_reconciliation_widget: function (args) {
+            var partner_id = args.splice(1, 1)[0];
+            var excluded_ids = args.splice(1, 1)[0];
+            var key = JSON.stringify(args);
+            if (!mv_lines[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_reconciliation_widget: '"+ key + "'");
+            }
+            return $.when(_.filter(mv_lines[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1 && (!partner_id || partner_id === line.partner_id);
+            }));
+        },
+        get_data_for_reconciliation_widget: function (args) {
+            var ids = args[0];
+            return $.when(_.filter(data_widget, function (w) {return _.contains(ids, w.st_line.id);}));
+        },
+        reconciliation_widget_auto_reconcile: function () {
+            return $.when(auto_reconciliation);
+        },
+        process_statement_line_reconciliations: function (args) {
+            var datas = args[1];
+            var ids = _.flatten(_.pluck(_.pluck(datas, 'counterpart_aml_dicts'), 'counterpart_aml_id'));
+            ids = ids.concat(_.flatten(_.pluck(datas, 'payment_aml_ids')));
+            ids = _.compact(ids);
+
+            for (var key in move_lines_for_manual_reconciliation) {
+                move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                    return ids.indexOf(mv_line.id) === -1;
+                });
+            }
+            return $.when();
+        },
+        get_data_for_manual_reconciliation_widget: function (args) {
+            var key = JSON.stringify(args);
+            if (!data_for_manual_reconciliation_widget[key]) {
+                throw new Error("Unknown parameters for get_data_for_manual_reconciliation_widget: '"+ key + "'");
+            }
+            return $.when(data_for_manual_reconciliation_widget[key]);
+        },
+        get_move_lines_for_manual_reconciliation: function (args) {
+            var excluded_ids = args.splice(2, 1)[0];
+            var key = JSON.stringify(args);
+            if (!move_lines_for_manual_reconciliation[key]) {
+                throw new Error("Unknown parameters for get_move_lines_for_manual_reconciliation: '"+ key + "'");
+            }
+            return $.when(_.filter(move_lines_for_manual_reconciliation[key], function (line) {
+                return excluded_ids.indexOf(line.id) === -1;
+            }));
+        },
+        // for manual reconciliation
+        process_move_line_reconciliations: function (args) {
+            var datas = args[0];
+            for (var i in datas) {
+                var data = datas[i];
+                for (var key in move_lines_for_manual_reconciliation) {
+                    move_lines_for_manual_reconciliation[key] = _.filter(move_lines_for_manual_reconciliation[key], function (mv_line) {
+                        return data.mv_line_ids.indexOf(mv_line.id) === -1;
+                    });
+                }
+            }
+            return $.when();
+        },
     }
 };
 
@@ -610,7 +608,7 @@ QUnit.module('account', {
 
         testUtils.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, counterpart_aml_dicts: [{
+                [null,[5],[{partner_id: 8, counterpart_aml_dicts: [{
                                                                   "counterpart_aml_id": 109,
                                                                   "credit": 650,
                                                                   "debit": 0,
@@ -623,7 +621,7 @@ QUnit.module('account', {
                                                                   "name": "INV/2017/0003"
                                                                 }], 
                                     payment_aml_ids: [], new_aml_dicts: []}]],
-                "Should call process_reconciliations with ids");
+                "Should call process_statement_line_reconciliations with ids");
         });
 
         // click on reconcile button

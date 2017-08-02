@@ -220,7 +220,7 @@ ReconciliationClientAction.StatementAction.include({
                     }).then(function (rec) {
                         var createdInvoices = _.difference(rec[0].invoice_ids, order.invoice_ids);
                         return self._rpc({
-                            model: 'sale.advance.payment.inv',
+                            model: 'account.reconciliation',
                             method: 'reconciliation_create_move_lines_propositions',
                             args: [[order.id], createdInvoices]
                         });

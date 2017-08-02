@@ -7,6 +7,7 @@ class TestPointOfSaleCommon(common.TransactionCase):
     def setUp(self):
         super(TestPointOfSaleCommon, self).setUp()
         self.AccountBankStatement = self.env['account.bank.statement']
+        self.AccountWidgetReconciliation = self.env['account.reconciliation']
         self.AccountBankStatementLine = self.env['account.bank.statement.line']
         self.PosMakePayment = self.env['pos.make.payment']
         self.PosOrder = self.env['pos.order']
