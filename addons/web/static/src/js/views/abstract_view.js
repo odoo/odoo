@@ -78,6 +78,7 @@ var AbstractView = Class.extend({
     init: function (viewInfo, params) {
         this.rendererParams = {
             arch: viewInfo.arch,
+            noContentHelp: params.action && params.action.help,
         };
 
         this.controllerParams = {
@@ -88,7 +89,6 @@ var AbstractView = Class.extend({
                 delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
                 duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
             },
-            noContentHelp: params.action && params.action.help,
         };
 
         this.loadParams = {

@@ -65,12 +65,10 @@ var AbstractField = Widget.extend({
      * @constructor
      * @param {Widget} parent
      * @param {string} name The field name defined in the model
-     * @param {Object} record A record object (result of the get method of 
+     * @param {Object} record A record object (result of the get method of
      *   a basic model)
      * @param {Object} [options]
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
-     * @param {string} [options.standalone=false] this flag indicates that the
-     *   field does not have a controller to delegate to
      */
     init: function (parent, name, record, options) {
         this._super(parent);
@@ -160,10 +158,6 @@ var AbstractField = Widget.extend({
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
         this.parseOptions = {};
-
-        // standalone is a flag indicating that the field does not have a
-        // controller to delegate actions to
-        this.standalone = options.standalone;
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
@@ -379,6 +373,11 @@ var AbstractField = Widget.extend({
      * @private
      * @param {any} value
      * @param {Object} [options]
+     * @param {boolean} [options.doNotSetDirty=false] if true, the basic model
+     *   will not consider that this field is dirty, even though it was changed.
+     *   Please do not use this flag unless you really need it.  Our only use
+     *   case is currently the pad widget, which does a _setValue in the
+     *   renderEdit method.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
      * @returns {Deferred}
@@ -407,6 +406,7 @@ var AbstractField = Widget.extend({
             dataPointID: this.dataPointID,
             changes: changes,
             viewType: this.viewType,
+            doNotSetDirty: options && options.doNotSetDirty,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });

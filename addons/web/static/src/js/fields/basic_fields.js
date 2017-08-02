@@ -151,6 +151,9 @@ var DebouncedField = AbstractField.extend({
 });
 
 var InputField = DebouncedField.extend({
+    custom_events: _.extend({}, DebouncedField.prototype.custom_events, {
+        field_changed: '_onFieldChanged',
+    }),
     events: _.extend({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
@@ -168,6 +171,12 @@ var InputField = DebouncedField.extend({
         if (this.mode === 'edit') {
             this.tagName = 'input';
         }
+        // We need to know if the widget is dirty (i.e. if the user has changed
+        // the value, and those changes haven't been acknowledged yet by the
+        // environment), to prevent erasing that new value on a reset (e.g.
+        // coming by an onchange on another field)
+        this.isDirty = false;
+        this.lastChangeEvent = undefined;
     },
 
     //--------------------------------------------------------------------------
@@ -183,14 +192,21 @@ var InputField = DebouncedField.extend({
         return this.$input || $();
     },
     /**
-     * Do not re-render this field if it was the origin of the onchange call.
-     * FIXME: make the onchange work on itself without disturbing the user typing
+     * Re-renders the widget if it isn't dirty. The widget is dirty if the user
+     * changed the value, and that change hasn't been acknowledged yet by the
+     * environment. For example, another field with an onchange has been updated
+     * and this field is updated before the onchange returns. Two '_setValue'
+     * are done (this is sequential), the first one returns and this widget is
+     * reset. However, it has pending changes, so we don't re-render.
      *
      * @override
      */
     reset: function (record, event) {
         this._reset(record, event);
-        if (event && event.target === this) {
+        if (!event || event === this.lastChangeEvent) {
+            this.isDirty = false;
+        }
+        if (this.isDirty || (event && event.target === this)) {
             return $.when();
         } else {
             return this._render();
@@ -266,6 +282,16 @@ var InputField = DebouncedField.extend({
         this._doAction();
     },
     /**
+     * Listens to events 'field_changed' to keep track of the last event that
+     * has been trigerred. This allows to detect that all changes have been
+     * acknowledged by the environment.
+     *
+     * @param {OdooEvent} event 'field_changed' event
+     */
+    _onFieldChanged: function (event) {
+        this.lastChangeEvent = event;
+    },
+    /**
      * Called when the user is typing text -> By default this only calls a
      * debounced method to notify the outside world of the changes.
      * @see _doDebouncedAction
@@ -273,6 +299,7 @@ var InputField = DebouncedField.extend({
      * @private
      */
     _onInput: function () {
+        this.isDirty = true;
         this._doDebouncedAction();
     },
     /**

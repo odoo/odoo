@@ -8,7 +8,6 @@ odoo.define('web.BasicController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
@@ -19,7 +18,6 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
-        mutexify: '_onMutexify',
         reload: '_onReload',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -39,7 +37,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         FieldManagerMixin.init.call(this, this.model);
         this.handle = params.initialState.id;
         this.mode = params.mode || 'readonly';
-        this.mutex = new concurrency.Mutex();
     },
     /**
      * @override
@@ -238,7 +235,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context}),
+                context: record.getContext({additionalContext: attrs.context || {}}),
             }),
             model: record.model,
             res_ids: [recordID],
@@ -360,17 +357,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             activeIds: this.getSelectedIds(),
             model: this.modelName,
         };
-    },
-    /**
-     * Used by list and kanban views to determine whether or not to display
-     * the no content helper (if there is no data in the state to display)
-     *
-     * @private
-     * @param {Object} state
-     * @returns {boolean}
-     */
-    _hasContent: function (state) {
-        return state.count !== 0;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -536,15 +522,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {function} ev.data.action the function to execute in the mutex
-     */
-    _onMutexify: function (ev) {
-        ev.stopPropagation(); // prevent other controllers from handling this request
-        this.mutex.exec(ev.data.action);
     },
     /**
      * When a reload event triggers up, we need to reload the full view.

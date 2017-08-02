@@ -372,6 +372,30 @@ QUnit.module('Views', {
         });
     });
 
+    QUnit.test('reload graph with correct fields', function (assert) {
+        assert.expect(2);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph>' +
+                    '<field name="product_id" type="row"/>' +
+                    '<field name="foo" type="measure"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.fields, ['product_id', 'foo'],
+                        "should read the correct fields");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        graph.reload({groupBy: []});
+
+        graph.destroy();
+    });
 });
 
 });

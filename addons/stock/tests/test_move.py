@@ -114,7 +114,10 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.supplier_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 5.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product3, self.supplier_location)), 0.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product3, self.stock_location)), 1.0)
+        quants = self.env['stock.quant']._gather(self.product3, self.stock_location)
+        self.assertEqual(len(quants), 1.0)
+        for quant in quants:
+            self.assertNotEqual(quant.in_date, False)
 
     def test_in_3(self):
         """ Receive 5 serial-tracked products from a supplier. The system should create 5 differents
@@ -162,7 +165,10 @@ class StockMove(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 5.0)
 
         self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.supplier_location)), 0.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.stock_location)), 5.0)
+        quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
+        self.assertEqual(len(quants), 5.0)
+        for quant in quants:
+            self.assertNotEqual(quant.in_date, False)
 
     def test_out_1(self):
         """ Send products to a client. Check that a move line is created reserving products in
@@ -2371,3 +2377,241 @@ class StockMove(TransactionCase):
 
         self.assertEqual(move1.state, 'confirmed')
         self.assertEqual(len(move1.move_line_ids), 0)
+
+    def test_in_date_1(self):
+        """ Check that moving a tracked quant keeps the incoming date.
+        """
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.lot_name = 'lot1'
+        move1.move_line_ids.qty_done = 1
+        move1.action_done()
+
+        quant = self.env['stock.quant']._gather(self.product3, self.stock_location)
+        self.assertEqual(len(quant), 1.0)
+        self.assertNotEqual(quant.in_date, False)
+
+        # Keep a reference to the initial incoming date in order to compare it later.
+        initial_incoming_date = quant.in_date
+
+        move2 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move2.action_confirm()
+        move2.action_assign()
+        move2.move_line_ids.qty_done = 1
+        move2.action_done()
+
+        quant = self.env['stock.quant']._gather(self.product3, self.pack_location)
+        self.assertEqual(len(quant), 1.0)
+        self.assertEqual(quant.in_date, initial_incoming_date)
+
+    def test_in_date_2(self):
+        """ Check that editing a done move line for a tracked product and changing its lot
+        correctly restores the original lot with its incoming date and remove the new lot
+        with its incoming date.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product3.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product3.id,
+        })
+        # receive lot1
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.lot_id = lot1
+        move1.move_line_ids.qty_done = 1
+        move1.action_done()
+
+        # receive lot2
+        move2 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move2.action_confirm()
+        move2.action_assign()
+        move2.move_line_ids.lot_id = lot2
+        move2.move_line_ids.qty_done = 1
+        move2.action_done()
+
+        initial_in_date_lot2 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot2.id),
+        ]).in_date
+
+        # Edit lot1's incoming date.
+        quant_lot1 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot1.id),
+        ])
+        from datetime import datetime, timedelta
+        initial_in_date_lot1 = datetime.now() - timedelta(days=5)
+        quant_lot1.in_date = initial_in_date_lot1
+
+        # Move one quant to pack location
+        move3 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move3.action_confirm()
+        move3.action_assign()
+        move3.move_line_ids.qty_done = 1
+        move3.action_done()
+        quant_in_pack = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('location_id', '=', self.pack_location.id),
+        ])
+        # As lot1 has an older date and FIFO is set by default, it's the one that should be
+        # in pack.
+        self.assertEqual(len(quant_in_pack), 1)
+        from odoo.fields import Datetime
+        self.assertEqual(quant_in_pack.in_date, Datetime.to_string(initial_in_date_lot1))
+        self.assertEqual(quant_in_pack.lot_id, lot1)
+
+        # Now, edit the move line and actually move the other lot
+        move3.move_line_ids.lot_id = lot2
+
+        # Check that lot1 correctly is back to stock with its right in_date
+        quant_lot1 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot1.id),
+        ])
+        self.assertEqual(quant_lot1.location_id, self.stock_location)
+        self.assertEqual(quant_lot1.in_date, Datetime.to_string(initial_in_date_lot1))
+
+        # Check that lo2 is in pack with is right in_date
+        quant_lot2 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot2.id),
+        ])
+        self.assertEqual(quant_lot2.location_id, self.pack_location)
+        self.assertEqual(quant_lot2.in_date, initial_in_date_lot2)
+
+    def test_in_date_3(self):
+        """ Check that, when creating a move line on a done stock move, the lot and its incoming
+        date are correctly moved to the destination location.
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product3.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product3.id,
+        })
+        # receive lot1
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.lot_id = lot1
+        move1.move_line_ids.qty_done = 1
+        move1.action_done()
+
+        # receive lot2
+        move2 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move2.action_confirm()
+        move2.action_assign()
+        move2.move_line_ids.lot_id = lot2
+        move2.move_line_ids.qty_done = 1
+        move2.action_done()
+
+        initial_in_date_lot2 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot2.id),
+        ]).in_date
+
+        # Edit lot1's incoming date.
+        quant_lot1 = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+            ('lot_id', '=', lot1.id),
+        ])
+        from datetime import datetime, timedelta
+        initial_in_date_lot1 = datetime.now() - timedelta(days=5)
+        quant_lot1.in_date = initial_in_date_lot1
+
+        # Move one quant to pack location
+        move3 = self.env['stock.move'].create({
+            'name': 'test_in_date_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.pack_location.id,
+            'product_id': self.product3.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move3.action_confirm()
+        move3.action_assign()
+        move3.move_line_ids.qty_done = 1
+        move3.action_done()
+
+        # Now, also move lot2
+        self.env['stock.move.line'].create({
+            'move_id': move3.id,
+            'product_id': move3.product_id.id,
+            'qty_done': 1,
+            'product_uom_id': move3.product_uom.id,
+            'location_id': move3.location_id.id,
+            'location_dest_id': move3.location_dest_id.id,
+            'lot_id': lot2.id,
+        })
+
+        quants = self.env['stock.quant'].search([
+            ('product_id', '=', self.product3.id),
+        ])
+        self.assertEqual(len(quants), 2)
+        from odoo.fields import Datetime
+        for quant in quants:
+            if quant.lot_id == lot1:
+                self.assertEqual(quant.in_date, Datetime.to_string(initial_in_date_lot1))
+            elif quant.lot_id == lot2:
+                self.assertEqual(quant.in_date, initial_in_date_lot2)

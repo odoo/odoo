@@ -188,7 +188,6 @@ var ListController = BasicController.extend({
                 position: self.editable,
             });
         }).then(function (recordID) {
-            self._toggleNoContentHelper(false);
             var state = self.model.get(self.handle);
             self.renderer.updateState(state, {});
             self.renderer.editRecord(recordID);
@@ -283,12 +282,10 @@ var ListController = BasicController.extend({
     },
     /**
      * @override
-     * @param {Object} state
      * @returns {Deferred}
      */
-    _update: function (state) {
+    _update: function () {
         this.selectedRecords = [];
-        this._toggleNoContentHelper(!this._hasContent(state));
         this._toggleSidebar();
         return this._super.apply(this, arguments);
     },

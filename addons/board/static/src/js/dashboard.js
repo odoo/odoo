@@ -20,7 +20,6 @@ FormView.include({
      */
     init: function (viewInfo) {
         this._super.apply(this, arguments);
-        this.rendererParams.noContentHelp = this.controllerParams.noContentHelp;
         this.controllerParams.viewID = viewInfo.view_id;
     },
 });
@@ -236,6 +235,7 @@ FormRenderer.include({
                     var view = new View(viewInfo, {
                         action: action,
                         context: context,
+                        domain: params.domain,
                         groupBy: context.group_by,
                         modelName: action.res_model,
                         hasSelectors: false,

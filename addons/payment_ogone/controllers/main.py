@@ -41,6 +41,7 @@ class OgoneController(http.Controller):
             token = acq.s2s_process(post)
         except Exception as e:
             # synthax error: 'CHECK ERROR: |Not a valid date\n\n50001111: None'
+            token = False
             error = str(e).splitlines()[0].split('|')[-1] or ''
 
         if token and post.get('verify_validity'):

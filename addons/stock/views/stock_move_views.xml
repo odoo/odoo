@@ -226,7 +226,7 @@
             <field name="model">stock.move</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Stock Moves">
+                <form string="Stock Moves" create="0" edit="0">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
@@ -515,6 +515,6 @@
             </field>
         </record>
 
-<menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="130"/>
+<menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
 
 </odoo>
