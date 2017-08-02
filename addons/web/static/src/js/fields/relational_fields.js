@@ -219,10 +219,16 @@ var FieldMany2One = AbstractField.extend({
     /**
      * @private
      * @param {string} name
+     * @returns {Deferred} resolved after the name_create or when the slowcreate
+     *                     modal is closed.
      */
     _quickCreate: function (name) {
         var self = this;
-        var slowCreate = this._searchCreatePopup.bind(this, "form", false, this._createContext(name));
+        var def = $.Deferred();
+        var slowCreate = function () {
+            var dialog = self._searchCreatePopup.bind(self, "form", false, self._createContext(name));
+            dialog.on('closed', self, def.resolve.bind(def));
+        };
         if (this.nodeOptions.quick_create) {
             this.trigger_up('mutexify', {
                 action: function () {
@@ -235,12 +241,16 @@ var FieldMany2One = AbstractField.extend({
                         if (self.mode === "edit") {
                             self.reinitialize({id: result[0], display_name: result[1]});
                         }
-                    }, slowCreate);
+                        def.resolve();
+                    }).fail(function () {
+                        slowCreate();
+                    });
                 },
             });
         } else {
             slowCreate();
         }
+        return def;
     },
     /**
      * @private
