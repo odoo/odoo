@@ -2834,6 +2834,16 @@ var BasicModel = AbstractModel.extend({
                             parentID: record.id,
                         });
                         record._changes[name] = rec.id;
+                    } else if (field.type === 'reference' && result[name]) {
+                        var ref = result[name].split(',');
+                        var rec = self._makeDataPoint({
+                            context: record.context,
+                            data: {id: parseInt(ref[1])},
+                            modelName: ref[0],
+                            parentID: record.id,
+                        });
+                        defs.push(self._fetchNameGet(rec));
+                        record._changes[name] = rec.id;
                     } else if (field.type === 'one2many' || field.type === 'many2many') {
                         var fieldInfo = record.fieldsInfo[record.viewType][name];
                         var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];

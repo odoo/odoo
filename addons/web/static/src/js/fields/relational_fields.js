@@ -2071,8 +2071,13 @@ var FieldReference = FieldMany2One.extend({
      * @override
      */
     _formatValue: function () {
-        return this.recordData.display_name;
+        if (typeof this.value === "string") {
+            return this.recordData.display_name;
+        } else {
+            return this.value.data && this.value.data.display_name || '';
+        }
     },
+
 
     /**
      * Add a select in edit mode (for the model).
@@ -2097,8 +2102,9 @@ var FieldReference = FieldMany2One.extend({
      * @private
      */
     _reset: function () {
+        var value = this.$('select').val();
         this._super.apply(this, arguments);
-        this._setRelation(this.value && this.value.model);
+        this._setRelation(this.value && this.value.model || value);
     },
     /**
      * Set `relation` key in field properties.
