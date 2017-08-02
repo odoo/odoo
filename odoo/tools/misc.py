@@ -1039,7 +1039,7 @@ def dumpstacks(sig=None, frame=None):
     threads_info = {th.ident: {'name': th.name,
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a'),
-                               'url': getattr(th, 'httprequest_url', 'n/a')}
+                               'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
