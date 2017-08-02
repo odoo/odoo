@@ -815,9 +815,6 @@ var FormRenderer = BasicRenderer.extend({
                 self._addFieldTooltip(widget, $label);
             }
         });
-
-        // Focus the default field (in edit mode)
-        self.autofocus();
     },
     /**
      * Sets id attribute of given widget to idForLabel
