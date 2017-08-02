@@ -119,10 +119,13 @@ var RunningTourActionHelper = core.Class.extend({
         if (values.consume_event === "input") {
             values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
         } else if (values.$element.is("select")) {
-            values.$element.children("option")
-                .prop("selected", false).removeProp("selected")
-                .filter(function () { return $(this).val() === text; })
-                .prop("selected", true);
+            var $options = values.$element.children("option");
+            $options.prop("selected", false).removeProp("selected");
+            var $selectedOption = $options.filter(function () { return $(this).val() === text; });
+            if ($selectedOption.length === 0) {
+                $selectedOption = $options.filter(function () { return $(this).text() === text; });
+            }
+            $selectedOption.prop("selected", true);
             this._click(values);
         } else {
             values.$element.text(text);

@@ -416,7 +416,7 @@ class PurchaseOrder(models.Model):
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel')).action_confirm()
                 seq = 0
-                for move in moves:
+                for move in sorted(moves, key=lambda move: move.date_expected):
                     seq += 5
                     move.sequence = seq
                 moves.action_assign()
@@ -946,7 +946,7 @@ class ProcurementOrder(models.Model):
         if self.purchase_line_id:
             if not self.move_ids:
                 return False
-            return all(move.state == 'done' for move in self.move_ids)
+            return all(move.state in ('done', 'cancel') for move in self.move_ids) and any(move.state == 'done' for move in self.move_ids)
         return super(ProcurementOrder, self)._check()
 
     def _get_purchase_schedule_date(self):

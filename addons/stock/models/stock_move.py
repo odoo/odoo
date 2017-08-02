@@ -298,8 +298,11 @@ class StockMove(models.Model):
 
     @api.constrains('product_uom')
     def _check_uom(self):
-        if any(move.product_id.uom_id.category_id.id != move.product_uom.category_id.id for move in self):
-            raise UserError(_('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.'))
+        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id.id != move.product_uom.category_id.id)
+        if moves_error:
+            user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+            user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
+            raise UserError(user_warning)
 
     @api.model_cr
     def init(self):
@@ -645,7 +648,7 @@ class StockMove(models.Model):
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
                     not (move_line and (move_line.product_id and move_line.pack_lot_ids)) or (move_line and not move_line.product_id):
-                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % ("%s (%s)" % (move.product_id.name, move.picking_id.name)))
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         self.ensure_one()
@@ -739,12 +742,18 @@ class StockMove(models.Model):
                 else:
                     # Check what our parents brought and what our siblings took in order to
                     # determine what we can distribute.
+                    # `qty_done` is in `ml.product_uom_id` and, as we will later increase
+                    # the reserved quantity on the quants, convert it here in
+                    # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     move_lines_in = move.move_orig_ids.filtered(lambda m: m.state == 'done').mapped('move_line_ids')
                     keys_in = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
                     grouped_move_lines_in = {}
                     for k, g in groupby(sorted(move_lines_in, key=itemgetter(*keys_in)), key=itemgetter(*keys_in)):
-                        grouped_move_lines_in[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('qty_done'))
-
+                        # `qty_done` is in `ml.product_uom_id` and, as we will later increase the
+                        qty_done = 0
+                        for ml in g:
+                            qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                        grouped_move_lines_in[k] = qty_done
                     move_lines_out_done = (move.move_orig_ids.mapped('move_dest_ids') - move)\
                         .filtered(lambda m: m.state in ['done'])\
                         .mapped('move_line_ids')
@@ -754,7 +763,10 @@ class StockMove(models.Model):
                     keys_out = ['location_id', 'lot_id', 'package_id', 'owner_id']
                     grouped_move_lines_out = {}
                     for k, g in groupby(sorted(move_lines_out_done, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
-                        grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('qty_done'))
+                        qty_done = 0
+                        for ml in g:
+                            qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                        grouped_move_lines_out[k] = qty_done
                     for k, g in groupby(sorted(move_lines_out_reserved, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
                         grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                     available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in.keys()}

@@ -5,6 +5,8 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
+from datetime import datetime, timedelta
+
 
 class StockQuant(TransactionCase):
     def setUp(self):
@@ -588,3 +590,131 @@ class StockQuant(TransactionCase):
             quant.sudo(self.demo_user).write({'quantity': 2.0})
         with self.assertRaises(AccessError):
             quant.sudo(self.demo_user).unlink()
+
+    def test_in_date_1(self):
+        """ Check that no incoming date is set when updating the quantity of an untracked quant.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        quantity, in_date = self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0)
+        self.assertEqual(quantity, 1)
+        self.assertEqual(in_date, None)
+
+    def test_in_date_2(self):
+        """ Check that an incoming date is correctly set when updating the quantity of a tracked
+        quant.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': product1.id,
+        })
+        quantity, in_date = self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1)
+        self.assertEqual(quantity, 1)
+        self.assertNotEqual(in_date, None)
+
+    def test_in_date_3(self):
+        """ Check that the FIFO strategies correctly applies when you have multiple lot received
+        at different times for a tracked product.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': product1.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': product1.id,
+        })
+        in_date_lot1 = datetime.now()
+        in_date_lot2 = datetime.now() - timedelta(days=5)
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date_lot1)
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot2, in_date=in_date_lot2)
+
+        quants = self.env['stock.quant']._update_reserved_quantity(product1, stock_location, 1)
+
+        # Default removal strategy is FIFO, so lot2 should be received as it was received earlier.
+        self.assertEqual(quants[0][0].lot_id.id, lot2.id)
+
+    def test_in_date_4(self):
+        """ Check that the LIFO strategies correctly applies when you have multiple lot received
+        at different times for a tracked product.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        lifo_strategy = self.env['product.removal'].search([('method', '=', 'lifo')])
+        stock_location.removal_strategy_id = lifo_strategy
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'serial',
+        })
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': product1.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': product1.id,
+        })
+        in_date_lot1 = datetime.now()
+        in_date_lot2 = datetime.now() - timedelta(days=5)
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date_lot1)
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot2, in_date=in_date_lot2)
+
+        quants = self.env['stock.quant']._update_reserved_quantity(product1, stock_location, 1)
+
+        # Removal strategy is LIFO, so lot1 should be received as it was received later.
+        self.assertEqual(quants[0][0].lot_id.id, lot1.id)
+
+    def test_in_date_5(self):
+        """ Receive the same lot at different times, once they're in the same location, the quants
+        are merged and only the earliest incoming date is kept.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'tracking': 'lot',
+        })
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': product1.id,
+        })
+
+        in_date1 = datetime.now()
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date1)
+
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', product1.id),
+            ('location_id', '=', stock_location.id),
+        ])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, 1)
+        self.assertEqual(quant.lot_id.id, lot1.id)
+        from odoo.fields import Datetime
+        self.assertEqual(quant.in_date, Datetime.to_string(in_date1))
+
+        in_date2 = datetime.now() - timedelta(days=5)
+        self.env['stock.quant']._update_available_quantity(product1, stock_location, 1.0, lot_id=lot1, in_date=in_date2)
+
+        quant = self.env['stock.quant'].search([
+            ('product_id', '=', product1.id),
+            ('location_id', '=', stock_location.id),
+        ])
+        self.assertEqual(len(quant), 1)
+        self.assertEqual(quant.quantity, 2)
+        self.assertEqual(quant.lot_id.id, lot1.id)
+        self.assertEqual(quant.in_date, Datetime.to_string(in_date2))

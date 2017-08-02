@@ -47,7 +47,7 @@ class WebsiteSaleDelivery(WebsiteSale):
             if order.carrier_id and not order.delivery_rating_success:
                 values['errors'].append(
                     (_("Ouch, you cannot choose this carrier!"),
-                     _("%s does not ship to your address, please choose another one.") % order.carrier_id.name))
+                     _("%s does not ship to your address, please choose another one.\n(Error: %s)" % (order.carrier_id.name, order.delivery_message))))
                 order._remove_delivery_line()
 
             delivery_carriers = order._get_delivery_methods()

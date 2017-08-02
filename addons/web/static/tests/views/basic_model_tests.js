@@ -1475,6 +1475,71 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('dont write on readonly fields unless save attribute is set', function (assert) {
+        assert.expect(6);
+
+        this.params.fieldNames = ['foo', 'bar'];
+        this.data.partner.onchanges.foo = function (obj) {
+            obj.bar = obj.foo.length;
+        };
+        this.params.fieldsInfo = {
+            default: {
+                foo: {},
+                bar: {
+                    modifiers:"{\"readonly\": true}",
+                    force_save: true,
+                },
+            }
+        };
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], {bar: 14, foo: "verylongstring"},
+                        "should only save foo field");
+                }
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {bar: 21, foo: "anotherverylongstring"},
+                        "should only save foo field");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 2,
+                "should be initialized with correct value");
+
+            model.notifyChanges(resultID, {foo: "verylongstring"});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 14,
+                "should be changed with correct value");
+
+            model.save(resultID);
+        });
+
+        // start again, but with a new record
+        delete this.params.res_id;
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 0,
+                "should be initialized with correct value (0 as integer)");
+
+            model.notifyChanges(resultID, {foo: "anotherverylongstring"});
+
+            record = model.get(resultID);
+            assert.strictEqual(record.data.bar, 21,
+                "should be changed with correct value");
+
+            model.save(resultID);
+        });
+        model.destroy();
+    });
+
     QUnit.test('default_get with one2many values', function (assert) {
         assert.expect(1);
 

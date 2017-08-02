@@ -115,18 +115,20 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
-     * Disable stat buttons so that they can't be clicked anymore
+     * Disable statusbar buttons and stat buttons so that they can't be clicked anymore
      *
      */
     disableButtons: function () {
-        this.$('.oe_button_box button').attr('disabled', true);
+        this.$('.o_statusbar_buttons button, .oe_button_box button')
+            .attr('disabled', true);
     },
     /**
-     * Enable stat buttons so they can be clicked again
+     * Enable statusbar buttons and stat buttons so they can be clicked again
      *
      */
     enableButtons: function () {
-        this.$('.oe_button_box button').removeAttr('disabled');
+        this.$('.o_statusbar_buttons button, .oe_button_box button')
+            .removeAttr('disabled');
     },
     /**
      * returns the active tab pages for each notebook

@@ -81,19 +81,6 @@ var KanbanController = BasicController.extend({
         return this.renderer.updateRecord(this.model.get(id));
     },
     /**
-     * The nocontent helper should be displayed in kanban:
-     *   - ungrouped: if there is no records
-     *   - grouped: if there is no groups and no column quick create
-     *
-     * @override
-     * @private
-     */
-    _hasContent: function (state) {
-        return this._super.apply(this, arguments) ||
-               this.createColumnEnabled ||
-               (state.groupedBy.length && state.data.length);
-    },
-    /**
      * The column quick create should be displayed in kanban iff grouped by an
      * m2o field and group_create action enabled.
      *
@@ -137,17 +124,6 @@ var KanbanController = BasicController.extend({
                 .toggleClass('btn-primary', !createMuted)
                 .toggleClass('btn-default', createMuted);
         }
-    },
-    /**
-     * @override
-     * @param {Object} state
-     * @returns {Deferred}
-     */
-    _update: function (state) {
-        var hasNoContent = !this._hasContent(state);
-        this.$el.toggleClass('o_kanban_nocontent', hasNoContent);
-        this._toggleNoContentHelper(hasNoContent);
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------

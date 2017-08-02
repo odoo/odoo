@@ -3608,6 +3608,40 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('clicking on a stat button with no context', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<sheet>' +
+                        '<div class="oe_button_box" name="button_box">' +
+                            '<button class="oe_stat_button" type="action" name="1">' +
+                                '<field name="qux" widget="statinfo"/>' +
+                            '</button>' +
+                        '</div>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            viewOptions: {
+                context: {some_context: true},
+            },
+            intercepts: {
+                execute_action: function (e) {
+                    assert.deepEqual(e.data.action_data.context, {},
+                        "button context should have been evaluated and given to the action, without previous context");
+                },
+            },
+        });
+
+        form.$('.oe_stat_button').click();
+
+        form.destroy();
+    });
+
     QUnit.test('diplay a stat button outside a buttonbox', function (assert) {
         assert.expect(3);
 
@@ -4946,8 +4980,8 @@ QUnit.module('Views', {
         _t.database.multi_lang = multi_lang;
     });
 
-    QUnit.test('buttons are disabled until action is resolved', function (assert) {
-        assert.expect(3);
+    QUnit.test('buttons are disabled until status bar action is resolved', function (assert) {
+        assert.expect(9);
 
         var def = $.Deferred();
 
@@ -4956,6 +4990,10 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                        '<button name="some_method" class="s" string="Do it" type="object"/>' +
+                    '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
                             '<button class="oe_stat_button">' +
@@ -4977,18 +5015,94 @@ QUnit.module('Views', {
             },
         });
 
-        assert.notOk(form.$('.oe_button_box button').attr('disabled'),
+        assert.strictEqual(form.$buttons.find('button:not(:disabled)').length, 4,
+            "control panel buttons should be enabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:not(:disabled)').length, 2,
+            "status bar buttons should be enabled");
+        assert.strictEqual(form.$('.oe_button_box button:not(:disabled)').length, 1,
+            "stat buttons should be enabled");
+
+        form.$('.o_form_statusbar button').click();
+
+        // The unresolved deferred lets us check the state of the buttons
+        assert.strictEqual(form.$buttons.find('button:disabled').length, 4,
+            "control panel buttons should be disabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:disabled').length, 2,
+            "status bar buttons should be disabled");
+        assert.strictEqual(form.$('.oe_button_box button:disabled').length, 1,
+            "stat buttons should be disabled");
+
+        def.resolve();
+
+        assert.strictEqual(form.$buttons.find('button:not(:disabled)').length, 4,
+            "control panel buttons should be enabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:not(:disabled)').length, 2,
+            "status bar buttons should be enabled");
+        assert.strictEqual(form.$('.oe_button_box button:not(:disabled)').length, 1,
+            "stat buttons should be enabled");
+
+        form.destroy();
+    });
+
+    QUnit.test('buttons are disabled until button box action is resolved', function (assert) {
+        assert.expect(9);
+
+        var def = $.Deferred();
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                        '<button name="some_method" class="s" string="Do it" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button">' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                execute_action: function (event) {
+                    return def.then(function() {
+                        event.data.on_success();
+                    });
+                }
+            },
+        });
+
+        assert.strictEqual(form.$buttons.find('button:not(:disabled)').length, 4,
+            "control panel buttons should be enabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:not(:disabled)').length, 2,
+            "status bar buttons should be enabled");
+        assert.strictEqual(form.$('.oe_button_box button:not(:disabled)').length, 1,
             "stat buttons should be enabled");
 
         form.$('.oe_button_box button').click();
 
         // The unresolved deferred lets us check the state of the buttons
-        assert.ok(form.$('.oe_button_box button').attr('disabled'),
+        assert.strictEqual(form.$buttons.find('button:disabled').length, 4,
+            "control panel buttons should be disabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:disabled').length, 2,
+            "status bar buttons should be disabled");
+        assert.strictEqual(form.$('.oe_button_box button:disabled').length, 1,
             "stat buttons should be disabled");
 
         def.resolve();
 
-        assert.notOk(form.$('.oe_button_box button').attr('disabled'),
+        assert.strictEqual(form.$buttons.find('button:not(:disabled)').length, 4,
+            "control panel buttons should be enabled");
+        assert.strictEqual(form.$('.o_form_statusbar button:not(:disabled)').length, 2,
+            "status bar buttons should be enabled");
+        assert.strictEqual(form.$('.oe_button_box button:not(:disabled)').length, 1,
             "stat buttons should be enabled");
 
         form.destroy();

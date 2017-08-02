@@ -21,7 +21,7 @@ class PriceRule(models.Model):
             elif rule.list_price and not rule.list_base_price:
                 name = '%s %s times %s' % (name, rule.list_price, rule.variable_factor)
             else:
-                name = '%s fixed price %s and %s times %s Extra' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
+                name = '%s fixed price %s plus %s times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
@@ -50,7 +50,13 @@ class ProviderGrid(models.Model):
                     'error_message': _('Error: no matching grid.'),
                     'warning_message': False}
 
-        price_unit = self._get_price_available(order)
+        try:
+            price_unit = self._get_price_available(order)
+        except UserError as e:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': e.name,
+                    'warning_message': False}
         if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
             price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
 
@@ -91,7 +97,7 @@ class ProviderGrid(models.Model):
                 criteria_found = True
                 break
         if not criteria_found:
-            raise UserError(_("Selected product in the delivery method doesn't fulfill any of the delivery carrier(s) criteria."))
+            raise UserError(_("No price rule matching this order; delivery cost cannot be computed."))
 
         return price
 

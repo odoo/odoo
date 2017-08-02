@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var relationalFields = require('web.relational_fields');
+var StandaloneFieldManagerMixin = require('web.StandaloneFieldManagerMixin');
 var testUtils = require('web.test_utils');
 var Widget = require('web.Widget');
 
@@ -565,7 +566,7 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
-    QUnit.test('many2one field with option standalone', function (assert) {
+    QUnit.test('standalone many2one field', function (assert) {
         assert.expect(3);
         var done = assert.async();
 
@@ -593,7 +594,14 @@ QUnit.module('relational_fields', {
             },
         }).then(function (recordID) {
             var record = model.get(recordID);
-            var parent = new Widget();
+            // create a new widget that uses the StandaloneFieldManagerMixin
+            var StandaloneWidget = Widget.extend(StandaloneFieldManagerMixin, {
+                init: function (parent) {
+                    this._super.apply(this, arguments);
+                    StandaloneFieldManagerMixin.init.call(this, parent);
+                },
+            });
+            var parent = new StandaloneWidget(model);
             testUtils.addMockEnvironment(parent, {
                 data: self.data,
                 mockRPC: function (route, args) {
@@ -607,7 +615,6 @@ QUnit.module('relational_fields', {
                 record,
                 {
                     mode: 'edit',
-                    standalone: true,
             });
 
             relField.appendTo(fixture);
