@@ -1216,7 +1216,7 @@
                     <field name="date_maturity" groups="base.group_no_one"/>
                     <field name="user_type_id" groups="account.group_account_user"/>
                     <field name="analytic_account_id" groups="account.group_account_manager"/>
-                    <field name="statement_line_id" groups="base.group_no_one"/>
+                    <field name="statement_line_id" />
                     <field name="create_uid" groups="base.group_no_one"/>
                     <field name="move_id" group="base.group_no_one"/>
                     <field name="account_id" groups="account.group_account_manager"/>
@@ -1232,6 +1232,7 @@
                     <field name="debit" groups="account.group_account_invoice" />
                     <field name="credit" groups="account.group_account_invoice" />
                     <field name="quantity" groups="account.group_account_invoice" />
+                    <field name="product_uom_id"groups="product.group_uom"/>
                 </pivot>
             </field>
         </record>
