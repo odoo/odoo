@@ -42,6 +42,19 @@ class ProjectTaskType(models.Model):
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
 
+    @api.multi
+    def unlink(self):
+        # if type share between projects
+        stages = self
+        project_id = self.env.context.get('default_project_id')
+        if project_id:
+            records = self.filtered(lambda x: len(x.project_ids) > 1 and project_id in x.project_ids.ids)
+            records.write({'project_ids': [(3, project_id)]})
+            # remove reference of stage from all related tasks
+            related_tasks = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', project_id), ('stage_id', 'in', self.ids)])
+            related_tasks.write({'stage_id': False})
+            stages = self.filtered(lambda x: x not in records)
+        return super(ProjectTaskType, stages).unlink()
 
 class Project(models.Model):
     _name = "project.project"

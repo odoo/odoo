@@ -5862,7 +5862,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.only('form globle context test on delete record', function (assert) {
+    QUnit.test('form globle context test on delete record', function (assert) {
         assert.expect(1);
 
         var form = createView({

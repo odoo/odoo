@@ -257,20 +257,30 @@ var KanbanColumn = Widget.extend({
      */
     _onDeleteColumn: function (event) {
         event.preventDefault();
-        var buttons = [
-            {
-                text: _t("Ok"),
-                classes: 'btn-primary',
-                close: true,
-                click: this.trigger_up.bind(this, 'kanban_column_delete'),
-            },
-            {text: _t("Cancel"), close: true}
-        ];
+        var buttons;
+        var message;
+        if (this.isEmpty()){
+            buttons = [
+                {
+                    text: _t("Ok"),
+                    classes: 'btn-primary',
+                    close: true,
+                    click: this.trigger_up.bind(this, 'kanban_column_delete'),
+                },
+                {text: _t("Cancel"), close: true}
+            ];
+            message =  _t("Are you sure that you want to remove this column ?");
+        } else {
+            buttons = [
+                {text: _t("Ok"), close: true}
+            ];
+            message = _t("You cannot remove this column because it is containing some cards.");
+        }
         new Dialog(this, {
             size: 'medium',
             buttons: buttons,
             $content: $('<div>', {
-                text: _t("Are you sure that you want to remove this column ?")
+                text: message
             }),
         }).open();
     },

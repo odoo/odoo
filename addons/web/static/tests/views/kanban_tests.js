@@ -942,7 +942,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('delete a column in grouped on m2o', function (assert) {
-        assert.expect(26);
+        assert.expect(16);
 
         var kanban = createView({
             View: KanbanView,
@@ -985,35 +985,49 @@ QUnit.module('Views', {
                         "should not be able to archive the records");
         assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
                         "should not be able to restore the records");
+        // delete last column (first add the column, then delete)
+        kanban.$('.o_kanban_add_column').click();
+        kanban.$('.o_kanban_quick_create input').val('xxo');
+        kanban.$('.o_kanban_add').click();
 
-        // delete second column (first cancel the confirm request, then confirm)
-        kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
-        assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal .modal-footer .btn-default').click(); // click on cancel
-        assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 5,
-            'column [5, "xmo"] should still be there');
-        kanban.$('.o_kanban_group:last .o_column_delete').click(); // click on delete
-        assert.ok($('.modal').length, 'a confirm modal should be displayed');
-        $('.modal .modal-footer .btn-primary').click(); // click on confirm
-        assert.strictEqual(kanban.$('.o_kanban_group:last').data('id'), 3,
-            'last column should now be [3, "hello"]');
-        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should still have two columns");
-        assert.ok(!kanban.$('.o_kanban_group:first').data('id'),
-            'first column should have no id (Undefined column)');
-        // check available actions on 'Undefined' column
-        assert.ok(kanban.$('.o_kanban_group:first .o_kanban_toggle_fold').length,
-                        "should be able to fold the column");
-        assert.ok(!kanban.$('.o_kanban_group:first .o_column_delete').length,
-            'Undefined column could not be deleted');
-        assert.ok(!kanban.$('.o_kanban_group:first .o_column_edit').length,
-            'Undefined column could not be edited');
-        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_archive').length,
-                        "should not be able to archive the records");
-        assert.ok(!kanban.$('.o_kanban_header:first .o_kanban_config .o_column_unarchive').length,
-                        "should not be able to restore the records");
-        assert.verifySteps(['read_group', 'unlink', 'read_group']);
-        assert.strictEqual(kanban.renderer.widgets.length, 2,
-            "the old widgets should have been correctly deleted");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3,
+            "third column was added");
+        kanban.$('.o_kanban_group:last .o_kanban_config .o_column_delete').click();
+        assert.strictEqual($('.modal').length, 1, 'Are you sure you want to delete this column ?');
+        $('.modal .modal-footer .btn-primary').click(); // click on ok
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
+            "third column was delete");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('restict to delete a column having values in grouped on m2o', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method) {
+                    assert.step(args.method);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        kanban.$('.o_kanban_group:last .o_column_delete').click();
+        assert.strictEqual($('.modal').length, 1, 'You can not delete column containing active records !');
+        $('.modal .modal-footer .btn-primary').click(); // click on ok
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2, "should have two columns");
+
         kanban.destroy();
     });
 
@@ -2128,54 +2142,6 @@ QUnit.module('Views', {
             assert.strictEqual($quickCreateGroup[0], $groups[0],
                 "quick create should have been added in the first column");
         }
-    });
-
-    QUnit.skip('mobile grouped rendering', function (assert) {
-        // Temporarily disable this test until we introduce a mobile test suite, as
-        // the code of the kanban renderer for mobile is in a specific file which isn't
-        // executed in desktop (so setting 'isMobile: True' in the test is useless).
-        // So to re-activate this test, it will need to be moved in another file
-        // included in the bundle of the mobile test suite.
-        assert.expect(8);
-        var done = assert.async();
-
-        createAsyncView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban class="o_kanban_test o_kanban_small_column" on_create="quick_create">' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div><field name="foo"/></div>' +
-                    '</t></templates>' +
-                '</kanban>',
-            groupBy: ['product_id'],
-            config: {device: {isMobile: true}},
-        }).then(function (kanban) {
-
-            // Dummy dom update trigger for activate mobile tabs and move to first column
-            core.bus.trigger("DOM_updated");
-
-            assert.equal(kanban.$el.find('.o_kanban_group').length, 2, "2 colomns are created" );
-
-            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
-            assert.ok(kanban.$('.o_kanban_group:nth(0) > div:nth(1)').hasClass('o_kanban_quick_create'),
-                "clicking on create should open the quick_create in the first column");
-
-            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "hello", "First tab 'hello' is active tab with class 'current'" );
-            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'hello' tab" );
-            assert.equal(kanban.$el.find('.o_kanban_group.next > div.o_kanban_record').length, "0", "there is 0 record in next tab. Records will load when click on next tab");
-
-            kanban.$el.find('.o_kanban_mobile_tab.next').trigger('click'); // Moving to next tab
-            assert.equal(kanban.$el.find('.o_kanban_mobile_tab.current > span').html(), "xmo", "Second tab 'xmo' is active with class 'current'" );
-            assert.equal(kanban.$el.find('.o_kanban_group.current > div.o_kanban_record').length, "2", "there is 2 record in active 'xmo' tab. Records are loaded after click on tab");
-
-            kanban.$buttons.find('.o-kanban-button-new').click(); // Click on 'Create'
-            assert.ok(kanban.$('.o_kanban_group:nth(1) >  div:nth(1)').hasClass('o_kanban_quick_create'),
-                "clicking on create should open the quick_create in the second column");
-
-            kanban.destroy();
-            done();
-        });
     });
 
     QUnit.test('kanban globle context test on delete record', function (assert) {
