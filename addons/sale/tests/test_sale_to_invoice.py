@@ -61,7 +61,7 @@ class TestSale(TestMail):
         context = {"active_model": 'sale.order', "active_ids": [order.id], "active_id": order.id}
         order.with_context(context).action_confirm()
         # Now I create invoice.
-        payment = self.env['sale.advance.payment.inv'].create({
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
             'advance_payment_method': 'fixed',
             'amount': 5,
             'product_id': self.env.ref('sale.advance_product_0').id,
