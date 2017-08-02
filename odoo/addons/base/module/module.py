@@ -506,7 +506,7 @@ class Module(models.Model):
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)
-        config = self.next() or {}
+        config = env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
