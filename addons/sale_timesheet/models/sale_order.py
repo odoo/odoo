@@ -179,8 +179,9 @@ class SaleOrderLine(models.Model):
                 account = self.order_id.analytic_account_id
             project = Project.search([('analytic_account_id', '=', account.id)], limit=1)
             if not project:
+                project_name = '%s (%s)' % (account.name, self.sale_line_id.order_partner_id.ref) if self.sale_line_id.order_partner_id.ref else account.name
                 project_id = account.sudo().project_create({
-                    'name': account.name,
+                    'name': project_name,
                     'allow_timesheets': self.product_id.service_type == 'timesheet',
                 })
                 project = Project.sudo().browse(project_id)
@@ -194,7 +195,7 @@ class SaleOrderLine(models.Model):
         project = self._timesheet_find_project()
         planned_hours = self._convert_qty_company_hours()
         return {
-            'name': '%s:%s' % (self.order_id.name or '', self.product_id.name),
+            'name': '%s:%s' % (self.order_id.name or '', self.name.split('\n')[0] or self.product_id.name),
             'planned_hours': planned_hours,
             'remaining_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
