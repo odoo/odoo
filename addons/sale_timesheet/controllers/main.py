@@ -24,7 +24,7 @@ class SaleTimesheetController(http.Controller):
             'domain': domain,
         }
         hour_rounding = request.env.ref('product.product_uom_hour').rounding
-        billable_types = ['non_billable', 'billable_time', 'billable_fixed']
+        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
 
         # -- Dashboard (per billable type)
         dashboard_values = {
@@ -69,6 +69,7 @@ class SaleTimesheetController(http.Controller):
             repartition_employee.setdefault(employee_id, dict(
                 employee_id=data['employee_id'][0],
                 employee_name=data['employee_id'][1],
+                non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
                 billable_fixed=0.0,

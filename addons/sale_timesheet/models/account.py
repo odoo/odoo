@@ -11,7 +11,8 @@ class AccountAnalyticLine(models.Model):
     timesheet_invoice_type = fields.Selection([
         ('billable_time', 'Billable Time'),
         ('billable_fixed', 'Billable Fixed'),
-        ('non_billable', 'Non Billable')], string="Billable Type", readonly=True, copy=False)
+        ('non_billable', 'Non Billable'),
+        ('non_billable_project', 'No task found')], string="Billable Type", readonly=True, copy=False)
     timesheet_invoice_id = fields.Many2one('account.invoice', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     timesheet_revenue = fields.Monetary("Revenue", default=0.0, readonly=True, currency_field='company_currency_id', copy=False)
 
@@ -83,14 +84,14 @@ class AccountAnalyticLine(models.Model):
                 timesheet_uom = self.env.user.company_id.project_time_mode_id
 
             # default values
-            billable_type = 'non_billable'
+            billable_type = 'non_billable_project' if not timesheet.task_id else 'non_billable'
             unit_amount = timesheet.unit_amount
             so_line = timesheet.so_line
             revenue = 0.0
             billable_type = 'non_billable'
 
             # set the revenue and billable type according to the product and the SO line
-            if so_line.product_id.type == 'service' and so_line.product_id.service_type == 'timesheet':
+            if timesheet.task_id and so_line.product_id.type == 'service' and so_line.product_id.service_type == 'timesheet':
                 # find the analytic account to convert revenue into its currency
                 analytic_account = timesheet.account_id
                 # convert the unit of mesure into hours
