@@ -15,7 +15,7 @@ class StockQuantPackage(models.Model):
     def _compute_weight(self):
         weight = 0
         for quant in self.quant_ids:
-            weight += quant.qty * quant.product_id.weight
+            weight += quant.quantity * quant.product_id.weight
         self.weight = weight
 
     weight = fields.Float(compute='_compute_weight')
