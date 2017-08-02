@@ -228,7 +228,7 @@ var BasicModel = AbstractModel.extend({
                 model: modelName,
                 method: 'unlink',
                 args: [_.pluck(records, 'res_id')],
-                context: session.user_context, // todo: combine with view context
+                context: records[0].getContext(),
             })
             .then(function () {
                 _.each(records, function (record) {
