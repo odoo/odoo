@@ -294,10 +294,11 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <pivot string="Operations">
-                <field name="date_start"/>
+                <field name="date_start" groups="mrp.group_mrp_routings"/>
                 <field name="operation_id"/>
                 <field name="duration" type="measure"/>
                 <field name="duration_expected" type="measure"/>
+                <field name="production_date" groups="mrp.group_mrp_manager"/>
             </pivot>
         </field>
     </record>
