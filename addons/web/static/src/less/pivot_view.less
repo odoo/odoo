@@ -37,21 +37,13 @@
         .o_pivot_header_cell_closed {
             .text-align(left);
             .o-pivot-header-cell;
-            &::before {
-                font-family: FontAwesome;
-                content: "";
-                .margin-right(8px);
-            }
+            .o_pivot_header_cell_closed_mixin();
         }
 
         .o_pivot_header_cell_opened {
             .o-pivot-header-cell;
             .text-align(left);
-            &::before {
-                font-family: FontAwesome;
-                content: "";
-                .margin-right(8px);
-            }
+            .o_pivot_header_cell_opened_mixin();
         }
 
         .o_pivot_measure_row_sorted_asc::after {

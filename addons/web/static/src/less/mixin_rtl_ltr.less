@@ -300,3 +300,37 @@
        -o-transform: rotate(@deg);
           transform: rotate(@deg);
 }
+
+// for pivot view static content
+
+.o_pivot_header_cell_closed_mixin() when (@lng-direction = ltr) {
+    &::before {
+        font-family: FontAwesome;
+        content: "";
+        .margin-right(8px);
+    }
+}
+
+.o_pivot_header_cell_opened_mixin() when (@lng-direction = ltr) {
+    &::before {
+        font-family: FontAwesome;
+        content: "";
+        .margin-right(8px);
+    }
+}
+
+.o_pivot_header_cell_closed_mixin() when (@lng-direction = rtl) {
+    &::after {
+        font-family: FontAwesome;
+        content: "";
+        .margin-right(8px);
+    }
+}
+
+.o_pivot_header_cell_opened_mixin() when (@lng-direction = rtl) {
+    &::after {
+        font-family: FontAwesome;
+        content: "";
+        .margin-right(8px);
+    }
+}
