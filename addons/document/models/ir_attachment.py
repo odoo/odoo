@@ -110,7 +110,7 @@ class IrAttachment(models.Model):
         if bin_data.startswith('%PDF-'):
             f = StringIO(bin_data)
             try:
-                pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
+                pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False, strict=False)
                 for page in pdf.pages:
                     buf += page.extractText()
             except Exception:

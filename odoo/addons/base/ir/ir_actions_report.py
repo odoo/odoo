@@ -85,7 +85,7 @@ def _merge_pdf(documents):
         for document in documents:
             pdfreport = open(document, 'rb')
             streams.append(pdfreport)
-            reader = PdfFileReader(pdfreport, overwriteWarnings=False)
+            reader = PdfFileReader(pdfreport, overwriteWarnings=False, strict=False)
             for page in range(0, reader.getNumPages()):
                 writer.addPage(reader.getPage(page))
 
