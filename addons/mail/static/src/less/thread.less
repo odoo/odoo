@@ -103,6 +103,11 @@
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
+            > pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+                text-align: justify;
+            }
 
             &.o_mail_note {
                 background-color: @mail-thread-note;
