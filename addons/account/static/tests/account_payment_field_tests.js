@@ -26,7 +26,7 @@ QUnit.module('account', {
     QUnit.module('Reconciliation');
 
     QUnit.test('Reconciliation form field', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var form = createView({
             View: FormView,
@@ -73,6 +73,7 @@ QUnit.module('account', {
             "should display outstanding information");
 
         form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');
+        assert.strictEqual(form.$('.popover .js_open_payment').length, 1, "should display the open payment button (False positive if the focus is not on the page)");
         form.$('.popover .js_open_payment').trigger('click');
 
         form.$('.o_field_widget[name="payments_widget"] .js_payment_info').trigger('focus');

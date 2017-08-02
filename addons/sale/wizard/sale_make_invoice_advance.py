@@ -25,6 +25,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 return 'all'
         return 'delivered'
 
+    def _get_order_currency(self):
+        sale_obj = self.env['sale.order']
+        order = sale_obj.browse(self._context.get('active_ids'))[0]
+        return order.pricelist_id.currency_id.id or self.env.user.company_id.currency_id.id
+
     @api.model
     def _default_product_id(self):
         product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
@@ -51,6 +56,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)
     deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
+    currency_id = fields.Many2one("res.currency", compute='_get_order_currency', default=_get_order_currency, string="Currency", readonly=True, required=True)
 
     @api.onchange('advance_payment_method')
     def onchange_advance_payment_method(self):
@@ -122,10 +128,16 @@ class SaleAdvancePaymentInv(models.TransientModel):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return invoice
 
+    @api.model
+    def reconciliation_create_move_lines_propositions(self, order_ids, invoice_ids):
+        sale_orders = self.env['sale.order'].browse(order_ids)
+        self.env['account.invoice'].browse(invoice_ids).action_invoice_open()
+        move_lines = self.env['account.bank.statement.line'].get_move_lines_for_reconciliation(additional_domain=[('invoice_id', 'in', invoice_ids)])
+        return move_lines.prepare_move_lines_for_reconciliation_widget(target_currency=sale_orders[0].currency_id)
+
     @api.multi
     def create_invoices(self):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
-
         if self.advance_payment_method == 'delivered':
             sale_orders.action_invoice_create()
         elif self.advance_payment_method == 'all':

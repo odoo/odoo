@@ -13,3 +13,4 @@ from . import sale_analytic
 from . import sale_config_settings
 from . import sale_layout
 from . import sales_team
+from . import account_bank_statement

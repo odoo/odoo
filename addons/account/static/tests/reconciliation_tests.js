@@ -6,6 +6,7 @@ var data = {
         fields: {
             id: {string: "ID", type: 'integer'},
             display_name: {string: "Displayed name", type: 'char'},
+            name: {string: "name", type: 'char'},
             image: {string: "image", type: 'integer'},
             customer: {string: "customer", type: 'boolean'},
             supplier: {string: "supplier", type: 'boolean'},
@@ -14,12 +15,12 @@ var data = {
             property_account_payable_id: {string: 'Account payable', type: 'many2one', relation: 'account.account'},
         },
         records: [
-            {id: 1, display_name: "partner 1", image: 'AAA', customer: true},
-            {id: 2, display_name: "partner 2", image: 'BBB', customer: true},
-            {id: 3, display_name: "partner 3", image: 'CCC', customer: true},
-            {id: 4, display_name: "partner 4", image: 'DDD', customer: true},
-            {id: 8, display_name: "Agrolait", image: 'EEE', customer: true},
-            {id: 12, display_name: "Camptocamp", image: 'FFF', supplier: true, property_account_receivable_id: 287, property_account_payable_id: 287},
+            {id: 1, name: "partner 1", display_name: "partner 1", image: 'AAA', customer: true},
+            {id: 2, name: "partner 2", display_name: "partner 2", image: 'BBB', customer: true},
+            {id: 3, name: "partner 3", display_name: "partner 3", image: 'CCC', customer: true},
+            {id: 4, name: "partner 4", display_name: "partner 4", image: 'DDD', customer: true},
+            {id: 8, name: "Agrolait", display_name: "Agrolait", image: 'EEE', customer: true},
+            {id: 12, name: "Camptocamp", display_name: "Camptocamp", image: 'FFF', supplier: true, property_account_receivable_id: 287, property_account_payable_id: 287},
         ],
         mark_as_reconciled: function () {
             return $.when();
@@ -482,8 +483,9 @@ return {
     },
     // this is the main function for this module. Its job is to export (and clone) all data for a test.
     getParams: function () {
-        return $.extend(true, {}, this.params);
-    }
+        this.current = $.extend(true, {}, this.params);
+        return this.current;
+    },
 };
 });
 
@@ -632,7 +634,7 @@ QUnit.module('account', {
 
 
     QUnit.test('Reconciliation partial', function (assert) {
-        assert.expect(10);
+        assert.expect(7);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -671,9 +673,6 @@ QUnit.module('account', {
         widget.$('.accounting_view .cell_left .line_info_button').trigger('click');
         assert.strictEqual(widget.$('.accounting_view .cell_left .line_info_button').length, 0, "should not display a partial reconciliation alert");
         assert.notOk(widget.$('.accounting_view .cell_left .line_info_button').hasClass('do_partial_reconcile_false'), "should not display the partial reconciliation information");
-        assert.ok( widget.$('button.btn-default:not(hidden)').length, "should display the validate button");
-        assert.strictEqual( widget.$el.data('mode'), "match", "should be inactive mode");
-        widget.$('button.btn-default:not(hidden)').trigger('click');
 
         clientAction.destroy();
     });

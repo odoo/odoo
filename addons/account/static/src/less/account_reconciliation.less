@@ -216,14 +216,23 @@
             max-height: 210px;
             .o-transition(max-height, 400ms);
         }
+        &[data-mode="inactive"] .cell_action .fa {
+            display: none;
+        }
+        &[data-mode="inactive"]:hover .cell_action .toggle_match {
+            display: block;
+        }
+        &[data-mode="inactive"] tfoot:hover .cell_action .toggle_create {
+            display: block;
+        }
     }
-        
+
     /* Match view */
 
     .match {
         > div {
-            padding: 1px;
             border: 1px solid #eee;
+            padding: 8px 14px 8px 1px;
             border-radius: 5px;
         }
         .cell_action .fa-add-remove:before {

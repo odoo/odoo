@@ -232,7 +232,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
 var LineRenderer = Widget.extend(FieldManagerMixin, {
     template: "reconciliation.line",
     events: {
-        'click .accounting_view caption .o_buttons button': '_onValidate',
+        'click .accounting_view .o_validate, .accounting_view caption .o_reconcile': '_onValidate',
         'click .accounting_view thead td': '_onTogglePanel',
         'click .accounting_view tfoot td': '_onShowPanel',
         'input input.filter': '_onFilterChange',

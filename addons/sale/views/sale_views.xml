@@ -371,6 +371,46 @@
             </field>
         </record>
 
+        <!-- Sales Orders View for reconciliation  -->
+
+        <record id="view_sales_order_reconciliation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders">
+                    <field name="name" string="Order Number"/>
+                    <field name="client_order_ref" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="confirmation_date"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total" sum="Total Tax Included" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="state"/>
+                    <field name="invoice_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_sales_order_reconciliation_filter" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <field name="name" string="Sales Order" filter_domain="['|','|',('name','ilike',self),('client_order_ref','ilike',self),('partner_id','child_of',self)]"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="user_id"/>
+                    <field name="team_id" string="Sales Channel"/>
+                    <field name="project_id"/>
+                    <field name="product_id"/>
+                    <field name="amount_total" filter_domain="['|',('amount_total','ilike',self),('amount_untaxed','ilike',self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter name="groupby_partner_id" context="{'group_by' : 'partner_id'}" string="Customer"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
         <!-- inherited view to make the order lines list in the form non-editable
              for the members of some usability groups -->
         <record id="view_order_form_editable_list" model="ir.ui.view">

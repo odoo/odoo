@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- inherits from sales_team.assets_backend to override certain attributes defined in sales_team -->
-        <template id="assets_backend" name="project assets" inherit_id="sales_team.assets_backend">
-            <xpath expr="." position="inside">
-                <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
-            </xpath>
-        </template>
+    <!-- inherits from sales_team.assets_backend to override certain attributes defined in sales_team -->
+    <template id="assets_backend" name="project assets" inherit_id="sales_team.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/reconciliation/reconciliation_action.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/reconciliation/reconciliation_model.js"></script>
+            <script type="text/javascript" src="/sale/static/src/js/reconciliation/reconciliation_renderer.js"></script>
+            <link href="/sale/static/src/less/sale.less" rel="stylesheet" type="text/less"/>
+        </xpath>
+    </template>
+
+
+    <template id="qunit_suite" name="account_reconciliation tests" inherit_id="web.qunit_suite">
+        <xpath expr="//t[@t-set='head']" position="inside">
+            <script type="text/javascript" src="/sale/static/tests/reconciliation_tests.js"></script>
+        </xpath>
+    </template>
 </odoo>

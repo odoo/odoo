@@ -548,6 +548,25 @@
             <field name="price_unit">12.50</field>
         </record>
 
+        <record id="sale_order_19" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="pricelist_id" ref="product.list0"/>
+            <field name="team_id" ref="sales_team.team_sales_department"/>
+            <field name="date_order" eval="(datetime.now()-relativedelta(days=35)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="state">sent</field>
+        </record>
+
+        <record id="sale_order_line_42" model="sale.order.line">
+            <field name="order_id" ref="sale_order_19"/>
+            <field name="name">Laptop E5023 beta</field>
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_qty">1</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">1000.00</field>
+        </record>
+
+
         <!-- Confirm some Sales Orders-->
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_6')]]"/>

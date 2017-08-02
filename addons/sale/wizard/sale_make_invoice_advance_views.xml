@@ -5,7 +5,7 @@
             <field name="model">sale.advance.payment.inv</field>
             <field name="arch" type="xml">
                 <form string="Invoice Sales Order">
-                    <p class="oe_grey">
+                    <p class="oe_grey" invisible="context.get('reconcile_with_sale_order', False)">
                         Invoices will be created in draft so that you can review
                         them before validation.
                     </p>
@@ -22,6 +22,7 @@
                                 attrs="{'required': [('advance_payment_method', 'in', ('fixed','percentage'))]}" class="oe_inline" widget="monetary"/>
                             <label string="%%"
                                 attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
+                            <field name="currency_id" invisible="True" class="oe_inline"/>
                         </div>
                         <field name="deposit_account_id" class="oe_inline"
                             attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>

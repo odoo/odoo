@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+<t t-extend="reconciliation.line">
+    <t t-jquery=".o_reconciliation_line" t-operation="prepend">
+        <div class="o_reconciliation_blockui hidden">
+            <div class="o_reconciliation_message">
+                <h3>Please wait for lines to be added for reconciliation.</h3>
+                The sale order is being validated, the invoice is generated and validated and the moves lines are generated.
+            </div>
+            <div class="o_reconciliation_shadow"/>
+        </div>
+    </t>
+    <t t-jquery=".o_buttons" t-operation="prepend">
+        <button t-attf-class="o_reconcile_so btn btn-default btn-sm {{state.balance.amount &lt;= 0 || state.balance.type &gt; 0 || !state.order_ids.length ? 'hidden' : ''}}">Reconcile with sales order(s)</button>
+    </t>
+</t>
+<t t-extend="reconciliation.manual.line">
+    <t t-jquery=".o_reconciliation_line" t-operation="prepend">
+        <div class="o_reconciliation_blockui hidden">
+            <div class="o_reconciliation_message">
+                <h3>Please wait for lines to be added for reconciliation.</h3>
+                The sale order is being validated, the invoice is generated and validated and the moves lines are generated.
+            </div>
+            <div class="o_reconciliation_shadow"/>
+        </div>
+    </t>
+    <t t-jquery=".o_buttons" t-operation="prepend">
+        <button t-attf-class="o_reconcile_so btn btn-default btn-sm {{state.balance.amount &lt;= 0 || _.filter(state.reconciliation_proposition, {'display': true}).length !== 1 || state.balance.type &gt; 0 || !state.order_ids.length ? 'hidden' : ''}}">Reconcile with sales order(s)</button>
+    </t>
+</t>
+
+</templates>

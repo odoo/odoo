@@ -132,7 +132,7 @@ return core.Class.extend({
             this._cache.filters[key] = rpc.query({
                 args: [dataset.model, action_id],
                 kwargs: {
-                    context: dataset.get_context(),
+                    context: dataset.get_context().eval(),
                 },
                 model: 'ir.filters',
                 method: 'get_filters',

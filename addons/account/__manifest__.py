@@ -68,7 +68,6 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
     'qweb': [
         "static/src/xml/account_reconciliation.xml",
         "static/src/xml/account_payment.xml",
-        "static/src/xml/account_report_backend.xml",
     ],
     'installable': True,
     'application': False,

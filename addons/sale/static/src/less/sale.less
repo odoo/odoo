@@ -1,0 +1,29 @@
+.o_reconciliation {
+    .o_reconciliation_line {
+        position: relative;
+    }
+    .o_reconciliation_line .o_reconciliation_blockui, .o_reconciliation_line .o_reconciliation_shadow {
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    .o_reconciliation_line .o_reconciliation_blockui {
+        z-index: 1;
+    }
+    .o_reconciliation_line .o_reconciliation_message {
+        background: #fff;
+        border: 1px #333 solid;
+        width: 400px;
+        margin: 35px auto 0px auto;
+        padding: 0 12px 14px 12px;
+        border-radius: 3px;
+    }
+    .o_reconciliation_line .o_reconciliation_shadow {
+        background: #000;
+        opacity: 0.4;
+        z-index: -1;
+    }
+}
