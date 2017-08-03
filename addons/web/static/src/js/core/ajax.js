@@ -433,15 +433,57 @@ var loadXML = (function () {
     };
 })();
 
-return {
+
+/**
+ * Makes sure that the jsLibs and cssLibs are properly loaded. Note that
+ * the ajax loadJS and loadCSS methods don't do anything if the given file
+ * is already loaded.
+ *
+ * @returns {Deferred}
+ */
+function loadLibs (lib) {
+    var defs = [];
+    _.each(lib.jsLibs || [], function (urls) {
+        if (typeof(urls) === 'string') {
+            // jsLibs is an array of urls: those urls can be loaded in
+            // parallel
+            defs.push(ajax.loadJS(urls));
+        } else {
+            // jsLibs is an array of arrays of urls: those arrays of urls
+            // can be loaded in parallel, but the urls inside each
+            // sub-array must be loaded sequentially
+            var jsDef = new $.Deferred();
+            var urlDef = $.when();
+            _.each(urls, function (url) {
+                urlDef = urlDef.then(function () {
+                    return ajax.loadJS(url).then(function () {
+                        if (urls[urls.length-1] === url) {
+                            jsDef.resolve();
+                        }
+                    });
+                });
+            });
+            defs.push(jsDef);
+        }
+    });
+    _.each(lib.cssLibs || [], function (url) {
+        defs.push(ajax.loadCSS(url));
+    });
+    return $.when.apply($, defs);
+}
+
+var ajax = {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
     rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,
+    loadLibs: loadLibs,
     get_file: get_file,
     post: post,
 };
+
+return ajax;
 
 });

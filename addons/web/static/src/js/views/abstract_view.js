@@ -23,13 +23,12 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
+var ajax = require('web.ajax');
 var Class = require('web.Class');
 var Context = require('web.Context');
-var ajax = require('web.ajax');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
-var Context = require('web.Context');
 
 var AbstractView = Class.extend({
     // name displayed in view switchers
@@ -51,8 +50,6 @@ var AbstractView = Class.extend({
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-        js_libs: [],
-        css_libs: [],
     },
 
     /**
@@ -133,24 +130,27 @@ var AbstractView = Class.extend({
      */
     getController: function (parent) {
         var self = this;
-        return $.when(this._loadData(parent), this._loadLibs()).then(function () {
-            var model = self.getModel();
-            var state = model.get(arguments[0]);
-            var renderer = self.getRenderer(parent, state);
-            var Controller = self.Controller || self.config.Controller;
-            var controllerParams = _.extend({
-                initialState: state,
-            }, self.controllerParams);
-            var controller = new Controller(parent, model, renderer, controllerParams);
-            renderer.setParent(controller);
+        return ajax.loadLibs(this).then(function () {
+            return self._loadData(parent).then(function () {
+                var model = self.getModel();
+                var state = model.get(arguments[0]);
+                var renderer = self.getRenderer(parent, state);
+                var Controller = self.Controller || self.config.Controller;
+                var controllerParams = _.extend({
+                    initialState: state,
+                }, self.controllerParams);
+                var controller = new Controller(parent, model, renderer, controllerParams);
+                renderer.setParent(controller);
 
-            if (!self.model) {
-                // if we have a model, it already has a parent. Otherwise, we
-                // set the controller, so the rpcs from the model actually work
-                model.setParent(controller);
-            }
-            return controller;
+                if (!self.model) {
+                    // if we have a model, it already has a parent. Otherwise, we
+                    // set the controller, so the rpcs from the model actually work
+                    model.setParent(controller);
+                }
+                return controller;
+            });
         });
+
     },
     /**
      * Returns the view model or create an instance of it if none
@@ -201,40 +201,6 @@ var AbstractView = Class.extend({
     _loadData: function (parent) {
         var model = this.getModel(parent);
         return model.load(this.loadParams);
-    },
-    /**
-     * Makes sure that the js_libs and css_libs are properly loaded. Note that
-     * the ajax loadJS and loadCSS methods don't do anything if the given file
-     * is already loaded.
-     *
-     * @private
-     * @returns {Deferred}
-     */
-    _loadLibs: function () {
-        var defs = [];
-        var jsDefs;
-        _.each(this.config.js_libs, function (urls) {
-            if (typeof(urls) === 'string') {
-                // js_libs is an array of urls: those urls can be loaded in
-                // parallel
-                defs.push(ajax.loadJS(urls));
-            } else {
-                // js_libs is an array of arrays of urls: those arrays of urls
-                // must be loaded sequentially, but the urls inside each
-                // sub-array can be loaded in parallel
-                defs.push($.when.apply($, jsDefs).then(function () {
-                    jsDefs = [];
-                    _.each(urls, function (url) {
-                        jsDefs.push(ajax.loadJS(url));
-                    });
-                    return $.when.apply($, jsDefs);
-                }));
-            }
-        });
-        _.each(this.config.css_libs, function (url) {
-            defs.push(ajax.loadCSS(url));
-        });
-        return $.when.apply($, defs);
     },
     /**
      * Loads the subviews for x2many fields when they are not inline
