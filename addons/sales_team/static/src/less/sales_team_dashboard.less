@@ -110,7 +110,9 @@
     }
 
     .o_sales_dashboard {
-        margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+        @media screen and (min-width: @screen-sm-min) {
+            margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+        }
         .o-flex(1, 0, 100%);
         padding: 10px (@odoo-horizontal-padding - @sale-table-spacing);
 
@@ -156,6 +158,9 @@
                     width: 25%;
 
                     height: 33px;
+                    @media(max-width:@screen-sm-max) {
+                    padding: 3px;
+                    }
 
                     span {
                         display: inline;
