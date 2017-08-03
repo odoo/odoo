@@ -4,6 +4,7 @@ odoo.define('web_editor.snippet.editor', function (require) {
 var Class = require('web.Class');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 var editor = require('web_editor.editor');
 var animation = require('web_editor.snippets.animation');
@@ -98,7 +99,7 @@ data.Class = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? cssFind($from, selector) : $(selector);
+                    return $from ? dom.cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -121,30 +122,15 @@ data.Class = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return cssFind($from || self.$editable, selector);
+                    return dom.cssFind($from || self.$editable, selector);
                 } : function ($from) {
                     $from = $from || self.$editable;
-                    return $from.filter(selector).add(cssFind($from, selector));
+                    return $from.filter(selector).add(dom.cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
-        }
-
-        /**
-         * jQuery find function behavior is:
-         *      $('A').find('A B') <=> $('A A B')
-         * The searches behavior to find options' DOM needs to be
-         *      $('A').find('A B') <=> $('A B')
-         * This is what this function does.
-         *
-         * @param {jQuery} $from - the jQuery element(s) from which to search
-         * @param {string} selector - the CSS selector to match
-         * @returns {jQuery}
-         */
-        function cssFind($from, selector) {
-            return $from.find('*').filter(selector);
         }
     },
 
