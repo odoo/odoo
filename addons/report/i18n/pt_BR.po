@@ -7,15 +7,15 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
 # grazziano <gra.negocia@gmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2016
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2016
 # falexandresilva <falexandresilva@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: falexandresilva <falexandresilva@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -542,18 +542,20 @@ msgid "Website:"
 msgstr "Site:"
 
 #. module: report
-#: code:addons/report/models/report.py:435
-#, python-format
-msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr "Wkhtmltopdf falhou (código de erro: %s). Mensagem: %s"
-
-#. module: report
 #: code:addons/report/models/report.py:450
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf falhou (código de erro: %s). Limite de memória muito baixo ou "
+"máximo número de arquivo do subprocesso alcançado. Mensagem : %s"
+
+#. module: report
+#: code:addons/report/models/report.py:452
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf falhou (código de erro: %s). Mensagem: %s"
 
 #. module: report
 #. openerp-web
@@ -582,22 +584,34 @@ msgstr ""
 " target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+"Sua instalação do Wkhtmltopdf parece estar quebrada. O relatório será "
+"mostrado em html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+
+#. module: report
 #: model:ir.model,name:report.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: report
-#. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:96
-#, python-format
-msgid ""
-"Your installation of Wkhtmltopdf seems to be broken. The \n"
-"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
-"A instalação do Wkhtmltopdf parece estar quebrada. O \n"
-"relatório será mostrado em html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+#: model:ir.model,name:report.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
 msgstr "ir.qweb.field.barcode"
+
+#. module: report
+#: model:ir.model,name:report.model_report_abstract_report
+msgid "report.abstract_report"
+msgstr "report.abstract_report"

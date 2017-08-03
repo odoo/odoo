@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-14 15:53+0000\n"
-"PO-Revision-Date: 2016-11-14 15:53+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Эдуард Манятовский <manyatovskiy@gmail.com>, 2016\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -194,9 +194,14 @@ msgid "Analytic Account"
 msgstr "Аналитический счет"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_account_id
+msgid "An expense account is expected"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_configuration
 msgid "Apply"
-msgstr "Применить "
+msgstr "Применить"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -225,6 +230,7 @@ msgid "Bill Reference"
 msgstr "Описание счёта"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,field_description:hr_expense.field_product_template_can_be_expensed
 msgid "Can be Expensed"
 msgstr "Может быть расходом"
@@ -997,7 +1003,7 @@ msgstr "Причина отказа от расходов."
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Ref."
-msgstr "Ссылка"
+msgstr "Ссыл."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1111,6 +1117,7 @@ msgid "Setup your domain alias"
 msgstr "Установить псевдоним домена"
 
 #. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_product_product_can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template_can_be_expensed
 msgid "Specify whether the product can be selected in an HR expense."
 msgstr ""
@@ -1214,15 +1221,15 @@ msgid "The journal used when the expense is done."
 msgstr "Журнал используется когда расход совершен."
 
 #. module: hr_expense
-#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
-msgid "The payment method used when the expense is paid by the company."
-msgstr "Способ оплаты используются, когда расходы оплачиваются компанией."
-
-#. module: hr_expense
 #: code:addons/hr_expense/wizard/hr_expense_register_payment.py:35
 #, python-format
 msgid "The payment amount must be strictly positive."
-msgstr ""
+msgstr "Сумма платежа должна быть строго положительной."
+
+#. module: hr_expense
+#: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_bank_journal_id
+msgid "The payment method used when the expense is paid by the company."
+msgstr "Способ оплаты используются, когда расходы оплачиваются компанией."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1340,7 +1347,7 @@ msgstr "Посмотреть отчет"
 msgid "Want to manage your employee expenses and receipts? <i>Start here</i>."
 msgstr ""
 "Хотите управлять своими расходами сотрудников и квитанции? <i>Начните "
-"отсюда</i>"
+"отсюда</i>."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1381,10 +1388,25 @@ msgstr ""
 "                                     в почтовом сообщении, чтобы установить его так же на счет."
 
 #. module: hr_expense
-#: code:addons/hr_expense/models/hr_expense.py:425
+#: code:addons/hr_expense/models/hr_expense.py:566
+#, python-format
+msgid "You cannot add expense lines of another employee."
+msgstr "Вы не можете добавлять строки расходов другого сотрудника."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:433
 #, python-format
 msgid "You cannot delete a posted expense."
 msgstr "Вы не можете удалить опубликованный расход."
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/hr_expense.py:559
+#, python-format
+msgid ""
+"You cannot have a positive and negative amounts on the same expense report."
+msgstr ""
+"Вы не можете иметь положительные и отрицательные суммы в одном отчете о "
+"расходах."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:106

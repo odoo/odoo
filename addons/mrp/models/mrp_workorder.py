@@ -282,7 +282,7 @@ class MrpWorkorder(models.Model):
         for move_lot in self.active_move_lot_ids:
             # Check if move_lot already exists
             if move_lot.quantity_done <= 0:  # rounding...
-                move_lot.unlink()
+                move_lot.sudo().unlink()
                 continue
             if not move_lot.lot_id:
                 raise UserError(_('You should provide a lot for a component'))
@@ -291,7 +291,7 @@ class MrpWorkorder(models.Model):
             if lots:
                 lots[0].quantity_done += move_lot.quantity_done
                 lots[0].lot_produced_id = self.final_lot_id.id
-                move_lot.unlink()
+                move_lot.sudo().unlink()
             else:
                 move_lot.lot_produced_id = self.final_lot_id.id
                 move_lot.done_wo = True
@@ -391,9 +391,12 @@ class MrpWorkorder(models.Model):
         domain = [('workorder_id', 'in', self.ids), ('date_end', '=', False)]
         if not doall:
             domain.append(('user_id', '=', self.env.user.id))
+        not_productive_timelines = timeline_obj.browse()
         for timeline in timeline_obj.search(domain, limit=None if doall else 1):
             wo = timeline.workorder_id
-            if timeline.loss_type != 'productive':
+            if wo.duration_expected <= wo.duration:
+                if timeline.loss_type == 'productive':
+                    not_productive_timelines += timeline
                 timeline.write({'date_end': fields.Datetime.now()})
             else:
                 maxdate = fields.Datetime.from_string(timeline.date_start) + relativedelta(minutes=wo.duration_expected - wo.duration)
@@ -402,10 +405,12 @@ class MrpWorkorder(models.Model):
                     timeline.write({'date_end': enddate})
                 else:
                     timeline.write({'date_end': maxdate})
-                    loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
-                    if not len(loss_id):
-                        raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-                    timeline.copy({'date_start': maxdate, 'date_end': enddate, 'loss_id': loss_id.id})
+                    not_productive_timelines += timeline.copy({'date_start': maxdate, 'date_end': enddate})
+        if not_productive_timelines:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            not_productive_timelines.write({'loss_id': loss_id.id})
         return True
 
     @api.multi

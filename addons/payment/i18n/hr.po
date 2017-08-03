@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-22 08:30+0000\n"
-"PO-Revision-Date: 2017-05-22 08:30+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Tina Milas <tina@uvid.hr>, 2017\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -154,7 +154,7 @@ msgstr "Ref. stjecatelja"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Referenca stjecatelja"
+msgstr "Vezna oznaka stjecatelja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -253,11 +253,6 @@ msgid "Click to create a payment acquirer."
 msgstr "Kliknite za kreiranje stjecatelja plaćanja."
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_account_payment_payment_method_id_code
-msgid "Code"
-msgstr "Šifra"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
 msgid "Company"
 msgstr "Tvrtka"
@@ -284,6 +279,7 @@ msgstr "Odgovarajući modul"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_count
 msgid "Count Payment Token"
 msgstr "Broj token plaćanja"
 
@@ -386,7 +382,7 @@ msgstr "E-pošta"
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
 msgid "Electronic"
-msgstr ""
+msgstr "Elektronski"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_email
@@ -496,7 +492,7 @@ msgstr "Status instalacije"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
 msgid "Internal reference of the TX"
-msgstr ""
+msgstr "Interna oznaka transakcije"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_lang
@@ -698,6 +694,7 @@ msgstr "Token plaćanja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
+#: model:ir.model.fields,field_description:payment.field_res_users_payment_token_ids
 #: model:ir.ui.view,arch_db:payment.payment_token_form_view
 #: model:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model:ir.ui.view,arch_db:payment.payment_token_view_search
@@ -775,7 +772,7 @@ msgstr "Vezna oznaka"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr ""
+msgstr "Oznaka transakcije kod stjecatelja"
 
 #. module: payment
 #: constraint:payment.acquirer:0
@@ -879,7 +876,7 @@ msgstr "Poruka zahvale"
 #: code:addons/payment/models/payment_acquirer.py:472
 #, python-format
 msgid "The payment transaction reference must be unique!"
-msgstr "Šifra transakcije plaćanja mora biti jedinstvena!"
+msgstr "Vezna oznaka transakcije plaćanja mora biti jedinstvena!"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:42
@@ -900,6 +897,12 @@ msgstr ""
 msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is be rendered with qWeb with the following evaluation context:"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:160
+#, python-format
+msgid "Transaction Authorization is not supported by this payment provider."
 msgstr ""
 
 #. module: payment
@@ -1060,13 +1063,7 @@ msgstr "payment.token"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "referenca: referentni broj transakcije"
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:160
-#, python-format
-msgid "Transaction Authorization is not supported by this payment provider."
-msgstr ""
+msgstr "vezna oznaka: referentni broj transakcije"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form

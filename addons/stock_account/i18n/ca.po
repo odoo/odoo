@@ -10,10 +10,10 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:56+0000\n"
-"PO-Revision-Date: 2016-09-07 08:56+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Eric Antones <eantones@users.noreply.github.com>, 2016\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "Núm. de productes"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Propietats de valors de comptes"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -42,6 +42,8 @@ msgstr "Informació comptable"
 msgid ""
 "Allows to configure inventory valuations on products and product categories."
 msgstr ""
+"Permet configurar les valoracions d'inventari en productes i categories de "
+"productes."
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -62,6 +64,9 @@ msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
 " the product category, or on the location, before processing this operation."
 msgstr ""
+"No es pot trobar un compte d'entrada d'estoc del producte %s. Heu de definir"
+" un a la categoria de producte o a la ubicació abans de processar aquesta "
+"operació"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:246
@@ -71,6 +76,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"No es pot trobar un compte de sortida d'estoc del producte %s. Heu de "
+"definir un a la categoria de producte o a la ubicació abans de processar "
+"aquesta operació"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -87,7 +95,7 @@ msgstr "Canvi de preu estàndard"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose a date in the past to get the inventory at that date."
-msgstr ""
+msgstr "Trieu una data anterior per obtenir l'inventari en aquesta data."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -95,11 +103,14 @@ msgid ""
 "Choose the accounting date at which you want to value the stock moves "
 "created by the inventory instead of the default one (the inventory end date)"
 msgstr ""
+"Trieu la data de comptabilitat en què voleu valorar els moviments de valors "
+"creats per l'inventari en comptes del valor predeterminat (la data de "
+"finalització de l'inventari)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Choose your date"
-msgstr ""
+msgstr "Tria la teva data"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_company_id
@@ -108,18 +119,14 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
-msgid "Compute from average price"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/models/stock.py:319
+#: code:addons/stock_account/models/stock.py:338
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
+"Error de configuració. Configureu el compte de diferència de preu al "
+"producte o la seva categoria per processar aquesta operació."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -130,7 +137,7 @@ msgstr "Cost"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost method"
-msgstr ""
+msgstr "Mètode de cost"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -142,7 +149,7 @@ msgstr "Mètode cost"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
 msgid "Counter-Part Account"
-msgstr ""
+msgstr "Compte de contrapartida"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -171,7 +178,7 @@ msgstr "Mostrar Nom"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
 msgid "Force Accounting Date"
-msgstr ""
+msgstr "Forçar la data de comptabilitat"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_search
@@ -205,6 +212,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valoració perpètua s'activa per un producte, el sistema crearà "
+"automàticament assentaments comptables corresponents als moviments d'estoc, "
+"amb el preu de producte indicat segons el \"mètode de cost\". El compte de "
+"valoració d'inventari establerta en la categoria de producte representarà el"
+" compte d'inventari actual, i els comptes d'entrada i sortida de mercaderia "
+"contindrà les contrapartides de moviment pels productes entrants i sortints."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -217,11 +230,18 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valoració perpètua s'activa per un producte, el sistema crearà "
+"automàticament assentaments comptables corresponents als moviments d'estoc, "
+"amb el preu de producte indicat segons el \"mètode de cost\". El compte de "
+"valoració d'inventari establerta en la categoria de producte representarà el"
+" compte d'inventari actual, i els comptes d'entrada i sortida de mercaderia "
+"contindrà les contrapartides de moviment pels productes entrants i sortints."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "Include landed costs in product costing computation"
 msgstr ""
+"Inclou els costos de desemborsament en la computació de costos del producte"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_config_settings_module_stock_landed_costs
@@ -229,6 +249,8 @@ msgid ""
 "Install the module that allows to affect landed costs on pickings, and split"
 " them onto the different products."
 msgstr ""
+"Instal·leu el mòdul que permeti afectar els costos de desembarcament a les "
+"recollides i dividir-los en els diferents productes."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -259,7 +281,7 @@ msgstr "Valor de l'inventari"
 #: model:ir.model.fields,field_description:stock_account.field_wizard_valuation_history_choose_date
 #: model:ir.ui.menu,name:stock_account.menu_action_wizard_valuation_history
 msgid "Inventory at Date"
-msgstr ""
+msgstr "Inventari a la data"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_invoice
@@ -310,46 +332,48 @@ msgstr "Lot/núm. de sèrie"
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_inventory_valuation
 msgid "Manage Inventory Valuation and Costing Methods"
-msgstr ""
+msgstr "Gestionar mètodes de valoració i valoració d'inventaris"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:109
 #, python-format
 msgid "No difference between standard price and new price!"
-msgstr ""
+msgstr "No hi ha diferència entre el preu estàndard i el preu nou."
 
 #. module: stock_account
 #: selection:stock.config.settings,module_stock_landed_costs:0
 msgid "No landed costs"
-msgstr ""
+msgstr "Sense desemborsar costos"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_date
 msgid "Operation Date"
-msgstr ""
+msgstr "Data d'operació"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Periodic (manual)"
-msgstr ""
+msgstr "Periòdic (manual)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid "Periodic inventory valuation (recommended)"
-msgstr ""
+msgstr "Valoració periòdica d'inventari (recomanat)"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 #: selection:product.template,property_valuation:0
 msgid "Perpetual (automated)"
-msgstr ""
+msgstr "Perpetu (automatitzat)"
 
 #. module: stock_account
 #: selection:stock.config.settings,group_stock_inventory_valuation:0
 msgid ""
 "Perpetual inventory valuation (stock move generates accounting entries)"
 msgstr ""
+"Valoració de l'inventari permanent (moviment d'accions genera entrades "
+"comptables)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
@@ -396,18 +420,18 @@ msgstr "Preu real"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the Inventory Value"
-msgstr ""
+msgstr "Recuperar el valor de l'inventari"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
 msgid "Retrieve the curent stock valuation."
-msgstr ""
+msgstr "Recuperar la valoració actual de l'estoc."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Set standard price"
-msgstr ""
+msgstr "Estableix el preu estàndard"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_source
@@ -425,7 +449,7 @@ msgstr "Preu estàndard"
 #: code:addons/stock_account/models/product.py:131
 #, python-format
 msgid "Standard Price changed"
-msgstr ""
+msgstr "S'ha canviat el preu estàndard"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -435,6 +459,11 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Preu estàndard: el preu de cost s'actualitza manualment al final d'un "
+"període específic (generalment un cop a l'any).Preu mitjà: el preu de cost "
+"es recalcula amb cada enviament entrant i s'utilitza per a la valoració del "
+"producte.Preu Real: el preu de cost és el preu de l'últim producte sortint "
+"(s'utilitzarà en cas de pèrdua d'inventari, per exemple)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -443,11 +472,21 @@ msgid ""
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
+"Preu estàndard: el preu de cost s'actualitza manualment al final d'un "
+"període específic (generalment un cop a l'any).Preu mitjà: el preu de cost "
+"es recalcula amb cada enviament entrant i s'utilitza per a la valoració del "
+"producte.Preu Real: el preu de cost és el preu de l'últim producte sortint "
+"(s'utilitzarà en cas de pèrdua d'inventari, per exemple)."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
 msgid "Stock Accounting"
-msgstr ""
+msgstr "Comptabilitat d'accions"
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.action_stock_history
+msgid "Stock History"
+msgstr "Historial d'existències"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -485,12 +524,12 @@ msgstr "Compte de la valoració d'estoc"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Compte de valoració de valors (entrant)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr ""
+msgstr "Compte de valoració de valors (sortint)"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/wizard_valuation_history.py:24
@@ -515,6 +554,9 @@ msgid ""
 "probably a configuration error. Check the costing method and the standard "
 "price"
 msgstr ""
+"L'import de valoració trobat pel producte 1%s és zero. El que significa que "
+"probablement hi ha un error de configuració. Comprovi el métode de càlcul de"
+" costos i el preu estàndard."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_history_report_tree
@@ -530,6 +572,12 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Utilitzat per una valoració en temps real de l'inventari. Quan està "
+"establert en una ubicació virtual (no de temps intern), aquest compte "
+"s'utilitzarà per mantenir el valor dels productes que són moguts d'una "
+"ubicació interna a aquesta ubicació, en lloc del compte de sortida "
+"d'existències genèric establert en el producte. No té efecte per ubicacions "
+"internes."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
@@ -540,12 +588,17 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Utilitzat per una valoració en temps real de l'inventari. Quan està "
+"establert en una ubicació virtual (no de temps intern), aquest compte "
+"s'utilitzarà per mantenir el valor dels productes que són moguts fora de la "
+"ubicació a una ubicació interna, en lloc del compte de sortida d'existències"
+" genèric establert en el producte. No té efecte per ubicacions internes."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr ""
+msgstr "Valoració"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_price_unit_on_quant
@@ -561,6 +614,11 @@ msgid ""
 "value for all products in this category. It can also directly be set on each"
 " product"
 msgstr ""
+"Quan es realitza una valoració d'inventari en temps real, la contrapartida "
+"per tots els moviments entrants seran imputats en aquest comte, a menys que "
+"s'hagi establert un compte de valoració especifica en la ubicació de "
+"sortida. Aquest és el valor per defecte per tots els productes en aquesta "
+"categoria. També es poden establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
@@ -571,6 +629,10 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Quan es realitza una valoració d'inventari en temps real, la contrapartida "
+"per tots els moviments d'entrada seran imputats en aquest compte, a menys "
+"que s'hagi establert un compte de valoració especifica en l'ubicació font. "
+"Quan no s'estableixi al producte, s'utilitza l'establerta en la categoria."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
@@ -581,6 +643,11 @@ msgid ""
 "default value for all products in this category. It can also directly be set"
 " on each product"
 msgstr ""
+"Quan es realitza una valoració d'inventari en temps real, la contrapartida "
+"per tots els moviments de sortida seran imputats en aquest comte, a menys "
+"que s'hagi establert un compte de valoració especifica en la ubicació de "
+"destí. Aquest és el valor per defecte per tots els productes en aquesta "
+"categoria. També es poden establir directament en cada producte."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
@@ -591,6 +658,11 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"Quan es realitza una valoració d'inventari en temps real, la contrapartida "
+"per tots els moviments de sortida seran imputades en aquest compte, a menys "
+"que s'hagi establert un compte de valoració especifica en la ubicació de "
+"destí. Quan no s'estableixi en el producte, s'utilitza l'establerta en la "
+"categoria."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
@@ -614,7 +686,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_wizard_valuation_history
 msgid "Wizard that opens the stock valuation history table"
-msgstr ""
+msgstr "Assistent que obre la taula d'historial de valoració de valors"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:242
@@ -623,6 +695,8 @@ msgid ""
 "You don't have any stock journal defined on your product category, check if "
 "you have installed a chart of accounts"
 msgstr ""
+"No teniu cap revista d'estoc definida a la vostra categoria de producte, "
+"comproveu si heu instal·lat un gràfic de comptes"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:111
@@ -632,6 +706,8 @@ msgid ""
 "You don't have any stock valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"No té cap compte de valoració d'estoc definida en la seva categoria de "
+"producte. Ha de definir un abans de processar aquesta operació."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -646,4 +722,4 @@ msgstr "stock.config.settings"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_history
 msgid "stock.history"
-msgstr ""
+msgstr "stock.history"

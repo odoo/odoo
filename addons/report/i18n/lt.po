@@ -14,10 +14,10 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:57+0000\n"
-"PO-Revision-Date: 2016-09-07 08:57+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: Antanas Muliuolis <an.muliuolis@gmail.com>, 2017\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
@@ -536,18 +536,18 @@ msgid "Website:"
 msgstr "Interneto svetainė:"
 
 #. module: report
-#: code:addons/report/models/report.py:435
-#, python-format
-msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
-msgstr "Wkhtmltopdf klaida (klaidos kodas: %s). Pranešimas: %s"
-
-#. module: report
 #: code:addons/report/models/report.py:450
 #, python-format
 msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+
+#. module: report
+#: code:addons/report/models/report.py:452
+#, python-format
+msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
+msgstr "Wkhtmltopdf klaida (klaidos kodas: %s). Pranešimas: %s"
 
 #. module: report
 #. openerp-web
@@ -575,20 +575,31 @@ msgstr ""
 "target=\"_blank\">wkhtmltopdf.org</a>"
 
 #. module: report
+#. openerp-web
+#: code:addons/report/static/src/js/qwebactionmanager.js:21
+#, python-format
+msgid ""
+"Your installation of Wkhtmltopdf seems to be broken. The report will be "
+"shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
+"target=\"_blank\">wkhtmltopdf.org</a>"
+msgstr ""
+
+#. module: report
 #: model:ir.model,name:report.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: report
-#. openerp-web
-#: code:addons/report/static/src/js/qwebactionmanager.js:96
-#, python-format
-msgid ""
-"Your installation of Wkhtmltopdf seems to be broken. The \n"
-"report will be shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\">wkhtmltopdf.org</a>"
+#: model:ir.model,name:report.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
+msgstr ""
+
+#. module: report
+#: model:ir.model,name:report.model_report_abstract_report
+msgid "report.abstract_report"
 msgstr ""

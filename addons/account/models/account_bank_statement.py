@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import float_is_zero
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare, float_round, float_repr
 from odoo.tools.misc import formatLang
 from odoo.exceptions import UserError, ValidationError
 
@@ -300,7 +300,10 @@ class AccountBankStatement(models.Model):
         #try to assign partner to bank_statement_line
         stl_to_assign_partner = [stl.id for stl in st_lines_left if not stl.partner_id]
         refs = list(set([st.name for st in st_lines_left if not stl.partner_id]))
-        if st_lines_left and stl_to_assign_partner and refs:
+        if st_lines_left and stl_to_assign_partner and refs\
+           and st_lines_left[0].journal_id.default_credit_account_id\
+           and st_lines_left[0].journal_id.default_debit_account_id:
+
             sql_query = """SELECT aml.partner_id, aml.ref, stl.id
                             FROM account_move_line aml
                                 JOIN account_account acc ON acc.id = aml.account_id
@@ -597,12 +600,14 @@ class AccountBankStatementLine(models.Model):
         acc_type = "acc.internal_type IN ('payable', 'receivable')" if (self.partner_id or overlook_partner) else "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
-        where_clause = """WHERE aml.company_id = %(company_id)s  
-                                AND (
-                                        (aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s) 
-                                    OR 
-                                        ("""+acc_type+""" AND aml.reconciled = false)
-                                    )"""
+        account_clause = ''
+        if self.journal_id.default_credit_account_id and self.journal_id.default_debit_account_id:
+            account_clause = "(aml.statement_id IS NULL AND aml.account_id IN %(account_payable_receivable)s AND aml.payment_id IS NOT NULL) OR"
+        where_clause = """WHERE aml.company_id = %(company_id)s
+                          AND (
+                                    """ + account_clause + """
+                                    ("""+acc_type+""" AND aml.reconciled = false)
+                          )"""
         where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause
         where_clause = where_clause + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else where_clause
         if split:
@@ -623,7 +628,7 @@ class AccountBankStatementLine(models.Model):
         precision = st_line_currency and st_line_currency.decimal_places or company_currency.decimal_places
         params = {'company_id': self.env.user.company_id.id,
                     'account_payable_receivable': (self.journal_id.default_credit_account_id.id, self.journal_id.default_debit_account_id.id),
-                    'amount': float_round(amount, precision_digits=precision),
+                    'amount': float_repr(float_round(amount, precision_digits=precision), precision_digits=precision),
                     'partner_id': self.partner_id.id,
                     'excluded_ids': tuple(excluded_ids),
                     'ref': self.name,
@@ -644,9 +649,9 @@ class AccountBankStatementLine(models.Model):
         # Look for a single move line with the same amount
         field = currency and 'amount_residual_currency' or 'amount_residual'
         liquidity_field = currency and 'amount_currency' or amount > 0 and 'debit' or 'credit'
-        liquidity_amt_clause = currency and '%(amount)s' or 'abs(%(amount)s)'
+        liquidity_amt_clause = currency and '%(amount)s::numeric' or 'abs(%(amount)s::numeric)'
         sql_query = self._get_common_sql_query(excluded_ids=excluded_ids) + \
-                " AND ("+field+" = %(amount)s OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
+                " AND ("+field+" = %(amount)s::numeric OR (acc.internal_type = 'liquidity' AND "+liquidity_field+" = " + liquidity_amt_clause + ")) \
                 ORDER BY date_maturity asc, aml.id asc LIMIT 1"
         self.env.cr.execute(sql_query, params)
         results = self.env.cr.fetchone()
@@ -901,7 +906,7 @@ class AccountBankStatementLine(models.Model):
             counterpart_moves = (counterpart_moves | move)
 
             # Create The payment
-            payment = False
+            payment = self.env['account.payment']
             if abs(total)>0.00001:
                 partner_id = self.partner_id and self.partner_id.id or False
                 partner_type = False

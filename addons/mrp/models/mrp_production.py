@@ -208,11 +208,8 @@ class MrpProduction(models.Model):
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
     def _compute_post_visible(self):
         for order in self:
-            if order.product_tmpl_id._is_cost_method_standard():
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids) or \
-                    any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
-            else:
-                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
+            order.post_visible = any(order.move_raw_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel']))) or \
+                any(order.move_finished_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel'])))
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids')
@@ -269,7 +266,10 @@ class MrpProduction(models.Model):
     @api.model
     def create(self, values):
         if not values.get('name', False) or values['name'] == _('New'):
-            values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+            if values.get('picking_type_id'):
+                values['name'] = self.env['stock.picking.type'].browse(values['picking_type_id']).sequence_id.next_by_id()
+            else:
+                values['name'] = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
         if not values.get('procurement_group_id'):
             values['procurement_group_id'] = self.env["procurement.group"].create({'name': values['name']}).id
         production = super(MrpProduction, self).create(values)

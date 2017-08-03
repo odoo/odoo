@@ -11,13 +11,14 @@
 # xiaobin wu <bd5dml@gmail.com>, 2016
 # Ted Wang <feiyuwang2012@gmail.com>, 2016
 # Godners Ren <godners@163.com>, 2017
+# Maie <m@maie.name>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Godners Ren <godners@163.com>, 2017\n"
+"Last-Translator: Maie <m@maie.name>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -847,7 +848,7 @@ msgstr "<strong>减少的数据录入:</strong> 无需手动创建发票, 登记
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>参考:</strong>"
+msgstr "<strong>参照:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2304,7 +2305,7 @@ msgstr "待付账单"
 #. module: account
 #: selection:res.partner,invoice_warn:0
 msgid "Blocking Message"
-msgstr "受阻消息"
+msgstr "阻止消息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_type_include_initial_balance
@@ -2847,7 +2848,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:account.field_res_partner_ref_company_ids
 #: model:ir.model.fields,field_description:account.field_res_users_ref_company_ids
 msgid "Companies that refers to partner"
-msgstr "公司是指业务伙伴"
+msgstr "指业务伙伴的公司"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_company_id
@@ -3066,7 +3067,7 @@ msgstr "恭喜你，成功了！"
 #: model:ir.model,name:account.model_account_abstract_payment
 msgid ""
 "Contains the logic shared between models which allows to register payments"
-msgstr "包含在允许登记付款的模块之间共享的逻辑"
+msgstr "包含在允许登记付款的模型之间共享的逻辑"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner_contract_ids
@@ -4170,7 +4171,7 @@ msgstr "费用"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
 msgid "External Reference"
-msgstr "外部引用"
+msgstr "外部参照"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -4400,7 +4401,7 @@ msgstr "强制将这科目的所有凭证转为第二货币。"
 #: code:addons/account/models/account_invoice.py:81
 #, python-format
 msgid "Free Reference"
-msgstr "自由参考"
+msgstr "自由参照"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5125,7 +5126,7 @@ msgstr "发票号必须在公司范围内唯一"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_invoice_id
 msgid "Invoice Reference"
-msgstr "发票号"
+msgstr "发票参照"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
@@ -6984,7 +6985,7 @@ msgstr "付款凭证明细行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference_type
 msgid "Payment Reference"
-msgstr "付款参考"
+msgstr "付款参照"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term
@@ -7026,7 +7027,7 @@ msgstr "差异付款"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_payment_reference
 msgid "Payment reference"
-msgstr "付款参考"
+msgstr "付款参照"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
@@ -7649,7 +7650,7 @@ msgstr "参考."
 #: model:ir.model.fields,field_description:account.field_account_move_ref
 #: model:ir.model.fields,field_description:account.field_cash_box_in_ref
 msgid "Reference"
-msgstr "参考"
+msgstr "参照"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_uom_name
@@ -7659,7 +7660,7 @@ msgstr "参考计量单位"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
 msgid "Reference number"
-msgstr "参考号码"
+msgstr "参照号码"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_line_origin
@@ -7677,7 +7678,7 @@ msgstr "有问题的付款的相关凭证。比如校验码、文件名等。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_name
 msgid "Reference/Description"
-msgstr "参考/说明"
+msgstr "参照/说明"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:958
@@ -8093,7 +8094,7 @@ msgstr "选择付款条款相应的估值"
 msgid ""
 "Selected invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state."
-msgstr "所选的发票(s) 不能删除，因为它们已处于“删除”或“已完成”状态。"
+msgstr "所选的发票不能删除，因为它们已处于“删除”或“已完成”状态。"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:21
@@ -8101,7 +8102,7 @@ msgstr "所选的发票(s) 不能删除，因为它们已处于“删除”或�
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
-msgstr "选择的发票(s)不能被确认，因为它们不是“草稿”或者“形式发票”状态"
+msgstr "选择的发票不能被确认，因为它们不是“草稿”或者“形式发票”状态"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_invoice_warn
@@ -8112,7 +8113,7 @@ msgid ""
 "block the flow. The Message has to be written in the next field."
 msgstr ""
 "选择此“警告“选项，将通知用户此消息。\n"
-"选择“受阻消息“选项，将在流程受阻时将抛出一个消息。\n"
+"选择“阻止消息“选项，将在流程受阻时将抛出一个消息。\n"
 "消息写入下一个字段。"
 
 #. module: account
@@ -8304,7 +8305,7 @@ msgstr "开始钱箱"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_statement_id
@@ -8427,27 +8428,27 @@ msgstr "目标凭证"
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 #, python-format
 msgid "Tax"
-msgstr "税金"
+msgstr "税"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:761
 #: code:addons/account/models/chart_template.py:764
 #, python-format
 msgid "Tax %.2f%%"
-msgstr "税金 %.2f%%"
+msgstr "税 %.2f%%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_account_id
 msgid "Tax Account"
-msgstr "税金科目"
+msgstr "税科目"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_refund_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template_refund_account_id
 msgid "Tax Account on Refunds"
-msgstr "退款的税金科目"
+msgstr "退款的税科目"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -8582,7 +8583,7 @@ msgstr "采用的税"
 #: model:ir.ui.view,arch_db:account.view_account_config_settings
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr "税金"
+msgstr "税"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -9912,7 +9913,7 @@ msgstr "供应商付款条款"
 #: model:ir.model.fields,field_description:account.field_account_invoice_reference
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Vendor Reference"
-msgstr "供应商参考"
+msgstr "供应商参照"
 
 #. module: account
 #: selection:account.invoice,type:0 selection:account.invoice.report,type:0
@@ -10549,7 +10550,7 @@ msgstr "对于这个供应商，你可以将它们分配为标记此账单已支
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "账单"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view

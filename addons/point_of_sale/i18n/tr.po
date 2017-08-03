@@ -7,14 +7,13 @@
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2016
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Levent Karakaş <levent@mektup.at>, 2016
 # Murat Kaplan <muratk@projetgrup.com>, 2016
-# Ediz Duman <neps1192@gmail.com>, 2016
 # gezgin biri <gezginbiri@hotmail.com>, 2016
-# MESUT TAVUKÇU <mesut@data-net.com.tr>, 2016
 # selim kartal <kartalselim37@gmail.com>, 2016
+# Ediz Duman <neps1192@gmail.com>, 2016
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2016
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Azar Huseynli <azerbay1984@gmail.com>, 2016
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2016
 # tanerhasret <tanerhasret@gmail.com>, 2016
 # Esin Kandemir <esaykandemir@gmail.com>, 2016
@@ -26,8 +25,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-13 09:53+0000\n"
-"PO-Revision-Date: 2017-02-13 09:53+0000\n"
+"POT-Creation-Date: 2017-06-23 13:27+0000\n"
+"PO-Revision-Date: 2017-06-23 13:27+0000\n"
 "Last-Translator: UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2016\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -40,33 +39,27 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:679
 #, python-format
 msgid " REFUND"
-msgstr "IADE"
+msgstr "İADE"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_nbr_lines
 msgid "# of Lines"
-msgstr "Satırlar"
+msgstr "satır adedi"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1423
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1428
 #, python-format
 msgid "% discount"
 msgstr "% indirim"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1550
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1590
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1555
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1595
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:72
-#, python-format
-msgid "(RESCUE FOR %(session)s)"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -76,7 +69,7 @@ msgstr "(güncelle)"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "+ Transactions"
-msgstr "+ İşlemleri"
+msgstr "+ İşlemler"
 
 #. module: point_of_sale
 #. openerp-web
@@ -94,6 +87,10 @@ msgid ""
 "laptops, or industrial hardware.</p><p>Once the session launched, the system"
 " continues to run without an internet connection.</p>"
 msgstr ""
+"<p>Satış noktası arayüzünü başlatmak için tıklayınız. <b>Tabletlerde, "
+"dizüstü bilgisayarlarda</b>veya endüstriyel donanımlarda çalışır.</p><p>Bir "
+"otorum açıldığında sistem internat bağlantısı olmadan çalışmaya devam "
+"edebilir.</p>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -101,6 +98,8 @@ msgid ""
 "<span class=\"o_stat_text\">Put</span>\n"
 "                                <span class=\"o_stat_text\">Money In</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Para</span>\n"
+"                                <span class=\"o_stat_text\">Koy</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -118,6 +117,8 @@ msgid ""
 "<span class=\"o_stat_text\">Take</span>\n"
 "                                <span class=\"o_stat_text\">Money Out</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Para</span>\n"
+"                                <span class=\"o_stat_text\">Al</span>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -142,7 +143,7 @@ msgstr "<span>Görünüm</span>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Company</strong>:<br/>"
-msgstr "<strong>Şirket</strong>:<br/>"
+msgstr "<strong>Firma</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -152,7 +153,7 @@ msgstr "<strong>Kapanış Bakiyesi</strong>:<br/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Journal</strong>:<br/>"
-msgstr "<strong>Günlük</strong>:<br/>"
+msgstr "<strong>Yevmiye</strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -189,7 +190,7 @@ msgstr "= Teorik Kapanış Bakiyesi"
 #: code:addons/point_of_sale/static/src/js/screens.js:1909
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
-msgstr "? \"Onayla\"yı tıklamak ödemeyi doğrulayacaktır."
+msgstr "olduğuna emin misiniz? \"Onayla\"yı tıklamak ödemeyi doğrulayacaktır."
 
 #. module: point_of_sale
 #. openerp-web
@@ -203,8 +204,7 @@ msgstr "Bir Müşteri Adı Gerekli"
 msgid ""
 "A Security PIN used to protect sensible functionality in the Point of Sale"
 msgstr ""
-"Ödeme Noktasının akıllı işlevselliğini korumak için bir Güvenlik PİN'i "
-"kullanılır"
+"Ödeme Noktasının hassas işlevini korumak için bir Güvenlik PİN'i kullanılır"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -222,19 +222,20 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data"
 msgstr ""
+"Bu pos yapılandırması için istemci tarafından oluşturulan verilerdeki "
+"çakışmayı önlemek için bir evrensel tekil tanımlayıcı."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
 msgid ""
 "A sequence number that is incremented each time a user resumes the pos "
 "session"
-msgstr ""
-"Her zaman artırılır bir sıra numarası ile kullanıcı pos oturumu devam eder"
+msgstr "Kullanıcının her oturumu devam ettirişinde artırılan sıra numarası"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_sequence_number
 msgid "A sequence number that is incremented with each order"
-msgstr "Her sipariş ile artırılır bir sıra numarası"
+msgstr "Her sipariş ile artırılan sıra numarası"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -244,11 +245,15 @@ msgid ""
 "                currencies in your cash registers at the beginning and the end\n"
 "                of each session."
 msgstr ""
+"Oturum, genellikle bir gün süren \n"
+"                satış noktasında satış yapılan bir süredir. Kullanıcı nakit\n"
+"                kasadaki tutarları oturumun başında ve sonunda \n"
+"                kontrol etmek zorundadır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sequence_number
 msgid "A session-unique sequence number for the order"
-msgstr "Oturum için benzersiz sipariş sıra numarası"
+msgstr "Oturum için tekil sipariş sıra numarası"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_footer
@@ -280,13 +285,13 @@ msgstr "Muhasebe Bilgisi"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_invoice_journal_id
 msgid "Accounting journal used to create invoices."
-msgstr ""
+msgstr "Faturalar oluşurken kullanılacak muhasebe yevmiyesi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_journal_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_sale_journal
 msgid "Accounting journal used to post sales entries."
-msgstr "Muhasebe Yevmiye satış kayıtları göndermek için kullanılır."
+msgstr "Satış fişleri için kullanılacak muhasebe yevmiyesi"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_5
@@ -314,7 +319,7 @@ msgstr "Bahşiş Ekle"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr "Genel İskonto Ekle"
+msgstr "Satış Toplamına İndirim Ekle"
 
 #. module: point_of_sale
 #. openerp-web
@@ -337,17 +342,17 @@ msgstr "Kasiyerin makbuzları tekrar yazdırmasına izin ver."
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
 msgid "Allow discounts on order lines only"
-msgstr "Yalnız satır iskontosuna izin ver"
+msgstr "Sadece satırda indirime izin ver"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_discount:0
 msgid "Allow global discounts"
-msgstr "Fatura altı iskontolara izin ver"
+msgstr "Satış toplamında indirime izin ver"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
 msgid "Allows customers to pay with credit cards."
-msgstr "Müşterilerin kredi kartıyla ödeme yapmasına izin ver."
+msgstr "Müşterilerin kredi kartıyla ödeme yapmasını sağla."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_discount
@@ -355,6 +360,8 @@ msgid ""
 "Allows the cashier to quickly give a percentage sale discount for all the "
 "sales order to a customer"
 msgstr ""
+"Kasiyerin hızlıca tüm satış tutarı üzerinden belli bir oranda müşteriye "
+"indirim yapmasını sağlar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_loyalty
@@ -362,6 +369,8 @@ msgid ""
 "Allows you to define a loyalty program in the point of sale, where the "
 "customers earn loyalty points and get rewards"
 msgstr ""
+"Satış noktasında müşterilerinizin sadakat puanı kazanıp ödüller "
+"kazanabileceği sadakat programı tanımlamanızı sağlar."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
@@ -372,7 +381,7 @@ msgstr "Tutar"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_amount_authorized_diff
 msgid "Amount Authorized Difference"
-msgstr "Miktar Fark Yetkili"
+msgstr "İzin Verilen Fark Tutarı"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -400,7 +409,7 @@ msgstr "İndirim Yap"
 #: code:addons/point_of_sale/static/src/js/screens.js:1901
 #, python-format
 msgid "Are you sure that the customer wants to  pay"
-msgstr "Müşterinin ödeme yapmak istediğine emin misiniz?"
+msgstr "Müşterinin ödemek istediği tutar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_auto
@@ -410,21 +419,22 @@ msgstr "Otomatik Makbuz Yazdırma"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_cashdrawer
 msgid "Automatically open the cashdrawer"
-msgstr "Anonim bir sipariş fatura edilemez"
+msgstr "Nakit çekmecesini otomatik aç"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_journal_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_journal_ids
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Available Payment Methods"
-msgstr "Ödeme Yöntemleri"
+msgstr "Mevcut Ödeme Yöntemleri"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr ""
+msgstr "Satış Noktasında Mevcut"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in the Point of Sale"
 msgstr "Satış Noktasında Mevcut"
@@ -464,7 +474,7 @@ msgstr "Barkod"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_barcode_nomenclature_all
 msgid "Barcode Nomenclatures"
-msgstr "Barkod Terimleri"
+msgstr "Barkod Terminolojisi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -482,7 +492,7 @@ msgstr "Barkodlar"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Beverages"
-msgstr "Içkiler"
+msgstr "İçkiler"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.raisins_noir
@@ -513,7 +523,7 @@ msgstr "Donanım proxysi ile tarayıcı yazdırmasını ve çıktıyı baypass e
 #: code:addons/point_of_sale/static/src/xml/pos.xml:806
 #, python-format
 msgid "CHANGE"
-msgstr "DEĞİŞTİR"
+msgstr "PARA ÜSTÜ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -543,7 +553,7 @@ msgstr "İptal Edildi"
 #: code:addons/point_of_sale/static/src/js/screens.js:1890
 #, python-format
 msgid "Cannot return change without a cash payment method"
-msgstr "Nakit ödeme yöntemi olmadan değişiklik iade edemez"
+msgstr "Nakit ödeme yöntemi olmadan para üstü verilemez"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.carotte
@@ -567,7 +577,7 @@ msgstr "Nakit Yevmiye"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_id
 msgid "Cash Register"
-msgstr "Yazar Kasa"
+msgstr "Nakit Kasa"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:121
@@ -602,13 +612,15 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Kategoriler ürünleri dokunmatik ekran üzerinden\n"
+"                görüntülemek için kullanılır."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:511
 #, python-format
 msgid "Change"
-msgstr "Değiştir"
+msgstr "Para Üstü"
 
 #. module: point_of_sale
 #. openerp-web
@@ -634,23 +646,23 @@ msgstr "Bahşiş Değiştir"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:667
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1479
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1484
 #, python-format
 msgid "Change:"
 msgstr "Para Üstü:"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_to_weight
 #: model:ir.model.fields,help:point_of_sale.field_product_template_to_weight
 msgid ""
 "Check if the product should be weighted using the hardware scale integration"
-msgstr ""
-"Ürün donanım ölçekli entegrasyonu kullanılarak tartmayı kontrol ediniz"
+msgstr "Ürün donanım tartı entegrasyonu kullanılarak tartmayı kontrol ediniz"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr ""
-"Bu ürünün Satış Noktası görünmesini istediğinizin olmadığını kontrol edin"
+msgstr "Bu ürünün Satış Noktasında görünmesi için seçiniz"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_cash_control
@@ -663,6 +675,8 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in a"
 " point of sale."
 msgstr ""
+"Bu yevmiye satış noktasında ödeme yöntemi olarak kullanılacaksa bu kutuyu "
+"işaretleyiniz."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_by
@@ -670,8 +684,8 @@ msgid ""
 "Check this if you want to group the Journal Items by Product while closing a"
 " Session"
 msgstr ""
-"Bir Oturum kapatırken Ürün tarafından Yevmiye öğeler gruplandırmak "
-"istiyorsanız bu kontrol edin"
+"Bir Oturum kapatırken yevmiye öğelerini ürüne göre gruplandırmak "
+"istiyorsanız bunu işaretleyiniz"
 
 #. module: point_of_sale
 #. openerp-web
@@ -691,7 +705,7 @@ msgstr "Alt Kategoriler"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:331
 #, python-format
 msgid "City"
-msgstr "Mahalle"
+msgstr "Semt/Mahalle"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -741,7 +755,7 @@ msgstr "Kapat"
 #. module: point_of_sale
 #: selection:pos.session,state:0
 msgid "Closed & Posted"
-msgstr "Kapandı & İşlemdi"
+msgstr "Kapandı & İşlendi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -772,7 +786,7 @@ msgstr "Firma"
 #: model:product.product,name:point_of_sale.poire_conference
 #: model:product.template,name:point_of_sale.poire_conference_product_template
 msgid "Conference pears"
-msgstr "Konferans görüşme"
+msgstr "Avrupa Armudu"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -790,6 +804,8 @@ msgid ""
 "Configure at least one Point of Sale to be able to sell through the PoS "
 "interface."
 msgstr ""
+"Satış noktası arayüzünden satış yapabilmek için en az bir tane Satış Noktası"
+" yapılandırmalısınız."
 
 #. module: point_of_sale
 #. openerp-web
@@ -873,12 +889,12 @@ msgstr "Para Birimi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_id
 msgid "Current Session"
-msgstr "Şu Anki Oturum"
+msgstr "Mevcut Oturum"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_current_session_state
 msgid "Current session state"
-msgstr ""
+msgstr "Mevcut Oturum Durumu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -924,7 +940,7 @@ msgstr "Hata Ayıklama Penceresi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_cashbox_lines_ids
 msgid "Default Balance"
-msgstr ""
+msgstr "Varsayılan Bakiye"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_account_id
@@ -934,7 +950,7 @@ msgstr "Varsayılan Borç Hesabı"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_default_fiscal_position_id
 msgid "Default Fiscal Position"
-msgstr ""
+msgstr "Varsayılan Mali Koşul"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_barcode_nomenclature_id
@@ -942,11 +958,13 @@ msgid ""
 "Defines what kind of barcodes are available and how they are assigned to "
 "products, customers and cashiers"
 msgstr ""
+"Hangi barkodların kullanılabileceğini ve ürün, müşteri ve kasiyerlere nasıl "
+"ilişkilendirieceğini tanımlar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_delay_validation
 msgid "Delay Validation"
-msgstr "Bekleme Onayı"
+msgstr "Onaylama Süresi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -993,26 +1011,26 @@ msgstr "Güncel Sipariş iptal edilecek ?"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_difference
 msgid "Difference"
-msgstr "Farkı"
+msgstr "Fark"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_difference
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
 "balance."
-msgstr "Teorik kapanış bakiyesi ve gerçek kapanoş bakiyesi arasındaki fark."
+msgstr "Teorik kapanış bakiyesi ve gerçek kapanış bakiyesi arasındaki fark."
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:147
 #, python-format
 msgid "Disc"
-msgstr "İnd:"
+msgstr "İnd"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Disc:"
-msgstr ""
+msgstr "İnd:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_discount
@@ -1073,7 +1091,7 @@ msgstr "Kategori Görsellerini Görüntüle"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_point_of_sale_report_saledetails_display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_display_name
 msgid "Display Name"
-msgstr "Adı Göstermek"
+msgstr "Görünüm Adı"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -1083,16 +1101,34 @@ msgid ""
 "                category, you can not sell it through the point of sale\n"
 "                interface."
 msgstr ""
+"Fiyatı ve içinde görüneceği satış noktası kategorisini\n"
+"                belirlemeyi unutmayın. Eğer bir ürünün\n"
+"                satış noktası kategorisi yoksa o ürünü satış noktası\n"
+"                arayüzünden satamazsınız."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_open_statement
 msgid "Do you want to open cash registers?"
-msgstr "Yazarkasaları açmak istiyor musun?"
+msgstr "Nakit kasaları açmak istiyor musun?"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
-msgstr "Ok"
+msgstr "Biten"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1314
+#, python-format
+msgid "Download Paid Orders"
+msgstr "Ödenmiş Siparişleri İndir"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1316
+#, python-format
+msgid "Download Unpaid Orders"
+msgstr "Ödenmemiş Siparişleri İndir"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1147,7 +1183,7 @@ msgstr "Boş Sipariş"
 #: code:addons/point_of_sale/static/src/js/screens.js:420
 #, python-format
 msgid "Empty Serial/Lot Number"
-msgstr ""
+msgstr "Boş Seri/Lot Numarası"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -1157,7 +1193,7 @@ msgstr "Uzaktan bağlanan barkod tarayıcı ile barkod taramayı etkinleştirin"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_electronic_scale
 msgid "Enables Electronic Scale integration"
-msgstr "Elektronik Kantar Entegrasyonu Etkinleştirir"
+msgstr "Elektronik Tartı Entegrasyonu Etkinleştirir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_payment_terminal
@@ -1167,12 +1203,12 @@ msgstr "Ödeme Terminali Entegrasyonu Etkinleştirir"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_vkeyboard
 msgid "Enables an integrated Virtual Keyboard"
-msgstr "Entegre Sanal Klavye sağlar"
+msgstr "Entegre Sanal Klavye Etkinleştirir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale"
-msgstr "Satış Noktasında fatura oluşumunu etkinleştir"
+msgstr "Satış Noktasında fatura oluşturmayı etkinleştir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
@@ -1316,19 +1352,19 @@ msgstr "Grupla"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_by
 msgid "Group Journal Items"
-msgstr "Grup Yevmiye Kalemleri"
+msgstr "Yevmiye Kalemlerini Grupla"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1322
 #, python-format
 msgid "Hardware Events"
-msgstr "Donanım Etkinlikler"
+msgstr "Donanım Olayları"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
 msgid "Hardware Proxy / PosBox"
-msgstr ""
+msgstr "Donanım Proxy / PosBox"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1340,7 +1376,7 @@ msgstr "Donanım Durumu"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_control
 msgid "Has Cash Control"
-msgstr "Nakit Kontrol Var"
+msgstr "Nakit Kontrolü Var"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -1384,11 +1420,14 @@ msgid ""
 "                touchscreen interface will automatically. We suggest not to put\n"
 "                a photo on categories for small (1024x768) screens."
 msgstr ""
+"Kategoriye görsel koyarsanız dokunmatik\n"
+"                arayüzünüz otomatik değişecektir. Küçük (1024x768)\n"
+"                ekranlarda kategori görseli önerilmez."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image
 msgid "Image"
-msgstr "Resim"
+msgstr "Görsel"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1400,18 +1439,18 @@ msgstr "Siparişleri içe aktar"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_data_drinks
 msgid "Import common drinks data"
-msgstr ""
+msgstr "Genel içecek bilgilerini içeri aktar"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_sale_config_settings_form_pos
 msgid "Importable Point of Sale Data"
-msgstr ""
+msgstr "İçe aktarılabilir Satış Noktası Verisi"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.tomate_en_grappe
 #: model:product.template,name:point_of_sale.tomate_en_grappe_product_template
 msgid "In Cluster Tomatoes"
-msgstr "Domates Öbekleri"
+msgstr "Domates Saklım"
 
 #. module: point_of_sale
 #: selection:pos.session,state:0
@@ -1459,7 +1498,7 @@ msgstr "Fatura"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_invoice_journal_id
 msgid "Invoice Journal"
-msgstr ""
+msgstr "Fatura Yevmiyesi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_invoiced
@@ -1557,17 +1596,12 @@ msgstr "Son Güncelleme"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_cash
 msgid "Last session closing cash"
-msgstr ""
+msgstr "Son oturum kapanış nakit tutarı"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_last_session_closing_date
 msgid "Last session closing date"
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_users_date_review
-msgid "Latest Partner Review"
-msgstr "Son İş Ortağı Görüşmesi"
+msgstr "Son oturum kapanış tarihi"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.poireaux_poireaux
@@ -1614,7 +1648,7 @@ msgstr "Konum"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_login_number
 msgid "Login Sequence Number"
-msgstr "Sıra Numarası Girişi"
+msgstr "Giriş Sıra Numaras"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1626,19 +1660,19 @@ msgstr "Yönetici olarak giriş yap"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Lot Adı"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:2016
 #, python-format
 msgid "Lot/Serial Number(s) Required"
-msgstr ""
+msgstr "Lot/Seri Numarası Gerekli"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Lot/Seri Numarası"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_settings_module_pos_loyalty
@@ -1663,7 +1697,7 @@ msgstr "Yönetici"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_image_medium
 msgid "Medium-sized image"
-msgstr "Orta ölçekli resim"
+msgstr "Orta boyutlu görsel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image_medium
@@ -1672,7 +1706,7 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
-"Kategorinin orta boyutlu görüntü. Otomatik olarak korunmuş en boy oranına "
+"Kategorinin orta boyutlu görseli. Otomatik olarak korunmuş en boy oranına "
 "sahip, bir 128x128px görüntü olarak yeniden boyutlandırılır. Form "
 "görünümleri ya da kanban görünümlerinde bu alanı kullanın."
 
@@ -1762,8 +1796,7 @@ msgstr "Sonraki Sipariş"
 msgid ""
 "No cash statement found for this session. Unable to record returned cash."
 msgstr ""
-"Bu oturum için nakit açıklamada bulunamadı. Geri nakit kaydetmek için "
-"açılamıyor."
+"Bu oturum için nakit kasa kaydı bulunamadı. Geri nakit kaydedilemiyor."
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_mercury:0
@@ -1774,7 +1807,7 @@ msgstr "Kredi kartı yok"
 #: code:addons/point_of_sale/report/pos_invoice.py:25
 #, python-format
 msgid "No link to an invoice for %s."
-msgstr "%s Fatura için Link mevcut değil"
+msgstr "%s  için fatura bağlantısı mevcut değil"
 
 #. module: point_of_sale
 #: selection:pos.config.settings,module_pos_reprint:0
@@ -1806,6 +1839,8 @@ msgid ""
 "Note that you may use the menu <i>Your Session</i>\n"
 "                to quickly open a new session."
 msgstr ""
+"Hızlı bir şekilde oturum açmak için <i>Oturumunuz </i>\n"
+"                menüsünü kullanabilirsiniz."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -1851,7 +1886,7 @@ msgstr "Tamam"
 #: code:addons/point_of_sale/static/src/js/screens.js:421
 #, python-format
 msgid "One or more product(s) required serial/lot number."
-msgstr ""
+msgstr "Bir veya birden fazla ürün seri/lot numarası gerektiriyor."
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.Onions
@@ -1864,7 +1899,7 @@ msgstr "Soğan"
 #: code:addons/point_of_sale/static/src/js/screens.js:1271
 #, python-format
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported"
-msgstr "Sadece web uyumlu imaj formatları  .png veya .jpeg gibi desteklenir"
+msgstr "Sadece .png veya .jpeg gibi web uyumlu görsel formatları desteklenir"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -1882,7 +1917,7 @@ msgstr "Nakit Kasa Aç"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1324
 #, python-format
 msgid "Open Cashbox"
-msgstr "Açık Kasa"
+msgstr "Nakit Çekmecesini Aç"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -1897,7 +1932,7 @@ msgstr "Kasa Aç"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details_wizard
 msgid "Open Sale Details Report"
-msgstr ""
+msgstr "Satış Ayrıntıları Raporunu Aç"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1986,7 +2021,7 @@ msgstr "Sipariş Sıra Numarası"
 #: code:addons/point_of_sale/models/pos_order.py:430
 #, python-format
 msgid "Order is not paid."
-msgstr ""
+msgstr "Sipariş ödenmedi"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2018,7 +2053,7 @@ msgstr "Sipariş Analizi"
 #: code:addons/point_of_sale/models/pos_config.py:212
 #, python-format
 msgid "POS Order %s"
-msgstr ""
+msgstr "POS Siparişi %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line_form
@@ -2049,7 +2084,7 @@ msgstr "POS Satışları"
 #: code:addons/point_of_sale/models/pos_config.py:223
 #, python-format
 msgid "POS order line %s"
-msgstr ""
+msgstr "POS sipariş satırı %s"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2094,7 +2129,7 @@ msgstr "Parola ?"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr "Ödeme Siparişi"
+msgstr "Siparişi Öde"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2126,7 +2161,7 @@ msgstr "Ödeme Biçimi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_payment_name
 msgid "Payment Reference"
-msgstr "Ödeme referansı"
+msgstr "Ödeme Referansı"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_payment_terminal
@@ -2141,6 +2176,10 @@ msgid ""
 "                from the touchscreen interface, you must set the payment method\n"
 "                on the <i>Point of Sale</i> configuration."
 msgstr ""
+"Ödeme yöntemleri muhasebe yevmiyeleri üzerindeki  \n"
+"                üzerindeki <i>POS Ödeme Yöntemi </i> işaretlenerek tanımlanır. Dokunmatik\n"
+"                arayüz üzerinden kullanılabilmesi için ödeme yöntemini\n"
+"                Satış Noktası</i> yapılandırması üzeriden belirlemelisiniz."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_statement_ids
@@ -2154,7 +2193,7 @@ msgstr "Ödemeler"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:898
 #, python-format
 msgid "Payments:"
-msgstr ""
+msgstr "Ödemeler:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.peche
@@ -2165,14 +2204,14 @@ msgstr "Şeftali"
 #. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
-msgstr ""
+msgstr "Oturum Bazında"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_user_id
 msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
-msgstr "Yazarkasa kullanan kişi. Bu bir öğrenci yada bir personel olabilir."
+msgstr "Nakit kasa kullanan kişi. Bu bir öğrenci yada bir personel olabilir."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2193,12 +2232,12 @@ msgstr "Telefon:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_picking_id
 msgid "Picking"
-msgstr "Seçim Listesi"
+msgstr "Toplama Listesi"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Picking Errors"
-msgstr ""
+msgstr "Toplama Listesi Hataları"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_picking_type_id
@@ -2209,14 +2248,14 @@ msgstr "Toplama Türü"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_picking_count
 msgid "Picking count"
-msgstr ""
+msgstr "Toplama Listesi Adedi"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:1900
 #, python-format
 msgid "Please Confirm Large Amount"
-msgstr "Lütfen Yüksek miktarı onaylayın"
+msgstr "Lütfen Yüksek Tutarı Onaylayın"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:266
@@ -2228,7 +2267,7 @@ msgstr "Lütfen bu ürün için gelir hesabı belirtin: \"%s\" (id:%d)."
 #: code:addons/point_of_sale/models/pos_order.py:446
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr "Satış için bir partner belirtin"
+msgstr "Satış için bir iş ortağı seçiniz"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2274,6 +2313,7 @@ msgid "Point of Sale Analysis"
 msgstr "Satış Noktası Analizi"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_pos_categ_id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_pos_categ_id
 msgid "Point of Sale Category"
 msgstr "Satış Noktası Kategorisi"
@@ -2281,7 +2321,7 @@ msgstr "Satış Noktası Kategorisi"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Point of Sale Config"
-msgstr "Satış Nokası Ayarları"
+msgstr "Satış Noktası Ayarları"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_form
@@ -2309,7 +2349,7 @@ msgstr "Satış Noktası Siparişi"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr "POS İstatistikleri"
+msgstr "Satış Noktası Sipariş İstatistikleri"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
@@ -2321,7 +2361,7 @@ msgstr "Satış Noktası Ödemesi"
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_tree
 msgid "Point of Sale Session"
-msgstr "Satış Notası Oturumu"
+msgstr "Satış Noktası Oturumu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pos_user_id
@@ -2336,34 +2376,34 @@ msgstr "Mağazalar için satış noktası"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Categories"
-msgstr "Pos Kategoriler"
+msgstr "Pos Kategorileri"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_product_pos_category
 msgid "Pos Product Categories"
-msgstr "Pos Ürün Kategoriler"
+msgstr "Pos Ürün Kategorileri"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_pos_config_ids
 msgid "Pos config ids"
-msgstr ""
+msgstr "Pos Ayar idleri"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users_pos_order_count
 msgid "Pos order count"
-msgstr ""
+msgstr "Poos sipariş adedi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_pos_order_line_id
 msgid "Pos order line id"
-msgstr ""
+msgstr "POs sipariş satır id"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_pos_session_username
 msgid "Pos session username"
-msgstr ""
+msgstr "Pos oturumu kullanıcı adı"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2399,7 +2439,7 @@ msgstr "Fiyat"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Price Unit"
-msgstr ""
+msgstr "Birim Fiyat"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:13
@@ -2494,7 +2534,7 @@ msgstr "Web Kategorisi"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_box_in
 msgid "Put Money In"
-msgstr "...'ya parayı yatır"
+msgstr "Para Koy"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2514,14 +2554,14 @@ msgstr "Miktar"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1326
 #, python-format
 msgid "Read Weighing Scale"
-msgstr ""
+msgstr "Tartıyı Oku"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/tour.js:13
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
-msgstr ""
+msgstr "<b>satış noktası</b>başlatmaya hazır? <i>Buraya tıklayın</i>."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -2600,7 +2640,7 @@ msgstr "Restoran: Masa yönetimini etkinleştir"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "Özgeçmiş (CV)"
+msgstr "Devam Et"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:690
@@ -2645,7 +2685,7 @@ msgstr "Satış Siparişleri"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_user_id
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Salesman"
-msgstr "SatışElemanı"
+msgstr "Satış Personeli"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_user_id
@@ -2658,7 +2698,7 @@ msgstr "Satış Personeli"
 #: code:addons/point_of_sale/static/src/js/chrome.js:385
 #, python-format
 msgid "Scale"
-msgstr "Ölçek"
+msgstr "Tartı"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2672,7 +2712,7 @@ msgstr "Tara"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1302
 #, python-format
 msgid "Scan EAN-13"
-msgstr "Barkodu Tara"
+msgstr "EAN-13 Tara"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_scan_via_proxy
@@ -2741,7 +2781,7 @@ msgstr "Vergi seç"
 #: code:addons/point_of_sale/models/pos_order.py:204
 #, python-format
 msgid "Selected orders do not have the same session!"
-msgstr "Seçilen siparişler aynı seansta yok!"
+msgstr "Seçilen siparişler aynı oturumda değil!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_sequence
@@ -2758,7 +2798,7 @@ msgstr "Sıra Numarası"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1055
 #, python-format
 msgid "Serial/Lot Number"
-msgstr ""
+msgstr "Seri/Lot Numarası"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2816,14 +2856,14 @@ msgstr "Oturumlar"
 #: code:addons/point_of_sale/static/src/js/screens.js:1141
 #, python-format
 msgid "Set Customer"
-msgstr "Müşteri Yerleştir"
+msgstr "Müşteri Seç"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1294
 #, python-format
 msgid "Set Weight"
-msgstr "Ağırlık Ayarlama"
+msgstr "Ağırlık Belirle"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_global_settings
@@ -2836,7 +2876,7 @@ msgstr "Ayarlar"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:42
 #, python-format
 msgid "Skip"
-msgstr "Atlama"
+msgstr "Atla"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_print_skip_screen
@@ -2855,9 +2895,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is"
 " required."
 msgstr ""
-"Kategorinin küçük boyutlu görüntü. Otomatik olarak bir 64x64px olarak "
-"yeniden boyutlandırılır korunmuş boy oranı ile görüntü,. Her yerde küçük bir"
-" görüntüdür bu alanı kullanın gereklidir."
+"Kategorinin küçük boyutlu görseli. Otomatik olarak ölçek korunarak 64x64px "
+"olarak yeniden boyutlandırılır. Küçük bir görsel gerektiren yerlerde bu "
+"alanı kullanın."
 
 #. module: point_of_sale
 #. openerp-web
@@ -2869,12 +2909,12 @@ msgstr "Bazı siparişler gönderilemedi."
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Pos sipariş satırında ürün lot/seri numarası belirt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_start_categ_id
 msgid "Start Category"
-msgstr "Kategori Başlat"
+msgstr "Başlangıç Kategorisi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_start_date
@@ -2921,13 +2961,13 @@ msgstr "Stok Konumu"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:327
 #, python-format
 msgid "Street"
-msgstr "adres"
+msgstr "Sokak/Cadde"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.limon
 #: model:product.template,name:point_of_sale.limon_product_template
 msgid "Stringers"
-msgstr "Stringers"
+msgstr "Limon"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2940,7 +2980,7 @@ msgstr "Ara Toplam"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line_price_subtotal
 msgid "Subtotal w/o Tax"
-msgstr "AltToplam w/o Vergi"
+msgstr "Vergisiz alt toplam"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_price_sub_total
@@ -2976,7 +3016,7 @@ msgstr "Açılış bakiyesi ve işlemleri toplamı."
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
-msgstr "AltToplam Toplamı"
+msgstr "Alt Toplam Toplamı"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3039,13 +3079,13 @@ msgstr "Tel:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:510
 #, python-format
 msgid "Tendered"
-msgstr "İhale edilmiş"
+msgstr "Alınan"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:254
 #, python-format
 msgid "The POS order must have lines when calling this method"
-msgstr "Bu yöntemi çağırırken POS sipariş hatları olmalıdır"
+msgstr "Bu yöntemi çağırırken POS sipariş satırları olmalıdır"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3055,7 +3095,7 @@ msgid ""
 "The Point of Sale could not find any product, client, employee\n"
 "                    or action associated with the scanned barcode."
 msgstr ""
-"Point of Sale taranan barkod ile ilişkili herhangi bir ürün, müşteri, çalışan \n"
+"Satış noktası taranan barkod ile ilişkili herhangi bir ürün, müşteri, çalışan \n"
 " veya eylemi bulamadı."
 
 #. module: point_of_sale
@@ -3063,21 +3103,21 @@ msgstr ""
 #, python-format
 msgid ""
 "The company of a payment method is different than the one of point of sale"
-msgstr "Firma ödeme yöntemi şirket satış noktası olandan farklıdır"
+msgstr "Ödeme yöntemi firması satış noktasınınkinden farklı"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:172
 #, python-format
 msgid ""
 "The company of the sale journal is different than the one of point of sale"
-msgstr "Firma satış yevmiyesi satış noktası olandan farklıdır"
+msgstr "Satış yevmiyesifirması satış noktasınınkinden farklı"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:167
 #, python-format
 msgid ""
 "The company of the stock location is different than the one of point of sale"
-msgstr "Stok konumu şirket satış noktası'dan farklı"
+msgstr "Stok konumu firması satış noktasınınkinden farklı"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:187
@@ -3086,13 +3126,17 @@ msgid ""
 "The default fiscal position must be included in the available fiscal "
 "positions of the point of sale"
 msgstr ""
+"Varsayılan mali koşul satış noktasında kullanılabilen bir mali koşul "
+"olmalıdır"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_tax_included
 msgid ""
 "The displayed prices will always include all taxes, even if the taxes have "
 "been setup differently"
-msgstr "Gösterilen Fiyatlar her zaman için KDV dahil fiyatlardır"
+msgstr ""
+"Gösterilen fiyatlar vergiler farklı ayarlanmış olsa bile her zaman KDV dahil"
+" fiyat olacaktır"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_proxy_ip
@@ -3100,15 +3144,15 @@ msgid ""
 "The hostname or ip address of the hardware proxy, Will be autodetected if "
 "left empty"
 msgstr ""
-"Boş bırakılırsa, donanım proxy ana bilgisayar adı veya IP adresi, "
-"autodetected olacak"
+"Donanım proxy veya sunucu adı veya IP adresi. Boş bırakılırsa otomatik "
+"algılanacaktır"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:177
 #, python-format
 msgid ""
 "The invoice journal and the point of sale must belong to the same company"
-msgstr ""
+msgstr "Fatura yevmiyesi ve satış noktası aynı firmaya ait olmalıdır"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:93
@@ -3121,7 +3165,7 @@ msgstr "Bu POS Oturum adı benzersiz olmalıdır!"
 #: model:ir.model.fields,help:point_of_sale.field_res_partner_pos_order_count
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_order_count
 msgid "The number of point of sale orders related to this customer"
-msgstr ""
+msgstr "Bu müşteriyle ilişkili satış noktası siparişlerinin adedi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3143,12 +3187,14 @@ msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
 "prefilled with the exact due amount"
 msgstr ""
+"Ödeme girişi banka ödeme girişine benzer davranır ve geri ödenecek tutar "
+"otomatik doldurulur"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_config_id
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_config_id
 msgid "The physical point of sale you will use."
-msgstr "Satış nokta fiziksel kullanır."
+msgstr "Kullanacağınız fiziksel satış noktası."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_start_categ_id
@@ -3156,13 +3202,13 @@ msgid ""
 "The point of sale will display this product category by default. If no "
 "category is specified, all available products will be shown"
 msgstr ""
-"Varsayılan olarak bir ürün kategorisi seçilmemişsetüm ürünler "
-"gösterilecektir."
+"Varsayılan olarak bu ürün kategorisi gösterilecek. Eğer ürün kategorisi "
+"seçilmemişse tüm ürünler gösterilecektir."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_display_categ_images
 msgid "The product categories will be displayed with pictures."
-msgstr "Ürün kategorileri resimlerle beraber görünecektir."
+msgstr "Ürün kategorileri görsellerle beraber görünecektir."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_tip_product_id
@@ -3170,8 +3216,8 @@ msgid ""
 "The product used to encode the customer tip. Leave empty if you do not "
 "accept tips."
 msgstr ""
-"Müşteri Tarafından bahşiş bırakıldığında kullanılmak için açılmış bir ürün "
-"kartdır. Eğer kasada bahşiş almak istemiyorsanız boş bırakabilirsiniz"
+"Müşteri Tarafından bahşiş bırakıldığında kullanılmak için açılmış bir "
+"üründür. Eğer kasada bahşiş kabul etmek istemiyorsanız boş bırakın."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3190,7 +3236,7 @@ msgstr "Fiş otomatik yazdırılabiliyorsa önizleme ekranı gösterilmeyecektir
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_print_auto
 msgid "The receipt will automatically be printed at the end of each order"
-msgstr "Sipariş sonunda fiş otomatik yazdıralacaktır."
+msgstr "Sipariş sonunda fiş otomatik yazdırılacaktır."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3212,7 +3258,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_mercury
 msgid "The transactions are processed by MercuryPay"
-msgstr "Ödeme MercuryPay vasıtasıyla alınmıştır."
+msgstr "Ödeme MercuryPay vasıtasıyla alınacaktır."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:243
@@ -3234,8 +3280,8 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
-"Veritabanına henüz saklanamamış işlemler mevcut. Çıkmak istediğinizden emin "
-"misiniz?"
+"Veritabanına henüz kaydedilememiş işlemler mevcut. Çıkmak istediğinizden "
+"emin misiniz?"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3254,7 +3300,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box.py:21
 #, python-format
 msgid "There is no cash register for this PoS Session"
-msgstr "Bu POS Oturum için bir kasa yok"
+msgstr "Bu POS Oturum için bir nakit kasa yok"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:644
@@ -3263,7 +3309,7 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
-"Partner için ödeme yapmak için tanımlanmış bir alacak hesabı yok: \"%s\" "
+"İş ortağı için ödeme yapmak için tanımlanmış bir alacak hesabı yok: \"%s\" "
 "(id:%d)."
 
 #. module: point_of_sale
@@ -3286,6 +3332,8 @@ msgid ""
 "This cashbox line is used by default when opening or closing a balance for "
 "this point of sale"
 msgstr ""
+"Bu nakitkasa satırı bu satış noktası açılırken veya kapanırken varsayılan "
+"olarak kullanılır"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_journal_amount_authorized_diff
@@ -3295,15 +3343,17 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"Bu alan oturum kapatılırken satış noktası yöneticisi olmayanlar için bitiş "
+"bakiyesi ile teorik nakit arasında izin verilen en fazla farktır. Eğer bu "
+"değer aşılırsa kullanıcı oturumu kapatırken yöneticisiyle iletişime geçmesi "
+"gerektiğini söyleyen bir hata mesajı alacaktır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_image
 msgid ""
 "This field holds the image used as image for the cateogry, limited to "
 "1024x1024px."
-msgstr ""
-"Bu alanda 1024x1024px sınırlı kategorik için resmi olarak kullanılan görüntü"
-" tutar."
+msgstr "Bu alanda 1024x1024px sınırlı kategori görselini tutar."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_manager_id
@@ -3311,6 +3361,7 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client"
 msgstr ""
+"Bu alan pos yönetici grubunu pos istemcisine gönderebilmek için buradadır"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_group_pos_user_id
@@ -3318,6 +3369,7 @@ msgid ""
 "This field is there to pass the id of the pos user group to the point of "
 "sale client"
 msgstr ""
+"Bu alan pos kullanıcı grubunu pos istemcisine gönderebilmek için buradadır"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:454
@@ -3326,6 +3378,8 @@ msgid ""
 "This invoice has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Bu fatura bu pos oturumunda oluşturulmuştur: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_settings_module_pos_restaurant
@@ -3338,6 +3392,13 @@ msgid ""
 "\n"
 "- Kitchen Order Printing: allows you to print orders updates to kitchen or bar printers"
 msgstr ""
+"Bu modül çeşitli restoran özelliklerini satış noktaına ekler: \n"
+"\n"
+"- Hesap Yazdırma: Ödeme öncesinde makbuz yazdırılmasına olanak sağlar \n"
+"\n"
+"- Hesap Bölme: Bir siparişi birden fazla siparişe bölmeye olanak sağlar \n"
+"\n"
+"- Mutfak Sipariş Yazdırma: Sipariş değişikliklerini mutfak veya bar yazıcılarından yazdırılmasına olanak sağlar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3347,6 +3408,8 @@ msgid ""
 "This operation will permanently destroy all paid orders from the local "
 "storage. You will lose all the data. This operation cannot be undone."
 msgstr ""
+"Bu işlem tüm ödenmiş siparişleri yerel depolamadan kalıcı olarak silecektir."
+" Verilerinizi kaybedeceksiniz. Bu işlem geri alınamaz."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3357,6 +3420,9 @@ msgid ""
 "that have been put in the local storage. You will lose all the data and exit"
 " the point of sale. This operation cannot be undone."
 msgstr ""
+"Bu işlem tüm oturumlardaki tüm ödenmemiş siparişleri yerel depolamadan "
+"kalıcı olarak silecektir. Verilerinizi kaybedeceksiniz ve satış noktasından "
+"çıkacaksınız. Bu işlem geri alınamaz."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_sequence_id
@@ -3369,17 +3435,21 @@ msgstr ""
 "değiştirlebilirsiniz."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:566
+#: code:addons/point_of_sale/models/pos_order.py:603
 #, python-format
 msgid ""
 "This transfer has been created from the point of sale session: <a href=# "
 "data-oe-model=pos.order data-oe-id=%d>%s</a>"
 msgstr ""
+"Bu transfer bu satış noktası oturumundan oluşturulmuştur: <a href=# data-oe-"
+"model=pos.order data-oe-id=%d>%s</a>"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_product_pos_categ_id
 #: model:ir.model.fields,help:point_of_sale.field_product_template_pos_categ_id
 msgid "Those categories are used to group similar products for point of sale."
-msgstr "Bu kategoriler satış noktasında grup benzer ürünlere kullanılır."
+msgstr ""
+"Bu kategoriler satış noktasında benzer ürünleri gruplamak için kullanılır."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3394,18 +3464,20 @@ msgid "Tip Product"
 msgstr "Bahşiş Ürünü"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_product_to_weight
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_to_weight
 msgid "To Weigh With Scale"
-msgstr "Ölçeği tartılır"
+msgstr "Tartıyla Tartmak İçin"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_order.py:675
+#: code:addons/point_of_sale/models/pos_order.py:768
 #, python-format
 msgid ""
 "To return product(s), you need to open a session that will be used to "
 "register the refund."
 msgstr ""
-"Ürün (ler) dönmek için iade kayıt kullanılacak bir oturum açmanız gerekir."
+"Ürün (ler) geri almak için iade kayıt kullanılacak bir oturum açmanız "
+"gerekir."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3519,6 +3591,9 @@ msgid ""
 "                orders, you may use the menu <i>Your Session</i> for\n"
 "                the touchscreen interface."
 msgstr ""
+"Bu menüyü önceki siparişlere göz atmak için kullanın. Yeni bir\n"
+"                sipariş kaydetmek için dokunmatik arayüzden<i>Oturumum</i>\n"
+"                menüsünü kullanabilirsiniz."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3546,7 +3621,7 @@ msgstr "Kullanıcılar"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Ettn"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3588,7 +3663,7 @@ msgstr "Depo"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1320
 #, python-format
 msgid "Weighing"
-msgstr ""
+msgstr "Tartılıyor"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/barcode_rule.py:12
@@ -3602,7 +3677,7 @@ msgstr "Tartılmış Ürün"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1422
 #, python-format
 msgid "With a"
-msgstr "bir ile"
+msgstr "ile"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -3621,6 +3696,8 @@ msgid ""
 "You can define another list of available currencies on the\n"
 "                                <i>Cash Registers</i> tab of the"
 msgstr ""
+"Başka bir kullanılabilir para birimi listesini\n"
+"                                <i>Nakit Kasalar</i> sayfasından tanımlayabilirsiniz"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:390
@@ -3637,7 +3714,8 @@ msgid ""
 "You cannot confirm all orders of this session, because they have not the "
 "'paid' status"
 msgstr ""
-"Bu oturumun tüm siparişler teyit edemez.çünkü olmayanlar var'ödeme' durumu"
+"Bu oturumun tüm siparişler onaylayamazsınız çünkü 'ödendi' durumunda "
+"olmayanlar var"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:132
@@ -3694,6 +3772,11 @@ msgid ""
 "methods directly from menu \"PoS Backend / Configuration / Payment "
 "Methods\"."
 msgstr ""
+"Satış noktasında kullanılabilir ödeme yöntemlerini mevcut kasa ve bankaları "
+"\"Muhasebe / Yapılandırma / Yevmiyeler / Yevmiyeler\" üzerinden "
+"tanımlayabilirsiniz. Bir yevmiye seçin ve \"Satış Noktası\" sekmesindeki "
+"\"POS Ödeme Yöntemi\" kutusunu işaretleyin. \"POS / Yapılandırma / Ödeme "
+"Yöntemleri\" menüsünü kullanarak ödeme yöntemlerini direk yaratabilirsiniz."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:658
@@ -3721,7 +3804,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:24
 #, python-format
 msgid "You have to set a Sale Journal for the POS:%s"
-msgstr ""
+msgstr "Bu POS için Satış Yevmiyesi beliremelisiniz:%s"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -3736,7 +3819,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/screens.js:1933
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
-msgstr "Siparişi faturalamak için önce bir müşteri seçmelisiniz?"
+msgstr "Siparişi faturalamak için önce bir müşteri seçmelisiniz."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:138
@@ -3749,7 +3832,7 @@ msgstr "Oturumuna Satış Nokta atamanız gerekir"
 #: code:addons/point_of_sale/static/src/js/chrome.js:54
 #, python-format
 msgid "You will lose any data associated with the current order"
-msgstr "Geçerli sipariş ile alakalı verileri kaybedersiniz"
+msgstr "Geçerli sipariş ile ilişkili verileri kaybedersiniz"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3766,9 +3849,9 @@ msgid ""
 "(%.2f), the maximum allowed is: %.2f. You can contact your manager to force "
 "it."
 msgstr ""
-"Kapanış bakiyeniz teorik nakit kapanışından çok farklıdır (%.2f), müsaade "
-"edilen maksimum : %.2f'dir. Yöneticiniz ile iletişime geçerek bunu "
-"değiştirebilrsiniz."
+"Kapanış bakiyeniz teorik nakit kapanışından çok farklıdır (%.2f), izin "
+"verilen en fazla tutar %.2f'dir. Yöneticiniz ile iletişime geçerek bunu "
+"kaydedebilirsiniz."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3800,14 +3883,14 @@ msgstr "de"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_barcode_rule
 msgid "barcode.rule"
-msgstr "barkod.kural"
+msgstr "barkod.rule"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1178
 #, python-format
 msgid "belong to another session:"
-msgstr ""
+msgstr "farklı bir oturuma ait:"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.partner_product_8
@@ -3834,43 +3917,51 @@ msgstr "cash.box.out"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1552
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1594
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1557
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1599
 #, python-format
 msgid "close"
-msgstr "kapalı"
+msgstr "kapat"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1510
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1587
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1515
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1592
 #, python-format
 msgid "delete"
 msgstr "sil"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1248
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1251
 #, python-format
 msgid "discount"
 msgstr "indirim"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1905
+#: code:addons/point_of_sale/static/src/js/popups.js:109
 #, python-format
-msgid "for an order of"
-msgstr ""
+msgid "error"
+msgstr "hata"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:203
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:1923
+#, python-format
+msgid "for an order of"
+msgstr "ve sipariş tutarı "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:207
 #, python-format
 msgid "not used"
 msgstr "kullanılmaz"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:1172
+#: code:addons/point_of_sale/static/src/js/chrome.js:292
+#: code:addons/point_of_sale/static/src/xml/pos.xml:1175
 #, python-format
 msgid "paid orders"
 msgstr "ödenmiş siparişler"
@@ -3888,7 +3979,7 @@ msgstr "pos.config"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_settings
 msgid "pos.config.settings"
-msgstr "sn.yapılandırma.ayarlar"
+msgstr "pos.config.settings"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session
@@ -3903,7 +3994,7 @@ msgstr "report.point_of_sale.report_invoice"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_point_of_sale_report_saledetails
 msgid "report.point_of_sale.report_saledetails"
-msgstr ""
+msgstr "report.point_of_sale.report_saledetails"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3912,7 +4003,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1592
 #, python-format
 msgid "return"
-msgstr "dönen"
+msgstr "iade"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3920,7 +4011,7 @@ msgstr "dönen"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1549
 #, python-format
 msgid "shift"
-msgstr "değiştirme"
+msgstr "ilerlet"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3948,4 +4039,4 @@ msgstr "unpaid orders could not be imported"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:1177
 #, python-format
 msgid "were duplicates of existing orders"
-msgstr ""
+msgstr "mükerrer siparişler"

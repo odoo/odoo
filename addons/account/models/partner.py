@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from ast import literal_eval
 from operator import itemgetter
 import time
 
@@ -442,7 +443,7 @@ class ResPartner(models.Model):
         '''
         This function returns an action that display invoices/refunds made for the given partners.
         '''
-        action = self.env.ref('account.action_invoice_refund_out_tree')
-        result = action.read()[0]
-        result['domain'] = [('partner_id', 'child_of', self.ids)]
-        return result
+        action = self.env.ref('account.action_invoice_refund_out_tree').read()[0]
+        action['domain'] = literal_eval(action['domain'])
+        action['domain'].append(('partner_id', 'child_of', self.ids))
+        return action

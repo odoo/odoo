@@ -281,3 +281,17 @@ class AccountConfigSettings(models.TransientModel):
             'res_id': self.env.user.company_id.id,
             'target': 'current',
         }
+
+    @api.model
+    def create(self, vals):
+        """
+        Avoid to rewrite the `accounts_code_digits` on the company if the value is the same. As all the values are
+        passed on the res.config creation, the related fields are rewriten on each res_config creation. Rewriting
+        the `account_code_digits` on the company will trigger a write on all the account.account to complete the
+        code the missing characters to complete the desired number of digit, leading to a sql_constraint.
+        """
+        if ('company_id' in vals and 'code_digits' in vals):
+            if self.env['res.company'].browse(vals.get('company_id')).accounts_code_digits == vals.get('code_digits'):
+                vals.pop('code_digits')
+        res = super(AccountConfigSettings, self).create(vals)
+        return res

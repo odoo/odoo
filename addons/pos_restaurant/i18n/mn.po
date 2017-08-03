@@ -9,10 +9,10 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0c\n"
+"Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-07 08:55+0000\n"
-"PO-Revision-Date: 2016-09-07 08:55+0000\n"
+"POT-Creation-Date: 2017-06-23 13:26+0000\n"
+"PO-Revision-Date: 2017-06-23 13:26+0000\n"
 "Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -27,6 +27,8 @@ msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
 msgstr ""
+"Борлуулалтын цэгийн интерфэйсд давхрын зохион байгуулалтыг үзүүлэхэд дэвсгэр"
+" зургийг ашигладаг"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -34,6 +36,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
+"Рестораны давхар нь үйлчлүүлэгч нар үйлчлүүлдэг газрыг хэлнэ, энд та "
+"ширээнүүдийг тодорхойлж, байрлуулах боломжтой."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -50,32 +54,32 @@ msgstr "Тэмдэглэл нэмэх"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Allow custom notes on Orderlines"
-msgstr ""
+msgstr "Захиалгын мөрүүд дээр тусгай тэмдэглэлийг зөвшөөрөх"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_printbill
 msgid "Allows to print the Bill before payment"
-msgstr ""
+msgstr "Баримтыг төлөлтөөс өмнө хэвлэхийг зөвшөөрдөг"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
 msgid "An internal identification of a table"
-msgstr ""
+msgstr "Ширээний дотоод тодорхойлолт"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_name
 msgid "An internal identification of the printer"
-msgstr ""
+msgstr "Принтерийн дотоод тодорхойлолт"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_name
 msgid "An internal identification of the restaurant floor"
-msgstr ""
+msgstr "Рестораны давхрын дотоод тодорхойлолт"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Appearance"
-msgstr ""
+msgstr "Харагдац"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -100,7 +104,7 @@ msgstr "Дэвсгэр өнгө"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_background_image
 msgid "Background Image"
-msgstr ""
+msgstr "Дэвсгэр зураг"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_pos_config_form
@@ -204,11 +208,14 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Захиалгын Хэвлэгч болгон принтер олдсон газарт PosBox/Тоног төхөөрөмжийн\n"
+" проксийг тодорхойлдог IP хаяг болон барааны ангилалуудын жагсаалттай байдаг.\n"
+"Захиалгын Хэвлэгч нь зөвхөн түүний ангилалуудын аль нэгт харьялагдах бараануудын шинэчлэлийг хэвлэнэ."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale"
-msgstr ""
+msgstr "Борлуулалтын цэг дээр Тооцоо хуваахыг идэвхижүүлнэ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -224,7 +231,7 @@ msgstr "Давхарын нэр"
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
 #: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_floor_all
 msgid "Floor Plans"
-msgstr ""
+msgstr "Давхарын Төлөвлөлтүүд"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -247,7 +254,7 @@ msgstr "Зочид ?"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:21
 #, python-format
 msgid "Guests:"
-msgstr ""
+msgstr "Зочид:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_height
@@ -257,7 +264,7 @@ msgstr "Өндөр"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_h
 msgid "Horizontal Position"
-msgstr ""
+msgstr "Хэвтээ Байрлал"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_id
@@ -272,6 +279,8 @@ msgid ""
 "If false, the table is deactivated and will not be available in the point of"
 " sale"
 msgstr ""
+"Хэрвээ буруу бол, ширээ нь идэвхгүй болж борлуулалтын цэг дээр боломжгүй "
+"байна"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor___last_update
@@ -350,11 +359,13 @@ msgid ""
 "Order Printers are used by restaurants and bars to print the\n"
 "                order updates in the kitchen/bar when the waiter updates the order."
 msgstr ""
+"Зөөгч захиалгыг шинэчлэх үед ресторанууд болон барууд гал тогоо/бар дахь "
+"захиалгын шинэчлэлүүдийг хэвлэхэд Захиалгын Принтерүүдийг ашигладаг."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Orderline Notes"
-msgstr ""
+msgstr "Захиалгын мөрийн тэмдэглэлүүд"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer_form
@@ -369,10 +380,14 @@ msgid "Payment"
 msgstr "Төлбөр"
 
 #. module: pos_restaurant
-#: model:ir.model,name:pos_restaurant.model_pos_order
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor_pos_config_id
 msgid "Point of Sale"
 msgstr "Борлуулалтын цэг"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Борлуулалтын Цэгийн Захиалгууд"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -389,19 +404,19 @@ msgstr "Хэвлэгдсэн барааны ангилал"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_name
 msgid "Printer Name"
-msgstr ""
+msgstr "Хэвлэгчийн нэр"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "Proxy IP Address"
-msgstr ""
+msgstr "Proxy IP Хаяг"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:551
 #, python-format
 msgid "Removing a table cannot be undone"
-msgstr ""
+msgstr "Хассан ширээг буцаах боломжгүй"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
@@ -417,7 +432,7 @@ msgstr "Рестораны давхарууд"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_printer
 msgid "Restaurant Order Printers"
-msgstr ""
+msgstr "Рестораны Захиалгын Хэвлэгчүүд"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
@@ -427,7 +442,7 @@ msgstr "Рестораны ширээ"
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
 msgid "Round"
-msgstr ""
+msgstr "Дугуй"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_seats
@@ -444,12 +459,12 @@ msgstr "Дараалал"
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:71
 #, python-format
 msgid "Served by"
-msgstr ""
+msgstr "Үйлчилсэн"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_shape
 msgid "Shape"
-msgstr ""
+msgstr "Хэлбэр"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -510,12 +525,12 @@ msgstr "Утас:"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer_proxy_ip
 msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr ""
+msgstr "Хэвлэгчийн тоног төхөөрөмжийн проксийн IP хаяг эсвэл хостын нэр"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_customer_count
 msgid "The amount of customers that have been served by this order."
-msgstr ""
+msgstr "Энэ захиалгаар үйлчлүүлсэн үйлчлүүлэгчдийн хэмжээ."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_color
@@ -523,62 +538,64 @@ msgid ""
 "The background color of the floor layout, (must be specified in a html-"
 "compatible format)"
 msgstr ""
+"Давхарын зохион байгуулалтын дэвсгэр өнгө, (html-д тохирох форматаар "
+"тодорхойлсон байх ёстой)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_seats
 msgid "The default number of customer served at this table."
-msgstr ""
+msgstr "Энэ ширээн дээр үйлчлүүлсэн үйлчлүүлэгчдийн тооны анхны утга."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_table_ids
 msgid "The list of tables in this floor"
-msgstr ""
+msgstr "Энэ давхар дахь ширээнүүдийн жагсаалт"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale"
-msgstr ""
+msgstr "Энэ борлуулалтын цэгээр үйлчлүүлсэн рестораны давхарууд"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
 msgid "The table where this order was served"
-msgstr ""
+msgstr "Энэ захиалгыг хүргэсэн ширээ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_color
 msgid ""
 "The table's color, expressed as a valid 'background' CSS property value"
-msgstr ""
+msgstr "Үнэн зөв CSS 'дэвсгэр' утгатай ширээний өнгө"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_height
 msgid "The table's height in pixels"
-msgstr ""
+msgstr "Ширээний өндөр, цэгээр"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_h
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr ""
+msgstr "Ширээний зүүн талаас төв хүртэлх ширээний хэвтээ байрлал, цэгээр"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr ""
+msgstr "Ширээний дээд хэсгээс төв хүртэлх ширээний босоо байрлал, цэгээр"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_width
 msgid "The table's width in pixels"
-msgstr ""
+msgstr "Ширээний өргөн, цэгээр"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:106
 #, python-format
 msgid "This floor has no tables yet, use the"
-msgstr ""
+msgstr "Энэ давхарт одоогоор ширээ алга, дараахийг ашиглана уу"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -590,7 +607,7 @@ msgstr "Шилжүүлэх"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_sequence
 msgid "Used to sort Floors"
-msgstr ""
+msgstr "Давхруудыг ангилахад хэрэглэнэ"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -602,7 +619,7 @@ msgstr "НӨАТ:"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_position_v
 msgid "Vertical Position"
-msgstr ""
+msgstr "Босоо Байрлал"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_width
@@ -614,7 +631,7 @@ msgstr "Өргөн"
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
 #, python-format
 msgid "With a"
-msgstr ""
+msgstr " "
 
 #. module: pos_restaurant
 #. openerp-web
@@ -624,6 +641,7 @@ msgstr ""
 #, python-format
 msgid "You must be connected to the internet to save your changes."
 msgstr ""
+"Та хийсэн өөрчлөлтүүдээ хадгалахад интернэтэд холбогдсон байх шаардлагатай."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -638,14 +656,14 @@ msgstr "Австри"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:17
 #, python-format
 msgid "at table"
-msgstr ""
+msgstr "ширээ"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:107
 #, python-format
 msgid "button in the editing toolbar to create new tables."
-msgstr ""
+msgstr "шинэ ширээ үүсгэхэд засварлах багажийн мөр дахь товч."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -662,14 +680,14 @@ msgstr "pos.config"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 msgid "restaurant.floor"
-msgstr ""
+msgstr "restaurant.floor"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_printer
 msgid "restaurant.printer"
-msgstr ""
+msgstr "restaurant.printer"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 msgid "restaurant.table"
-msgstr ""
+msgstr "restaurant.table"

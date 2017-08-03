@@ -1598,6 +1598,10 @@ msgid ""
 "you request an interval of 30 days Odoo generates an analysis of creditors "
 "for the past month, past two months, and so on."
 msgstr ""
+"Struktura IOS-a partnera je detaljan izvještaj potraživanja po intervalima. "
+"Odoo izračunava tablicu salda potraživanja po početnom datumu. Ako želite "
+"interval od 30 dana Odoo generira analizu potraživanja za zadnji mjesec, "
+"zadnja dva mjeseca itd."
 
 #. module: account
 #. openerp-web
@@ -3575,7 +3579,7 @@ msgstr "Kupci"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
-msgstr "Kontrolna ploča"
+msgstr "Nadzorna ploča"
 
 #. module: account
 #. openerp-web
@@ -5726,12 +5730,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr "Kanban kontrolna ploča"
+msgstr "Kanban nadzorna ploča"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr "Graf kanban kontrolne ploče"
+msgstr "Graf kanban nadzorne ploče"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6757,7 +6761,7 @@ msgid ""
 "                        The available methods for synchronization are as follows."
 msgstr ""
 "Kada unesete žiro račune, moći ćete \n"
-"pristupiti izvodima kroz izbornik Računovodstvo.\n"
+"pristupiti izvodima kroz nadzornu ploču Računovodstvo.\n"
 "Dostupne metode za sinkronizaciju su kako slijedi."
 
 #. module: account
@@ -6812,7 +6816,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Otvori"
+msgstr "Otvoreno"
 
 #. module: account
 #. openerp-web
@@ -7681,7 +7685,7 @@ msgstr "Porez nabave (%)"
 #: model:ir.ui.menu,name:account.menu_finance_payables
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Purchases"
-msgstr "Nabavke"
+msgstr "Nabava"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_in
@@ -8619,7 +8623,7 @@ msgstr "Podzbroj"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "TIN:"
-msgstr "OIB :"
+msgstr "PDV ID / OIB:"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -8746,7 +8750,7 @@ msgstr "Porezna grupa"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Tax ID"
-msgstr "OIB"
+msgstr "PDV ID / OIB"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_tax_tax
@@ -10204,7 +10208,7 @@ msgstr "Polje u kojem se vidi iznos u valuti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_vat_required
 msgid "VAT required"
-msgstr "OIB obavezan"
+msgstr "PDV ID / OIB obavezan"
 
 #. module: account
 #. openerp-web
@@ -10534,7 +10538,7 @@ msgstr "Nije moguće brisati već proknjiženu uplatu"
 #: code:addons/account/models/account_invoice.py:1360
 #, python-format
 msgid "You can only delete an invoice line if the invoice is in draft state."
-msgstr ""
+msgstr "Stavke računa smijete brisati samo u statusu Nacrt."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:128
@@ -10861,7 +10865,7 @@ msgstr "Vaša bruto bilanca (popis konta sa njihovim saldima)."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "Your company's legal name, tax ID, address, and logo."
-msgstr "Naziv Vaše tvrtke, OIB, adresa i logo"
+msgstr "Naziv Vaše tvrtke, PDV ID / OIB, adresa i logo"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -10973,7 +10977,7 @@ msgstr "za ovog dobavljača. Možete označiti ove račune kao plaćene."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "invoice"
-msgstr ""
+msgstr "Račun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_aged_balance_view
@@ -11002,7 +11006,7 @@ msgstr "pomirenja sa ctrl-enter prečicama."
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_invoice_report_duplicate
 msgid "refund"
-msgstr ""
+msgstr "Odobrenje"
 
 #. module: account
 #. openerp-web

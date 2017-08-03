@@ -3,7 +3,8 @@
 
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class HrHolidaySummaryReport(models.AbstractModel):
@@ -102,6 +103,9 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     @api.model
     def render_html(self, docids, data=None):
+        if not data.get('form'):
+            raise UserError(_("Form content is missing, this report cannot be printed."))
+
         Report = self.env['report']
         holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
         holidays = self.env['hr.holidays'].browse(self.ids)
