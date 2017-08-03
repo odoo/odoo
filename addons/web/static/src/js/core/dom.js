@@ -105,6 +105,20 @@ return {
         }
     },
     /**
+     * jQuery find function behavior is:
+     *      $('A').find('A B') <=> $('A A B')
+     * The searches behavior to find options' DOM needs to be
+     *      $('A').find('A B') <=> $('A B')
+     * This is what this function does.
+     *
+     * @param {jQuery} $from - the jQuery element(s) from which to search
+     * @param {string} selector - the CSS selector to match
+     * @returns {jQuery}
+     */
+    cssFind: function ($from, selector) {
+        return $from.find('*').filter(selector);
+    },
+    /**
      * Detaches widgets from the DOM and performs their on_detach_callback()
      *
      * @param {Array} [to_detach] array of {widget: w, callback_args: args} such
