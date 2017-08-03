@@ -47,10 +47,15 @@ class SaleOrderLine(models.Model):
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _get_default_template(self):
+        template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
+        return template and template.active and template or False
+        
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        default=_get_default_template)
     website_description = fields.Html('Description', sanitize_attributes=False, translate=html_translate)
     options = fields.One2many(
         'sale.order.option', 'order_id', 'Optional Products Lines',

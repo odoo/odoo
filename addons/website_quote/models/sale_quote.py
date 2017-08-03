@@ -26,7 +26,8 @@ class SaleQuoteTemplate(models.Model):
         'mail.template', 'Confirmation Mail',
         domain=[('model', '=', 'sale.order')],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.")
-
+    active = fields.Boolean(default=True, help="If unchecked, it will allow you to hide the quotation template without removing it.")
+    
     @api.multi
     def open_template(self):
         self.ensure_one()
