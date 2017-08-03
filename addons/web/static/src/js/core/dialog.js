@@ -236,6 +236,63 @@ Dialog.confirm = function (owner, message, options) {
     }, options)).open();
 };
 
+/**
+ * Static method to open double confirmation dialog.
+ *
+ * @param {Widget} owner
+ * @param {string} message
+ * @param {Object} [options] @see Dialog.init @see Dialog.confirm
+ * @param {string} [options.securityLevel="warning"] - bootstrap color
+ * @param {string} [options.securityMessage="I am sure about this"]
+ * @returns {Dialog} (open() is automatically called)
+ */
+Dialog.safeConfirm = function (owner, message, options) {
+    var $checkbox = dom.renderCheckbox({
+        text: options && options.securityMessage || _t("I am sure about this"),
+    }).addClass('mb0');
+    var $securityCheck = $('<div/>', {
+        class: 'alert alert-' + (options && options.securityLevel || 'warning') + ' mt8 mb0',
+    }).prepend($checkbox);
+    var $content;
+    if (options && options.$content) {
+        $content = options.$content;
+        delete options.$content;
+    } else {
+        $content = $('<div>', {
+            text: message,
+        });
+    }
+    $content = $('<div/>').append($content, $securityCheck);
+
+    var buttons = [
+        {
+            text: _t("Ok"),
+            classes: 'btn-primary o_safe_confirm_button',
+            close: true,
+            click: options && options.confirm_callback,
+            disabled: true,
+        },
+        {
+            text: _t("Cancel"),
+            close: true,
+            click: options && options.cancel_callback
+        }
+    ];
+    var dialog = new Dialog(owner, _.extend({
+        size: 'medium',
+        buttons: buttons,
+        $content: $content,
+        title: _t("Confirmation"),
+    }, options));
+    dialog.opened(function () {
+        var $button = dialog.$footer.find('.o_safe_confirm_button');
+        $securityCheck.on('click', 'input[type="checkbox"]', function (ev) {
+            $button.prop('disabled', !$(ev.currentTarget).prop('checked'));
+        });
+    });
+    return dialog.open();
+};
+
 return Dialog;
 
 });
