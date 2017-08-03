@@ -560,7 +560,7 @@ class StockMove(models.Model):
                     in_move_return = True
 
         if in_move_return:  # goods returned from customer
-            self._create_account_move_line_adapt_value(acc_valuation, acc_src, journal_id, value_adapt=value_adapt)
+            self._create_account_move_line(acc_valuation, acc_src, journal_id, value_adapt=value_adapt)
         elif in_move_normal:
             self._create_account_move_line(acc_valuation, acc_dest, journal_id, value_adapt=value_adapt)
         elif out_move_return:
