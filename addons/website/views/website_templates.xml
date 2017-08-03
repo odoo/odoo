@@ -868,6 +868,9 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 <template id="website_search_box" name="Website Searchbox">
     <div class="input-group">
         <div class="oe_search">
+            <t t-if="search and search_reset_url">
+                <a class="oe_search_clear" t-att-href="search_reset_url"><span class="fa fa-times-circle text-muted"/></a>
+            </t>
             <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search" />
         </div>
         <span class="input-group-btn">
