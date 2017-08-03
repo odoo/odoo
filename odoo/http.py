@@ -1495,7 +1495,7 @@ def db_filter(dbs, httprequest=None):
         # In case --db-filter is not provided and --database is passed, Odoo will
         # use the value of --database as a comma seperated list of exposed databases.
         exposed_dbs = set(db.strip() for db in odoo.tools.config['db_name'].split(','))
-        dbs = list(exposed_dbs.intersection(dbs))
+        dbs = sorted(exposed_dbs.intersection(dbs))
     return dbs
 
 def db_monodb(httprequest=None):
