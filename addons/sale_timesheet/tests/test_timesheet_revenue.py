@@ -155,7 +155,7 @@ class TestSaleTimesheet(TestSale):
             'open_invoices': True,
         }
         payment = self.env['sale.advance.payment.inv'].create({
-            'advance_payment_method': 'delivered',
+            'advance_payment_method': 'invoiceable',
         })
         action_invoice = payment.with_context(context).create_invoices()
         invoice_id = action_invoice['res_id']
@@ -269,7 +269,7 @@ class TestSaleTimesheet(TestSale):
             'open_invoices': True,
         }
         payment = self.env['sale.advance.payment.inv'].create({
-            'advance_payment_method': 'delivered',
+            'advance_payment_method': 'invoiceable',
         })
         action_invoice = payment.with_context(context).create_invoices()
         invoice_id = action_invoice['res_id']

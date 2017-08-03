@@ -8,8 +8,7 @@ from datetime import datetime, timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
-from odoo.tools.misc import formatLang
+from odoo.tools import float_compare, float_is_zero, float_round, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
 from odoo.addons import decimal_precision as dp
 
@@ -165,6 +164,7 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+    is_all_uninvoiced = fields.Boolean('invoice all uninvoiced lines', readonly=True, copy=False)
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -358,7 +358,7 @@ class SaleOrder(models.Model):
         return action
 
     @api.multi
-    def action_invoice_create(self, grouped=False, final=False):
+    def action_invoice_create(self, grouped=False, final=False, all_uninvoiced=False):
         """
         Create the invoice associated to the SO.
         :param grouped: if True, invoices are grouped by SO id. If False, invoices are grouped by
@@ -373,7 +373,7 @@ class SaleOrder(models.Model):
         for order in self:
             group_key = order.id if grouped else (order.partner_invoice_id.id, order.currency_id.id)
             for line in order.order_line.sorted(key=lambda l: l.qty_to_invoice < 0):
-                if float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                if float_is_zero(line.qty_to_invoice, precision_digits=precision) and not all_uninvoiced:
                     continue
                 if group_key not in invoices:
                     inv_data = order._prepare_invoice()
@@ -387,10 +387,13 @@ class SaleOrder(models.Model):
                     if order.client_order_ref and order.client_order_ref not in invoices[group_key].name.split(', ') and order.client_order_ref != invoices[group_key].name:
                         vals['name'] = invoices[group_key].name + ', ' + order.client_order_ref
                     invoices[group_key].write(vals)
-                if line.qty_to_invoice > 0:
+                if line.qty_to_invoice > 0 and not all_uninvoiced:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
-                elif line.qty_to_invoice < 0 and final:
+                elif line.qty_to_invoice < 0 and final and not all_uninvoiced:
                     line.invoice_line_create(invoices[group_key].id, line.qty_to_invoice)
+                elif all_uninvoiced and float_compare(line.product_uom_qty, line.qty_invoiced, precision_digits=precision) > 0:
+                    order.is_all_uninvoiced = True
+                    line.invoice_line_create(invoices[group_key].id, float_round((line.product_uom_qty - line.qty_invoiced), precision))
 
             if references.get(invoices.get(group_key)):
                 if order not in references[invoices[group_key]]:

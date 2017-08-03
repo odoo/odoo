@@ -17,13 +17,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
         return len(self._context.get('active_ids', []))
 
     @api.model
-    def _get_advance_payment_method(self):
+    def _get_deduct_down_payment(self):
         if self._count() == 1:
-            sale_obj = self.env['sale.order']
-            order = sale_obj.browse(self._context.get('active_ids'))[0]
+            order = self.env['sale.order'].browse(self._context.get('active_id'))
             if all([line.product_id.invoice_policy == 'order' for line in order.order_line]) or order.invoice_count:
-                return 'all'
-        return 'delivered'
+                return True
+        return False
 
     @api.model
     def _default_product_id(self):
@@ -38,25 +37,45 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _default_deposit_taxes_id(self):
         return self._default_product_id().taxes_id
 
+    @api.depends('advance_payment_method', 'deduct_down_payment')
+    def _get_invoiceable_amount(self):
+        order = self.env['sale.order'].browse(self._context.get('active_id'))
+        total_amount = 0
+        for line in order.order_line.filtered(lambda x: x.invoice_status == 'to invoice'):
+            if not self.deduct_down_payment and line.is_downpayment:
+                continue
+            taxes = line.tax_id.compute_all(line.price_reduce, line.order_id.currency_id, line.qty_to_invoice, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            total_amount += taxes['total_included']
+        self.invoiceable_amount = total_amount
+
+    @api.multi
+    def _get_default_currency(self):
+        return self.env['sale.order'].browse(self._context.get('active_id')).currency_id
+
+    @api.depends('advance_payment_method')
+    def _get_down_payment(self):
+        order = self.env['sale.order'].browse(self._context.get('active_id'))
+        self.total_down_payment = sum(line.price_unit for line in order.order_line.filtered(lambda x: x.is_downpayment and x.invoice_status == 'to invoice'))
+
     advance_payment_method = fields.Selection([
-        ('delivered', 'Invoiceable lines'),
-        ('all', 'Invoiceable lines (deduct down payments)'),
-        ('percentage', 'Down payment (percentage)'),
-        ('fixed', 'Down payment (fixed amount)')
-        ], string='What do you want to invoice?', default=_get_advance_payment_method, required=True)
-    product_id = fields.Many2one('product.product', string='Down Payment Product', domain=[('type', '=', 'service')],
-        default=_default_product_id)
+        ('invoiceable', 'Invoiceable lines'),
+        ('down_payment', 'Down payments'),
+        ('all_uninvoiced', 'All the lines not yet invoiced')], string='What do you want to invoice?', default='invoiceable', required=True)
+    product_id = fields.Many2one('product.product', string='Down payment product', domain=[('type', '=', 'service')], default=_default_product_id)
+    down_payment_method = fields.Selection([('percentage', 'Percentage'), ('fixed', 'Fixed amount')], default='percentage', required=True)
+    deduct_down_payment = fields.Boolean('Deduct down payments', default=_get_deduct_down_payment)
+    currency_id = fields.Many2one('res.currency', default=_get_default_currency, readonly=True)
+    total_down_payment = fields.Monetary(compute='_get_down_payment', digits=dp.get_precision('Account'), string='Total paid down payment amount', readonly=True, currency_field='currency_id')
+    invoiceable_amount = fields.Monetary(compute='_get_invoiceable_amount', digits=dp.get_precision('Account'), string='Total Invoiceable amount', readonly=True, currency_field='currency_id')
     count = fields.Integer(default=_count, string='# of Orders')
     amount = fields.Float('Down Payment Amount', digits=dp.get_precision('Account'), help="The amount to be invoiced in advance, taxes excluded.")
     deposit_account_id = fields.Many2one("account.account", string="Income Account", domain=[('deprecated', '=', False)],
         help="Account used for deposits", default=_default_deposit_account_id)
     deposit_taxes_id = fields.Many2many("account.tax", string="Customer Taxes", help="Taxes used for deposits", default=_default_deposit_taxes_id)
 
-    @api.onchange('advance_payment_method')
-    def onchange_advance_payment_method(self):
-        if self.advance_payment_method == 'percentage':
-            return {'value': {'amount': 0}}
-        return {}
+    @api.onchange('down_payment_method')
+    def onchange_down_payment_method(self):
+        self.amount = False
 
     @api.multi
     def _create_invoice(self, order, so_line, amount):
@@ -76,7 +95,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
         if self.amount <= 0.00:
             raise UserError(_('The value of the down payment amount must be positive.'))
-        if self.advance_payment_method == 'percentage':
+        if self.advance_payment_method == 'down_payment' and self.down_payment_method == 'percentage':
             amount = order.amount_untaxed * self.amount / 100
             name = _("Down payment of %s%%") % (self.amount,)
         else:
@@ -126,10 +145,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def create_invoices(self):
         sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
 
-        if self.advance_payment_method == 'delivered':
-            sale_orders.action_invoice_create()
-        elif self.advance_payment_method == 'all':
-            sale_orders.action_invoice_create(final=True)
+        if self.advance_payment_method == 'invoiceable':
+            sale_orders.action_invoice_create(final=self.deduct_down_payment)
+        elif self.advance_payment_method == 'all_uninvoiced':
+            sale_orders.action_invoice_create(all_uninvoiced=True)
         else:
             # Create deposit product if necessary
             if not self.product_id:
@@ -139,7 +158,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
             sale_line_obj = self.env['sale.order.line']
             for order in sale_orders:
-                if self.advance_payment_method == 'percentage':
+                if self.advance_payment_method == 'down_payment' and self.down_payment_method == 'percentage':
                     amount = order.amount_untaxed * self.amount / 100
                 else:
                     amount = self.amount
