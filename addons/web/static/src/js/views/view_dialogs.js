@@ -241,6 +241,7 @@ var SelectCreateListController = ListController.extend({
     // row of the list) such that it triggers up 'select_record' with its res_id.
     custom_events: _.extend({}, ListController.prototype.custom_events, {
         open_record: function (event) {
+            event.stopPropagation();
             var selected_record = this.model.get(event.data.id);
             this.trigger_up('select_record', {id: selected_record.res_id});
         },
