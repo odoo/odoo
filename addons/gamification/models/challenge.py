@@ -105,7 +105,7 @@ class Challenge(models.Model):
     visibility_mode = fields.Selection([
             ('personal', "Individual Goals"),
             ('ranking', "Leader Board (Group Ranking)"),
-        ], default='ranking',
+        ], default='personal',
         string="Display Mode", required=True)
 
     report_message_frequency = fields.Selection([
@@ -118,6 +118,7 @@ class Challenge(models.Model):
         ], default='never',
         string="Report Frequency", required=True)
     report_message_group_id = fields.Many2one('mail.channel', string="Send a copy to", help="Group that will receive a copy of the report in addition to the user")
+    report_template_id = fields.Many2one('mail.template', default=lambda self: self._get_report_template(), string="Report Template", required=True)
     remind_update_delay = fields.Integer("Non-updated manual goals will be reminded after", help="Never reminded if no value or zero is specified.")
     last_report_date = fields.Date("Last Report Date", default=fields.Date.today)
     next_report_date = fields.Date("Next Report Date", compute='_get_next_report_date', store=True)
@@ -134,7 +135,6 @@ class Challenge(models.Model):
         'monthly': relativedelta(months=1),
         'yearly': relativedelta(years=1),
     }
-
     @api.depends('last_report_date', 'report_message_frequency')
     def _get_next_report_date(self):
         """ Return the next report date based on the last report date and
@@ -148,6 +148,11 @@ class Challenge(models.Model):
                 challenge.next_report_date = fields.Date.to_string(last + offset)
             else:
                 challenge.next_report_date = False
+
+    def _get_report_template(self):
+        template = self.env.ref('gamification.simple_report_template', raise_if_not_found=False)
+
+        return template.id if template else False
 
     @api.model
     def create(self, vals):
@@ -344,7 +349,7 @@ class Challenge(models.Model):
                 if end_date:
                     date_clause += "AND g.end_date = %s"
                     query_params.append(end_date)
-
+            
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
@@ -358,7 +363,7 @@ class Challenge(models.Model):
                 participant_user_ids = set(challenge.user_ids.ids)
                 user_squating_challenge_ids = user_with_goal_ids - participant_user_ids
                 if user_squating_challenge_ids:
-                    # users that used to match the challenge
+                    # users that used to match the challenge 
                     Goals.search([
                         ('challenge_id', '=', challenge.id),
                         ('user_id', 'in', list(user_squating_challenge_ids))
@@ -446,7 +451,7 @@ class Challenge(models.Model):
             'action': <{True,False}>,
             'display_mode': <{progress,boolean}>,
             'target': <challenge line target>,
-            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,
+            'state': <gamification.goal state {draft,inprogress,reached,failed,canceled}>,                                
             'completeness': <percentage>,
             'current': <current value>,
         }
@@ -463,7 +468,6 @@ class Challenge(models.Model):
                 'computation_mode': line.definition_id.computation_mode,
                 'monetary': line.definition_id.monetary,
                 'suffix': line.definition_id.suffix,
-                'full_suffix': line.definition_id.full_suffix,
                 'action': True if line.definition_id.action_id else False,
                 'display_mode': line.definition_id.display_mode,
                 'target': line.target_goal,
@@ -490,10 +494,10 @@ class Challenge(models.Model):
                 goal = Goals.search(domain, limit=1)
                 if not goal:
                     continue
+
                 if goal.state != 'reached':
                     return []
                 line_data.update(goal.read(['id', 'current', 'completeness', 'state'])[0])
-                line_data['user_id'] = goal.user_id
                 res_lines.append(line_data)
                 continue
 
@@ -510,7 +514,8 @@ class Challenge(models.Model):
 
                 line_data['goals'].append({
                     'id': goal.id,
-                    'user_id': goal.user_id,
+                    'user_id': goal.user_id.id,
+                    'name': goal.user_id.name,
                     'rank': ranking,
                     'current': goal.current,
                     'completeness': goal.completeness,
@@ -536,23 +541,15 @@ class Challenge(models.Model):
 
         MailTemplates = self.env['mail.template']
         if challenge.visibility_mode == 'ranking':
-            template_id = self.env.ref('gamification.simple_report_template_ranking', raise_if_not_found=False)
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
-            ctx = {
-                'challenge_lines': lines_boards,
-                'default_use_template': bool(template_id),
-                'default_template_id': template_id,
-                'custom_layout': "gamification.challenge_mail_template",
-            }
-            body_html = MailTemplates.with_context(ctx).render_template(template_id.body_html, 'gamification.challenge', challenge.id)
 
-            challenge.with_context(ctx).message_post_with_template(
-                template_id.id,
-                res_id=challenge.id,
-                model='gamification.challenge',
-                partner_ids=challenge.mapped('user_ids.partner_id.id')
-            )
+            body_html = MailTemplates.with_context(challenge_lines=lines_boards).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
 
+            # send to every follower and participant of the challenge
+            challenge.message_post(
+                body=body_html,
+                partner_ids=challenge.mapped('user_ids.partner_id.id'),
+                subtype='mail.mt_comment')
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
                     body=body_html,
@@ -560,25 +557,26 @@ class Challenge(models.Model):
 
         else:
             # generate individual reports
-            template_id = self.env.ref('gamification.simple_report_template_personal', raise_if_not_found=False)
-            ctx = {
-                'default_use_template': bool(template_id),
-                'default_template_id': template_id,
-            }
             for user in (users or challenge.user_ids):
                 lines = challenge._get_serialized_challenge_lines(user, restrict_goals=subset_goals)
                 if not lines:
                     continue
 
-                ctx.update(challenge_lines=lines)
+                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines).render_template(
+                    challenge.report_template_id.body_html,
+                    'gamification.challenge',
+                    challenge.id)
 
                 # send message only to users, not on the challenge
-                template_id.with_context(ctx).send_mail(challenge.id, email_values={'recipient_ids': [(4, user.partner_id.id)]})
-
+                self.env['gamification.challenge'].message_post(
+                    body=body_html,
+                    partner_ids=[(4, user.partner_id.id)],
+                    subtype='mail.mt_comment'
+                )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
-                        body=body_html,
-                        subtype='mail.mt_comment')
+                         body=body_html,
+                         subtype='mail.mt_comment')
         return challenge.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
@@ -721,7 +719,7 @@ class Challenge(models.Model):
             for goal in goal_ids:
                 if goal.state != 'reached':
                     all_reached = False
-                if goal.definition_condition == 'higher' and goal.target_goal > 0:
+                if goal.definition_condition == 'higher':
                     # can be over 100
                     total_completeness += 100.0 * goal.current / goal.target_goal
                 elif goal.state == 'reached':
