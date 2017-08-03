@@ -517,6 +517,9 @@ action = model.setting_init_bank_account_action()
                     <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
+                <div class="alert alert-danger" role="alert" attrs="{'invisible': [('is_valid_balance_start','=',True)]}">
+                    The starting balance <b>doesn't match</b> with the ending balance of the previous bank statement.
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="button_journal_entries"
@@ -539,6 +542,7 @@ action = model.setting_init_bank_account_action()
                             <field name="accounting_date" groups="base.group_no_one"/>
                             <field name='company_id' options="{'no_create': True}" groups="base.group_multi_company" />
                             <field name="currency_id" invisible="1"/>
+                            <field name="is_valid_balance_start" invisible="1"/>
                         </group><group>
                             <label for="balance_start"/>
                             <div>
