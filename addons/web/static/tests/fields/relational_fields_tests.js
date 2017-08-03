@@ -1418,6 +1418,58 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('updating a many2one from a many2many', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.records[1].turtle_trululu = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="turtle_trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,form': '<form string="Trululu"><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [1], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Opening the modal
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_row td:contains(first record)').click();
+        form.$('.o_external_button').click();
+        assert.strictEqual($('.modal').length, 1,
+            "should have one modal in body");
+
+        // Changing the 'trululu' value
+        $('.modal input[name="display_name"]').val('test').trigger('input');
+        $('.modal button.btn-primary').click();
+
+        // Test whether the value has changed
+        assert.strictEqual($('.modal').length, 0,
+            "the modal should be closed");
+        assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
+            "the partner name should have been updated to 'test'");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldOne2Many');
 
     QUnit.test('one2many basic properties', function (assert) {
