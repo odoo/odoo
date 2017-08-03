@@ -334,3 +334,15 @@
         .margin-right(8px);
     }
 }
+
+// ------------------------------------------------------------------
+// Position absolute special fix for tour langaguage RTL and LTR
+// ------------------------------------------------------------------
+
+.o-position-tour-absolute(@top: auto, @right: auto, @bottom: auto, @left: auto) {
+    position: absolute;
+    top: @top;
+    left: @left;
+    bottom: @bottom;
+    right: @right;
+}
