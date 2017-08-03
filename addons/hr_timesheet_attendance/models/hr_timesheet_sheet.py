@@ -45,6 +45,13 @@ class HrTimesheetSheet(models.Model):
         for sheet in self:
             sheet.attendance_count = len(sheet.attendances_ids)
 
+    @api.model
+    def create(self, vals):
+        res = super(HrTimesheetSheet, self).create(vals)
+        # We need to match possible orphans with the new sheet
+        self.env['hr.attendance'].search([('sheet_id', '=', False)])._compute_sheet()
+        return res
+
     @api.multi
     def unlink(self):
         sheets = self.read(['total_attendance'])
