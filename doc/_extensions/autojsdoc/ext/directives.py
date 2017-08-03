@@ -55,10 +55,15 @@ def automodule_bound(app, modules, symbols):
         def run(self):
             modname = self.arguments[0].strip()
 
+            target = nodes.target('', '', ids=['module-' + modname], ismod=True)
+            self.state.document.note_explicit_target(target)
+            env = self.state.document.settings.env
+            env.domaindata['js']['objects'][modname] = (env.docname, 'module')
+
             root = addnodes.desc(noindex=False, desctype='module', domain='js', objtype='module')
             root += self.make_signature(modname)
             root += self.make_content(modname)
-            return [root]
+            return [target, root]
 
         def make_signature(self, modname):
             prefix, _ = modname.rsplit('.')
@@ -82,9 +87,11 @@ def automodule_bound(app, modules, symbols):
 
             if doc.doc:
                 self.state.nested_parse(to_list(doc.doc), 0, content)
-            with addto(content, nodes.field_list()) as fields:
-                with addto(fields, nodes.field()) as field:
-                    self.make_dependencies(field, doc)
+
+            if doc.dependencies:
+                with addto(content, nodes.field_list()) as fields:
+                    with addto(fields, nodes.field()) as field:
+                        self.make_dependencies(field, doc)
 
             content += doc_for(self, modname, None, doc.exports)
 
@@ -95,7 +102,13 @@ def automodule_bound(app, modules, symbols):
             with addto(field, nodes.field_body()) as body:
                 with addto(body, nodes.bullet_list()) as deps:
                     for dep in doc.dependencies:
-                        deps += nodes.list_item('', nodes.paragraph(dep, dep))
+                        ref = addnodes.pending_xref(
+                            dep, nodes.paragraph(dep, dep),
+                            reftype='module',
+                            reftarget=dep,
+                            refdomain='js',
+                        )
+                        deps += nodes.list_item(dep, ref)
 
     return AutoModuleDirective
 
