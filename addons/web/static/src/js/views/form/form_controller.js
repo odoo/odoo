@@ -217,7 +217,7 @@ var FormController = BasicController.extend({
      *
      * @private
      * @override method from field manager mixin
-     * @param {string} id
+     * @param {string} id - id of the previously changed record
      * @returns {Deferred}
      */
     _confirmSave: function (id) {
@@ -228,15 +228,21 @@ var FormController = BasicController.extend({
                 return this._setMode('readonly');
             }
         } else {
-            // a subrecord changed, so update the corresponding relational field
+            // A subrecord has changed, so update the corresponding relational field
             // i.e. the one whose value is a record with the given id or a list
             // having a record with the given id in its data
             var record = this.model.get(this.handle);
-            var fieldsChanged = _.findKey(record.data, function (d) {
-                return _.isObject(d) &&
-                    (d.id === id || _.findWhere(d.data, {id: id}));
-            });
-            return this.renderer.confirmChange(record, record.id, [fieldsChanged]);
+
+            // Callback function which returns true
+            // if a value recursively contains a record with the given id.
+            // This will be used to determine the list of fields to reload.
+            var containsChangedRecord = function (value) {
+                return _.isObject(value) &&
+                    (value.id === id || _.find(value.data, containsChangedRecord));
+            };
+
+            var changedFields = _.findKey(record.data, containsChangedRecord);
+            return this.renderer.confirmChange(record, record.id, [changedFields]);
         }
     },
     /**
