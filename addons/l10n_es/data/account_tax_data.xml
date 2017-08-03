@@ -9,6 +9,32 @@
      © 2013-2016 Pedro M. Baeza
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
+
+    <record id="mod_111_02" model="account.account.tag">
+        <field name="name">Mod 111 [02]</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="mod_111_03" model="account.account.tag">
+        <field name="name">Mod 111 [03]</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="mod_111_05" model="account.account.tag">
+        <field name="name">Mod 111 [05]</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="mod_111_06" model="account.account.tag">
+        <field name="name">Mod 111 [06]</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="mod_111_08" model="account.account.tag">
+        <field name="name">Mod 111 [08]</field>
+        <field name="applicability">taxes</field>
+    </record>
+    <record id="mod_111_09" model="account.account.tag">
+        <field name="name">Mod 111 [09]</field>
+        <field name="applicability">taxes</field>
+    </record>
+
     <record id="mod_303_01_03" model="account.account.tag">
         <field name="name">Mod 303 [01] and [03]</field>
         <field name="applicability">taxes</field>
@@ -298,6 +324,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_02'), ref('mod_111_03')])]"/>
     </record>
     <record id="account_tax_template_p_iva4_sp_ex_1" model="account.tax.template">
         <field name="description">P_IVA4_SP_EX_1</field>
@@ -899,6 +926,7 @@
         <field name="amount" eval="-19"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_19"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf20a" model="account.tax.template">
         <field name="description">P_RAC20A</field>
@@ -921,6 +949,7 @@
         <field name="amount" eval="-18"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_18"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf19a" model="account.tax.template">
         <field name="description">P_RAC19A</field>
@@ -954,6 +983,7 @@
         <field name="amount" eval="-7"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_7"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf9" model="account.tax.template">
         <field name="description">P_IRPF9</field>
@@ -965,6 +995,7 @@
         <field name="amount" eval="-9"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_9"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
         <field name="description">S_IRPF20</field>
@@ -1133,6 +1164,7 @@
         <field name="amount" eval="-1"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_1"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf15" model="account.tax.template">
         <field name="description">P_IRPF15</field>
@@ -1144,6 +1176,7 @@
         <field name="amount" eval="-15"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_15"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21t" model="account.tax.template">
         <field name="description">P_IRPFT</field>
@@ -1155,6 +1188,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_02'), ref('mod_111_03')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_sp_in_1" model="account.tax.template">
         <field name="description">P_IVA10_SP_IN_1</field>
@@ -1238,6 +1272,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_05'), ref('mod_111_06')])]"/>
     </record>
     <record id="account_tax_template_p_irpf20" model="account.tax.template">
         <field name="description">P_IRPF20</field>
@@ -1249,6 +1284,7 @@
         <field name="amount" eval="-20"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_20"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf21a" model="account.tax.template">
         <field name="description">P_RAC21A</field>
@@ -1271,6 +1307,7 @@
         <field name="amount" eval="-21"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_21"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_p_irpf2" model="account.tax.template">
         <field name="description">P_IRPF2</field>
@@ -1282,6 +1319,7 @@
         <field name="amount" eval="-2"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_2"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_111_08'), ref('mod_111_09')])]"/>
     </record>
     <record id="account_tax_template_s_iva0_isp" model="account.tax.template">
         <field name="description">S_IVA0_ISP</field>
