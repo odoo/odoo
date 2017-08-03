@@ -60,7 +60,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         packs = set()
         for move_line in self.move_line_ids:
-            if move_line.result_package_id and move_line.result_package_id.packaging_id:
+            if move_line.result_package_id:
                 packs.add(move_line.result_package_id.id)
         self.package_ids = list(packs)
 
