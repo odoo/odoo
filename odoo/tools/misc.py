@@ -1038,15 +1038,17 @@ def dumpstacks(sig=None, frame=None):
     # modified for python 2.5 compatibility
     threads_info = {th.ident: {'name': th.name,
                                'uid': getattr(th, 'uid', 'n/a'),
-                               'dbname': getattr(th, 'dbname', 'n/a')}
+                               'dbname': getattr(th, 'dbname', 'n/a'),
+                               'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s)" %
+        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
                     (thread_info.get('name', 'n/a'),
                      threadId,
                      thread_info.get('dbname', 'n/a'),
-                     thread_info.get('uid', 'n/a')))
+                     thread_info.get('uid', 'n/a'),
+                     thread_info.get('url', 'n/a')))
         for line in extract_stack(stack):
             code.append(line)
 

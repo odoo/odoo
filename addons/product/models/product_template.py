@@ -264,7 +264,7 @@ class ProductTemplate(models.Model):
         tools.image_resize_images(vals)
         template = super(ProductTemplate, self).create(vals)
         if "create_product_product" not in self._context:
-            template.create_variant_ids()
+            template.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         related_vals = {}
