@@ -98,7 +98,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <pivot string="Sales Orders">
-                    <field name="date_order" type="row"/>
+                    <field name="date_order" type="row" groups="base.group_no_one"/>
                     <field name="amount_total" type="measure"/>
                 </pivot>
             </field>
