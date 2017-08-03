@@ -398,9 +398,6 @@ var PlannerLauncher = Widget.extend({
     events: {
         "click": "show_dialog"
     },
-    init: function () {
-        this._super.apply(this, arguments);
-    },
     start: function () {
         this.$progress = this.$(".progress");
         this.$progressBar = this.$progress.find(".progress-bar");
