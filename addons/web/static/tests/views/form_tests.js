@@ -5888,5 +5888,37 @@ QUnit.module('Views', {
             "table is now sorted");
         form.destroy();
     });
+
+    QUnit.test('bounce edit button in readonly mode', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div class="oe_title">' +
+                        '<field name="display_name"/>' +
+                    '</div>' +
+                '</form>',
+            res_id: 1,
+            intercepts: {
+                bounce_edit: function() {
+                    assert.step('bounce');
+                },
+            },
+        });
+
+        // in readonly
+        form.$('[name="display_name"]').click();
+        assert.verifySteps(['bounce']);
+
+        // in edit
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('[name="display_name"]').click();
+        assert.verifySteps(['bounce']);
+
+        form.destroy();
+    });
 });
 });
