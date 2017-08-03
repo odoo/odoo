@@ -745,9 +745,7 @@
         <field name="amount" eval="4"/>
         <field name="amount_type">percent</field>
         <field name="tax_group_id" ref="tax_group_iva_4"/>
-=======
-         <field name="tag_ids" eval="[
-         (6, False, [ref('mod_303_01_03')])]"/>
+         <field name="tag_ids" eval="[(6, False, [ref('mod_303_01_03')])]"/>
     </record>
     <record id="account_tax_template_s_iva10b" model="account.tax.template">
         <field name="description">S_IVA10B</field>
@@ -1342,7 +1340,7 @@
         <field name="account_id" ref="l10n_es.account_common_472"/>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="tax_group_id" ref="tax_group_iva_10"/>
-        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref(mod_303_40_41')])]"/>
+        <field name="tag_ids" eval="[(6, False, [ref('mod_303_28_29'), ref('mod_303_40_41')])]"/>
     </record>
     <record id="account_tax_template_p_iva10_isp_2" model="account.tax.template">
         <field name="name">IVA 10% Compra con Inversión del Sujeto Pasivo Nacional (2)</field>
