@@ -2877,6 +2877,9 @@ var BasicModel = AbstractModel.extend({
 
                                 r._changes = _.defaults(value[2], r.data);
                                 for (var name in r._changes) {
+                                    if (r._changes[name] === null) {
+                                        continue;
+                                    }
                                     var isFieldInView = name in r.fields;
                                     if (isFieldInView && r.fields[name].type === 'many2one') {
                                         var rec = self._makeDataPoint({
