@@ -8,12 +8,4 @@
 Javascript
 ==========
 
-.. automodule:: web.Class
-
-.. automodule:: web.Widget
-
-.. automodule:: web.core
-
-.. automodule:: web.Bus
-
-.. automodule:: web.translation
+.. automodule:: *

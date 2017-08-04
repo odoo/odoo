@@ -143,46 +143,46 @@ class ModuleProxy(object):
         return self
 
 jq = jsdoc.UnknownNS({
-    'name': 'jQuery',
-    'doc': '<jQuery>',
+    'name': u'jQuery',
+    'doc': u'<jQuery>',
 })
 window = jsdoc.UnknownNS({
     'doc': '<window>',
     'name': 'window',
 })
 BASE_SCOPE = {
-    '_': jsdoc.UnknownNS({'doc': '<underscore.js>', 'name': '_'}),
+    '_': jsdoc.UnknownNS({'doc': u'<underscore.js>', 'name': u'_'}),
     '$': jq, 'jQuery': jq,
     'nv': jsdoc.UnknownNS({
-        'doc': '<nvd3>',
-        'name': 'nv',
+        'doc': u'<nvd3>',
+        'name': u'nv',
     }),
     'window': window,
     'document': window.get_property('document'),
     'Date': jsdoc.ClassDoc({
-        'name': 'Date',
-        'doc': '',
+        'name': u'Date',
+        'doc': u'',
     }),
     'Backbone': jsdoc.UnknownNS({
         '_members': [
             ('Model', jsdoc.ClassDoc({
-                'name': 'Model',
-                'doc': '',
+                'name': u'Model',
+                'doc': u'',
             })),
             ('Collection', jsdoc.ClassDoc({
-                'name': 'Collection',
-                'doc': '',
+                'name': u'Collection',
+                'doc': u'',
             })),
         ]
     }),
     'odoo': jsdoc.UnknownNS({
-        'name': 'odoo',
-        'doc': "Odoo",
+        'name': u'odoo',
+        'doc': u"Odoo",
         '_members': [
-            ('name', jsdoc.PropertyDoc({'name': 'csrf_token', 'type': '{String}'})),
+            ('name', jsdoc.PropertyDoc({'name': u'csrf_token', 'type': u'{String}'})),
         ]
     }),
-    'undefined': jsdoc.LiteralDoc({'name': 'undefined', 'value': None})
+    'undefined': jsdoc.LiteralDoc({'name': u'undefined', 'value': None})
 }
 
 class ModuleExtractor(Visitor):

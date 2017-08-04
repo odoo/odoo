@@ -75,23 +75,23 @@ def _resolve_references(byname):
 
 ABSTRACT_MODULES = [
     jsdoc.ModuleDoc({
-        'module': 'web.web_client',
-        'dependency': {'web.AbstractWebClient'},
+        'module': u'web.web_client',
+        'dependency': {u'web.AbstractWebClient'},
         'exports': jsdoc.NSDoc({
-            'name': 'web_client',
-            'doc': 'instance of AbstractWebClient',
+            'name': u'web_client',
+            'doc': u'instance of AbstractWebClient',
         }),
     }),
     jsdoc.ModuleDoc({
-        'module': 'web.Tour',
-        'dependency': {'web_tour.TourManager'},
+        'module': u'web.Tour',
+        'dependency': {u'web_tour.TourManager'},
         'exports': jsdoc.NSDoc({
-            'name': 'Tour',
-            'doc': 'maybe tourmanager instance?',
+            'name': u'Tour',
+            'doc': u'maybe tourmanager instance?',
         }),
     }),
     jsdoc.ModuleDoc({
-        'module': 'summernote/summernote',
-        'exports': jsdoc.NSDoc({'doc': "totally real summernote"}),
+        'module': u'summernote/summernote',
+        'exports': jsdoc.NSDoc({'doc': u"totally real summernote"}),
     })
 ]

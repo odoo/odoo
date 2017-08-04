@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import abc
 import contextlib
+import fnmatch
 import io
 
 from docutils import nodes
@@ -31,7 +32,8 @@ def documenter_for(directive, modname, classname, doc):
         return PropertyDocumenter(directive, modname, classname, doc)
     if isinstance(doc, jsdoc.InstanceDoc):
         return InstanceDocumenter(directive, modname, classname, doc)
-    if isinstance(doc, jsdoc.Unknown):
+    # FIXME: MixinDocumenter
+    if isinstance(doc, (jsdoc.Unknown, jsdoc.MixinDoc)):
         return UnknownDocumenter(directive, None, None, doc)
 
     raise TypeError("No documenter for %s" % type(doc))
@@ -54,61 +56,31 @@ def automodule_bound(app, modules, symbols):
         # => needed for doc (converted?) and for actual directive body
         def run(self):
             modname = self.arguments[0].strip()
+            mods = [
+                (name, mod)
+                for name, mod in modules.items()
+                if fnmatch.fnmatch(name, modname)
+            ]
 
-            target = nodes.target('', '', ids=['module-' + modname], ismod=True)
-            self.state.document.note_explicit_target(target)
-            env = self.state.document.settings.env
-            env.domaindata['js']['objects'][modname] = (env.docname, 'module')
+            ret = []
+            for name, mod in mods:
+                # TODO: undoc-matches for glob automodules
+                # don't document if no doc or export unless requested
+                # specifically
+                if not (mod.doc or mod.exports) and name != modname:
+                    continue
 
-            root = addnodes.desc(noindex=False, desctype='module', domain='js', objtype='module')
-            root += self.make_signature(modname)
-            root += self.make_content(modname)
-            return [target, root]
+                # FIXME: pending_xref doesn't actually link to this...?
+                target = nodes.target('', '', ids=['module-' + name], ismod=True)
+                self.state.document.note_explicit_target(target)
+                env = self.state.document.settings.env
+                env.domaindata['js']['objects'][name] = (env.docname, 'module')
 
-        def make_signature(self, modname):
-            prefix, _ = modname.rsplit('.')
-            signode = addnodes.desc_signature(
-                '', '',
-                addnodes.desc_annotation('module ', 'module '),
-                addnodes.desc_name(modname, modname),
-                fullname=modname,
-                object=prefix,
-                module=None,
-                ids=[modname],
-            )
-            return signode
+                documenter = ModuleDocumenter(self, None, None, mod)
 
-        def make_content(self, modname):
-            doc = modules[modname]
-            content = addnodes.desc_content()
-
-            # FIXME: how do I decide whether to ignore the body?
-            self.state.nested_parse(self.content, 0, content)
-
-            if doc.doc:
-                self.state.nested_parse(to_list(doc.doc), 0, content)
-
-            if doc.dependencies:
-                with addto(content, nodes.field_list()) as fields:
-                    with addto(fields, nodes.field()) as field:
-                        self.make_dependencies(field, doc)
-
-            content += doc_for(self, modname, None, doc.exports)
-
-            return content
-
-        def make_dependencies(self, field, doc):
-            field += nodes.field_name("Depends On", "Depends On")
-            with addto(field, nodes.field_body()) as body:
-                with addto(body, nodes.bullet_list()) as deps:
-                    for dep in doc.dependencies:
-                        ref = addnodes.pending_xref(
-                            dep, nodes.paragraph(dep, dep),
-                            reftype='module',
-                            reftarget=dep,
-                            refdomain='js',
-                        )
-                        deps += nodes.list_item(dep, ref)
+                ret.append(target)
+                ret.extend(documenter.generate())
+            return ret
 
     return AutoModuleDirective
 
@@ -129,6 +101,8 @@ class Documenter(object):
             module=self._module,
             fullname=self._doc.name,
         )) as s:
+            if self._doc.name:
+                s['ids'] = [self._doc.name]
             s['class'] = self._class or ''
             if self.objtype:
                 s += addnodes.desc_annotation(
@@ -150,6 +124,44 @@ class Documenter(object):
         """
         :rtype: List[nodes.Node]
         """
+
+class ModuleDocumenter(Documenter):
+    objtype = 'module'
+    def make_signature(self):
+        return [addnodes.desc_name(self._doc.name, self._doc.name)]
+    def make_content(self):
+        doc = self._doc
+        content = addnodes.desc_content()
+
+        # FIXME: how do I decide whether to ignore the body?
+        self._directive.state.nested_parse(self._directive.content, 0, content)
+
+        if doc.doc:
+            self._directive.state.nested_parse(to_list(doc.doc), 0, content)
+
+        if doc.dependencies:
+            with addto(content, nodes.field_list()) as fields:
+                with addto(fields, nodes.field()) as field:
+                    self.make_dependencies(field, doc)
+
+        if doc.exports:
+            content += doc_for(self._directive, doc.name, None, doc.exports)
+
+        return content
+
+    def make_dependencies(self, field, doc):
+        field += nodes.field_name("Depends On", "Depends On")
+        with addto(field, nodes.field_body()) as body:
+            with addto(body, nodes.bullet_list()) as deps:
+                for dep in doc.dependencies:
+                    ref = addnodes.pending_xref(
+                        dep, nodes.paragraph(dep, dep),
+                        reftype='module',
+                        reftarget=dep,
+                        refdomain='js',
+                    )
+                    deps += nodes.list_item(dep, ref)
+
 
 class ClassDocumenter(Documenter):
     objtype = 'class'
