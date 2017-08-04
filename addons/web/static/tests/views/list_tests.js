@@ -984,7 +984,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view, editable, without data', function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         this.data.foo.records = [];
 
@@ -998,6 +998,7 @@ QUnit.module('Views', {
                     '<field name="date"/>' +
                     '<field name="m2o"/>' +
                     '<field name="foo"/>' +
+                    '<button type="object" icon="fa-plus-square" name="method"/>' +
                 '</tree>',
             viewOptions: {
                 action: {
@@ -1033,7 +1034,14 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody tr:eq(0) td:eq(1)').text().trim(), "",
             "the date field td should not have any content");
 
+        assert.strictEqual(list.$('.o_list_button button').prop('disabled'), true,
+            "buttons should be disabled while the record is not yet created");
+
         list.$buttons.find('.o_list_button_save').click();
+
+        assert.strictEqual(list.$('.o_list_button button').prop('disabled'), false,
+            "buttons should not be disabled once the record is created");
+
         list.destroy();
     });
 

@@ -281,15 +281,19 @@ var ListRenderer = BasicRenderer.extend({
 
         this._registerModifiers(node, record, $button);
 
-        // TODO this should be moved to a handler
-        var self = this;
-        $button.on("click", function (e) {
-            e.stopPropagation();
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: record,
+        if (record.res_id) {
+            // TODO this should be moved to a handler
+            var self = this;
+            $button.on("click", function (e) {
+                e.stopPropagation();
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: record,
+                });
             });
-        });
+        } else {
+            $button.prop('disabled', true);
+        }
 
         return $button;
     },
