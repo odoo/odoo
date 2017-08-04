@@ -34,7 +34,6 @@ Procurements in exception should be checked manually and can be re-run.
         'data/procurement_data.xml',
         'wizard/procurement_order_compute_all_views.xml',
         'views/procurement_views.xml',
-        'views/product_views.xml',
     ],
     'demo': [],
     'test': [],

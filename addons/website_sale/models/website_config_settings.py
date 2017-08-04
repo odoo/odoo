@@ -37,8 +37,9 @@ class WebsiteConfigSettings(models.TransientModel):
 
     module_website_sale_options = fields.Boolean("Optional Products", help='Installs *e-Commerce Optional Products*')
     module_website_sale_digital = fields.Boolean("Digital Content")
-    module_website_sale_wishlist = fields.Boolean("Wishlists ", help='Installs *e-Commerce Wishlist*')
+    module_website_sale_wishlist = fields.Boolean("Wishlists", help='Installs *e-Commerce Wishlist*')
     module_website_sale_comparison = fields.Boolean("Product Comparator", help='Installs *e-Commerce Comparator*')
+    module_website_sale_stock = fields.Boolean("Inventory", help='Installs *e-Commerce Inventory*')
 
     module_account_invoicing = fields.Boolean("Invoicing")
     module_sale_stock = fields.Boolean("Delivery Orders")

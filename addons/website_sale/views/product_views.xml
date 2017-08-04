@@ -70,10 +70,8 @@
                 <group name="website" string="Website" >
                     <field name="website_url" invisible="1"/>
                     <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
-                    <field name="alternative_product_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="accessory_product_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="availability" widget="selection"/>
-                    <field name="availability_warning" attrs="{'invisible': [('availability', '!=', 'warning')]}"/>
+                    <field name="alternative_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
                 </group>
             </group>
@@ -218,7 +216,7 @@
         <field name="arch" type="xml">
             <form string="Product Images">
                 <sheet>
-                    <field name="image" widget="image" class="oe_avatar"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
                     <div class="oe_title">
                         <label class="oe_edit_only" for="name" string="Image Name"/>
                         <h1><field name="name" placeholder="Image Name" required="True"/></h1>

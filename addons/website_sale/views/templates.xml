@@ -469,19 +469,10 @@
                                         </t>
                                     </t>
                                     <t t-call="website_sale.product_price" />
-                                    <p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger" style="padding: 15px;">Product not available</p>
+                                    <p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger" style="padding: 15px;">This combination does not exist.</p>
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr t-if="product.availability != 'empty'"/>
-                            <div t-if="product.availability == 'in_stock'" class="alert alert-success">
-                                <span class="fa fa-check" />
-                                <span>In Stock</span>
-                            </div>
-                            <div t-if="product.availability == 'warning'" class="alert alert-warning">
-                                <span class="fa fa-warning" />
-                                <span t-field="product.availability_warning" />
-                            </div>
                             <hr t-if="product.description_sale" />
                             <div class="o_not_editable">
                                 <p t-field="product.description_sale" class="text-muted" />
