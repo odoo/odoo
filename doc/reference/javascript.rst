@@ -9,3 +9,4 @@ Javascript
 ==========
 
 .. automodule:: *
+    :members:

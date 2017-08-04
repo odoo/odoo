@@ -7,6 +7,11 @@ var QWeb = require('web.QWeb');
 var Registry = require('web.Registry');
 var translation = require('web.translation');
 
+/**
+ * Whether the client is currently in "debug" mode
+ *
+ * @type Boolean
+ */
 var debug = $.deparam($.param.querystring()).debug !== undefined;
 
 var bus = new Bus ();
@@ -23,11 +28,6 @@ _.each('resize,scroll'.split(','), function(evtype) {
 });
 
 return {
-    /**
-     * Whether the client is currently in "debug" mode
-     *
-     * @constant {Boolean}
-     */
     debug: debug,
     qweb: new QWeb(debug),
 

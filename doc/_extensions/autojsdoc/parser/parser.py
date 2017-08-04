@@ -327,6 +327,8 @@ class ValueExtractor(Visitor):
             self.declaration.comments,
             jsdoc.Unknown.from_(node['type'])
         )
+        if self.declaration.id:
+            self.result.set_name(self.declaration.id)
         return SKIP
 
     def enter_Literal(self, node):

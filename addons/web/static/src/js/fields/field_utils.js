@@ -256,7 +256,7 @@ function formatX2Many(value) {
  * @param {Object} [options]
  *        additional options to override the values in the python description of
  *        the field.
- * @param {Object} [options.currency] - the description of the currency to use
+ * @param {Object} [options.currency] the description of the currency to use
  * @param {integer} [options.currency_id]
  *        the id of the 'res.currency' to use (ignored if options.currency)
  * @param {string} [options.currency_field]

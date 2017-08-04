@@ -377,7 +377,7 @@ class Unknown(pyjsdoc.CommentDoc):
 
     @property
     def name(self):
-        return self['name'] + self['source']
+        return self['name'] + ' ' + self['source']
 
     def set_name(self, name):
         self.parsed['name'] = name
@@ -427,5 +427,7 @@ def guess(parsed, default=NSDoc):
         return NSDoc(parsed)
     if 'module' in parsed:
         return ModuleDoc(parsed)
+    if 'type' in parsed:
+        return PropertyDoc(parsed)
 
     return default(parsed)

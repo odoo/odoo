@@ -56,6 +56,8 @@ var AbstractField = Widget.extend({
     specialData: false,
     /**
      * to override to indicate which field types are supported by the widget
+     *
+     * @type Array<String>
      */
     supportedFieldTypes: [],
 

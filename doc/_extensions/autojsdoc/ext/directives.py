@@ -6,9 +6,10 @@ import io
 
 from docutils import nodes
 from docutils.parsers.rst import Directive
+from docutils.parsers.rst.directives import flag
 from docutils.statemachine import StringList
 from sphinx import addnodes
-
+from sphinx.ext.autodoc import members_set_option, bool_option
 
 from ..parser import jsdoc
 
@@ -26,14 +27,15 @@ def documenter_for(directive, modname, classname, doc):
         return ClassDocumenter(directive, modname, None, doc)
     if isinstance(doc, jsdoc.NSDoc):
         return NSDocumenter(directive, modname, None, doc)
+    if isinstance(doc, jsdoc.MixinDoc):
+        return MixinDocumenter(directive, modname, None, doc)
     if isinstance(doc, jsdoc.FunctionDoc):
         return FunctionDocumenter(directive, modname, classname, doc)
-    if isinstance(doc, jsdoc.PropertyDoc):
+    if isinstance(doc, (jsdoc.PropertyDoc, jsdoc.LiteralDoc)):
         return PropertyDocumenter(directive, modname, classname, doc)
     if isinstance(doc, jsdoc.InstanceDoc):
         return InstanceDocumenter(directive, modname, classname, doc)
-    # FIXME: MixinDocumenter
-    if isinstance(doc, (jsdoc.Unknown, jsdoc.MixinDoc)):
+    if isinstance(doc, jsdoc.Unknown):
         return UnknownDocumenter(directive, None, None, doc)
 
     raise TypeError("No documenter for %s" % type(doc))
@@ -50,31 +52,53 @@ def automodule_bound(app, modules, symbols):
         required_arguments = 1
         has_content = True
         # TODO: add relevant options from automodule (e.g. :members: & shit)
-        option_spec = {}
+        ## from docutils.parsers.rst.directives
+        # flag -> None|unset
+        # unchanged_required -> arg
+        # unchanged -> arg | ''
+        # nonnegative_int -> 0+
+        # positive_int -> 1+
+        # positive_int_list
+        # choice -> any of choices, must be wrapped
+        # class_option -> list of identifiers
+        # value_or(values, fn) -> arg if arg in values else fn(arg)
+        ## from autodoc
+        # DefDict(identity) -> accept all
+        # members_option -> ALL | arg.split(',')|strip()
+        # members_set_option -> ALL | set(arg.split(',')|strip())
+        # annotation_option -> SUPPRESS | arg
+        # bool_option -> True|unset
+        option_spec = {
+            'members': members_set_option,
+            'undoc-members': bool_option,
+            'private-members': bool_option,
+            'undoc-matches': bool_option,
+        }
 
         # self.state.nested_parse(string, offset, node) => parse context for sub-content (body which can contain RST data)
         # => needed for doc (converted?) and for actual directive body
         def run(self):
+            # FIXME: lazy parse here (avoid parsing if not rebuilding doc host
+            # FIXME: env.note_dependency(mod.sourcefile)
             modname = self.arguments[0].strip()
             mods = [
                 (name, mod)
                 for name, mod in modules.items()
                 if fnmatch.fnmatch(name, modname)
             ]
-
             ret = []
             for name, mod in mods:
-                # TODO: undoc-matches for glob automodules
-                # don't document if no doc or export unless requested
-                # specifically
-                if not (mod.doc or mod.exports) and name != modname:
-                    continue
+                if name != modname and not (mod.doc or mod.exports):
+                    # this module has no documentation, no exports and was
+                    # not specifically requested through automodule -> skip
+                    # unless requested
+                    if not self.options.get('undoc-matches'):
+                        continue
 
-                # FIXME: pending_xref doesn't actually link to this...?
+                # FIXME: not sure what that's used for as normal xrefs are
+                # resolved using the id directly
                 target = nodes.target('', '', ids=['module-' + name], ismod=True)
                 self.state.document.note_explicit_target(target)
-                env = self.state.document.settings.env
-                env.domaindata['js']['objects'][name] = (env.docname, 'module')
 
                 documenter = ModuleDocumenter(self, None, None, mod)
 
@@ -83,7 +107,7 @@ def automodule_bound(app, modules, symbols):
             return ret
 
     return AutoModuleDirective
-
+# FIXME: autoclass/automethod/autofunction/autons/automixin/... directive
 class Documenter(object):
     objtype = None
     def __init__(self, directive, mod, classname, doc):
@@ -95,20 +119,28 @@ class Documenter(object):
         """
         :rtype: List[nodes.Node]
         """
-        assert self.objtype, '%s has no objtype' % type(self)
-        root = addnodes.desc(domain='js', desctype=self.objtype, objtype=self.objtype)
+        objname = self._doc.name
+        objtype = self.objtype
+        assert objtype, '%s has no objtype' % type(self)
+        root = addnodes.desc(domain='js', desctype=objtype, objtype=objtype)
         with addto(root, addnodes.desc_signature(
-            module=self._module,
-            fullname=self._doc.name,
+            module=self._module or '',
+            fullname=objname,
         )) as s:
-            if self._doc.name:
-                s['ids'] = [self._doc.name]
             s['class'] = self._class or ''
-            if self.objtype:
+
+            if objname:
+                s['ids'] = [objname]
+            if objtype:
                 s += addnodes.desc_annotation(
-                    self.objtype, self.objtype,
+                    objtype, objtype,
                     nodes.Text(' '),
                 )
+            if objname and objtype:
+                env = self._directive.state.document.settings.env
+                env.domaindata['js']['objects'][objname] = (env.docname, objtype)
+
+            # FIXME: linkcode_resolve
             s += self.make_signature()
         with addto(root, addnodes.desc_content()) as c:
             c += self.make_content()
@@ -137,6 +169,7 @@ class ModuleDocumenter(Documenter):
         self._directive.state.nested_parse(self._directive.content, 0, content)
 
         if doc.doc:
+            # FIXME: link source file (for warnings & stuff)
             self._directive.state.nested_parse(to_list(doc.doc), 0, content)
 
         if doc.dependencies:
@@ -144,6 +177,8 @@ class ModuleDocumenter(Documenter):
                 with addto(fields, nodes.field()) as field:
                     self.make_dependencies(field, doc)
 
+        # FIXME: xref exports to exported object (unless anonymous?)
+        # FIXME: document all elements in bodies based on :members:, undoc, private
         if doc.exports:
             content += doc_for(self._directive, doc.name, None, doc.exports)
 
@@ -160,6 +195,7 @@ class ModuleDocumenter(Documenter):
                         reftarget=dep,
                         refdomain='js',
                     )
+                    # TODO: js:module/js:object keys for relative lookup
                     deps += nodes.list_item(dep, ref)
 
 
@@ -168,7 +204,6 @@ class ClassDocumenter(Documenter):
     def make_signature(self):
         return [
             addnodes.desc_name(self._doc.name, self._doc.name),
-            # FIXME: constructor parameters?
             self.make_parameters(),
         ]
 
@@ -178,11 +213,12 @@ class ClassDocumenter(Documenter):
         if not ctors:
             return params
         for p in ctors[0].params:
-            if p.name.startswith('[') and p.name.startswith(']'):
-                n = p.name[1:-1]
+            name = p.name.strip()
+            if name.startswith('[') and name.startswith(']'):
+                n = name[1:-1]
                 params += addnodes.desc_optional(n, n)
             else:
-                params += addnodes.desc_parameter(p.name, p.name)
+                params += addnodes.desc_parameter(name, name)
         return params
 
     def make_content(self):
@@ -190,7 +226,8 @@ class ClassDocumenter(Documenter):
         ret = nodes.section()
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-        # TODO: get params doc from ctor?
+        # FIXME: fields params doc from ctor
+        # FIXME: split & xref ctor params
 
         if doc.mixins:
             with addto(ret, nodes.field_list()) as fields:
@@ -229,6 +266,7 @@ class InstanceDocumenter(Documenter):
         return [
             addnodes.desc_name(self._doc.name, self._doc.name),
             addnodes.desc_annotation(' instance of ', ' instance of '),
+            # FIXME: xref class
             addnodes.desc_type(cls.name, cls.name),
         ]
 
@@ -244,15 +282,21 @@ class FunctionDocumenter(Documenter):
     def objtype(self):
         return 'method' if self._class else 'function'
     def make_signature(self):
+        # FIXME: xref superclass
         ret = nodes.section('', addnodes.desc_name(self._doc.name, self._doc.name))
         # TODO: desc_annotation, desc_type?
         with addto(ret, addnodes.desc_parameterlist()) as params:
+            # FIXME: guess params if undoc'd
             for p in self._doc.params:
-                if p.name.startswith('[') and p.name.startswith(']'):
-                    n = p.name[1:-1]
+                name = p.name.strip()
+                # FIXME: extract sub-params to typedef (in body?)
+                if '.' in name:
+                    continue
+                if name.startswith('[') and name.startswith(']'):
+                    n = name[1:-1]
                     params += addnodes.desc_optional(n, n)
                 else:
-                    params += addnodes.desc_parameter(p.name, p.name)
+                    params += addnodes.desc_parameter(name, name)
         retval = self._doc.return_val
         if retval.type or retval.doc:
             ret += addnodes.desc_returns(retval.type or '*', retval.type  or '*')
@@ -279,6 +323,7 @@ class FunctionDocumenter(Documenter):
                              addto(body, nodes.paragraph()) as p:
                             p += nodes.inline(doc.return_val.doc, doc.return_val.doc)
                 if doc.return_val.type:
+                    # FIXME: split & xref return type
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Return Type", "Return Type")
                         with addto(field, nodes.field_body()) as body, \
@@ -288,10 +333,11 @@ class FunctionDocumenter(Documenter):
 
     def make_parameters(self, params):
         for param in params:
-            name = param.name.strip('[]')
+            name = param.name.strip().strip('[]')
             p = nodes.paragraph(
                 '', '', addnodes.literal_strong(name, name))
             if param.type:
+                # FIXME: split & xref param type
                 p += [
                     nodes.Text(' ('),
                     addnodes.literal_emphasis(param.type, param.type),
@@ -304,8 +350,7 @@ class FunctionDocumenter(Documenter):
                 ]
             yield p
 
-class NSDocumenter(Documenter):
-    objtype = 'namespace'
+class ObjectDocumenter(Documenter):
     def make_signature(self):
         if self._doc.name:
             return [addnodes.desc_name(self._doc.name, self._doc.name)]
@@ -315,9 +360,18 @@ class NSDocumenter(Documenter):
         ret = nodes.section()
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
+        # FIXME: visibility (:members:, :private-members: :undoc-members:)
+        # FIXME: xref when property is named/not inline
         for (_, p) in doc.properties:
             ret += doc_for(self._directive, self._module, None, p)
         return ret.children
+
+class NSDocumenter(ObjectDocumenter):
+    objtype = 'namespace'
+class MixinDocumenter(ObjectDocumenter):
+    objtype = 'mixin'
+
+# FIXME: add typedef support
 
 class PropertyDocumenter(Documenter):
     objtype = 'attribute'

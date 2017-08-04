@@ -444,6 +444,7 @@ var rpc = require('web.rpc');
 
 /**
  * @mixin
+ * @name ServicesMixin
  */
 var ServicesMixin = {
     call: function (service, method) {

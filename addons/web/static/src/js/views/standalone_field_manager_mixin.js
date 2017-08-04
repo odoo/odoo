@@ -9,6 +9,7 @@ var FieldManagerMixin = require('web.FieldManagerMixin');
  * that instanciates its own field widgets.
  *
  * @mixin
+ * @name StandaloneFieldManagerMixin
  * @mixes FieldManagerMixin
  * @property {Function} _confirmChange
  * @property {Function} _registerWidget
