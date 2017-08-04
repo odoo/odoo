@@ -771,7 +771,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
         });
     }
     oLayoutInfo.editable().on('mousedown', function (e) {
-        if (dom.isImg(e.target)) {
+        if (dom.isImg(e.target) && dom.isContentEditable(e.target)) {
             range.createFromNode(e.target).select();
         }
     });
@@ -836,7 +836,12 @@ eventHandler.attach = function (oLayoutInfo, options) {
         var show_tooltip = true;
 
         oLayoutInfo.editor().on("dblclick", selector, function (e) {
-            if ($(e.target).closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            var $target = $(e.target);
+            if (!dom.isContentEditable($target)) {
+                // Prevent edition of non editable parts
+                return;
+            }
+
             show_tooltip = false;
             callback();
             e.stopImmediatePropagation();
@@ -844,7 +849,11 @@ eventHandler.attach = function (oLayoutInfo, options) {
 
         oLayoutInfo.editor().on("click", selector, function (e) {
             var $target = $(e.target);
-            if ($target.closest(".note-toolbar").length) return; // prevent icon edition of top bar for default summernote
+            if (!dom.isContentEditable($target)) {
+                // Prevent edition of non editable parts
+                return;
+            }
+
             show_tooltip = true;
             setTimeout(function () {
                 if (!show_tooltip) return;
