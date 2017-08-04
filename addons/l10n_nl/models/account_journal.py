@@ -16,8 +16,4 @@ class AccountJournal(models.Model):
         tag_ids.append((4, self.env.ref('l10n_nl.account_tag_7').id))
         account_vals['tag_ids'] = tag_ids
 
-        # Link the newly created account to the right SBR code.
-        xml_id = 'l10n_nl.sbr_code_%s' % ('BLimKasKas' if type == 'cash' else 'BLimBanRba')
-        account_vals['l10n_nl_sbr'] = self.env.ref(xml_id).id
-
         return account_vals
