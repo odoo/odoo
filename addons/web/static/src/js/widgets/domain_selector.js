@@ -426,11 +426,12 @@ var DomainTree = DomainNode.extend({
  * DomainTree specialization to use to have a fully working widget.
  *
  * Known limitations:
- *     - Some operators like "child_of", "parent_of", "like", "not like",
- *       "=like", "=ilike" will come only if you use them from demo data or
- *       debug input.
- *     - Some kind of domain can not be build right now
- *       e.g ("country_id", "in", [1,2,3]) but you can insert from debug input.
+ *
+ * - Some operators like "child_of", "parent_of", "like", "not like",
+ *   "=like", "=ilike" will come only if you use them from demo data or
+ *   debug input.
+ * - Some kind of domain can not be build right now
+ *   e.g ("country_id", "in", [1,2,3]) but you can insert from debug input.
  */
 var DomainSelector = DomainTree.extend({
     template: "DomainSelector",

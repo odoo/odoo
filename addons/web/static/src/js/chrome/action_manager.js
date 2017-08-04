@@ -300,11 +300,11 @@ var ActionManager = Widget.extend({
     /**
      * Add a new action to the action manager
      *
-     * widget: typically, widgets added are openerp.web.ViewManager. The action manager
-     *      uses the stack of actions to handle the breadcrumbs.
-     * action_descr: new action description
-     * options.on_reverse_breadcrumb: will be called when breadcrumb is clicked on
-     * options.clear_breadcrumbs: boolean, if true, action stack is destroyed
+     * @param {Widget} widget typically, widgets added are openerp.web.ViewManager. The action manager uses the stack of actions to handle the breadcrumbs.
+     * @param {Object} action_descr new action description
+     * @param {Object} options
+     * @param options.on_reverse_breadcrumb will be called when breadcrumb is clicked on
+     * @param options.clear_breadcrumbs: boolean, if true, action stack is destroyed
      */
     push_action: function(widget, action_descr, options) {
         var self = this;

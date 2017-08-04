@@ -12,7 +12,7 @@ var _t = core._t;
  * Model use to fetch, format and update 'account.bank.statement' and
  * 'account.bank.statement.line' datas allowing reconciliation
  *
- * The statement internal structure:
+ * The statement internal structure::
  *
  *  {
  *      valuenow: integer
@@ -25,7 +25,7 @@ var _t = core._t;
  *      accounts: {id: code}
  *  }
  *
- * The internal structure of each line is:
+ * The internal structure of each line is::
  *
  *   {
  *      balance: {
@@ -165,13 +165,15 @@ var StatementModel = BasicModel.extend({
      * change the mode line ('inactive', 'match', 'create'), and fetch the new
      * matched lines or prepare to create a new line
      *
-     * 'match': display the matched lines, the user can select the lines to
-     *   apply there as proposition
-     * 'create': display fields and quick create button to create a new
-     *   proposition for the reconciliation
+     * ``match``
+     *   display the matched lines, the user can select the lines to apply
+     *   there as proposition
+     * ``create``
+     *   display fields and quick create button to create a new proposition
+     *   for the reconciliation
      *
      * @param {string} handle
-     * @param {string} mode
+     * @param {'inactive' | 'match' | 'create'} mode
      * @returns {Deferred}
      */
     changeMode: function (handle, mode) {
@@ -294,6 +296,7 @@ var StatementModel = BasicModel.extend({
     },
     /**
      * load data from
+     *
      * - 'account.bank.statement' fetch the line id and bank_statement_id info
      * - 'account.reconcile.model'  fetch all reconcile model (for quick add)
      * - 'account.account' fetch all account code

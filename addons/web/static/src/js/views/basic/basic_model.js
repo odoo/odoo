@@ -729,8 +729,7 @@ var BasicModel = AbstractModel.extend({
      * - it needs to check all changes,
      * - generate commands for x2many fields,
      * - call the /create or /write method according to the record status
-     * - After that, it has to reload all data, in case something changed,
-     *   server side.
+     * - After that, it has to reload all data, in case something changed, server side.
      *
      * @param {string} record_id local resource
      * @param {Object} [options]
