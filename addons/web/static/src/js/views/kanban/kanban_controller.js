@@ -142,6 +142,12 @@ var KanbanController = BasicController.extend({
         this.model.createGroup(event.data.value, this.handle).then(function () {
             return self.update({}, {reload: false});
         }).then(function () {
+            var data = self.model.get(self.handle, {raw: true});
+            event.data.ids = [];
+            _.each(data.data, function(res){
+                event.data.ids.push(res.res_id);
+            });
+            self._onResequenceColumn(event);
             self._updateButtons();
             self.renderer.quickCreateToggleFold();
         });
