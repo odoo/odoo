@@ -958,6 +958,50 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: default_get with x2many create', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges.timmy = function (obj) {
+            assert.deepEqual(
+                obj.timmy,
+                [
+                    [6, false, []],
+                    [0, false, {display_name: 'brandon is the new timmy', name: 'brandon'}]
+                ],
+                "should have properly created the x2many command list");
+            obj.int_field = obj.timmy.length;
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="timmy">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({timmy: [[0, 0, {display_name: 'brandon is the new timmy', name: 'brandon'}]]});
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('td.o_data_cell:first').text(), 'brandon is the new timmy',
+            "should have created the new record in the m2m with the correct name");
+        assert.strictEqual($('input.o_field_integer').val(), '2',
+            "should have called and executed the onchange properly");
+
+        form.destroy();
+    });
+
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
 
