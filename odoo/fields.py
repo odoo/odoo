@@ -980,6 +980,7 @@ class Field(object):
                 recs = record._in_cache_without(self)
                 if len(recs) > PREFETCH_MAX:
                     recs = recs[:PREFETCH_MAX] | record
+                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
@@ -2068,7 +2069,7 @@ class _RelationalMulti(_Relational):
             accessible = lambda target: target.id in target_ids
             # filter values to keep the accessible records only
             for record in records:
-                record[self.name] = record[self.name].filtered(accessible)
+                record[self.name] = record[self.name].filtered(accessible).with_prefetch(record._prefetch)
 
     def _setup_regular_base(self, model):
         super(_RelationalMulti, self)._setup_regular_base(model)
