@@ -4,6 +4,7 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
+var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
@@ -560,7 +561,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderSelector: function (tag) {
-        var $content = $('<div class="o_checkbox"><input type="checkbox"><span/></div>');
+        var $content = dom.renderCheckbox();
         return $('<' + tag + ' width="1">')
                     .addClass('o_list_record_selector')
                     .append($content);
