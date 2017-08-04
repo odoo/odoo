@@ -17,11 +17,23 @@
             </field>
     </record>
 
+    <record id="timesheet_view_pivot_revenue" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.revenue</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Timesheet">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="timesheet_revenue" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
     <!--
         Reporting
     -->
     <record id="timesheet_action_billing_report" model="ir.actions.act_window">
-        <field name="name">Billing Rate Analysis</field>
+        <field name="name">By Billing Rate</field>
         <field name="res_model">account.analytic.line</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('project_id', '!=', False)]</field>
@@ -44,9 +56,48 @@
     </record>
 
     <menuitem id="menu_timesheet_billing_analysis"
-            parent="hr_timesheet.menu_timesheets_reports"
+            parent="hr_timesheet.menu_timesheets_reports_timesheet"
             action="timesheet_action_billing_report"
-            name="Billing Rate Analysis"/>
+            name="By Billing Rate"
+            sequence="40"/>
+
+    <record id="timesheet_action_report_cost_revenue" model="ir.actions.act_window">
+        <field name="name">Costs and Revenues</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="domain">[('project_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_groupby_project':1,
+            'search_default_groupby_employee':2,
+        }</field>
+    </record>
+
+    <record id="timesheet_action_report_cost_revenue_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="timesheet_view_pivot_revenue"/>
+        <field name="act_window_id" ref="timesheet_action_report_cost_revenue"/>
+    </record>
+
+    <record id="timesheet_action_report_cost_revenue_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="act_window_id" ref="timesheet_action_report_cost_revenue"/>
+    </record>
+
+    <record id="timesheet_action_report_cost_revenue_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="15"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+        <field name="act_window_id" ref="timesheet_action_report_cost_revenue"/>
+    </record>
+
+    <menuitem id="menu_timesheet_report_cost_revenue"
+            parent="hr_timesheet.menu_timesheets_reports"
+            action="timesheet_action_report_cost_revenue"
+            name="Costs and Revenues"
+            sequence="50"/>
 
     <!--
         Plan
