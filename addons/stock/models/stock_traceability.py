@@ -90,6 +90,7 @@ class MrpStockReport(models.TransientModel):
                 quant_ids = self.env['stock.quant'].search([
                     ('lot_id', '=', context.get('active_id')),
                     ('quantity', '<', 0),
+                    ('location_id.usage', '=', 'internal'),
                 ])
                 res += self._lines(line_id, model_id=model_id, model='stock.quant', level=level,
                                    parent_quant=parent_quant, stream=stream, obj_ids=quant_ids)
@@ -104,6 +105,7 @@ class MrpStockReport(models.TransientModel):
                 quant_ids = self.env['stock.quant'].search([
                     ('lot_id', '=', context.get('active_id')),
                     ('quantity', '>', 0),
+                    ('location_id.usage', '=', 'internal'),
                 ])
                 res += self._lines(line_id, model_id=model_id, model='stock.quant', level=level,
                                    parent_quant=parent_quant, stream=stream, obj_ids=quant_ids)

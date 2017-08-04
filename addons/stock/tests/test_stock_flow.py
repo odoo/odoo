@@ -1415,9 +1415,9 @@ class TestStockFlow(TestStockCommon):
         # Check picking_in_package is in picking_pack_package
         self.assertEqual(picking_in_package.id, picking_pack_package.id, 'The package created in the picking in is not in the one created in picking pack')
         self.assertEqual(picking_pack_package.id, picking_out_package.id, 'The package created in the picking in is not in the one created in picking pack')
-        # Check that we haven't quant in customer location.
-        quant = self.StockQuantObj.search([('location_id', '=', self.customer_location)])
-        self.assertEqual(len(quant), 0, 'There should be no package for customer location')
+        # Check that we have one quant in customer location.
+        quant = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.customer_location)])
+        self.assertEqual(len(quant), 1, 'There should be one quant with package for customer location')
         # Check that the  parent package of the quant is the picking_in_package
 
     def test_50_create_in_out_with_product_pack_lines(self):
@@ -1471,9 +1471,11 @@ class TestStockFlow(TestStockCommon):
         packout2.package_id = pack2
         packout2.qty_done = 1
         picking_out.action_done()
-        # Check there are no negative quants
+        # Should be only 1 negative quant in supplier location
         neg_quants = self.env['stock.quant'].search([('product_id', '=', self.productE.id), ('quantity', '<', 0.0)])
-        self.assertEqual(len(neg_quants), 0, 'There are negative quants!')
+        self.assertEqual(len(neg_quants), 1, 'There should be 1 negative quants for supplier!')
+        self.assertEqual(neg_quants.location_id.id, self.supplier_location, 'There shoud be 1 negative quants for supplier!')
+
         quants = self.env['stock.quant']._gather(self.productE, self.env['stock.location'].browse(self.stock_location))
         self.assertEqual(len(quants), 2, 'We should have exactly 2 quants in the end')
 
@@ -1538,9 +1540,10 @@ class TestStockFlow(TestStockCommon):
             'product_uom_id': self.productE.uom_id.id,
         })
         picking_out.action_done()
-        # Check there are no negative quants
+        # Should be only 1 negative quant in supplier location
         neg_quants = self.env['stock.quant'].search([('product_id', '=', self.productE.id), ('quantity', '<', 0.0)])
-        self.assertEqual(len(neg_quants), 0, 'There are negative quants!')
+        self.assertEqual(len(neg_quants), 1, 'There should be 1 negative quants for supplier!')
+        self.assertEqual(neg_quants.location_id.id, self.supplier_location, 'There shoud be 1 negative quants for supplier!')
         # We should also make sure that when matching stock moves with pack operations, it takes the correct
         quants = self.env['stock.quant']._gather(self.productE, self.env['stock.location'].browse(self.stock_location))
         self.assertEqual(len(quants), 0, 'We should have no quants in the end')

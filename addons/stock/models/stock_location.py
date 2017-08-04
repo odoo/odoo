@@ -117,9 +117,9 @@ class Location(models.Model):
             ('view_location_id.parent_left', '<=', self.parent_left),
             ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
 
-    def should_impact_quants(self):
+    def should_bypass_reservation(self):
         self.ensure_one()
-        return False if self.usage in ('supplier', 'inventory', 'production', 'customer') else True
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
 
 class Route(models.Model):
