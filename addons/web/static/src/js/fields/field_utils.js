@@ -16,6 +16,7 @@ odoo.define('web.field_utils', function (require) {
  */
 
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -27,9 +28,9 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
- * @todo Really? it returns a jqueryElement...  We should try to move this to a
- * module with dom helpers functions, such as web.dom, maybe. And replace this
- * with a function that returns a string so we can get rid of the forceString.
+ * @todo Really? it returns a jQuery element...  We should try to avoid this and
+ * let DOM utility functions handle this directly. And replace this with a
+ * function that returns a string so we can get rid of the forceString.
  *
  * @param {boolean} value
  * @param {Object} [field]
@@ -37,22 +38,18 @@ var _t = core._t;
  * @param {Object} [options] additional options
  * @param {boolean} [options.forceString=false] if true, returns a string
 *    representation of the boolean rather than a jQueryElement
- * @returns {jQueryElement | string}
+ * @returns {jQuery|string}
  */
 function formatBoolean(value, field, options) {
     if (options && options.forceString) {
         return value ? _t('True') : _t('False');
     }
-    var $input = $('<input/>', {
-        type: 'checkbox',
-    }).prop({
-        checked: value,
-        disabled: true,
+    return dom.renderCheckbox({
+        prop: {
+            checked: value,
+            disabled: true,
+        },
     });
-    var $div = $('<div/>', {
-        class: 'o_checkbox',
-    });
-    return $div.append($input, '<span/>');
 }
 
 /**
@@ -437,8 +434,8 @@ function parseFloat(value) {
 
 /**
  * Parse a String containing currency symbol and returns amount
- * 
- * @param {string} value 
+ *
+ * @param {string} value
  *                The string to be parsed
  *                We assume that a monetary is always a pair (symbol, amount) separated
  *                by a non breaking space. A simple float can also be accepted as value

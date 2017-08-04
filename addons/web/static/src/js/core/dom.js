@@ -201,6 +201,35 @@ return {
         }
         return $button;
     },
+    /**
+     * Renders a checkbox with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple checkbox.
+     *
+     * @param {Object} [options]
+     * @param {Object} [options.prop]
+     *        Allows to set the input properties (disabled and checked states).
+     * @param {string} [options.text]
+     *        The checkbox's associated text. If none is given then a simple
+     *        checkbox without label structure is rendered.
+     * @returns {jQuery}
+     */
+    renderCheckbox: function (options) {
+        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        if (options && options.prop) {
+            $container.children('input').prop(options.prop);
+        }
+        if (options && options.text) {
+            $container = $('<label/>').append(
+                $container,
+                $('<span/>', {
+                    class: 'ml8',
+                    text: options.text,
+                })
+            );
+        }
+        return $container;
+    },
 };
 
 });
