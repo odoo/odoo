@@ -415,8 +415,11 @@ var loadXML = (function () {
             if (loadingsData.length) {
                 // There is something to load, load it, resolve the associated
                 // deferred then start loading the next one
-                var loadingData = loadingsData.shift();
+                var loadingData = loadingsData[0];
                 loadingData.qweb.add_template(loadingData.url, function () {
+                    // Remove from array only now so that multiple calls to
+                    // loadXML with the same URL returns the right deferred
+                    loadingsData.shift();
                     loadingData.def.resolve();
                     _load();
                 });
