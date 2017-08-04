@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shopping Cart Lines -->
+    <template id="website_sale_stock_modal" inherit_id="website_sale_options.modal" name="Stocks Modal">
+        <xpath expr="//input[@type='text']" position="replace">
+          <t t-if="'inventory_availability' in product and product.inventory_availability in ['always', 'threshold']">
+            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" value="1" t-att-data-max="product.sudo().virtual_available - product.cart_qty" />
+          </t>
+          <t t-else="">
+            <input type="text" class="js_quantity form-control quantity" data-min="1" name="add_qty" value="1"/>
+          </t>
+        </xpath>
+    </template>
+
+</odoo>
