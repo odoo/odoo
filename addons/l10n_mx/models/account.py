@@ -48,7 +48,8 @@ class AccountAccount(models.Model):
     def _onchange_code(self):
         if self.company_id.country_id.id == self.env.ref('base.mx').id and self.code:
             tags = self.mx_search_tags(self.code)
-            self.tag_ids = tags
+            self.tag_ids = self.tag_ids.filtered(
+                lambda r: r.color != 4) | tags
 
 
 class AccountAccountTag(models.Model):
