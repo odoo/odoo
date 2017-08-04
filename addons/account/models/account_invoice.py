@@ -1203,11 +1203,33 @@ class AccountInvoice(models.Model):
     def action_cancel(self):
         moves = self.env['account.move']
         for inv in self:
+            date_invoice = inv.date_invoice
             if inv.move_id:
                 moves += inv.move_id
             if inv.payment_move_line_ids:
                 raise UserError(_('You cannot cancel an invoice which is partially paid. You need to unreconcile related payment entries first.'))
 
+            # If the invoice that is being cancelled having got the last sequence number of some year then that sequence number should be reused
+            # when same invoice or a new invoice of the same year is created and validated.
+            if date_invoice:
+                invoice_year = fields.Date.from_string(date_invoice).strftime('%Y')
+                date_from = '{}-01-01'.format(invoice_year)
+                date_to = '{}-12-31'.format(invoice_year)
+                last_invoice_of_the_year = self.search([
+                    ('type', '=', inv.type), ('move_name', '!=', False),
+                    ('date_invoice', '>=', date_from), ('date_invoice', '<=', date_to)
+                ], order="move_name desc", limit=1)
+                if last_invoice_of_the_year == inv:
+                    if inv.type in ('in_refund', 'out_refund') and inv.journal_id.refund_sequence:
+                        sequence = inv.journal_id.refund_sequence_id
+                    else:
+                        sequence = inv.journal_id.sequence_id
+                    seq_range = sequence.date_range_ids.filtered(
+                        lambda seq: seq.date_from <= date_invoice and seq.date_to >= date_invoice
+                    )
+                    inv.move_name = False
+                    if seq_range.number_next > 1:
+                        seq_range.number_next = seq_range.number_next - 1
         # First, set the invoices as cancelled and detach the move ids
         self.write({'state': 'cancel', 'move_id': False})
         if moves:

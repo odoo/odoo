@@ -528,7 +528,7 @@ class AccountJournal(models.Model):
     def _get_sequence_prefix(self, code, refund=False):
         prefix = code.upper()
         if refund:
-            prefix = 'R' + prefix
+            prefix = prefix + '-CN'
         return prefix + '/%(range_year)s/'
 
     @api.model
@@ -727,8 +727,14 @@ class AccountTax(models.Model):
     def _default_tax_group(self):
         return self.env['account.tax.group'].search([], limit=1)
 
+    @api.model
+    def _default_type_tax_use(self):
+        if not self._context.get('default_type_tax_use'):
+            return 'sale'
+
     name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True,
+        default=_default_type_tax_use,
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
     tax_adjustment = fields.Boolean(help='Set this field to true if this tax can be used in the tax adjustment wizard, used to manually fill some data in the tax declaration')
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, oldname='type',
@@ -769,6 +775,15 @@ class AccountTax(models.Model):
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
     ]
+
+    @api.multi
+    @api.depends('name', 'type_tax_use')
+    def name_get(self):
+        type_tax_use_data = dict(self._fields['type_tax_use']._description_selection(self.env))
+        return [(
+                tax.id, type_tax_use_data[tax.type_tax_use] + ' - ' + tax.name
+            ) for tax in self
+        ]
 
     @api.multi
     def unlink(self):

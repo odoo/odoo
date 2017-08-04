@@ -28,7 +28,12 @@
         <div t-if="widget._initialState.valuemax &gt; widget._initialState.defaultDisplayQty">
             <button class="btn btn-default js_load_more">Load more</button>
         </div>
-        <div class="pull-right text-muted">Tip: Hit CTRL-Enter to reconcile all the balanced items in the sheet.</div>
+        <div class="pull-right text-muted"><b>Tips:</b>
+            <ul>
+                <li>Hit CTRL-Enter to reconcile all the balanced items in the sheet.</li>
+                <li>The blue lines represent payments to reconcile.</li>
+            </ul>
+        </div>
     </div>
     <div t-else="" class="o_view_nocontent">
         <p>Nothing to do!</p>

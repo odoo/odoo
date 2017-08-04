@@ -298,8 +298,7 @@
                                                    attrs="{'readonly': 1}" groups="base.group_no_one"/>
                                         </div>
                                         <field name="refund_sequence"
-                                               attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"
-                                               groups="base.group_no_one"/>
+                                               attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <label for="refund_sequence_number_next"
                                                attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}"/>
                                         <div attrs="{'invisible': ['|',('type', 'not in', ['sale', 'purchase']), ('refund_sequence', '!=', True)]}">
