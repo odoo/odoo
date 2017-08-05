@@ -33,7 +33,7 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name', required=True),
+        'name': fields.char('Name', required=True, translate=True),
         'type': fields.char('Action Type', required=True),
         'usage': fields.char('Action Usage'),
         'xml_id': fields.function(osv.osv.get_external_id, type='char', string="External ID"),
