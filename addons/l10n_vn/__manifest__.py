@@ -22,7 +22,7 @@ The folling has been done and integrated
 * New account tags data has been added to use in the similar way of parent view accounts before Odoo 9. For example, accountant now can group all accounts 111xxx using account the tag 111.
 * Accounts now link to the tags having corresponding code. E.g. account 1111 and 1112 .... 111x have the same account tag of 111.
 * According to Vietnam law, sale and purchase journals must have a dedicated sequence for any refund.
-* Use English instead of Vietnamese to bring ease for worldwide developers and foreigners doing business in Vietnam. Translations could be done later with support of the l10n_multilang
+* Use English instead of Vietnamese to bring ease for worldwide developers and foreigners doing business in Vietnam. Translations for Vietnamese will be loaded upon loading Vietnamese and then installation of l10n_multilang module
 
 Known issues
 -------------
