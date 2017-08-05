@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-06-07 17:13+0000\n"
+"PO-Revision-Date: 2017-08-04 01:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-9/language/mn/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgid ""
 " * The 'Pro-forma' status is used when the voucher does not have a voucher number.\n"
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
-msgstr ""
+msgstr " * 'Ноорог' төлөв нь магадлагдаагүй шинэ ваучерийг оруулсан дараа хэрэглэгдэнэ.\n* 'Урьдчилсан' төлөв нь ваучерт дугаар байхгүй үед хэрэглэгдэнэ.\n* 'Илгээгдсэн' төлөв нь ваучерийг үүсгэж илгээхэд хэрэглэгдэх бөгөөд ваучерийн дугаар олгогдож санхүүгийн бичилт хийгдэнэ\n* 'Цуцлагдсан' төлөв нь ваучерийг цуцласан тохиолдолд хэрэглэгдэнэ."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -102,12 +102,12 @@ msgstr "Нэгэнт нээчихсэн эсвэл төлөгдчихсөн ва
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Борлуулалтын баримт үүсгэх бол дарна уу."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Худалдан авалтын баримт бүртгэх бол дарна уу."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -212,7 +212,7 @@ msgstr "Дагагчид (Харилцагчид)"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "Ваучерыг харуулах үед энэ мөрийн дарааллыг өгдөг."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -241,7 +241,7 @@ msgstr "Хэрэв сонгосон бол, шинэ зурвасуудад ан
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_tax_correction
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
-msgstr ""
+msgstr "Татварт дүнг мухарлах асуудал гарвал энэ талбарыг ашиглан засаарай"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -355,7 +355,7 @@ msgstr "Шууд төлөх"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Дараа төлөх"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -495,12 +495,12 @@ msgstr "Татвар"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Татварын дүн"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Татвар засах"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -515,7 +515,7 @@ msgstr "Сонгосон барааны орлогын эсвэл зарлагы
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "Энэ баримтын түншийн код."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -569,7 +569,7 @@ msgstr "Нийлүүлэгч"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Нийлүүлэгчийн ваучер"
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:28
@@ -623,14 +623,14 @@ msgstr "Вебсайтын харилцааны түүх"
 msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
-msgstr ""
+msgstr "Худалдан авалтын баримтыг батласны дараа холбоотой\n нийлүүлэгчийн төлбөрийг бүртгэх боломжтой."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
-msgstr ""
+msgstr "Борлуулалтын баримтыг батласны дараа холбоотой захиалагчийн \nтөлбөрийг бүртгэх боломжтой."
 
 #. module: account_voucher
 #: code:addons/account_voucher/account_voucher.py:345
