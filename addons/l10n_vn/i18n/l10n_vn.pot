@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 11.0alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:19+0000\n"
-"PO-Revision-Date: 2015-09-18 08:19+0000\n"
+"POT-Creation-Date: 2017-08-05 10:35+0000\n"
+"PO-Revision-Date: 2017-08-05 10:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,17 +16,211 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_vn
-#: model:ir.actions.client,name:l10n_vn.action_client_l10n_vn_menu
-msgid "Open Account Dashboard Menu"
+#: model:ir.model,name:l10n_vn.model_account_account_tag
+msgid "Account Tag"
+msgstr ""
+
+#. module: l10n_vn
+#: model:ir.model.fields,field_description:l10n_vn.field_account_account_tag_code
+msgid "Code"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_fixed_assets_purchase_vat0
+msgid "Deductible Fixed Assets VAT 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_fixed_assets_purchase_vat10
+msgid "Deductible Fixed Assets VAT 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_fixed_assets_purchase_vat5
+msgid "Deductible Fixed Assets VAT 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_purchase_vat0
+msgid "Deductible VAT 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_purchase_vat10
+msgid "Deductible VAT 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_purchase_vat5
+msgid "Deductible VAT 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_export_0
+#: model:account.tax,name:l10n_vn.1_tax_foreign_export_0
+msgid "Export tax 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_export_10
+#: model:account.tax,name:l10n_vn.1_tax_foreign_export_10
+msgid "Export tax 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_export_5
+#: model:account.tax,name:l10n_vn.1_tax_foreign_export_5
+msgid "Export tax 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_importing_vat0
+msgid "Import VAT 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_importing_vat10
+msgid "Import VAT 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_importing_vat5
+msgid "Import VAT 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_import_0
+#: model:account.tax,name:l10n_vn.1_tax_foreign_import_0
+msgid "Import tax 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_import_10
+#: model:account.tax,name:l10n_vn.1_tax_foreign_import_10
+msgid "Import tax 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_foreign_import_5
+#: model:account.tax,name:l10n_vn.1_tax_foreign_import_5
+msgid "Import tax 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_sale_vat0
+msgid "Output VAT 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_sale_vat10
+msgid "Output VAT 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_sale_vat5
+msgid "Output VAT 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_purchase_vat_exemption
+msgid "Purchase VAT Exemption"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_sale_vat_exemption
+msgid "Sales VAT Exemption"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_purchase_special_consumption_10
+#: model:account.tax,description:l10n_vn.1_tax_sale_special_consumption_10
+#: model:account.tax,name:l10n_vn.1_tax_purchase_special_consumption_10
+#: model:account.tax,name:l10n_vn.1_tax_sale_special_consumption_10
+msgid "Special consumption tax 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:ir.model,name:l10n_vn.model_account_chart_template
+msgid "Templates for Account Chart"
+msgstr ""
+
+#. module: l10n_vn
+#: model:ir.model.fields,help:l10n_vn.field_account_account_tag_code
+msgid "The unique code of the tag. For example, 111 for cash, 112 for cash in banks, etc."
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_importing_vat0
+msgid "VAT 0% on imported goods"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_importing_vat10
+msgid "VAT 10% on imported goods"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_importing_vat5
+msgid "VAT 5% on imported goods"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,name:l10n_vn.1_tax_purchase_vat_exemption
+#: model:account.tax,name:l10n_vn.1_tax_sale_vat_exemption
+msgid "VAT Exemption"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_fixed_assets_purchase_vat0
+msgid "VAT on purchase of fixed assets 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_fixed_assets_purchase_vat10
+msgid "VAT on purchase of fixed assets 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_fixed_assets_purchase_vat5
+msgid "VAT on purchase of fixed assets 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_purchase_vat0
+msgid "VAT on purchase of goods and services 0%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_purchase_vat10
+msgid "VAT on purchase of goods and services 10%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_purchase_vat5
+msgid "VAT on purchase of goods and services 5%"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_sale_vat0
+msgid "Value Added Tax 0% on sold goods to the State Budget\n"
+"		"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_sale_vat10
+msgid "Value Added Tax 10% on sold goods to the State\n"
+"			Budget\n"
+"		"
+msgstr ""
+
+#. module: l10n_vn
+#: model:account.tax,description:l10n_vn.1_tax_sale_vat5
+msgid "Value Added Tax 5% on sold goods to the State Budget\n"
+"		"
 msgstr ""
 
 #. module: l10n_vn
 #: model:ir.ui.menu,name:l10n_vn.account_reports_vn_statements_menu
-msgid "Vietnamese Statements"
-msgstr ""
-
-#. module: l10n_vn
-#: model:account.account.type,name:l10n_vn.account_type_other
-msgid "X. TÀI KHOẢN NGOÀI BẢNG"
+msgid "Vietnam"
 msgstr ""
 
