@@ -29,6 +29,9 @@ msgid ""
 "* The 'Waiting Approval' status is used to confirm the timesheet by user. \n"
 "* The 'Approved' status is used when the users timesheet is accepted by his/her senior."
 msgstr ""
+" * Ажилчин батлаагүй шинэ цагийн хуудас оруулхад 'Нээлттэй' төлөвтэй байна.                 \n"
+"* Хэрэглэгч цагийн хуудсыг батлахад 'Зөвшөөрхийг хүлээж буй' төлөвтэй байна.                 \n"
+"* Удирдагч цагийн хуудсыг зөвшөөрхөд 'Зөвшөөрсөн' төлөвтэй болно."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -62,7 +65,7 @@ msgstr "Зөвшөөрсөн"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:140
 #, python-format
 msgid "Cannot approve a non-submitted timesheet."
-msgstr ""
+msgstr "Илгээгээгүй цагийн хуудсыг зөвшөөрөх боломжгүй."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -145,7 +148,7 @@ msgstr "Ажилчид"
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_config_settings_form_inherit_hr_timesheet_sheet
 msgid "Extra features"
-msgstr ""
+msgstr "Нэмэлт боломжууд"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.view_hr_timesheet_sheet_filter
@@ -228,7 +231,7 @@ msgstr "Өөрийн цагийн хуудас"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_my_timesheets
 msgid "My Timesheets"
-msgstr ""
+msgstr "Миний Цагийн хуудсууд"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -238,7 +241,7 @@ msgstr "Шинэ"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 msgid "New timesheet to approve."
-msgstr ""
+msgstr "Зөвшөөрөх шинэ цагийн хуудас."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_timesheet_sheet_sheet_name
@@ -249,7 +252,7 @@ msgstr "Тэмдэглэл"
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:138
 #, python-format
 msgid "Only an HR Officer or Manager can approve timesheets."
-msgstr ""
+msgstr "Зөвхөн ХН Дарга эсвэл Менежер цагийн хуудсыг зөвшөөрөх эрхтэй."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/hr_timesheet_sheet.py:123
@@ -257,6 +260,8 @@ msgstr ""
 msgid ""
 "Only an HR Officer or Manager can refuse timesheets or reset them to draft."
 msgstr ""
+"Зөвхөн ХН Дарга эсвэл Менежер цагийн хуудсыг татгалзах эсвэл ноорог болгох "
+"эрхтэй."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -346,12 +351,12 @@ msgstr "Цагийн хуудсын мөчлөг"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_module_project_timesheet_synchro
 msgid "Timesheet app for Chrome/Android/iOS"
-msgstr ""
+msgstr "Chrome/Android/iOS -д зориулсан Цагийн хуудсын апп"
 
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_approved
 msgid "Timesheet approved"
-msgstr ""
+msgstr "Цагийн хуудсыг зөвшөөрсөн"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.view,arch_db:hr_timesheet_sheet.hr_timesheet_account_form
@@ -372,12 +377,12 @@ msgstr "Цаг бүртгэлийн хүрээ"
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_project_config_settings_timesheet_range
 msgid "Timesheet range *"
-msgstr ""
+msgstr "Цагийн хуудсын мөчлөг *"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model.fields,field_description:hr_timesheet_sheet.field_hr_department_timesheet_to_approve_count
 msgid "Timesheet to Approve"
-msgstr ""
+msgstr "Зөвшөөрөх Цагийн хуудас"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
@@ -392,7 +397,7 @@ msgstr "Цагийн Хуваарь"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,name:hr_timesheet_sheet.mt_department_timesheet_approved
 msgid "Timesheets Approved"
-msgstr ""
+msgstr "Зөвшөөрсөн Цагийн хуудсууд"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -406,6 +411,8 @@ msgid ""
 "Timesheets can also be invoiced to customers, depending on the\n"
 "                configuration of each project's related contract."
 msgstr ""
+"Төсөл бүрийн холбоотой гэрээний тохиргооноос хамааран цагийн \n"
+"хуудсыг мөн захиалагч руу нэхэмжлэх боломжтой."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -487,6 +494,8 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
 msgstr ""
+"Давхацсан 2 цагийн хуудастай байж болохгүй!\n"
+"'Өөрийн одоогийн цагийн хуудас' менюг ашигласнаар энэ асуудлаас зайлсхийнэ."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/models/account_analytic_line.py:60
@@ -502,13 +511,15 @@ msgid ""
 "                of the week. Once the timesheet is confirmed, it should be\n"
 "                validated by a manager."
 msgstr ""
+"Та цагийн хуудсыг өдөр бүр хөтлөж, долоо хоногийн төгсгөлд \n"
+"хянаад илгээх ёстой. Илгээсэн цагийн хуудсыг менежер шалгана."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:52
 #, python-format
 msgid "You will be able to register your working hours and activities."
-msgstr ""
+msgstr "Та ажилласан цаг, хийсэн ажлаа бүртгэх боломжтой болно."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -518,7 +529,7 @@ msgstr "Одоогийн нээлттэй цаг бүртгэл"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_my_timesheets
 msgid "new timesheet."
-msgstr ""
+msgstr "шинэ цагийн хуудас."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_project_config_settings
@@ -533,4 +544,4 @@ msgstr "дараах руу"
 #. module: hr_timesheet_sheet
 #: model:mail.message.subtype,description:hr_timesheet_sheet.mt_timesheet_confirmed
 msgid "waiting approval"
-msgstr ""
+msgstr "зөвшөөрөл хүлээж буй"
