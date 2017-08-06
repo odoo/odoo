@@ -14,13 +14,14 @@
 # Nurettin Emre Ozbakir <emre.ozbakir@gamareklam.com>, 2017
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# İlknur Püskül <ilknurpuskull@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-15 09:49+0000\n"
 "PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
+"Last-Translator: İlknur Püskül <ilknurpuskull@gmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +54,7 @@ msgstr "Amortisman kalemleri sayısı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_nbr
 msgid "# of Installment Lines"
-msgstr ""
+msgstr "Taksitli Hatlar"
 
 #. module: account_asset
 #: model:ir.actions.server,name:account_asset.account_asset_cron_ir_actions_server
@@ -76,6 +77,7 @@ msgstr "Hesap Girişi"
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_id
 msgid "Account used in the depreciation entries, to decrease the asset value."
 msgstr ""
+"Amortisman kayıtlarında kullanılan hesap, varlık değerini azaltmak içindir."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_depreciation_expense_id
@@ -83,12 +85,16 @@ msgid ""
 "Account used in the periodical entries, to record a part of the asset as "
 "expense."
 msgstr ""
+"Periyodik kayıtlarda kullanılan hesap, varlığın bir kısmını gider olarak "
+"kaydetmektir."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_account_asset_id
 msgid ""
 "Account used to record the purchase of the asset at its original price."
 msgstr ""
+"Varlığın orijinal fiyata satın alınmasını kaydetmek için kullanılan "
+"hesaptır."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_active
@@ -115,7 +121,7 @@ msgstr "Amortisman Satırları Tutarı"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_installment_value
 msgid "Amount of Installment Lines"
-msgstr ""
+msgstr "Taksitlendirme Hattı Miktarı"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_category_account_analytic_id
@@ -207,6 +213,8 @@ msgstr "Demirbaş amortisman satırı"
 #, python-format
 msgid "Asset sold or disposed. Accounting entry awaiting for validation."
 msgstr ""
+"Varlık satıldı veya elden çıkarıldı. Muhasebe girişi doğrulama için "
+"bekleniyor."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_asset
@@ -239,7 +247,7 @@ msgstr "Demirbaş Amortisman Satırları"
 #. module: account_asset
 #: model:ir.ui.menu,name:account_asset.menu_finance_config_assets
 msgid "Assets and Revenues"
-msgstr ""
+msgstr "Varlıklar ve Gelirler"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_search
@@ -297,6 +305,8 @@ msgstr ""
 #: model:ir.model.fields,help:account_asset.field_account_asset_category_group_entries
 msgid "Check this if you want to group the generated entries by categories."
 msgstr ""
+"Oluşturulan girdileri kategorilere göre gruplamak istiyorsanız bunu "
+"işaretleyiniz."
 
 #. module: account_asset
 #: model:ir.model.fields,help:account_asset.field_account_asset_asset_method
@@ -803,7 +813,7 @@ msgstr "Bir dönemdeki ay sayısı"
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "One Entry Every"
-msgstr ""
+msgstr "Her Giriş Tek Bir Giriş"
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:593
@@ -989,6 +999,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
+"Bu sihirbaz, seçilen ay için taksitlendirme / amortisman satırları gönderir.<br/>\n"
+"Bu, bu varlık / gelir tanıma döneminde de ilgili tüm taksit hatları için günlük girdileri oluşturacaktır."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time
@@ -1000,7 +1012,7 @@ msgstr "Yöntem"
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_asset_form
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_form
 msgid "Time Method Based On"
-msgstr ""
+msgstr "Zaman Metodu Açık"
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_type
@@ -1048,7 +1060,7 @@ msgstr "Yıl"
 #: code:addons/account_asset/models/account_asset.py:111
 #, python-format
 msgid "You cannot delete a document is in %s state."
-msgstr ""
+msgstr "Bir belgeyi silemeceğinizi%sbelirtmektedir."
 
 #. module: account_asset
 #: code:addons/account_asset/models/account_asset.py:114
@@ -1066,7 +1078,7 @@ msgstr "İşlenmiş amortisman kalemleri içeren bir varlığı silemezsiniz."
 #: code:addons/account_asset/models/account_asset.py:604
 #, python-format
 msgid "You cannot delete posted installment lines."
-msgstr ""
+msgstr "Gönderilen taksit satırlarını silemezsiniz."
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard

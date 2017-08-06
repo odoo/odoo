@@ -9,8 +9,9 @@
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# lap.odoo <lap@odoo.com>, 2016
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Christophe Dubuit <cdubuit@yahoo.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
@@ -61,7 +62,7 @@ msgstr ""
 #. module: stock_account
 #: selection:wizard.valuation.history,compute_at_date:0
 msgid "At a Specific Date"
-msgstr ""
+msgstr "À une date spécifique"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -126,6 +127,8 @@ msgstr ""
 msgid ""
 "Choose to analyze the current inventory or from a specific date in the past."
 msgstr ""
+"Choisissez d'analyser votre inventaire actuel or à une date spécifique dans "
+"le passé."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_wizard_valuation_history
@@ -199,7 +202,7 @@ msgstr "Créé le"
 #. module: stock_account
 #: selection:wizard.valuation.history,compute_at_date:0
 msgid "Current Inventory"
-msgstr ""
+msgstr "Inventaire actuel"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
@@ -244,6 +247,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
+"Si la valorisation perpétuelle est activée pour un produit, le système "
+"créera automatiquement des entrées comptables correspondant aux mouvements "
+"de stock, avec un prix de produit conforme à la méthode de valorisation. La "
+"variation du compte de stock établie sur la catégorie de produit "
+"représentera la valeur actuelle des stocks, le compte d'entrée et de sortie "
+"en stock présenteront la contrepartie des mouvements."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
@@ -256,12 +265,12 @@ msgid ""
 "value, and the stock input and stock output account will hold the "
 "counterpart moves for incoming and outgoing products."
 msgstr ""
-"Si l'évaluation permanente est activée pour un produit, le système créera "
-"automatiquement les entrées de journal correspondant aux mouvements de "
-"stock, avec un prix de produit conforme à la méthode des coûts. La variation"
-" du compte de stock établie sur la catégorie de produit représentera la "
-"valeur actuelle des stocks, le compte d'entrée et de sortie en stock "
-"présenteront la contrepartie des mouvements."
+"Si la valorisation perpétuelle est activée pour un produit, le système "
+"créera automatiquement des entrées comptables correspondant aux mouvements "
+"de stock, avec un prix de produit conforme à la méthode de valorisation. La "
+"variation du compte de stock établie sur la catégorie de produit "
+"représentera la valeur actuelle des stocks, le compte d'entrée et de sortie "
+"en stock présenteront la contrepartie des mouvements."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_stock_config_settings_inherit
@@ -289,7 +298,7 @@ msgstr "Valorisation de l'inventaire"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_wizard_stock_valuation_history
 msgid "Inventory Valuation Report"
-msgstr ""
+msgstr "Rapport de valorisation d'inventaire"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_history_inventory_value
@@ -486,6 +495,9 @@ msgid ""
 "                Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "                Real Price: The cost price displayed is the price of the last outgoing product (will be use in case of inventory loss for example)."
 msgstr ""
+"Prix Standard: Le coût est mis à jour manuellement à la fin d'une période spécifique (en général une fois par an).\n"
+"                Prix Moyen: Le coût est recalculé à chaque entrée en stock et utilisé pour la valorisation du produit.\n"
+"                Prix réel: Le coût affiché est le coût du dernier produit sorti de stock (il sera utilisé dans le cas d'une perte d'inventaire par exemple). "
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -494,6 +506,11 @@ msgid ""
 "Average Price: The cost price is recomputed at each incoming shipment and used for the product valuation.\n"
 "Real Price: The cost price displayed is the price of the last outgoing product (will be used in case of inventory loss for example)."
 msgstr ""
+"Prix Standard: Le coût est mis à jour manuellement à la fin d'une période "
+"spécifique (en général une fois par an). Prix Moyen: Le coût est recalculé à"
+" chaque entrée en stock et utilisé pour la valorisation du produit. Prix "
+"réel: Le coût affiché est le coût du dernier produit sorti de stock (il sera"
+" utilisé dans le cas d'une perte d'inventaire par exemple). "
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_stock_history
