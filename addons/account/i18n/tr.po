@@ -5,13 +5,14 @@
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# İlknur Püskül <ilknurpuskull@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-26 08:44+0000\n"
 "PO-Revision-Date: 2017-05-26 08:44+0000\n"
-"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
+"Last-Translator: İlknur Püskül <ilknurpuskull@gmail.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5745,12 +5746,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr ""
+msgstr "Kanban gösterge tablosu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr ""
+msgstr "Kanban panosu grafiği"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6266,6 +6267,9 @@ msgid ""
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
 msgstr ""
+"Para toplama için ödeme araçlarıdır. Odoo modülleri, çeşitli ödeme işlemleri"
+" yapma olanakları sunar, ancak ödemeleri yazılımın dışında yönetmek için "
+"daima 'Manuel' ödeme yöntemini kullanabilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_outbound_payment_method_ids
@@ -6274,6 +6278,9 @@ msgid ""
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
 msgstr ""
+"Para göndermek için ödeme yöntemleridir. Odoo modülleri, çeşitli ödeme "
+"işlemleri yapma olanakları, ancak ödemeleri yazılımın dışında yönetmek için "
+"daima 'Manuel' ödeme yöntemini kullanabilirsiniz."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_abstract_payment_communication
@@ -7936,7 +7943,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_register_payments
 msgid "Register payments on multiple invoices"
-msgstr ""
+msgstr "Ödemeleri birden fazla faturaya kaydedin"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8041,7 +8048,7 @@ msgstr "Sorumlu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_account_deferred_revenue
 msgid "Revenue Recognition"
-msgstr ""
+msgstr "Gelirlerin Muhasebeleştirilmesi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal_date
@@ -8259,6 +8266,10 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
+"Müşteri faturaları dergileri için 'Satış' seçeneğini seçiniz.\n"
+"Satıcı fatura dergileri için 'Satın Al' seçeneğini seçiniz.\n"
+"Müşteri veya satıcı ödemelerinde kullanılan dergiler için \"Nakit\" veya \"Banka\" seçeneğini seçiniz.\n"
+"Muhtelif işlem dergileri için 'Genel' seçeneğini seçiniz."
 
 #. module: account
 #. openerp-web
@@ -8859,6 +8870,7 @@ msgstr "Gerçekleşme Esası metodu için kullanılan teknik alan"
 msgid ""
 "Technical field used to adapt the interface to the payment type selected."
 msgstr ""
+"Ara birimi seçilen ödeme türüne uyarlamak için kullanılan teknik alan."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_hide_payment_method
@@ -8877,6 +8889,11 @@ msgid ""
 "items are directly exigible, but with the module account_tax_cash_basis, "
 "some will become exigible only when the payment is recorded."
 msgstr ""
+"Bir vergi satırını, vergi raporuna uygun olarak işaretlemek için kullanılan "
+"teknik alan (yalnızca geçerli yevmiye öğeleri görüntülenir). Varsayılan "
+"olarak tüm yeni yevmiye öğeleri kolayca anlaşılabilir, ancak "
+"account_tax_cash_basis modülü ile bazıları yalnızca ödeme kaydedildiğinde "
+"anlaşılabilir hale gelecektir."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_chart_template_id
@@ -9112,7 +9129,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "Bu derginin günlük girdileri bu önek kullanılarak adlandırılacaktır."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_payment_term_form
@@ -10042,7 +10059,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Gösterge tablolarında Dergileri sipariş etmek için kullanılır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_loss_account_id
@@ -10050,6 +10067,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
+"Bir yazar kütüğünün bitiş bakiyesi sisteminkinden farklı olduğunda bir "
+"zararı kaydettirmek için kullanılır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_profit_account_id
@@ -10057,6 +10076,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
+"Yazarkasa biten bakiyesi sistemin hesapladığı değerden farklı olduğunda kar "
+"kaydetmek için kullanılır."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_line_company_currency_id
@@ -10260,7 +10281,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Bu günlüğün gösterge tablosunda gösterilip gösterilmemesidir."
 
 #. module: account
 #. openerp-web

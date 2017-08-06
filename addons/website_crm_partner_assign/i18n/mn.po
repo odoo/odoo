@@ -55,6 +55,36 @@ msgid ""
 "% endif\n"
 "            "
 msgstr ""
+"\n"
+"<p>Сайн байна уу,</p>\n"
+"\n"
+"\n"
+"<p>Таны бүс дэхь боломжит худалдан авагчид бид нартай холбогдсон тул дараах сэжмүүдийг ${ctx['partner_id'].name} -д оноосон:</p>\n"
+"\n"
+"<ol>\n"
+"% for lead in ctx['partner_leads']:\n"
+"     <li><a href=\"${lead.lead_link}\">${lead.lead_id.name or 'Нэргүй'}</a>, ${lead.lead_id.partner_name or lead.lead_id.contact_name or 'Нэргүй холбогч'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Улсыг тодорхойлоогүй' }, ${lead.lead_id.email_from or 'Имэйлийг тодорхойлоогүй'}, ${lead.lead_id.phone or ''} </li></br>\n"
+"% endfor\n"
+"</ol>\n"
+"\n"
+"% if ctx.get('partner_in_portal'):\n"
+"<p><a href=\"${object.get_portal_url()}\">Харилцагчийн Портал</a> руу орж дэлгэрэнгүйг авна уу. Сэжим болгоны зүүн дээд булан дээр байрлах хоёр даруулыг сэжимтэй холбогдсоны дараа дарах ёстой: \"Сонирхож байна\" & \"Сонирхоогүй\".</p>\n"
+"% else:\n"
+"<p>\n"
+"    Танд одоогоор манай өгөгдлийн бааз руу хандах портал эрх алга. \n"
+"    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'Санхүүгийн менежертэй %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'Бидэнтэй'} холбогдоно уу.\n"
+"</p>\n"
+"% endif\n"
+"<p>Хэрэв та сэжимтэй 20 өдрийн дотор холбогдохгүй бол сэжмийг өөр түнш рүү илгээх болно.</p>\n"
+"\n"
+"<p>Баярлалаа,</p>\n"
+"\n"
+"${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or '' | safe}\n"
+"\n"
+"% if not ctx['partner_id'].user_id:\n"
+"Жич: Таныг хариуцсан санхүүгийн менежер алга, бидэнтэй холбогдоно уу.\n"
+"% endif\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_nbr_cases
@@ -86,7 +116,7 @@ msgstr "<i class=\"fa fa-fw fa-times\"/> Сонирхоогүй"
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:192
 #, python-format
 msgid "<p>I am interested by this lead.</p>"
-msgstr ""
+msgstr "<p>Би энэ сэжмийг сонирхож байна.</p>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -95,6 +125,8 @@ msgid ""
 "<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">N </span>\n"
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">S </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&lt;=',0)]}\">Х </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_latitude','&gt;=',0)]}\">У </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_geo_assign_form
@@ -104,6 +136,9 @@ msgid ""
 "                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">W </span>\n"
 "                                <span class=\"oe_grey\">) </span>"
 msgstr ""
+"<span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&lt;=',0)]}\">З </span>\n"
+"                                <span class=\"oe_grey\" attrs=\"{'invisible':[('partner_longitude','&gt;=',0)]}\">Б </span>\n"
+"                                <span class=\"oe_grey\">) </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -112,6 +147,9 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_desinterested\" "
+"style=\"display:none;\">Та сэжмийг зөвшөөрхөөс өмнө дараагийн үйлдлийг "
+"бөглөөд захиалагчтай холбогдох ёстой</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -120,11 +158,14 @@ msgid ""
 "style=\"display:none;\">You need to fill up the next action and contact the "
 "customer before accepting the lead</span>"
 msgstr ""
+"<span class=\"text-danger error_partner_assign_interested\" "
+"style=\"display:none;\">Та сэжмийг зөвшөөрхөөс өмнө дараагийн үйлдлийг "
+"бөглөөд захиалагчтай холбогдох ёстой</span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<span>at </span>"
-msgstr ""
+msgstr "<span>энд </span>"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -328,7 +369,7 @@ msgstr "Үүсгэсэн"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opp"
-msgstr ""
+msgstr "Ажиллагааны одоогийн шат"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_report_assign_partner_id
@@ -376,7 +417,7 @@ msgstr "Хаахыг Азнах"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Details Next Activity"
-msgstr ""
+msgstr "Дараагийн ажилбарын дэлгэрэнгүй"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_display_name
@@ -421,7 +462,7 @@ msgstr "Хаахыг хүлээх"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Expected Closing:"
-msgstr ""
+msgstr "Таамагласан хаах огноо:"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:107
@@ -448,12 +489,12 @@ msgstr "Үеэр шүүх"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_partner_id
 msgid "Forward Leads To"
-msgstr ""
+msgstr "Сэжмүүдийг Forward хийх"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner_forward_type
 msgid "Forward selected leads to"
-msgstr ""
+msgstr "Сонгосон сэжмүүдийг Forward хийх"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
@@ -464,7 +505,7 @@ msgstr "Харилцагчид шилжүүлэх"
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: ${ctx['partner_id'].name}"
-msgstr ""
+msgstr "Fwd: Сэжим: ${ctx['partner_id'].name}"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_partner_latitude
@@ -620,7 +661,7 @@ msgstr "Сэжимийн Байршил"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation_lead_link
 msgid "Lead Single Links"
-msgstr ""
+msgstr "Сэжмийн нэг холбоосууд"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -739,7 +780,7 @@ msgstr "Дараагийн харилцагчийг шалгах"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_partner_unavailable
 msgid "No more partner available"
-msgstr ""
+msgstr "Өөр түнш алга"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1007,7 +1048,7 @@ msgstr "Мөнгөн"
 #. module: website_crm_partner_assign
 #: model:crm.lead.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
 msgid "Spam"
-msgstr ""
+msgstr "Спам"
 
 #. module: website_crm_partner_assign
 #: code:addons/website_crm_partner_assign/controllers/main.py:109
@@ -1194,7 +1235,7 @@ msgstr "эсвэл"
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "pull-left"
-msgstr ""
+msgstr "pull-left"
 
 #. module: website_crm_partner_assign
 #: model:ir.ui.view,arch_db:website_crm_partner_assign.index

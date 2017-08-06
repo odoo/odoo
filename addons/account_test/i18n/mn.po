@@ -5,13 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
 # Otgonbayar.A <gobi.mn@gmail.com>, 2017
+# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-07 08:56+0000\n"
 "PO-Revision-Date: 2016-09-07 08:56+0000\n"
-"Last-Translator: Otgonbayar.A <gobi.mn@gmail.com>, 2017\n"
+"Last-Translator: Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2017\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +26,13 @@ msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
 msgstr ""
+"<br/>\n"
+"                        <strong>Тайлбар:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>Нэр:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
@@ -52,6 +55,8 @@ msgstr "Идэвхитэй"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
+"Хөдөлгөөний мөрүүд нь баланслагдсан, нэг огноо ба мөчлөгтэй байгаа эсэхийг "
+"шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -59,6 +64,8 @@ msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
 msgstr ""
+"Банкны хуулга дээр Хаах Баланс = Эхлэх Баланс + хуулгын мөрүүдийн нийлбэр "
+"байгаа эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -72,6 +79,8 @@ msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
 msgstr ""
+"Өглөг ба Авлагын дансыг тодорхойлогч тулгасан дансны хөдөлгөөнүүд нь "
+"тулгасан нэхэмжлэлд харьяалагдаж буй эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
@@ -79,6 +88,8 @@ msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
 msgstr ""
+"Борлуулалт/Худалдан авалтын тулгасан нэхэмжлэл доторх Өглөг ба Авлагын "
+"дансын оролтуудыг тулгасан эсэхийг шалгана уу"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -88,7 +99,7 @@ msgstr "Баланс шалгах: Дебитийн нийлбэр = Креди�
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Санхүүгийн Тест үүсгэх бол дарна уу."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -119,6 +130,27 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Код нь үргэлж `result` нэртэй хувьсагчид жагсаалт эсвэл толь бичиг төрлийн таны тестийн үр \n"
+"дүнг оноох ёстой. Хэрэв `result` нь хоосон жагсаалт байвал тест амжилттай болсон гэсэн үг. \n"
+"Үгүй бол `result` доторхийг орчуулж хэвлэх гэж оролдоно.\n"
+"\n"
+"Хэрэв таны тестийн хариу толь бичиг бол `result`-н агуулгыг хэвлэх дарааллыг сонгохын тулд \n"
+"`column_order` хувьсагчид утга оноох боломжтой.\n"
+"\n"
+"Шаардлагатай бол мөн дараах хувьсагчуудыг ашиглах боломжтой:\n"
+"    * cr: өгөгдлийн сан руу заах курсор\n"
+"    * uid: идэвхитэй хэрэглэгчийн ID\n"
+"\n"
+"Ямар ч байсан, код нь (шаардлагатай бол) зөв догол мөртэй албан ёсны python илэрхийлэл \n"
+"байх ёстой.\n"
+"\n"
+"Жишээ: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -191,13 +223,15 @@ msgstr "Тест 1: Ерөнхий баланс"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Тест 3: Хөдөлгөөний мөрүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr ""
+"Тест 5.1 : Тулгасан нэхэмжлэлүүдийн авлага ба өглөгийн нягтлан бодогчийн "
+"мөрүүд"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
@@ -212,7 +246,7 @@ msgstr "Тэст 6 : Нэхэмжлэлийн төлөв"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Тест 7 : Банкны хуулганд баланс хаах"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
@@ -244,4 +278,4 @@ msgstr "accounting.assert.test"
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"
