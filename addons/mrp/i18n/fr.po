@@ -30,13 +30,15 @@
 # Lucas Deliege <lud@openerp.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# lap.odoo <lap@odoo.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-28 13:12+0000\n"
 "PO-Revision-Date: 2017-04-28 13:12+0000\n"
-"Last-Translator: Chuck Fabry de Fabrègues <jfa@odoo.com>, 2017\n"
+"Last-Translator: lap.odoo <lap@odoo.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -355,7 +357,7 @@ msgstr "Caractéristiques"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_group_product_variant
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "Attributs et Variantes"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_message_view_tree
@@ -1787,7 +1789,7 @@ msgstr "Opération à consommer"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "Type d'opération"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -2516,6 +2518,8 @@ msgstr "Fixer la durée manuellement"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
+"Définissez les attributs du produit (e.g. couleur, taille,...) pour gérer "
+"les variantes"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
@@ -2711,7 +2715,7 @@ msgstr "Le nombre de produits déjà pris en charge par cet ordre de travail "
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "Le type d'opérations détermine la vue du transfert"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_operation_id
@@ -3115,6 +3119,11 @@ msgid ""
 " operation type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
+"Quand un approvisionnement a une route \"Produire\" avec un type d'opération"
+" défini, un ordre de fabrication sera créé pour ce produit en utilisant une "
+"nomenclature ayant le même type d'opération. Cela permet de définir des "
+"règles d'approvisionnement qui génèrent différents ordres de fabrication "
+"avec différentes nomenclatures."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3404,6 +3413,8 @@ msgstr ""
 #, python-format
 msgid "You cannot use the same serial number in two different lines."
 msgstr ""
+"Vous ne pouvez pas utiliser le même numéro de série sur deux lignes "
+"différentes. "
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:44

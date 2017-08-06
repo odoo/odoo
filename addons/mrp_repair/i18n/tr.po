@@ -4,25 +4,13 @@
 # 
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# selim kartal <kartalselim37@gmail.com>, 2017
-# cagri erarslan <cagri.erarslan@mechsoft.com.tr>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-18 14:47+0000\n"
 "PO-Revision-Date: 2017-04-18 14:47+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +38,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* 'Taslak' durumu, bir kullanıcı yeni ve doğrulanmamış bir onarım siparişini kodlarken kullanılır.\n"
+"* Onay siparişi Onaylandığında 'Onaylandı' durumu kullanılır.\n"
+"* 'Onaylanmaya Hazır' durumu onarımı başlatmak için kullanılır, kullanıcı onarımı ancak onarım talimatı onaylandıktan sonra başlatabilir.\n"
+"* Faturalandırılmış Olmak İçin Durumu, yapılması gereken onarılamadan önce veya sonra faturayı oluşturmak için kullanılır.\n"
+"* Onarım tamamlandığında 'Bitti' durumu ayarlanır.\n"
+"* Kullanıcı \"onarım siparişini iptal ettiğinde\" İptal edildi \"durumu kullanılır."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -89,7 +83,7 @@ msgstr "<strong>Onarılacak Ürün:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<Strong> Teslimat adresi: </ strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -135,7 +129,7 @@ msgstr "Onarım Öncesi"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Sadece taslak onarımlarını onaylayabiliriz."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -164,7 +158,7 @@ msgstr "İptal Edildi"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Tamamlanan onarımları iptal edemezsiniz."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -242,7 +236,7 @@ msgstr "Geçerli Konum"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_default_address_id
 msgid "Default Address"
-msgstr ""
+msgstr "Varsayılan Adres"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
@@ -667,7 +661,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Onarıma başlamadan önce onay gereklidir."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
@@ -718,7 +712,7 @@ msgstr "Onarım Siparişi"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Onarım Siparişlerini Ara"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -745,7 +739,7 @@ msgstr "Taslağa  Ayarla"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_location_id
@@ -809,6 +803,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Onarım satırının durumu otomatik olarak bağlantılı onarım siparişine göre "
+"ayarlanır."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -880,7 +876,7 @@ msgstr "Vergisiz Tutar"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Yaklaşan Etkinlikler (7 gün)"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -917,3 +913,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Onarım formunda bir fiyat listesi seçmelisiniz!\n"
+" Lütfen bir ürün seçmeden önce bir tane ayarlayın."

@@ -3,29 +3,14 @@
 # * mrp
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Esin Kandemir <esaykandemir@gmail.com>, 2017
 # Murat Kaplan <muratk@projetgrup.com>, 2017
-# checkyoursix <batuhan.akpinar@gmail.com>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Mehmet Demirel <mdemirell@gmail.com>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
-# tanerhasret <tanerhasret@gmail.com>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Tolga Han Duyuler <peccavi01@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-28 13:12+0000\n"
 "PO-Revision-Date: 2017-04-28 13:12+0000\n"
-"Last-Translator: Tolga Han Duyuler <peccavi01@hotmail.com>, 2017\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +63,11 @@ msgid ""
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
+"<P class = \"oe_view_nocontent_create\">\n"
+"                        Dosyaları ürününüze yüklemek için tıklayın.\n"
+"                    </ P> <p>\n"
+"                        Çizimler veya özellikler gibi dosyaları saklamak için bu özelliği kullanın.\n"
+"                    </ P>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -283,6 +273,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
+"Malzeme faturalarına yan ürünler ekleyin. Bu, birkaç bitmiş ürün elde etmek "
+"için de kullanılabilir. Bu seçenek olmadan yalnızca şunları yapabilirsiniz: "
+"A + B = C. Bu seçenek ile : A + B = C + D."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -386,7 +379,7 @@ msgstr "BoM Adı"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_attribute_value_ids
 msgid "BOM Product Variants needed form apply this line."
-msgstr ""
+msgstr "Bu satırı uygulamak için gereken BOM Ürün Varyantları"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_structure_report
@@ -527,7 +520,7 @@ msgstr "BoM detayları"
 #: code:addons/mrp/models/mrp_bom.py:68
 #, python-format
 msgid "BoM line product %s should not be same as BoM product."
-msgstr ""
+msgstr "BoM satırındaki % s ürünü, BoM ana ürünüyle aynı olmamalıdır."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_byproduct
@@ -844,7 +837,7 @@ msgstr "Varsayılan Süre"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_default_use_manufacturing_lead
 msgid "Default Manufacturing Lead Time"
-msgstr ""
+msgstr "Varsayılan İmalat Talep Süresi"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1004,7 +997,7 @@ msgstr "Filtreler"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 msgid "Finish Order"
-msgstr ""
+msgstr "Bitir"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1067,7 +1060,7 @@ msgstr "Görünüm için dizi sıralamasını verir."
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Go through a production routing with work orders"
-msgstr ""
+msgstr "İş emirleri ile bir üretim rotasını çıkarma"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
@@ -1242,6 +1235,9 @@ msgid ""
 "materials.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Ham maddeleri bulabileceğiniz yerde üretirseniz boşaltın. Sabit bir yerde "
+"üretirseniz, bir yer ayarlayın. İmalat işlemlerini taşeronlara "
+"yaptırıyorsanız bu bir iş ortağı konumu olabilir."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -1254,6 +1250,8 @@ msgid ""
 "Kit (Phantom): When processing a sales order for this product, the delivery "
 "order will contain the raw materials, instead of the finished product."
 msgstr ""
+"Kit (Phantom): Bu ürün için bir satış siparişi işlerken, teslimat emrinde, "
+"bitmiş ürün yerine alt bileşenler sevk edilir."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty___last_update
@@ -1580,7 +1578,7 @@ msgstr "Üretim İş Merkezi"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr ""
+msgstr "Mrp: Üretim Siparişlerini Planla"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1656,6 +1654,8 @@ msgstr "Bu ekipmanda verimlilik kaybı yok"
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
+"Şu anda devam eden çalışma programı yok. İş merkezini engellenmiş olarak "
+"işaretlemek için tıklayın."
 
 #. module: mrp
 #: selection:mrp.production,availability:0
@@ -1721,12 +1721,12 @@ msgstr "OEE"
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once a minimum number of products is processed"
-msgstr ""
+msgstr "Minimum sayıda ürün işlendikten sonra"
 
 #. module: mrp
 #: selection:mrp.routing.workcenter,batch:0
 msgid "Once all products are processed"
-msgstr ""
+msgstr "Tüm ürünler işlendikten sonra"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter_name
@@ -1744,7 +1744,7 @@ msgstr "Operasyonda Tüketilecekler"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_picking_type_id
 msgid "Operation Type"
-msgstr ""
+msgstr "Operasyon Türü"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_operation_ids
@@ -1780,13 +1780,13 @@ msgstr "Toplam Ekipman Verimliliği (OEE)"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_oee
 msgid "Overall Equipment Effectiveness, based on the last month"
-msgstr ""
+msgstr "Toplam Ekipman Etkinliği (OEE), geçen aya göre"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
 msgid "Overall Equipment Effectiveness: no working or blocked time."
-msgstr ""
+msgstr "Toplam Ekipman Etkinliği (OEE): Çalışılmayan veya engellenen süre yok"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -1836,7 +1836,7 @@ msgstr "Performans Kayıpları"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_performance
 msgid "Performance over the last month"
-msgstr ""
+msgstr "Son bir aydaki performans"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1846,7 +1846,7 @@ msgstr "İş Emirleri Planlayın"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Plan procurement orders based on forecasts"
-msgstr ""
+msgstr "Tahminlere dayalı olarak tedarik emirlerini planlayın"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -1872,6 +1872,8 @@ msgid ""
 "Please set the quantity you produced in the Current Qty field. It can not be"
 " 0!"
 msgstr ""
+"Lütfen ürettiğiniz Miktar Miktarını Geçerli Miktar alanına ayarlayın. 0 "
+"olamaz!"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_lots_plus_visible
@@ -2249,12 +2251,12 @@ msgstr "İlişkili Tedarikler"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_config_settings_module_mrp_repair
 msgid "Repair"
-msgstr ""
+msgstr "Tamir"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Repair broken or damaged products"
-msgstr ""
+msgstr "Bozuk veya zarar görmüş ürünleri onar"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -2339,17 +2341,17 @@ msgstr "Kaydet"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
+msgstr "Bu sayfayı kaydedin ve özelliği ayarlamak için buraya dönün."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Schedule maintenance activities"
-msgstr ""
+msgstr "Bakım faaliyetlerini zamanlama"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr ""
+msgstr "Gecikmelerden kaçınmak için üretim siparişlerini önceden planlayın"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_date_planned_finished
@@ -2463,6 +2465,7 @@ msgstr "Süreyi manuel olarak ayarla"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_config
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
+"Varyantları yönetmek için ürün niteliklerini ayarlayın (ör. Renk, boyut)"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
@@ -2486,7 +2489,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_origin
@@ -2637,23 +2640,27 @@ msgid ""
 "mainly used to compute work center costs during operations and to plan "
 "future loads on work centers based on production planning."
 msgstr ""
+"Bitmiş ürünü üretmek için yapılan işlemlerin listesi. Yönlendirme, esas "
+"olarak operasyonlar sırasında iş merkezi maliyetlerini hesaplamak ve üretim "
+"planlamasına dayalı olarak iş merkezlerinde gelecekteki yükleri planlamak "
+"için kullanılır."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder_qty_produced
 msgid "The number of products already handled by this work order"
-msgstr ""
+msgstr "Bu iş emri tarafından halihazırda ele alınan ürünlerin sayısı"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "İşlem türü, toplama görünümünü belirler"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line_operation_id
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
-msgstr ""
+msgstr "Bileşenlerin tüketildiği veya bitmiş ürünler oluşturulduğu işlem."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_routing_id
@@ -2662,6 +2669,9 @@ msgid ""
 "production orders will  be executed through work orders, otherwise "
 "everything is processed in the production order itself. "
 msgstr ""
+"Bu BoM için üretim işlemleri. Bir rota belirtildiğinde, üretim emirleri iş "
+"emirleri vasıtasıyla yürütülecektir, aksi halde her şey üretim emrinde "
+"kendiliğinden işlenir."
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -2697,6 +2707,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Bu alan, bu iş merkezindeki bir iş emrinin beklenen süresini hesaplamak için"
+" kullanılır. Örneğin, bir iş emri bir saat sürer ve etkinlik faktörü% 100 "
+"ise, beklenen süre bir saat olacaktır. Etkinlik faktörü% 200 ise, beklenen "
+"süre 30 dakika olacaktır."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_time_ids
@@ -2706,7 +2720,7 @@ msgstr "Zaman"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_efficiency
 msgid "Time Efficiency"
-msgstr ""
+msgstr "Zaman Verimliliği"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_time_ids
@@ -2918,7 +2932,7 @@ msgstr "Rezervasyonu Kaldır"
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgstr "Yaklaşan Etkinlikler (7 gün)"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2969,6 +2983,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"Uzun sipariş süreniz varsa ve satış tahminlerine dayalı olarak üretim "
+"yaparsanız, yeniden sıralama ve üretim operasyonlarınızı planlamak için bir "
+"üretim çizelgeleme raporu kullanmak yararlı olur."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
@@ -3039,6 +3056,10 @@ msgid ""
 " operation type. That allows to define procurement rules which trigger "
 "different manufacturing orders with different BoMs. "
 msgstr ""
+"Bir tedarik, bir işlem tipi seti olan bir 'üretim' rotasına sahip olduğunda,"
+" o ürün için aynı İşlem Tipi bir BoM kullanarak bir Üretim Siparişi "
+"yaratmaya çalışacaktır. Bu, farklı BoM'lerle farklı imalat siparişlerini "
+"tetikleyen tedarik kurallarını tanımlamaya olanak tanır."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3061,6 +3082,8 @@ msgid ""
 "Will determine if the next work order will be planned after the previous one"
 " or after the first Quantity To Process of the previous one."
 msgstr ""
+"Bir sonraki iş emirinin bir öncekinin sonrasında mı yoksa bir sonraki Emre "
+"İşlemeden Önce mi planlanacağını belirleyecektir."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -3151,6 +3174,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required raw materials."
 msgstr ""
+"İş Emri İşlemleri, bir ürün üretmek için iş merkezlerinizde izlenmesi "
+"gereken imalat operasyonlarını yaratmanıza ve yönetmenize izin verir. "
+"Gerekli hammaddeleri tanımlayacak malzeme faturalarına eklenirler."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_workorder_id
@@ -3309,6 +3335,7 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a stock move having already consumed material"
 msgstr ""
+"Zaten harcanmış malzeme bulunduran bir stok hareketini iptal edemezsiniz"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_move.py:38
@@ -3330,6 +3357,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"'Performans' kategorisinde en az bir verimlilik kaybı tanımlamanız gerekir. "
+"Üretim uygulamasından, menüden bir tane oluşturun: Yapılandırma / Verimlilik"
+" Kaybı."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:354
@@ -3339,6 +3369,9 @@ msgid ""
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
 " Productivity Losses."
 msgstr ""
+"'Verimlilik' kategorisinde en az bir verimlilik kaybı tanımlamanız gerekir. "
+"Üretim uygulamasından, menüden bir tane oluşturun: Yapılandırma / Verimlilik"
+" Kaybı."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:407
@@ -3348,6 +3381,9 @@ msgid ""
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
+"'Performans' kategorisinde en az bir etkin olmayan verimlilik kaybı "
+"tanımlamanız gerekir. Üretim uygulamasından, menüden bir tane oluşturun: "
+"Yapılandırma / Verimlilik Kaybı."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:107

@@ -148,6 +148,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart\"/>\n"
 "                    My Cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    Mon Panier"
 
 #. module: website_sale
 #: code:addons/website_sale/models/crm_team.py:56
@@ -158,6 +160,10 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Vous trouverez ici tous les paniers abandonnés, i.e. les paniers générés par vos visiteurs il y a plus d'une heure et qui n'ont pas encore été confirmés.</p>\n"
+"                        <p>Vous devriez leur envoyer un courriel pour les encourager!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.terms
@@ -274,7 +280,7 @@ msgstr "<span class=\"fa fa-long-arrow-left\"/> Retour"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"fa fa-long-arrow-left\"/> Previous"
-msgstr ""
+msgstr "<span class=\"fa fa-long-arrow-left\"/> Précédent"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.checkout
@@ -502,6 +508,8 @@ msgid ""
 "<span>Sort by</span>\n"
 "                        <span class=\"caret\"/>"
 msgstr ""
+"<span>Trié par</span>\n"
+"                        <span class=\"caret\"/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -657,7 +665,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "<strong>See it in action in Odoo</strong><br/>"
-msgstr ""
+msgstr "<strong>Le voir en action sur Odoo</strong><br/>"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -758,12 +766,12 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:72
 #, python-format
 msgid "AT A GLANCE"
-msgstr ""
+msgstr "En un coup d'oeil"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.crm_team_salesteams_view_kanban_inherit_website_sale
 msgid "Abandoned Cart"
-msgstr ""
+msgstr "Paniers abandonnés"
 
 #. module: website_sale
 #. openerp-web
@@ -847,6 +855,8 @@ msgstr "Tous les produits"
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
+"Autorisez les acheteurs à comparer les articles en se basant sur leurs "
+"attributs"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist_selectable
@@ -893,12 +903,12 @@ msgstr "Appliquer le multi-devises"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Apply shipping costs on orders"
-msgstr ""
+msgstr "Appliquez les frais d'expédition sur les commandes"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Apply specific prices per country, discounts, etc."
-msgstr ""
+msgstr "Appliquez des prix spécifiques par pays, promotions, etc. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
@@ -908,7 +918,7 @@ msgstr "Affectation"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Assignation of online orders"
-msgstr ""
+msgstr "Affectation des commandes en ligne"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_variants_action
@@ -924,7 +934,7 @@ msgstr "Caractéristiques"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_product_variant
 msgid "Attributes and Variants"
-msgstr ""
+msgstr "Attributs et variantes"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_availability
@@ -946,7 +956,7 @@ msgstr "Avertissement de disponibilité"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:100
 #, python-format
 msgid "Average Order"
-msgstr ""
+msgstr "Commande moyenne"
 
 #. module: website_sale
 #. openerp-web
@@ -977,6 +987,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Renforcez vos ventes avec deux sortes de programmes de réduction: les "
+"promotions et les coupons. Des conditions spécifiques peuvent être mises en "
+"place (produits, clients, montant d'achat minimum, période...). La "
+"récompense peut être une réduction (% ou montant) ou des produits gratuits. "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1001,7 +1015,7 @@ msgstr "Quantité du panier"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:91
 #, python-format
 msgid "Carts"
-msgstr ""
+msgstr "Paniers"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1137,7 +1151,7 @@ msgstr "Utilisateurs Communauté &amp; Entreprise :"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Company Details"
-msgstr ""
+msgstr "Détails de la société "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -1184,7 +1198,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Confirmation Email"
-msgstr ""
+msgstr "Courriel de confirmation"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -1273,7 +1287,7 @@ msgstr "Avis client :"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "DHL"
-msgstr ""
+msgstr "DHL"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_dhl
@@ -1349,7 +1363,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_sale_coupon
 msgid "Discount Programs"
-msgstr ""
+msgstr "Programmes de réduction"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_group_discount_per_so_line
@@ -1371,7 +1385,7 @@ msgstr "Ne rien afficher"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Display an images carousel on product pages"
-msgstr ""
+msgstr "Affichez un carousel d'images sur les pages d'article"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
@@ -1432,7 +1446,7 @@ msgstr "Courriel envoyé au client à la fin du processus de commande"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Email sent to the customer"
-msgstr ""
+msgstr "Envoyez un courriel de confirmation au client"
 
 #. module: website_sale
 #. openerp-web
@@ -1460,7 +1474,7 @@ msgstr "Etape supplémentaire"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "FedEx"
-msgstr ""
+msgstr "FedEx"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_delivery_fedex
@@ -1473,6 +1487,9 @@ msgid ""
 "Find here all the abandoned carts, i.e. the carts generated by your "
 "website's visitors more than one hour ago and not confirmed."
 msgstr ""
+"Vous trouverez ici tous les paniers abandonnées, e.g. les paniers générés "
+"par les visiteurs de votre site web depuis plus d'une heure et qui n'ont pas"
+" été confirmés. "
 
 #. module: website_sale
 #. openerp-web
@@ -1678,7 +1695,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_internal_product_categories
 msgid "Internal Categories"
-msgstr ""
+msgstr "Catégories internes"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:484
@@ -1768,11 +1785,12 @@ msgstr "Dénomination légale"
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Let returning shoppers save products in a whishlist"
 msgstr ""
+"Laissez les acheteurs enregistrer des articles dans une liste d'envies"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Let the customer enter a shipping address"
-msgstr ""
+msgstr "Laissez le client entrer une adresse de livraison"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -1887,7 +1905,7 @@ msgstr "Nom"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Name <i class=\"fa fa-caret-down\" aria-hidden=\"true\"/>"
-msgstr ""
+msgstr "Nom <i class=\"fa fa-caret-down\" aria-hidden=\"true\"/>"
 
 #. module: website_sale
 #. openerp-web
@@ -1931,7 +1949,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team_abandoned_carts_count
 msgid "Number of Abandoned Carts"
-msgstr ""
+msgstr "Nombre de Paniers Abandonnés"
 
 #. module: website_sale
 #. openerp-web
@@ -2039,7 +2057,7 @@ msgstr "Commandes à facturer"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:96
 #, python-format
 msgid "Orders/Day"
-msgstr ""
+msgstr "Commandes/jour"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category_parent_id
@@ -2149,19 +2167,19 @@ msgstr "Préféré par certains clients"
 #: code:addons/website_sale/controllers/backend.py:110
 #, python-format
 msgid "Previous Month"
-msgstr ""
+msgstr "Mois Précédent"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:108
 #, python-format
 msgid "Previous Week"
-msgstr ""
+msgstr "Semaine Précédente"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/backend.py:112
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "Année précédente"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2219,12 +2237,12 @@ msgstr "Attribut de l'article"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Product Catalog"
-msgstr ""
+msgstr "Catalogue d'articles"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_comparison
 msgid "Product Comparator"
-msgstr ""
+msgstr "Comparateur d'articles"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2246,7 +2264,7 @@ msgstr "Pages produits"
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_show_tax
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Product Prices"
-msgstr ""
+msgstr "Prix des articles"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -2292,7 +2310,7 @@ msgstr "Article introuvable !"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Product prices displaying in web catalog"
-msgstr ""
+msgstr "Affichez le prix des articles dans le catalogue web"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2311,7 +2329,7 @@ msgstr "Promouvoir"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Provide customers with links or content to download"
-msgstr ""
+msgstr "Fournissez aux clients des liens ou contenus à télécharger "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
@@ -2569,7 +2587,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address_kanban
 msgid "Select this address"
-msgstr ""
+msgstr "Sélectionner cette adresse"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2579,7 +2597,7 @@ msgstr "Sélectionnez vos préférence de tarifs et autorisez les remises."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Select your shipping management policy"
-msgstr ""
+msgstr "Choisissez votre politique de gestion des expéditions"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist_selectable
@@ -2599,12 +2617,12 @@ msgstr "Vendez plus"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Sell in several currencies"
-msgstr ""
+msgstr "Vendez en plusieurs devises"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Sell your products on eBay"
-msgstr ""
+msgstr "Vendez vos produits sur eBay"
 
 #. module: website_sale
 #. openerp-web
@@ -2645,22 +2663,22 @@ msgstr "Livrer à :"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Ship with DHL"
-msgstr ""
+msgstr "Livrez avec DHL"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Ship with FedEx"
-msgstr ""
+msgstr "Livrez avec FedEx"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Ship with UPS"
-msgstr ""
+msgstr "Livrez avec UPS"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Ship with USPS"
-msgstr ""
+msgstr "Livrez avec USPS"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
@@ -2688,7 +2706,7 @@ msgstr "Connecteurs pour l'envoi"
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Shipping Costs"
-msgstr ""
+msgstr "Frais de livraison"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_sale_delivery_settings
@@ -2805,7 +2823,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:116
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Vendu"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2833,12 +2851,12 @@ msgstr "Trier par prix"
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.sort
 msgid "Sorting by :"
-msgstr ""
+msgstr "Trié par:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Start your online shop by creating 3 products pages.<br/>"
-msgstr ""
+msgstr "Commencez votre boutique en ligne en créant 3 pages produit."
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
@@ -2853,12 +2871,12 @@ msgstr "État / Province..."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Street 2"
-msgstr ""
+msgstr "Rue 2"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address
 msgid "Street <span class=\"hidden-xs\"> and Number</span>"
-msgstr ""
+msgstr "Rue <span class=\"hidden-xs\"> et Numéro</span>"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_style_name
@@ -2895,12 +2913,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
 msgid "Suggest optional products when adding to cart"
-msgstr ""
+msgstr "Suggérez des produits optionnels lors de l'ajout au panier"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "Suggest options and accessories"
-msgstr ""
+msgstr "Suggérer des options et des accessoires"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -2910,7 +2928,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested Accessories:"
-msgstr ""
+msgstr "Accessoires suggérés:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
@@ -2930,12 +2948,12 @@ msgstr "Numéro de TVA"
 #. module: website_sale
 #: selection:website.config.settings,sale_show_tax:0
 msgid "Tax-Excluded Prices"
-msgstr ""
+msgstr "Prix hors taxe"
 
 #. module: website_sale
 #: selection:website.config.settings,sale_show_tax:0
 msgid "Tax-Included Prices"
-msgstr ""
+msgstr "Prix taxes comprises"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.confirmation
@@ -2987,7 +3005,7 @@ msgstr "Le paiement semble avoir été annulé."
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "There are two strategies to sell more to a customer:"
-msgstr ""
+msgstr "Il existe deux stratégies pour vendre plus à un client:"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_config_settings_view_form_inherit_website_sale
@@ -3102,7 +3120,7 @@ msgstr "Prix unitaire"
 #: model:ir.ui.menu,name:website_sale.menu_orders_unpaid_orders
 #, python-format
 msgid "Unpaid Orders"
-msgstr ""
+msgstr "Commandes non payées"
 
 #. module: website_sale
 #. openerp-web
@@ -3242,12 +3260,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_config_settings_module_website_sale_wishlist
 msgid "Wishlists "
-msgstr ""
+msgstr "Listes d'envies"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.payment_token_form_confirm
 msgid "Yes, pay with this card"
-msgstr ""
+msgstr "Oui, payer avec cette carte"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner
@@ -3281,7 +3299,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 msgid "You should send an email to revive them!"
-msgstr ""
+msgstr "Vous devriez envoyer un courriel pour les relancer! "
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.address

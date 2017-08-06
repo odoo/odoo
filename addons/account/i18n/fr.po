@@ -36,7 +36,7 @@
 # Loic <loic.richard2@gmail.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Hamid Darabi <hamid.darabi@gmail.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2016
 # Matillon Samantha <smatillon@gmail.com>, 2016
 # Benedicte HANET <hanetb@gmail.com>, 2016
@@ -394,6 +394,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Importer</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 contacts</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -404,6 +409,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Créer manuellement</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 contacts</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -697,7 +707,7 @@ msgstr "<strong>Numéro de client :</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>Client: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -777,7 +787,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>Mémo: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3977,7 +3987,7 @@ msgstr "Affichage sur les factures"
 #: model:ir.model.fields,field_description:account.field_account_config_settings_module_print_docsaway
 #: model:ir.ui.view,arch_db:account.account_config_settings_view_form
 msgid "Docsaway"
-msgstr ""
+msgstr "Docsaway"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_overdue_document
@@ -6324,7 +6334,7 @@ msgstr "Moins notes de frais"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Minus Non-Current Liabilities"
-msgstr "Moins passif non-circulant"
+msgstr "Moins passif immobilisé"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
@@ -6575,7 +6585,7 @@ msgstr "Actif immobilisé"
 #. module: account
 #: model:account.account.type,name:account.data_account_type_non_current_liabilities
 msgid "Non-current Liabilities"
-msgstr "Passif non-circulant"
+msgstr "Passif immobilisé"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -6846,7 +6856,7 @@ msgstr ""
 #. module: account
 #: selection:account.invoice,state:0 selection:account.invoice.report,state:0
 msgid "Open"
-msgstr "Ouvertes"
+msgstr "Ouvert"
 
 #. module: account
 #. openerp-web
@@ -8383,6 +8393,8 @@ msgstr ""
 msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' state."
 msgstr ""
+"Les factures sélectionnées ne peuvent pas être confirmées car elles sont en "
+"'Brouillon'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_invoice_warn
@@ -8413,7 +8425,7 @@ msgstr "Envoyer de l'argent"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send Receipt By Email"
-msgstr ""
+msgstr "Envoyer le Reçu par Courriel"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_form
@@ -8570,6 +8582,7 @@ msgstr "Plus petit texte"
 #, python-format
 msgid "Form content is missing, this report cannot be printed."
 msgstr ""
+"Le contenu du formulaire est manquant, le rapport ne peut pas être imprimé. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_general_ledger_sortby
@@ -10111,7 +10124,7 @@ msgstr "Factures Impayées"
 #: model:ir.ui.view,arch_db:account.view_account_move_filter
 #: model:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
-msgstr "Décomptabilisé"
+msgstr "Non Validé"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_move_filter

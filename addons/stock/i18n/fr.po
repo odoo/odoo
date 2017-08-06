@@ -15,7 +15,7 @@
 # Xavier Symons <xsy@openerp.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2016
+# Quentin THEURET <odoo@kerpeo.com>, 2016
 # Saad Thaifa <saad.thaifa@gmail.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
@@ -891,7 +891,7 @@ msgstr "Caractéristiques"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_group_product_variant
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "Attributs et Variantes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_path_auto
@@ -1244,7 +1244,7 @@ msgstr "Cliquer pour ajouter une route."
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Click to create a new operation type."
-msgstr ""
+msgstr "Cliquez pour créer un nouveau type d'opération."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -1383,7 +1383,7 @@ msgstr "Consommable"
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_children_ids
@@ -1714,7 +1714,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_dhl
 msgid "DHL"
-msgstr ""
+msgstr "DHL"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2244,7 +2244,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_config_settings_module_delivery_fedex
 msgid "FedEx"
-msgstr ""
+msgstr "FedEx"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.quant_search_view
@@ -2625,6 +2625,10 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
+"Si cette case est cochée, vous pourrez choisir les lots/numéros de série. "
+"Vous pouvez aussi décider de ne pas définir de lots sur ce type d'opération."
+" Cela signifie que du stock sans lot sera créé ou qu'il n'y aura pas de "
+"restriction sur le lot choisi."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_backorder_id
@@ -3451,6 +3455,10 @@ msgid ""
 "                        The tracking can be configured on every product: not any tracing at\n"
 "                        all, tracking by lot, or tracking by unique serial number."
 msgstr ""
+"Les lots peuvent être encodés sur les réceptions, transferts internes et\n"
+"                        livraisons selon les paramètres du type d'opérations.\n"
+"                        Le suivi peut être configuré sur chaque produit: pas de suivi\n"
+"                        , suivi par lots, ou suivi par numéro de série unique."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -4055,7 +4063,7 @@ msgstr "Nom de l'opération"
 #: model:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr ""
+msgstr "Type d'opération"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_procurement_rule_picking_type_id
@@ -4063,11 +4071,13 @@ msgid ""
 "Operation Type determines the way the picking should be shown in the view, "
 "reports, ..."
 msgstr ""
+"Le type d'opérations détermine la façon dont les opérations doivent être "
+"montrées dans les vues, rapports, ..."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr ""
+msgstr "Type d'opérations pour les retours"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4080,7 +4090,7 @@ msgstr "Types d'opérations"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_name
 msgid "Operation Types Name"
-msgstr ""
+msgstr "Nom des types d'opérations"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4422,6 +4432,10 @@ msgid ""
 "            the general inventory or whenever you need it, to adapt the\n"
 "            current inventory level of a product."
 msgstr ""
+"Les inventaires périodiques sont utilisés pour compter le nombre de produits\n"
+"            disponible par zone d'emplacement. Vous pouvez les utiliser une fois par an quand vous faites\n"
+"            l'inventaire général ou quand vous en avez besoin, pour adapter le\n"
+"            la quantité d'un produit de l'inventaire actuel."
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5536,6 +5550,10 @@ msgid ""
 "allows to update or check the unit # transferred (which must be a multiple "
 "of the unit # per package). Packaging types are set on product detail form."
 msgstr ""
+"Choisissez ou scannez le conditionnement utilisé pour transférer les "
+"produits. Cela permet de mettre à jour ou vérifier le nombre d'unités "
+"transférées (qui doit être un multiple du nombre d'unités par colis). Les "
+"types de conditionnement sont définis sur le formulaire du produit."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:108
@@ -5649,6 +5667,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Set product attributes (e.g. color, size) to manage variants"
 msgstr ""
+"Définissez les attributs du produit (e.g. couleur, taille,...) pour gérer "
+"les variantes"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -5708,22 +5728,22 @@ msgstr "Expédition directe depuis le stock (en 1 étape)"
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Ship with DHL"
-msgstr ""
+msgstr "Livrez avec DHL"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Ship with FedEx"
-msgstr ""
+msgstr "Livrez avec FedEx"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Ship with UPS"
-msgstr ""
+msgstr "Livrez avec UPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
 msgid "Ship with USPS"
-msgstr ""
+msgstr "Livrez avec USPS"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -5733,7 +5753,7 @@ msgstr "Connecteurs pour l'envoi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_move_type
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Politique d'expédition"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_config_settings
@@ -5772,6 +5792,8 @@ msgid ""
 "Some products require lots/serial numbers, so you need to specify those "
 "first!"
 msgstr ""
+"Certains produits nécessitent des numéros de série/lot, vous devez donc les "
+"spécifier avant! "
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -6244,7 +6266,7 @@ msgstr "Le nouvel emplacement ou les articles doivent être envoyés"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "The operation type determines the picking view"
-msgstr ""
+msgstr "Le type d'opérations détermine la vue du transfert"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -6254,6 +6276,10 @@ msgid ""
 "                On the operation type you could e.g. specify if packing is needed by default,\n"
 "                if it should show the customer."
 msgstr ""
+"Le système des types d'opérations vous permet d'assigner à chaque opération\n"
+"                de stock un type spécifique qui altérera ses vues en fonction.\n"
+"                Sur le type d'opération, vous pourriez par exemple spécifier si le colis est requis par défaut,\n"
+"                si le client doit être affiché."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_package_parent_id
@@ -6422,6 +6448,11 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
+"Il s'agit de la zone d'emplacement destination par défaut quand vous créez "
+"une opération de stock manuellement avec ce type d'opération. Il est "
+"néanmoins possible de changer cela ou que les routes définissent une autre "
+"zone d'emplacement. Si ce champ est laissé vide, l'emplacement client défini"
+" sur le contact sera utilisé."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type_default_location_src_id
@@ -6431,6 +6462,11 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
+"Il s'agit de la zone d'emplacement source par défaut quand vous créez une "
+"opération de stock manuellement avec ce type d'opération. Il est néanmoins "
+"possible de changer cela ou que les routes définissent une autre zone "
+"d'emplacement. Si ce champ est laissé vide, l'emplacement fournisseur défini"
+" sur le contact sera utilisé."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -6443,6 +6479,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_location_path_picking_type_id
 msgid "This is the operation type that will be put on the stock moves"
 msgstr ""
+"Il s'agit du type d'opérations qui sera défini sur les mouvements de stock."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant_owner_id
