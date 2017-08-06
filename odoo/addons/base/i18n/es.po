@@ -21,7 +21,6 @@
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2016
 # Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # Jose Manuel <admin@jaboweb.com>, 2016
@@ -36,6 +35,7 @@
 # Soluntec <abraham@soluntec.es>, 2017
 # Mariano Rodríguez <mahrodriguez@gmail.com>, 2017
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
+# Gelo Joga Landoo <gj@landoo.es>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
 msgid ""
 msgstr ""
@@ -67,9 +67,6 @@ msgstr ""
 "\n"
 "Permitir al vendedor reimprimir recibos\n"
 "\n"
-"\n"
-"\n"
-"r\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -210,6 +207,73 @@ msgid ""
 "11010101 Caja General\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"Módulo de localización para la república dominicana\n"
+"===================================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -368,6 +432,9 @@ msgid ""
 "        Print amount in words on checks issued for expenses\n"
 "    "
 msgstr ""
+"\n"
+"        Imprima la cantidad en palabras en los cheques emitidos para gastos\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_calendar
@@ -1638,7 +1705,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"Activar parámetros UTM en enlaces"
+"Activar rastreadores UTM en enlaces compartidos.\n"
+"================================================"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_crypt
@@ -2677,6 +2745,10 @@ msgid ""
 "========================\n"
 "\n"
 msgstr ""
+"\n"
+"Odoo Web vista kanban.\n"
+"======================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -5255,6 +5327,10 @@ msgid ""
 "env[\"res.partner\"].create({\"name\": partner_name})\n"
 "</code>"
 msgstr ""
+"<code style=\"white-space: pre-wrap\">\n"
+"partner_name = record.name + '_code'\n"
+"env[\"res.partner\"].create({\"name\": partner_name})\n"
+"</code>"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_model_fields_form
@@ -7093,7 +7169,7 @@ msgstr "Impresión de cheques"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_check
 msgid "Check Printing in Expenses"
-msgstr ""
+msgstr "Comprobar la impresión en gastos"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_is_company
@@ -7576,6 +7652,11 @@ msgid ""
 "expression, like 'record.list_price > 5000'. A void condition is considered "
 "as always True. Help about python expression is given in the help tab."
 msgstr ""
+"Condición verificada antes de ejecutar la acción de servidor. Si no esta "
+"verificada, la acción no será ejecutada. La condición es una expresión "
+"Python, como 'record.list_price > 5000'. Una condición vacía es considerada "
+"siempre verdadera. La ayuda con las expresiones Python es dada en la pestaña"
+" ayuda."
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_workflow_activity_form
@@ -9858,7 +9939,7 @@ msgstr "Francia - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_certification
 msgid "France - Accounting - Certified CGI 286 I-3 bis"
-msgstr ""
+msgstr "Francia - Contabilidad - Certificado CGI 286 I-3 bis"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
@@ -10985,7 +11066,7 @@ msgstr "India - Contabilidad"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_schedule6
 msgid "Indian - Schedule VI Accounting"
-msgstr ""
+msgstr "India - Contabilidad del Anexo VI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -12479,7 +12560,7 @@ msgstr "Falta el valor requerido para el campo '%s'."
 #: code:addons/base/ir/ir_ui_view.py:345
 #, python-format
 msgid "Missing view architecture."
-msgstr ""
+msgstr "Falta la vista de la arquitectura."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_mister
@@ -13996,7 +14077,7 @@ msgstr "Precisión del precio"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_check
 msgid "Print amount in words on checks issued for expenses"
-msgstr ""
+msgstr "Imprima la cantidad en palabras en los cheques emitidos para gastos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_priority
@@ -14116,7 +14197,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_screen
 msgid "Provides support for customer facing displays"
-msgstr ""
+msgstr "Proporciona soporte para pantallas orientadas al cliente"
 
 #. module: base
 #: model:res.groups,name:base.group_public
@@ -18467,7 +18548,7 @@ msgstr "email@yourcompany.com"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "env: Odoo Environement on which the action is triggered"
-msgstr ""
+msgstr "entorno: El entorno de Odoo donde la acción es activada"
 
 #. module: base
 #: code:addons/base/ir/ir_fields.py:328
@@ -18808,7 +18889,7 @@ msgstr "record.partner_id.currency_id"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
 msgid "record: browse_record of the record on which the action is triggered"
-msgstr ""
+msgstr "registro: browse_record del registro en el que se activa la acción"
 
 #. module: base
 #: model:ir.model,name:base.model_report_base_report_irmodulereference

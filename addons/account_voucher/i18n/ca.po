@@ -29,6 +29,10 @@ msgid ""
 " * The 'Posted' status is used when user create voucher,a voucher number is generated and voucher entries are created in account.\n"
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
+"* L'estat 'Esborrany' s'utilitza quan un usuari està introduint un nou i no confirmat comprovant.\n"
+"* 'Proforma' s'estableix quan el comprovant està en estat proforma. El comprovant encara no té un número de comprovant.\n"
+"* L'estat 'Assegut' s'utilitza quan l'usuari confirma el comprovant, assignant un número de comprovant i creant-li els assentaments comptables.\n"
+"* L'estat 'Cancel·lat' s'utilitza quan l'usuari cancel·la el comprovant."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_account_id
@@ -65,7 +69,7 @@ msgstr "Compte analític"
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Està segur que desitja cancel·lar aquest rebut?"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date
@@ -82,7 +86,7 @@ msgstr "Informació de la factura"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Referència de factura"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -92,7 +96,7 @@ msgstr "Cancel·la"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_sale_receipt_form
 msgid "Cancel Receipt"
-msgstr ""
+msgstr "Cancel·lar rebut"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -103,17 +107,17 @@ msgstr "Cancel·lat"
 #: code:addons/account_voucher/models/account_voucher.py:159
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
-msgstr ""
+msgstr "No es pot esborrar comprovants que ja estan oberts o pagats."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
 msgid "Click to create a sale receipt."
-msgstr ""
+msgstr "Clic per a crear un rebut de vendes."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
 msgid "Click to register a purchase receipt."
-msgstr ""
+msgstr "Clic per registrar un rebut de compra."
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_company_id
@@ -181,7 +185,7 @@ msgstr "Esborrany"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Comprovant esborrany"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_date_due
@@ -196,7 +200,7 @@ msgstr "Data efectiva per entrades comptables."
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_sequence
 msgid "Gives the sequence of this line when displaying the voucher."
-msgstr ""
+msgstr "Dona la seqüència d'aquesta línia quan es visualitza al comprovant."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -216,6 +220,8 @@ msgstr "ID"
 msgid ""
 "In case we have a rounding problem in the tax, use this field to correct it"
 msgstr ""
+"En cas de tenir un problema d'arrodoniment a l'impost, utilitzi aquest camp "
+"per corregir-lo."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
@@ -273,7 +279,7 @@ msgstr "Número"
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_tax_ids
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Només per impostos exclosos del preu"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_paid
@@ -294,7 +300,7 @@ msgstr "Paga directament"
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 msgid "Pay Later"
-msgstr ""
+msgstr "Paga més tard"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_pay_now
@@ -310,7 +316,7 @@ msgstr "Referència de pagament"
 #: code:addons/account_voucher/models/account_voucher.py:195
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Activi, si us plau, la seqüència del diari seleccionat!"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:198
@@ -331,7 +337,7 @@ msgstr "Fixat"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Comprovant assentats"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
@@ -351,18 +357,18 @@ msgstr "Compra"
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Receipt"
-msgstr ""
+msgstr "Rebut de compra"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Rebut de compra"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Purchase Voucher"
-msgstr ""
+msgstr "Comprovant de compra"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_quantity
@@ -388,7 +394,7 @@ msgstr "Rebut de vendes"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Rebut de ventes"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -419,7 +425,7 @@ msgstr "Estat"
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
 msgid "Status Change"
-msgstr ""
+msgstr "Canvi d'estat"
 
 #. module: account_voucher
 #: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
@@ -434,17 +440,17 @@ msgstr "Impost"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax amount"
-msgstr ""
+msgstr "Import de l'impost"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax correction"
-msgstr ""
+msgstr "Correcció de l'impost"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
 msgid "The Voucher has been totally paid."
-msgstr ""
+msgstr "El comprovant ha estat totalment pagat"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_line_account_id
@@ -455,7 +461,7 @@ msgstr ""
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_reference
 msgid "The partner reference of this document."
-msgstr ""
+msgstr "La referència externa d'aquest document."
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -499,7 +505,7 @@ msgstr "Proveïdor "
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_purchase_receipt_form
 msgid "Vendor Voucher"
-msgstr ""
+msgstr "Comprovant del venedor"
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:97
@@ -544,6 +550,8 @@ msgid ""
 "When the purchase receipt is confirmed, you can record the\n"
 "                vendor payment related to this purchase receipt."
 msgstr ""
+"Quan un rebut de compra està confirmat, vostè pot registrar el pagament al "
+"proveïdor relacionat amb aquest rebut de compra"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -551,6 +559,8 @@ msgid ""
 "When the sale receipt is confirmed, you can record the customer\n"
 "                payment related to this sales receipt."
 msgstr ""
+"Quan el rebut de venda és confirmat, vostè pot registrar el pagament del "
+"client relacionat amb aquest rebut de venda."
 
 #. module: account_voucher
 #: code:addons/account_voucher/models/account_voucher.py:361
