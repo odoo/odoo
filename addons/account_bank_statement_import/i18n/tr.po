@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2017-07-11 21:59+0000\n"
+"PO-Revision-Date: 2017-08-03 18:51+0000\n"
 "Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>\n"
 "Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -115,7 +115,7 @@ msgstr "Vazgeç"
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
 " journal."
-msgstr ""
+msgstr "Bu derginin hangi günlüğü içe aktarabileceğini bulamıyorum. Lütfen bir günlük seçiniz."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
@@ -152,7 +152,7 @@ msgstr "Bu yevmiyeyle ilişkili şirket"
 msgid ""
 "Could not make sense of the given file.\n"
 "Did you install the module to support this type of file ?"
-msgstr ""
+msgstr "Verilen dosyayı anlamam mümkün değildir.\nModülü bu tür dosyaları desteklemek için kurdunuz mu?"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_create_uid
@@ -209,7 +209,7 @@ msgstr "Bu banka hesabını satış siparişleri ve faturalar gibi belgelerin al
 msgid ""
 "Download a bank statement from your bank and import it here. Supported "
 "formats:"
-msgstr ""
+msgstr "Bankanızdan bir banka dekontu indirin ve buraya aktarınız.  Desteklenen formatlar:"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -221,7 +221,7 @@ msgstr "Kayıt Sırası"
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
-msgstr ""
+msgstr "Bankanızdan elektronik formatta banka açıklamalarınızı alınız ve buradan seçiniz."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_group_invoice_lines
@@ -301,24 +301,24 @@ msgstr "Yevmiye Adı"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_journal_id
 msgid "Journal id"
-msgstr ""
+msgstr "Günlük kimliği"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "Just click OK to create the account/journal and finish the import. If this "
 "was a mistake, hit cancel to abort the import."
-msgstr ""
+msgstr "Hesabı oluşturmak için Tamam seçeneğine tıklayınız/dergi ve ithalatı bitiriniz. Eğer bu bir hataydı, içe aktarmayı iptal etmek için isabetleyiniz."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban dashboard"
-msgstr ""
+msgstr "Kanban gösterge tablosu"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban dashboard graph"
-msgstr ""
+msgstr "Kanban panosu grafiği"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -349,7 +349,7 @@ msgid ""
 "Means of payment for collecting money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "Para toplama için ödeme araçlarıdır. Odoo modülleri, çeşitli ödeme işlemleri yapma olanakları sunar, ancak ödemeleri yazılımın dışında yönetmek için daima 'Manuel' ödeme yöntemini kullanabilirsiniz."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
@@ -357,7 +357,7 @@ msgid ""
 "Means of payment for sending money. Odoo modules offer various payments "
 "handling facilities, but you can always use the 'Manual' payment method in "
 "order to manage payments outside of the software."
-msgstr ""
+msgstr "Para göndermek için ödeme yöntemleridir. Odoo modülleri, çeşitli ödeme işlemleri yapma olanakları, ancak ödemeleri yazılımın dışında yönetmek için daima 'Manuel' ödeme yöntemini kullanabilirsiniz."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:132
@@ -426,14 +426,14 @@ msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
 "In order to proceed with the import, you need to create a bank journal for "
 "this account."
-msgstr ""
+msgstr "İçe aktardığınız ifadenin hesabı Odoo'da henüz kaydedilmemiştir. İthalat işlemlerine devam etmek için, bu hesap için bir banka günlüğü oluşturmanız gerekmektedir."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:143
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
-msgstr ""
+msgstr "Bu ifadenin hesabı(%s)günlükle aynı değildir.(%s),"
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:156
@@ -441,7 +441,7 @@ msgstr ""
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
 "the journal (%s) !"
-msgstr ""
+msgstr "Banka dekontunun para birimi(%s)günlüğün para birimi ile aynı değildir.(%s)!"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
@@ -451,7 +451,7 @@ msgstr "Hesap özetine girilecek para birimi"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "The journal entries of this journal will be named using this prefix."
-msgstr ""
+msgstr "Bu derginin günlük girdileri bu önek kullanılarak adlandırılacaktır."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
@@ -471,13 +471,13 @@ msgstr "Bu alan, bu yevmiyeye ait yevmiye girişleri numaralarının verilmesiyl
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:110
 #, python-format
 msgid "This file doesn't contain any statement."
-msgstr ""
+msgstr "Bu dosya hiçbir açıklama içermiyordur."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:118
 #, python-format
 msgid "This file doesn't contain any transaction."
-msgstr ""
+msgstr "Bu dosya herhangi bir işlem içermiyordur."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -487,26 +487,26 @@ msgstr "Tür"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence
 msgid "Used to order Journals in the dashboard view"
-msgstr ""
+msgstr "Gösterge tablolarında Dergileri sipariş etmek için kullanılır."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_loss_account_id
 msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
-msgstr ""
+msgstr "Bir yazar kütüğünün bitiş bakiyesi sisteminkinden farklı olduğunda bir zararı kaydettirmek için kullanılır."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
-msgstr ""
+msgstr "Yazarkasa biten bakiyesi sistemin hesapladığı değerden farklı olduğunda kar kaydetmek için kullanılır."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_show_on_dashboard
 msgid "Whether this journal should be displayed on the dashboard or not"
-msgstr ""
+msgstr "Bu günlüğün gösterge tablosunda gösterilip gösterilmemesidir."
 
 #. module: account_bank_statement_import
 #: code:addons/account_bank_statement_import/account_bank_statement_import.py:218
