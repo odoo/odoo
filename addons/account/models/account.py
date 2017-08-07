@@ -100,7 +100,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type", 
+    user_type_id = fields.Many2one('account.account.type', string='Type', required=True, oldname="user_type",
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', store=True, readonly=True)
     #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
@@ -612,7 +612,8 @@ class AccountTax(models.Model):
     def get_grouping_key(self, invoice_tax_val):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
         self.ensure_one()
-        return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'])
+        return str(invoice_tax_val['tax_id']) + '-' + str(invoice_tax_val['account_id']) + '-' + str(invoice_tax_val['account_analytic_id'] or 0) \
+            + '-' + str(invoice_tax_val['included_tax_ids'])
 
     def _compute_amount(self, base_amount, price_unit, quantity=1.0, product=None, partner=None):
         """ Returns the amount of a single tax. base_amount is the actual amount on which the tax is applied, which is
@@ -691,10 +692,15 @@ class AccountTax(models.Model):
             prec += 5
 
         base_values = self.env.context.get('base_values')
+        # We keep track of the compute sequence here, as we do not keep track of
+        # the topological sorting order concerning tax group in later steps of tax handling
+        tax_compute_sequence = self.env.context.get('tax_compute_sequence') or 0
         if not base_values:
             total_excluded = total_included = base = round(price_unit * quantity, prec)
+            taxes_include_in_subsequent = []
         else:
-            total_excluded, total_included, base = base_values
+            total_excluded, total_included, base, taxes_include_in_subsequent = base_values
+
 
         # Sorting key is mandatory in this case. When no key is provided, sorted() will perform a
         # search. However, the search method is overridden in account.tax in order to add a domain
@@ -702,10 +708,15 @@ class AccountTax(models.Model):
         # case of group taxes.
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                children = tax.children_tax_ids.with_context(base_values=(total_excluded, total_included, base))
+                taxes_include_in_subsequent2 = list(taxes_include_in_subsequent)
+                children = tax.children_tax_ids.with_context(base_values=(
+                    total_excluded, total_included, base, taxes_include_in_subsequent), tax_compute_sequence=tax_compute_sequence)
                 ret = children.compute_all(price_unit, currency, quantity, product, partner)
                 total_excluded = ret['total_excluded']
                 base = ret['base'] if tax.include_base_amount else base
+                tax_compute_sequence = ret['taxes'][-1]['sequence']
+                if not tax.include_base_amount:
+                    taxes_include_in_subsequent = taxes_include_in_subsequent2
                 total_included = ret['total_included']
                 tax_amount = total_included - total_excluded
                 taxes += ret['taxes']
@@ -728,20 +739,24 @@ class AccountTax(models.Model):
 
             if tax.include_base_amount:
                 base += tax_amount
-
+            tax_compute_sequence += 1
             taxes.append({
                 'id': tax.id,
                 'name': tax.with_context(**{'lang': partner.lang} if partner else {}).name,
                 'amount': tax_amount,
+                'included_tax_ids': [x for x in taxes_include_in_subsequent],
                 'base': tax_base,
-                'sequence': tax.sequence,
+                'sequence': tax_compute_sequence,
                 'account_id': tax.account_id.id,
                 'refund_account_id': tax.refund_account_id.id,
                 'analytic': tax.analytic,
             })
 
+            if tax.include_base_amount:
+                taxes_include_in_subsequent += [tax.id]
+
         return {
-            'taxes': sorted(taxes, key=lambda k: k['sequence']),
+            'taxes': taxes,
             'total_excluded': currency.round(total_excluded) if round_total else total_excluded,
             'total_included': currency.round(total_included) if round_total else total_included,
             'base': base,
