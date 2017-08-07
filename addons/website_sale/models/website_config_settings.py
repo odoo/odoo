@@ -88,9 +88,9 @@ class WebsiteConfigSettings(models.TransientModel):
     group_multi_currency = fields.Boolean(string='Multi-Currencies', implied_group='base.group_multi_currency')
 
     sale_show_tax = fields.Selection([
-        ('total', 'Tax-Included Prices'),
-        ('subtotal', 'Tax-Excluded Prices')],
-        "Product Prices", default='total')
+        ('subtotal', 'Tax-Excluded Prices'),
+        ('total', 'Tax-Included Prices')],
+        "Product Prices", default='subtotal')
 
     @api.model
     def get_values(self):
@@ -111,7 +111,7 @@ class WebsiteConfigSettings(models.TransientModel):
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['formula'] and 1 or False,
             sale_pricelist_setting=sale_pricelist_setting,
-            sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('website.sale_show_tax')
+            sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('sale.sale_show_tax', default='subtotal')
         )
         return res
 
@@ -120,7 +120,7 @@ class WebsiteConfigSettings(models.TransientModel):
         value = self.module_account_invoicing and self.default_invoice_policy == 'order' and self.automatic_invoice
         self.env['ir.config_parameter'].sudo().set_param('website_sale.automatic_invoice', value)
         self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
-        self.env['ir.config_parameter'].sudo().set_param('website.sale_show_tax', self.sale_show_tax)
+        self.env['ir.config_parameter'].sudo().set_param('sale.sale_show_tax', self.sale_show_tax)
 
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
