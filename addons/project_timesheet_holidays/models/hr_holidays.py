@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class HolidaysType(models.Model):
     _inherit = "hr.holidays.status"
 
-    timesheet_generate = fields.Boolean('Generate Timesheet', help="If checked, when validating a leave, timesheet will be generated in the Vacation Project of the company.")
+    timesheet_generate = fields.Boolean('Generate Timesheet', default=True, help="If checked, when validating a leave, timesheet will be generated in the Vacation Project of the company.")
     timesheet_project_id = fields.Many2one('project.project', string="Internal Project", help="The project will contain the timesheet generated when a leave is validated.")
     timesheet_task_id = fields.Many2one('project.task', string="Internal Task for timesheet", domain="[('project_id', '=', timesheet_project_id)]")
 
@@ -20,6 +21,13 @@ class HolidaysType(models.Model):
         else:
             self.timesheet_project_id = False
             self.timesheet_task_id = False
+
+    @api.constrains('timesheet_generate')
+    def _check_timesheet_generate(self):
+        for holiday_status in self:
+            if holiday_status.timesheet_generate:
+                if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
+                    raise ValidationError(_('For the leaves to generate timesheet, the internal project and task are requried.'))
 
 
 class Holidays(models.Model):
