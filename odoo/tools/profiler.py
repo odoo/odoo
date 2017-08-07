@@ -57,7 +57,7 @@ class _LogTracer(object):
                     'lines': {},
                     'nb': 0,
                 }
-            except Exception, e:
+            except Exception:
                 return
         codeProfile = self.profiles[frame.f_code]
 
