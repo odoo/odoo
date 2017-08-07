@@ -2435,6 +2435,12 @@ var BasicModel = AbstractModel.extend({
      */
     _getDomain: function (element, options) {
         if (options && options.fieldName) {
+            if (element._domains[options.fieldName]) {
+                return Domain.prototype.stringToArray(
+                    element._domains[options.fieldName],
+                    this._getEvalContext(element, true)
+                );
+            }
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
             if (fieldInfo && fieldInfo.domain) {
@@ -2697,6 +2703,7 @@ var BasicModel = AbstractModel.extend({
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
+            _domains: {},
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
@@ -3021,12 +3028,7 @@ var BasicModel = AbstractModel.extend({
                     record._warning = true;
                 }
                 if (result.domain) {
-                    var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
-                    for (var fieldName in result.domain) {
-                        if (fieldsInfo[fieldName]) {
-                            fieldsInfo[fieldName].domain = result.domain[fieldName];
-                        }
-                    }
+                    record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
                     return result;
