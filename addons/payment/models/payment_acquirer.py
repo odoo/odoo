@@ -150,6 +150,8 @@ class PaymentAcquirer(models.Model):
              "resized as a 64x64px image, with aspect ratio preserved. "
              "Use this field anywhere a small image is required.")
 
+    payment_option_ids = fields.Many2many('payment.option', string='Supported Payment Option')
+
     def _search_is_tokenized(self, operator, value):
         tokenized = self._get_feature_support()['tokenize']
         if (operator, value) in [('=', True), ('!=', False)]:
@@ -394,6 +396,35 @@ class PaymentAcquirer(models.Model):
                 'context': context,
             }
 
+class PaymentOption(models.Model):
+    _name = 'payment.option'
+    _description = 'Payment Option'
+
+    name = fields.Char(string='Name')
+    acquirer_ids = fields.Many2many('payment.acquirer', string="Acquirers", help="List of Acquirers supporting this payment option.")
+    image = fields.Binary(
+        "Image", attachment=True,
+        help="This field holds the image used for this payment option, limited to 1024x1024px")
+    image_medium = fields.Binary(
+        "Medium-sized image", attachment=True,
+        help="Medium-sized image of this payment option. It is automatically "
+             "resized as a 128x128px image, with aspect ratio preserved. "
+             "Use this field in form views or some kanban views.")
+    image_small = fields.Binary(
+        "Small-sized image", attachment=True,
+        help="Small-sized image of this payment option. It is automatically "
+             "resized as a 64x64px image, with aspect ratio preserved. "
+             "Use this field anywhere a small image is required.")
+
+    @api.model
+    def create(self, vals):
+        image_resize_images(vals)
+        return super(PaymentOption, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        image_resize_images(vals)
+        return super(PaymentOption, self).write(vals)
 
 class PaymentTransaction(models.Model):
     """ Transaction Model. Each specific acquirer can extend the model by adding
