@@ -42,11 +42,11 @@ def documenter_for(directive, modname, classname, doc):
 def doc_for(directive, modname, classname, doc):
     return documenter_for(directive, modname, classname, doc).generate()
 
-def to_list(doc):
+def to_list(doc, source=None):
     return StringList([
         line.rstrip('\n')
         for line in io.StringIO(doc)
-    ])
+    ], source=source)
 def automodule_bound(app, modules, symbols):
     class AutoModuleDirective(Directive):
         required_arguments = 1
@@ -153,12 +153,11 @@ class ModuleDocumenter(Documenter):
         doc = self._doc
         content = addnodes.desc_content()
 
-        # FIXME: how do I decide whether to ignore the body?
         self._directive.state.nested_parse(self._directive.content, 0, content)
 
         if doc.doc:
-            # FIXME: link source file (for warnings & stuff)
-            self._directive.state.nested_parse(to_list(doc.doc), 0, content)
+            # FIXME: source offset
+            self._directive.state.nested_parse(to_list(doc.doc, source=doc['sourcefile']), 0, content)
 
         if doc.dependencies:
             with addto(content, nodes.field_list()) as fields:
