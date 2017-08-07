@@ -36,7 +36,7 @@ class StockMoveLine(models.Model):
         'stock.quant.package', 'Destination Package',
         ondelete='restrict', required=False,
         help="If set, the operations are packed into this package")
-    date = fields.Datetime('Date', default=fields.Datetime.now(), required=True)
+    date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
     owner_id = fields.Many2one('res.partner', 'Owner', help="Owner of the quants")
     location_id = fields.Many2one('stock.location', 'From', required=True)
     location_dest_id = fields.Many2one('stock.location', 'To', required=True)
