@@ -23,8 +23,9 @@ class ModuleMatcher(Visitor):
     * spawns off a :class:`ModuleBodyMatcher` on the function's body with the
       module name and the $name as "require" function
     """
-    def __init__(self):
+    def __init__(self, filename):
         super(ModuleMatcher, self).__init__()
+        self.filename = filename
         self.result = []
     def enter_Program(self, node):
         pass # allows visiting toplevel
@@ -40,6 +41,7 @@ class ModuleMatcher(Visitor):
             mod = jsdoc.parse_comments(node.get('comments'), jsdoc.ModuleDoc)
             # set module name
             mod.parsed['module'] = module['value']
+            mod.parsed['sourcefile'] = self.filename
             self.result.append(mod)
 
             # get name of require parameter

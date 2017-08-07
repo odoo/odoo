@@ -15,42 +15,35 @@ def _get_roots(conf):
         return env_roots.split(':')
     return []
 
-def _read_js(modules, symbols):
-    def read_js(app, env, docnames):
-        """
-        :type app: sphinx.application.Sphinx
-        :type env: sphinx.environment.BuildEnvironment
-        :type docnames: list[str]
-        """
-        # only load JS if there are actually docs to update otherwise it's
-        # completely unnecessary (?)
-        if not docnames:
-            return
+def read_js(app, modules, symbols):
+    """
+    :type app: sphinx.application.Sphinx
+    :type modules: Dict[str, jsdoc.ModuleDoc]
+    :type symbols: Dict[str, jsdoc.CommentDoc]
+    """
+    roots = map(os.path.normpath, app.config.js_roots or [os.path.join(app.confdir, '..')])
+    files = [
+        os.path.join(r, f)
+        for root in roots
+        for r, _, fs in os.walk(root)
+        if 'static/src/js' in r
+        for f in fs
+        if f.endswith('.js')
+    ]
 
-        roots = map(os.path.normpath, app.config.js_roots or [os.path.join(app.confdir, '..')])
-        files = [
-            os.path.join(r, f)
-            for root in roots
-            for r, _, fs in os.walk(root)
-            if 'static/src/js' in r
-            for f in fs
-            if f.endswith('.js')
-        ]
+    modules.update((mod.name, mod) for mod in ABSTRACT_MODULES)
+    for name in status_iterator(files, "Parsing javascript files...", length=len(files)):
+        with io.open(name) as f:
+            ast = pyjsparser.parse(f.read())
+            modules.update(
+                (mod.name, mod)
+                for mod in parser.ModuleMatcher(name).visit(ast)
+            )
+    _resolve_references(modules)
 
-        modules.update((mod.name, mod) for mod in ABSTRACT_MODULES)
-        for name in status_iterator(files, "Parsing javascript files...", length=len(files)):
-            with io.open(name) as f:
-                ast = pyjsparser.parse(f.read())
-                modules.update(
-                    (mod.name, mod)
-                    for mod in parser.ModuleMatcher().visit(ast)
-                )
-        _resolve_references(modules)
-
-        for mod in modules.values():
-            exports = symbols[mod.name] = mod.exports
-            graft(exports, symbols, prefix=mod.name)
-    return read_js
+    for mod in modules.values():
+        exports = symbols[mod.name] = mod.exports
+        graft(exports, symbols, prefix=mod.name)
 
 def graft(parent, items, prefix):
     if isinstance(parent, jsdoc.ClassDoc):

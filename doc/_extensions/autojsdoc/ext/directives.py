@@ -6,11 +6,11 @@ import io
 
 from docutils import nodes
 from docutils.parsers.rst import Directive
-from docutils.parsers.rst.directives import flag
 from docutils.statemachine import StringList
 from sphinx import addnodes
 from sphinx.ext.autodoc import members_set_option, bool_option
 
+from autojsdoc.ext.extractor import read_js
 from ..parser import jsdoc
 
 
@@ -51,23 +51,6 @@ def automodule_bound(app, modules, symbols):
     class AutoModuleDirective(Directive):
         required_arguments = 1
         has_content = True
-        # TODO: add relevant options from automodule (e.g. :members: & shit)
-        ## from docutils.parsers.rst.directives
-        # flag -> None|unset
-        # unchanged_required -> arg
-        # unchanged -> arg | ''
-        # nonnegative_int -> 0+
-        # positive_int -> 1+
-        # positive_int_list
-        # choice -> any of choices, must be wrapped
-        # class_option -> list of identifiers
-        # value_or(values, fn) -> arg if arg in values else fn(arg)
-        ## from autodoc
-        # DefDict(identity) -> accept all
-        # members_option -> ALL | arg.split(',')|strip()
-        # members_set_option -> ALL | set(arg.split(',')|strip())
-        # annotation_option -> SUPPRESS | arg
-        # bool_option -> True|unset
         option_spec = {
             'members': members_set_option,
             'undoc-members': bool_option,
@@ -78,9 +61,12 @@ def automodule_bound(app, modules, symbols):
         # self.state.nested_parse(string, offset, node) => parse context for sub-content (body which can contain RST data)
         # => needed for doc (converted?) and for actual directive body
         def run(self):
-            # FIXME: lazy parse here (avoid parsing if not rebuilding doc host
-            # FIXME: env.note_dependency(mod.sourcefile)
             modname = self.arguments[0].strip()
+
+            # TODO: cache/memoize modules & symbols?
+            if not modules:
+                read_js(app, modules, symbols)
+
             mods = [
                 (name, mod)
                 for name, mod in modules.items()
@@ -94,7 +80,9 @@ def automodule_bound(app, modules, symbols):
                     # unless requested
                     if not self.options.get('undoc-matches'):
                         continue
-
+                modsource = mod['sourcefile']
+                if modsource:
+                    self.state.document.settings.env.note_dependency(modsource)
                 # FIXME: not sure what that's used for as normal xrefs are
                 # resolved using the id directly
                 target = nodes.target('', '', ids=['module-' + name], ismod=True)
