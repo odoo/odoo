@@ -13,23 +13,23 @@ class ReportProjectTaskUser(models.Model):
     name = fields.Char(string='Task Title', readonly=True)
     user_id = fields.Many2one('res.users', string='Assigned To', readonly=True)
     date_start = fields.Datetime(string='Assignation Date', readonly=True)
-    no_of_days = fields.Integer(string='# Working Days', readonly=True)
     date_end = fields.Datetime(string='Ending Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
-    closing_days = fields.Float(string='# Days to Close',
+    working_days_close = fields.Float(string='# Working Days to Close',
         digits=(16,2), readonly=True, group_operator="avg",
-        help="Number of Days to close the task")
-    opening_days = fields.Float(string='# Days to Assign',
+        help="Number of Working Days to close the task")
+    working_days_open = fields.Float(string='# Working Days to Assign',
         digits=(16,2), readonly=True, group_operator="avg",
-        help="Number of Days to Open the task")
+        help="Number of Working Days to Open the task")
     delay_endings_days = fields.Float(string='# Days to Deadline', digits=(16,2), readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
     priority = fields.Selection([
-            ('0','Non Starred'),
-            ('1','Starred')
-        ], size=1, readonly=True, string="Starred")
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High')
+        ], size=1, readonly=True, string="Priority")
     state = fields.Selection([
             ('normal', 'In Progress'),
             ('blocked', 'Blocked'),
@@ -48,7 +48,6 @@ class ReportProjectTaskUser(models.Model):
                     t.date_end as date_end,
                     t.date_last_stage_update as date_last_stage_update,
                     t.date_deadline as date_deadline,
-                    abs((extract('epoch' from (t.write_date-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
                     t.project_id,
                     t.priority,
@@ -57,8 +56,8 @@ class ReportProjectTaskUser(models.Model):
                     t.partner_id,
                     t.stage_id as stage_id,
                     t.kanban_state as state,
-                    (extract('epoch' from (t.write_date-t.create_date)))/(3600*24)  as closing_days,
-                    (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
+                    t.working_days_close as working_days_close,
+                    t.working_days_open  as working_days_open,
                     (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24)  as delay_endings_days
         """
         return select_str

@@ -13,9 +13,6 @@ class ProjectTaskType(models.Model):
     _description = 'Task Stage'
     _order = 'sequence, id'
 
-    def _get_mail_template_id_domain(self):
-        return [('model', '=', 'project.task')]
-
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
@@ -40,7 +37,7 @@ class ProjectTaskType(models.Model):
     mail_template_id = fields.Many2one(
         'mail.template',
         string='Email Template',
-        domain=lambda self: self._get_mail_template_id_domain(),
+        domain=[('model', '=', 'project.task')],
         help="If set an email will be sent to the customer when the task or issue reaches this step.")
     fold = fields.Boolean(string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
@@ -100,11 +97,6 @@ class Project(models.Model):
                        for project_data in projects_data}
         for project in self:
             project.task_needaction_count = mapped_data.get(project.id, 0)
-
-    @api.model
-    def _get_alias_models(self):
-        """ Overriden in project_issue to offer more options """
-        return [('project.task', "Tasks")]
 
     @api.multi
     def attachment_tree_view(self):
@@ -168,9 +160,6 @@ class Project(models.Model):
         result['use_tasks'] = True
         return result
 
-    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
-    _alias_models = lambda self: self._get_alias_models()
-
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
@@ -201,8 +190,6 @@ class Project(models.Model):
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
-    alias_model = fields.Selection(_alias_models, string="Alias Model", index=True, required=True, default='project.task',
-        help="The kind of document created when an email is received on this project's email alias")
     privacy_visibility = fields.Selection([
             ('followers', _('On invitation only')),
             ('employees', _('Visible by all employees')),
@@ -263,9 +250,6 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        # if alias_model has been changed, update alias_model_id accordingly
-        if vals.get('alias_model'):
-            vals['alias_model_id'] = self.env['ir.model']._get(vals.get('alias_model', 'project.task')).id
         res = super(Project, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
@@ -320,14 +304,6 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
-    @api.model
-    def default_get(self, field_list):
-        """ Set 'date_assign' if user_id is set. """
-        result = super(Task, self).default_get(field_list)
-        if 'user_id' in result:
-            result['date_assign'] = fields.Datetime.now()
-        return result
-
     def _get_default_partner(self):
         if 'default_project_id' in self.env.context:
             default_project_id = self.env['project.project'].browse(self.env.context['default_project_id'])
@@ -353,9 +329,10 @@ class Task(models.Model):
     name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
-            ('0','Non Starred'),
-            ('1','Starred')
-        ], default='0', index=True, string="Starred")
+        ('0', 'Low'),
+        ('1', 'Normal'),
+        ('2', 'High')
+        ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', track_visibility='onchange', index=True,
@@ -417,6 +394,38 @@ class Task(models.Model):
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
     subtask_project_id = fields.Many2one('project.project', related="project_id.subtask_project_id", string='Sub-task Project', readonly=True)
     subtask_count = fields.Integer(compute='_compute_subtask_count', type='integer', string="Sub-task count")
+    email_from = fields.Char(string='Email', help="These people will receive email.", index=True)
+    email_cc = fields.Char(string='Watchers Emails', help="""These email addresses will be added to the CC field of all inbound
+        and outbound emails for this record before being sent. Separate multiple email addresses with a comma""")
+    # Computed field about working time elapsed between record creation and assignation/closing.
+    working_hours_open = fields.Float(compute='_compute_elapsed', string='Working hours to assign', store=True, group_operator="avg")
+    working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
+    working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
+    working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
+
+    @api.multi
+    @api.depends('create_date', 'date_end', 'date_assign')
+    def _compute_elapsed(self):
+        task_linked_to_calendar = self.filtered(
+            lambda task: task.project_id.resource_calendar_id and task.create_date
+        )
+        for task in task_linked_to_calendar:
+            dt_create_date = fields.Datetime.from_string(task.create_date)
+
+            if task.date_assign:
+                dt_date_assign = fields.Datetime.from_string(task.date_assign)
+                task.working_hours_open = task.project_id.resource_calendar_id.get_work_hours_count(
+                        dt_create_date, dt_date_assign, False, compute_leaves=True)
+                task.working_days_open = task.working_hours_open / 24.0
+
+            if task.date_end:
+                dt_date_end = fields.Datetime.from_string(task.date_end)
+                task.working_hours_close = task.project_id.resource_calendar_id.get_work_hours_count(
+                    dt_create_date, dt_date_end, False, compute_leaves=True)
+                task.working_days_close = task.working_hours_close / 24.0
+
+        (self - task_linked_to_calendar).update(dict.fromkeys(
+            ['working_hours_open', 'working_hours_close', 'working_days_open', 'working_days_close'], 0.0))
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -428,6 +437,10 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        self.email_from = self.partner_id.email
+
     @api.onchange('project_id')
     def _onchange_project(self):
         default_partner_id = self.env.context.get('default_partner_id')
@@ -436,8 +449,11 @@ class Task(models.Model):
             self.partner_id = self.project_id.partner_id or default_partner
             if self.project_id not in self.stage_id.project_ids:
                 self.stage_id = self.stage_find(self.project_id.id, [('fold', '=', False)])
+            if not self.email_from:
+                self.email_from = self.partner_id.email
         else:
             self.partner_id = default_partner
+            self.email_from = default_partner.email
             self.stage_id = False
 
     @api.onchange('user_id')
@@ -465,11 +481,6 @@ class Task(models.Model):
         for task in self:
             if task.parent_id.project_id and task.project_id != task.parent_id.project_id.subtask_project_id:
                 raise UserError(_("You can't define a parent task if its project is not correctly configured. The sub-task's project of the parent task's project should be this task's project"))
-
-    @api.constrains('date_start', 'date_end')
-    def _check_dates(self):
-        if any(self.filtered(lambda task: task.date_start and task.date_end and task.date_start > task.date_end)):
-            raise ValidationError(_('Error ! Task starting date must be lower than its ending date.'))
 
     # Override view according to the company definition
     @api.model
@@ -561,6 +572,9 @@ class Task(models.Model):
         # user_id change: update date_assign
         if vals.get('user_id'):
             vals['date_assign'] = fields.Datetime.now()
+        # Stage change: Update date_end if folded stage
+        if vals.get('stage_id'):
+            vals.update(self.update_date_end(vals['stage_id']))
         task = super(Task, self.with_context(context)).create(vals)
         return task
 
@@ -569,17 +583,24 @@ class Task(models.Model):
         now = fields.Datetime.now()
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
+            vals.update(self.update_date_end(vals['stage_id']))
             vals['date_last_stage_update'] = now
             # reset kanban state when changing stage
             if 'kanban_state' not in vals:
                 vals['kanban_state'] = 'normal'
         # user_id change: update date_assign
-        if vals.get('user_id'):
+        if vals.get('user_id') and 'date_assign' not in vals:
             vals['date_assign'] = now
 
         result = super(Task, self).write(vals)
 
         return result
+
+    def update_date_end(self, stage_id):
+        project_task_type = self.env['project.task.type'].browse(stage_id)
+        if project_task_type.fold:
+            return {'date_end': fields.Datetime.now()}
+        return {'date_end': False}
 
     # ---------------------------------------------------
     # Mail gateway
@@ -646,17 +667,28 @@ class Task(models.Model):
 
     @api.model
     def message_new(self, msg, custom_values=None):
-        """ Override to updates the document according to the email. """
+        """ Overrides mail_thread message_new that is called by the mailgateway
+            through message_process.
+            This override updates the document according to the email.
+        """
+        # remove default author when going through the mail gateway. Indeed we
+        # do not want to explicitly set user_id to False; however we do not
+        # want the gateway user to be responsible if no other responsible is
+        # found.
+        create_context = dict(self.env.context or {})
+        create_context['default_user_id'] = False
         if custom_values is None:
             custom_values = {}
         defaults = {
-            'name': msg.get('subject'),
+            'name': msg.get('subject') or _("No Subject"),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
             'planned_hours': 0.0,
             'partner_id': msg.get('author_id')
         }
         defaults.update(custom_values)
 
-        task = super(Task, self).message_new(msg, custom_values=defaults)
+        task = super(Task, self.with_context(create_context)).message_new(msg, custom_values=defaults)
         email_list = task.email_split(msg)
         partner_ids = [p for p in task._find_partner_from_emails(email_list, force_create=False) if p]
         task.message_subscribe(partner_ids)
@@ -692,7 +724,10 @@ class Task(models.Model):
         recipients = super(Task, self).message_get_suggested_recipients()
         for task in self.filtered('partner_id'):
             reason = _('Customer Email') if task.partner_id.email else _('Customer')
-            task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
+            if task.partner_id:
+                task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
+            elif task.email_from:
+                task._message_add_suggested_recipient(recipients, partner=task.email_from, reason=reason)
         return recipients
 
     @api.multi
@@ -712,6 +747,22 @@ class Task(models.Model):
             headers['X-Odoo-Tags'] = ','.join(self.tag_ids.mapped('name'))
         res['headers'] = repr(headers)
         return res
+
+    def _message_post_after_hook(self, message):
+        if self.email_from and not self.partner_id:
+            # we consider that posting a message with a specified recipient (not a follower, a specific one)
+            # on a document without customer means that it was created through the chatter using
+            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
+            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
+            if new_partner:
+                self.search([
+                    ('partner_id', '=', False),
+                    ('email_from', '=', new_partner.email),
+                    ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
+        return super(Task, self)._message_post_after_hook(message)
+
+    def action_assign_to_me(self):
+        self.write({'user_id': self.env.user.id})
 
     def action_open_parent_task(self):
         return {
@@ -812,9 +863,9 @@ class AccountAnalyticAccount(models.Model):
         return result
 
 class ProjectTags(models.Model):
-    """ Tags of project's tasks (or issues) """
+    """ Tags of project's tasks """
     _name = "project.tags"
-    _description = "Tags of project's tasks, issues..."
+    _description = "Tags of project's tasks"
 
     name = fields.Char(required=True)
     color = fields.Integer(string='Color Index', default=10)
