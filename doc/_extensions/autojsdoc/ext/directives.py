@@ -224,16 +224,9 @@ class ClassDocumenter(Documenter):
     def make_parameters(self):
         params = addnodes.desc_parameterlist('', '')
         ctor = self.ctor()
-        if not ctor:
-            return params
+        if ctor:
+            params += make_desc_parameters(ctor.params)
 
-        for p in ctor.params:
-            name = p.name.strip()
-            if name.startswith('[') and name.startswith(']'):
-                n = name[1:-1]
-                params += addnodes.desc_optional(n, n)
-            else:
-                params += addnodes.desc_parameter(name, name)
         return params
 
     def make_content(self):
@@ -336,17 +329,7 @@ class FunctionDocumenter(Documenter):
     def make_signature(self):
         ret = nodes.section('', addnodes.desc_name(self._doc.name, self._doc.name))
         with addto(ret, addnodes.desc_parameterlist()) as params:
-            # FIXME: guess params if undoc'd
-            for p in self._doc.params:
-                name = p.name.strip()
-                # FIXME: extract sub-params to typedef (in body?)
-                if '.' in name:
-                    continue
-                if name.startswith('[') and name.startswith(']'):
-                    n = name[1:-1]
-                    params += addnodes.desc_optional(n, n)
-                else:
-                    params += addnodes.desc_parameter(name, name)
+            params += make_desc_parameters(self._doc.params)
         retval = self._doc.return_val
         if retval.type or retval.doc:
             ret += addnodes.desc_returns(retval.type or '*', retval.type  or '*')
@@ -380,6 +363,22 @@ class FunctionDocumenter(Documenter):
                              addto(body, nodes.paragraph()) as p:
                             p += make_types(rtype, mod=self._module)
         return ret.children
+
+
+def make_desc_parameters(params):
+    # FIXME: guess params if undoc'd (no @param on function)
+    for p in params:
+        name = p.name.strip()
+        # FIXME: extract sub-params to typedef (in body?)
+        if '.' in name:
+            continue
+
+        if name.startswith('[') and name.startswith(']'):
+            n = name[1:-1]
+            yield addnodes.desc_optional(n, n)
+        else:
+            yield addnodes.desc_parameter(name, name)
+
 
 def make_parameters(params, mod=None):
     for param in params:
