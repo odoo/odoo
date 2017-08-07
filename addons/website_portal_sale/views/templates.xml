@@ -250,7 +250,7 @@
                       <t t-foreach="order.order_line" t-as="ol">
                         <div class="row orders_vertical_align">
                             <div class="col-md-1 text-center">
-                                <img t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id"/>
+                                <img t-att-src="ol.product_id.image_small and ('data:image/png;base64,' + ol.product_id.image_small) or '/web/static/src/img/placeholder.png'"/>
                             </div>
                             <div id='product_name' class="col-md-5">
                               <span t-esc="ol.product_id.name"/>
