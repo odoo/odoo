@@ -35,6 +35,7 @@ def walksymlinks(top, topdown=True, onerror=None):
     same as os.walk but follow symlinks
     attention: all symlinks are walked before all normals directories
     """
+    top = top.encode("utf-8")    #通过强制指定编码方式，以解决odoo遇到中文文件名出错的问题
     for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
         if topdown:
             yield dirpath, dirnames, filenames
