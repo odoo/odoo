@@ -911,6 +911,7 @@ class StockMove(models.Model):
                     })
                 picking.message_post('Backorder Created') #message needs to be improved
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
+                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
             moves_to_backorder.action_assign()
         return moves_todo
 

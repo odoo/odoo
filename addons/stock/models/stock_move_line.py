@@ -295,7 +295,7 @@ class StockMoveLine(models.Model):
                 rounding = ml.product_uom_id.rounding
 
                 # if this move line is force assigned, unreserve elsewhere if needed
-                if float_compare(ml.qty_done, ml.product_qty, precision_rounding=rounding) > 0:
+                if ml.location_id.should_impact_quants() and float_compare(ml.qty_done, ml.product_qty, precision_rounding=rounding) > 0:
                     extra_qty = ml.qty_done - ml.product_qty
                     ml._free_reservation(ml.product_id, ml.location_id, extra_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 # unreserve what's been reserved
