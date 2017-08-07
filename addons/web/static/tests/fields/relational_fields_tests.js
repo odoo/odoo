@@ -1418,6 +1418,63 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2one in one2many: domain updated by an onchange', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            trululu: function () {},
+        };
+
+        var domain = [];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bttom">' +
+                            '<field name="trululu"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        },
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, domain,
+                        "sent domain should be correct");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // add a first row with a specific domain for the m2o
+        domain = [['id', 'in', [10]]]; // domain for subrecord 1
+        form.$('.o_field_x2many_list_row_add a').click(); // triggers the onchange
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        // add a second row with another domain for the m2o
+        domain = [['id', 'in', [5]]]; // domain for subrecord 2
+        form.$('.o_field_x2many_list_row_add a').click(); // triggers the onchange
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        // check again the first row to ensure that the domain hasn't change
+        domain = [['id', 'in', [10]]]; // domain for subrecord 1 should have been kept
+        form.$('.o_data_row:first .o_data_cell').click();
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        form.destroy();
+    });
+
     QUnit.test('updating a many2one from a many2many', function (assert) {
         assert.expect(4);
 
