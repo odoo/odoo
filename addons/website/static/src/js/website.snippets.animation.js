@@ -128,8 +128,9 @@ animation.registry.media_video = animation.Class.extend({
         if (!this.$target.has('.media_iframe_video_size').length) {
             var editor = '<div class="css_editable_mode_display">&nbsp;</div>';
             var size = '<div class="media_iframe_video_size">&nbsp;</div>';
-            this.$target.html(editor+size+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
+            this.$target.html(editor+size);
         }
+        this.$target.html(this.$target.html()+'<iframe src="'+_.escape(this.$target.data("src"))+'" frameborder="0" allowfullscreen="allowfullscreen"></iframe>');
     },
 });
 
