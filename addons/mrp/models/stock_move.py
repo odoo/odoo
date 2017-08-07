@@ -68,6 +68,12 @@ class StockMoveLots(models.Model):
                     .write({'lot_produced_id': vals['lot_id']})
         return super(StockMoveLots, self).write(vals)
 
+    @api.model
+    def create(self, vals):
+        movelot = super(StockMoveLots, self).create(vals)
+        if movelot.move_id.raw_material_production_id.check_to_done and movelot.move_id.raw_material_production_id.product_id.tracking != 'none':
+            raise UserError(_('Please modify an existing lot instead of creating a new one.'))
+        return movelot
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
