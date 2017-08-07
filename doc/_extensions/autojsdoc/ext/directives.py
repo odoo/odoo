@@ -8,7 +8,7 @@ from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
 from sphinx import addnodes
-from sphinx.ext.autodoc import members_set_option, bool_option
+from sphinx.ext.autodoc import members_set_option, bool_option, ALL
 
 from autojsdoc.ext.extractor import read_js
 from ..parser import jsdoc
@@ -83,8 +83,7 @@ def automodule_bound(app, modules, symbols):
                 modsource = mod['sourcefile']
                 if modsource:
                     self.state.document.settings.env.note_dependency(modsource)
-                # FIXME: not sure what that's used for as normal xrefs are
-                # resolved using the id directly
+                # FIXME: not sure what that's used for as normal xrefs are resolved using the id directly
                 target = nodes.target('', '', ids=['module-' + name], ismod=True)
                 self.state.document.note_explicit_target(target)
 
@@ -128,7 +127,7 @@ class Documenter(object):
                 env = self._directive.state.document.settings.env
                 env.domaindata['js']['objects'][objname] = (env.docname, objtype)
 
-            # FIXME: linkcode_resolve
+            # TODO: linkcode_resolve
             s += self.make_signature()
         with addto(root, addnodes.desc_content()) as c:
             c += self.make_content()
@@ -144,6 +143,30 @@ class Documenter(object):
         """
         :rtype: List[nodes.Node]
         """
+
+    def should_document(self, member):
+        """
+        :type member: jsdoc.CommentDoc
+        :rtype: bool
+        """
+        options = self._directive.options
+        member_name = member.name
+
+        members = options.get('members')
+        if members is not ALL:
+            # if a member is requested by name, it's always documented
+            return member_name in members
+
+        # ctor params are merged into the class doc
+        if member.is_constructor:
+            return False
+
+        # only document "private" members if option is set
+        if member.is_private and not options.get('private-members'):
+            return False
+
+        # TODO: what if member doesn't have a description but has non-desc tags set?
+        return bool(member.doc or options.get('undoc-members'))
 
 class ModuleDocumenter(Documenter):
     objtype = 'module'
@@ -222,13 +245,7 @@ class ClassDocumenter(Documenter):
                     field += self.make_mixins()
 
         for m in doc.methods:
-            if m.is_private: # FIXME: :private-members:
-                continue
-            # TODO: what if no description but other attributes?
-            if not m.doc: # FIXME: :undoc-members:
-                continue
-            # ctor params are set on the class itself
-            if m.is_constructor:
+            if not self.should_document(m):
                 continue
 
             ret += doc_for(self._directive, self._module, self._doc.name, m)
@@ -347,9 +364,10 @@ class ObjectDocumenter(Documenter):
         ret = nodes.section()
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-        # FIXME: visibility (:members:, :private-members: :undoc-members:)
         # FIXME: xref when property is named/not inline
         for (_, p) in doc.properties:
+            if not self.should_document(p):
+                continue
             ret += doc_for(self._directive, self._module, None, p)
         return ret.children
 
