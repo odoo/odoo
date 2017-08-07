@@ -54,14 +54,20 @@ class SaleOrder(models.Model):
                     # set the forced carrier at the beginning of the list to be verfied first below
                     available_carriers -= carrier
                     available_carriers = carrier + available_carriers
+
+            # Check if the default carrier of the shipping contact is an option
+            partner_default_carrier = self.partner_shipping_id.property_delivery_carrier_id
+            if partner_default_carrier:
+                carrier = partner_default_carrier.verify_carrier(self.partner_shipping_id)
+
             if force_carrier_id or not carrier or carrier not in available_carriers:
                 for delivery in available_carriers:
                     verified_carrier = delivery.verify_carrier(self.partner_shipping_id)
                     if verified_carrier:
                         carrier = delivery
                         break
-                self.write({'carrier_id': carrier.id})
             if carrier:
+                self.write({'carrier_id': carrier.id})
                 self.delivery_set()
             else:
                 self._delivery_unset()
