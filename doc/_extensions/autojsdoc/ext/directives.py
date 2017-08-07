@@ -199,7 +199,7 @@ class ModuleDocumenter(Documenter):
         field += nodes.field_name("Depends On", "Depends On")
         with addto(field, nodes.field_body()) as body:
             with addto(body, nodes.bullet_list()) as deps:
-                for dep in doc.dependencies:
+                for dep in sorted(doc.dependencies):
                     ref = addnodes.pending_xref(
                         dep, nodes.paragraph(dep, dep),
                         refdomain='js',
@@ -283,7 +283,7 @@ class ClassDocumenter(Documenter):
         ret = nodes.field('', nodes.field_name("Mixes", "Mixes"))
         with addto(ret, nodes.field_body()) as body:
             with addto(body, nodes.bullet_list()) as mixins:
-                for mixin in doc.mixins:
+                for mixin in sorted(doc.mixins, key=lambda m: m.name):
                     mixin_link = addnodes.pending_xref(
                         mixin.name, nodes.paragraph(mixin.name, mixin.name),
                         refdomain='js', reftype='mixin', reftarget=mixin.name
