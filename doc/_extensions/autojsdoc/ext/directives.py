@@ -4,6 +4,7 @@ import contextlib
 import fnmatch
 import io
 
+import re
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
@@ -201,9 +202,9 @@ class ModuleDocumenter(Documenter):
                 for dep in doc.dependencies:
                     ref = addnodes.pending_xref(
                         dep, nodes.paragraph(dep, dep),
+                        refdomain='js',
                         reftype='module',
                         reftarget=dep,
-                        refdomain='js',
                     )
                     # TODO: js:module/js:object keys for relative lookup
                     deps += nodes.list_item(dep, ref)
@@ -217,12 +218,16 @@ class ClassDocumenter(Documenter):
             self.make_parameters(),
         ]
 
+    def ctor(self):
+        return next(iter(self._doc.constructors), None)
+
     def make_parameters(self):
         params = addnodes.desc_parameterlist('', '')
-        ctors = self._doc.constructors
-        if not ctors:
+        ctor = self.ctor()
+        if not ctor:
             return params
-        for p in ctors[0].params:
+
+        for p in ctor.params:
             name = p.name.strip()
             if name.startswith('[') and name.startswith(']'):
                 n = name[1:-1]
@@ -236,13 +241,12 @@ class ClassDocumenter(Documenter):
         ret = nodes.section()
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-        # FIXME: fields params doc from ctor
-        # FIXME: split & xref ctor params
 
-        if doc.mixins:
+        if doc.superclass or doc.mixins:
             with addto(ret, nodes.field_list()) as fields:
-                with addto(fields, nodes.field()) as field:
-                    field += self.make_mixins()
+                fields += self.make_super()
+                fields += self.make_mixins()
+                fields += self.make_params()
 
         for m in doc.methods:
             if not self.should_document(m):
@@ -252,27 +256,71 @@ class ClassDocumenter(Documenter):
 
         return ret.children
 
+    def make_super(self):
+        doc = self._doc
+        if not doc.superclass:
+            return []
+
+        sup_link = addnodes.pending_xref(
+            doc.superclass.name, nodes.paragraph(doc.superclass.name, doc.superclass.name),
+            refdomain='js', reftype='class', reftarget=doc.superclass.name,
+        )
+        # FIXME: should be the module the superclass comes from (if any)
+        # -> need to keep the source module on CommentDoc objects
+        sup_link['js:module'] = self._module
+        return nodes.field(
+            '',
+            nodes.field_name("Extends", "Extends"),
+            nodes.field_body(doc.superclass.name, sup_link),
+        )
+
+
     def make_mixins(self):
-        ret = nodes.section('', nodes.field_name("Mixes", "Mixes"))
+        doc = self._doc
+        if not doc.mixins:
+            return []
+
+        ret = nodes.field('', nodes.field_name("Mixes", "Mixes"))
         with addto(ret, nodes.field_body()) as body:
             with addto(body, nodes.bullet_list()) as mixins:
-                for mixin in self._doc.mixins:
-                    mixins += nodes.list_item('', nodes.paragraph(mixin.name, mixin.name))
-        return ret.children
+                for mixin in doc.mixins:
+                    mixin_link = addnodes.pending_xref(
+                        mixin.name, nodes.paragraph(mixin.name, mixin.name),
+                        refdomain='js', reftype='mixin', reftarget=mixin.name
+                    )
+                    mixin_link['js:module'] = self._module
+                    mixins += nodes.list_item('', mixin_link)
+        return ret
+
+    def make_params(self):
+        ctor = self.ctor()
+        if not (ctor and ctor.params):
+            return []
+
+        ret = nodes.field('', nodes.field_name('Parameters', 'Parameters'))
+        with addto(ret, nodes.field_body()) as body,\
+             addto(body, nodes.bullet_list()) as holder:
+            holder += make_parameters(ctor.params, mod=self._module)
+        return ret
 
 class InstanceDocumenter(Documenter):
     objtype = 'object'
     def make_signature(self):
         cls = self._doc.cls
-        if not cls:
-            return [addnodes.desc_name(self._doc.name, self._doc.name)]
-
-        return [
-            addnodes.desc_name(self._doc.name, self._doc.name),
-            addnodes.desc_annotation(' instance of ', ' instance of '),
-            # FIXME: xref class
-            addnodes.desc_type(cls.name, cls.name),
-        ]
+        ret = []
+        if self._doc.name:
+            ret.append(addnodes.desc_name(self._doc.name, self._doc.name))
+        if cls:
+            super_ref = addnodes.pending_xref(
+                cls.name, nodes.Text(cls.name, cls.name),
+                refdomain='js', reftype='class', reftarget=cls.name
+            )
+            super_ref['js:module'] = self._module
+            ret.append(addnodes.desc_annotation(' instance of ', ' instance of '))
+            ret.append(addnodes.desc_type(cls.name, '', super_ref))
+        if not ret:
+            return [addnodes.desc_name('???', '???')]
+        return ret
 
     def make_content(self):
         ret = nodes.section()
@@ -286,9 +334,7 @@ class FunctionDocumenter(Documenter):
     def objtype(self):
         return 'method' if self._class else 'function'
     def make_signature(self):
-        # FIXME: xref superclass
         ret = nodes.section('', addnodes.desc_name(self._doc.name, self._doc.name))
-        # TODO: desc_annotation, desc_type?
         with addto(ret, addnodes.desc_parameterlist()) as params:
             # FIXME: guess params if undoc'd
             for p in self._doc.params:
@@ -312,47 +358,65 @@ class FunctionDocumenter(Documenter):
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
 
-        if doc.params or doc.return_val.type or doc.return_val.doc:
+        rtype = doc.return_val.type
+        if doc.params or rtype or doc.return_val.doc:
             with addto(ret, nodes.field_list()) as fields:
                 if doc.params:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name('Parameters', 'Parameters')
                         with addto(field, nodes.field_body()) as body,\
                              addto(body, nodes.bullet_list()) as holder:
-                            holder.extend(self.make_parameters(doc.params))
+                            holder.extend(make_parameters(doc.params, mod=self._module))
                 if doc.return_val.doc:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Returns", "Returns")
                         with addto(field, nodes.field_body()) as body,\
                              addto(body, nodes.paragraph()) as p:
                             p += nodes.inline(doc.return_val.doc, doc.return_val.doc)
-                if doc.return_val.type:
-                    # FIXME: split & xref return type
+                if rtype:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Return Type", "Return Type")
                         with addto(field, nodes.field_body()) as body, \
                              addto(body, nodes.paragraph()) as p:
-                            p += nodes.inline(doc.return_val.type, doc.return_val.type)
+                            p += make_types(rtype, mod=self._module)
         return ret.children
 
-    def make_parameters(self, params):
-        for param in params:
-            name = param.name.strip().strip('[]')
-            p = nodes.paragraph(
-                '', '', addnodes.literal_strong(name, name))
-            if param.type:
-                # FIXME: split & xref param type
-                p += [
-                    nodes.Text(' ('),
-                    addnodes.literal_emphasis(param.type, param.type),
-                    nodes.Text(')'),
-                ]
-            if param.doc:
-                p += [
-                    nodes.Text(' -- '),
-                    nodes.inline(param.doc, param.doc)
-                ]
-            yield p
+def make_parameters(params, mod=None):
+    for param in params:
+        name = param.name.strip().strip('[]')
+        p = nodes.paragraph('', '', addnodes.literal_strong(name, name))
+        if param.type:
+            p += nodes.Text(' (')
+            p += make_types(param.type, mod=mod)
+            p += nodes.Text(')')
+        if param.doc:
+            p += [
+                nodes.Text(' -- '),
+                nodes.inline(param.doc, param.doc)
+            ]
+        yield p
+
+def make_types(typespec, mod=None):
+    # "A or B" or "A | B"
+    # FIXME: handle literals
+    # FIXME: handle parametric types
+    def make_link(t):
+        ref = addnodes.pending_xref(
+            t, addnodes.literal_emphasis(t, t),
+            refdomain='js', reftype='class', reftarget=t,
+        )
+        if mod:
+            ref['js:module'] = mod
+        return ref
+
+    types = (
+        make_link(t.strip())
+        for t in re.split(r'\b(?:or|\|)\b', typespec)
+    )
+    yield next(types)
+    for t in types:
+        yield nodes.emphasis(' or ', ' or ')
+        yield t
 
 class ObjectDocumenter(Documenter):
     def make_signature(self):
@@ -381,14 +445,23 @@ class MixinDocumenter(ObjectDocumenter):
 class PropertyDocumenter(Documenter):
     objtype = 'attribute'
     def make_signature(self):
-        return [addnodes.desc_name(self._doc.name, self._doc.name)]
+        ret = [addnodes.desc_name(self._doc.name, self._doc.name)]
+        proptype = self._doc.type
+        if proptype:
+            typeref = addnodes.pending_xref(
+                proptype, nodes.Text(proptype, proptype),
+                refdomain='js', reftype='class', reftarget=proptype
+            )
+            typeref['js:module'] = self._module
+            ret.append(nodes.Text(' '))
+            ret.append(typeref)
+        return ret
 
     def make_content(self):
         doc = self._doc
         ret = nodes.section()
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-        # FIXME: type?
         return ret.children
 
 class UnknownDocumenter(Documenter):

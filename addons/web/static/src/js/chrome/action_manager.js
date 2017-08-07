@@ -613,7 +613,7 @@ var ActionManager = Widget.extend({
     /**
      * Execute an OpenERP action
      *
-     * @param {Number|String|String|Object} Can be either an action id, an action XML id, a client action tag or an action descriptor.
+     * @param {Number|String|String|Object} action Can be either an action id, an action XML id, a client action tag or an action descriptor.
      * @param {Object} [options]
      * @param {Boolean} [options.clear_breadcrumbs=false] Clear the breadcrumbs history list
      * @param {Boolean} [options.replace_breadcrumb=false] Replace the current breadcrumb with the action
