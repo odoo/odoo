@@ -1836,8 +1836,9 @@ class stock_move(osv.osv):
     def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
         uom_obj = self.pool.get('product.uom')
         res = {}
+        rounding_method = (context or {}).get('rounding_method', 'UP')
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, context=context)
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id, rounding_method=rounding_method, context=context)
         return res
 
     def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
@@ -2888,9 +2889,11 @@ class stock_move(osv.osv):
 
         if context.get('source_location_id'):
             defaults['location_id'] = context['source_location_id']
-        new_move = self.copy(cr, uid, move.id, defaults, context=context)
 
         ctx = context.copy()
+        ctx['rounding_method'] = 'HALF-UP'
+        new_move = self.copy(cr, uid, move.id, defaults, context=ctx)
+
         ctx['do_not_propagate'] = True
         self.write(cr, uid, [move.id], {
             'product_uom_qty': move.product_uom_qty - uom_qty,
