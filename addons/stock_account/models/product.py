@@ -41,11 +41,11 @@ class ProductTemplate(models.Model):
     average_price = fields.Float(
         'Average Cost', compute='_compute_fifo_average_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="Average cost of the product, in the default unit of measure of the product.")
+        help="This is the average cost of this product, in the default unit of measure of the product.")
     fifo_price = fields.Float(
         'FIFO Cost', compute='_compute_fifo_average_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="FIFO cost of the product, in the default unit of measure of the product.")
+        help="This is the cost of the last product leaving the stock.")
 
     @api.multi
     def _compute_fifo_average_price(self):
@@ -196,16 +196,17 @@ class ProductProduct(models.Model):
                 last_cumulated_value = product._get_latest_cumulated_value()
                 product.average_price = last_cumulated_value / product.qty_available
             else:
-                
-                product.average_price = 0
-    
+                domain = [('product_id', '=', self.id), ('last_done_qty', '>', 0.0)] + self.env['stock.move']._get_all_base_domain()
+                move = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
+                product.average_price = move and move.cumulated_value / move.last_done_qty or 0.0
+
     @api.multi
     def _compute_fifo_price(self):
+        Move = self.env['stock.move']
         for product in self:
-            domain = product._get_base_out_domain()
-            domain = [('product_id', '=', self.product_id.id)] + domain
-            move = self.search(domain, order='date desc, id desc', limit=1)
-            product.fifo_price = move and move.price_unit or self.product_id.standard_price
+            domain = [('product_id', '=', self.id)] + Move._get_base_out_domain()
+            move = Move.search(domain, order='date desc, id desc', limit=1)
+            product.fifo_price = move and move.price_unit or 0.0
     
     @api.multi
     def _compute_stock_value(self):

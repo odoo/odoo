@@ -101,20 +101,20 @@ class StockMove(models.Model):
     def _get_in_base_domain(self, company_id=False):
         return [('state', '=', 'done'), 
                 ('location_id.company_id', '=', False), 
-                ('location_dest_id.company_id', '=', company_id or self.env.user_id.company_id.id)]
+                ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id)]
 
     @api.model
     def _get_out_base_domain(self, company_id=False):
         return [('state', '=', 'done'), 
-                ('location_id.company_id', '=', company_id or self.env.user_id.company_id.id), 
+                ('location_id.company_id', '=', company_id or self.env.user.company_id.id), 
                 ('location_dest_id.company_id', '=', False)]
 
     @api.model
     def _get_all_base_domain(self, company_id=False):
         return [('state', '=', 'done'), 
                 '|', '&', ('location_id.company_id', '=', False), 
-                ('location_dest_id.company_id', '=', company_id or self.env.user_id.company_id.id),
-                '&', ('location_id.company_id', '=', company_id or self.env.user_id.company_id.id), 
+                ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                '&', ('location_id.company_id', '=', company_id or self.env.user.company_id.id), 
                 ('location_dest_id.company_id', '=', False)]
 
     def _get_in_domain(self):

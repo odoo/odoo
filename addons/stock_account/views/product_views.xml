@@ -41,15 +41,18 @@
                         <field name="standard_price"
                             attrs="{'readonly': [('valuation','=','real_time')]}"
                             widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                        <field name="average_price" readonly="1" 
-                            attrs="{'invisible': [('cost_method','!=', 'average')]}"
-                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </field>
                     <div name="standard_price_uom" position="after">
                         <button string="Update Cost" type="action"
                             name="%(action_view_change_standard_price)d"
                             attrs="{'invisible':['|', '|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['average', 'standard']), ('product_variant_count', '>', 1)]}"
                             class="oe_link oe_read_only" colspan="2"/>
+                        <field name="average_price" readonly="1" 
+                            attrs="{'invisible': [('cost_method','!=', 'average')]}"
+                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                        <field name="fifo_price" readonly="1" 
+                            attrs="{'invisible': [('cost_method','!=', 'fifo')]}"
+                            widget='monetary' options="{'currency_field': 'currency_id'}"/>
                     </div>
                     <group name="accounting" position="inside">
                         <group name="property_inventory_valuation"  string="Stock Valuation" attrs="{'invisible': [('type','=','service'), ('valuation', '!=', 'real_time')]}">
