@@ -196,6 +196,7 @@ class ProductProduct(models.Model):
                 last_cumulated_value = product._get_latest_cumulated_value()
                 product.average_price = last_cumulated_value / product.qty_available
             else:
+                
                 product.average_price = 0
     
     @api.multi
@@ -213,7 +214,7 @@ class ProductProduct(models.Model):
                 product.stock_value = product.standard_price * product.qty_available
             elif product.cost_method == 'average':
                 product.stock_value = product._get_latest_cumulated_value()
-            elif product.cost_method == 'fifo': #Could also do same as for average, but it would lead to more rounding errors
+            elif product.cost_method == 'fifo': # We could do the same calc as average
                 moves = product._get_candidates_move()
                 value = 0
                 for move in moves:
