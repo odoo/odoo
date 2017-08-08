@@ -484,45 +484,16 @@ class StockMove(models.Model):
     def _account_entry_move(self):
         """ Accounting Valuation Entries """
         self.ensure_one()
-        if self.product_id.type != 'product':
-            # no stock valuation for consumable products
-            return False
-        if self.restrict_partner_id:
-            # if the move isn't owned by the company, we don't make any valuation
-            return False
-
-        location_from = self.location_id
-        location_to = self.location_dest_id
-        company_from = location_from.usage == 'internal' and location_from.company_id or False
-        company_to = location_to and (location_to.usage == 'internal') and location_to.company_id or False
-
-        # Create Journal Entry for products arriving in the company; in case of routes making the link between several
-        # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
-        if company_to and (self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage == 'internal' or company_from != company_to):
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            if location_from and location_from.usage == 'customer':  # goods returned from customer
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_dest, acc_valuation, journal_id)
-            else:
-                self.with_context(force_company=company_to.id)._create_account_move_line(acc_src, acc_valuation, journal_id)
-
-        # Create Journal Entry for products leaving the company
-        if company_from and (self.location_id.usage == 'internal' and self.location_dest_id.usage not in ('internal', 'transit') or company_from != company_to):
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            if location_to and location_to.usage == 'supplier':  # goods returned to supplier
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_src, journal_id)
-            else:
-                self.with_context(force_company=company_from.id)._create_account_move_line(acc_valuation, acc_dest, journal_id)
-
+        self._account_entry_move_adapt_value(self.value)
         if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self._create_account_move_line(acc_src, acc_dest, journal_id)
-            
 
     def _account_entry_move_adapt_value(self, value_adapt):
-        """ Adapt value stuff"""
+        """ Womm create entries depending on the """
         self.ensure_one()
-        if self.product_id.type != 'product' or self.restrict_partner_id: #Owner could be about some quantities only?
+        if self.product_id.type != 'product' or self.restrict_partner_id: #TODO: Owner could be about some quantities only?
             return False
         
         in_move = self._is_in_move()
@@ -570,7 +541,6 @@ class StockMove(models.Model):
                 self._create_account_move_line(acc_src, acc_dest, journal_id, value_adapt=value_adapt)
             else:
                 self._create_account_move_line(acc_dest, acc_src, journal_id, value_adapt=value_adapt)
-            
 
 
 class StockReturnPicking(models.TransientModel):
