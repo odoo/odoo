@@ -16,7 +16,7 @@ Belgian Payroll Rules.
     * Allow to configure Basic/Gross/Net Salary
     * Employee Payslip
     * Monthly Payroll Register
-    * Integrated with Holiday Management
+    * Integrated with Leaves Management
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
