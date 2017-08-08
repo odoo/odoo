@@ -41,8 +41,8 @@ QUnit.module('ActivityMenu', {
                         res_model: "project.issue",
                         planned_count: 1,
                         today_count: 1,
-                        overdue_count: 0,
-                        total_count: 2,
+                        overdue_count: 1,
+                        total_count: 3,
                     }],
                 },
             };
@@ -67,10 +67,9 @@ QUnit.test('activity menu widget: menu with no records', function (assert) {
 });
 
 QUnit.test('activity menu widget: activity menu with 3 records', function (assert) {
-    assert.expect(4);
+    assert.expect(10);
     var self = this;
     var activityMenu = new systray.ActivityMenu();
-
     testUtils.addMockEnvironment(activityMenu, {
         mockRPC: function (route, args) {
             if (args.method === 'activity_user_count') {
@@ -83,7 +82,41 @@ QUnit.test('activity menu widget: activity menu with 3 records', function (asser
     assert.ok(activityMenu.$el.hasClass('o_mail_navbar_item'), 'should be the instance of widget');
     assert.ok(activityMenu.$('.o_mail_channel_preview').hasClass('o_mail_channel_preview'), "should instance of widget");
     assert.ok(activityMenu.$('.o_notification_counter').hasClass('o_notification_counter'), "widget should have notification counter");
-    assert.strictEqual(parseInt(activityMenu.el.innerText), 4, "widget should have 4 notification counter");
+    assert.strictEqual(parseInt(activityMenu.el.innerText), 5, "widget should have 5 notification counter");
+
+    var context = {};
+    testUtils.intercept(activityMenu, 'do_action', function(event) {
+        assert.deepEqual(event.data.action.context, context, "wrong context value");
+    }, true);
+
+    // case 1: click on "late"
+    context = {
+        search_default_activities_overdue: 1,
+    };
+    activityMenu.$('.dropdown-toggle').click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), true, 'ActivityMenu should be open');
+    activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='overdue']").click();
+    assert.strictEqual(activityMenu.$el.hasClass("open"), false, 'ActivityMenu should be closed');
+    // case 2: click on "today"
+    context = {
+        search_default_activities_today: 1,
+    };
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='today']").click();
+    // case 3: click on "future"
+    context = {
+        search_default_activities_upcoming_all: 1,
+    };
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_activity_filter_button[data-model_name='Issue'][data-filter='upcoming_all']").click();
+    // case 4: click anywere else
+    context = {
+        search_default_activities_overdue: 1,
+        search_default_activities_today: 1,
+    };
+    activityMenu.$('.dropdown-toggle').click();
+    activityMenu.$(".o_mail_navbar_dropdown_channels > div[data-model_name='Issue']").click();
+
     activityMenu.destroy();
 });
 });
