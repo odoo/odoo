@@ -714,26 +714,27 @@ var StatementModel = BasicModel.extend({
                         args: args,
                     })
                     .then(function (result) {
-                        var tax = result.taxes[0];
-                        var tax_prop = self._formatQuickCreate(line, {
-                            'link': prop.id,
-                            'tax_id': tax.id,
-                            'amount': tax.amount,
-                            'label': tax.name,
-                            'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
-                            'analytic': tax.analytic,
-                            'is_tax': true,
-                            '__focus': false
+                        _.each(result.taxes, function(tax){
+                            var tax_prop = self._formatQuickCreate(line, {
+                                'link': prop.id,
+                                'tax_id': tax.id,
+                                'amount': tax.amount,
+                                'label': tax.name,
+                                'account_id': tax.account_id ? [tax.account_id, null] : prop.account_id,
+                                'analytic': tax.analytic,
+                                'is_tax': true,
+                                '__focus': false
+                            });
+
+                            prop.amount = tax.base;
+                            prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
+                            prop.invalid = !self._isValid(prop);
+
+                            tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
+                            tax_prop.invalid = prop.invalid;
+
+                            reconciliation_proposition.push(tax_prop);
                         });
-
-                        prop.amount = tax.base;
-                        prop.amount_str = field_utils.format.monetary(Math.abs(prop.amount), {}, formatOptions);
-                        prop.invalid = !self._isValid(prop);
-
-                        tax_prop.amount_str = field_utils.format.monetary(Math.abs(tax_prop.amount), {}, formatOptions);
-                        tax_prop.invalid = prop.invalid;
-
-                        reconciliation_proposition.push(tax_prop);
                     }));
             } else {
                 var currencyData = {
