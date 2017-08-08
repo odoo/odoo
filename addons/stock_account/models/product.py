@@ -204,7 +204,7 @@ class ProductProduct(models.Model):
     def _compute_fifo_price(self):
         Move = self.env['stock.move']
         for product in self:
-            domain = [('product_id', '=', self.id)] + Move._get_out_base_domain()
+            domain = [('product_id', '=', product.id)] + Move._get_out_base_domain()
             move = Move.search(domain, order='date desc, id desc', limit=1)
             product.fifo_price = move and move.price_unit or 0.0
     

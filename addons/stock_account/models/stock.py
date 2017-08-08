@@ -528,19 +528,11 @@ class StockMove(models.Model):
         if in_move_return:  # goods returned from customer
             self._create_account_move_line(acc_dest, acc_valuation, journal_id, value_adapt=value_adapt)
         elif in_move_normal:
-            self.with_context._create_account_move_line(acc_src, acc_valuation, journal_id, value_adapt=value_adapt)
+            self._create_account_move_line(acc_src, acc_valuation, journal_id, value_adapt=value_adapt)
         elif out_move_return:
             self._create_account_move_line(acc_valuation, acc_src, journal_id, value_adapt=value_adapt)
         elif out_move_normal:
             self._create_account_move_line(acc_valuation, acc_dest, journal_id, value_adapt=value_adapt)
-        # Dropship
-        if self.company_id.anglo_saxon_accounting and self.location_id.usage == 'supplier' and self.location_dest_id.usage == 'customer':
-            # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            if value_adapt > 0.0:
-                self._create_account_move_line(acc_src, acc_dest, journal_id, value_adapt=value_adapt)
-            else:
-                self._create_account_move_line(acc_dest, acc_src, journal_id, value_adapt=value_adapt)
 
 
 class StockReturnPicking(models.TransientModel):
