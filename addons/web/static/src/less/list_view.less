@@ -7,6 +7,11 @@
     margin-bottom: 0px;
 
     &.table {
+        td {
+            @media (max-width: @screen-md-max) {
+                line-height: 2.3;
+            }
+        }
         td, th {
            vertical-align: middle;
         }
