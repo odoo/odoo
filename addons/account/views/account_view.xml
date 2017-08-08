@@ -1606,6 +1606,16 @@
                 </search>
             </field>
         </record>
+        <record id="view_payment_term_tree" model="ir.ui.view">
+            <field name="name">account.payment.term.tree</field>
+            <field name="model">account.payment.term</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Terms">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
         <record id="view_payment_term_form" model="ir.ui.view">
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>

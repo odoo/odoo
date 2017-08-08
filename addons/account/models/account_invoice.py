@@ -1520,7 +1520,7 @@ class AccountInvoiceTax(models.Model):
 class AccountPaymentTerm(models.Model):
     _name = "account.payment.term"
     _description = "Payment Terms"
-    _order = "name"
+    _order = "sequence, id"
 
     def _default_line_ids(self):
         return [(0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 9, 'days': 0, 'option': 'day_after_invoice_date'})]
@@ -1530,6 +1530,7 @@ class AccountPaymentTerm(models.Model):
     note = fields.Text(string='Description on the Invoice', translate=True)
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
+    sequence = fields.Integer(required=True, default=10)
 
     @api.constrains('line_ids')
     @api.one
