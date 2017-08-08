@@ -126,7 +126,7 @@ tour.register('main_flow_tour', {
 }, {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
-    in_modal: false,
+    extra_trigger: "body:not(.modal-open)",
     content: _t("Click here to add some lines."),
     position: "bottom",
 }, {
