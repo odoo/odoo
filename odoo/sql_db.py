@@ -13,6 +13,7 @@ from functools import wraps
 import logging
 import time
 import uuid
+import os
 
 import psycopg2
 import psycopg2.extras
@@ -21,11 +22,20 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
-from .tools import pycompat
+from .tools import enable_logger, pycompat
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
+
+# Bob aka SQL logger
+sql_log_file_handler = logging.FileHandler('bob.txt')
+sql_log_file_handler.setLevel(logging.DEBUG)
+sql_log_file_handler.setFormatter(logging.Formatter(fmt='%(asctime)s [%(process)d]: [42-1] LOG:  %(message)s\n', datefmt='%Y-%m-%d %H:%M:%S %Z'))
+_sql_logger = _logger.getChild('bob')
+_sql_logger.propagate = False
+_sql_logger.addHandler(sql_log_file_handler)
+_enable_bob = enable_logger('odoo.sql_db.bob')
 
 types_mapping = {
     'date': (1082,),
@@ -497,8 +507,14 @@ class LazyCursor(object):
         if self._cursor is not None:
             self._cursor.__exit__(exc_type, exc_value, traceback)
 
-class PsycoConnection(psycopg2.extensions.connection):
-    pass
+
+class OdooConnection(psycopg2.extras.MinTimeLoggingConnection):
+
+    def filter(self, msg, curs):
+        t = (time.time() - curs.timestamp) * 1000
+        if t > self._mintime:
+            return 'duration: %.3f ms  statement: %s' % (t, msg)
+
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
@@ -537,7 +553,7 @@ class ConnectionPool(object):
     def borrow(self, connection_info):
         """
         :param dict connection_info: dict of psql connection keywords
-        :rtype: PsycoConnection
+        :rtype: OdooConnection
         """
         # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
@@ -582,11 +598,17 @@ class ConnectionPool(object):
 
         try:
             result = psycopg2.connect(
-                connection_factory=PsycoConnection,
+                connection_factory=OdooConnection,
                 **connection_info)
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
+        # bob = _logger.getChild('bob')
+        # bob.debug('Quick zephyrs blow, vexing daft Jim.')
+        # bob.info('How quickly daft jumping zebras vex.')
+        # bob.warning('Jail zesty vixen who grabbed pay from quack.')
+        # bob.error('The five boxing wizards jump quickly.')
+        result.initialize(_logger.getChild('bob'))
         result._original_dsn = connection_info
         self._connections.append((result, True))
         self._debug('Create new connection')
