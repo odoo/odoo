@@ -4,6 +4,14 @@ odoo.define('website_quote.website_quote', function (require) {
 var ajax = require('web.ajax');
 var config = require('web.config');
 var Widget = require('web.Widget');
+var WebsiteQuotePayment = require('payment.transaction');
+
+$(document).ready(function () {
+    if($("#website_quote_payment").length){
+        var website_quote_payment = new WebsiteQuotePayment();
+        website_quote_payment.attachTo($("#website_quote_payment"));
+    }
+});
 
 if(!$('.o_website_quote').length) {
     return $.Deferred().reject("DOM doesn't contain '.o_website_quote'");
@@ -112,7 +120,7 @@ if(!$('.o_website_quote').length) {
     });
 
     var accept_modal = new AcceptModal();
-    accept_modal.setElement($('#modalaccept'));
+    accept_modal.setElement($('#modalpayment'));
     accept_modal.start();
 
     // Nav Menu ScrollSpy

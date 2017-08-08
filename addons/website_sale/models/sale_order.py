@@ -190,6 +190,18 @@ class SaleOrder(models.Model):
         else:
             raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
 
+    @api.multi
+    def _prepare_payment_acquirer(self, values=None):
+        self.ensure_one()
+        result = super(SaleOrder, self)._prepare_payment_acquirer(values)
+        if result:
+            result['tokens'] = self.env['payment.token'].search([
+                ('partner_id', '=', self.partner_id.id),
+                ('acquirer_id', 'in', [payment.id for payment in result['acquirers']]),
+            ])
+            result['save_option'] = True
+        return result
+
 
 class ResCountry(models.Model):
     _inherit = 'res.country'

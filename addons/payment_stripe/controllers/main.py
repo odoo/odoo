@@ -30,7 +30,7 @@ class StripeController(http.Controller):
 
         Expects the result from the user input from checkout.js popup"""
         tx = request.env['payment.transaction'].sudo().browse(
-            int(request.session.get('sale_transaction_id') or request.session.get('website_payment_tx_id', False))
+            int(request.session.get('sale_transaction_id') or request.session.get('website_payment_tx_id', False) or request.session.get('invoice_tx_id'))
         )
         response = tx._create_stripe_charge(tokenid=post['tokenid'], email=post['email'])
         _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))

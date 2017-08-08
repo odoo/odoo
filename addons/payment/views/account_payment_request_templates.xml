@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="layout_logo_show" inherit_id="payment.layout" name="Show Logo">
+        <xpath expr="//header//a[@class='navbar-brand']" position="replace">
+            <a href="/" class="navbar-brand logo">
+                <img class="company_logo" t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" t-if="not payment_request"/>
+                <t t-if="payment_request">
+                    <span class="invoice_company_logo" t-field="payment_request.invoice_id.company_id.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % payment_request.invoice_id.company_id.name" t-att-title="payment_request.invoice_id.company_id.name"/>
+                </t>
+            </a>
+        </xpath>
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div class="container mt8 mb8" id="footer">
+                <div class="pull-right"> Powered by <a href="http://www.odoo.com">Odoo</a>
+                   <div>Bill and get paid online for free</div>
+                </div>
+                <div t-if="payment_request" class="pull-left text-muted" itemscope="itemscope" itemtype="http://schema.org/Organization">Copyright &amp;copy; 
+                    <span t-field="payment_request.invoice_id.company_id">Company Name</span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+
+    <template id="invoice_payment_detail" name="Payment Detail">
+        <div id="wrap">
+            <div t-att-class="payment_request.state == 'paid' and 'panel panel-success' or payment_request.state == 'pending' and 'panel panel-warning' or 'panel panel-default'">
+                <t t-if="payment_request.state not in ['open', 'paid'] and message">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <h4>
+                                <div class="col-md-6" t-raw="message"/>
+                            </h4>
+                        </div>
+                    </div>
+                </t>
+                <div class="panel-body">
+                    <div class="o_invoice_report_html">
+                        <iframe id="print_invoice"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="invoice_payment" name="Payment">
+        <div id="wrap">
+            <div class="o_invoice_payment">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <h2>
+                                Your Invoice<br></br>
+                                <em t-esc="payment_request.reference"/>
+                                <small t-field="payment_request.state"/>
+                            </h2>
+                        </div>
+                        <div class="col-md-6 col-sm-6 hidden-print" id="pay_button" t-ignore="true">
+                            <div t-att-class="'o_payment_text_align o_payment_button' if not payment_request.invoice_id.date_due and ((payment_request.amount_total and payment_request.state == 'paid') or not payment_request.amount_total) else 'o_payment_text_align'">
+                                <ul class="list-inline o_payment_pull_align">
+                                    <li class="o_divider">
+                                         <h2>
+                                            <span t-esc="payment_request.amount_total" t-options="{'widget': 'monetary', 'display_currency': payment_request.invoice_id.currency_id}"/>
+                                        </h2>
+                                        <t t-if="payment_request.invoice_id.date_due">
+                                            <h4>Due by<span class="ml4" t-esc="payment_request.invoice_id.date_due" t-options='{"widget": "date"}'/></h4>
+                                        </t>
+                                    </li>
+                                    <li class="o_download_button">
+                                        <a target="_blank" t-att-href="'/payment/%s' % payment_request.access_token+'?pdf=True'" title="Download">
+                                            <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                                        </a><br></br>
+                                    </li>
+                                    <li class="o_print_button">
+                                        <a id="print_iframe" title="Print">
+                                            <i class="fa fa-print fa-2x" aria-hidden="true"/>
+                                        </a>
+                                    </li>
+                                    <li t-if="payment_request.state != 'paid' and payment_request.amount_total">
+                                        <h3>
+                                            <a class="btn btn-primary btn-lg o_paynow_button"  data-toggle="modal" data-target="#modalpayment">
+                                                <i class="fa fa-arrow fa-5x" aria-hidden="true"/>Pay Now
+                                            </a>
+                                        </h3>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb16">
+                        <div class="col-md-12 hidden-sm hidden-xs">
+                            <t t-call="payment.invoice_payment_detail"/>
+                        </div>
+                    </div>
+                    <div id="online_invoice_payment">
+                        <input type='hidden' name="access_token" t-att-value="payment_request.access_token" t-if="payment_request.access_token"/>
+                        <t t-call="payment.payment"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="invoice_pay" name="Invoice Pay">
+        <span class="o_extend_layout">
+            <t t-call="payment.layout">
+                <t t-call="payment.invoice_payment"/>
+            </t>
+        </span>
+    </template>
+
+    <template id="invoice_sign_dialog" name="Sign Dialog" inherit_id="payment.payment">
+        <xpath expr="//div[@id='sign-dialog']" position="inside">
+            <t t-if="sign_modal_for_invoice">
+                <p>
+                    <span>I agree that by paying this proposal, I
+                    accept it on the behalf of </span><b t-field="payment_request.partner_id.commercial_partner_id"/><span>, for an amount of </span>
+                    <b data-id="total_amount" t-field="payment_request.amount_total"
+                    t-options='{"widget": "monetary", "display_currency": payment_request.invoice_id.currency_id}'/>
+                    <t t-if="payment_request.invoice_id.payment_term_id">
+                        <span>with payment terms: </span><b t-field="payment_request.invoice_id.payment_term_id"/>.
+                    </t>
+                </p>
+            </t>
+        </xpath>
+        <xpath expr="//div[@id='payment_method']" position="inside">
+            <t t-if="sign_modal_for_invoice">
+                <div class="col-md-6">
+                    <t t-call="payment.save_payment_data"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

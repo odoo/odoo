@@ -709,26 +709,16 @@ class WebsiteSale(http.Controller):
             partner=order.partner_id.id,
             order=order,
             payment_action_id=request.env.ref('payment.action_payment_acquirer').id,
+            call_url='/shop/payment/transaction',
         )
 
-        acquirers = request.env['payment.acquirer'].search(
-            [('website_published', '=', True), ('company_id', '=', order.company_id.id)]
-        )
-        values['acquirers'] = []
-        for acquirer in acquirers:
-            acquirer_button = acquirer.with_context(submit_class='btn btn-primary', submit_txt=_('Pay Now')).sudo().render(
-                '/',
-                order.amount_total,
-                order.pricelist_id.currency_id.id,
-                values={
-                    'return_url': '/shop/payment/validate',
-                    'partner_id': shipping_partner_id,
-                    'billing_partner_id': order.partner_invoice_id.id,
-                }
-            )
-            acquirer.button = acquirer_button
-            values['acquirers'].append(acquirer)
-        values['tokens'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id), ('acquirer_id', 'in', acquirers.ids)])
+        render_values = {
+            'return_url': '/shop/payment/validate',
+            'partner_id': shipping_partner_id,
+            'billing_partner_id': order.partner_invoice_id.id,
+        }
+        payment = order.with_context(submit_class="btn btn-primary", submit_txt=_("Pay Now"))._prepare_payment_acquirer(values=render_values)
+        values.update(payment)
 
         return values
 
@@ -761,9 +751,10 @@ class WebsiteSale(http.Controller):
         tx = request.env['payment.transaction'].sudo().browse(int(tx))
         if not tx or not request.website.sale_get_transaction() or tx != request.website.sale_get_transaction():
             return dict(success=False, error='Tx missmatch')
-        res = tx.confirm_sale_token()
-        if res is not True:
-            return dict(success=False, error=res)
+        if tx.payment_token_id and tx.partner_id == tx.sale_order_id.partner_id:
+            res = tx.confirm_sale_token()
+            if res is not True:
+                return dict(success=False, error=res)
         return dict(success=True, url='/shop/payment/validate')
 
     @http.route(['/shop/payment/transaction_token'], type='http', methods=['POST'], auth="public", website=True)
@@ -806,13 +797,13 @@ class WebsiteSale(http.Controller):
         tx = request.website.sale_get_transaction() or request.env['payment.transaction'].sudo()
         acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
         payment_token = request.env['payment.token'].sudo().browse(int(token)) if token else None
-        tx = tx.check_or_create_sale_tx(order, acquirer, payment_token=payment_token, tx_type=tx_type)
+        tx = order._prepare_payment_transaction(acquirer, tx_type=tx_type, transaction=tx, payment_token=payment_token)
         request.session['sale_transaction_id'] = tx.id
 
         if token:
             return request.env.ref('website_sale.payment_token_form').render(dict(tx=tx), engine='ir.qweb')
 
-        return tx.render_sale_button(order, '/shop/payment/validate')
+        return order.render_sale_payment_button(tx, '/shop/payment/validate')
 
     @http.route('/shop/payment/get_status/<int:sale_order_id>', type='json', auth="public", website=True)
     def payment_get_status(self, sale_order_id, **post):
