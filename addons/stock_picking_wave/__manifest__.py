@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Warehouse Management: Waves',
+    'name': 'Warehouse Management: Batch Picking',
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-This module adds the picking wave option in warehouse management
-================================================================
+This module adds the batch picking option in warehouse management
+=================================================================
     """,
     'website': 'https://www.odoo.com/page/warehouse',
     'depends': ['stock'],
