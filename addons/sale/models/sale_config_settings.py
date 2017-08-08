@@ -137,7 +137,7 @@ class SaleConfigSettings(models.TransientModel):
         res.update(
             use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
             auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
-            default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
+            default_deposit_product_id=int(self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')) or False,
             sale_show_tax=self.env['ir.config_parameter'].sudo().get_param('sale.sale_show_tax', default='subtotal'),
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
