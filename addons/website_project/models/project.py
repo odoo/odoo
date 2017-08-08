@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, exceptions, models, fields
-from odoo.addons.website.models.website import slug
 
 
 class Project(models.Model):

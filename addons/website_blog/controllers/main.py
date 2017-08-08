@@ -9,8 +9,8 @@ import babel.dates
 from collections import OrderedDict
 
 from odoo import http, fields, _
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.website import slug, unslug
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import html2plaintext

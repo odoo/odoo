@@ -243,7 +243,7 @@ odoo.define('website.website', function (require) {
     });
 
     /* Load localizations */
-    var lang = utils.get_cookie('website_lang') || $('html').attr('lang') || 'en_US';
+    var lang = utils.get_cookie('frontend_lang') || $('html').attr('lang') || 'en_US';
     ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
 
     /**
