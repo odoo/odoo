@@ -39,18 +39,23 @@ class ProductTemplate(models.Model):
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
     average_price = fields.Float(
-        'Average Cost', compute='_compute_average_price',
+        'Average Cost', compute='_compute_fifo_average_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
         help="Average cost of the product, in the default unit of measure of the product.")
+    fifo_price = fields.Float(
+        'FIFO Cost', compute='_compute_fifo_average_price',
+        digits=dp.get_precision('Product Price'), groups="base.group_user",
+        help="FIFO cost of the product, in the default unit of measure of the product.")
 
     @api.multi
-    def _compute_average_price(self):
+    def _compute_fifo_average_price(self):
         unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
         for template in unique_variants:
             template.average_price = template.product_variant_ids.average_price
+            template.fifo_price = template.product_variant_ids.fifo_price
         for template in (self - unique_variants):
             template.average_price = 0.0
-
+            template.fifo_price = 0.0
 
     @api.one
     @api.depends('property_valuation', 'categ_id.property_valuation')
@@ -106,6 +111,12 @@ class ProductProduct(models.Model):
         groups="base.group_user",
         compute='_compute_average_price',
         help="Calculated average cost")
+    fifo_price = fields.Float(
+        'FIFO Cost', 
+        digits=dp.get_precision('Product Price'),
+        groups="base.group_user",
+        compute='_compute_fifo_price',
+        help="Calculated FIFO cost")
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
 
@@ -158,15 +169,7 @@ class ProductProduct(models.Model):
 
     def _get_latest_cumulated_value(self, not_move=False):
         self.ensure_one()
-        domain = [
-            ('product_id', '=', self.id),
-            ('state', '=', 'done'),
-            ('company_id', '=', self.company_id.id), 
-            '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
-            ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
-            '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
-            ('location_dest_id.usage', 'in', ('internal', 'transit'))
-            ]
+        domain = [('product_id', '=', self.id)] + self.env['stock.move']._get_all_base_domain()
         if not_move:
             domain += [('id', '!=', not_move.id)]
         latest = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
@@ -176,28 +179,14 @@ class ProductProduct(models.Model):
 
     def _get_candidates_out_move(self):
         self.ensure_one()
-        # TODO: filter at start of period
-        candidates = self.env['stock.move'].search([
-            ('product_id', '=', self.id),
-            ('location_dest_id.usage', 'not in', ('transit', 'internal')),
-            ('location_id.usage', 'in', ('transit', 'internal')),
-            ('remaining_qty', '>', 0),
-            ('state', '=', 'done'),
-            ('company_id', '=', self.company_id.id)
-        ], order='date, id') #TODO: case
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_out_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
     def _get_candidates_move(self):
         self.ensure_one()
-        # TODO: filter at start of period
-        candidates = self.env['stock.move'].search([
-            ('product_id', '=', self.id),
-            ('location_dest_id.usage', 'in', ('transit', 'internal')),
-            ('location_id.usage', 'not in', ('transit', 'internal')),
-            ('remaining_qty', '>', 0),
-            ('state', '=', 'done'), 
-            ('company_id', '=', self.company_id.id)
-        ], order='date, id') #TODO: case where 
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
     @api.multi
@@ -208,6 +197,14 @@ class ProductProduct(models.Model):
                 product.average_price = last_cumulated_value / product.qty_available
             else:
                 product.average_price = 0
+    
+    @api.multi
+    def _compute_fifo_price(self):
+        for product in self:
+            domain = product._get_base_out_domain()
+            domain = [('product_id', '=', self.product_id.id)] + domain
+            move = self.search(domain, order='date desc, id desc', limit=1)
+            product.fifo_price = move and move.price_unit or self.product_id.standard_price
     
     @api.multi
     def _compute_stock_value(self):
@@ -229,12 +226,8 @@ class ProductProduct(models.Model):
         candidates = self._get_candidates_move()
         candidates.write({'remaining_qty': 0.0})
         # Search candidates
-        candidates = self.env['stock.move'].search([
-            ('product_id', '=', self.id),
-            ('location_dest_id.usage', 'in', ('transit', 'internal')),
-            ('location_id.usage', 'not in', ('transit', 'internal')),
-            ('state', '=', 'done'), 
-            ('company_id', '=', self.company_id.id)], order='date desc, id desc')
+        domain = [('product_id', '=', self.id)] + self.env['stock.move']._get_in_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date desc, id desc')
         qty_todo = self.with_context(internal=True).qty_available
         for candidate in candidates:
             if qty_todo > candidate.product_qty:

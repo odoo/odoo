@@ -85,57 +85,52 @@ class StockMove(models.Model):
         if self.product_id.cost_method == 'average':
             return self.product_id.average_price or self.product_id.standard_price
         if self.product_id.cost_method == 'fifo':
-            move = self.search([('product_id', '=', self.product_id.id),
-                         ('state', '=', 'done'), 
-                         ('location_id.usage', '=', 'internal'), 
-                         ('location_dest_id.usage', '!=', 'internal'),
-                         ('company_id', '=', self.company_id.id)], order='date desc', limit=1)
-            if move:
-                return move.price_unit or self.product_id.standard_price
+            return self.product_id.fifo_price or self.product_id.standard_price
         return self.product_id.standard_price
 
     def _update_future_cumulated_value(self, value):
         self.ensure_one()
-        moves = self.search([('state', '=', 'done'), 
-                     ('date', '>=',  self.date),
-                     ('id', '>', self.id), 
-                     ('product_id', '=', self.product_id.id), 
-                     ('company_id', '=', self.company_id.id),
-                     '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
-                    ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
-                    '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
-                    ('location_dest_id.usage', 'in', ('internal', 'transit'))])
+        domain = self._get_all_domain()
+        domain += ['|', ('date', '>', self.date), 
+                   '&', ('date', '=', self.date), ('id', '>', self.id)]
+        moves = self.search(domain, order='date, id')
         for move in moves:
             move.cumulated_value += value
 
+    @api.model
+    def _get_in_base_domain(self, company_id=False):
+        return [('state', '=', 'done'), 
+                ('location_id.company_id', '=', False), 
+                ('location_dest_id.company_id', '=', company_id or self.env.user_id.company_id.id)]
+
+    @api.model
+    def _get_out_base_domain(self, company_id=False):
+        return [('state', '=', 'done'), 
+                ('location_id.company_id', '=', company_id or self.env.user_id.company_id.id), 
+                ('location_dest_id.company_id', '=', False)]
+
+    @api.model
+    def _get_all_base_domain(self, company_id=False):
+        return [('state', '=', 'done'), 
+                '|', '&', ('location_id.company_id', '=', False), 
+                ('location_dest_id.company_id', '=', company_id or self.env.user_id.company_id.id),
+                '&', ('location_id.company_id', '=', company_id or self.env.user_id.company_id.id), 
+                ('location_dest_id.company_id', '=', False)]
+
     def _get_in_domain(self):
-        return [('product_id', '=', self.product_id.id), 
-                ('state', '=', 'done'), 
-                ('company_id', '=', self.company_id.id), 
-                ('location_id.usage', 'not in', ('internal', 'transit')), 
-                ('location_dest_id.usage', 'in', ('internal', 'transit'))]
+        return [('product_id', '=', self.product_id.id)] + self._get_in_base_domain(company_id=self.company_id.id)
 
     def _get_out_domain(self):
-        return [('product_id', '=', self.product_id.id), 
-                ('state', '=', 'done'), 
-                ('company_id', '=', self.company_id.id), 
-                ('location_id.usage', 'in', ('internal', 'transit')), 
-                ('location_dest_id.usage', 'not in', ('internal', 'transit'))]
+        return [('product_id', '=', self.product_id.id)] + self._get_out_base_domain(company_id=self.company_id.id)
 
     def _get_all_domain(self):
-        return [('product_id', '=', self.product_id.id), 
-                 ('state', '=', 'done'), 
-                 ('company_id', '=', self.company_id.id),
-                 '|', '&', ('location_id.usage', 'in', ('internal', 'transit')), 
-                    ('location_dest_id.usage', 'not in', ('internal', 'transit')), 
-                    '&', ('location_id.usage', 'not in', ('internal', 'transit')), 
-                    ('location_dest_id.usage', 'in', ('internal', 'transit'))]
+        return [('product_id', '=', self.product_id.id)] + self._get_all_base_domain(company_id=self.company_id.id)
         
     def _is_in_move(self):
-        return self.location_id.usage not in ('internal', 'transit') and self.location_dest_id.usage in ('internal', 'transit')
+        return not self.location_id.company_id and self.location_dest_id.company_id.id == self.company_id.id 
 
     def _is_out_move(self):
-        return self.location_id.usage in ('internal', 'transit') and self.location_dest_id.usage not in ('internal', 'transit')
+        return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
 
     @api.multi
     def replay_average(self):
