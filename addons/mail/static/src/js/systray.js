@@ -252,8 +252,13 @@ var ActivityMenu = Widget.extend({
      * @param {MouseEvent} event
      */
     _onActivityFilterClick: function (event) {
-        event.stopPropagation();
         var $target = $(event.currentTarget);
+        // Fix to prevent method being executed again on clicking of a button.
+        // We can't use event.stopPropagation() here otherwise drop-down
+        // will not be closed after performing the action.
+        if($(event.target).is('button') && !$target.is('button')) {
+            return;
+        }
         var context = {};
         if ($target.data('filter')=='my') {
             context['search_default_activities_overdue'] = 1;
