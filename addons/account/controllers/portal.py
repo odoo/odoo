@@ -79,7 +79,23 @@ class PortalAccount(CustomerPortal):
         return request.render("account.portal_my_invoices", values)
 
     @http.route(['/my/invoices/<int:invoice_id>'], type='http', auth="public", website=True)
-    def portal_my_invoices_report(self, invoice_id, access_token=None, **kw):
+    def portal_my_invoice_detail(self, invoice_id, access_token=None, **kw):
+        invoice = request.env['account.invoice'].browse(invoice_id)
+        try:
+            invoice.check_access_rights('read')
+            invoice.check_access_rule('read')
+        except AccessError:
+            if not access_token or not consteq(invoice.sudo().access_token, access_token):
+                return request.redirect('/my')
+
+        values = {
+            'page_name': 'invoice',
+            'invoice': invoice.sudo(),
+        }
+        return request.render("account.portal_invoice_page", values)
+
+    @http.route(['/my/invoices/pdf/<int:invoice_id>'], type='http', auth="public", website=True)
+    def portal_my_invoice_report(self, invoice_id, access_token=None, **kw):
         invoice = request.env['account.invoice'].browse(invoice_id)
         try:
             invoice.check_access_rights('read')
