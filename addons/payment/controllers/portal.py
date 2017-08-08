@@ -19,7 +19,7 @@ class WebsitePayment(http.Controller):
         return_url = request.params.get('redirect', '/my/payment_method')
         for acquirer in acquirers:
             acquirer.form = acquirer.sudo()._registration_render(request.env.user.partner_id.id, {'error': {}, 'error_message': [], 'return_url': return_url, 'json': False, 'bootstrap_formatting': True, 'verify_validity': True})
-        return request.render("website_payment.pay_methods", values)
+        return request.render("payment.pay_methods", values)
 
     @http.route(['/website_payment/delete/'], methods=['POST'], type='http', auth="user", website=True)
     def delete(self, delete_pm_id=None):
@@ -46,7 +46,7 @@ class WebsitePayment(http.Controller):
         # auto-increment reference with a number suffix if the reference already exists
         reference = request.env['payment.transaction'].get_next_reference(reference)
 
-        partner_id = user.partner_id.id if user.partner_id.id != request.website.partner_id.id else False
+        partner_id = user.partner_id.id if not user._is_public() else False
 
         payment_form = acquirer.sudo().render(reference, float(amount), currency.id, values={'return_url': '/website_payment/confirm', 'partner_id': partner_id})
         values = {
@@ -56,11 +56,11 @@ class WebsitePayment(http.Controller):
             'amount': float(amount),
             'payment_form': payment_form,
         }
-        return request.render('website_payment.pay', values)
+        return request.render('payment.pay', values)
 
     @http.route(['/website_payment/transaction'], type='json', auth="public", website=True)
     def transaction(self, reference, amount, currency_id, acquirer_id):
-        partner_id = request.env.user.partner_id.id if request.env.user.partner_id != request.website.partner_id else False
+        partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
         values = {
             'acquirer_id': int(acquirer_id),
             'reference': reference,
@@ -87,7 +87,7 @@ class WebsitePayment(http.Controller):
             else:
                 status = 'danger'
                 message = tx.acquirer_id.error_msg
-            return request.render('website_payment.confirm', {'tx': tx, 'status': status, 'message': message})
+            return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:
             return request.redirect('/my/home')
 

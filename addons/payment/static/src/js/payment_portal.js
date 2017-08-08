@@ -62,12 +62,17 @@ $(document).ready(function () {
 });
 
 
-odoo.define('website_payment.payment_acquirer', function (require) {
+odoo.define('payment.payment_acquirer', function (require) {
 "use strict";
 
 var ajax = require('web.ajax');
 var Dialog = require('web.Dialog');
-var website = require('website.website');
+
+$(document).ready(function () {
+
+    if( !$('#payment_tokens_list').length ) {
+        return $.Deferred().reject("DOM doesn't contain '.payment_tokens_list'");
+    }
 
     var payment_methods = $('#payment_tokens_list');
 
@@ -114,4 +119,5 @@ var website = require('website.website');
             }
         });
     });
+});
 });
