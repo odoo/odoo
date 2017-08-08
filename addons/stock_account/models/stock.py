@@ -491,7 +491,7 @@ class StockMove(models.Model):
             self._create_account_move_line(acc_src, acc_dest, journal_id)
 
     def _account_entry_move_adapt_value(self, value_adapt):
-        """ Womm create entries depending on the """
+        """ Create journal entries for validated and adapted moves"""
         self.ensure_one()
         if self.product_id.type != 'product' or self.restrict_partner_id: #TODO: Owner could be about some quantities only?
             return False
