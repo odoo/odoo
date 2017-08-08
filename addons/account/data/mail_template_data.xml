@@ -20,7 +20,7 @@
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_url = is_online and object.get_mail_url() or '/report/pdf/account.report_invoice/' + str(object.id)
+% set access_url = object.get_mail_url()
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)

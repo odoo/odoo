@@ -4,6 +4,9 @@
             <li t-if="page_name == 'invoice'" class="active">
                 Invoices
             </li>
+            <li t-if="invoice">
+                <t t-esc="invoice.name"/>
+            </li>
         </xpath>
     </template>
 
@@ -38,7 +41,7 @@
                 <t t-foreach="invoices" t-as="invoice">
                     <tr>
                         <td>
-                            <a t-att-href="'/my/invoices/'+str(invoice.id)" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                            <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
                         </td>
                         <td><span t-field="invoice.date_invoice"/></td>
                         <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
@@ -63,4 +66,62 @@
         </div>
       </t>
     </template>
+
+    <template id="portal_invoice_report" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//tbody[@class='invoice_tbody']/tr/td[1]/span" position="replace">
+            <span t-field="l.product_image" t-options="{'widget': 'image', 'class': 'img-rounded', 'style':'width: 48px;height:48px'}"/>
+            <span t-field="l.name"/>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_page" name="Invoice Portal Template">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>
+                                    <t t-call='portal.record_pager'/>
+                                    Invoice
+                                    <span t-esc="invoice.name"/>
+                                </h4>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="action_buttons">
+                                 <!-- t-ignore="true"> -->
+                                <ul class="list-inline">
+                                    <li class="o_divider">
+                                         <h2>
+                                            <!-- <span t-esc="payment_request.amount_total" t-options="{'widget': 'monetary', 'display_currency': payment_request.invoice_id.currency_id}"/> -->
+                                            Prout
+                                        </h2>
+                                        <t t-if="invoice.date_due">
+                                            <h4>Due by<span class="ml4" t-esc="invoice.date_due" t-options='{"widget": "date"}'/></h4>
+                                        </t>
+                                    </li>
+                                    <li class="o_download_button">
+                                        <a target="_blank" t-att-href="'/my/invoices/pdf/%s' % invoice.id" title="Download">
+                                            <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                                        </a>
+                                    </li>
+                                    <li class="o_print_button">
+                                        <a id="print_iframe" title="Print">
+                                            <i class="fa fa-print fa-2x" aria-hidden="true"/>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <t t-call="account.portal_invoice_report">
+                            <t t-set="o" t-value="invoice"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+
 </odoo>
