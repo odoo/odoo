@@ -177,7 +177,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
     },
     tansform_t_tag: function(options){
         var self = this;
-        var t_tags = this.$content.find('t');
+        var t_tags = this.$content.find("[t-esc],[t-field],[t-raw],[t-set]");
         _.each(t_tags, function(tag){
             var exp_editor = new ExpEditor(options);
             exp_editor.attachTo($(tag));
@@ -231,7 +231,7 @@ var ExpEditor = Widget.extend({
         this._super.apply(this, arguments);
     },
     start: function(){
-        var exp_text = this.$el.attr('t-esc') || this.$el.attr('t-raw') ||  this.$el.attr('t-set') || '?';
+        var exp_text = this.$el.attr('t-esc') || this.$el.attr('t-field') || this.$el.attr('t-raw') ||  this.$el.attr('t-set') || '?';
         $('<code/>', {
             'contenteditable': false,
             'class': 'o_t_expression'
