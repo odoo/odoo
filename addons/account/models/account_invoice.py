@@ -862,7 +862,7 @@ class AccountInvoice(models.Model):
         return {
             'date_maturity': line.get('date_maturity', False),
             'partner_id': part,
-            'name': line['name'][:64],
+            'name': line['name'],
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
