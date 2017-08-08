@@ -489,7 +489,6 @@ class Picking(models.Model):
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
         moves.action_assign()
-        self._check_entire_pack()
         return True
 
     @api.multi
