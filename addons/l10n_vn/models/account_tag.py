@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo.osv import expression
 from odoo import models, fields, api
 
 class account_account_tag(models.Model):
@@ -32,7 +31,5 @@ class account_account_tag(models.Model):
         domain = []
         if name:
             domain = ['|', ('code', '=ilike', name + '%'), ('name', operator, name)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS:
-                domain = ['&'] + domain
         tags = self.search(domain + args, limit=limit)
         return tags.name_get()
