@@ -124,7 +124,7 @@
                                 <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id"/>
-                                        <field name="partner_email"/>
+                                        <field name="partner_email" readonly="1"/>
                                     </tree>
                                 </field>
                             </page>
@@ -134,7 +134,7 @@
                                     <field name="auto_notification"/>
                                     <field name="notification_message" attrs="{'invisible': [('auto_notification', '=', False)]}"/>
                                 </group>
-                                <group string="Emails">
+                                <group string="Whitelist/Blacklist">
                                     <field name="moderated_email_ids" nolabel="1">
                                         <tree editable="bottom" string="Moderated Emails">
                                             <field name="email"/>
