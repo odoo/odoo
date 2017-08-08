@@ -7,7 +7,7 @@
     'category': 'Human Resources',
     'summary': 'Schedule timesheet when on leaves',
     'description': """
-Bridge module to integrate holidays in timesheet
+Bridge module to integrate leaves in timesheet
 ================================================
 
 This module allows to automatically log timesheets when employees are

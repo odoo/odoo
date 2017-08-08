@@ -19,7 +19,7 @@ class HrContract(models.Model):
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
     thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
         help="Yearly gross amount the employee receives as 13th month bonus.")
-    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double holidays',
+    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double Holidays',
         help="Yearly gross amount the employee receives as double holidays bonus.")
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
@@ -62,10 +62,10 @@ class HrContract(models.Model):
     meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
         default=lambda self: self.get_attribute('meal_voucher_amount', 'default_value'),
         help="Amount the employee receives in the form of meal vouchers per worked day.")
-    holidays = fields.Float(string="Holidays",
+    holidays = fields.Float(string='Legal Leaves',
         default=lambda self: self.get_attribute('holidays', 'default_value'),
         help="Number of days of paid leaves the employee gets per year.")
-    holidays_editable = fields.Boolean(string="Editable Holidays", default=True)
+    holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', sting="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
