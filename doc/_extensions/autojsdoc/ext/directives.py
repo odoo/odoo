@@ -296,6 +296,7 @@ class ClassDocumenter(Documenter):
             return []
 
         ret = nodes.field('', nodes.field_name('Parameters', 'Parameters'))
+        check_parameters(self, ctor)
         with addto(ret, nodes.field_body()) as body,\
              addto(body, nodes.bullet_list()) as holder:
             holder += make_parameters(ctor.params, mod=self._module)
@@ -346,21 +347,25 @@ class FunctionDocumenter(Documenter):
         if doc.doc:
             self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
 
+        check_parameters(self, doc)
+
+        params = doc.params
+        rdoc = doc.return_val.doc
         rtype = doc.return_val.type
-        if doc.params or rtype or doc.return_val.doc:
+        if params or rtype or rdoc:
             with addto(ret, nodes.field_list()) as fields:
-                if doc.params:
+                if params:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name('Parameters', 'Parameters')
                         with addto(field, nodes.field_body()) as body,\
                              addto(body, nodes.bullet_list()) as holder:
-                            holder.extend(make_parameters(doc.params, mod=doc['sourcemodule'].name))
-                if doc.return_val.doc:
+                            holder.extend(make_parameters(params, mod=doc['sourcemodule'].name))
+                if rdoc:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Returns", "Returns")
                         with addto(field, nodes.field_body()) as body,\
                              addto(body, nodes.paragraph()) as p:
-                            p += nodes.inline(doc.return_val.doc, doc.return_val.doc)
+                            p += nodes.inline(rdoc, rdoc)
                 if rtype:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Return Type", "Return Type")
@@ -369,9 +374,37 @@ class FunctionDocumenter(Documenter):
                             p += make_types(rtype, mod=doc['sourcemodule'].name)
         return ret.children
 
+def check_parameters(documenter, doc):
+    """
+    Check that all documented parameters match a formal parameter for the
+    function. Documented params which don't match the actual function may be
+    typos.
+    """
+    guessed = set(doc['guessed_params'] or [])
+    if not guessed:
+        return
+
+    # TODO: eventually support/strip dash or colon between param name and description (possibly monkeypatch ParamDoc.__init__?)
+    # TODO: also strip trailing newline/whitespace from param name
+    documented = {
+        # param name can be of the form [foo.bar.baz=default]\ndescription
+        jsdoc.ParamDoc(text).name.strip().strip('[]').split('.')[0].split('=')[0]
+        for text in doc.get_as_list('param')
+    }
+    odd = documented - guessed
+    if not odd:
+        return
+
+    app = documenter._directive.state.document.settings.env.app
+    app.warn("Found documented params %s not in formal parameter list "
+             "of function %s in module %s (%s)" % (
+        ', '.join(odd),
+        doc.name,
+        documenter._module,
+        doc['sourcemodule']['sourcefile'],
+    ))
 
 def make_desc_parameters(params):
-    # FIXME: guess params if undoc'd (no @param on function)
     for p in params:
         name = p.name.strip()
         # FIXME: extract sub-params to typedef (in body?)

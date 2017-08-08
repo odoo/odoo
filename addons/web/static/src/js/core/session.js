@@ -328,8 +328,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
      * @param {Object} options additional options for rpc call
-     * @param {Function} success_callback function to execute on RPC call success
-     * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function (url, params, options) {

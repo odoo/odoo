@@ -773,7 +773,7 @@ var ViewEditor = Widget.extend({
      * is toggled -> reloads the resources accordingly.
      *
      * @private
-     * @param {Event}
+     * @param {Event} ev
      */
     _onIncludeAllLessChange: function (ev) {
         this.options.includeAllLess = $(ev.target).prop('checked');
@@ -784,7 +784,7 @@ var ViewEditor = Widget.extend({
      * included is toggled -> reloads the resources accordingly.
      *
      * @private
-     * @param {Event}
+     * @param {Event} ev
      */
     _onIncludeBundlesChange: function (ev) {
         this.options.includeBundles = $(ev.target).prop('checked');

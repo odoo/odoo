@@ -464,7 +464,7 @@ var StatementModel = BasicModel.extend({
      * Then the total is recomputed to have 100%.
      *
      * @param {string} handle
-     * @param {number[]} context.statement_ids
+     * @param {*} values
      * @returns {Deferred}
      */
     updateProposition: function (handle, values) {
@@ -581,7 +581,7 @@ var StatementModel = BasicModel.extend({
      * stop the editable proposition line and remove it if it's invalid then
      * compute the line
      *
-     * @see '_computeLine'
+     * See :func:`_computeLine`
      *
      * @private
      * @param {string} handle
@@ -716,7 +716,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {string} handle
-     * @param {integer} reconcile model id
+     * @param {integer} reconcileModelId
      */
     _computeReconcileModels: function (handle, reconcileModelId) {
         var line = this.getLine(handle);
@@ -733,8 +733,7 @@ var StatementModel = BasicModel.extend({
      * format a name_get into an object {id, display_name}, idempotent
      *
      * @private
-     * @param {Object|Array} data or name_get
-     * @param {Object|false} value
+     * @param {Object|Array} [value] data or name_get
      */
     _formatNameGet: function (value) {
         return value ? (value.id ? value : {'id': value[0], 'display_name': value[1]}) : false;
@@ -904,7 +903,7 @@ var StatementModel = BasicModel.extend({
      *
      * @private
      * @param {object} line
-     * @param {object} proposition
+     * @param {object} prop
      * @returns {object}
      */
     _formatToProcessReconciliation: function (line, prop) {
@@ -1158,7 +1157,7 @@ var ManualModel = StatementModel.extend({
      * @see '_computeLine'
      *
      * @private
-     * @param {'customers' or 'suppliers' or 'accounts'} type
+     * @param {'customers' | 'suppliers' | 'accounts'} type
      * @param {Object} data
      * @returns {Deferred}
      */

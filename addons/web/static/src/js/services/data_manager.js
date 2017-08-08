@@ -64,9 +64,11 @@ return core.Class.extend({
      * Loads various information concerning views: fields_view for each view,
      * the fields of the corresponding model, and optionally the filters.
      *
-     * @param {Object} [dataset] the dataset for which the views are loaded
-     * @param {Array} [views_descr] array of [view_id, view_type]
-     * @param {Object} [options] dictionnary of various options:
+     * @param {Object} params
+     * @param {String} params.model
+     * @param {Object} params.context
+     * @param {Array} params.views_descr array of [view_id, view_type]
+     * @param {Object} [options] dictionary of various options:
      *     - options.load_filters: whether or not to load the filters,
      *     - options.action_id: the action_id (required to load filters),
      *     - options.toolbar: whether or not a toolbar will be displayed,

@@ -79,7 +79,7 @@ var FormRenderer = BasicRenderer.extend({
      * Show a warning message if the user modified a translated field.  For each
      * field, the notification provides a link to edit the field's translations.
      *
-     * @param {Object[]} alertFields: field list
+     * @param {Object[]} alertFields field list
      */
     displayTranslationAlert: function (alertFields) {
         this.$('.o_notification_box').remove();

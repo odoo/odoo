@@ -154,7 +154,7 @@ return {
         /**
          * Registers a new deferred and rejects the previous one
          *
-         * @param {Deferred} the new deferred
+         * @param {Deferred} deferred the new deferred
          * @returns {Promise}
          */
         add: function (deferred) {

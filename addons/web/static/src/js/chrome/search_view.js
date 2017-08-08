@@ -265,7 +265,7 @@ var SearchView = Widget.extend({
      *
      * @param parent
      * @param dataset
-     * @param fields_view
+     * @param fvg
      * @param {Object} [options]
      * @param {Boolean} [options.hidden=false] hide the search view
      * @param {Boolean} [options.disable_custom_filters=false] do not load custom filters from ir.filters

@@ -57,7 +57,7 @@ def test_func():
          * @param {Foo} bar this is a bar
          * @param {Baz} qux this is a qux
          */
-        return function () {
+        return function (bar, qux) {
             return 42;
         }
     });
@@ -83,7 +83,7 @@ def test_hoist():
         /**
          * @param a_thing
          */
-        function foo() {
+        function foo(a_thing) {
             return 42;
         }
     });
