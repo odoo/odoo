@@ -18,7 +18,7 @@
             <field name="arch" type="xml">
                 <pivot string="Activities Analysis" disable_linking="True">
                     <field name="mail_activity_type_id" type="col"/>
-                    <field name="date" interval="month" type="row"/>
+                    <field name="date" interval="month" type="row" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>

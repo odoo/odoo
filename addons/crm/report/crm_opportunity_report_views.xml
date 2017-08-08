@@ -7,9 +7,12 @@
             <field name="model">crm.opportunity.report</field>
             <field name="arch" type="xml">
                 <pivot string="Pipeline Analysis" disable_linking="True">
-                    <field name="create_date" interval="month" type="col"/>
+                    <field name="create_date" interval="month" type="col" groups="base.group_no_one"/>
                     <field name="stage_id" type="row"/>
                     <field name="expected_revenue" type="measure"/>
+                    <field name="delay_close" groups="base.group_no_one"/>
+                    <field name="nbr_activities" groups="base.group_no_one"/>
+                    <field name="delay_open" groups="base.group_no_one"/>
                 </pivot>
             </field>
         </record>
