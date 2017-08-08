@@ -12,7 +12,7 @@
     <menuitem id="menu_sale_config" name="Configuration" parent="menu_base_partner"
     sequence="100" groups="group_sale_manager"/>
         <menuitem id="menu_sale_general_settings" name="Settings" parent="menu_sale_config"
-            sequence="0" action="action_sale_config" groups="base.group_system"/>
+            sequence="0" action="action_sale_config" groups="base.group_system" active="False"/>
 
         <menuitem id="menu_config_address_book" parent="menu_sale_config" name="Contacts" sequence="4" groups="base.group_system"/>
             <menuitem action="base.action_partner_category_form" id="menu_partner_category_form" name="Contact Tags" sequence="1" parent="menu_config_address_book" groups="base.group_no_one"/>

@@ -73,7 +73,6 @@ class SaleConfigSettings(models.TransientModel):
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
-    module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
@@ -81,10 +80,7 @@ class SaleConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
 
-    module_sale_timesheet = fields.Boolean("Timesheets")
-    module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
-    module_web_clearbit = fields.Boolean("Customer Autocomplete")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
