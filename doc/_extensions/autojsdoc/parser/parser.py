@@ -268,6 +268,7 @@ class ModuleExtractor(Visitor):
         )
         fn.parsed['sourcemodule'] = self.module
         fn.parsed['guessed_function'] = node['id']['name']
+        fn.parsed['guessed_params'] = [p['name'] for p in node['params']]
         return SKIP
 
     def enter_ReturnStatement(self, node):
@@ -363,6 +364,7 @@ class ValueExtractor(Visitor):
         self.result = jsdoc.parse_comments(comments, jsdoc.FunctionDoc)
         name = node['id']['name'] if node['id'] else name
         self._update_result_meta(name)
+        self.result.parsed['guessed_params'] = [p['name'] for p in node['params']]
         return SKIP
 
     def enter_NewExpression(self, node):

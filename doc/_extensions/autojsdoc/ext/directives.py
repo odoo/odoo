@@ -194,8 +194,10 @@ class ModuleDocumenter(Documenter):
                 with addto(fields, nodes.field()) as field:
                     self.make_dependencies(field, doc)
 
-        # FIXME: xref exports to exported object (unless anonymous?)
         # FIXME: document all elements in bodies based on :members:, undoc, private
+        # e.g. web.view_dialogs does not export ViewDialog but exports subclasses
+        # which looks weird
+        # => allow documenting all objects, then xref to the export
         if doc.exports:
             content += doc_for(self._directive, doc.name, None, doc.exports)
 
