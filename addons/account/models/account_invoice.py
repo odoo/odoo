@@ -748,11 +748,19 @@ class AccountInvoice(models.Model):
             try:
                 record.check_access_rule('read')
             except exceptions.AccessError:
-                pass
+                if self.env.context.get('force_website'):
+                    return {
+                        'type': 'ir.actions.act_url',
+                        'url': '/my/invoices/%s' % self.id,
+                        'target': 'self',
+                        'res_id': self.id,
+                    }
+                else:
+                    pass
             else:
                 return {
                     'type': 'ir.actions.act_url',
-                    'url': '/my/invoices?',  # No controller /my/invoices/<int>, only a report pdf
+                    'url': '/my/invoices/%s?access_token=%s' % (self.id, self.access_token),
                     'target': 'self',
                     'res_id': self.id,
                 }
@@ -1394,6 +1402,7 @@ class AccountInvoiceLine(models.Model):
         ondelete='set null', index=True, oldname='uos_id')
     product_id = fields.Many2one('product.product', string='Product',
         ondelete='restrict', index=True)
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
     account_id = fields.Many2one('account.account', string='Account',
         required=True, domain=[('deprecated', '=', False)],
         default=_default_account,
