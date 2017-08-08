@@ -10,4 +10,12 @@ class MrpStockReport(models.TransientModel):
             res_model = 'mrp.production'
             res_id = move_line.production_id.id
             ref = move_line.production_id.name
+        if move_line.move_id.unbuild_id:
+            res_model = 'mrp.unbuild'
+            res_id = move_line.move_id.unbuild_id.id
+            ref = move_line.move_id.unbuild_id.name
+        if move_line.move_id.consume_unbuild_id:
+            res_model = 'mrp.unbuild'
+            res_id = move_line.move_id.consume_unbuild_id.id
+            ref = move_line.move_id.consume_unbuild_id.name
         return res_model, res_id, ref
