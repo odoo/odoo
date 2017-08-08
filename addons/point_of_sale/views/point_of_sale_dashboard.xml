@@ -52,13 +52,25 @@
                 <field name="current_session_state"/>
                 <field name="last_session_closing_date"/>
                 <field name="pos_session_username"/>
+                <field name="pos_session_state"/>
                 <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
                             <div class="o_kanban_card_header oe_kanban_color_1">
                                 <div class="o_kanban_card_header_title">
-                                    <div class="o_primary"><t t-esc="record.name.value"/></div>
+                                    <div class="o_primary">
+                                        <t t-esc="record.name.value"/>
+                                        <t t-if="record.pos_session_state.raw_value == 'opening_control'">
+                                            <div class="label label-info o_kanban_inline_block">Opening Control</div>
+                                        </t>
+                                        <t t-if="record.pos_session_state.raw_value == 'opened'">
+                                            <div class="label label-success o_kanban_inline_block">In Progress</div>
+                                        </t>
+                                        <t t-if="record.pos_session_state.raw_value == 'closing_control'">
+                                            <div class="label label-info o_kanban_inline_block">Closing Control</div>
+                                        </t>
+                                    </div>
                                     <div class="o_secondary"><t t-esc="record.pos_session_username.value || 'Unused'"/></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
@@ -76,7 +88,6 @@
 
                                         <button t-if="!record.current_session_id.raw_value &amp;&amp; !record.pos_session_username.value" class="btn btn-primary" name="open_session_cb" type="object">New Session</button>
 
-                                        <button t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="btn btn-primary" name="open_session_cb" type="object">A session is already opened</button>
                                     </div>
                                     <div class="col-xs-6 o_kanban_primary_right">
 
