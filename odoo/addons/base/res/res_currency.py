@@ -36,7 +36,14 @@ class Currency(models.Model):
     @api.multi
     def _compute_current_rate(self):
         date = self._context.get('date') or fields.Datetime.now()
-        company_id = self._context.get('company_id') or self.env['res.users']._get_company().id
+        # A vicious bug can be introduced when calling self.env.user.company_id.currency_id.rate.
+        # Since 'user' is browsed as 'sudo', self.env.user is always the admin at this point, even
+        # though it might be different in the calling method.
+        company_id = (
+            self.env.context.get('company_id') or
+            self.env['res.users'].browse(self.env.context.get('uid')).company_id.id or
+            self.env.user.company_id.id
+        )
         # the subquery selects the last rate before 'date' for the given currency/company
         query = """SELECT c.id, (SELECT r.rate FROM res_currency_rate r
                                   WHERE r.currency_id = c.id AND r.name <= %s
