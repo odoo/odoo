@@ -47,6 +47,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* 'Taslak' durumu, bir kullanıcı yeni ve doğrulanmamış bir onarım siparişini kodlarken kullanılır.\n"
+"* Onay siparişi Onaylandığında 'Onaylandı' durumu kullanılır.\n"
+"* 'Onaylanmaya Hazır' durumu onarımı başlatmak için kullanılır, kullanıcı onarımı ancak onarım talimatı onaylandıktan sonra başlatabilir.\n"
+"* Faturalandırılmış Olmak İçin Durumu, yapılması gereken onarılamadan önce veya sonra faturayı oluşturmak için kullanılır.\n"
+"* Onarım tamamlandığında 'Bitti' durumu ayarlanır.\n"
+"* Kullanıcı \"onarım siparişini iptal ettiğinde\" İptal edildi \"durumu kullanılır."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -86,7 +92,7 @@ msgstr "<strong>Onarılacak Ürün:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Shipping address :</strong>"
-msgstr ""
+msgstr "<Strong> Teslimat adresi: </ strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -127,7 +133,7 @@ msgstr "Onarım Öncesi"
 #: code:addons/mrp_repair/models/mrp_repair.py:206
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "Sadece taslak onarımlarını onaylayabiliriz."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -156,7 +162,7 @@ msgstr "İptal Edildi"
 #: code:addons/mrp_repair/models/mrp_repair.py:221
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr ""
+msgstr "Tamamlanan onarımları iptal edemezsiniz."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -654,7 +660,7 @@ msgstr ""
 #: code:addons/mrp_repair/models/mrp_repair.py:343
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "Onarıma başlamadan önce onay gereklidir."
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:371
@@ -705,7 +711,7 @@ msgstr "Onarım Siparişi"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "Onarım Siparişlerini Ara"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -796,6 +802,8 @@ msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
 msgstr ""
+"Onarım satırının durumu otomatik olarak bağlantılı onarım siparişine göre "
+"ayarlanır."
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -894,3 +902,5 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"Onarım formunda bir fiyat listesi seçmelisiniz!\n"
+" Lütfen bir ürün seçmeden önce bir tane ayarlayın."

@@ -15,10 +15,10 @@
 # José Vicente <txusev@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # David Casas <info@informaticacoslada.com>, 2016
 # Sergio Hevia <sah@talleresbernesga.com>, 2016
 # David Perez <david@closemarketing.es>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 # Albert Orellano <albert.orellano@megaterios.co>, 2017
 # David Arnold <blaggacao@users.noreply.github.com>, 2017
@@ -137,6 +137,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"                        &lt;body class=\"ie9\"&gt;\n"
+"                    &lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
@@ -1012,7 +1015,7 @@ msgstr "Filtro"
 #: code:addons/web/static/src/js/views/search_menus.js:85
 #, python-format
 msgid "Filter name is required."
-msgstr "Se requiere un nombre para el filtro"
+msgstr "Se requiere un nombre para el filtro."
 
 #. module: web
 #. openerp-web
@@ -1155,6 +1158,8 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
+"Nombre de base de datos invalido. Solo caracteres alfanuméricos, subrayado, "
+"guión y punto están permitidos"
 
 #. module: web
 #. openerp-web
@@ -2046,7 +2051,7 @@ msgstr "El dominio es incorrecto."
 #: code:addons/web/static/src/js/views/form_widgets.js:1128
 #, python-format
 msgid "The field is empty, there's nothing to save !"
-msgstr "Este campo esta vacio, !no hay nada que guardar!"
+msgstr "Este campo esta vacio, ¡no hay nada que guardar!"
 
 #. module: web
 #. openerp-web
@@ -2653,7 +2658,7 @@ msgstr "es verdadero"
 #: code:addons/web/static/src/js/framework/utils.js:303
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. openerp-web
