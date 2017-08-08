@@ -38,6 +38,7 @@ class AccountConfigSettings(models.TransientModel):
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
     module_account_budget = fields.Boolean(string='Budget Management')
+    module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
     default_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax",
