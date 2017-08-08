@@ -3,15 +3,14 @@ import operator
 
 import pyjsparser
 
-from autojsdoc import jsdoc
-from autojsdoc.parser.parser import ModuleMatcher
+from autojsdoc.parser import jsdoc, parser
 
 params = operator.attrgetter('name', 'type', 'doc')
 
 
 def parse(s):
     tree = pyjsparser.parse(s)
-    mods = ModuleMatcher().visit(tree)
+    mods = parser.ModuleMatcher(None).visit(tree)
     post(mods)
     return mods
 

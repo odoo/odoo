@@ -101,7 +101,7 @@ def test_export_instance():
         return new Class();
     });
     """)
-    assert type(mod.exports) == jsdoc.NSDoc
+    assert type(mod.exports) == jsdoc.InstanceDoc
     assert mod.exports.doc == 'Provides an instance of Class'
 
 def test_bounce():

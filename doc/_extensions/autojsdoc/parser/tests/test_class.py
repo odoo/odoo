@@ -125,12 +125,12 @@ def test_mixin_implicit():
     assert params(cls.get_method('foo')) == ('foo', 'Function', '')
 
 def test_instanciation():
-    """ Instantiating a class yields a namespace (don't ask) whose properties
-    are the class members/methods
-    """
     [A, a] = parse("""
     odoo.define('A', function (r) {
         var Class = r('Class');
+        /**
+         * @class A
+         */
         return Class.extend({
             foo: function () {}
         });
@@ -141,9 +141,8 @@ def test_instanciation():
         return a;
     });
     """)
-    assert type(a.exports) == jsdoc.NSDoc
-    [(_, prop)] = a.exports.properties
-    assert params(prop) == ('foo', 'Function', '')
+    assert type(a.exports) == jsdoc.InstanceDoc
+    assert a.exports.cls.name == A.exports.name
 
 def test_non_function_properties():
     [A] = parse("""
