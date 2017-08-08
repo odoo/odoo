@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.account_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="eu_service" position="after">
-                <div class="col-xs-12 col-md-6 o_setting_box" title="Use VIES service to check VAT # of your customers rather than a simple format validation.">
+                <div class="col-xs-12 col-md-6 o_setting_box" title="If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service.">
                     <div class="o_setting_left_pane">
                         <field name="vat_check_vies"/>
                     </div>
@@ -15,7 +15,7 @@
                         <label for="vat_check_vies"/>
                         <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
                         <div class="text-muted">
-                            VAT # check with European VIES service
+                           Verify VAT numbers using the European VIES service
                         </div>
                     </div>
                 </div>
