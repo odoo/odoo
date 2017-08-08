@@ -442,14 +442,6 @@ class StockMove(models.Model):
     # Misc tools
     # ------------------------------------------------------------
 
-    def _filter_closed_moves(self):
-        """ Helper methods when having to avoid working on moves that are
-        already done or canceled. In a lot of cases you may handle a batch
-        of stock moves, some being already done / canceled, other being still
-        under computation. Instead of having to use filtered everywhere and
-        forgot some of them, use this tool instead. """
-        return self.filtered(lambda move: move.state not in ('done', 'cancel'))
-
     @api.multi
     def do_unreserve(self):
         if any(move.state in ('done', 'cancel') for move in self):
