@@ -141,7 +141,7 @@ msgid "Asset Durations to Modify"
 msgstr "Duracions d'actiu per modificar"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
 msgid "Asset End Date"
 msgstr "Data final de l'actiu"
 
@@ -156,7 +156,7 @@ msgid "Asset Name"
 msgstr "Nombre d'actiu"
 
 #. module: account_asset
-#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_end_date
+#: model:ir.model.fields,field_description:account_asset.field_account_invoice_line_asset_start_date
 msgid "Asset Start Date"
 msgstr "Data d'inici de l'aciut"
 
@@ -917,7 +917,7 @@ msgstr "Pendent"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_value_residual
 msgid "Residual Value"
-msgstr "Valor residual"
+msgstr "Valor comptable"
 
 #. module: account_asset
 #: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
@@ -938,7 +938,7 @@ msgstr "Vendes"
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_salvage_value
 msgid "Salvage Value"
-msgstr "Valor de salvaguarda"
+msgstr "Valor residual"
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_account_asset_category_search
@@ -993,8 +993,8 @@ msgid ""
 "This wizard will post installment/depreciation lines for the selected month.<br/>\n"
 "                        This will generate journal entries for all related installment lines on this period of asset/revenue recognition as well."
 msgstr ""
-"Aquest assistent publicarà línies d'instal·lació/amortització pel més seleccionat.<br/>\n"
-"Generarà assentaments per tots els registres relacionats amb aquest període d'ingressos/despeses incloses."
+"Aquest assistent generarà tots els assentaments d'amortització prevists per abans de la data seleccionada.<br/>\n"
+"Si el diari dels mateixos està configurat per saltar-se l'estat esborrany, serà assegut automàticament."
 
 #. module: account_asset
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_method_time

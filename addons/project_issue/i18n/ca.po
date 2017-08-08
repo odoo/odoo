@@ -52,12 +52,12 @@ msgstr "<b>Categoria:</b>"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "<b>Project:</b>"
-msgstr ""
+msgstr "<b>Projecte:</b>"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_form_inherited
 msgid "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_issues', '=', False)]}\">com </span>"
 
 #. module: project_issue
 #: selection:project.config.settings,module_project_issue_sheet:0
@@ -85,6 +85,13 @@ msgid ""
 "\n"
 "                                           * Ready for next stage indicates the issue is ready to be pulled to the next stage"
 msgstr ""
+"Un estat kanban d'una incidència indica que hi ha una situació especial que l'afecta:\n"
+"\n"
+"* Normal és la situació per defecte\n"
+"\n"
+"* Bloqueig indica que alguna cosa està impedint que la incidència avanci\n"
+"\n"
+"* Llest per la següent etapa indica que la incidència està llesta per a ser incorporada a la següent etapa."
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -161,6 +168,8 @@ msgstr "Canal"
 #: model:ir.model.fields,help:project_issue.field_project_project_use_issues
 msgid "Check this box to manage customer activities through this project"
 msgstr ""
+"Marcar aquesta opció per gestionar les activitats de tots els clients a "
+"través d'aquest projecte"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_closed
@@ -235,6 +244,8 @@ msgstr "Correu del client"
 #: model:ir.model.fields,help:project_issue.field_project_project_label_issues
 msgid "Customize the issues label, for example to call them cases."
 msgstr ""
+"Personalitzi l'etiqueta de les incidències, per exemple per anomenar-les "
+"casos"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date
@@ -320,7 +331,7 @@ msgstr "Durada"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_kanban_view
 msgid "Edit Issue"
-msgstr ""
+msgstr "Editar incidència"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_email_from
@@ -388,13 +399,13 @@ msgstr "Incidència bloquejada"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Opened"
-msgstr ""
+msgstr "Incidència oberta"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_ready
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_ready
 msgid "Issue Ready"
-msgstr ""
+msgstr "Incidència preparada"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
@@ -404,7 +415,7 @@ msgstr "Etapa d'incidència canviada"
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.project_issue_form_view
 msgid "Issue Summary..."
-msgstr ""
+msgstr "Resum de la incidència..."
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -424,12 +435,12 @@ msgstr "Incidència bloquejada"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue opened"
-msgstr ""
+msgstr "Incidència oberta"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_ready
 msgid "Issue ready for next stage"
-msgstr ""
+msgstr "Incidència llesta per a la següent etapa"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.act_project_project_2_project_issue_all
@@ -537,7 +548,7 @@ msgstr "Nou"
 #: code:addons/project_issue/models/project_issue.py:275
 #, python-format
 msgid "New Issue"
-msgstr ""
+msgstr "Nova incidència"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_date_action_next
@@ -618,6 +629,8 @@ msgid ""
 "Please remove existing issues in the project linked to the accounts you want"
 " to delete."
 msgstr ""
+"Si us plau, elimini les incidències existents en el projecte vinculat als "
+"comptes que vol esborrar."
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_priority
@@ -668,7 +681,7 @@ msgstr ""
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "Rating on issue"
-msgstr ""
+msgstr "Valoració en la incidència"
 
 #. module: project_issue
 #: selection:project.issue,kanban_state:0
@@ -729,6 +742,8 @@ msgid ""
 "                    like internal requests, software development bugs, customer\n"
 "                    complaints, project troubles, material breakdowns, etc."
 msgstr ""
+"El gestor d'incidències d'Odoo li permet gestionar eficientment qüestions com les peticions internes, errors de desenvolupament de software, queixes dels clients, problemes al projecte, trencament de material, etc.\n"
+"            "
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_cc
@@ -736,6 +751,9 @@ msgid ""
 "These email addresses will be added to the CC field of all inbound\n"
 "        and outbound emails for this record before being sent. Separate multiple email addresses with a comma"
 msgstr ""
+"Aquestes adreces de correu seran afegides al camp CC per a tots els correus "
+"entrants i sortints d'aquest registre abans de ser enviats. Separeu les "
+"diferents adreces de correu amb una coma."
 
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_issue_email_from
@@ -745,7 +763,7 @@ msgstr "Aquestes persones rebran un correu electrònic."
 #. module: project_issue
 #: model:ir.model.fields,help:project_issue.field_project_config_settings_module_rating_project_issue
 msgid "This allows customers to give rating on issue"
-msgstr ""
+msgstr "Això permet als clients donar una classificació de la incidència"
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.action_project_issue_report
@@ -770,12 +788,12 @@ msgstr "Parts de temps"
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_config_settings_module_project_issue_sheet
 msgid "Timesheets on Issues"
-msgstr ""
+msgstr "Part d'hores per a les incidències"
 
 #. module: project_issue
 #: selection:project.config.settings,module_rating_project_issue:0
 msgid "Track customer satisfaction on issues"
-msgstr ""
+msgstr "Seguiment de la satisfacció del client en incidències"
 
 #. module: project_issue
 #: model:ir.ui.view,arch_db:project_issue.view_project_issue_filter
@@ -793,12 +811,12 @@ msgstr "Missatges pendents de llegir"
 #: model:ir.model.fields,field_description:project_issue.field_account_analytic_account_use_issues
 #: model:ir.model.fields,field_description:project_issue.field_project_project_use_issues
 msgid "Use Issues"
-msgstr ""
+msgstr "Utilitzar incidències"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_project_label_issues
 msgid "Use Issues as"
-msgstr ""
+msgstr "Utilitzar incidències com"
 
 #. module: project_issue
 #: model:ir.model.fields,field_description:project_issue.field_project_issue_user_email
@@ -826,6 +844,8 @@ msgid ""
 "You can link this issue to an existing task or directly create a new one "
 "from here"
 msgstr ""
+"Pot enllaçar aquesta incidència a una tasca existent o crear una nova des "
+"d'aquí"
 
 #. module: project_issue
 #: code:addons/project_issue/models/project_issue.py:191

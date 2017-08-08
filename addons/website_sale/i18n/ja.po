@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-06-26 14:46+0000\n"
-"PO-Revision-Date: 2017-06-26 14:46+0000\n"
+"POT-Creation-Date: 2017-07-18 14:21+0000\n"
+"PO-Revision-Date: 2017-07-18 14:21+0000\n"
 "Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2016\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
@@ -971,6 +971,16 @@ msgid "Catalog"
 msgstr "カタログ"
 
 #. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: decreasing order"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.ui.view,arch_db:website_sale.sort
+msgid "Catalog price: increasing order"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -1245,6 +1255,13 @@ msgid ""
 "effective at your office or warehouse's address (origin-based)."
 msgstr ""
 "州や国によっては、バイヤーの住所(目的地)のレートか、あなたのオフィスまたは倉庫の住所(起点)で有効な料金のいずれかで販売税を徴収する必要があります。"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_description
+#: model:ir.model.fields,field_description:website_sale.field_product_product_website_description
+#: model:ir.model.fields,field_description:website_sale.field_product_template_website_description
+msgid "Description for the website"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier_website_sequence
@@ -1943,16 +1960,6 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale.payment
 msgid "Price"
 msgstr "価格"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Catalog price: decreasing order"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.sort
-msgid "Catalog price: increasing order"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_pricelist_ids
@@ -2837,6 +2844,7 @@ msgid "Website Public Categories"
 msgstr "ウェブサイト公開カテゴリ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_sequence
 msgid "Website Sequence"
@@ -2848,32 +2856,38 @@ msgid "Website Shop"
 msgstr "ウェブサイトショップ"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_url
 msgid "Website URL"
 msgstr "ウェブサイトURL"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_description
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_description
 msgid "Website meta description"
 msgstr "ウェブサイトメタディスクリプション"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_keywords
 msgid "Website meta keywords"
 msgstr "ウェブサイトメタキーワード"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_meta_title
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_meta_title
 msgid "Website meta title"
 msgstr "ウェブサイトメタタイトル"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_price
 msgid "Website price"
 msgstr "ウェブサイト価格"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_delivery_carrier_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_product_website_public_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template_website_public_price
 msgid "Website public price"
@@ -3030,11 +3044,6 @@ msgstr "アイテム)"
 #: model:ir.ui.view,arch_db:website_sale.website_planner
 msgid "or"
 msgstr "または"
-
-#. module: website_sale
-#: model:ir.ui.view,arch_db:website_sale.products
-msgid "pagination form-inline o_website_sale_search"
-msgstr "ページネーションフォームインラインo_website_sale_search"
 
 #. module: website_sale
 #: model:ir.ui.view,arch_db:website_sale.website_planner

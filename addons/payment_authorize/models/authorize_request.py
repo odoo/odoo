@@ -111,7 +111,7 @@ class AuthorizeAPI():
         payment_profile = etree.SubElement(profile, "paymentProfiles")
         etree.SubElement(payment_profile, "customerType").text = 'business' if partner.is_company else 'individual'
         billTo = etree.SubElement(payment_profile, "billTo")
-        etree.SubElement(billTo, "address").text = (partner.street + (partner.street2 if partner.street2 else '')) or None
+        etree.SubElement(billTo, "address").text = (partner.street or '' + (partner.street2 if partner.street2 else '')) or None
         etree.SubElement(billTo, "city").text = partner.city
         etree.SubElement(billTo, "state").text = partner.state_id.name or None
         etree.SubElement(billTo, "zip").text = partner.zip

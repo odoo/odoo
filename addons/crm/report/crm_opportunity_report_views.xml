@@ -77,8 +77,8 @@
             <field name="domain">[('probability', '=', 100)]</field>
             <field name="context">{'col_group_by': ['create_date:month'], 'group_by': ['country_id']}</field>
         </record>
-        <record id="ir_filters_crm_opportunity_report_next_action" model="ir.filters">
-            <field name="name">Expected Revenus by Team</field>
+        <record id="filter_opportunity_expected_revenue" model="ir.filters">
+            <field name="name">Expected Revenue by Team</field>
             <field name="model_id">crm.opportunity.report</field>
             <field name="user_id" eval="False"/>
             <field name="context">{'group_by': ['create_date:month', 'team_id'], 'measures': ['expected_revenue', '__count']}</field>
@@ -188,13 +188,12 @@ with the the sales teams.</field>
             <field name="res_model">crm.opportunity.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
-            <field name="context">{'search_default_current': True, 'active_test': True}</field>
+            <field name="context">{'search_default_current': True, 'active_test': True, 'search_default_lead': True}</field>
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')})]"/>
-            <field name="help">This report analyses the source of your leads
-(including those converted into opportunities).</field>
+            <field name="help">This report analyses the source of your leads.</field>
         </record>
 
         <menuitem

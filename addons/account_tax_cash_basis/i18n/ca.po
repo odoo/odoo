@@ -28,7 +28,7 @@ msgstr "Assentament comptable"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Account use when creating entry for tax cash basis"
-msgstr ""
+msgstr "Ús del compte en crear un assentament de bases imposables"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_res_company
@@ -49,7 +49,7 @@ msgstr "Conciliació parcial"
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:39
 #, python-format
 msgid "Please configure a Tax Received Account for tax %s"
-msgstr ""
+msgstr "Configuri un compte d'impostos rebuts per %s"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_tax_use_cash_basis
@@ -57,6 +57,9 @@ msgid ""
 "Select this if the tax should use cash basis,which will create an entry for "
 "this tax on a given account during reconciliation"
 msgstr ""
+"Seleccionar aquest si l'impost s'hauria d'utilitzar en el pagament en "
+"efectiu, el qual crearà, durant la conciliació, d'un registre comptable per "
+"aquest impost en un compte ja establert"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_tax
@@ -66,18 +69,18 @@ msgstr "Impost"
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr ""
+msgstr "Impost de base d'efectiu d'entrada"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_config_settings_tax_cash_basis_journal_id
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_res_company_tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr ""
+msgstr "Impost de base d'efectiu"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_cash_basis_account
 msgid "Tax Received Account"
-msgstr ""
+msgstr "Compte d'impostos rebuts"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,help:account_tax_cash_basis.field_account_move_tax_cash_basis_rec_id
@@ -86,6 +89,9 @@ msgid ""
 " is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Camp tècnic utilitzat per fer un seguiment de la conciliació de bases "
+"d'efectius d'impostos. Es necessiten quan es cancel·la l'origen: publicarà "
+"l'assentament invers per cancel·lar també aquesta part."
 
 #. module: account_tax_cash_basis
 #: code:addons/account_tax_cash_basis/models/account_partial_reconcile.py:80
@@ -94,11 +100,13 @@ msgid ""
 "There is no tax cash basis journal defined for this company: \"%s\" \n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"No hi ha diari base d'efectiu d'impostos definit per aquesta empresa:\" %s \"\n"
+"Configurar en Ajustos / Configuració / Comptabilitat"
 
 #. module: account_tax_cash_basis
 #: model:ir.model.fields,field_description:account_tax_cash_basis.field_account_tax_use_cash_basis
 msgid "Use Cash Basis"
-msgstr ""
+msgstr "Utilitzar base d'efectiu"
 
 #. module: account_tax_cash_basis
 #: model:ir.model,name:account_tax_cash_basis.model_account_config_settings

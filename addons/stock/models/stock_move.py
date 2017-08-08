@@ -219,8 +219,11 @@ class StockMove(models.Model):
 
     @api.constrains('product_uom')
     def _check_uom(self):
-        if any(move.product_id.uom_id.category_id.id != move.product_uom.category_id.id for move in self):
-            raise UserError(_('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.'))
+        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id.id != move.product_uom.category_id.id)
+        if moves_error:
+            user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
+            user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
+            raise UserError(user_warning)
 
     @api.model_cr
     def init(self):
@@ -555,7 +558,7 @@ class StockMove(models.Model):
                     (move.picking_id.picking_type_id.use_existing_lots or move.picking_id.picking_type_id.use_create_lots) and \
                     move.product_id.tracking != 'none' and \
                     not (move.restrict_lot_id or (pack_operation and (pack_operation.product_id and pack_operation.pack_lot_ids)) or (pack_operation and not pack_operation.product_id)):
-                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % move.product_id.name)
+                raise UserError(_('You need to provide a Lot/Serial Number for product %s') % ("%s (%s)" % (move.product_id.name, move.picking_id.name)))
 
     @api.multi
     def action_assign(self, no_prepare=False):

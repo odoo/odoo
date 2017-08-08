@@ -29,7 +29,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_html_3ds
 msgid "3D Secure HTML"
-msgstr "3D Secure HTML"
+msgstr "3D 安全HTML"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -37,6 +37,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_warning_text\">测试</span>\n"
+"                                    <span class=\"o_stat_text\">环境</span>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -44,6 +46,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"text-success\">生产</span>\n"
+"                                    <span class=\"o_stat_text\">环境</span>"
 
 #. module: payment
 #: model:payment.acquirer,cancel_msg:payment.payment_acquirer_adyen
@@ -73,7 +77,7 @@ msgstr "<span><i>取消,</i> 你的付款已被取消.</span>"
 msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
-msgstr "<span><i>完成,</i> 你的在线支付已成功完成. 感谢你的订单.</span>"
+msgstr "<span><i>完成,</i> 你的在线付款已成功完成. 感谢你的订单.</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -106,14 +110,14 @@ msgstr ""
 msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
-msgstr "<span><i>待定,</i> 你的在线支付已完成. 但是你的订单还未确认.</span>"
+msgstr "<span><i>待定,</i> 你的在线付款已完成. 但是你的订单还验证.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
-msgstr ""
+msgstr "<span><i>待定</i>... 订单将在付款后被验证.</span>"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_journal_id
@@ -138,7 +142,7 @@ msgstr "收单方参照"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr "收单参照"
+msgstr "收单方参照"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_active
@@ -202,7 +206,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr "授权"
+msgstr "已授权"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -223,7 +227,7 @@ msgstr "已取消"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "捕捉交易"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -294,7 +298,7 @@ msgstr "创建日期"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Credentials"
-msgstr "授权认证"
+msgstr "凭证"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -427,7 +431,7 @@ msgstr "表单"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_view_template_id
 msgid "Form Button Template"
-msgstr "Form按钮模板"
+msgstr "表单按钮模板"
 
 #. module: payment
 #: selection:payment.transaction,type:0
@@ -718,7 +722,7 @@ msgstr "贝宝"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Pending"
-msgstr "暂停"
+msgstr "待定"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_pending_msg
@@ -780,7 +784,7 @@ msgstr "保存的付款令牌"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr "支持保存卡片资料"
+msgstr "支持保存卡片数据"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -824,7 +828,7 @@ msgstr "状态"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_save_token
 msgid "Store Card Data"
-msgstr "存储卡数据"
+msgstr "存储卡片数据"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
@@ -1005,7 +1009,7 @@ msgstr "context:当前上下相关字典"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "currency: the transaction currency browse record"
-msgstr "currency: 交易币种浏览记录"
+msgstr "currency:交易币种浏览记录"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1017,7 +1021,7 @@ msgstr "partner:客户浏览历史(不完全)"
 msgid ""
 "partner_values: specific values about the buyer, for example coming from a "
 "shipping form"
-msgstr "partner_values: 关于购买的运费需要参考具体的货运方法,如航空等"
+msgstr "partner_values:关于购买的运费需要参考具体的货运方法,如航空等"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1027,7 +1031,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "reference: the transaction reference number"
-msgstr "reference:  交易参考号码"
+msgstr "reference:交易参考号码"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -1042,4 +1046,4 @@ msgstr "tx_values:交易价值"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
 msgid "user: current user browse record"
-msgstr "user: 当前用户浏览记录"
+msgstr "user:当前用户浏览记录"
