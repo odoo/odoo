@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="website_portal.portal_layout" priority="40">
+    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_layout" priority="40">
         <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'project' or project">
                 <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
@@ -19,7 +19,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="website_portal.portal_my_home" priority="40">
+    <template id="portal_my_home" name="Portal My Home: project entries" inherit_id="portal.portal_my_home" priority="40">
         <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
             <li t-if="project_count" class="list-group-item">
                 <span class="badge" t-esc="project_count"/>
@@ -33,9 +33,9 @@
     </template>
 
     <template id="my_projects" name="My Projects">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <h3>Projects
-                <t t-call="website_portal.portal_searchbar"/>
+                <t t-call="portal.portal_searchbar"/>
             </h3>
             <t t-if="not projects">
                 <div class="alert alert-warning mt8" role="alert">
@@ -72,13 +72,13 @@
     </template>
 
     <template id="my_project" name="My Project">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12">
                             <h4>
-                                <t t-call='website_portal.record_pager'/>
+                                <t t-call='portal.record_pager'/>
                                 Project - <span t-field="project.name"/>
                             </h4>
                         </div>
@@ -126,9 +126,9 @@
     </template>
 
     <template id="my_tasks" name="My Tasks">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <h3>Tasks
-                <t t-call="website_portal.portal_searchbar"/>
+                <t t-call="portal.portal_searchbar"/>
             </h3>
             <t t-if="not tasks">
                 <div class="alert alert-warning mt8" role="alert">
@@ -164,13 +164,13 @@
     </template>
 
     <template id="my_task" name="My Task">
-        <t t-call="website_portal.portal_layout">
+        <t t-call="portal.portal_layout">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-md-12">
                             <h4>
-                                <t t-call='website_portal.record_pager'/>
+                                <t t-call='portal.record_pager'/>
                                 Task - <span t-field="task.name"/>
                                 <span t-field="task.stage_id.name" class="pull-right label label-info" title="Current stage of this task"/>
                                 <a class="btn btn-info" t-att-href="'/web#return_label=Website&amp;model=project.task&amp;id=%s&amp;view_type=form' % (task.id)" groups="project.group_project_user">Edit Task</a>

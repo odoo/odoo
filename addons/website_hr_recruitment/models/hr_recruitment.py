@@ -4,7 +4,6 @@
 from werkzeug import urls
 
 from odoo import api, fields, models
-from odoo.addons.website.models.website import slug
 from odoo.tools.translate import html_translate
 
 

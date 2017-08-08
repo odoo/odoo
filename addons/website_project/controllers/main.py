@@ -5,13 +5,12 @@ from collections import OrderedDict
 
 from odoo import http, _
 from odoo.http import request
-
-from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
+from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal
 from odoo.osv.expression import OR
 from odoo.tools import pycompat
 
 
-class WebsiteAccount(website_account):
+class WebsiteAccount(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
         values = super(WebsiteAccount, self)._prepare_portal_layout_values()

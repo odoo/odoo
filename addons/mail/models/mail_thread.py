@@ -1914,7 +1914,7 @@ class MailThread(models.AbstractModel):
         handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
-            from odoo.addons.website.models.website import slug
+            from odoo.addons.http_routing.models.ir_http import slug
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id

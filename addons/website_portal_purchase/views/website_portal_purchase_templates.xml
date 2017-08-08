@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="website_portal.portal_layout" priority="25">
+  <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="portal.portal_layout" priority="25">
     <xpath expr="//ol[contains(@class,'o_portal_submenu')]" position="inside">
       <li t-if="page_name == 'purchase' or purchase_order">
         <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
@@ -13,7 +13,7 @@
     </xpath>
   </template>
 
-  <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="website_portal.portal_my_home" priority="25">
+  <template id="portal_my_home_purchase" name="Portal My Home : purchase entry" inherit_id="portal.portal_my_home" priority="25">
     <xpath expr="//ul[contains(@class,'o_portal_docs')]" position="inside">
         <li t-if="purchase_count" class="list-group-item">
           <span class="badge" t-esc="purchase_count"/>
@@ -23,9 +23,9 @@
   </template>
 
   <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
-    <t t-call="website_portal.portal_layout">
+    <t t-call="portal.portal_layout">
       <h3>Purchase Orders
-        <t t-call="website_portal.portal_searchbar"/>
+        <t t-call="portal.portal_searchbar"/>
       </h3>
       <div t-if="orders" class="panel panel-default">
       <div class="table-responsive"><table class="table table-hover o_my_status_table">
@@ -61,7 +61,7 @@
   </template>
 
   <template id="portal_my_purchase_order" name="Portal: My Purchase Order">
-    <t t-call="website_portal.portal_layout">
+    <t t-call="portal.portal_layout">
       <t t-set="purchase_order" t-value="order"/>
       <div id="optional_placeholder"></div>
       <div class="container">
@@ -70,7 +70,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h4>
-                    <t t-call='website_portal.record_pager'/>
+                    <t t-call='portal.record_pager'/>
                     Purchase Order
                     <span t-esc="order.name"/>
                   </h4>

@@ -9,7 +9,7 @@
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': "",
-    'depends': ['web', 'web_editor', 'web_planner'],
+    'depends': ['web', 'web_editor', 'web_planner', 'http_routing', 'portal'],
     'installable': True,
     'data': [
         'data/website_data.xml',

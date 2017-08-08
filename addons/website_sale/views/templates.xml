@@ -1708,7 +1708,7 @@
         </xpath>
     </template>
 
-    <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
+    <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="sale.orders_followup">
         <xpath expr="//div[@id='product_name']/*" position="replace">
             <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
                 <span t-esc="ol.name" />

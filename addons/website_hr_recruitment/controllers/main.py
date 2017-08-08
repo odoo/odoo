@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import http, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 
 

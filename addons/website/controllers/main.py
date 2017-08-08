@@ -17,7 +17,7 @@ from odoo import http, models
 from odoo import fields
 from odoo.http import request
 
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.web.controllers.main import WebClient, Binary, Home
 
 from odoo.tools import pycompat, OrderedSet
@@ -103,7 +103,7 @@ class Website(Home):
             lang = request.website.default_lang_code
             r = '/%s%s' % (lang, r or '/')
         redirect = werkzeug.utils.redirect(r or ('/%s' % lang), 303)
-        redirect.set_cookie('website_lang', lang)
+        redirect.set_cookie('frontend_lang', lang)
         return redirect
 
     @http.route('/page/<page:page>', type='http', auth="public", website=True, cache=300)

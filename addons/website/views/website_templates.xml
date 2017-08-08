@@ -18,12 +18,9 @@
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.wrapwrap.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/bootstrap.extend.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/website.js"></script>
@@ -79,8 +76,8 @@
     </li>
 </template>
 
-<template id="layout" name="Main layout">
-    <t t-call="web.layout">
+<template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+    <xpath expr="//t[@t-set='head_website']" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
@@ -103,6 +100,8 @@
             </t>
         </t>
         <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
+    </xpath>
+    <xpath expr="//t[@t-set='head_website']" position="replace">
         <t t-set="head_website">
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
@@ -121,7 +120,7 @@
             </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang and website">
+            <t t-if="request and request.is_frontend_multilang and website">
                 <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
                     <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
@@ -130,7 +129,7 @@
             <script type="text/javascript">
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
-                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                    is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,  
                     is_frontend: true,
                     translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
@@ -150,51 +149,30 @@
             <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_publisher"/>
             <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
         </t>
-        <t t-set="head" t-value="head_website + (head or '')"/>
-
-        <div id="wrapwrap" t-att-class="pageName or ''">
-            <header>
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
-                        </div>
-                        <div class="collapse navbar-collapse navbar-top-collapse">
-                            <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                    <t t-call="website.submenu"/>
-                                </t>
-                                <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
-                                <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <b>
-                                            <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
-                                            <span class="caret"></span>
-                                        </b>
-                                    </a>
-                                    <ul class="dropdown-menu js_usermenu" role="menu">
-                                        <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <main>
-                <t t-raw="0"/>
-            </main>
-            <footer >
-                <div id="footer">
-                </div>
-            </footer>
+    </xpath>
+    <xpath expr="//header//div[@class='navbar-header']" position="replace">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
         </div>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[@class='divider']" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[@class='dropdown']" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[@class='divider']" position="before">
+        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+            <t t-call="website.submenu"/>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="after">
         <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -204,7 +182,7 @@
             ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
             ga('send','pageview');
         </script>
-    </t>
+    </xpath>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
@@ -235,17 +213,6 @@
         <t t-call="website.layout">
             <div class="oe_website_login_container" t-raw="0"/>
         </t>
-    </xpath>
-</template>
-
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
-    <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
-            <a t-attf-href="/web/login">
-                <b>Sign in</b>
-            </a>
-        </li>
     </xpath>
 </template>
 
@@ -281,7 +248,7 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+    <ul class="list-inline js_language_selector mt16" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li t-foreach="languages" t-as="lg">
           <a
             t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
@@ -382,18 +349,7 @@
     </t>
 </template>
 
-<template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
-        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
-        </li>
-        <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-        </t>
-        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
-        </li>
-    </ul>
+<template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 
 <!--

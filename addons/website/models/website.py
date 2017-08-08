@@ -3,23 +3,16 @@
 
 import inspect
 import logging
-import math
-import unicodedata
-import re
 import hashlib
+import re
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
-# optional python-slugify import (https://github.com/un33k/python-slugify)
-try:
-    import slugify as slugify_lib
-except ImportError:
-    slugify_lib = None
-
-from odoo import api, fields, models
-from odoo import tools
-from odoo.tools import ustr, pycompat
+from odoo import api, fields, models, tools
+from odoo.addons.http_routing.models.ir_http import slugify
+from odoo.addons.portal.controllers.portal import pager
+from odoo.tools import pycompat
 from odoo.http import request
 from odoo.tools.translate import _
 
@@ -34,117 +27,6 @@ DEFAULT_CDN_FILTERS = [
     # retrocompatibility
     "^/website/image/",
 ]
-
-
-def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
-    location = path_or_uri.strip()
-    force_lang = lang is not None
-    url = urls.url_parse(location)
-
-    if request and not url.netloc and not url.scheme and (url.path or force_lang):
-        location = urls.url_join(current_path, location)
-
-        lang = lang or request.context.get('lang')
-        langs = [lg[0] for lg in request.website.get_languages()]
-
-        if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
-            ps = location.split('/')
-            if ps[1] in langs:
-                # Replace the language only if we explicitly provide a language to url_for
-                if force_lang:
-                    ps[1] = lang.encode('utf-8')
-                # Remove the default language unless it's explicitly provided
-                elif ps[1] == request.website.default_lang_code:
-                    ps.pop(1)
-            # Insert the context language or the provided language
-            elif lang != request.website.default_lang_code or force_lang:
-                ps.insert(1, lang.encode('utf-8'))
-            location = '/'.join(ps)
-
-    return location.decode('utf-8')
-
-
-def is_multilang_url(local_url, langs=None):
-    if not langs:
-        langs = [lg[0] for lg in request.website.get_languages()]
-    spath = local_url.split('/')
-    # if a language is already in the path, remove it
-    if spath[1] in langs:
-        spath.pop(1)
-        local_url = '/'.join(spath)
-    try:
-        # Try to match an endpoint in werkzeug's routing table
-        url = local_url.split('?')
-        path = url[0]
-        query_string = url[1] if len(url) > 1 else None
-        router = request.httprequest.app.get_db_router(request.db).bind('')
-        # Force to check method to POST. Odoo uses methods : ['POST'] and ['GET', 'POST']
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return (func.routing.get('website', False) and
-                func.routing.get('multilang', func.routing['type'] == 'http'))
-    except Exception:
-        return False
-
-
-####################################################
-# Slug API
-####################################################
-
-def slugify(s, max_length=None):
-    """ Transform a string to a slug that can be used in a url path.
-        This method will first try to do the job with python-slugify if present.
-        Otherwise it will process string by stripping leading and ending spaces,
-        converting unicode chars to ascii, lowering all chars and replacing spaces
-        and underscore with hyphen "-".
-        :param s: str
-        :param max_length: int
-        :rtype: str
-    """
-    s = ustr(s)
-    if slugify_lib:
-        # There are 2 different libraries only python-slugify is supported
-        try:
-            return slugify_lib.slugify(s, max_length=max_length)
-        except TypeError:
-            pass
-    uni = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    slug_str = re.sub('[\W_]', ' ', uni).strip().lower()
-    slug_str = re.sub('[-\s]+', '-', slug_str)
-
-    return slug_str[:max_length]
-
-
-def slug(value):
-    if isinstance(value, models.BaseModel):
-        if isinstance(value.id, models.NewId):
-            raise ValueError("Cannot slug non-existent record %s" % value)
-        # [(id, name)] = value.name_get()
-        identifier, name = value.id, value.display_name
-    else:
-        # assume name_search result tuple
-        identifier, name = value
-    slugname = slugify(name or '').strip().strip('-')
-    if not slugname:
-        return str(identifier)
-    return "%s-%d" % (slugname, identifier)
-
-# NOTE: as the pattern is used as it for the ModelConverter (ir_http.py), do not use any flags
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[A-Za-z0-9-_]+?\w)-)?(-?\d+)(?=$|/)')
-
-
-def unslug(s):
-    """Extract slug and id from a string.
-        Always return un 2-tuple (str|None, int|None)
-    """
-    m = _UNSLUG_RE.match(s)
-    if not m:
-        return None, None
-    return m.group(1), int(m.group(2))
 
 
 class Website(models.Model):
@@ -434,62 +316,7 @@ class Website(models.Model):
 
     @api.model
     def pager(self, url, total, page=1, step=30, scope=5, url_args=None):
-        """ Generate a dict with required value to render `website.pager` template. This method compute
-            url, page range to display, ... in the pager.
-            :param url : base url of the page link
-            :param total : number total of item to be splitted into pages
-            :param page : current page
-            :param step : item per page
-            :param scope : number of page to display on pager
-            :param url_args : additionnal parameters to add as query params to page url
-            :type url_args : dict
-            :returns dict
-        """
-        # Compute Pager
-        page_count = int(math.ceil(float(total) / step))
-
-        page = max(1, min(int(page if str(page).isdigit() else 1), page_count))
-        scope -= 1
-
-        pmin = max(page - int(math.floor(scope/2)), 1)
-        pmax = min(pmin + scope, page_count)
-
-        if pmax - pmin < scope:
-            pmin = pmax - scope if pmax - scope > 0 else 1
-
-        def get_url(page):
-            _url = "%s/page/%s" % (url, page) if page > 1 else url
-            if url_args:
-                _url = "%s?%s" % (_url, urls.url_encode(url_args))
-            return _url
-
-        return {
-            "page_count": page_count,
-            "offset": (page - 1) * step,
-            "page": {
-                'url': get_url(page),
-                'num': page
-            },
-            "page_start": {
-                'url': get_url(pmin),
-                'num': pmin
-            },
-            "page_previous": {
-                'url': get_url(max(pmin, page - 1)),
-                'num': max(pmin, page - 1)
-            },
-            "page_next": {
-                'url': get_url(min(pmax, page + 1)),
-                'num': min(pmax, page + 1)
-            },
-            "page_end": {
-                'url': get_url(pmax),
-                'num': pmax
-            },
-            "pages": [
-                {'url': get_url(page), 'num': page} for page in range(pmin, pmax+1)
-            ]
-        }
+        return pager(url, total, page=page, step=step, scope=scope, url_args=url_args)
 
     def rule_is_enumerable(self, rule):
         """ Checks that it is possible to generate sensible GET queries for
