@@ -387,6 +387,16 @@ function remove_message_from_channel (channel_id, message) {
     });
 }
 
+function remove_message_from_cache(message) {
+    _.each(message.channel_ids, function(channel_id) {
+        var channel = chat_manager.get_channel(channel_id);
+        if (channel) {
+            var channel_cache = get_channel_cache(channel);
+            channel_cache.messages = _.without(channel_cache.messages, message);
+        }
+    });
+}
+
 function update_channel_unread_counter (channel, counter) {
     if (channel.unread_counter > 0 && counter === 0) {
         unread_conversation_counter = Math.max(0, unread_conversation_counter-1);
@@ -528,12 +538,14 @@ function on_moderator_notification(message) {
     chat_manager.bus.trigger('update_moderation_counter');
 }
 
-function on_moderator_action(message_ids) {
+function on_moderator_action(message_ids, moderator_action) {
     moderation_counter = moderation_counter - message_ids.length;
     _.each(message_ids, function(msg_id) {
         var message = chat_manager.get_message(msg_id);
         message.is_moderation = false;
         remove_message_from_channel("channel_moderation", message);
+        if (_.contains(['reject', 'discard', 'ban'], moderator_action))
+            remove_message_from_cache(message);
         chat_manager.bus.trigger('update_message', message);
     });
     chat_manager.bus.trigger('update_moderation_counter');
@@ -924,7 +936,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                 args: [message_ids, moderator_action]
             })
             .then(function() {
-                on_moderator_action(message_ids);
+                on_moderator_action(message_ids, moderator_action);
             })
         }
     },
