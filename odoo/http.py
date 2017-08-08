@@ -280,8 +280,9 @@ class WebRequest(object):
         if self._cr:
             if exc_type is None and not self._failed:
                 self._cr.commit()
-                self.registry.signal_changes()
-            else:
+                if self.registry:
+                    self.registry.signal_changes()
+            elif self.registry:
                 self.registry.reset_changes()
             self._cr.close()
         # just to be sure no one tries to re-use the request
