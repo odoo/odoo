@@ -41,11 +41,11 @@ class ProductTemplate(models.Model):
     average_price = fields.Float(
         'Average Cost', compute='_compute_fifo_average_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="This is the average cost of this product, in the default unit of measure of the product.")
+        help="This is the average cost of this product and can be used to value the stock of this product. ")
     fifo_price = fields.Float(
         'FIFO Cost', compute='_compute_fifo_average_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="This is the cost of the last product leaving the stock.")
+        help="This is the cost based on the last products leaving the stock.")
 
     @api.multi
     def _compute_fifo_average_price(self):
@@ -110,13 +110,13 @@ class ProductProduct(models.Model):
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
         compute='_compute_average_price',
-        help="Calculated average cost")
+        help="This is the average cost of this product and can be used to value the stock of this product. ")
     fifo_price = fields.Float(
         'FIFO Cost', 
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
         compute='_compute_fifo_price',
-        help="Calculated FIFO cost")
+        help="This is the cost based on the last products leaving the stock.")
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
 
