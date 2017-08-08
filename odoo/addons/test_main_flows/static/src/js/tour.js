@@ -10,7 +10,7 @@ tour.register('main_flow_tour', {
     test: true,
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
 }, {
@@ -239,13 +239,9 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the app switcher'),
     position: 'bottom',
 }, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t('Organize your sales activities with the <b>Sales app</b>.'),
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
+    content: _t('Organize your sales activities with the <b>CRM app</b>.'),
     position: 'bottom',
-}, {
-    trigger: ".o_sales_dashboard .o_dashboard_action[name='crm.action_your_pipeline']:last, .oe_secondary_submenu .oe_menu_text:contains('My Pipeline'):first",
-    content: _t("Let\'s have a look at your opportunities pipeline."),
-    position: "bottom"
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
@@ -516,16 +512,16 @@ tour.register('main_flow_tour', {
     content: _t('Go back to the app switcher'),
     position: 'bottom',
 }, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_menu_sections a[data-menu-xmlid='sales_team.menu_sales']",
+    trigger: ".o_menu_sections a[data-menu-xmlid='sale.sale_order_menu']",
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Sales Orders')), .oe_secondary_submenu .oe_menu_text:contains('Sales Orders'):first",
+    trigger: ".o_menu_sections a[data-menu-xmlid='sale.menu_sale_order'], .oe_secondary_submenu a[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {

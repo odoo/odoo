@@ -5,8 +5,11 @@ from odoo import api, fields, models
 
 
 class SaleConfigSettings(models.TransientModel):
-    _inherit = 'sale.config.settings'
+    _name = 'sale.config.settings'
+    _inherit = 'res.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
@@ -69,7 +72,6 @@ class SaleConfigSettings(models.TransientModel):
         oldname='deposit_product_id_setting',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Orders")
-    module_sale_subscription = fields.Boolean("Subscriptions")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
     auth_signup_uninvited = fields.Selection([
@@ -78,7 +80,6 @@ class SaleConfigSettings(models.TransientModel):
     ], string='Customer Account')
 
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
-    module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
@@ -86,10 +87,7 @@ class SaleConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
 
-    module_sale_timesheet = fields.Boolean("Timesheets")
-    module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
-    module_web_clearbit = fields.Boolean("Customer Autocomplete")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
@@ -144,7 +142,7 @@ class SaleConfigSettings(models.TransientModel):
             auth_signup_uninvited='b2c' if ICPSudo.get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
             use_sale_note=ICPSudo.get_param('sale.use_sale_note', default=False),
             auto_done_setting=ICPSudo.get_param('sale.auto_done_setting'),
-            default_deposit_product_id=ICPSudo.get_param('sale.default_deposit_product_id'),
+            default_deposit_product_id=int(ICPSudo.get_param('sale.default_deposit_product_id')),
             sale_show_tax=ICPSudo.get_param('sale.sale_show_tax', default='subtotal'),
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,

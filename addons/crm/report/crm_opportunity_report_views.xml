@@ -167,7 +167,7 @@ mainly used by the sales manager in order to do the periodic review with the
 teams of the sales pipeline.</field>
         </record>
         <menuitem id="crm_opportunity_report_menu" name="Pipeline"
-            parent="sales_team.menu_sale_report" action="crm_opportunity_report_action" sequence="5"/>
+            parent="crm_menu_report" action="crm_opportunity_report_action" sequence="5"/>
 
         <record id="crm_opportunity_report_action_graph" model="ir.actions.act_window">
              <field name="name">Pipeline Analysis</field>
@@ -202,7 +202,7 @@ with the the sales channel.</field>
         <menuitem
             id="crm_opportunity_report_menu_lead"
             name="Leads"
-            parent="sales_team.menu_sale_report"
+            parent="crm_menu_report"
             action="crm_opportunity_report_action_lead"
             groups="crm.group_use_lead"
             sequence="1"/>

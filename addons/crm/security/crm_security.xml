@@ -12,12 +12,9 @@
         <field eval="[(4,ref('base.group_partner_manager'))]" name="groups_id"/>
     </record>
 
-    <record model='ir.ui.menu' id='sales_team.menu_base_partner'>
-        <field name="groups_id" eval="[(4,ref('sales_team.group_sale_manager')),(4,ref('sales_team.group_sale_salesman'))]"/>
-    </record>
-
-    <record model="ir.ui.menu" id="sales_team.menu_sale_config">
-        <field eval="[(4, ref('sales_team.group_sale_manager'))]" name="groups_id"/>
+    <record id="contacts.res_partner_menu_config" model="ir.ui.menu">
+        <field name="name">Configuration</field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_manager'))]"/>
     </record>
 
 </data>
