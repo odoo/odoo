@@ -124,6 +124,7 @@ class PosConfig(models.Model):
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
     pos_session_username = fields.Char(compute='_compute_current_session_user')
+    pos_session_state = fields.Char(compute='_compute_current_session_user')
     group_by = fields.Boolean(string='Group Journal Items', default=True,
         help="Check this if you want to group the Journal Items by Product while closing a Session.")
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', required=True, default=_default_pricelist)
@@ -195,8 +196,9 @@ class PosConfig(models.Model):
     @api.depends('session_ids')
     def _compute_current_session_user(self):
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: s.state == 'opened' and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.state in ['opening_control', 'opened', 'closing_control'] and not s.rescue)
             pos_config.pos_session_username = session and session[0].user_id.name or False
+            pos_config.pos_session_state = session and session[0].state or False
 
     @api.constrains('company_id', 'stock_location_id')
     def _check_company_location(self):
