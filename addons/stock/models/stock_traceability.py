@@ -117,7 +117,12 @@ class MrpStockReport(models.TransientModel):
             res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, parent_quant=parent_quant, stream=stream, obj_ids=move_line_ids)
         else:
             res = self._lines(line_id,  model_id=model_id, model=model, level=level, parent_quant=parent_quant, stream=stream)
-        return res
+        reverse_sort = True
+        if stream == "downstream":
+            reverse_sort = False
+        final_vals = sorted(res, key=lambda v: v['date'], reverse=reverse_sort)
+        lines = self.final_vals_to_lines(final_vals, level)
+        return lines
 
     @api.model
     def get_links(self, move_line):
@@ -278,12 +283,7 @@ class MrpStockReport(models.TransientModel):
         else:
             for move_line in obj_ids:
                 final_vals += self.make_dict_head(level, stream=stream, parent_id=line_id, model=model or 'stock.pack.operation', move_line=move_line)
-        reverse_sort = True
-        if stream == "downstream":
-            reverse_sort = False
-        final_vals = sorted(final_vals, key=lambda v: v['date'], reverse=reverse_sort)
-        lines = self.final_vals_to_lines(final_vals, level)
-        return lines
+        return final_vals
 
     @api.model
     def get_produced_or_consumed_vals(self, move_lines, level, model, stream, parent_id):
