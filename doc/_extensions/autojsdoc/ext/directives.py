@@ -84,7 +84,7 @@ def automodule_bound(app, modules, symbols):
                 modsource = mod['sourcefile']
                 if modsource:
                     self.state.document.settings.env.note_dependency(modsource)
-                # FIXME: not sure what that's used for as normal xrefs are resolved using the id directly
+                # not sure what that's used for as normal xrefs are resolved using the id directly
                 target = nodes.target('', '', ids=['module-' + name], ismod=True)
                 self.state.document.note_explicit_target(target)
 
@@ -108,6 +108,7 @@ class Documenter(object):
         :rtype: List[nodes.Node]
         """
         objname = self._doc.name
+        prefixed = (self._doc['sourcemodule'].name + '.' + objname) if self._doc['sourcemodule'] else None
         objtype = self.objtype
         assert objtype, '%s has no objtype' % type(self)
         root = addnodes.desc(domain='js', desctype=objtype, objtype=objtype)
@@ -119,6 +120,9 @@ class Documenter(object):
 
             if objname:
                 s['ids'] = [objname]
+                if prefixed:
+                    s['ids'].append(prefixed)
+
             if objtype:
                 s += addnodes.desc_annotation(
                     objtype, objtype,
@@ -127,6 +131,8 @@ class Documenter(object):
             if objname and objtype:
                 env = self._directive.state.document.settings.env
                 env.domaindata['js']['objects'][objname] = (env.docname, objtype)
+                if prefixed:
+                    env.domaindata['js']['objects'][prefixed] = (env.docname, objtype)
 
             # TODO: linkcode_resolve
             s += self.make_signature()
@@ -206,7 +212,6 @@ class ModuleDocumenter(Documenter):
                         reftype='module',
                         reftarget=dep,
                     )
-                    # TODO: js:module/js:object keys for relative lookup
                     deps += nodes.list_item(dep, ref)
 
 
@@ -258,9 +263,7 @@ class ClassDocumenter(Documenter):
             doc.superclass.name, nodes.paragraph(doc.superclass.name, doc.superclass.name),
             refdomain='js', reftype='class', reftarget=doc.superclass.name,
         )
-        # FIXME: should be the module the superclass comes from (if any)
-        # -> need to keep the source module on CommentDoc objects
-        sup_link['js:module'] = self._module
+        sup_link['js:module'] = doc.superclass['sourcemodule'].name
         return nodes.field(
             '',
             nodes.field_name("Extends", "Extends"),
@@ -281,7 +284,7 @@ class ClassDocumenter(Documenter):
                         mixin.name, nodes.paragraph(mixin.name, mixin.name),
                         refdomain='js', reftype='mixin', reftarget=mixin.name
                     )
-                    mixin_link['js:module'] = self._module
+                    mixin_link['js:module'] = mixin['sourcemodule'].name
                     mixins += nodes.list_item('', mixin_link)
         return ret
 
@@ -308,7 +311,7 @@ class InstanceDocumenter(Documenter):
                 cls.name, nodes.Text(cls.name, cls.name),
                 refdomain='js', reftype='class', reftarget=cls.name
             )
-            super_ref['js:module'] = self._module
+            super_ref['js:module'] = cls['sourcemodule'].name
             ret.append(addnodes.desc_annotation(' instance of ', ' instance of '))
             ret.append(addnodes.desc_type(cls.name, '', super_ref))
         if not ret:
@@ -349,7 +352,7 @@ class FunctionDocumenter(Documenter):
                         field += nodes.field_name('Parameters', 'Parameters')
                         with addto(field, nodes.field_body()) as body,\
                              addto(body, nodes.bullet_list()) as holder:
-                            holder.extend(make_parameters(doc.params, mod=self._module))
+                            holder.extend(make_parameters(doc.params, mod=doc['sourcemodule'].name))
                 if doc.return_val.doc:
                     with addto(fields, nodes.field()) as field:
                         field += nodes.field_name("Returns", "Returns")
@@ -361,7 +364,7 @@ class FunctionDocumenter(Documenter):
                         field += nodes.field_name("Return Type", "Return Type")
                         with addto(field, nodes.field_body()) as body, \
                              addto(body, nodes.paragraph()) as p:
-                            p += make_types(rtype, mod=self._module)
+                            p += make_types(rtype, mod=doc['sourcemodule'].name)
         return ret.children
 
 
@@ -451,7 +454,7 @@ class PropertyDocumenter(Documenter):
                 proptype, nodes.Text(proptype, proptype),
                 refdomain='js', reftype='class', reftarget=proptype
             )
-            typeref['js:module'] = self._module
+            typeref['js:module'] = self._doc['sourcemodule'].name
             ret.append(nodes.Text(' '))
             ret.append(typeref)
         return ret

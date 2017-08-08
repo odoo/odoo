@@ -8,9 +8,9 @@ from autojsdoc.parser import jsdoc, parser
 params = operator.attrgetter('name', 'type', 'doc')
 
 
-def parse(s):
+def parse(s, source=None):
     tree = pyjsparser.parse(s)
-    mods = parser.ModuleMatcher(None).visit(tree)
+    mods = parser.ModuleMatcher(source).visit(tree)
     post(mods)
     return mods
 

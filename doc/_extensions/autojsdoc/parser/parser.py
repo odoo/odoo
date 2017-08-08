@@ -48,7 +48,7 @@ class ModuleMatcher(Visitor):
             require = None # a module can have no dependencies
             if func['params']:
                 require = func['params'][0]['name']
-            mod.parsed['dependency'], mod.parsed['exports'], post = ModuleExtractor(require).visit(func['body'])
+            mod.parsed['dependency'], mod.parsed['exports'], post = ModuleExtractor(mod, require).visit(func['body'])
             mod._post_process.extend(post)
         # don't recurse since we've fired off a sub-visitor for the
         # bits we're interested in
@@ -188,8 +188,9 @@ BASE_SCOPE = {
 }
 
 class ModuleExtractor(Visitor):
-    def __init__(self, requirefunc):
+    def __init__(self, module, requirefunc):
         super(ModuleExtractor, self).__init__()
+        self.module = module
         self.requirefunc = requirefunc
         self.result = ModuleContent()
         self.scope = dict(BASE_SCOPE)
@@ -265,6 +266,7 @@ class ModuleExtractor(Visitor):
             node.get('comments'),
             jsdoc.FunctionDoc,
         )
+        fn.parsed['sourcemodule'] = self.module
         fn.parsed['guessed_function'] = node['id']['name']
         return SKIP
 
@@ -329,15 +331,19 @@ class ValueExtractor(Visitor):
             self.declaration.comments,
             jsdoc.Unknown.from_(node['type'])
         )
-        if self.declaration.id:
-            self.result.set_name(self.declaration.id)
+        self._update_result_meta()
         return SKIP
+
+    def _update_result_meta(self, name=None):
+        self.result.parsed['sourcemodule'] = self.parent.module
+        n = name or self.declaration.id
+        if n:
+            self.result.set_name(n)
 
     def enter_Literal(self, node):
         self.result = jsdoc.parse_comments(
             self.declaration.comments, jsdoc.LiteralDoc)
-        if self.declaration.id:
-            self.result.parsed['name'] = self.declaration.id
+        self._update_result_meta()
         self.result.parsed['value'] = node['value']
         return SKIP
     def enter_Identifier(self, node):
@@ -356,15 +362,13 @@ class ValueExtractor(Visitor):
         name, comments = astuple(self.declaration)
         self.result = jsdoc.parse_comments(comments, jsdoc.FunctionDoc)
         name = node['id']['name'] if node['id'] else name
-        if name:
-            self.result.parsed['guessed_function'] = name
+        self._update_result_meta(name)
         return SKIP
 
     def enter_NewExpression(self, node):
         comments = self.declaration.comments if self.declaration else node.get('comments')
         self.result = ns = jsdoc.parse_comments(comments, jsdoc.InstanceDoc)
-        name = self.declaration.id if self.declaration else ''
-        ns.parsed['name'] = name
+        self._update_result_meta()
 
         def _update_contents(cls):
             if not isinstance(cls, jsdoc.ClassDoc):
@@ -375,8 +379,7 @@ class ValueExtractor(Visitor):
 
     def enter_ObjectExpression(self, node):
         self.result = obj = jsdoc.parse_comments(self.declaration.comments, jsdoc.ObjectDoc.from_parsed)
-        if self.declaration.id:
-            self.result.set_name(self.declaration.id)
+        self._update_result_meta()
         for n, p in MemberExtractor(parent=self.parent).visit(node['properties']).items():
             obj.add_member(n, p)
         return SKIP
@@ -403,11 +406,10 @@ class ValueExtractor(Visitor):
             },
         }):  # creates a new class, but may not actually return it
             obj = node['callee']['object']
-            varname, comments = astuple(self.declaration)
+            _, comments = astuple(self.declaration)
             self.result = cls = jsdoc.parse_comments(comments, jsdoc.ClassDoc)
             cls.parsed['extends'] = self.parent.refify(obj)
-            if varname:
-                cls.parsed['class'] = varname
+            self._update_result_meta()
             items = ClassProcessor(self.parent).visit(node['arguments'])
 
             @self.parent.result.post.append
@@ -424,6 +426,7 @@ class ValueExtractor(Visitor):
         # other function calls
         else:
             self.result = jsdoc.parse_comments(self.declaration.comments, jsdoc.guess)
+            self._update_result_meta()
 
         return SKIP
 

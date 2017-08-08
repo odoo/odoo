@@ -35,6 +35,7 @@ def test_multiple():
     assert mod1.dependencies == set()
     assert isinstance(mod1.exports, jsdoc.LiteralDoc)
     assert mod1.exports.value == 1.0
+    assert mod1.exports['sourcemodule'] is mod1
     assert mod1.doc == ""
 
     assert mod2.name == 'module2'
@@ -63,6 +64,7 @@ def test_func():
     """)
     exports = mod.exports
     assert type(exports) == jsdoc.FunctionDoc
+    assert exports['sourcemodule'] is mod
 
     assert exports.name == ''
     assert exports.member == ''
@@ -103,6 +105,7 @@ def test_export_instance():
     """)
     assert type(mod.exports) == jsdoc.InstanceDoc
     assert mod.exports.doc == 'Provides an instance of Class'
+    assert mod.exports['sourcemodule'] is mod
 
 def test_bounce():
     [m2, m1] = parse("""
@@ -121,6 +124,7 @@ def test_bounce():
     assert type(m2.exports) == jsdoc.NSDoc
     it = m2.exports.get_property('Item')
     assert type(it) == jsdoc.ClassDoc
+    assert it['sourcemodule'] is m1
 
 def test_attr():
     [m1, m2] = parse("""
