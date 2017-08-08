@@ -583,6 +583,13 @@ var FieldMonetary = InputField.extend({
         this.formatOptions.digits = [16, 2];
         this.formatOptions.field_digits = this.nodeOptions.field_digits;
     },
+    _prepareInput: function () {
+        this._super.apply(this, arguments);
+        if(config.isMobile){
+            this.$input.attr('type', 'tel');
+        }
+        return this.$input;
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -789,6 +796,13 @@ var FieldInteger = InputField.extend({
     isSet: function () {
         return this.value === 0 || this._super.apply(this, arguments);
     },
+    _prepareInput: function () {
+        this._super.apply(this, arguments);
+        if(config.isMobile){
+            this.$input.attr('type', 'tel');
+        }
+        return this.$input;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -835,6 +849,13 @@ var FieldFloat = InputField.extend({
         if (this.attrs.digits) {
             this.nodeOptions.digits = JSON.parse(this.attrs.digits);
         }
+    },
+    _prepareInput: function () {
+        this._super.apply(this, arguments);
+        if(config.isMobile){
+            this.$input.attr('type', 'tel');
+        }
+        return this.$input;
     },
 
     //--------------------------------------------------------------------------
@@ -971,6 +992,14 @@ var FieldEmail = InputField.extend({
 var FieldPhone = FieldEmail.extend({
     className: 'o_field_phone',
     prefix: 'tel',
+
+    _prepareInput: function () {
+        this._super.apply(this, arguments);
+        if(config.isMobile){
+            this.$input.attr('type', 'tel');
+        }
+        return this.$input;
+    },
 
     //--------------------------------------------------------------------------
     // Private
