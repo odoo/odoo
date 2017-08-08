@@ -17,7 +17,7 @@ class HrExpenseConfigSettings(models.TransientModel):
         implied_group='product.group_uom')
     use_mailgateway = fields.Boolean(string='Let your employees record expenses by email')
     module_project = fields.Boolean(string="Project")
-    module_sale = fields.Boolean(string="Customer Billing")
+    module_sale_management = fields.Boolean(string="Customer Billing")
 
     @api.model
     def get_values(self):

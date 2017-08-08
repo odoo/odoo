@@ -51,7 +51,7 @@ class StockConfigSettings(models.TransientModel):
     group_stock_multi_warehouses = fields.Boolean('Multi-Warehouses', implied_group='stock.group_stock_multi_warehouses')
     module_quality = fields.Boolean(string="Quality Control")
     module_mrp = fields.Boolean(string="Manufacturing")
-    module_sale = fields.Boolean(string="Sales")
+    module_sale_management = fields.Boolean(string="Sales")
     module_purchase = fields.Boolean(string="Purchase")
 
     @api.onchange('use_propagation_minimum_delta')
