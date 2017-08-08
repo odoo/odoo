@@ -1,6 +1,8 @@
 odoo.define('barcodes.tests', function (require) {
 "use strict";
 
+var barcodeEvents = require('barcodes.BarcodeEvents');
+
 var testUtils = require('web.test_utils');
 var FormView = require('web.FormView');
 
@@ -13,6 +15,7 @@ QUnit.module('Barcodes', {
             product: {
                 fields: {
                     name: {string : "Product name", type: "char"},
+                    int_field: {string : "Integer", type: "integer"},
                 },
                 records: [
                     {id: 1, name: "iPad Mini"},
@@ -116,6 +119,76 @@ QUnit.test('pager buttons', function (assert) {
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
 
     form.destroy();
+});
+
+QUnit.test('widget field_float_scannable', function (assert) {
+    var done = assert.async();
+    assert.expect(11);
+
+    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
+    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
+
+    this.data.product.records[0].int_field = 4;
+    this.data.product.onchanges = {
+        int_field: function () {},
+    };
+
+    var form = createView({
+        View: FormView,
+        model: 'product',
+        data: this.data,
+        arch: '<form>' +
+                    '<field name="display_name"/>' +
+                    '<field name="int_field" widget="field_float_scannable"/>' +
+                '</form>',
+        mockRPC: function (route, args) {
+            if (args.method === 'onchange') {
+                assert.step('onchange');
+                assert.strictEqual(args.args[1].int_field, 426,
+                    "should send correct value for int_field");
+            }
+            return this._super.apply(this, arguments);
+        },
+        fieldDebounce: 1000,
+        res_id: 1,
+    });
+
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '4',
+        "should display the correct value in readonly");
+
+    form.$buttons.find('.o_form_button_edit').click();
+
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '4',
+        "should display the correct value in edit");
+
+    // simulates keypress events in the input to replace 0.00 by 26 (should not trigger onchanges)
+    form.$('.o_field_widget[name=int_field]').focus();
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
+        "int field should be focused");
+    form.$('.o_field_widget[name=int_field]').trigger({type: 'keypress', which: 50, keyCode: 50}); // 2
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
+        "int field should still be focused");
+    form.$('.o_field_widget[name=int_field]').trigger({type: 'keypress', which: 54, keyCode: 54}); // 6
+    assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
+        "int field should still be focused");
+
+    setTimeout(function () {
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '426',
+            "should display the correct value in edit");
+        assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
+        "int field should still be focused");
+
+        assert.verifySteps([], 'should not have done any onchange RPC');
+
+        form.$('.o_field_widget[name=int_field]').trigger('change'); // should trigger the onchange
+
+        assert.verifySteps(['onchange'], 'should have done the onchange RPC');
+
+        form.destroy();
+        barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+        done();
+    });
+
 });
 
 });
