@@ -2,29 +2,70 @@
 <odoo>
 
         <!-- Top menu item -->
-        <!--
-            This menu item's purpose is to overwrite another one defined in
-            the base module in order to set new groups.
-        -->
-        <menuitem name="Sales"
-            id="sales_team.menu_base_partner"
+
+        <menuitem id="sale_menu_root"
+            name="Sales"
             web_icon="sale,static/description/icon.png"
-            active="False"/>
+            active="False"
+            sequence="7"/>
 
-        <menuitem
-            id= "menu_sales_config"
-            parent= "sales_team.menu_sale_config"
+        <menuitem id="sale_order_menu"
+            name="Orders"
+            parent="sale_menu_root"
+            sequence="2"/>
+
+        <menuitem id="res_partner_menu"
+            parent="sale_order_menu"
+            action="base.action_partner_form"
+            sequence="3"/>
+
+        <menuitem id="menu_sale_config"
+            name="Configuration"
+            parent="sale_menu_root"
+            sequence="6"
+            groups="sales_team.group_sale_manager"/>
+
+        <menuitem id= "menu_sales_config"
+            parent= "menu_sale_config"
             sequence= "3"
-            name= "Sales"
-            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"
-            active="False"/>
+            name= "Sales Orders"
+            groups= "sales_team.group_sale_manager,sales_team.group_sale_salesman,account.group_account_manager,account.group_account_user"/>
 
-        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sales_team.menu_base_partner" sequence="7" active="False"/>
+        <menuitem id="sales_team_config"
+            name="Sales Channels"
+            parent="sale.menu_sale_config"
+            action="sales_team.sales_team_config_action"
+            sequence="2"/>
+
+        <menuitem id="menu_sale_report"
+            name="Reporting"
+            parent="sale_menu_root"
+            sequence="5"
+            groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="menu_report_product_all"
+            name="Sales"
+            action="action_order_report_all"
+            parent="menu_sale_report"
+            sequence="1"/>
+
+        <menuitem id="report_sales_team"
+            name="Sales Channels"
+            parent="menu_sale_report"
+            action="sales_team.crm_team_salesteams_act"
+            sequence="2"/>
+
+        <menuitem id="report_all_channels_sales"
+            action="report_all_channels_sales_action"
+            name="All Channels Sales Orders"
+            parent="menu_sale_report"
+            sequence="3"/>
+
+        <menuitem id="product_menu_catalog" name="Catalog" action="product.product_template_action" parent="sale_menu_root" sequence="4"/>
         <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="product.group_product_variant" active="False"/>
-        <menuitem id="sales_team.menu_sales" name="Sales" parent="sales_team.menu_base_partner" sequence="4"/>
         <menuitem action="product.product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
-        <menuitem id="sale.prod_config_main" name="Products" parent="sales_team.menu_sale_config" sequence="5" active="False"/>
-        <menuitem action="product.attribute_action" id="menu_attribute_action" parent="sale.prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
+        <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
+        <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="product.group_product_variant" active="False"/>
         <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="product.group_product_variant" active="False"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
@@ -472,9 +513,11 @@
             </field>
         </record>
 
-        <menuitem action="action_orders"
-            id="menu_sale_order" parent="sales_team.menu_sales"
-            sequence="12" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager" active="False"/>
+        <menuitem id="menu_sale_order"
+            name="Orders"
+            action="action_orders"
+            parent="sale_order_menu"
+            sequence="2" groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"/>
 
         <record id="action_orders_to_invoice" model="ir.actions.act_window">
             <field name="name">Orders to Invoice</field>
@@ -494,11 +537,15 @@
               </p>
             </field>
         </record>
-        <menuitem name="Invoicing"
-            id="menu_sale_invoicing" parent="sales_team.menu_base_partner"
-            sequence="5" active="False"/>
-        <menuitem action="action_orders_to_invoice"
-            id="menu_sale_order_invoice" parent="sale.menu_sale_invoicing"
+
+        <menuitem id="menu_sale_invoicing"
+            name="Invoicing"
+            parent="sale_menu_root"
+            sequence="3"/>
+
+        <menuitem id="menu_sale_order_invoice"
+            action="action_orders_to_invoice"
+            parent="sale.menu_sale_invoicing"
             sequence="2" active="False"/>
 
         <record id="action_orders_upselling" model="ir.actions.act_window">
@@ -550,8 +597,9 @@
         </record>
 
         <menuitem id="menu_sale_quotations"
-                action="action_quotations" parent="sales_team.menu_sales"
-                sequence="11" active="False"/>
+                action="action_quotations"
+                parent="sale_order_menu"
+                sequence="1"/>
 
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>

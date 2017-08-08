@@ -613,7 +613,7 @@
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <separator/>
-                    <filter string="My Opportunities" name="assigned_to_me"
+                    <filter string="My Pipeline" name="assigned_to_me"
                             domain="[('user_id', '=', uid)]"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Unassigned" name="unassigned"
@@ -736,10 +736,15 @@ if record:
             Menu Actions
         -->
         <menuitem
-            id="sales_team.menu_sales"
-            name="Sales"
-            parent="sales_team.menu_base_partner"
-            sequence="5"/>
+            id="crm_menu_pipeline"
+            name="Pipeline"
+            parent="crm_menu_root"
+            sequence="1"/>
+
+        <menuitem id="res_partner_menu_crm"
+            parent="crm_menu_root"
+            action="base.action_partner_form"
+            sequence="2"/>
 
         <!-- Lead Menu -->
         <record model="ir.actions.act_window" id="crm_lead_all_leads">
@@ -772,7 +777,7 @@ if record:
         <menuitem
             id="menu_crm_leads"
             name="Leads"
-            parent="sales_team.menu_sales"
+            parent="crm_menu_pipeline"
             sequence="1"
             action="crm_lead_all_leads"
             groups="crm.group_use_lead"/>
@@ -830,7 +835,7 @@ if record:
         </record>
 
         <record model="ir.actions.act_window" id="crm_lead_opportunities_tree_view">
-            <field name="name">Your Pipeline</field>
+            <field name="name">Pipeline</field>
             <field name="res_model">crm.lead</field>
             <field name="view_mode">kanban,tree,graph,pivot,form,calendar</field>
             <field name="domain">[('type','=','opportunity')]</field>
@@ -863,9 +868,14 @@ if record:
         <menuitem
             id="menu_crm_opportunities"
             action="action_your_pipeline"
-            name="My Pipeline"
-            parent="sales_team.menu_sales"
-            sequence="4"/>
+            name="Pipeline"
+            parent="crm_menu_pipeline"
+            sequence="5"/>
+
+        <menuitem
+            id="crm.crm_menu_root"
+            name="CRM"
+            action="action_your_pipeline"/>
 
         <!-- Next Activities Menu -->
         <record id="crm_lead_action_activities" model="ir.actions.act_window">
@@ -892,13 +902,6 @@ if record:
                 </p>
             </field>
         </record>
-
-        <menuitem
-            id="crm_lead_menu_activities"
-            name="Next Activities"
-            parent="sales_team.menu_sales"
-            sequence="5"
-            action="crm_lead_action_activities" />
 
         <!-- Configuration/Lead & Opporotunities/Lead Tags Menu -->
         <record id="crm_lead_tag_action" model="ir.actions.act_window">
