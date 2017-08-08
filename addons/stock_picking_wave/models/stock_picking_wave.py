@@ -8,19 +8,19 @@ from odoo.exceptions import UserError
 class StockPickingWave(models.Model):
     _inherit = ['mail.thread']
     _name = "stock.picking.wave"
-    _description = "Picking Wave"
+    _description = "Batch Picking"
     _order = "name desc"
 
     name = fields.Char(
-        string='Picking Wave Name', default='/',
+        string='Batch Picking Name', default='/',
         copy=False, required=True,
-        help='Name of the picking wave')
+        help='Name of the batch picking')
     user_id = fields.Many2one(
         'res.users', string='Responsible', track_visibility='onchange',
-        help='Person responsible for this wave')
+        help='Person responsible for this batch picking')
     picking_ids = fields.One2many(
         'stock.picking', 'wave_id', string='Pickings',
-        help='List of picking associated to this wave')
+        help='List of picking associated to this batch')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'Running'),
@@ -56,12 +56,12 @@ class StockPickingWave(models.Model):
     def done(self):
         pickings = self.mapped('picking_ids').filtered(lambda picking: picking.state not in ('cancel', 'done'))
         if any(picking.state != 'assigned' for picking in pickings):
-            raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this wave to done.'))
+            raise UserError(_('Some pickings are still waiting for goods. Please check or force their availability before setting this batch to done.'))
         for picking in pickings:
             picking.message_post(
                 body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.wave>%s</a>" % (
                     _("Transferred by"),
-                    _("Picking Wave"),
+                    _("Batch Picking"),
                     picking.wave_id.id,
                     picking.wave_id.name))
         if pickings:
@@ -78,6 +78,6 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     wave_id = fields.Many2one(
-        'stock.picking.wave', string='Picking Wave',
+        'stock.picking.wave', string='Batch Picking',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        help='Picking wave associated to this picking')
+        help='Batch associated to this picking')
