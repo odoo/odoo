@@ -238,13 +238,12 @@ class ProductProduct(models.Model):
         qty_todo = self.with_context(internal=True).qty_available
         for candidate in candidates:
             if qty_todo > candidate.product_qty:
-                candidate.remaining_qty = candidate.product_qty
-                qty_todo -= candidate.product_qty
-                candidate.price_unit = price
-                candidate.value = price * candidate.product_qty
+                candidate.write({'remaining_qty': candidate.product_qty, 
+                                 'price_unit': price,
+                                 'value': price * candidate.product_qty,})
             else:
-                candidate.remaining_qty = qty_todo
-                candidate.value = candidate.value * (candidate.product_qty - qty_todo) / candidate.product_qty + price * qty_todo
+                candidate.write({'remaining_qty': qty_todo,
+                                 'value': candidate.value * (candidate.product_qty - qty_todo) / candidate.product_qty + price * qty_todo, })
                 qty_todo = 0
                 break
 
