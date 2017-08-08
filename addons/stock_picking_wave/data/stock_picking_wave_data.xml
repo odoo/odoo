@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Picking Wave related subtypes for messaging / Chatter -->
+    <!-- Batch Picking related subtypes for messaging / Chatter -->
     <record id="mt_wave_state" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">stock.picking.wave</field>
@@ -9,9 +9,9 @@
     </record>
 
     <record id="seq_picking_wave" model="ir.sequence">
-        <field name="name">Picking Wave</field>
+        <field name="name">Batch Picking</field>
         <field name="code">picking.wave</field>
-        <field name="prefix">Wave/</field>
+        <field name="prefix">Batch/</field>
         <field name="padding">5</field>
         <field name="company_id" eval="False"/>
     </record>

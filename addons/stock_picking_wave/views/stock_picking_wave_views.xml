@@ -4,7 +4,7 @@
             <field name="name">picking.wave.form</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <form string="Stock Picking Waves">
+                <form string="Stock Batch Picking">
                     <header>
                         <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                         <button name="print_picking" string="Print" type="object" class="oe_highlight"/>
@@ -49,7 +49,7 @@
             <field name="name">picking.wave.tree</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <tree string="Stock Picking Waves" decoration-muted="state=='cancel'">
+                <tree string="Stock Batch Picking" decoration-muted="state=='cancel'">
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="state"/>
@@ -90,9 +90,9 @@
             <field name="name">picking.wave.filter</field>
             <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <search string="Search Picking Waves">
-                    <field name="name" string="Picking Wave"/>
-                    <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Picking Waves not finished"/>
+                <search string="Search Batch Picking">
+                    <field name="name" string="Batch Picking"/>
+                    <filter name="in_progress" string="In Progress" domain="[('state','=', 'in_progress')]" help="Batch Picking not finished"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
                         <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
@@ -103,7 +103,7 @@
         </record>
 
         <record id="action_picking_wave" model="ir.actions.act_window">
-            <field name="name">Picking Waves</field>
+            <field name="name">Batch Picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.picking.wave</field>
             <field name="view_type">form</field>
@@ -112,11 +112,11 @@
             <field name="search_view_id" ref="view_picking_wave_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a Picking Wave. 
+                Click to create a Batch Picking.
               </p><p>
-                The goal of the picking waves is to group operations that may
+                The goal of the Batch Picking is to group operations that may
                 (needs to) be done together in order to increase their efficiency.
-                It may also be useful to assign jobs (one person = one wave) or
+                It may also be useful to assign jobs (one person = one batch) or
                 help the timing management of operations (tasks to be done at 1pm).
               </p>
             </field>
@@ -149,7 +149,7 @@
         <field name="inherit_id" ref="stock.view_picking_internal_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='picking_type']" position="after">
-                <filter string="Wave" domain="[]" context="{'group_by':'wave_id'}"/>
+                <filter string="Batch" domain="[]" context="{'group_by':'wave_id'}"/>
             </xpath>
             <xpath expr="//field[@name='picking_type_id']" position="after">
                     <field name="wave_id"/>
