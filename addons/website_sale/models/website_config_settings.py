@@ -23,6 +23,7 @@ class WebsiteConfigSettings(models.TransientModel):
         ('website', "Delivery methods are selectable on the website: the customer pays for shipping costs"),
         ], string="Shipping Management")
     module_delivery_dhl = fields.Boolean("DHL integration")
+    module_delivery_easypost = fields.Boolean("Easypost integration")
     module_delivery_fedex = fields.Boolean("Fedex integration")
     module_delivery_ups = fields.Boolean("UPS integration")
     module_delivery_usps = fields.Boolean("USPS integration")
