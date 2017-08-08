@@ -1,5 +1,5 @@
 @o-chat-window-bg: white;
-@o-chat-window-width: 300px;
+@o-chat-window-width: 325px;
 
 .o_chat_window {
     .o-flex-display();
@@ -11,9 +11,9 @@
     max-height: 100%;
     font-size: 12px;
     background-color: @o-chat-window-bg;
-    border: 1px solid gray;
-    border-radius: 3px;
+    border-radius: 3px 3px 0 0;
     z-index: 3;
+    box-shadow: -5px -5px 20px fade(black, 28%);
 
     @media (max-width: @screen-xs-max) {
         width: 100%;
@@ -31,8 +31,10 @@
         .o-flex-display();
         .o-flex(0, 0, auto);
         color: white;
+        padding: @o-mail-chatter-gap*0.5 @o-mail-chatter-gap;
+        border-radius: 3px 3px 0 0;
+        border-bottom: 1px solid @gray-lighter-dark;
         background-color: @odoo-brand-primary;
-        padding: 5px;
 
         @media (max-width: @screen-xs-max) {
             height: @navbar-height;
@@ -53,9 +55,7 @@
                 color: white;
                 padding: 3px;
                 margin-left: 5px;
-                &:hover {
-                    background-color: darken(@odoo-brand-primary, 10%);
-                }
+                .o-hover-opacity(0.7, 1);
             }
         }
 
@@ -64,6 +64,8 @@
     .o_mail_thread {
         .o-flex(1, 1, auto);
         overflow: auto;
+        border: 1px solid @gray-lighter-dark;
+        border-width: 0 1px;
 
         .o_thread_date_separator {
             margin-top: 0px;
@@ -82,11 +84,7 @@
     }
 
     .o_chat_composer {
-        .o-flex(0, 0, auto);
-        > input {
-            padding: 5px;
-            width: 100%;
-        }
+        .o-chat-composer-design(@mini-composer: true);
     }
 }
 
@@ -94,11 +92,16 @@
     width: auto;
     height: 28px;
     color: white;
-    background-color: @odoo-brand-primary;
+    background-color: @gray-dark;
     cursor: pointer;
+    box-shadow: none;
 
     @media (max-width: @screen-xs-max) {
         display: none;
+    }
+
+    .o_chat_header {
+        border-radius: 0;
     }
 
     .o_chat_window_dropdown_toggler {
@@ -111,7 +114,7 @@
             font-size: smaller;
         }
     }
-    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter {
+    &.open .o_chat_window_dropdown_toggler .o_total_unread_counter, .o_chat_window_expand {
         display: none;
     }
 
@@ -127,7 +130,6 @@
             }
             &:hover {
                 background-color: darken(@odoo-brand-primary, 10%);
-                color: white;
             }
         }
     }

@@ -1,31 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-     <div t-name="mail.ChatComposer" class="o_chat_composer">
-         <div class="o_composer_attachments_list"/>
-         <t t-if="widget.extended">
-             <div class="o_composer_subject">
-                 <input tabindex="1" type="text" class="o_input" placeholder="Subject"></input>
-                 <div class="btn-group o_composer_buttons">
-                    <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
-                    <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
-                    <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
-                 </div>
+     <div t-name="mail.ChatComposer" t-attf-class="o_chat_composer #{widget.extended ? 'o_chat_composer_extended' : ''}">
+         <div class="o_composer_container">
+             <!-- TODO: Use real user avatar -->
+             <img height="36" width="36" class="o_thread_message_sidebar o_chatter_avatar img-circle" src="https://pbs.twimg.com/profile_images/885832422667038720/NmqlCWGq_400x400.jpg"/>
+             <div t-if="widget.extended" class="o_composer_subject">
+                 <input tabindex="1" type="text" placeholder="Subject" class="o_input"/>
              </div>
-         </t>
-         <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
-             <div class="o_composer_input">
-                 <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
+             <div t-attf-class="o_composer #{widget.extended ? 'o_extended_composer' : ''}">
+                <div class="o_composer_input">
+                    <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
+                    <div class="o_chatter_composer_tools">
+                        <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
+                        <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
+                    </div>
+                </div>
              </div>
-             <t t-if="!widget.extended">
-                 <div class="btn-group o_composer_buttons">
-                    <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
-                    <button tabindex="4" class="btn btn-sm btn-icon fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover"/>
-                    <button tabindex="5" class="btn btn-sm btn-icon fa fa-paperclip o_composer_button_add_attachment" type="button"/>
-                 </div>
-             </t>
+             <div class="o_composer_attachments_list"/>
          </div>
-
+         <div class="o_composer_send">
+             <button tabindex="3" class="btn btn-sm btn-primary o_composer_button_send" type="button"><t t-esc="widget.options.send_text"/></button>
+         </div>
          <span class="hide">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
