@@ -13,7 +13,7 @@
                     <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')], 'readonly': [('state', '!=', 'draft')]}" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//field[@name='communication']" position="after">
-                    <field name="check_manual_sequencing" invisible="1"/>
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
                     <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_number', '=', 0)]}"/>
                 </xpath>
             </field>
@@ -28,7 +28,7 @@
                     <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//field[@name='communication']" position="after">
-                    <field name="check_manual_sequencing" invisible="1"/>
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
                     <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_manual_sequencing', '=', False)]}"/>
                 </xpath>
             </field>
@@ -43,7 +43,7 @@
                     <field name="check_amount_in_words" attrs="{'invisible': [('payment_method_code', '!=', 'check_printing')]}" groups="base.group_no_one"/>
                 </xpath>
                 <xpath expr="//field[@name='communication']" position="after">
-                    <field name="check_manual_sequencing" invisible="1"/>
+                    <field name="check_manual_sequencing" invisible="1" readonly="1"/>
                     <field name="check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('check_manual_sequencing', '=', False)]}"/>
                 </xpath>
             </field>
