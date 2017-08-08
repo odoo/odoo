@@ -332,6 +332,7 @@
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                             domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <separator/>
                     <filter string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter string="Upcoming Activities (7 days)" name="activities_week"
