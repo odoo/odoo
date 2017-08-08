@@ -53,12 +53,12 @@
                         t-att-src="message.avatar_src"
                         data-oe-model="res.partner"
                         t-att-data-oe-id="message.author_redirect ? message.author_id[0] : ''"
-                        t-attf-class="o_thread_message_avatar #{message.author_redirect ? 'o_mail_redirect' : ''}"/>
+                        t-attf-class="o_thread_message_avatar img-circle #{message.author_redirect ? 'o_mail_redirect' : ''}"/>
                 </t>
                 <t t-if="message.mailto || !message.author_id[0]">
                     <img t-if="message.avatar_src &amp;&amp; message.display_author"
                         t-att-src="message.avatar_src"
-                        class="o_thread_message_avatar"/>
+                        class="o_thread_message_avatar img-circle"/>
                 </t>
                 <span t-if="!message.display_author" t-att-title="message.date" class="o_thread_message_side_date">
                     <t t-esc="message.date.format('hh:mm')"/>
@@ -165,7 +165,8 @@
     </t>
 
     <t t-name="mail.ChatComposer.Attachments">
-        <div class="o_attachments">
+        <div t-if="attachments.length > 0" class="o_attachments">
+            <h5 class="mt4 mb0 small text-muted">Attachments:</h5>
             <t t-foreach="attachments" t-as='attachment'>
                 <t t-call="mail.Attachment">
                      <t t-set="editable" t-value="true"/>
