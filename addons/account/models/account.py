@@ -662,6 +662,8 @@ class AccountTax(models.Model):
     analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
     tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
     tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
+    # Technical field to make the 'use_cash_basis' field invisible if the same named field is set to false in 'res.company' model
+    hide_use_cash_basis = fields.Boolean(string='Hide Use Cash Basis Option', related='company_id.use_cash_basis')
     use_cash_basis = fields.Boolean(
         'Use Cash Basis',
         help="Select this if the tax should use cash basis,"
