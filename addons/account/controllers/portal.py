@@ -5,7 +5,7 @@ from odoo import http, _
 from odoo.exceptions import AccessError
 from odoo.http import request
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 
 
 class PortalAccount(CustomerPortal):
@@ -53,7 +53,7 @@ class PortalAccount(CustomerPortal):
         # count for pager
         invoice_count = AccountInvoice.search_count(domain)
         # pager
-        pager = request.pager(
+        pager = portal_pager(
             url="/my/invoices",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=invoice_count,
