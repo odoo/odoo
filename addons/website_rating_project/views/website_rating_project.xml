@@ -115,13 +115,6 @@
                     <div class="container oe_website_rating_project">
                         <h1 t-esc="project.name" class="text-center"/>
                         <div class="row mb32">
-                            <div id="website_published_button" class="" groups="project.group_project_manager">
-                                <t t-call="website.publish_management">
-                                  <t t-set="object" t-value="project"/>
-                                  <t t-set="publish_edit" t-value="True"/>
-                                  <t t-set="action" t-value="'project.open_view_project_all'"/>
-                                </t>
-                            </div>
                             <div class="col-md-8">
                                 <t t-set="type" t-value="'Tasks'"/>
                                 <t t-set="data" t-value="task_data"/>
