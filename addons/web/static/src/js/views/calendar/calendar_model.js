@@ -302,44 +302,38 @@ return AbstractModel.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Converts this.data.filters into a domain
+     *
+     * @private
+     * @returns {Array}
+     */
     _getFilterDomain: function () {
-        var domain = [];
-        _.each(this.data.filters, function (filter) {
-            if (filter.all) return;
-            var nb = {};
-            var not = {};
-            var contains = {};
-            _.each(filter.filters, function (f) {
-                if (!contains[filter.fieldName]) {
-                    contains[filter.fieldName] = [];
-                    not[filter.fieldName] = [];
-                    nb[filter.fieldName] = 0;
-                }
-                if (f.value === 'all' && f.active) {
-                    contains[filter.fieldName].all = true;
-                } else {
-                    nb[filter.fieldName]++;
-                }
+        // List authorized values for every field
+        // fields with an active 'all' filter are skipped
+        var authorizedValues = {};
 
-                if (f.active && contains[filter.fieldName].indexOf(f.value) === -1) {
-                    contains[filter.fieldName].push(f.value);
-                }
-                if (!f.active && not[filter.fieldName].indexOf(f.value) === -1) {
-                    not[filter.fieldName].push(f.value);
+        _.each(this.data.filters, function (filter) {
+            // Skip 'all' filters because they do not affect the domain
+            if (filter.all) return;
+
+            // Loop over subfilters to complete authorizedValues
+            _.each(filter.filters, function (f) {
+                if (!authorizedValues[filter.fieldName])
+                    authorizedValues[filter.fieldName] = [];
+
+                if (f.active) {
+                    authorizedValues[filter.fieldName].push(f.value);
                 }
             });
-
-            for (var field in contains) {
-                if (contains[field].all || contains[field].length === nb[field]) {
-                    continue;
-                }
-                if (contains[field].length) {
-                    domain.push([field, 'in', contains[field]]);
-                } else if (not[field].length && not[field].length !== nb[field]) {
-                    domain.push([field, 'not in', not[field]]);
-                }
-            }
         });
+
+        // Compute the domain
+        var domain = [];
+        for (var field in authorizedValues) {
+            domain.push([field, 'in', authorizedValues[field]]);
+        }
+
         return domain;
     },
     /**
@@ -401,14 +395,15 @@ return AbstractModel.extend({
                     context: self.data.context,
                     fields: self.fieldNames,
                     domain: self.data.domain.concat(self._getRangeDomain()).concat(self._getFilterDomain())
-                })
-                .then(function (events) {
-                    self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
-                    return $.when(
-                        self._loadColors(self.data, self.data.data),
-                        self._loadRecordsToFilters(self.data, self.data.data)
-                    );
-                });
+            })
+            .then(function (events) {
+                self._parseServerData(events);
+                self.data.data = _.map(events, self._recordToCalendarEvent.bind(self));
+                return $.when(
+                    self._loadColors(self.data, self.data.data),
+                    self._loadRecordsToFilters(self.data, self.data.data)
+                );
+            });
         });
     },
     /**
@@ -563,8 +558,21 @@ return AbstractModel.extend({
                 if (filter.filters.length && (filter.filters[0].avatar_model in to_read)) {
                     _.each(filter.filters, function (f) {
                         f.label = to_read[f.avatar_model][f.value];
-                    });   
+                    });
                 }
+            });
+        });
+    },
+    /**
+     * parse the server values to javascript framwork
+     *
+     * @param {Object} data the server data to parse
+     */
+    _parseServerData: function (data) {
+        var self = this;
+        _.each(data, function(event) {
+            _.each(self.fieldNames, function (fieldName) {
+                event[fieldName] = self._parseServerValue(self.fields[fieldName], event[fieldName]);
             });
         });
     },
@@ -580,11 +588,11 @@ return AbstractModel.extend({
             attendees = [];
 
         if (!all_day) {
-            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start]);
-            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop]) : null;
+            date_start = evt[this.mapping.date_start].clone();
+            date_stop = this.mapping.date_stop ? evt[this.mapping.date_stop].clone() : null;
         } else {
-            date_start = fieldUtils.parse.datetime(evt[this.mapping.date_start].split(' ')[0]);
-            date_stop = this.mapping.date_stop ? fieldUtils.parse.datetime(evt[this.mapping.date_stop].split(' ')[0]) : null;
+            date_start = evt[this.mapping.date_start].clone().startOf('day');
+            date_stop = this.mapping.date_stop ? evt[this.mapping.date_stop].clone().startOf('day') : null;
         }
 
         if (!date_stop && date_delay) {
@@ -602,8 +610,8 @@ return AbstractModel.extend({
             'record': evt,
             'start': date_start,
             'end': date_stop,
-            'r_start':date_start.clone(),
-            'r_end':date_stop.clone(),
+            'r_start': date_start,
+            'r_end': date_stop,
             'title': the_title,
             'allDay': this.mapping.all_day && evt[this.mapping.all_day] || false,
             'id': evt.id,

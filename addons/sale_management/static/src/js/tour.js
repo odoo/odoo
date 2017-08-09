@@ -9,16 +9,10 @@ var _t = core._t;
 tour.register('sale_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales Management app</b>.'),
     position: 'bottom',
-}, {
-    trigger: ".oe_kanban_action_button",
-    extra_trigger: '.o_salesteam_kanban',
-    content: _t("Let\'s have a look at the quotations of this sales channel."),
-    position: "bottom",
-    id: "quotation_button_on_dashboard",
-}, {
+},  {
     trigger: ".o_list_button_add",
     extra_trigger: ".o_sale_order",
     content: _t("Let's create a new quotation.<br/><i>Note that colored buttons usually point to the next logical actions.</i>"),
@@ -71,7 +65,7 @@ tour.register('sale_tour', {
     content: _t("Use the breadcrumbs to <b>go back to preceeding screens</b>."),
     position: "bottom"
 }, {
-    trigger: 'li a[data-menu-xmlid="sales_team.menu_sales"], .oe_secondary_menu_section[data-menu-xmlid="sales_team.menu_sales"]',
+    trigger: 'li a[data-menu-xmlid="sale.sale_order_menu"], .oe_secondary_menu_section[data-menu-xmlid="sale.sale_order_menu"]',
     content: _t("Use this menu to access quotations, sales orders and customers."),
     edition: "enterprise",
     position: "bottom"

@@ -166,20 +166,10 @@
 
   <!-- Complete page of the quotation -->
   <template id="so_quotation" name="Product Quotation">
-      <t t-call="website.layout">
+      <t t-call="portal.portal_layout">
+        <t t-set="sales_order" t-value="quotation"/> <!-- rename to ensure breadcrumb compatibility with website_portal_sale's portal_layout inheritance -->
         <body data-spy="scroll" data-target=".navspy" data-offset="50">
             <div class="container o_website_quote">
-              <div t-if="breadcrumb" class="row">
-                  <div class="col-sm-4">
-                      <ol class="breadcrumb mt8">
-                          <li><a href="/my/home"><i class="fa fa-home"/></a></li>
-                          <li><a t-attf-href="/my/quotes?#{keep_query()}">My Quotations</a></li>
-                          <li>
-                              Quotation <t t-esc="quotation.name"/>
-                          </li>
-                      </ol>
-                  </div>
-              </div>
               <div class="row mt16">
                 <!-- Sidebar -->
                   <div class="col-md-3 hidden-print">
@@ -370,7 +360,7 @@
                                                 t-att-data-id="acquirer.id"
                                                 t-att-data-access-token="token or ''"
                                                 t-att-data-tx-type="form"
-                                                t-att-data-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
+                                                t-att-data-call-url="'/quote/%s/transaction/%s' % (quotation.id, acquirer.id)">
                                             <div t-raw="buttons.get(acquirer.id)"/>
                                             <div t-field="acquirer.pre_msg"/>
                                         </div>
@@ -438,15 +428,12 @@
 
   <template id="chatter" name="Allow Comments &amp; History" customize_show="True" inherit_id="website_quote.so_quotation">
       <xpath expr="//div[@id='quote_content']" position="inside">
-          <section id="discussion" class="hidden-print">
-              <h1 class="page-header">History</h1>
-              <!-- Options:Quotation Chatter: user can reply -->
-              <t t-call="website_mail.message_thread">
-                <t t-set="object" t-value="quotation"/>
-                <t t-set="token_field" t-value="'access_token'"/>
-                <t t-set="chatter_mode" t-value="'json'"/>
-              </t>
-          </section>
+          <h1 class="page-header">History</h1>
+          <!-- Options:Quotation Chatter: user can reply -->
+          <t t-call="website_mail.message_thread">
+            <t t-set="object" t-value="quotation"/>
+            <t t-set="token_field" t-value="'access_token'"/>
+          </t>
       </xpath>
       <xpath expr="//a[@data-target='#modaldecline']" position="before">
           <a type="submit" href="#discussion">
@@ -483,7 +470,7 @@
                      <a class="btn btn-info" target="_blank" t-att-href="'/quote/%s/%s' % (quotation.id,quotation.access_token)+'?pdf=True'">Print</a>
                   </li>
                   <li>
-                    <t t-call='website_portal.record_pager'/>
+                    <t t-call='portal.record_pager'/>
                   </li>
                </ul>
             </div>
@@ -719,7 +706,7 @@
       </xpath>
   </template>
 
-  <template id="quotations" inherit_id="website_portal_sale.portal_my_quotations">
+  <template id="quotations" inherit_id="sale.portal_my_quotations">
       <xpath expr="//t[@t-foreach='quotations']" position="replace">
           <t t-foreach="quotations" t-as="quotation">
               <tr>

@@ -32,8 +32,8 @@ class TestSaleStock(TestSale):
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "nothing to invoice" after invoicing')
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 1})
-        wiz_act = pick.do_new_transfer()
+        pick.move_lines.write({'quantity_done': 1})
+        wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after partial delivery')
@@ -52,8 +52,8 @@ class TestSaleStock(TestSale):
         self.assertEqual(len(self.so.picking_ids), 2, 'Sale Stock: number of pickings should be 2')
         pick_2 = self.so.picking_ids[0]
         pick_2.force_assign()
-        pick_2.pack_operation_product_ids.write({'qty_done': 1})
-        self.assertIsNone(pick_2.do_new_transfer(), 'Sale Stock: second picking should be final without need for a backorder')
+        pick_2.move_lines.write({'quantity_done': 1})
+        self.assertIsNone(pick_2.button_validate(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
@@ -100,8 +100,8 @@ class TestSaleStock(TestSale):
         # deliver, check the delivered quantities
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 2})
-        self.assertIsNone(pick.do_new_transfer(), 'Sale Stock: complete delivery should not need a backorder')
+        pick.move_lines.write({'quantity_done': 2})
+        self.assertIsNone(pick.button_validate(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
@@ -141,7 +141,7 @@ class TestSaleStock(TestSale):
         # deliver completely
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 5})
+        pick.move_lines.write({'quantity_done': 5})
         pick.do_new_transfer()
 
         # Check quantity delivered
@@ -168,7 +168,7 @@ class TestSaleStock(TestSale):
 
         # Validate picking
         return_pick.force_assign()
-        return_pick.pack_operation_product_ids.write({'qty_done': 2})
+        return_pick.move_lines.write({'quantity_done': 2})
         return_pick.do_new_transfer()
 
         # Check invoice
@@ -215,10 +215,10 @@ class TestSaleStock(TestSale):
         # deliver partially
         pick = self.so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 4})
-        backorder_wiz_id = pick.do_new_transfer()['res_id']
-        backorder_wiz = self.env['stock.backorder.confirmation'].browse([backorder_wiz_id])
-        backorder_wiz.process_cancel_backorder()
+        pick.move_lines.write({'quantity_done': 4})
+        res_dict = pick.button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.process_cancel_backorder()
 
         # Check quantity delivered
         del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
@@ -255,7 +255,10 @@ class TestSaleStock(TestSale):
 
         # deliver them
         self.assertEquals(len(self.so.picking_ids), 1)
-        self.so.picking_ids[0].action_done()
+        self.so.picking_ids[0].force_assign()
+        res_dict = self.so.picking_ids[0].button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.process()
         self.assertEquals(self.so.picking_ids[0].state, "done")
 
         # update the two original sale order lines

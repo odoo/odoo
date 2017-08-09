@@ -183,7 +183,7 @@ class MrpProduction(models.Model):
             production.workorder_done_count = count_data.get(production.id, 0)
 
     @api.multi
-    @api.depends('move_raw_ids.state', 'move_raw_ids.partially_available', 'workorder_ids.move_raw_ids', 'bom_id.ready_to_produce')
+    @api.depends('move_raw_ids.state', 'workorder_ids.move_raw_ids', 'bom_id.ready_to_produce')
     def _compute_availability(self):
         for order in self:
             if not order.move_raw_ids:
@@ -192,24 +192,22 @@ class MrpProduction(models.Model):
             if order.bom_id.ready_to_produce == 'all_available':
                 order.availability = any(move.state not in ('assigned', 'done', 'cancel') for move in order.move_raw_ids) and 'waiting' or 'assigned'
             else:
-                partial_list = [x.partially_available and x.state in ('waiting', 'confirmed', 'assigned') for x in order.move_raw_ids]
+                partial_list = [x.state in ('partially_available', 'assigned') for x in order.move_raw_ids]
                 assigned_list = [x.state in ('assigned', 'done', 'cancel') for x in order.move_raw_ids]
                 order.availability = (all(assigned_list) and 'assigned') or (any(partial_list) and 'partially_available') or 'waiting'
 
-    @api.depends('state', 'move_raw_ids.reserved_quant_ids')
     def _compute_unreserve_visible(self):
-        for order in self:
-            if order.state in ['done', 'cancel'] or not order.move_raw_ids.mapped('reserved_quant_ids'):
-                order.unreserve_visible = False
-            else:
-                order.unreserve_visible = True
+        return True
 
     @api.multi
     @api.depends('move_raw_ids.quantity_done', 'move_finished_ids.quantity_done')
     def _compute_post_visible(self):
         for order in self:
-            order.post_visible = any(order.move_raw_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel']))) or \
-                any(order.move_finished_ids.filtered(lambda x: (x.quantity_done) > 0 and (x.state not in ['done', 'cancel'])))
+            if order.product_tmpl_id._is_cost_method_standard():
+                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_raw_ids) or \
+                    any((x.quantity_done > 0 and x.state not in ['done' 'cancel']) for x in order.move_finished_ids)
+            else:
+                order.post_visible = any((x.quantity_done > 0 and x.state not in ['done', 'cancel']) for x in order.move_finished_ids)
 
     @api.multi
     @api.depends('workorder_ids.state', 'move_finished_ids')
@@ -304,7 +302,7 @@ class MrpProduction(models.Model):
             'product_uom_qty': self.product_qty,
             'location_id': self.product_id.property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
-            'move_dest_id': self.procurement_ids and self.procurement_ids[0].move_dest_id.id or False,
+            'move_dest_ids': self.procurement_ids and [(4, p) for p in self.procurement_ids.mapped('move_dest_id').ids] or False,
             'procurement_id': self.procurement_ids and self.procurement_ids[0].id or False,
             'company_id': self.company_id.id,
             'production_id': self.id,
@@ -400,8 +398,7 @@ class MrpProduction(models.Model):
     @api.multi
     def action_assign(self):
         for production in self:
-            move_to_assign = production.move_raw_ids.filtered(lambda x: x.state in ('confirmed', 'waiting', 'assigned'))
-            move_to_assign.action_assign()
+            production.move_raw_ids.action_assign()
         return True
 
     @api.multi
@@ -469,7 +466,7 @@ class MrpProduction(models.Model):
             if len(workorders) == len(bom.routing_id.operation_ids):
                 moves_raw |= self.move_raw_ids.filtered(lambda move: not move.operation_id)
             moves_finished = self.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
-            moves_raw.mapped('move_lot_ids').write({'workorder_id': workorder.id})
+            moves_raw.mapped('move_line_ids').write({'workorder_id': workorder.id})
             (moves_finished + moves_raw).write({'workorder_id': workorder.id})
 
             workorder._generate_lot_ids()
@@ -513,30 +510,16 @@ class MrpProduction(models.Model):
             order._cal_price(moves_to_do)
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done','cancel'))
             moves_to_finish.action_done()
-            
-            for move in moves_to_finish:
-                #Group quants by lots
-                lot_quants = {}
-                raw_lot_quants = {}
-                quants = self.env['stock.quant']
-                if move.has_tracking != 'none':
-                    for quant in move.quant_ids:
-                        lot_quants.setdefault(quant.lot_id.id, self.env['stock.quant'])
-                        raw_lot_quants.setdefault(quant.lot_id.id, self.env['stock.quant'])
-                        lot_quants[quant.lot_id.id] |= quant
-                for move_raw in moves_to_do:
-                    if (move.has_tracking != 'none') and (move_raw.has_tracking != 'none'):
-                        for lot in lot_quants:
-                            lots = move_raw.move_lot_ids.filtered(lambda x: x.lot_produced_id.id == lot).mapped('lot_id')
-                            raw_lot_quants[lot] |= move_raw.quant_ids.filtered(lambda x: (x.lot_id in lots) and (x.qty > 0.0))
-                    else:
-                        quants |= move_raw.quant_ids.filtered(lambda x: x.qty > 0.0)
-                if move.has_tracking != 'none':
-                    for lot in lot_quants:
-                        lot_quants[lot].sudo().write({'consumed_quant_ids': [(6, 0, [x.id for x in raw_lot_quants[lot] | quants])]})
+            #order.action_assign()
+            consume_move_lines = moves_to_do.mapped('active_move_line_ids')
+            for moveline in moves_to_finish.mapped('active_move_line_ids'):
+                if moveline.move_id.has_tracking != 'none':
+                    # Link all movelines in the consumed with same lot_produced_id false or the correct lot_produced_id
+                    filtered_lines = consume_move_lines.filtered(lambda x: x.lot_produced_id == moveline.lot_id or not x.lot_produced_id)
+                    moveline.write({'consume_line_ids': [(6, 0, [x for x in filtered_lines.ids])]})
                 else:
-                    move.quant_ids.sudo().write({'consumed_quant_ids': [(6, 0, [x.id for x in quants])]})
-            order.action_assign()
+                    # Link with everything
+                    moveline.write({'consume_line_ids': [(6, 0, [x for x in consume_move_lines.ids])]})
         return True
 
     @api.multi

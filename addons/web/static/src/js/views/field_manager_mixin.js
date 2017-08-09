@@ -9,11 +9,13 @@ odoo.define('web.FieldManagerMixin', function (require) {
  */
 
 var BasicModel = require('web.BasicModel');
+var concurrency = require('web.concurrency');
 
 var FieldManagerMixin = {
     custom_events: {
         field_changed: '_onFieldChanged',
         load: '_onLoad',
+        mutexify: '_onMutexify',
     },
     /**
      * A FieldManagerMixin can be initialized with an instance of a basicModel.
@@ -23,6 +25,7 @@ var FieldManagerMixin = {
      */
     init: function (model) {
         this.model = model || new BasicModel(this);
+        this.mutex = new concurrency.Mutex();
     },
 
     //--------------------------------------------------------------------------
@@ -43,7 +46,8 @@ var FieldManagerMixin = {
      */
     _applyChanges: function (dataPointID, changes, event) {
         var self = this;
-        return this.model.notifyChanges(dataPointID, changes, event.data.viewType)
+        var options = _.pick(event.data, 'viewType', 'doNotSetDirty');
+        return this.model.notifyChanges(dataPointID, changes, options)
             .then(function (result) {
                 if (event.data.force_save) {
                     return self.model.save(dataPointID).then(function () {
@@ -128,6 +132,15 @@ var FieldManagerMixin = {
         this.model.reload(data.id, params).then(function (db_id) {
             data.on_success(self.model.get(db_id));
         });
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {function} ev.data.action the function to execute in the mutex
+     */
+    _onMutexify: function (ev) {
+        ev.stopPropagation(); // prevent other field managers from handling this request
+        this.mutex.exec(ev.data.action);
     },
 };
 

@@ -20,6 +20,7 @@
                         is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                         is_frontend: true, // this is not really the frontend here but this key is used to detect if xml has to be manually loaded
                     },
+                    _modules: ['web_editor'],
                 };
             </script>
             <t t-if="not dont_load_assets">

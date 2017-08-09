@@ -305,12 +305,12 @@
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <t t-if="not is_module_installed('website_contract')">
+                                    <t t-if="not is_module_installed('website_subscription')">
                                         <span class="text-muted">If you sell subscriptions (whether it's invoiced annually or monthly), activate the
-                                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_contract')">Subscription Management</a> app.
+                                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_subscription')">Subscription Management</a> app.
                                         </span>
                                     </t>
-                                    <t t-if="is_module_installed('website_contract')">
+                                    <t t-if="is_module_installed('website_subscription')">
                                         <h4><strong>Subscriptions</strong></h4>
                                         <p>
                                             Use subscription for recurring billing.
@@ -935,7 +935,7 @@
     <record id="planner_crm" model="web.planner">
         <field name="name">Sales strategy planner</field>
         <field name="view_id" ref="crm_planner"/>
-        <field name="menu_id" ref="sales_team.menu_base_partner"/>
+        <field name="menu_id" ref="crm_menu_root"/>
         <field name="planner_application">planner_crm</field>
         <field name="tooltip_planner"><![CDATA[
             Plan your sales strategy: objectives, leads, KPIs, and much more!

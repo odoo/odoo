@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from odoo.addons.website.models.website import slugify, unslug
+from odoo.addons.http_routing.models.ir_http import slugify, unslug
 
 from odoo.tools import pycompat
 

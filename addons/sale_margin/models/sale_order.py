@@ -59,7 +59,12 @@ class SaleOrderLine(models.Model):
     def _product_margin(self):
         for line in self:
             currency = line.order_id.pricelist_id.currency_id
-            line.margin = currency.round(line.price_subtotal - ((line.purchase_price or line.product_id.standard_price) * line.product_uom_qty))
+            price = line.purchase_price
+            if not price:
+                from_cur = line.env.user.company_id.currency_id.with_context(date=line.order_id.date_order)
+                price = from_cur.compute(line.product_id.standard_price, currency, round=False)
+ 
+            line.margin = currency.round(line.price_subtotal - (price * line.product_uom_qty))
 
 
 class SaleOrder(models.Model):

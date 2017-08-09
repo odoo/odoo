@@ -20,7 +20,6 @@ FormView.include({
      */
     init: function (viewInfo) {
         this._super.apply(this, arguments);
-        this.rendererParams.noContentHelp = this.controllerParams.noContentHelp;
         this.controllerParams.viewID = viewInfo.view_id;
     },
 });
@@ -85,13 +84,16 @@ FormController.include({
         var dialog = new Dialog(this, {
             title: _t("Edit Layout"),
             $content: QWeb.render('DashBoard.layouts', _.clone(event.data))
-        }).open();
-        dialog.$el.find('li').click(function () {
-            var layout = $(this).attr('data-layout');
-            self.renderer.changeLayout(layout);
-            self._saveDashboard();
-            dialog.close();
         });
+        dialog.opened().then(function () {
+            dialog.$('li').click(function () {
+                var layout = $(this).attr('data-layout');
+                self.renderer.changeLayout(layout);
+                self._saveDashboard();
+                dialog.close();
+            });
+        });
+        dialog.open();
     },
 
     /**
@@ -233,6 +235,7 @@ FormRenderer.include({
                     var view = new View(viewInfo, {
                         action: action,
                         context: context,
+                        domain: params.domain,
                         groupBy: context.group_by,
                         modelName: action.res_model,
                         hasSelectors: false,

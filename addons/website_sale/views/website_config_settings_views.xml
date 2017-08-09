@@ -86,7 +86,7 @@
                             </div>
                             <div class="content-group" attrs="{'invisible': [('group_multi_currency', '=', False)]}">
                                 <div class="mt16">
-                                    <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
+                                    <button type="action" name="%(base.action_currency_all_form)d" string="Activate Other Currencies" class="btn-link" icon="fa-arrow-right"/>
                                 </div>
                                 <div>
                                     <button type="action" name="%(account.action_account_config)d" string="Apply Automatic Rates Update" class="btn-link" icon="fa-arrow-right"/>
@@ -166,6 +166,17 @@
                             <label for="module_website_sale_comparison"/>
                             <div class="text-muted">
                                 Allow shoppers to compare products based on their attributes
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 o_setting_box" id="product_availability_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="module_website_sale_stock"/>
+                        </div>
+                        <div class="o_setting_right_pane" name="stock_inventory_availability">
+                            <label for="module_website_sale_stock"/>
+                            <div class="text-muted">
+                                Manage availability of products
                             </div>
                         </div>
                     </div>

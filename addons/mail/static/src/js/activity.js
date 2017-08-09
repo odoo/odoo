@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
+var utils = require('mail.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -54,7 +55,7 @@ var AbstractActivityField = AbstractField.extend({
     _markActivityDone: function (id, feedback) {
         return this._rpc({
                 model: 'mail.activity',
-                method: 'action_done',
+                method: 'action_feedback',
                 args: [[id]],
                 kwargs: {feedback: feedback},
             });
@@ -122,6 +123,9 @@ var Activity = AbstractActivityField.extend({
         return fetch_def.then(function () {
             _.each(self.activities, function (activity) {
                 activity.time_ago = moment(time.auto_str_to_date(activity.create_date)).fromNow();
+                if (activity.note) {
+                    activity.note = utils.parse_and_transform(activity.note, utils.add_link);
+                }
             });
             self.$el.html(QWeb.render('mail.activity_items', {
                 activities: setDelayLabel(self.activities),

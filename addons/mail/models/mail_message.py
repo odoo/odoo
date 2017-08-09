@@ -2,15 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import re
 
 from email.utils import formataddr
 
-from odoo import _, api, fields, models, SUPERUSER_ID, tools
+from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
 
 
 class Message(models.Model):
@@ -414,12 +416,14 @@ class Message(models.Model):
 
         # add subtype data (is_note flag, subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
-        subtypes = self.env['mail.message.subtype'].sudo().search(
-            [('id', 'in', [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']])]).read(['internal', 'description'])
+        subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
+        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+            if message['model']:
+                message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
         return message_values
 
     #------------------------------------------------------
@@ -720,6 +724,28 @@ class Message(models.Model):
             values['reply_to'] = self._get_reply_to(values)
         if 'record_name' not in values and 'default_record_name' not in self.env.context:
             values['record_name'] = self._get_record_name(values)
+
+        if 'attachment_ids' not in values:
+            values.setdefault('attachment_ids', [])
+
+        # extract base64 images
+        if 'body' in values:
+            Attachments = self.env['ir.attachment']
+            data_to_url = {}
+            def base64_to_boundary(match):
+                key = match.group(2)
+                if not data_to_url.get(key):
+                    name = 'image%s' % len(data_to_url)
+                    attachment = Attachments.create({
+                        'name': name,
+                        'datas': match.group(2),
+                        'datas_fname': name,
+                        'res_model': 'mail.message',
+                    })
+                    values['attachment_ids'].append((4, attachment.id))
+                    data_to_url[key] = '/web/image/%s' % attachment.id
+                return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
+            values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'])
 
         message = super(Message, self).create(values)
         message._invalidate_documents()

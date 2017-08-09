@@ -21,9 +21,16 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+def existing_tables(cr, tablenames):
+    """ Return the names of existing tables among ``tablenames``. """
+    query = """ SELECT table_name FROM information_schema.tables
+                WHERE table_name IN %s AND table_schema != 'information_schema' """
+    cr.execute(query, [tuple(tablenames)])
+    return [row[0] for row in cr.fetchall()]
+
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s"
+    query = "SELECT 1 FROM information_schema.tables WHERE table_name=%s AND table_schema != 'information_schema'"
     cr.execute(query, (tablename,))
     return cr.rowcount
 
@@ -46,7 +53,11 @@ def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
     """
-    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
+    # Do not select the field `character_octet_length` from `information_schema.columns`
+    # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
+    # might prevent a postgres user to read this field.
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+               FROM information_schema.columns WHERE table_name=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 

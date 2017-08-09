@@ -77,7 +77,7 @@ class ProcurementOrder(models.Model):
     def propagate_cancels(self):
         # set the context for the propagation of the procurement cancellation
         # TDE FIXME: was in cancel, moved here for consistency
-        cancel_moves = self.with_context(cancel_procurement=True).filtered(lambda order: order.rule_id.action == 'move').mapped('move_ids')
+        cancel_moves = self.filtered(lambda order: order.rule_id.action == 'move').mapped('move_ids').filtered(lambda m: m.state not in ('cancel', 'done'))
         if cancel_moves:
             cancel_moves.action_cancel()
         return self.search([('move_dest_id', 'in', cancel_moves.filtered(lambda move: move.propagate).ids)])
@@ -161,7 +161,7 @@ class ProcurementOrder(models.Model):
             'partner_id': self.rule_id.partner_address_id.id or (self.group_id and self.group_id.partner_id.id) or False,
             'location_id': self.rule_id.location_src_id.id,
             'location_dest_id': self.location_id.id,
-            'move_dest_id': self.move_dest_id and self.move_dest_id.id or False,
+            'move_dest_ids': self.move_dest_id and [(4, self.move_dest_id.id)] or False,
             'procurement_id': self.id,
             'rule_id': self.rule_id.id,
             'procure_method': self.rule_id.procure_method,

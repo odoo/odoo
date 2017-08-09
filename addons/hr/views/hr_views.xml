@@ -52,7 +52,7 @@
                                 <field name="name" placeholder="Employee's Name"/>
                             </h1>
                         </div>
-                        <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" options="{'no_create_edit': True}" groups="hr.group_hr_user"/>
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
                         <notebook>
                             <page name="public" string="Work Information">
                                 <group>
@@ -175,9 +175,9 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
-                        <field name="category_ids"/>
+                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div class="o_kanban_image">
-                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)"/>
+                            <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
                                 <t t-if="record.message_needaction_counter.raw_value">
                                     <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
@@ -584,7 +584,7 @@
               </p><p>
                 Odoo's department structure is used to manage all documents
                 related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
+                leaves, recruitments, etc.
               </p>
             </field>
         </record>

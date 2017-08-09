@@ -29,7 +29,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <field name="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <h4><field name="name"/></h4>
                                     <div>
                                         <t t-if="duration"><field name="duration" widget="float_time"/> hours</t>
@@ -83,15 +83,15 @@
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                    <filter string="Overdue Activities" name="activities_overdue"
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
                         <filter string="Stage" context="{'group_by':'stage_id'}"/>
@@ -147,7 +147,7 @@
                                     <field name="duration" class="oe_inline" widget="float_time"/> hours
                                 </div>
                                 <field name="location_id"/>
-                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
                     </sheet>

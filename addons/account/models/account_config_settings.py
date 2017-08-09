@@ -12,6 +12,7 @@ class AccountConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.user.company_id)
+    has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -58,6 +59,7 @@ class AccountConfigSettings(models.TransientModel):
     module_print_docsaway = fields.Boolean(string="Docsaway")
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
+    module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
 
@@ -66,8 +68,8 @@ class AccountConfigSettings(models.TransientModel):
         res = super(AccountConfigSettings, self).get_values()
         params = self.env['ir.config_parameter'].sudo()
         res.update(
-            default_purchase_tax_id=params.get_param('account.default_purchase_tax_id', default=False),
-            default_sale_tax_id=params.get_param('account.default_sale_tax_id', default=False)
+            default_purchase_tax_id=int(params.get_param('account.default_purchase_tax_id', default=False)) or False,
+            default_sale_tax_id=int(params.get_param('account.default_sale_tax_id', default=False)) or False
         )
         return res
 
@@ -85,9 +87,7 @@ class AccountConfigSettings(models.TransientModel):
         if self.default_purchase_tax_id:
             ir_values_obj.sudo().set_default('product.template', "supplier_taxes_id", [self.default_purchase_tax_id.id], for_all_users=True, company_id=self.company_id.id)
         """ install a chart of accounts for the given company (if required) """
-        if self.chart_template_id and not self.has_chart_of_accounts and self.company_id.expects_chart_of_accounts:
-            if self.company_id.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
-                raise UserError(_('You can not change a company chart of account once it has been installed'))
+        if self.chart_template_id and self.chart_template_id != self.company_id.chart_template_id:
             wizard = self.env['wizard.multi.charts.accounts'].create({
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
@@ -107,6 +107,8 @@ class AccountConfigSettings(models.TransientModel):
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
+        self.chart_template_id = self.company_id.chart_template_id or False
+        self.has_accounting_entries = self.env['wizard.multi.charts.accounts'].existing_accounting(self.company_id)
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
@@ -144,7 +146,12 @@ class AccountConfigSettings(models.TransientModel):
         # related values, including the currency_id field on res_company. This in turn will trigger the recomputation
         # of account_move_line related field company_currency_id which can be slow depending on the number of entries 
         # in the database. Thus, if we do not explicitely change the currency_id, we should not write it on the company
+        # Same for the field `code_digits` which will trigger a write on all the account.account to complete the
+        # code the missing characters to complete the desired number of digit, leading to a sql_constraint.
         if ('company_id' in values and 'currency_id' in values):
-            if self.env['res.company'].browse(values.get('company_id')).currency_id.id == values.get('currency_id'):
+            company = self.env['res.company'].browse(values.get('company_id'))
+            if company.currency_id.id == values.get('currency_id'):
                 values.pop('currency_id')
+            if company.accounts_code_digits == values.get('code_digits'):
+                values.pop('code_digits')
         return super(AccountConfigSettings, self).create(values)

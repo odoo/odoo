@@ -10,6 +10,7 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
 var core = require('web.core');
@@ -356,6 +357,15 @@ function createModel(params) {
 
     addMockEnvironment(widget, params);
 
+    // override the model's 'destroy' so that it calls 'destroy' on the widget
+    // instead, as the widget is the parent of the model and the mockServer.
+    model.destroy = function () {
+        // remove the override to properly destroy the model when it will be
+        // called the second time (by its parent)
+        delete model.destroy;
+        widget.destroy();
+    };
+
     return model;
 }
 
@@ -369,6 +379,7 @@ function createModel(params) {
  * @param {jqueryElement} $to
  * @param {Object} [options]
  * @param {string} [options.position=center] target position
+ * @param {string} [options.disableDrop=false] whether to trigger the drop action
  */
 function dragAndDrop($el, $to, options) {
     var position = (options && options.position) || 'center';
@@ -396,11 +407,21 @@ function dragAndDrop($el, $to, options) {
         pageY: toOffset.top
     }));
 
-    $el.trigger($.Event("mouseup", {
-        which: 1,
-        pageX: toOffset.left,
-        pageY: toOffset.top
-    }));
+    if (!(options && options.disableDrop)) {
+        $el.trigger($.Event("mouseup", {
+            which: 1,
+            pageX: toOffset.left,
+            pageY: toOffset.top
+        }));
+    } else {
+        // It's impossible to drag another element when one is already
+        // being dragged. So it's necessary to finish the drop when the test is
+        // over otherwise it's impossible for the next tests to drag and
+        // drop elements.
+        $el.on("remove", function () {
+            $el.trigger($.Event("mouseup"));
+        });
+    }
 }
 
 /**
@@ -470,7 +491,15 @@ function removeSrcAttribute($el, widget) {
     });
 }
 
-return session.is_bound.then(function () {
+// Loading static files cannot be properly simulated when their real content is
+// really needed. This is the case for static XML files so we load them here,
+// before starting the qunit test suite.
+// (session.js is in charge of loading the static xml bundle and we also have
+// to load xml files that are normally lazy loaded by specific widgets).
+return $.when(
+    session.is_bound,
+    ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb)
+).then(function () {
     setTimeout(function () {
         // this is done with the hope that tests are
         // only started all together...

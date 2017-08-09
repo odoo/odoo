@@ -37,7 +37,7 @@ class TestPurchaseLeadTime(TestPurchase):
         po_schedule_date = fields.Datetime.to_string(schedule_date)
         self.assertEqual(procurement.purchase_id.date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
-        # check the picking crated or not
+        # check the picking created or not
         self.assertTrue(procurement.purchase_id.picking_ids, "Picking should be created.")
 
         # Check scheduled date of In Type shipment

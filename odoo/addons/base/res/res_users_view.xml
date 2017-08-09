@@ -155,11 +155,10 @@
                             <label for="groups_id" string="Access Rights"
                                     attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
-                                <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
+                                <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone"/>
                             <field name="mobile" widget="phone"/>
-                            <field name="fax"/>
                         </group>
                     </sheet>
                 </form>

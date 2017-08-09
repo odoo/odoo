@@ -7,7 +7,7 @@ Website portal for Project and Tasks
 ====================================
     """,
     'category': 'Website',
-    'depends': ['project', 'website_portal'],
+    'depends': ['project', 'website', 'portal'],
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',

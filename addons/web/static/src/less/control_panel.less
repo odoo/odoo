@@ -99,13 +99,16 @@
     .o-flex-display();
     .o-flex-flow(row, wrap);
 
-    .o_cp_buttons, .o_cp_pager {
+    .o_cp_buttons {
         .o-flex-display();
         margin-right: auto;
+        > div {
+            margin-top: 5px;
+        }
     }
-
-    .o_cp_buttons > div {
-        margin-top: 5px;
+    .o_cp_pager {
+        .o-flex-display();
+        margin-left: auto;
     }
 }
 

@@ -49,7 +49,7 @@ Leaves Management
 -----------------
 
 Keep track of the vacation days accrued by each employee. Employees enter their
-requests (paid holidays, sick leave, etc), for managers to approve and
+requests (paid leaves, sick leaves, etc), for managers to approve and
 validate. It's all done in just a few clicks. The agenda of each employee is
 updated accordingly.
 

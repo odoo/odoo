@@ -1914,7 +1914,7 @@ class MailThread(models.AbstractModel):
         handle ir ui views. """
         values = kwargs.pop('values', None) or dict()
         try:
-            from odoo.addons.website.models.website import slug
+            from odoo.addons.http_routing.models.ir_http import slug
             values['slug'] = slug
         except ImportError:
             values['slug'] = lambda self: self.id
@@ -2081,6 +2081,7 @@ class MailThread(models.AbstractModel):
                 partner_ids=[(4, pid) for pid in partner_ids],
                 auto_delete=True,
                 auto_delete_message=True,
+                parent_id=False, # override accidental context defaults
                 subtype_id=self.env.ref('mail.mt_note').id)
 
     @api.multi
@@ -2171,8 +2172,8 @@ class MailThread(models.AbstractModel):
         :param new_res_id : the new res_id of the mail.message
         :param new_model : the name of the new model of the mail.message
 
-        Example :   my_lead.message_change_thread(my_project_issue)
-                    will transfer the context of the thread of my_lead to my_project_issue
+        Example :   my_lead.message_change_thread(my_project_task)
+                    will transfer the context of the thread of my_lead to my_project_task
         """
         self.ensure_one()
         # get the subtype of the comment Message

@@ -66,6 +66,7 @@ class AccountInvoiceReport(models.Model):
     residual = fields.Float(string='Due Amount', readonly=True)
     user_currency_residual = fields.Float(string="Total Residual", compute='_compute_amounts_in_user_currency', digits=0)
     country_id = fields.Many2one('res.country', string='Country of the Partner Company')
+    account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic Account', groups="analytic.group_analytic_accounting")
 
     _order = 'date desc'
 

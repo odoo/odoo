@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='mass_mailing']" position="replace"/>
+</template>
+
 <template id="snippets" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_feature']/div[@class='o_panel_body']" position="inside">
+    <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
         <t groups="website_mass_mailing.group_website_popup_on_exit">
             <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_popup.png"/>
         </t>
     </xpath>
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website_mass_mailing/static/src/img/blocks/newsletter_subscribe_form.png"/>
+
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/blocks/newsletter_subscribe_form.png"/>
     </xpath>
 </template>
 

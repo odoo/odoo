@@ -349,12 +349,17 @@ return core.Class.extend({
             }
             if (attrs.Widget.prototype.fieldsToFetch) {
                 attrs.viewType = 'default';
-                attrs.relatedFields = attrs.Widget.prototype.fieldsToFetch;
+                attrs.relatedFields = _.extend({}, attrs.Widget.prototype.fieldsToFetch);
                 attrs.fieldsInfo = {
                     default: _.mapObject(attrs.Widget.prototype.fieldsToFetch, function () {
                         return {};
                     }),
                 };
+                if (attrs.options.color_field) {
+                    // used by m2m tags
+                    attrs.relatedFields[attrs.options.color_field] = { type: 'integer' };
+                    attrs.fieldsInfo.default[attrs.options.color_field] = {};
+                }
             }
         }
         return attrs;

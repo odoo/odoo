@@ -132,18 +132,48 @@ class MailActivity(models.Model):
     def create(self, values):
         activity = super(MailActivity, self).create(values)
         self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+        if activity.date_deadline <= fields.Date.today():
+            self.env['bus.bus'].sendone(
+                (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                {'type': 'activity_updated', 'activity_created': True})
         return activity
 
     @api.multi
     def write(self, values):
+        if values.get('user_id'):
+            pre_responsibles = self.mapped('user_id.partner_id')
         res = super(MailActivity, self).write(values)
         if values.get('user_id'):
             for activity in self:
                 self.env[activity.res_model].browse(activity.res_id).message_subscribe(partner_ids=[activity.user_id.partner_id.id])
+                if activity.date_deadline <= fields.Date.today():
+                    self.env['bus.bus'].sendone(
+                        (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                        {'type': 'activity_updated', 'activity_created': True})
+            for activity in self:
+                if activity.date_deadline <= fields.Date.today():
+                    for partner in pre_responsibles:
+                        self.env['bus.bus'].sendone(
+                            (self._cr.dbname, 'res.partner', partner.id),
+                            {'type': 'activity_updated', 'activity_deleted': True})
         return res
 
     @api.multi
-    def action_done(self, feedback=False):
+    def unlink(self):
+        for activity in self:
+            if activity.date_deadline <= fields.Date.today():
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', activity.user_id.partner_id.id),
+                    {'type': 'activity_updated', 'activity_deleted': True})
+        return super(MailActivity, self).unlink()
+
+    @api.multi
+    def action_done(self):
+        """ Wrapper without feedback because web button add context as
+        parameter, therefore setting context to feedback """
+        return self.action_feedback()
+
+    def action_feedback(self, feedback=False):
         message = self.env['mail.message']
         if feedback:
             self.write(dict(feedback=feedback))

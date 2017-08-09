@@ -18,7 +18,3 @@ class Lead(models.Model):
         if self.mobile:
             self.mobile = self.phone_format(self.mobile)
 
-    @api.onchange('fax', 'country_id')
-    def _onchange_fax_validation(self):
-        if self.fax:
-            self.fax = self.phone_format(self.fax)

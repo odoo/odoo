@@ -7,7 +7,7 @@ from werkzeug import urls
 
 from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailGroup(models.Model):

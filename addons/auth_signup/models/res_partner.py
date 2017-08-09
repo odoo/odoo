@@ -4,9 +4,10 @@
 import random
 import werkzeug.urls
 
+from collections import defaultdict
 from datetime import datetime, timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, exceptions, fields, models, _
 from odoo.tools import pycompat
 
 
@@ -97,6 +98,21 @@ class ResPartner(models.Model):
     def action_signup_prepare(self):
         return self.signup_prepare()
 
+    def signup_get_auth_param(self):
+        """ Get a signup token related to the partner if signup is enabled.
+            If the partner already has a user, get the login parameter.
+        """
+        res = defaultdict(dict)
+
+        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        for partner in self:
+            if allow_signup and not partner.user_ids:
+                partner.signup_prepare()
+                res[partner.id]['auth_signup_token'] = partner.signup_token
+            elif partner.user_ids:
+                res[partner.id]['auth_login'] = partner.user_ids[0].login
+        return res
+
     @api.multi
     def signup_cancel(self):
         return self.write({'signup_token': False, 'signup_type': False, 'signup_expiration': False})
@@ -125,11 +141,11 @@ class ResPartner(models.Model):
         partner = self.search([('signup_token', '=', token)], limit=1)
         if not partner:
             if raise_exception:
-                raise SignupError("Signup token '%s' is not valid" % token)
+                raise exceptions.UserError(_("Signup token '%s' is not valid") % token)
             return False
         if check_validity and not partner.signup_valid:
             if raise_exception:
-                raise SignupError("Signup token '%s' is no longer valid" % token)
+                raise exceptions.UserError(_("Signup token '%s' is no longer valid") % token)
             return False
         return partner
 

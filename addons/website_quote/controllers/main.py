@@ -5,8 +5,8 @@ import werkzeug
 
 from odoo import fields, http, _
 from odoo.http import request
+from odoo.addons.portal.controllers.portal import get_records_pager
 from odoo.addons.website_mail.controllers.main import _message_post_helper
-from odoo.addons.website_portal.controllers.main import get_records_pager
 
 
 class sale_quote(http.Controller):
@@ -54,7 +54,7 @@ class sale_quote(http.Controller):
             'order_valid': (not order_sudo.validity_date) or (now <= order_sudo.validity_date),
             'days_valid': days,
             'action': request.env.ref('sale.action_quotations').id,
-            'breadcrumb': request.env.user.partner_id == order_sudo.partner_id,
+            'no_breadcrumbs': request.env.user.partner_id.commercial_partner_id not in order_sudo.message_partner_ids,
             'tx_id': Transaction.id if Transaction else False,
             'tx_state': Transaction.state if Transaction else False,
             'tx_post_msg': Transaction.acquirer_id.post_msg if Transaction else False,

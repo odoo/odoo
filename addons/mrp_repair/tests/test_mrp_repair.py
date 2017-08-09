@@ -50,7 +50,6 @@ class TestMrpRepair(AccountingTestCase):
         # I define Invoice Method 'After Repair' option in this Repair order.so I create invoice by clicking on "Make Invoice" wizard.
         mrp_make_invoice = self.MrpRepairMakeInvoice.create({
             'group': True})
-
         # I click on "Create Invoice" button of this wizard to make invoice.
         context = {
             "active_model": 'mrp_repair',
@@ -61,6 +60,7 @@ class TestMrpRepair(AccountingTestCase):
 
         # I check that invoice is created for this Repair order.
         self.assertEqual(len(self.mrp_repair_rmrp0.invoice_id), 1, "No invoice exists for this repair order")
+        self.assertEqual(len(self.mrp_repair_rmrp0.move_id.move_line_ids[0].consume_line_ids), 1, "Consume lines should be set")
 
     def test_01_mrp_repair_b4inv(self):
 

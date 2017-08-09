@@ -87,8 +87,7 @@ var FormController = BasicController.extend({
      * @returns {string}
      */
     getTitle: function () {
-        var dataPoint = this.model.get(this.handle, {raw: true});
-        return dataPoint.data.display_name || _t('New');
+        return this.model.getName(this.handle);
     },
     /**
      * Called each time the form view is attached into the DOM
@@ -183,13 +182,15 @@ var FormController = BasicController.extend({
      * @override
      */
     saveRecord: function () {
-        var result = this._super.apply(this, arguments);
-        if (_t.database.multi_lang) {
-            var self = this;
-            result.then(function (changedFields) {
-                if (!changedFields.length) {
-                    return changedFields;
-                }
+        var self = this;
+        return this._super.apply(this, arguments).then(function (changedFields) {
+            // the title could have been changed
+            self.set('title', self.getTitle());
+            self._updateEnv();
+
+            if (_t.database.multi_lang && changedFields.length) {
+                // need to make sure changed fields that should be translated
+                // are displayed with an alert
                 var fields = self.renderer.state.fields;
                 var alertFields = [];
                 for (var k = 0; k < changedFields.length; k++) {
@@ -201,9 +202,9 @@ var FormController = BasicController.extend({
                 if (alertFields.length) {
                     self.renderer.displayTranslationAlert(alertFields);
                 }
-            });
-        }
-        return result;
+            }
+            return changedFields;
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -244,7 +245,7 @@ var FormController = BasicController.extend({
      * @override
      * @private
      */
-    _disableButtons: function () {
+    _disableButtons: function () {
         this._super.apply(this, arguments);
         this.renderer.disableButtons();
     },
@@ -254,7 +255,7 @@ var FormController = BasicController.extend({
      * @override
      * @private
      */
-    _enableButtons: function () {
+    _enableButtons: function () {
         this._super.apply(this, arguments);
         this.renderer.enableButtons();
     },
@@ -370,7 +371,6 @@ var FormController = BasicController.extend({
             // save the record but don't switch to readonly mode
             def = this.saveRecord(this.handle, {
                 stayInEdit: true,
-                reload: false,
             }).then(function () {
                 // we need to reget the record to make sure we have changes made
                 // by the basic model, such as the new res_id, if the record is
@@ -378,10 +378,6 @@ var FormController = BasicController.extend({
                 var record = self.model.get(event.data.record.id);
                 return self._callButtonAction(attrs, record);
             });
-        }
-
-        if (event.data.showWow) {
-            def.then(this.trigger_up.bind(this, 'show_wow'));
         }
 
         def.always(this._enableButtons.bind(this));
@@ -409,7 +405,7 @@ var FormController = BasicController.extend({
      * @private
      */
     _onDiscard: function () {
-        this.discardChanges();
+        this._discardChanges();
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar

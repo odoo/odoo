@@ -18,30 +18,5 @@
                 </xpath>
             </field>
         </record>
-
-        <record id="acquirer_form_published" model="ir.ui.view">
-            <field name="name">payment.acquirer.form.published</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_form"/>
-            <field name="arch" type="xml">
-                <button name="toggle_website_published" position="replace">
-                    <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
-                        <field name="website_published" widget="website_button"/>
-                    </button>
-                </button>
-            </field>
-        </record>
-
-        <record id="acquirer_list_published" model="ir.ui.view">
-            <field name="name">payment.acquirer.tree.published</field>
-            <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_list"/>
-            <field name="arch" type="xml">
-                <field name="provider" position="after">
-                    <field name="website_published"/>
-                </field>
-            </field>
-        </record>
-
     </data>
 </odoo>

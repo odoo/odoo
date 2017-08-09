@@ -285,18 +285,20 @@ FormController.include({
                 });
             }}, {text: _t('Discard'), close: true}],
             $content: $content,
-        }).open();
-        // This line set the value of the key which triggered the _set_quantity in the input
-        var $input = this.dialog.$content.find('.o_set_qty_input').focus().val(character);
-
-        var $selectBtn = this.dialog.$footer.find('.btn-primary');
-        $input.on('keypress', function (event){
-            if (event.which === 13) {
-                event.preventDefault();
-                $input.off();
-                $selectBtn.click();
-            }
         });
+        this.dialog.opened().then(function () {
+            // This line set the value of the key which triggered the _set_quantity in the input
+            var $input = self.dialog.$('.o_set_qty_input').focus().val(character);
+            var $selectBtn = self.dialog.$footer.find('.btn-primary');
+            $input.on('keypress', function (event){
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $input.off();
+                    $selectBtn.click();
+                }
+            });
+        });
+        this.dialog.open();
     },
 });
 

@@ -5,8 +5,11 @@ from odoo import api, fields, models
 
 
 class SaleConfigSettings(models.TransientModel):
-    _inherit = 'sale.config.settings'
+    _name = 'sale.config.settings'
+    _inherit = 'res.config.settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.user.company_id)
     sale_note = fields.Text(related='company_id.sale_note', string="Terms & Conditions")
     use_sale_note = fields.Boolean(
         string='Default Terms & Conditions',
@@ -69,11 +72,14 @@ class SaleConfigSettings(models.TransientModel):
         oldname='deposit_product_id_setting',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Orders")
-    module_sale_contract = fields.Boolean("Subscriptions")
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")
 
+    auth_signup_uninvited = fields.Selection([
+        ('b2b', 'On invitation (B2B)'),
+        ('b2c', 'Free sign up (B2C)'),
+    ], string='Customer Account')
+
     group_multi_currency = fields.Boolean("Multi-Currencies", implied_group='base.group_multi_currency')
-    module_sale_stock = fields.Boolean("Inventory Management")
     module_delivery = fields.Boolean("Shipping Costs")
     module_delivery_dhl = fields.Boolean("DHL")
     module_delivery_fedex = fields.Boolean("FedEx")
@@ -81,10 +87,7 @@ class SaleConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS")
     module_delivery_bpost = fields.Boolean("bpost")
 
-    module_sale_timesheet = fields.Boolean("Timesheets")
-    module_sale_ebay = fields.Boolean("eBay")
     module_print_docsaway = fields.Boolean("Docsaway")
-    module_web_clearbit = fields.Boolean("Customer Autocomplete")
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_coupon = fields.Boolean("Coupons & Promotions")
 
@@ -133,12 +136,14 @@ class SaleConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(SaleConfigSettings, self).get_values()
-        sale_pricelist_setting = self.env['ir.config_parameter'].sudo().get_param('sale.sale_pricelist_setting')
+        ICPSudo = self.env['ir.config_parameter'].sudo()
+        sale_pricelist_setting = ICPSudo.get_param('sale.sale_pricelist_setting')
         res.update(
-            use_sale_note=self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note', default=False),
-            auto_done_setting=self.env['ir.config_parameter'].sudo().get_param('sale.auto_done_setting'),
-            default_deposit_product_id=self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id'),
-            sale_show_tax=self.group_show_price_total and 'total' or 'subtotal',
+            auth_signup_uninvited='b2c' if ICPSudo.get_param('auth_signup.allow_uninvited', 'False').lower() == 'true' else 'b2b',
+            use_sale_note=ICPSudo.get_param('sale.use_sale_note', default=False),
+            auto_done_setting=ICPSudo.get_param('sale.auto_done_setting'),
+            default_deposit_product_id=int(ICPSudo.get_param('sale.default_deposit_product_id')),
+            sale_show_tax=ICPSudo.get_param('sale.sale_show_tax', default='subtotal'),
             multi_sales_price=sale_pricelist_setting in ['percentage', 'formula'],
             multi_sales_price_method=sale_pricelist_setting in ['percentage', 'formula'] and sale_pricelist_setting or False,
             sale_pricelist_setting=sale_pricelist_setting,
@@ -148,7 +153,10 @@ class SaleConfigSettings(models.TransientModel):
     @api.multi
     def set_values(self):
         super(SaleConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param("sale.use_sale_note", self.use_sale_note)
-        self.env['ir.config_parameter'].sudo().set_param("sale.auto_done_setting", self.auto_done_setting)
-        self.env['ir.config_parameter'].sudo().set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
-        self.env['ir.config_parameter'].sudo().set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
+        ICPSudo = self.env['ir.config_parameter'].sudo()
+        ICPSudo.set_param('auth_signup.allow_uninvited', repr(self.auth_signup_uninvited == 'b2c'))
+        ICPSudo.set_param("sale.use_sale_note", self.use_sale_note)
+        ICPSudo.set_param("sale.auto_done_setting", self.auto_done_setting)
+        ICPSudo.set_param("sale.default_deposit_product_id", self.default_deposit_product_id.id)
+        ICPSudo.set_param('sale.sale_pricelist_setting', self.sale_pricelist_setting)
+        ICPSudo.set_param('sale.sale_show_tax', self.sale_show_tax)

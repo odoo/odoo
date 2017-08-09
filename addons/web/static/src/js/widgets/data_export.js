@@ -210,16 +210,16 @@ var DataExport = Dialog.extend({
 
         this.row_index = 0;
         this.row_index_level = 0;
+    },
+    start: function() {
+        var self = this;
+        var waitFor = [this._super.apply(this, arguments)];
 
         // The default for the ".modal_content" element is "max-height: 100%;"
         // but we want it to always expand to "height: 100%;" for this modal.
         // This can be achieved thanks to LESS modification without touching
         // the ".modal-content" rules... but not with Internet explorer (11).
         this.$modal.find(".modal-content").css("height", "100%");
-    },
-    start: function() {
-        var self = this;
-        var waitFor = [this._super.apply(this, arguments)];
 
         this.$fields_list = this.$('.o_fields_list');
         this.$import_compat_radios = this.$('.o_import_compat input');

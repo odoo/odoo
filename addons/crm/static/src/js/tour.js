@@ -9,14 +9,9 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t("Ready to boost your sales? Your <b>sales pipeline</b> can be found here, under this app."),
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
+    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under <b>CRM</b> app."),
     position: 'bottom',
-}, {
-    trigger: ".o_sales_dashboard .o_dashboard_action[name=\"crm.action_your_pipeline\"]:last",
-    extra_trigger: '.o_sales_dashboard',
-    content: _t("Let\'s have a look at your opportunities pipeline."),
-    position: "bottom"
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
@@ -80,7 +75,7 @@ tour.STEPS.MENU_MORE, {
     position: "right"
 }, tour.STEPS.TOGGLE_APPSWITCHER,
 tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t("Good job! Your completed the tour of the CRM. You can continue with the <b>implementation guide</b> to help you setup the CRM in your company."),
     position: 'bottom',
 }, {

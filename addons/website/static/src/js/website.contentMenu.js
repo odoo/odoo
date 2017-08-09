@@ -204,7 +204,8 @@ var EditMenuDialog = widget.Dialog.extend({
         this.flat = this.flatenize(menu);
         this.to_delete = [];
         this._super(parent, _.extend({}, {
-            title: _t("Edit Menu")
+            title: _t("Edit Menu"),
+            size: 'medium',
         }, options || {}));
     },
     start: function () {
@@ -332,6 +333,8 @@ var MenuEntryDialog = widget.LinkDialog.extend({
                 self.$('#o_link_dialog_url_input').closest('.form-group').toggle();
             });
         }
+        this.$modal.find('.modal-lg').removeClass('modal-lg')
+                   .find('.col-md-8').removeClass('col-md-8').addClass('col-xs-12');
 
         return this._super.apply(this, arguments);
     },

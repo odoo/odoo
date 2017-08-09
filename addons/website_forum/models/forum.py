@@ -209,11 +209,7 @@ class Post(models.Model):
         ('link', 'Article'),
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])],
-        string='Post Messages', help="Comments on forum post",
-    )
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -780,7 +776,7 @@ class Post(models.Model):
         return True
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {

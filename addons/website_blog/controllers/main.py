@@ -9,8 +9,8 @@ import babel.dates
 from collections import OrderedDict
 
 from odoo import http, fields, _
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.website import slug, unslug
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import html2plaintext
@@ -174,6 +174,7 @@ class WebsiteBlog(http.Controller):
         v['blog'] = blog
         v['base_url'] = request.env['ir.config_parameter'].sudo().get_param('web.base.url')
         v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
+        v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
 

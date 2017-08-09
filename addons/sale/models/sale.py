@@ -5,9 +5,10 @@ import uuid
 
 from itertools import groupby
 from datetime import datetime, timedelta
+from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools import float_is_zero, float_compare, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 from odoo.tools.misc import formatLang
 
@@ -118,6 +119,9 @@ class SaleOrder(models.Model):
     access_token = fields.Char(
         'Security Token', copy=False,
         default=_get_default_access_token)
+    website_url = fields.Char(
+        'Website URL', compute='_website_url',
+        help='The full URL to access the document using the customer portal.')
 
     state = fields.Selection([
         ('draft', 'Quotation'),
@@ -165,6 +169,10 @@ class SaleOrder(models.Model):
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
+
+    def _website_url(self):
+        for so in self:
+            so.website_url = '/my/orders/%s' % (so.id)
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -224,12 +232,11 @@ class SaleOrder(models.Model):
             'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
+            'user_id': self.partner_id.user_id.id or self.env.uid
         }
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note') and self.env.user.company_id.sale_note:
             values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
 
-        if self.partner_id.user_id:
-            values['user_id'] = self.partner_id.user_id.id
         if self.partner_id.team_id:
             values['team_id'] = self.partner_id.team_id.id
         self.update(values)
@@ -293,12 +300,19 @@ class SaleOrder(models.Model):
     @api.model_cr_context
     def _init_column(self, column_name):
         """ Initialize the value of the given column for existing rows.
-            Overridden here because we skip generating unique access tokens
-            for potentially tons of existing sale orders, should they be needed,
-            they will be generated on the fly.
+
+            Overridden here because we need to generate different access tokens
+            and by default _init_column calls the default method once and applies
+            it for every record.
         """
         if column_name != 'access_token':
             super(SaleOrder, self)._init_column(column_name)
+        else:
+            query = """UPDATE %(table_name)s
+                          SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                        WHERE %(column_name)s IS NULL
+                    """ % {'table_name': self._name, 'column_name': column_name}
+            self.env.cr.execute(query)
 
     def _generate_access_token(self):
         for order in self:
@@ -541,15 +555,66 @@ class SaleOrder(models.Model):
             for tax in line.tax_id:
                 group = tax.tax_group_id
                 res.setdefault(group, 0.0)
-                amount = tax.compute_all(line.price_reduce + base_tax, quantity=line.product_uom_qty,
-                                         product=line.product_id, partner=self.partner_shipping_id)['taxes'][0]['amount']
-                res[group] += amount
+                # FORWARD-PORT UP TO SAAS-17
+                price_reduce = line.price_unit * (1.0 - line.discount / 100.0)
+                taxes = tax.compute_all(price_reduce + base_tax, quantity=line.product_uom_qty,
+                                         product=line.product_id, partner=self.partner_shipping_id)['taxes']
+                for t in taxes:
+                    res[group] += t['amount']
                 if tax.include_base_amount:
-                    base_tax += tax.compute_all(line.price_reduce + base_tax, quantity=1, product=line.product_id,
+                    base_tax += tax.compute_all(price_reduce + base_tax, quantity=1, product=line.product_id,
                                                 partner=self.partner_shipping_id)['taxes'][0]['amount']
         res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]) for l in res]
         return res
+
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online order for
+        portal users or if force_website=True in the context. """
+        # TDE note: read access on sales order to portal users granted to followed sales orders
+        self.ensure_one()
+        if self.state == 'cancel' or (self.state == 'draft' and not self.env.context.get('mark_so_as_sent')):
+            return super(SaleOrder, self).get_access_action(access_uid)
+
+        user = self.env['res.users'].sudo().browse(access_uid) if access_uid else self.env.user
+        if user.share or self.env.context.get('force_website'):
+            return {
+                'type': 'ir.actions.act_url',
+                'url': '/my/orders/%s?access_token=%s' % (self.id, self.access_token),
+                'target': 'self',
+                'res_id': self.id,
+            }
+        return super(SaleOrder, self).get_access_action(access_uid)
+
+    def get_mail_url(self):
+        self.ensure_one()
+        params = {
+            'model': self._name,
+            'res_id': self.id,
+            'access_token': self.access_token,
+        }
+        params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
+        return '/mail/view?' + url_encode(params)
+
+    @api.multi
+    def _notification_recipients(self, message, groups):
+        groups = super(SaleOrder, self)._notification_recipients(message, groups)
+
+        self.ensure_one()
+        if self.state not in ('draft', 'cancel'):
+            for group_name, group_method, group_data in groups:
+                group_data['has_button_access'] = True
+
+        return groups
+
+    @api.multi
+    def get_signup_url(self):
+        self.ensure_one()
+        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
+            action='/mail/view',
+            model=self._name,
+            res_id=self.id)[self.partner_id.id]
 
 
 class SaleOrderLine(models.Model):
@@ -735,32 +800,34 @@ class SaleOrderLine(models.Model):
 
         return line
 
+    def _update_line_quantity(self, values):
+        orders = self.mapped('order_id')
+        for order in orders:
+            order_lines = self.filtered(lambda x: x.order_id == order)
+            msg = ""
+            if any([values['product_uom_qty'] < x.product_uom_qty for x in order_lines]):
+                msg += "<b>" + _(
+                    'The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.') + '</b>'
+            msg += "<ul>"
+            for line in order_lines:
+                msg += "<li> %s:" % (line.product_id.display_name,)
+                msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
+                line.product_uom_qty, float(values['product_uom_qty']),)
+                if line.product_id.type in ('consu', 'product'):
+                    msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
+                msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
+            msg += "</ul>"
+            order.message_post(body=msg)
+
     @api.multi
     def write(self, values):
         lines = False
-        changed_lines = False
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             lines = self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
-            changed_lines = self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)
-            if changed_lines:
-                orders = self.mapped('order_id')
-                for order in orders:
-                    order_lines = changed_lines.filtered(lambda x: x.order_id == order)
-                    msg = ""
-                    if any([values['product_uom_qty'] < x.product_uom_qty for x in order_lines]):
-                        msg += "<b>" + _('The ordered quantity has been decreased. Do not forget to take it into account on your invoices and delivery orders.') + '</b>'
-                    msg += "<ul>"
-                    for line in order_lines:
-                        msg += "<li> %s:" % (line.product_id.display_name,)
-                        msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (line.product_uom_qty, float(values['product_uom_qty']),)
-                        if line.product_id.type in ('consu', 'product'):
-                            msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
-                        msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
-                    msg += "</ul>"
-                    order.message_post(body=msg)
+            self.filtered(
+                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
         result = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_procurement_create()
@@ -783,7 +850,7 @@ class SaleOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Taxes', readonly=True, store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', readonly=True, store=True)
 
-    price_reduce = fields.Monetary(compute='_get_price_reduce', string='Price Reduce', readonly=True, store=True)
+    price_reduce = fields.Float(compute='_get_price_reduce', string='Price Reduce', digits=dp.get_precision('Product Price'), readonly=True, store=True)
     tax_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     price_reduce_taxinc = fields.Monetary(compute='_get_price_reduce_tax', string='Price Reduce Tax inc', readonly=True, store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_get_price_reduce_notax', string='Price Reduce Tax excl', readonly=True, store=True)
@@ -793,6 +860,8 @@ class SaleOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
     product_uom_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
     product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
+    # Non-stored related field to allow portal user to see the image of the product he has ordered
+    product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
     qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
     qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
@@ -915,6 +984,21 @@ class SaleOrderLine(models.Model):
             uom=self.product_uom.id
         )
 
+        result = {'domain': domain}
+
+        title = False
+        message = False
+        warning = {}
+        if product.sale_line_warn != 'no-message':
+            title = _("Warning for %s") % product.name
+            message = product.sale_line_warn_msg
+            warning['title'] = title
+            warning['message'] = message
+            result = {'warning': warning}
+            if product.sale_line_warn == 'block':
+                self.product_id = False
+                return result
+
         name = product.name_get()[0][1]
         if product.description_sale:
             name += '\n' + product.description_sale
@@ -926,22 +1010,11 @@ class SaleOrderLine(models.Model):
             vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
         self.update(vals)
 
-        title = False
-        message = False
-        warning = {}
-        if product.sale_line_warn != 'no-message':
-            title = _("Warning for %s") % product.name
-            message = product.sale_line_warn_msg
-            warning['title'] = title
-            warning['message'] = message
-            if product.sale_line_warn == 'block':
-                self.product_id = False
-            return {'warning': warning}
-        return {'domain': domain}
+        return result
 
     @api.onchange('product_uom', 'product_uom_qty')
     def product_uom_change(self):
-        if not self.product_uom:
+        if not self.product_uom or not self.product_id:
             self.price_unit = 0.0
             return
         if self.order_id.pricelist_id and self.order_id.partner_id:
@@ -949,7 +1022,7 @@ class SaleOrderLine(models.Model):
                 lang=self.order_id.partner_id.lang,
                 partner=self.order_id.partner_id.id,
                 quantity=self.product_uom_qty,
-                date_order=self.order_id.date_order,
+                date=self.order_id.date_order,
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')

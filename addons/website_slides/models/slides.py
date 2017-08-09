@@ -11,10 +11,10 @@ import re
 from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import image, pycompat
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
-from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):
@@ -261,6 +261,7 @@ class Slide(models.Model):
     _name = 'slide.slide'
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
     _description = 'Slides'
+    _mail_post_access = 'read'
 
     _PROMOTIONAL_FIELDS = [
         '__last_update', 'name', 'image_thumb', 'image_medium', 'slide_type', 'total_views', 'category_id',
@@ -326,10 +327,6 @@ class Slide(models.Model):
 
     # website
     date_published = fields.Datetime('Publish Date')
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')],
-        string='Website Messages', help="Website communication history")
     likes = fields.Integer('Likes')
     dislikes = fields.Integer('Dislikes')
     # views
@@ -369,7 +366,10 @@ class Slide(models.Model):
             if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
                 # link_tracker is not in dependencies, so use it to shorten url only if installed.
                 if self.env.registry.get('link.tracker'):
-                    url = self.env['link.tracker'].sudo().create({'url': '%s/slides/slide/%s' % (base_url, slug(slide))}).short_url
+                    url = self.env['link.tracker'].sudo().create({
+                        'url': '%s/slides/slide/%s' % (base_url, slug(slide)),
+                        'title': slide.name,
+                    }).short_url
                 else:
                     url = '%s/slides/slide/%s' % (base_url, slug(slide))
                 slide.website_url = url
@@ -382,7 +382,7 @@ class Slide(models.Model):
             values['image'] = values['datas']
         if values.get('website_published') and not values.get('date_published'):
             values['date_published'] = datetime.datetime.now()
-        if values.get('url'):
+        if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in pycompat.items(doc_data):
                 values.setdefault(key, value)
@@ -396,7 +396,7 @@ class Slide(models.Model):
 
     @api.multi
     def write(self, values):
-        if values.get('url'):
+        if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
             for key, value in pycompat.items(doc_data):
                 values.setdefault(key, value)
@@ -437,7 +437,7 @@ class Slide(models.Model):
         return fields
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
         if self.website_published:
@@ -447,7 +447,7 @@ class Slide(models.Model):
                 'target': 'self',
                 'res_id': self.id,
             }
-        return super(Slide, self).get_access_action()
+        return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
     def _notification_recipients(self, message, groups):

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import time
-from odoo import api, models
+from odoo import api, models, _
 from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
@@ -71,7 +71,7 @@ class ReportPartnerLedger(models.AbstractModel):
     @api.model
     def get_report_values(self, docids, data=None):
         if not data.get('form'):
-            raise UserError(_("Some data are missing, this report cannot be printed."))
+            raise UserError(_("Form content is missing, this report cannot be printed."))
 
         data['computed'] = {}
 
@@ -109,7 +109,7 @@ class ReportPartnerLedger(models.AbstractModel):
         self.env.cr.execute(query, tuple(params))
         partner_ids = [res['partner_id'] for res in self.env.cr.dictfetchall()]
         partners = obj_partner.browse(partner_ids)
-        partners = sorted(partners, key=lambda x: (x.ref, x.name))
+        partners = sorted(partners, key=lambda x: (x.ref or '', x.name or ''))
 
         return {
             'doc_ids': partner_ids,

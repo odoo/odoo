@@ -48,3 +48,13 @@ class Task(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
 
     _constraints = [(models.BaseModel._check_recursion, 'Circular references are not permitted between tasks and sub-tasks', ['parent_id'])]
+
+
+    @api.model
+    def create(self, vals):
+        context = dict(self.env.context)
+        # Remove default_parent_id to avoid a confusion in get_record_data
+        if context.get('default_parent_id', False):
+            vals['parent_id'] = context.pop('default_parent_id', None)
+        task = super(Task, self.with_context(context)).create(vals)
+        return task

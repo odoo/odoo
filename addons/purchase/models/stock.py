@@ -12,15 +12,6 @@ class StockPicking(models.Model):
         string="Purchase Orders", readonly=True)
 
     @api.model
-    def _prepare_values_extra_move(self, op, product, remaining_qty):
-        res = super(StockPicking, self)._prepare_values_extra_move(op, product, remaining_qty)
-        for m in op.linked_move_operation_ids:
-            if m.move_id.purchase_line_id and m.move_id.product_id == product:
-                res['purchase_line_id'] = m.move_id.purchase_line_id.id
-                break
-        return res
-
-    @api.model
     def _create_backorder(self, backorder_moves=[]):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self:
@@ -36,37 +27,34 @@ class StockMove(models.Model):
     _inherit = 'stock.move'
 
     purchase_line_id = fields.Many2one('purchase.order.line',
-        'Purchase Order Line', ondelete='set null', index=True, readonly=True)
+        'Purchase Order Line', ondelete='set null', index=True, readonly=True, copy=False)
 
     @api.multi
-    def get_price_unit(self):
-        """ Returns the unit price to store on the quant """
-        if self.purchase_line_id:
-            order = self.purchase_line_id.order_id
-            #if the currency of the PO is different than the company one, the price_unit on the move must be reevaluated
-            #(was created at the rate of the PO confirmation, but must be valuated at the rate of stock move execution)
-            if order.currency_id != self.company_id.currency_id:
-                #we don't pass the move.date in the compute() for the currency rate on purpose because
-                # 1) get_price_unit() is supposed to be called only through move.action_done(),
-                # 2) the move hasn't yet the correct date (currently it is the expected date, after
-                #    completion of action_done() it will be now() )
-                price_unit = self.purchase_line_id._get_stock_move_price_unit()
-                self.write({'price_unit': price_unit})
-                return price_unit
-            return self.price_unit
-        return super(StockMove, self).get_price_unit()
-
-    @api.multi
-    def copy(self, default=None):
+    def _get_price_unit(self):
+        """ Returns the unit price for the move"""
         self.ensure_one()
-        default = default or {}
-        # we don't want to propagate the link to the purchase order line on the move copied,
-        # except when it's a split or a returned move
+        if self.purchase_line_id:
+            line = self.purchase_line_id
+            order = line.order_id
+            price_unit = line.price_unit
+            if line.taxes_id:
+                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_excluded']
+            if line.product_uom.id != line.product_id.uom_id.id:
+                price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
+            if order.currency_id != order.company_id.currency_id:
+                price_unit = order.currency_id.compute(price_unit, order.company_id.currency_id, round=False)
+            return price_unit
+        return super(StockMove, self)._get_price_unit()
 
-        if not default.get('split_from') and not default.get('origin_returned_move_id'):
-            default['purchase_line_id'] = False
-        return super(StockMove, self).copy(default)
+    def _prepare_extra_move_vals(self, qty):
+        vals = super(StockMove, self)._prepare_extra_move_vals(qty)
+        vals['purchase_line_id'] = self.purchase_line_id.id
+        return vals
 
+    def _prepare_move_split_vals(self, uom_qty):
+        vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
+        vals['purchase_line_id'] = self.purchase_line_id.id
+        return vals
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -141,3 +129,11 @@ class StockWarehouse(models.Model):
             if warehouse.in_type_id.default_location_dest_id != warehouse.buy_pull_id.location_id:
                 warehouse.buy_pull_id.write({'location_id': warehouse.in_type_id.default_location_dest_id.id})
         return res
+
+class ReturnPicking(models.TransientModel):
+    _inherit = "stock.return.picking"
+
+    def _prepare_move_default_values(self, return_line, new_picking):
+        vals = super(ReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
+        vals['purchase_line_id'] = return_line.move_id.purchase_line_id.id
+        return vals

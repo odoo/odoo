@@ -8,7 +8,7 @@ from unicodedata import normalize
 
 import requests
 from lxml import etree, objectify
-from werkzeug import urls
+from werkzeug import urls, url_encode
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -280,7 +280,7 @@ class PaymentTxOgone(models.Model):
         return invalid_parameters
 
     def _ogone_form_validate(self, data):
-        if self.state == 'done':
+        if self.state in ['done', 'refunded']:
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -302,7 +302,12 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
+            self.payment_token_id.verified = True
             self.execute_callback()
+            # if this transaction is a validation one, then we refund the money we just withdrawn
+            if self.type == 'verification':
+                self.s2s_do_refund()
+
             return True
         elif status in self._ogone_cancel_tx_status:
             self.write({
@@ -331,11 +336,14 @@ class PaymentTxOgone(models.Model):
     # --------------------------------------------------
     # S2S RELATED METHODS
     # --------------------------------------------------
-
     def ogone_s2s_do_transaction(self, **kwargs):
         # TODO: create tx with s2s type
         account = self.acquirer_id
         reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
+
+        param_plus = {
+            'return_url': kwargs.get('return_url', False)
+        }
 
         data = {
             'PSPID': account.ogone_pspid,
@@ -348,6 +356,7 @@ class PaymentTxOgone(models.Model):
             'ECI': 2,   # Recurring (from MOTO)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
+            'PARAMPLUS' : url_encode(param_plus)
         }
 
         if kwargs.get('3d_secure'):
@@ -380,19 +389,58 @@ class PaymentTxOgone(models.Model):
 
         return self._ogone_s2s_validate_tree(tree)
 
+    def ogone_s2s_do_refund(self, **kwargs):
+
+        # we refund only if this transaction hasn't been already refunded and was paid.
+        if self.state != 'done':
+            return False
+
+        self.state = 'refunding'
+        account = self.acquirer_id
+        reference = self.reference or "ODOO-%s-%s" % (datetime.datetime.now().strftime('%y%m%d_%H%M%S'), self.partner_id.id)
+
+        data = {
+            'PSPID': account.ogone_pspid,
+            'USERID': account.ogone_userid,
+            'PSWD': account.ogone_password,
+            'ORDERID': reference,
+            'AMOUNT': int(self.amount * 100),
+            'CURRENCY': self.currency_id.name,
+            'OPERATION': 'RFD',
+            'ECI': 2,   # Recurring (from MOTO)
+            'ALIAS': self.payment_token_id.acquirer_ref,
+            'RTIMEOUT': 30,
+        }
+
+        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
+
+        _logger.debug("Ogone data %s", pformat(data))
+        result = requests.post(direct_order_url, data=data).content
+        _logger.debug('Ogone response = %s', result)
+
+        try:
+            tree = objectify.fromstring(result)
+        except etree.XMLSyntaxError:
+            # invalid response from ogone
+            _logger.exception('Invalid xml response from ogone')
+            raise
+
+        return self._ogone_s2s_validate_tree(tree)
+
     def _ogone_s2s_validate(self):
         tree = self._ogone_s2s_get_tx_status()
         return self._ogone_s2s_validate_tree(tree)
 
     def _ogone_s2s_validate_tree(self, tree, tries=2):
-        if self.state not in ('draft', 'pending'):
+        if self.state not in ('draft', 'pending', 'refunding'):
             _logger.info('Ogone: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = int(tree.get('STATUS') or 0)
         if status in self._ogone_valid_tx_status:
+            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': 'done',
+                'state': new_state,
                 'date_validate': datetime.date.today().strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'acquirer_reference': tree.get('PAYID'),
             })
@@ -406,6 +454,7 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
+            self.payment_token_id.verified = True
             self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -414,8 +463,9 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': tree.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
+            new_state = 'refunding' if self.type == 'validation' else 'pending'
             self.write({
-                'state': 'pending',
+                'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
                 'html_3ds': str(tree.HTML_ANSWER).decode('base64')
             })

@@ -221,7 +221,9 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', function () {
             chat_manager.mark_all_as_read(self.channel, self.domain);
         });
-        this.$buttons.on('click', '.o_mail_chat_button_unstar_all', chat_manager.unstar_all);
+        this.$buttons.on('click', '.o_mail_chat_button_unstar_all', function () {
+            chat_manager.unstar_all();
+        });
 
         this.thread.on('redirect', this, function (res_model, res_id) {
             chat_manager.redirect(res_model, res_id, this.set_channel.bind(this));
@@ -268,6 +270,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
                 chat_manager.bus.on('update_starred', self, self.throttled_renderSidebar);
                 chat_manager.bus.on('update_channel_unread_counter', self, self.throttled_renderSidebar);
                 chat_manager.bus.on('update_dm_presence', self, self.throttled_renderSidebar);
+                chat_manager.bus.on('activity_updated', self, self.throttled_renderSidebar);
                 self.thread.$el.on("scroll", null, _.debounce(function () {
                     if (self.thread.is_at_bottom()) {
                         chat_manager.mark_channel_as_seen(self.channel);
@@ -508,11 +511,19 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         });
     },
 
-    update_button_status: function (disabled) {
+    update_button_status: function (disabled, type) {
         if (this.channel.id === "channel_inbox") {
             this.$buttons
                 .find('.o_mail_chat_button_mark_read')
                 .toggleClass('disabled', disabled);
+            // Display Rainbowman when all inbox messages are read through
+            // 'MARK ALL READ' or marking last inbox message as read
+            if (disabled && type === 'mark_as_read') {
+                this.trigger_up('show_effect', {
+                    message: _t('Congratulations, your inbox is empty!'),
+                    type: 'rainbow_man',
+                });
+            }
         }
         if (this.channel.id === "channel_starred") {
             this.$buttons
@@ -604,7 +615,11 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
         // Dump scroll position of channels in which the new message arrived
         this.channels_scrolltop = _.omit(this.channels_scrolltop, message.channel_ids);
     },
-    on_update_message: function (message) {
+    on_update_message: function (message, type) {
+        // To identify 'update_button_status' method is called from from 'Mark as read / Mark all read'
+        // button, we are passing type to this method so that rainbowman will only appear on marking all
+        // messages as read (because the same method is also called from 'fetch_and_render_thread' when
+        // clicking @inbox, and we don't want rainbowman to appear everytime on empty inbox)
         var self = this;
         var current_channel_id = this.channel.id;
         if ((current_channel_id === "channel_starred" && !message.is_starred) ||
@@ -612,7 +627,7 @@ var ChatAction = Widget.extend(ControlPanelMixin, {
             chat_manager.get_messages({channel_id: this.channel.id, domain: this.domain}).then(function (messages) {
                 var options = self.get_thread_rendering_options(messages);
                 self.thread.remove_message_and_render(message.id, messages, options).then(function () {
-                    self.update_button_status(messages.length === 0);
+                    self.update_button_status(messages.length === 0, type);
                 });
             });
         } else if (_.contains(message.channel_ids, current_channel_id)) {

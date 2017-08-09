@@ -133,4 +133,39 @@ QUnit.test('dashboard: click on a button to execute an action', function (assert
     kanban.destroy();
 });
 
+QUnit.test('dashboard should be displayed even if there is no content', function (assert) {
+    assert.expect(2);
+
+    var dashboardData = this.dashboard_data;
+    var kanban = createView({
+        View: view_registry.get('sales_team_dashboard'),
+        model: 'partner',
+        data: this.data,
+        arch: '<kanban class="o_kanban_test">' +
+                '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                '</t></templates>' +
+              '</kanban>',
+        domain: [['id', '=', 239]], // no record will match this domain
+        mockRPC: function (route, args) {
+            if (args.method === 'retrieve_sales_dashboard') {
+                return $.when(dashboardData);
+            }
+            return this._super(route, args);
+        },
+        viewOptions: {
+            action: {
+                help: '<p>A help message</p>',
+            },
+        },
+    });
+
+    assert.strictEqual(kanban.$('div.o_sales_dashboard').length, 1,
+        "should render the dashboard");
+    assert.strictEqual(kanban.$('.oe_view_nocontent:contains(A help message)').length, 1,
+        "should correctly render the nocontent helper");
+
+    kanban.destroy();
+});
+
 });

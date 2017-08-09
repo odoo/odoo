@@ -87,14 +87,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Init a session, reloads from cookie, if it exists
      */
     session_init: function () {
-        var def = this.session_reload();
-        if (this.is_frontend) return def;
-
         var self = this;
+        var def = this.session_reload();
+
+        if (this.is_frontend) {
+            return def.then(function () {
+                return self.load_translations();
+            });
+        }
+
         return def.then(function () {
             var modules = self.module_list.join(',');
             var deferred = self.load_qweb(modules);
-            if(self.session_is_valid()) {
+            if (self.session_is_valid()) {
                 return deferred.then(function () { return self.load_modules(); });
             }
             return $.when(
@@ -217,7 +222,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
        });
     },
     load_translations: function () {
-        return _t.database.load_translations(this, this.module_list, this.user_context.lang);
+        return _t.database.load_translations(this, this.module_list, this.user_context.lang, this.translationURL);
     },
     load_css: function (files) {
         var self = this;

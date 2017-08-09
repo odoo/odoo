@@ -20,7 +20,7 @@ class ProductAttribute(models.Model):
 
 class ProductAttributevalue(models.Model):
     _name = "product.attribute.value"
-    _order = 'sequence, id'
+    _order = 'sequence, attribute_id, id'
 
     name = fields.Char('Value', required=True, translate=True)
     sequence = fields.Integer('Sequence', help="Determine the display order")
@@ -76,7 +76,7 @@ class ProductAttributevalue(models.Model):
 
     @api.multi
     def _variant_name(self, variable_attributes):
-        return ", ".join([v.name for v in self.sorted(key=lambda r: r.attribute_id.name) if v.attribute_id in variable_attributes])
+        return ", ".join([v.name for v in self if v.attribute_id in variable_attributes])
 
 
 class ProductAttributePrice(models.Model):

@@ -27,8 +27,8 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
     @api.model
     def _default_product_id(self):
-        product_id = self.env['ir.config_parameter'].get_param('sale.default_deposit_product_id')
-        return self.env['product.product'].browse(product_id)
+        product_id = self.env['ir.config_parameter'].sudo().get_param('sale.default_deposit_product_id')
+        return self.env['product.product'].browse(int(product_id))
 
     @api.model
     def _default_deposit_account_id(self):
@@ -113,6 +113,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'payment_term_id': order.payment_term_id.id,
             'fiscal_position_id': order.fiscal_position_id.id or order.partner_id.property_account_position_id.id,
             'team_id': order.team_id.id,
+            'user_id': order.user_id.id,
             'comment': order.note,
         })
         invoice.compute_taxes()

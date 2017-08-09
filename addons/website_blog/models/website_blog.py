@@ -7,7 +7,7 @@ import random
 import itertools
 
 from odoo import api, models, fields, _
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools.translate import html_translate
 from odoo.tools import html2plaintext
 
@@ -140,14 +140,8 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: [
-            '&', '&', ('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)
-        ],
-        string='Website Messages',
-        help="Website communication history",
-    )
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)])
+
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
     published_date = fields.Datetime('Published Date')
@@ -215,19 +209,20 @@ class BlogPost(models.Model):
     def write(self, vals):
         self.ensure_one()
         if 'website_published' in vals and 'published_date' not in vals:
-            if self.published_date <= fields.Datetime.now():
+            if (self.published_date or '') <= fields.Datetime.now():
                 vals['published_date'] = vals['website_published'] and fields.Datetime.now()
         result = super(BlogPost, self).write(vals)
         self._check_for_publication(vals)
         return result
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on website
         directly if user is an employee or if the post is published. """
         self.ensure_one()
-        if self.env.user.share and not self.sudo().website_published:
-            return super(BlogPost, self).get_access_action()
+        user = access_uid and self.env['res.users'].sudo().browse(access_uid) or self.env.user
+        if user.share and not self.sudo().website_published:
+            return super(BlogPost, self).get_access_action(access_uid)
         return {
             'type': 'ir.actions.act_url',
             'url': self.url,

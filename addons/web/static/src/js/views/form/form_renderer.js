@@ -4,6 +4,7 @@ odoo.define('web.FormRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
+var dom = require('web.dom');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -114,18 +115,20 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
-     * Disable stat buttons so that they can't be clicked anymore
+     * Disable statusbar buttons and stat buttons so that they can't be clicked anymore
      *
      */
-    disableButtons: function() {
-        this.$('.oe_button_box button').attr('disabled', true);
+    disableButtons: function () {
+        this.$('.o_statusbar_buttons button, .oe_button_box button')
+            .attr('disabled', true);
     },
     /**
-     * Enable stat buttons so they can be clicked again
+     * Enable statusbar buttons and stat buttons so they can be clicked again
      *
      */
-    enableButtons: function() {
-        this.$('.oe_button_box button').removeAttr('disabled');
+    enableButtons: function () {
+        this.$('.o_statusbar_buttons button, .oe_button_box button')
+            .removeAttr('disabled');
     },
     /**
      * returns the active tab pages for each notebook
@@ -206,7 +209,6 @@ var FormRenderer = BasicRenderer.extend({
             self.trigger_up('button_clicked', {
                 attrs: node.attrs,
                 record: self.state,
-                showWow: $el.hasClass('o_wow'),
             });
         });
     },
@@ -336,12 +338,27 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
+        var self = this;
         var $button = $('<button>')
                         .text(node.attrs.string)
                         .addClass('btn btn-sm btn-default');
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
+
+        // Display tooltip
+        if (config.debug || node.attrs.help) {
+            $button.tooltip({
+                delay: { show: 1000, hide: 0 },
+                title: function () {
+                    return qweb.render('WidgetButton.tooltip', {
+                        debug: config.debug,
+                        state: self.state,
+                        node: node,
+                    });
+                },
+            });
+        }
         return $button;
     },
     /**
@@ -542,14 +559,11 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var widget = {
-            node: node,
-            string: (node.attrs.string || '').replace(/_/g, '')
-        };
-        if (node.attrs.icon) {
-            widget.fa_icon = node.attrs.icon.indexOf('fa-') === 0;
-        }
-        var $button = $(qweb.render('WidgetButton', {widget: widget}));
+        var $button = dom.renderButton({
+            attrs: _.omit(node.attrs, 'icon', 'string'),
+            icon: node.attrs.icon,
+            text: (node.attrs.string || '').replace(/_/g, ''),
+        });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);

@@ -543,49 +543,9 @@
                                     </h4>
                                 </div>
                                 <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
-                                    <form id="comment" class="js_website_submit_form" t-attf-action="/slides/slide/#{slide.id}/comment" method="POST">
-                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                        <div class="media">
-                                            <span class="pull-left" t-if="not is_public_user">
-                                                <img class="img img-circle media-object"
-                                                    t-att-src="'/web/image?model=res.partner&amp;field=image_small&amp;id='+str(user_id.partner_id.id)"
-                                                    style="width: 30px"/>
-                                            </span>
-                                            <div class="media-body">
-                                                <div t-if="is_public_user" class="col-md-6">
-                                                    <input type="name" class="form-control mb8" required="true" name="name" placeholder="Your Name"/>
-                                                    <input type="email" class="form-control mb8" required="true" name="email" placeholder="Email Address"/>
-                                                </div>
-                                                <div t-if="is_public_user" class="col-md-6">
-                                                    <p class="text-muted small">
-                                                        Post comment with email address (confirmation of email is required in order to publish comment on website) or please
-                                                        <a t-attf-href="/web?redirect=#{request.httprequest.url}">login</a>
-                                                        to post comment
-                                                    </p>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <textarea rows="3" name="comment" class="o_slides_comment form-control" required="true" placeholder="Write a comment..."></textarea>
-                                                    <button type="submit" class="btn btn-primary mt8">Post</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                    <ul class="media-list mt8">
-                                        <li t-foreach="comments" t-as="message" class="media">
-                                            <span class="pull-left">
-                                                <img class="media-object img img-circle"
-                                                    t-att-src="'/web/image?model=mail.message&amp;field=author_avatar&amp;id='+str(message.id)" style="width: 30px"/>
-                                            </span>
-                                            <div class="media-body">
-                                                <t t-call="website.publish_short">
-                                                    <t t-set="object" t-value="message"/>
-                                                </t>
-                                                <span t-field="message.author_id" style="display: inline-block;" t-options='{"widget": "contact", "fields": ["name"]}'/>
-                                                <span class="text-muted">on<span t-field="message.date"/></span>
-                                                <div t-field="message.body" class="discussion_scroll_post"></div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <t t-call="website_mail.message_thread">
+                                        <t t-set="object" t-value="slide"/>
+                                    </t>
                                 </div>
                                 <div class="tab-pane fade oe_slides_transcript" id="transcript">
                                     <t t-if="slide.index_content">

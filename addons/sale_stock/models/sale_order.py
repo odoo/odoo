@@ -158,6 +158,10 @@ class SaleOrderLine(models.Model):
     @api.onchange('product_uom_qty')
     def _onchange_product_uom_qty(self):
         if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < self._origin.product_uom_qty:
+            # Do not display this warning if the new quantity is below the delivered
+            # one; the `write` will raise an `UserError` anyway.
+            if self.product_uom_qty < self.qty_delivered:
+                return {}
             warning_mess = {
                 'title': _('Ordered quantity decreased!'),
                 'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
@@ -191,7 +195,7 @@ class SaleOrderLine(models.Model):
             if move.location_dest_id.usage == "customer":
                 if not move.origin_returned_move_id:
                     qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage == "internal" and move.to_refund:
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
                 qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
         return qty
 
@@ -242,3 +246,14 @@ class SaleOrderLine(models.Model):
                     break
 
         return is_available
+
+    def _update_line_quantity(self, values):
+        if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
+            raise UserError('You cannot decrease the ordered quantity below the delivered quantity.\n'
+                            'Create a return first.')
+        for line in self:
+            pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+            for picking in pickings:
+                picking.message_post("The quantity of %s has been updated from %d to %d in %s" %
+                                      (line.product_id.name, line.product_uom_qty, values['product_uom_qty'], self.order_id.name))
+        super(SaleOrderLine, self)._update_line_quantity(values)

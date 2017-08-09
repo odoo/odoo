@@ -8,7 +8,6 @@ odoo.define('web.BasicController', function (require) {
  */
 
 var AbstractController = require('web.AbstractController');
-var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var FieldManagerMixin = require('web.FieldManagerMixin');
@@ -19,7 +18,6 @@ var _t = core._t;
 var BasicController = AbstractController.extend(FieldManagerMixin, {
     custom_events: _.extend({}, AbstractController.prototype.custom_events, FieldManagerMixin.custom_events, {
         discard_changes: '_onDiscardChanges',
-        mutexify: '_onMutexify',
         reload: '_onReload',
         sidebar_data_asked: '_onSidebarDataAsked',
         translate: '_onTranslate',
@@ -39,7 +37,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         FieldManagerMixin.init.call(this, this.model);
         this.handle = params.initialState.id;
         this.mode = params.mode || 'readonly';
-        this.mutex = new concurrency.Mutex();
     },
     /**
      * @override
@@ -104,39 +101,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return true;
     },
     /**
-     * Discards the changes made to the record whose ID is given, if necessary.
-     * Automatically leaves to default mode for the given record.
+     * Waits for the mutex to be unlocked and then calls _.discardChanges.
+     * This ensures that the confirm dialog isn't displayed directly if there is
+     * a pending 'write' rpc.
      *
-     * @param {string} [recordID] - default to main recordID
-     * @param {Object} [options]
-     * @param {boolean} [options.readonlyIfRealDiscard=false]
-     *        After discarding record changes, the usual option is to make the
-     *        record readonly. However, the view manager calls this function
-     *        at inappropriate times in the current code and in that case, we
-     *        don't want to go back to readonly if there is nothing to discard
-     *        (e.g. when switching record in edit mode in form view, we expect
-     *        the new record to be in edit mode too, but the view manager calls
-     *        this function as the URL changes...) @todo get rid of this when
-     *        the view manager is improved.
-     * @returns {Deferred}
+     * @see _.discardChanges
      */
     discardChanges: function (recordID, options) {
-        var self = this;
-        recordID = recordID || this.handle;
-        return this.canBeDiscarded(recordID).then(function (needDiscard) {
-            if (options && options.readonlyIfRealDiscard && !needDiscard) {
-                return;
-            }
-
-            if (needDiscard) { // Just some optimization
-                self.model.discardChanges(recordID);
-            }
-            if (self.model.isNew(recordID)) {
-                self._abandonRecord(recordID);
-                return;
-            }
-            return self._confirmSave(recordID);
-        });
+        return this.mutex.exec(function () {})
+            .then(this._discardChanges.bind(this, recordID || this.handle, options));
     },
     /**
      * Method that will be overriden by the views with the ability to have selected ids
@@ -262,7 +235,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var recordID = record.data.id;
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context}),
+                context: record.getContext({additionalContext: attrs.context || {}}),
             }),
             model: record.model,
             res_ids: [recordID],
@@ -274,7 +247,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             on_fail: function (reason) {
                 reload().always(function() {
                     def.reject(reason);
-                })
+                });
             },
             on_success: def.resolve.bind(def),
         });
@@ -327,6 +300,42 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         }
     },
     /**
+     * Discards the changes made to the record whose ID is given, if necessary.
+     * Automatically leaves to default mode for the given record.
+     *
+     * @private
+     * @param {string} [recordID] - default to main recordID
+     * @param {Object} [options]
+     * @param {boolean} [options.readonlyIfRealDiscard=false]
+     *        After discarding record changes, the usual option is to make the
+     *        record readonly. However, the view manager calls this function
+     *        at inappropriate times in the current code and in that case, we
+     *        don't want to go back to readonly if there is nothing to discard
+     *        (e.g. when switching record in edit mode in form view, we expect
+     *        the new record to be in edit mode too, but the view manager calls
+     *        this function as the URL changes...) @todo get rid of this when
+     *        the view manager is improved.
+     * @returns {Deferred}
+     */
+    _discardChanges: function (recordID, options) {
+        var self = this;
+        recordID = recordID || this.handle;
+        return this.canBeDiscarded(recordID)
+            .then(function (needDiscard) {
+                if (options && options.readonlyIfRealDiscard && !needDiscard) {
+                    return;
+                }
+                if (needDiscard) { // Just some optimization
+                    self.model.discardChanges(recordID);
+                }
+                if (self.model.isNew(recordID)) {
+                    self._abandonRecord(recordID);
+                    return;
+                }
+                return self._confirmSave(recordID);
+            });
+    },
+    /**
      * Enables buttons so they can be clicked again.
      *
      * @private
@@ -348,17 +357,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             activeIds: this.getSelectedIds(),
             model: this.modelName,
         };
-    },
-    /**
-     * Used by list and kanban views to determine whether or not to display
-     * the no content helper (if there is no data in the state to display)
-     *
-     * @private
-     * @param {Object} state
-     * @returns {boolean}
-     */
-    _hasContent: function (state) {
-        return state.count !== 0;
     },
     /**
      * Helper function to display a warning that some fields have an invalid
@@ -501,11 +499,8 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         ev.stopPropagation();
         var recordID = ev.data.recordID;
-        this.discardChanges(recordID)
+        this._discardChanges(recordID)
             .done(function () {
-                if (self.model.isNew(recordID)) {
-                    self._abandonRecord(recordID);
-                }
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
@@ -527,15 +522,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {function} ev.data.action the function to execute in the mutex
-     */
-    _onMutexify: function (ev) {
-        ev.stopPropagation(); // prevent other controllers from handling this request
-        this.mutex.exec(ev.data.action);
     },
     /**
      * When a reload event triggers up, we need to reload the full view.

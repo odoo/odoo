@@ -1339,12 +1339,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return False
 
     @api.multi
-    def get_formview_action(self):
+    def get_formview_action(self, access_uid=None):
         """ Return an action to open the document ``self``. This method is meant
             to be overridden in addons that want to give specific view ids for
             example.
-        """
-        view_id = self.sudo().get_formview_id(access_uid=self.env.uid)
+
+        An optional access_uid holds the user that will access the document
+        that could be different from the current user. """
+        view_id = self.sudo().get_formview_id(access_uid=access_uid)
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
@@ -1357,12 +1359,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
         By default it opens the formview of the document.
+
+        An optional access_uid holds the user that will access the document
+        that could be different from the current user.
         """
-        return self[0].get_formview_action()
+        return self[0].get_formview_action(access_uid=access_uid)
 
     @api.model
     def search_count(self, args):
@@ -1507,7 +1512,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             name
             for name, field in pycompat.items(self._fields)
             if name not in values
-            if name not in MAGIC_COLUMNS
+            if self._log_access and name not in MAGIC_COLUMNS
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
@@ -2579,6 +2584,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :param inherited_field_names: list of column names from parent
                 models; some of those fields may not be read
         """
+        if not self:
+            return
+
         env = self.env
         cr, user, context = env.args
 
@@ -2586,13 +2594,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         param_ids = object()
         query = Query(['"%s"' % self._table], ['"%s".id IN %%s' % self._table], [param_ids])
         self._apply_ir_rules(query, 'read')
-        order_str = self._generate_order_by(None, query)
 
-        # determine the fields that are stored as columns in tables;
-        fields = [self._fields[n] for n in (field_names + inherited_field_names)]
+        # determine the fields that are stored as columns in tables; ignore 'id'
         fields_pre = [
             field
-            for field in fields
+            for field in (self._fields[name] for name in field_names + inherited_field_names)
+            if field.name != 'id'
             if field.base_field.store and field.base_field.column_type
             if not (field.inherited and callable(field.base_field.translate))
         ]
@@ -2606,18 +2613,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 res = 'pg_size_pretty(length(%s)::bigint)' % res
             return '%s as "%s"' % (res, col)
 
-        qual_names = [qualify(name) for name in set(fields_pre + [self._fields['id']])]
+        qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
 
         # determine the actual query to execute
         from_clause, where_clause, params = query.get_sql()
-        query_str = """ SELECT %(qual_names)s FROM %(from_clause)s
-                        WHERE %(where_clause)s %(order_str)s
-                    """ % {
-                        'qual_names': ",".join(qual_names),
-                        'from_clause': from_clause,
-                        'where_clause': where_clause,
-                        'order_str': order_str,
-                    }
+        query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
         result = []
         param_pos = params.index(param_ids)
@@ -2634,26 +2634,26 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if context.get('lang'):
                 for field in fields_pre:
                     if not field.inherited and callable(field.translate):
-                        f = field.name
+                        name = field.name
                         translate = field.get_trans_func(fetched)
                         for vals in result:
-                            vals[f] = translate(vals['id'], vals[f])
+                            vals[name] = translate(vals['id'], vals[name])
 
-            # store result in cache for POST fields
+            # store result in cache
             for vals in result:
-                record = self.browse(vals['id'], self._prefetch)
+                record = self.browse(vals.pop('id'), self._prefetch)
                 record._cache.update(record._convert_to_cache(vals, validate=False))
 
             # determine the fields that must be processed now;
             # for the sake of simplicity, we ignore inherited fields
-            for f in field_names:
-                field = self._fields[f]
+            for name in field_names:
+                field = self._fields[name]
                 if not field.column_type:
                     field.read(fetched)
 
         # Warn about deprecated fields now that fields_pre and fields_post are computed
-        for f in field_names:
-            field = self._fields[f]
+        for name in field_names:
+            field = self._fields[name]
             if field.deprecated:
                 _logger.warning('Field %s is deprecated: %s', field, field.deprecated)
 
@@ -2982,7 +2982,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.check_access_rights('write')
 
         # No user-driven update of these columns
-        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
@@ -3250,7 +3253,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # add missing defaults, and drop fields that may not be set by user
         vals = self._add_missing_default_values(vals)
-        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+        pop_fields = ['parent_left', 'parent_right']
+        if self._log_access:
+            pop_fields.extend(MAGIC_COLUMNS)
+        for field in pop_fields:
             vals.pop(field, None)
 
         # split up fields into old-style and pure new-style ones
@@ -3289,10 +3295,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def _create(self, vals):
-        # low-level implementation of create()
-        if self.is_transient():
-            self._transient_vacuum()
-
         # data of parent records to create or update, by model
         tocreate = {
             parent_model: {'id': vals.pop(parent_field, None)}
@@ -3806,7 +3808,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 trans_name, source_id, target_id = get_trans(field, old, new)
                 domain = [('name', '=', trans_name), ('res_id', '=', source_id)]
                 new_val = new_wo_lang[name]
-                if old.env.lang:
+                if old.env.lang and callable(field.translate):
                     # the new value *without lang* must be the old value without lang
                     new_wo_lang[name] = old_wo_lang[name]
                 for vals in Translation.search_read(domain):
@@ -3815,6 +3817,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
+                        vals['source'] = old_wo_lang[name]
                         # the value should be the new value (given by copy())
                         vals['value'] = new_val
                     Translation.create(vals)
@@ -4710,12 +4713,48 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             :param fnames: iterable of field names that have been modified on
                 records ``self``
         """
-        # each field knows what to invalidate and recompute
-        spec = []
+        # group triggers by (model, path) to minimize the calls to search()
+        invalids = []
+        triggers = defaultdict(set)
         for fname in fnames:
-            spec += self._fields[fname].modified(self)
+            mfield = self._fields[fname]
+            # invalidate mfield on self, and its inverses fields
+            invalids.append((mfield, self._ids))
+            for field in self._field_inverses[mfield]:
+                invalids.append((field, None))
+            # group triggers by model and path to reduce the number of search()
+            for field, path in self._field_triggers[mfield]:
+                triggers[(field.model_name, path)].add(field)
 
-        self.env.invalidate(spec)
+        # process triggers, mark fields to be invalidated/recomputed
+        for model_path, fields in triggers.items():
+            model_name, path = model_path
+            stored = {field for field in fields if field.compute and field.store}
+            # process stored fields
+            if path and stored:
+                # determine records of model_name linked by path to self
+                if path == 'id':
+                    target0 = self
+                else:
+                    env = self.env(user=SUPERUSER_ID, context={'active_test': False})
+                    target0 = env[model_name].search([(path, 'in', self.ids)])
+                    target0 = target0.with_env(self.env)
+                # prepare recomputation for each field on linked records
+                for field in stored:
+                    # discard records to not recompute for field
+                    target = target0 - self.env.protected(field)
+                    if not target:
+                        continue
+                    invalids.append((field, target._ids))
+                    # mark field to be recomputed on target
+                    if field.compute_sudo:
+                        target = target.sudo()
+                    target._recompute_todo(field)
+            # process non-stored fields
+            for field in (fields - stored):
+                invalids.append((field, None))
+
+        self.env.invalidate(invalids)
 
     def _recompute_check(self, field):
         """ If ``field`` must be recomputed on some record in ``self``, return the

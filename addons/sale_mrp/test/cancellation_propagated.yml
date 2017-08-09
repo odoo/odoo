@@ -86,11 +86,7 @@
     assert len(main_procu.ids) == 1, 'Main procurement not identified !'
     main_procu.cancel()    
     assert main_procu[0].state == u'cancel', 'Main procurement should be cancelled !'
-    
-    # Check that all procurements related are cancelled    
-    for procu in procus:
-        assert procu.state == u'cancel', 'Procurement with id %d should be with the state "cancel" but is with a state : %s!' %(procu.id, procu.state)
 
-    # Check that the production order is cancelled                                                                                     
+    # Check that the production order is running                                                                                     
     for prodor in self.env['mrp.production'].browse([prodor.id for prodor in prodor_ids]):
-        assert prodor.state == u'cancel', 'Production order %d should be cancelled but is in state : %s!' %(prodor.id, prodor.state)
+        assert prodor.state == u'confirmed', 'Production order %d should be running since the pick does not propagate but is in state : %s!' %(prodor.id, prodor.state)

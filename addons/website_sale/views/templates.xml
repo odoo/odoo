@@ -17,7 +17,6 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_payment.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tour_buy.js"></script>
-            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_rating.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
         </xpath>
     </template>
@@ -175,7 +174,7 @@
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
-                                <t t-set="search_class">pagination form-inline o_website_sale_search</t>
+                                <t t-set="search_class" t-value="'pagination form-inline o_website_sale_search'"/>
                             </t>
                             <t t-call="website_sale.pricelist_list" />
                             <t t-call="website.pager" />
@@ -224,13 +223,15 @@
 
     <template id="sort" inherit_id="website_sale.products" active="True" customize_show="True" name="Show Sort by">
         <xpath expr="//div[@class='products_pager']/div/t[@t-call][last()]" position="after">
-            <t t-set="list_price_desc_label">Price <i class="fa fa-caret-up" aria-hidden="true"/></t>
-            <t t-set="list_price_asc_label">Price <i class="fa fa-caret-down" aria-hidden="true"/></t>
-            <t t-set="name_asc_label">Name <i class="fa fa-caret-down" aria-hidden="true"/></t>
+            <t t-set="list_price_desc_label">Catalog price: High to Low</t>
+            <t t-set="list_price_asc_label">Catalog price: Low to High</t>
+            <t t-set="name_asc_label">Name - A to Z</t>
+            <t t-set="name_desc_label">Name - Z to A</t>
             <t t-set="website_sale_sortable" t-value="[
                 (list_price_desc_label, 'list_price desc'),
                 (list_price_asc_label, 'list_price asc'),
-                (name_asc_label, 'name asc')
+                (name_asc_label, 'name asc'),
+                (name_desc_label, 'name desc')
             ]"/>
             <t t-set="website_sale_sortable_current" t-value="[sort for sort in website_sale_sortable if sort[1]==request.params.get('order', '')]"/>
             <div class="dropdown btn-group dropdown_sorty_by">
@@ -317,40 +318,41 @@
                 <input type="hidden" name="search" t-att-value="search" />
                 <ul class="nav nav-pills nav-stacked mt16">
                     <t t-foreach="attributes" t-as="a">
-                        <t t-if="a.type != 'hidden'">
-                            <li t-if="a.value_ids and len(a.value_ids) &gt; 1">
-                                <div>
-                                    <strong t-field="a.name" />
-                                </div>
-                                <t t-if="a.type == 'select'">
-                                    <select class="form-control" name="attrib">
-                                        <option value="" />
-                                        <t t-foreach="a.value_ids" t-as="v">
-                                            <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
-                                        </t>
-                                    </select>
-                                </t>
-                                <t t-if="a.type == 'radio'">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <t t-foreach="a.value_ids" t-as="v">
-                                            <li t-att-class="'active' if v.id in attrib_set else None">
-                                                <label style="margin: 0 20px;">
-                                                    <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
-                                                    <span style="font-weight: normal" t-field="v.name" />
-                                                </label>
-                                            </li>
-                                        </t>
-                                    </ul>
-                                </t>
-                                <t t-if="a.type == 'color'">
+                        <li t-if="a.value_ids and len(a.value_ids) &gt; 1">
+                            <div>
+                                <strong t-field="a.name" />
+                            </div>
+                            <t t-if="a.type == 'select'">
+                                <select class="form-control" name="attrib">
+                                    <option value="" />
                                     <t t-foreach="a.value_ids" t-as="v">
                                         <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
                                             <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
                                         </label>
+                                        <option t-att-value="'%s-%s' % (a.id,v.id)" t-esc="v.name" t-att-selected="v.id in attrib_set" />
                                     </t>
+                                </select>
+                            </t>
+                            <t t-if="a.type == 'radio'">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <t t-foreach="a.value_ids" t-as="v">
+                                        <li t-att-class="'active' if v.id in attrib_set else None">
+                                            <label style="margin: 0 20px;">
+                                                <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
+                                                <span style="font-weight: normal" t-field="v.name" />
+                                            </label>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </t>
+                            <t t-if="a.type == 'color'">
+                                <t t-foreach="a.value_ids" t-as="v">
+                                    <label t-attf-style="background-color:#{v.html_color or v.name}" t-attf-class="css_attribute_color #{'active' if v.id in attrib_set else ''}">
+                                        <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" t-att-title="v.name" />
+                                    </label>
                                 </t>
-                            </li>
-                        </t>
+                            </t>
+                        </li>
                     </t>
                 </ul>
             </form>
@@ -456,7 +458,8 @@
                         <div class="col-sm-5 col-lg-4 col-lg-offset-1" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="'/shop/product/%s' % slug(product)" />
-                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="product.product_variant_ids.ids" method="POST">
+                            <t t-set="attribute_value_ids" t-value="get_attribute_value_ids(product)"/>
+                            <form action="/shop/cart/update" class="js_add_cart_variants" t-att-data-attribute_value_ids="attribute_value_ids" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product" t-if="product.product_variant_ids">
                                     <t t-placeholder="select">
@@ -466,19 +469,10 @@
                                         </t>
                                     </t>
                                     <t t-call="website_sale.product_price" />
-                                    <p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger" style="padding: 15px;">Product not available</p>
+                                    <p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger" style="padding: 15px;">This combination does not exist.</p>
                                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                                 </div>
                             </form>
-                            <hr t-if="product.availability != 'empty'"/>
-                            <div t-if="product.availability == 'in_stock'" class="alert alert-success">
-                                <span class="fa fa-check" />
-                                <span>In Stock</span>
-                            </div>
-                            <div t-if="product.availability == 'warning'" class="alert alert-warning">
-                                <span class="fa fa-warning" />
-                                <span t-field="product.availability_warning" />
-                            </div>
                             <hr t-if="product.description_sale" />
                             <div class="o_not_editable">
                                 <p t-field="product.description_sale" class="text-muted" />
@@ -552,32 +546,20 @@
 
     <!-- Product options: OpenChatter -->
     <template id="product_comment" inherit_id="website_sale.product" active="False" customize_show="True" name="Discussion and Rating">
-        <xpath expr="//div[@id='product_details']" position="inside">
-            <t t-call="rating.rating_card">
-                <t t-set="rating_stat" t-value="rating_product"/>
-                <t t-set="max_rate" t-value="5"/>
-                <t t-set="min_rate" t-value="1"/>
-            </t>
-        </xpath>
         <xpath expr="//div[@t-field='product.website_description']" position="after">
-            <hr class="mb32"/>
-            <section class="container">
-                <div class="row col-md-10 col-md-offset-1">
-                    <div class="text-muted">
-                        <h3 class="fa fa-comment-o">
-                            <a id="comments">
-                                <t t-if="len(product.website_message_ids) &lt;= 1" ><t t-esc="len(product.website_message_ids)"/> comment</t>
-                                <t t-if="len(product.website_message_ids) > 1"><t t-esc="len(product.website_message_ids)"/> comments</t>
-                            </a>
-                        </h3>
+            <div class="o_shop_discussion_rating">
+                <section class="container mt16 mb16">
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <t t-call="website_mail.message_thread">
+                                <t t-set="object" t-value="product"/>
+                                <t t-set="display_rating" t-value="True"/>
+                            </t>
+                        </div>
                     </div>
-                    <t t-call="website_mail.message_thread">
-                        <t t-set="object" t-value="product"/>
-                        <t t-set="chatter_mode" t-value="'json'"/>
-                        <t t-set="rating_enable" t-value="True"/>
-                    </t>
-                </div>
-            </section>
+                </section>
+            </div>
         </xpath>
     </template>
 
@@ -643,7 +625,7 @@
 
             <strong t-field="variant_id.attribute_id.name"/>
 
-            <t t-if="variant_id.attribute_id.type in ['select', 'hidden']">
+            <t t-if="variant_id.attribute_id.type == 'select'">
               <select t-attf-class="form-control #{'js_variant_change' if variant_id.attribute_id.create_variant else ''}" t-att-name="'attribute-%s-%s' % (product.id, variant_id.attribute_id.id)">
                 <t t-foreach="variant_id.value_ids" t-as="value_id">
                   <option t-att-value="value_id.id">
@@ -702,30 +684,6 @@
           </li>
         </t>
       </ul>
-    </template>
-
-    <!-- extend the generic mail thread message template to add rating widget -->
-    <template id="message_thread_rating" inherit_id="website_mail.message_thread" name="Chatter with rating">
-        <xpath expr="//section[contains(@class, 'o_website_mail_thread')]" position="attributes">
-            <attribute name="t-att-data-rating-enabled">rating_message_values and 1 or 0</attribute>
-        </xpath>
-        <xpath expr="//textarea[@name='message']" position="before">
-            <t t-if="rating_enable">
-                <t t-call="rating.rating_star_card">
-                    <t t-set="rating_input_name" t-value="'rating'" />
-                </t>
-            </t>
-        </xpath>
-        <xpath expr="//ul[contains(@class, 'o_website_comments')]//h5" position="after">
-            <t t-if="rating_enable">
-                <div t-if="rating_message_values.get(message.id)">
-                    <t t-call="rating.rating_star_card">
-                        <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)" />
-                        <t t-set="rating_disabled" t-value="True" />
-                    </t>
-                </div>
-            </t>
-        </xpath>
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
@@ -1293,7 +1251,7 @@
             <div id="wrap">
                 <div class="container oe_website_sale">
                     <div class="row">
-                        <div class="col-lg-8 col-sm-9">
+                        <div class="col-md-offset-2 col-lg-8 col-sm-9">
                             <t t-foreach="errors" t-as="error">
                                 <div class="alert alert-danger" t-if="error">
                                     <h4>
@@ -1412,7 +1370,7 @@
                                     <a class="btn btn-default btn-block"
                                             groups="base.group_system"
                                             t-attf-href="/web#return_label=Website&amp;action=#{payment_action_id}">
-                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Setup payment acquirers
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Configure payment acquirers
                                     </a>
                                 </div>
                                 <div class="col-lg-5 col-sm-4 text-right">
@@ -1750,7 +1708,7 @@
         </xpath>
     </template>
 
-    <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
+    <template id="orders_followup_products_links" name="Orders Followup Products Links" inherit_id="sale.orders_followup">
         <xpath expr="//div[@id='product_name']/*" position="replace">
             <a t-if="ol.product_id.website_published" t-att-href="ol.product_id.website_url">
                 <span t-esc="ol.name" />

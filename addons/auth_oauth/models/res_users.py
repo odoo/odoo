@@ -6,7 +6,7 @@ import json
 import requests
 
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
@@ -82,7 +82,7 @@ class ResUsers(models.Model):
             try:
                 _, login, _ = self.signup(values, token)
                 return login
-            except SignupError:
+            except (SignupError, UserError):
                 raise access_denied_exception
 
     @api.model

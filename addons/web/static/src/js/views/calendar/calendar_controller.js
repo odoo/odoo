@@ -112,13 +112,18 @@ var CalendarController = AbstractController.extend({
      */
     _onChangeDate: function (event) {
         var modelData = this.model.get();
-        if (modelData.target_date.toString() === event.data.date) {
+        if (modelData.target_date.isSame(event.data.date)) {
+            // When clicking on same date, toggle between the two views
             switch (modelData.scale) {
                 case 'month': this.model.setScale('week'); break;
                 case 'week': this.model.setScale('day'); break;
                 case 'day': this.model.setScale('month'); break;
             }
+        } else if (modelData.target_date.week() === event.data.date.week()) {
+            // When clicking on a date in the same week, switch to day view
+            this.model.setScale('day');
         } else {
+            // When clicking on a random day of a random other week, switch to week view
             this.model.setScale('week');
         }
         this.model.setDate(event.data.date, true);
@@ -151,8 +156,10 @@ var CalendarController = AbstractController.extend({
                 self.quick.destroy();
                 self.quick = null;
                 self.reload(id);
-            }, function () {
+            }, function (error, errorEvent) {
                 // This will occurs if there are some more fields required
+                // Preventdefaulting the error event will prevent the traceback window
+                errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);

@@ -1,18 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="mail.chat.InboxItem">
-        <li class="o_mail_navbar_item">
-            <a href="#" title="Inbox">
-                <i class="fa fa-at"/> <span class="o_notification_counter"/>
-            </a>
-        </li>
-    </t>
-
     <t t-name="mail.chat.MessagingMenu">
         <li class="o_mail_navbar_item">
             <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Conversations" href="#">
-                <i class="fa fa-comments"/> <span class="o_notification_counter"/>
+                <i class="fa fa-comments"/> <span class="o_notification_counter badge"/>
             </a>
             <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
                 <li class="o_mail_navbar_dropdown_top">
@@ -29,9 +21,14 @@
     </t>
 
     <t t-name="mail.chat.ChannelsPreview">
+         <t t-if="_.isEmpty(channels)">
+            <li class="text-center o_no_activity mt16">
+                <span>No discussion yet...</span>
+            </li>
+        </t>
         <t t-foreach="channels" t-as="channel">
             <div t-attf-class="o_mail_channel_preview #{channel.unread_counter ? 'o_channel_unread' : ''}"
-                 t-att-data-channel_id="channel.id">
+                 t-att-data-channel_id="channel.id" t-att-data-res_id="channel.res_id" t-att-data-res_model="channel.model">
                 <img class="o_channel_image" t-att-src="channel.image_src"/>
                 <div class="o_channel_info">
                     <div class="o_channel_title">
@@ -53,5 +50,43 @@
         </t>
     </t>
 
+    <t t-name="mail.chat.ActivityMenuPreview">
+        <t t-if="_.isEmpty(activities)">
+            <li class="text-center o_no_activity">
+                <span>No activities planned.</span>
+            </li>
+        </t>
+        <t t-foreach="activities" t-as="activity">
+            <div class="o_mail_channel_preview" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='my'>
+                <img class="o_channel_image" t-att-src="activity.icon"/>
+                <div class="o_channel_info">
+                    <div class="o_channel_title">
+                        <span class="o_channel_name">
+                            <t t-esc="activity.name"/>
+                        </span>
+                    </div>
+                    <div>
+                        <button t-if="activity.overdue_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='overdue'><t t-esc="activity.overdue_count"/> Late </button>
+                        <span t-if="!activity.overdue_count" class="o_no_activity mr16">0 Late </span>
+                        <button t-if="activity.today_count" type="button" class="btn btn-link o_activity_filter_button mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='today'> <t t-esc="activity.today_count"/> Today </button>
+                        <span t-if="!activity.today_count" class="o_no_activity mr16">0 Today </span>
+                        <button t-if="activity.planned_count" type="button" class="btn btn-link o_activity_filter_button pull-right mr16" t-att-data-res_model="activity.model" t-att-data-model_name="activity.name" data-filter='upcoming_all'> <t t-esc="activity.planned_count"/> Future </button>
+                        <span t-if="!activity.planned_count" class="o_no_activity pull-right mr16">0 Future</span>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="mail.chat.ActivityMenu">
+        <li class="o_mail_navbar_item">
+            <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Activities" href="#">
+                <i class="fa fa-check-square-o"/> <span class="o_notification_counter badge"/>
+            </a>
+            <ul class="o_mail_navbar_dropdown dropdown-menu" role="menu">
+                <li class="o_mail_navbar_dropdown_channels"/>
+            </ul>
+        </li>
+    </t>
 </templates>
 

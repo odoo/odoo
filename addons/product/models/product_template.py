@@ -7,7 +7,7 @@ import psycopg2
 from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError, except_orm
+from odoo.exceptions import ValidationError, RedirectWarning, except_orm
 from odoo.tools import pycompat
 
 
@@ -21,7 +21,14 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        return category and category.id or False
+        if not category:
+            category = self.env['product.category'].search([], limit=1)
+        if category:
+            return category.id
+        else:
+            err_msg = _('You must define at least one product category in order to be able to create products.')
+            redir_msg = _('Go to Internal Categories')
+            raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
     def _get_default_uom_id(self):
         return self.env["product.uom"].search([], limit=1, order='id').id
@@ -50,7 +57,7 @@ class ProductTemplate(models.Model):
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
         'product.category', 'Internal Category',
-        change_default=True, default=_get_default_category_id, domain="[('type','=','normal')]",
+        change_default=True, default=_get_default_category_id,
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(
@@ -255,11 +262,6 @@ class ProductTemplate(models.Model):
         for p in self:
             if len(p.product_variant_ids) == 1:
                 p.product_variant_ids.packaging_ids = p.packaging_ids
-
-    @api.constrains('categ_id')
-    def _check_category(self):
-        if self.categ_id.type == 'view':
-            raise ValidationError(_("You cannot create a product with an Internal Category set as View. Please change the category or the category type."))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):

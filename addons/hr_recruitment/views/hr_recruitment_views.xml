@@ -112,7 +112,7 @@
                         </div>
                         <div>
                             <label for="categ_ids" class="oe_edit_only"/>
-                            <field name="categ_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </div>
                     </h2>
                 </div>
@@ -203,15 +203,15 @@
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                     domain="[('activity_ids.user_id', '=', uid)]"/>
-                <filter string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Upcoming Activities (7 days)" name="activities_week"
-                    domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                             ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                    ]"/>
-                <filter string="Overdue Activities" name="activities_overdue"
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <field name="categ_ids"/>
                 <field name="attachment_ids" filter_domain="[('attachment_ids.index_content', 'ilike', self)]" string="Attachments"/>
                 <separator/>
@@ -255,7 +255,6 @@
                 <field name="type_id"/>
                 <field name="job_id"/>
                 <field name="department_id"/>
-                <field name="categ_ids"/>
                 <field name="message_needaction_counter"/>
                 <field name="attachment_number"/>
                 <field name="active"/>
@@ -283,7 +282,7 @@
                                 </ul>
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
-                                    <field name="categ_ids"/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <b t-if="record.partner_name.raw_value">
                                         <field name="partner_name"/>
                                     </b><t t-else="1">
@@ -891,6 +890,7 @@
     <record id="hr_applicant_view_search" model="ir.ui.view">
         <field name="name">hr.applicant.search</field>
         <field name="model">hr.applicant</field>
+        <field name="priority">32</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
                 <field name="job_id"/>

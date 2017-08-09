@@ -7,7 +7,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.ir.ir_qweb.fields import nl2br
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website_form.controllers.main import WebsiteForm
@@ -53,28 +53,28 @@ class TableCompute(object):
                 x = y = 1
 
             pos = minpos
-            while not self._check_place(pos % PPR, pos / PPR, x, y):
+            while not self._check_place(pos % PPR, pos // PPR, x, y):
                 pos += 1
             # if 21st products (index 20) and the last line is full (PPR products in it), break
             # (pos + 1.0) / PPR is the line where the product would be inserted
             # maxy is the number of existing lines
             # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
             # and to force python to not round the division operation
-            if index >= ppg and ((pos + 1.0) / PPR) > maxy:
+            if index >= ppg and ((pos + 1.0) // PPR) > maxy:
                 break
 
             if x == 1 and y == 1:   # simple heuristic for CPU optimization
-                minpos = pos / PPR
+                minpos = pos // PPR
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos / PPR) + y2][(pos % PPR) + x2] = False
-            self.table[pos / PPR][pos % PPR] = {
+                    self.table[(pos // PPR) + y2][(pos % PPR) + x2] = False
+            self.table[pos // PPR][pos % PPR] = {
                 'product': p, 'x': x, 'y': y,
                 'class': " ".join(x.html_class for x in p.website_style_ids if x.html_class)
             }
             if index <= ppg:
-                maxy = max(maxy, y + (pos / PPR))
+                maxy = max(maxy, y + (pos // PPR))
             index += 1
 
         # Format table according to HTML needs
@@ -86,8 +86,6 @@ class TableCompute(object):
             rows[col] = [r[1] for r in cols if r[1]]
 
         return rows
-
-        # TODO keep with input type hidden
 
 
 class WebsiteSaleForm(WebsiteForm):
@@ -143,16 +141,17 @@ class WebsiteSale(http.Controller):
            (variant id, [visible attribute ids], variant price, variant sale price)
         """
         # product attributes with at least two choices
-        product = product.with_context(quantity=1)
+        quantity = product._context.get('quantity') or 1
+        product = product.with_context(quantity=quantity)
 
         visible_attrs_ids = product.attribute_line_ids.filtered(lambda l: len(l.value_ids) > 1).mapped('attribute_id').ids
         to_currency = request.website.get_current_pricelist().currency_id
         attribute_value_ids = []
         for variant in product.product_variant_ids:
             if to_currency != product.currency_id:
-                price = variant.currency_id.compute(variant.website_public_price, to_currency)
+                price = variant.currency_id.compute(variant.website_public_price, to_currency) / quantity
             else:
-                price = variant.website_public_price
+                price = variant.website_public_price / quantity
             visible_attribute_ids = [v.id for v in variant.attribute_value_ids if v.attribute_id.id in visible_attrs_ids]
             attribute_value_ids.append([variant.id, visible_attribute_ids, variant.website_price, price])
         return attribute_value_ids
@@ -275,9 +274,10 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True)
     def product(self, product, category='', search='', **kwargs):
-        product_context = dict(request.env.context, active_id=product.id)
+        product_context = dict(request.env.context,
+                               active_id=product.id,
+                               partner=request.env.user.partner_id)
         ProductCategory = request.env['product.public.category']
-        Rating = request.env['rating.rating']
 
         if category:
             category = ProductCategory.browse(int(category)).exists()
@@ -296,11 +296,6 @@ class WebsiteSale(http.Controller):
         to_currency = pricelist.currency_id
         compute_currency = lambda price: from_currency.compute(price, to_currency)
 
-        # get the rating attached to a mail.message, and the rating stats of the product
-        ratings = Rating.search([('message_id', 'in', product.website_message_ids.ids)])
-        rating_message_values = dict([(record.message_id.id, record.rating) for record in ratings])
-        rating_product = product.rating_get_stats([('website_published', '=', True)])
-
         if not product_context.get('pricelist'):
             product_context['pricelist'] = pricelist.id
             product = product.with_context(product_context)
@@ -317,8 +312,6 @@ class WebsiteSale(http.Controller):
             'main_object': product,
             'product': product,
             'get_attribute_value_ids': self.get_attribute_value_ids,
-            'rating_message_values': rating_message_values,
-            'rating_product': rating_product
         }
         return request.render("website_sale.product", values)
 
@@ -895,8 +888,8 @@ class WebsiteSale(http.Controller):
     def print_saleorder(self):
         sale_order_id = request.session.get('sale_last_order_id')
         if sale_order_id:
-            pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([sale_order_id])
-            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            pdf, _ = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([sale_order_id])
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', u'%s' % len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         else:
             return request.redirect('/shop')
@@ -914,7 +907,7 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
         products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
-        return {product.id: product.website_price / add_qty for product in products}
+        return {product.id: product.website_price // add_qty for product in products}
 
     # ------------------------------------------------------
     # Edit

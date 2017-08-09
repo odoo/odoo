@@ -420,8 +420,12 @@ class ResourceCalendar(models.Model):
                                dtstart=start_dt,
                                until=end_dt,
                                byweekday=self._get_weekdays()):
-            start_time = day.date() == start_dt.date() and start_dt.time() or datetime.time.min
-            end_time = day.date() == end_dt.date() and end_dt.time() or datetime.time.max
+            start_time = datetime.time.min
+            if day.date() == start_dt.date():
+                start_time = start_dt.time()
+            end_time = datetime.time.max
+            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+                end_time = end_dt.time()
 
             intervals = self._get_day_work_intervals(
                 day.date(),
@@ -445,8 +449,12 @@ class ResourceCalendar(models.Model):
                                dtstart=start_dt,
                                until=end_dt,
                                byweekday=self._get_weekdays()):
-            start_time = day.date() == start_dt.date() and start_dt.time() or datetime.time.min
-            end_time = day.date() == end_dt.date() and end_dt.time() or datetime.time.max
+            start_time = datetime.time.min
+            if day.date() == start_dt.date():
+                start_time = start_dt.time()
+            end_time = datetime.time.max
+            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+                end_time = end_dt.time()
 
             intervals = self._get_day_leave_intervals(
                 day.date(),
@@ -668,6 +676,17 @@ class ResourceResource(models.Model):
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
+
+    _sql_constraints = [
+        ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
+    ]
+
+    @api.multi
+    @api.constrains('time_efficiency')
+    def _check_time_efficiency(self):
+        for record in self:
+            if record.time_efficiency == 0:
+                raise ValidationError(_('The efficiency factor cannot be equal to 0.'))
 
     @api.model
     def create(self, values):

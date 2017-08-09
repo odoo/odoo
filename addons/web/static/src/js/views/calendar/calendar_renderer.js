@@ -164,6 +164,7 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.displayFields = params.displayFields;
+        this.model = params.model;
         this.filters = [];
         this.color_map = {};
 
@@ -287,7 +288,7 @@ return AbstractRenderer.extend({
         if (field.type === "one2many" || field.type === "many2many") {
             return field_utils.format[field.type]({data: record[fieldName]}, field);
         } else {
-            return field_utils.format[field.type](record[fieldName], field);
+            return field_utils.format[field.type](record[fieldName], field, {forceString: true});
         }
     },
     /**
@@ -329,11 +330,12 @@ return AbstractRenderer.extend({
                 }
                 element.find('.fc-content .fc-time').text(display_hour);
             },
-            height: 'auto',
+            height: 'parent',
             unselectAuto: false,
         });
 
         this.$calendar.fullCalendar(fc_options);
+        window.dispatchEvent(new Event('resize'));
     },
     /**
      * Initialize the mini calendar in the sidebar

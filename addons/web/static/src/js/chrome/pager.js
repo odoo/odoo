@@ -144,7 +144,7 @@ var Pager = Widget.extend({
     _edit: function () {
         if (this.options.can_edit) {
             var self = this;
-            var $input = $('<input>', {type: 'text', value: this.$value.html()});
+            var $input = $('<input>', {class: 'o_input', type: 'text', value: this.$value.html()});
 
             this.$value.html($input);
             $input.focus();

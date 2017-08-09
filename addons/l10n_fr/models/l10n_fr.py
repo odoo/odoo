@@ -7,9 +7,13 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    siret = fields.Char(string='SIRET', size=14)
+    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14)
     ape = fields.Char(string='APE')
 
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    siret = fields.Char(string='SIRET', size=14)
 
 class ChartTemplate(models.Model):
     _inherit = 'account.chart.template'

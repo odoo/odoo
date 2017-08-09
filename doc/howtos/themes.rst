@@ -144,16 +144,16 @@ Odoo's XML files, an overview
 -----------------------------
 
 Any Odoo XML file starts with encoding specifications.
-After that, you have to write your code inside a ``<data>`` tag, placed into an ``</odoo>`` tag.
+After that, you have to write your code inside a ``<odoo>`` tag.
 
 .. code-block:: xml
 
    [XML]
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
+     
        ## YOUR CODE HERE
-     </data>
+     
    </odoo>
 
 Almost every element and option that you create has to be placed inside a ``<template>`` tag, like in this example.
@@ -310,12 +310,12 @@ To do so, create a **layout.xml** file in your **views** folder and add the defa
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
 
-     </data>
+
+
    </odoo>
 
-Create a new template into the ``<data>`` tag, copy-pasting the following
+Create a new template into the ``<odoo>`` tag, copy-pasting the following
 code.
 
 .. code-block:: xml
@@ -373,14 +373,14 @@ Imagine that we want to create a specific layout for a Services page.
 For this page, we need to add a list of services to the top and give the client the possibility of setting the rest of the page’s layout using snippets.
 
 Inside your *views* folder, create a **pages.xml** file and add the
-default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
+default Odoo markup.  Inside ``<odoo>`` create a ``<template>`` tag, set the
 ``page`` attribute to ``True`` and add your code into it.
 
 .. code-block:: xml
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-     <data>
+
        <!-- === Services Page === -->
        <template name="Services page" id="website.services" page="True">
          <h1>Our Services</h1>
@@ -390,7 +390,7 @@ default Odoo markup.  Inside ``<data>`` create a ``<template>`` tag, set the
              <li>Unlimited space</li>
            </ul>
          </template>
-       </data>
+
      </odoo>
 
 The page title will be the template ID. In our case *Services* (from ``website.services``)
@@ -430,7 +430,6 @@ can fill with snippets. To achieve this, just create a ``div`` with
 
    <?xml version="1.0" encoding="utf-8" ?>
    <odoo>
-   <data>
 
    <!-- === Services Page === -->
    <template name="Services page" id="website.services" page="True">
@@ -450,7 +449,6 @@ can fill with snippets. To achieve this, just create a ``div`` with
      </t>
    </template>
 
-   </data>
    </odoo>
 
 .. tip::
@@ -512,7 +510,11 @@ The final result won't be pretty, but will provide you with enough information t
 Let’s start by creating an empty file called **style.less** and place it in a folder called **less** in your static folder.
 The following rules will style our *Services* page. Copy and paste it, then save the file.
 
-.. code-block:: css
+.. as of Pygments 2.2, the Less lexer can't handle inline comments or nested
+   rules so use scss instead, it's not quite perfect but it doesn't trigger
+   warnings/errors
+
+.. code-block:: scss
 
    .services {
        background: #EAEAEA;
@@ -727,7 +729,7 @@ Dropping our snippet onto the page, you will notice that our new options are aut
 
 Let’s create some css rules in order to provide a visual feedback for our options. Open our **style.less** file and add the following
 
-.. code-block:: css
+.. code-block:: scss
 
    .snippet_testimonial {
      border: 1px solid #EAEAEA;

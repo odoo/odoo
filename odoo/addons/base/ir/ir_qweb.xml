@@ -14,7 +14,7 @@
 </template>
 <template id="contact">
     <address t-ignore="true" class="mb0" itemscope="itemscope" itemtype="http://schema.org/Organization">
-        <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (fax and 'fax' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
+        <div t-if="not (('name' in fields) or (address and 'address' in fields) or (city and 'city' in fields) or (mobile and 'mobile' in fields) or (website and 'website' in fields) or (email and 'email' in fields))" class="css_non_editable_mode_hidden">
             --<span class="text-muted" t-esc="name"/>--
         </div>
         <t t-if="object.country_id.name_position != 'after'">

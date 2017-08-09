@@ -8,12 +8,8 @@
     'summary': 'Build Your Enterprise Website',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
-    'description': """
-Odoo Website CMS
-===================
-
-        """,
-    'depends': ['web', 'web_editor', 'web_planner'],
+    'description': "",
+    'depends': ['web', 'web_editor', 'web_planner', 'http_routing', 'portal'],
     'installable': True,
     'data': [
         'data/website_data.xml',

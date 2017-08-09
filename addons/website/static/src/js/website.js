@@ -7,10 +7,10 @@ odoo.define('website.website', function (require) {
     var Widget = require('web.Widget');
     var session = require('web.session');
     var base = require('web_editor.base');
+    var utils = require('web.utils');
 
     var qweb = core.qweb;
     var _t = core._t;
-    base.url_translations = '/website/translations';
 
     /* --- Set the browser into the dom for css selectors --- */
     var browser;
@@ -171,9 +171,7 @@ odoo.define('website.website', function (require) {
         form.submit();
     };
 
-    ajax.loadXML('/web/static/src/xml/base_common.xml', qweb).then(function () {
-        ajax.loadXML('/website/static/src/xml/website.xml', qweb);
-    });
+    ajax.loadXML('/website/static/src/xml/website.xml', qweb);
 
     base.ready().then(function () {
         data.topBar = new TopBar();
@@ -244,6 +242,10 @@ odoo.define('website.website', function (require) {
         }
     });
 
+    /* Load localizations */
+    var lang = utils.get_cookie('frontend_lang') || $('html').attr('lang') || 'en_US';
+    ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_'));
+
     /**
      * Object who contains all method and bind for the top bar, the template is create server side.
      */
@@ -275,13 +277,6 @@ odoo.define('website.website', function (require) {
 
     // enable magnify on zommable img
     $('.zoomable img[data-zoom]').zoomOdoo();
-
-    Dialog.include({
-        init: function () {
-            this._super.apply(this, arguments);
-            this.$modal.addClass("o_website_modal");
-        },
-    });
 
     var data = {
         prompt: prompt,

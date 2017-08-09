@@ -4,6 +4,7 @@ odoo.define('web.ListRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
+var dom = require('web.dom');
 var field_utils = require('web.field_utils');
 var Pager = require('web.Pager');
 var utils = require('web.utils');
@@ -30,7 +31,6 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
-    className: 'table-responsive',
     events: {
         'click tbody tr': '_onRowClicked',
         'click tbody .o_list_record_selector': '_onSelectRecord',
@@ -377,6 +377,10 @@ var ListRenderer = BasicRenderer.extend({
             $cells.unshift($('<td>'));
         }
         var name = group.value === undefined ? _t('Undefined') : group.value;
+        var groupBy = this.state.groupedBy[groupLevel];
+        if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
+            name = name || _t('Undefined');
+        }
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
@@ -557,7 +561,7 @@ var ListRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderSelector: function (tag) {
-        var $content = $('<div class="o_checkbox"><input type="checkbox"><span/></div>');
+        var $content = dom.renderCheckbox();
         return $('<' + tag + ' width="1">')
                     .addClass('o_list_record_selector')
                     .append($content);
@@ -573,12 +577,24 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
+        this.$el
+            .removeClass('table-responsive')
+            .empty();
+
         // destroy the previously instantiated pagers, if any
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        // display the no content helper if there is no data to display
+        if (!this._hasContent() && this.noContentHelp) {
+            this._renderNoContentHelper();
+            return this._super();
+        }
+
         var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
-        this.$el.empty().append($table);
+        this.$el
+            .addClass('table-responsive')
+            .append($table);
         var is_grouped = !!this.state.groupedBy.length;
         this._computeAggregates();
         $table.toggleClass('o_list_view_grouped', is_grouped);

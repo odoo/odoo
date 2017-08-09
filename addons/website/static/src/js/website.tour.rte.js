@@ -24,6 +24,7 @@ tour.register('rte_translator', {
             content: "go to english version",
             trigger: '.js_language_selector a[data-lang="en_US"]',
             extra_trigger: 'html[lang*="fr"]',
+            timeout: 60000,
         }, {
             content: "Open new page menu",
             trigger: '#oe_main_menu_navbar a[data-action=new_page]',

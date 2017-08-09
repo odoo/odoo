@@ -133,3 +133,11 @@ class MailChannel(models.Model):
             'channel_ids': self.ids,
             'info': 'transient_message',
         })
+
+    # Rating Mixin
+
+    def rating_get_parent_model_name(self, values):
+        return 'im_livechat.channel'
+
+    def rating_get_parent_id(self):
+        return self.livechat_channel_id.id

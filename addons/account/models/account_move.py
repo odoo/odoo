@@ -19,7 +19,6 @@ from lxml import etree
 class AccountMove(models.Model):
     _name = "account.move"
     _description = "Account Entry"
-    _inherit = ['mail.thread']
     _order = 'date desc, id desc'
 
     @api.multi
@@ -193,10 +192,10 @@ class AccountMove(models.Model):
     @api.multi
     def _check_lock_date(self):
         for move in self:
-            lock_date = max(move.company_id.period_lock_date, move.company_id.fiscalyear_lock_date)
+            lock_date = max(move.company_id.period_lock_date or '0000-00-00', move.company_id.fiscalyear_lock_date or '0000-00-00')
             if self.user_has_groups('account.group_account_manager'):
                 lock_date = move.company_id.fiscalyear_lock_date
-            if move.date <= lock_date:
+            if move.date <= (lock_date or '0000-00-00'):
                 if self.user_has_groups('account.group_account_manager'):
                     message = _("You cannot add/modify entries prior to and inclusive of the lock date %s") % (lock_date)
                 else:
@@ -695,7 +694,7 @@ class AccountMoveLine(models.Model):
             company_currency = line.account_id.company_id.currency_id
             ret_line = {
                 'id': line.id,
-                'name': line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
+                'name': line.name and line.name != '/' and line.move_id.name + ': ' + line.name or line.move_id.name,
                 'ref': line.move_id.ref or '',
                 # For reconciliation between statement transactions and already registered payments (eg. checks)
                 # NB : we don't use the 'reconciled' field because the line we're selecting is not the one that gets reconciled
@@ -1030,7 +1029,7 @@ class AccountMoveLine(models.Model):
         partial_rec_set = self.env['account.partial.reconcile']
         aml_id = False
         partial_rec_id = False
-        maxdate = None
+        maxdate = '0000-00-00'
         for aml in self:
             total_debit += aml.debit
             total_credit += aml.credit
@@ -1401,6 +1400,9 @@ class AccountMoveLine(models.Model):
         if context.get('account_tag_ids'):
             domain += [('account_id.tag_ids', 'in', context['account_tag_ids'].ids)]
 
+        if context.get('account_ids'):
+            domain += [('account_id', 'in', context['account_ids'].ids)]
+
         if context.get('analytic_tag_ids'):
             domain += ['|', ('analytic_account_id.tag_ids', 'in', context['analytic_tag_ids'].ids), ('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
 
@@ -1441,7 +1443,7 @@ class AccountPartialReconcile(models.Model):
     company_id = fields.Many2one('res.company', related='debit_move_id.company_id', store=True, string='Currency')
     full_reconcile_id = fields.Many2one('account.full.reconcile', string="Full Reconcile", copy=False)
     max_date = fields.Date(string='Max Date of Matched Lines', compute='_compute_max_date',
-        readonly=True, copy=False, stored=True,
+        readonly=True, copy=False, store=True,
         help='Technical field used to determine at which date this reconciliation needs to be shown on the aged receivable/payable reports.')
 
     @api.multi
@@ -1489,7 +1491,7 @@ class AccountPartialReconcile(models.Model):
         # The move date should be the maximum date between payment and invoice
         # (in case of payment in advance). However, we should make sure the
         # move date is not recorded after the end of year closing.
-        if move_date > self.company_id.fiscalyear_lock_date:
+        if (move_date or '0000-00-00' > self.company_id.fiscalyear_lock_date or '0000-00-00'):
             res['date'] = move_date
         return res
 
@@ -1687,7 +1689,7 @@ class AccountPartialReconcile(models.Model):
         #make sure that all partial reconciliations share the same secondary currency otherwise it's not
         #possible to compute the exchange difference entry and it has to be done manually.
         currency = list(partial_rec_set)[0].currency_id
-        maxdate = None
+        maxdate = '0000-00-00'
         aml_to_balance = None
         for partial_rec in partial_rec_set:
             if partial_rec.currency_id != currency:

@@ -10,8 +10,8 @@
 
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/>
 
-        <!-- FIXME remove website dependency ..? -->
-        <link href="/website/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
+        <!-- FIXME remove website / portal dependency ..? -->
+        <link href="/portal/static/src/less/website.wrapwrap.less" rel="stylesheet" type="text/less"/>
         <link href="/website/static/src/less/website.snippets.less" rel="stylesheet" type="text/less"/>
 
         <!-- TODO: Put in the right report ..? -->
@@ -105,12 +105,20 @@
                                 var z = x[i].split('=', 2);
                                 vars[z[0]] = unescape(z[1]);
                             }
-                            var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
-                            for (var i in x) {
-                                var y = document.getElementsByClassName(x[i]);
-                                for (var j=0; j&lt;y.length; ++j)
-                                    y[j].textContent = vars[x[i]];
-                            }
+                            var fromPage = document.getElementsByClassName('page');
+                            for(var j = 0; j&lt;fromPage.length; j++)
+                                fromPage[j].textContent = vars['sitepage'];
+                            var toPage = document.getElementsByClassName('topage');
+                            for(var j = 0; j&lt;toPage.length; j++)
+                                toPage[j].textContent = vars['sitepages'];
+
+                            var index = vars['webpage'].split('.', 4)[3]
+                            var header = document.getElementById('minimal_layout_report_headers');
+                            if(header != null)
+                                header.innerHTML = header.children[index].innerHTML;
+                            var footer = document.getElementById('minimal_layout_report_footers');
+                            if(footer != null)
+                                footer.innerHTML = footer.children[index].innerHTML;
                         }
                     </script>
                 </t>
@@ -147,7 +155,6 @@
             <div class="text-center">
                 <ul class="list-inline">
                     <li t-if="company.phone"><i class="fa fa-phone"/> <span t-field="company.phone"/></li>
-                    <li t-if="company.fax"><i class="fa fa-fax"/> <span t-field="company.fax"/></li>
                     <li t-if="company.email"><i class="fa fa-at"/> <span t-field="company.email"/></li>
                     <li t-if="company.website"><i class="fa fa-globe"/> <span t-field="company.website"/></li>
                     <li t-if="company.vat"><i class="fa fa-building-o"/> VAT: <span t-field="company.vat"/></li>
@@ -187,7 +194,6 @@
             <div class="text-center">
                 <ul class="list-inline">
                     <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
-                    <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
                     <li t-if="company.email">Mail: <span t-field="company.email"/></li>
                     <li t-if="company.website">Web: <span t-field="company.website"/></li>
                     <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
@@ -211,7 +217,6 @@
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
                         <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
                         <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
-                        <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
                         <li t-if="company.email"><span t-field="company.email"/></li>
                         <li t-if="company.website"><span t-field="company.website"/></li>
                     </ul>
@@ -274,7 +279,6 @@
             <div class="text-center" style="border-top: 1px solid black;">
                 <ul class="list-inline mb4">
                     <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
-                    <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
                     <li t-if="company.email">Email: <span t-field="company.email"/></li>
                     <li t-if="company.website">Web: <span t-field="company.website"/></li>
                     <li t-if="company.vat">VAT: <span t-field="company.vat"/></li>
@@ -298,7 +302,6 @@
         <t t-if="not o and doc">
             <t t-set="o" t-value="doc"/>
         </t>
-        <h2 t-esc="o"/>
 
         <t t-if="o and 'company_id' in o">
             <t t-set="company" t-value="o.company_id.sudo()"/>

@@ -537,7 +537,7 @@ class TestExpression(TransactionCase):
         countries = Country.search([('name', '=like', 'Ind__')])
         self.assertTrue(len(countries) == 1, "Must match India only")
         countries = Country.search([('name', '=ilike', 'z%')])
-        self.assertTrue(len(countries) == 3, "Must match only countries with names starting with Z (currently 3)")
+        self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
     def test_translate_search(self):
         Country = self.env['res.country']

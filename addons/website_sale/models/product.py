@@ -109,11 +109,6 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _mail_post_access = 'read'
 
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', '=', 'comment')],
-        string='Website Comments',
-    )
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many('product.template', 'product_alternative_rel', 'src_id', 'dest_id',
                                                string='Alternative Products', help='Suggest more expensive alternatives to '
@@ -131,12 +126,6 @@ class ProductTemplate(models.Model):
                                         help="Categories can be published on the Shop page (online catalog grid) to help "
                                         "customers find all the items within a category. To publish them, go to the Shop page, "
                                         "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
-    availability = fields.Selection([
-        ('empty', 'Display Nothing'),
-        ('in_stock', 'In Stock'),
-        ('warning', 'Warning'),
-    ], "Availability", default='empty', help="Adds an availability status on the web product page.")
-    availability_warning = fields.Text("Availability Warning", translate=True)
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
@@ -212,7 +201,7 @@ class Product(models.Model):
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
 
-    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color'), ('hidden', 'Hidden')], default='radio')
+    type = fields.Selection([('radio', 'Radio'), ('select', 'Select'), ('color', 'Color')], default='radio')
 
 
 class ProductAttributeValue(models.Model):

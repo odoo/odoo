@@ -12,12 +12,12 @@
                                     <div t-if="o.move_lines and o.move_lines[0].partner_id and o.move_lines[0].partner_id.id != o.partner_id.id">
                                         <span><strong>Delivery Address:</strong></span>
                                         <div t-field="o.move_lines[0].partner_id"
-                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                     </div>
                                     <div t-if="o.picking_type_id.code != 'internal' and (not o.move_lines or not o.move_lines[0].partner_id) and o.picking_type_id.warehouse_id.partner_id">
                                         <span><strong>Warehouse Address:</strong></span>
                                         <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                                     </div>
                                 </div>
                                 <div class="col-xs-5 col-xs-offset-1">
@@ -72,9 +72,9 @@
                             </table>
                             <br/>
                             <br/>
-                            <table class="table table-condensed" t-if="o.pack_operation_ids">
-                              <t t-set="has_barcode" t-value="any([pack_operation.product_id and pack_operation.product_id.sudo().barcode or pack_operation.package_id for pack_operation in o.pack_operation_ids])"/>
-                              <t t-set="has_serial_number" t-value="o.pack_operation_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
+                            <table class="table table-condensed" t-if="o.move_line_ids">
+                              <t t-set="has_barcode" t-value="any([pack_operation.product_id and pack_operation.product_id.sudo().barcode or pack_operation.package_id for pack_operation in o.move_line_ids])"/>
+                              <t t-set="has_serial_number" t-value="o.move_line_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
                               <thead>
                                 <tr>
                                     <th><strong>Product</strong></th>
@@ -90,7 +90,7 @@
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr t-foreach="o.pack_operation_ids" t-as="pack_operation">
+                                <tr t-foreach="o.move_line_ids" t-as="pack_operation">
                                     <td><span t-field="pack_operation.product_id"/><br/>
                                         <span t-field="pack_operation.product_id.description_picking"/>
                                         <t t-if="not pack_operation.product_id and pack_operation.package_id"><span  t-field="pack_operation.package_id"/></t></td>

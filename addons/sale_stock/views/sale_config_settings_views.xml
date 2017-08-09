@@ -4,7 +4,7 @@
     <record id="sale_config_settings_view_form_inherit_sale_stock" model="ir.ui.view">
         <field name="name">sale.config.settings.inherit.sale_stock</field>
         <field name="model">sale.config.settings</field>
-        <field name="inherit_id" ref="sale.sale_config_settings_view_form_inherit_sale"/>
+        <field name="inherit_id" ref="sale.sale_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='delivery']" position="after">
                 <div class="col-xs-12 col-md-6 o_setting_box" title="By default Odoo computes the expected delivery date this way: order date + highest customer lead time of products. With this option, you can set a specific delivery date on orders rather than setting lead times on products.">

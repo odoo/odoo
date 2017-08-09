@@ -11,7 +11,8 @@ Display purchase orders on your website. Customers will be able to access their 
         """,
     'depends': [
         'purchase',
-        'website_portal',
+        'website',
+        'portal',
     ],
     'data': [
         'views/website_portal_purchase_templates.xml',

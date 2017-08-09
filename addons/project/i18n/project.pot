@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~15\n"
+"Project-Id-Version: Odoo Server 10.saas~16\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-18 14:45+0000\n"
-"PO-Revision-Date: 2017-04-18 14:45+0000\n"
+"POT-Creation-Date: 2017-07-25 10:03+0000\n"
+"PO-Revision-Date: 2017-07-25 10:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -137,6 +137,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
+#: model:ir.model.fields,field_description:project.field_res_users_task_count
 msgid "# Tasks"
 msgstr ""
 
@@ -151,8 +152,8 @@ msgid "# of Tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:242
-#: code:addons/project/models/project.py:428
+#: code:addons/project/models/project.py:244
+#: code:addons/project/models/project.py:436
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -218,7 +219,7 @@ msgid "<i class=\"fa fa-user\"/> Person Responsible"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:122
+#: code:addons/project/models/project.py:124
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                        Documents are attached to the tasks and issues of your project.</p><p>\n"
@@ -228,7 +229,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:150
+#: code:addons/project/models/project.py:152
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
@@ -266,11 +267,6 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use projects:"
-msgstr ""
-
-#. module: project
-#: model:ir.ui.view,arch_db:project.view_project_kanban
-msgid "<span class=\"o_label\">Documents</span>"
 msgstr ""
 
 #. module: project
@@ -905,7 +901,7 @@ msgid "At the end of the week, each employee should review\n"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:115
+#: code:addons/project/models/project.py:117
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 #, python-format
 msgid "Attachments"
@@ -1291,7 +1287,7 @@ msgid "Currently there are not any activity scheduled."
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:658
+#: code:addons/project/models/project.py:666
 #: model:ir.model.fields,field_description:project.field_project_project_partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_partner_id
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -1300,7 +1296,7 @@ msgid "Customer"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:658
+#: code:addons/project/models/project.py:666
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -1425,7 +1421,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project.js:50
+#: code:addons/project/static/src/js/project.js:71
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
@@ -1545,7 +1541,7 @@ msgid "Ending Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:436
+#: code:addons/project/models/project.py:444
 #, python-format
 msgid "Error ! Task starting date must be lower than its ending date."
 msgstr ""
@@ -1790,7 +1786,7 @@ msgid "Holds visibility of the tasks or issues that belong to the current projec
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:585
+#: code:addons/project/models/project.py:593
 #, python-format
 msgid "I take it"
 msgstr ""
@@ -2176,11 +2172,6 @@ msgid "Merge into an existing task"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.view,arch_db:project.view_project_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr ""
-
-#. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "More efficient communication between employees"
 msgstr ""
@@ -2193,6 +2184,11 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.view_task_search_form
+msgid "My Followed Tasks"
 msgstr ""
 
 #. module: project
@@ -2297,7 +2293,7 @@ msgid "Odoo's project management allows you to manage the pipeline of your tasks
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:205
+#: code:addons/project/models/project.py:207
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "On invitation only"
@@ -2397,7 +2393,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:738
+#: code:addons/project/models/project.py:746
 #, python-format
 msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
 msgstr ""
@@ -2625,7 +2621,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project.js:48
+#: code:addons/project/static/src/js/project.js:69
 #, python-format
 msgid "Remove Cover Image"
 msgstr ""
@@ -2704,7 +2700,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project.js:46
+#: code:addons/project/static/src/js/project.js:62
 #, python-format
 msgid "Select"
 msgstr ""
@@ -2743,7 +2739,7 @@ msgstr ""
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project.js:45
+#: code:addons/project/static/src/js/project.js:61
 #, python-format
 msgid "Set a Cover Image"
 msgstr ""
@@ -3003,6 +2999,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_task_ids
 #: model:ir.model.fields,field_description:project.field_project_project_task_needaction_count
 #: model:ir.model.fields,field_description:project.field_res_partner_task_ids
+#: model:ir.model.fields,field_description:project.field_res_users_task_ids
 #: model:ir.ui.menu,name:project.menu_action_view_task
 #: model:ir.ui.view,arch_db:project.edit_project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3377,14 +3374,14 @@ msgid "View statistics for the week"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:206
+#: code:addons/project/models/project.py:208
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by all employees"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:207
+#: code:addons/project/models/project.py:209
 #: selection:project.project,privacy_visibility:0
 #, python-format
 msgid "Visible by following customers"
@@ -3617,7 +3614,7 @@ msgid "send us an email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:484
+#: code:addons/project/models/project.py:492
 #, python-format
 msgid "tasks"
 msgstr ""

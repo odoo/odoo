@@ -23,10 +23,10 @@ ajax.loadXML('/website/static/src/xml/website.seo.xml', qweb);
 
 function analyzeKeyword(htmlPage, keyword) {
     return  htmlPage.isInTitle(keyword) ? {
-                title: 'label label-primary',
+                title: 'label label-success',
                 description: "This keyword is used in the page title",
             } : htmlPage.isInDescription(keyword) ? {
-                title: 'label label-info',
+                title: 'label label-primary',
                 description: "This keyword is used in the page description",
             } : htmlPage.isInBody(keyword) ? {
                 title: 'label label-info',
@@ -202,6 +202,7 @@ var KeywordList = Widget.extend({
             keyword.on('removed', self, function () {
                self.trigger('list-not-full');
                self.trigger('removed', word);
+               self.trigger('content-updated', true);
             });
             keyword.on('selected', self, function (word, language) {
                 self.trigger('selected', word, language);
@@ -211,6 +212,7 @@ var KeywordList = Widget.extend({
         if (self.isFull()) {
             self.trigger('list-full');
         }
+        self.trigger('content-updated');
     },
 });
 
@@ -392,10 +394,14 @@ var Configurator = Dialog.extend({
         this.keywordList.on('selected', self, function (word, language) {
             self.keywordList.add(word, language);
         });
-        this.keywordList.appendTo(this.$('.js_seo_keywords_list'));
+        this.keywordList.on('content-updated', self, function (removed) {
+            self.updateTable(removed);
+        });
+        this.keywordList.insertAfter(this.$('.table thead'));
         this.disableUnsavableFields();
         this.renderPreview();
         this.getLanguages();
+        this.updateTable();
     },
     getLanguages: function () {
         var self = this;
@@ -453,7 +459,7 @@ var Configurator = Dialog.extend({
         var keyword = _.isString(word) ? word : $input.val();
         var language = $language.val().toLowerCase();
         this.keywordList.add(keyword, language);
-        $input.val("");
+        $input.val("").focus();
     },
     update: function () {
         var self = this;
@@ -550,6 +556,12 @@ var Configurator = Dialog.extend({
     destroy: function () {
         this.htmlPage.changeKeywords(this.keywordList.keywords());
         this._super.apply(this, arguments);
+    },
+    updateTable : function (removed) {
+        var self = this,
+             val = removed ? (this.$el.find('tbody > tr').length - 1) : (this.$el.find('tbody > tr').length);
+        this.$('table').toggleClass('js_seo_has_content', val > 0 );
+        this.$el.scrollTop(self.$el[0].scrollHeight);
     },
 });
 

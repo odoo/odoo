@@ -89,6 +89,7 @@ def init_logger():
     _logger_init = True
 
     logging.addLevelName(25, "INFO")
+    logging.captureWarnings(True)
 
     from .tools.translate import resetlocale
     resetlocale()
@@ -168,17 +169,16 @@ def init_logger():
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
+
 DEFAULT_LOG_CONFIGURATION = [
     'odoo.http.rpc.request:INFO',
     'odoo.http.rpc.response:INFO',
-    'odoo.addons.web.http:INFO',
-    'odoo.sql_db:INFO',
     ':INFO',
 ]
 PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['odoo:DEBUG','odoo.http.rpc.request:DEBUG', 'odoo.http.rpc.response:DEBUG'],
-    'debug_rpc': ['odoo:DEBUG','odoo.http.rpc.request:DEBUG'],
-    'debug': ['odoo:DEBUG'],
+    'debug_rpc_answer': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
+    'debug_rpc': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
+    'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
     'warn': ['odoo:WARNING', 'werkzeug:WARNING'],

@@ -26,7 +26,7 @@
             <field name="categ_id" ref="product.product_category_5"/>
             <field name="standard_price">1100.0</field>
             <field name="list_price">1250.0</field>
-            <field name="type">consu</field>
+            <field name="type">product</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="description">On demand hard-disk having capacity based on requirement.</field>
@@ -520,7 +520,10 @@
             <field name="sequence">2</field>
             <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
         </record>
-
+        
+        <record id="product.product_product_27" model="product.product">
+            <field name="type">product</field>
+        </record>
         <record id="mrp_production_laptop_cust" model="mrp.production">
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_id" ref="product.product_uom_unit"/>

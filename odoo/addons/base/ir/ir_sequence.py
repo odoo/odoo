@@ -179,7 +179,7 @@ class IrSequence(models.Model):
             number_next = _update_nogap(self, self.number_increment)
         return self.get_next_char(number_next)
 
-    def get_next_char(self, number_next):
+    def _get_prefix_suffix(self):
         def _interpolate(s, d):
             return (s % d) if s else ''
 
@@ -208,17 +208,21 @@ class IrSequence(models.Model):
             interpolated_suffix = _interpolate(self.suffix, d)
         except ValueError:
             raise UserError(_('Invalid prefix or suffix for sequence \'%s\'') % (self.get('name')))
+        return interpolated_prefix, interpolated_suffix
+
+    def get_next_char(self, number_next):
+        interpolated_prefix, interpolated_suffix = self._get_prefix_suffix()
         return interpolated_prefix + '%%0%sd' % self.padding % number_next + interpolated_suffix
 
     def _create_date_range_seq(self, date):
         year = fields.Date.from_string(date).strftime('%Y')
         date_from = '{}-01-01'.format(year)
         date_to = '{}-12-31'.format(year)
-        date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc')
+        date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '>=', date), ('date_from', '<=', date_to)], order='date_from desc', limit=1)
         if date_range:
             date_to = datetime.strptime(date_range.date_from, '%Y-%m-%d') + timedelta(days=-1)
             date_to = date_to.strftime('%Y-%m-%d')
-        date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_to', '>=', date_from), ('date_to', '<=', date)], order='date_to desc')
+        date_range = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_to', '>=', date_from), ('date_to', '<=', date)], order='date_to desc', limit=1)
         if date_range:
             date_from = datetime.strptime(date_range.date_to, '%Y-%m-%d') + timedelta(days=1)
             date_from = date_from.strftime('%Y-%m-%d')

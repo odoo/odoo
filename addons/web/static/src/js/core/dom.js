@@ -19,8 +19,8 @@ var core = require('web.core');
  * @params {Array} [callbacks] array of {widget: w, callback_args: args} such
  * that on_attach_callback() will be called on each w with arguments args
  */
-function _notify (content, callbacks) {
-    _.each(callbacks, function(c) {
+function _notify(content, callbacks) {
+    _.each(callbacks, function (c) {
         if (c.widget && c.widget.on_attach_callback) {
             c.widget.on_attach_callback(c.callback_args);
         }
@@ -105,6 +105,20 @@ return {
         }
     },
     /**
+     * jQuery find function behavior is:
+     *      $('A').find('A B') <=> $('A A B')
+     * The searches behavior to find options' DOM needs to be
+     *      $('A').find('A B') <=> $('A B')
+     * This is what this function does.
+     *
+     * @param {jQuery} $from - the jQuery element(s) from which to search
+     * @param {string} selector - the CSS selector to match
+     * @returns {jQuery}
+     */
+    cssFind: function ($from, selector) {
+        return $from.find('*').filter(selector);
+    },
+    /**
      * Detaches widgets from the DOM and performs their on_detach_callback()
      *
      * @param {Array} [to_detach] array of {widget: w, callback_args: args} such
@@ -115,14 +129,14 @@ return {
      * @return {jQuery} the detached elements
      */
     detach: function (to_detach, options) {
-        _.each(to_detach, function(d) {
+        _.each(to_detach, function (d) {
             if (d.widget.on_detach_callback) {
                 d.widget.on_detach_callback(d.callback_args);
             }
         });
         var $to_detach = options && options.$to_detach;
         if (!$to_detach) {
-            $to_detach = $(_.map(to_detach, function(d) {
+            $to_detach = $(_.map(to_detach, function (d) {
                 return d.widget.el;
             }));
         }
@@ -159,6 +173,76 @@ return {
         if (options && options.in_DOM) {
             _notify(content, options.callbacks);
         }
+    },
+    /**
+     * Renders a button with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple button.
+     *
+     * @param {Object} options
+     * @param {Object} [options.attrs] - Attributes to put on the button element
+     * @param {string} [options.attrs.type="button"]
+     * @param {string} [options.attrs.class="btn-default"]
+     *        Note: automatically completed with "btn btn-X" (@see options.size
+     *        for the value of X)
+     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.icon]
+     *        The specific fa icon class (for example "fa-home") or an URL for
+     *        an image to use as icon.
+     * @param {string} [options.text] - the button's text
+     * @returns {jQuery}
+     */
+    renderButton: function (options) {
+        var params = options.attrs || {};
+        params.type = params.type || 'button';
+        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
+        var $button = $('<button/>', params);
+        if (options.icon) {
+            if (options.icon.substr(0, 3) === 'fa-') {
+                $button.append($('<i/>', {
+                    class: 'fa fa-fw o_button_icon ' + options.icon,
+                }));
+            } else {
+                $button.append($('<img/>', {
+                    src: options.icon,
+                }));
+            }
+        }
+        if (options.text) {
+            $button.append($('<span/>', {
+                text: options.text,
+            }));
+        }
+        return $button;
+    },
+    /**
+     * Renders a checkbox with standard odoo template. This does not use any xml
+     * template to avoid forcing the frontend part to lazy load a xml file for
+     * each widget which might want to create a simple checkbox.
+     *
+     * @param {Object} [options]
+     * @param {Object} [options.prop]
+     *        Allows to set the input properties (disabled and checked states).
+     * @param {string} [options.text]
+     *        The checkbox's associated text. If none is given then a simple
+     *        checkbox without label structure is rendered.
+     * @returns {jQuery}
+     */
+    renderCheckbox: function (options) {
+        var $container = $('<div class="o_checkbox"><input type="checkbox"/><span/></div>');
+        if (options && options.prop) {
+            $container.children('input').prop(options.prop);
+        }
+        if (options && options.text) {
+            $container = $('<label/>').append(
+                $container,
+                $('<span/>', {
+                    class: 'ml8',
+                    text: options.text,
+                })
+            );
+        }
+        return $container;
     },
 };
 

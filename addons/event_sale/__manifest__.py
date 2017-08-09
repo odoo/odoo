@@ -7,7 +7,7 @@
     'website': 'https://www.odoo.com/page/events',
     'description': """
 Creating registration with sales orders.
-=======================================
+========================================
 
 This module allows you to automate and connect your registration creation with
 your main sale flow and therefore, to enable the invoicing feature of registrations.

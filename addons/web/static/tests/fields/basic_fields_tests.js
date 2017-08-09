@@ -353,6 +353,24 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldBooleanToggle');
+
+    QUnit.test('use boolean toggle widget in form view', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").length, 1, "Boolean toggle widget applied to boolean field");
+        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").find(".slider").length, 1, "Boolean toggle contains slider to toggle");
+        form.destroy();
+    });
+
     QUnit.module('FieldToggleButton');
 
     QUnit.test('use toggle_button in list view', function (assert) {
@@ -831,6 +849,122 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('input field: change value before pending onchange returns', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            product_id: function () {},
+        };
+
+        var def;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="product_id"/>' +
+                                '<field name="foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === "onchange") {
+                    return $.when(def).then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('.o_field_x2many_list_row_add a').click();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'My little Foo Value',
+            'should contain the default value');
+
+        def = $.Deferred();
+        form.$('.o_field_many2one input').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        // set foo before onchange
+        form.$('input[name="foo"]').val("tralala").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain tralala');
+
+        // complete the onchange
+        def.resolve();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain the same value as before onchange');
+
+        form.destroy();
+    });
+
+    QUnit.test('input field: change value before pending onchange renaming', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            product_id: function (obj) {
+                obj.foo = 'on change value';
+            },
+        };
+
+        var def = $.Deferred();
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === "onchange") {
+                    return $.when(def).then(function () {
+                        return result;
+                    });
+                } else {
+                    return result;
+                }
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'yop',
+            'should contain the correct value');
+
+        form.$('.o_field_many2one input').click();
+        var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
+        $dropdown.find('li:first()').click();
+
+        // set foo before onchange
+        form.$('input[name="foo"]').val("tralala").trigger('input');
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain tralala');
+
+        // complete the onchange
+        def.resolve();
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'tralala',
+            'input should contain the same value as before onchange');
+
+        form.destroy();
+    });
+
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {
@@ -1041,6 +1175,40 @@ QUnit.module('basic_fields', {
         form.destroy();
 
         _t.database.multi_lang = multiLang;
+    });
+
+    QUnit.test('go to next line (and not the next row) when pressing enter', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.foo.type = 'text';
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<list editable="top">' +
+                    '<field name="int_field"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux"/>' +
+                '</list>',
+        });
+
+        list.$('tbody tr:first .o_list_text').click();
+        var $textarea = list.$('textarea.o_field_text');
+        assert.strictEqual($textarea.length, 1, "should have a text area");
+        assert.strictEqual($textarea.val(), 'yop', 'should still be "yop" in edit');
+
+        assert.strictEqual(list.$('textarea').get(0), document.activeElement,
+            "text area should have the focus");
+
+        // click on enter
+        list.$('textarea')
+            .trigger({type: "keydown", which: $.ui.keyCode.ENTER})
+            .trigger({type: "keyup", which: $.ui.keyCode.ENTER});
+
+        assert.strictEqual(list.$('textarea').first().get(0), document.activeElement,
+            "text area should still have the focus");
+
+        list.destroy();
     });
 
     QUnit.module('FieldBinary');
@@ -1973,6 +2141,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with currency set by an onchange', function (assert) {
+        // this test ensures that the monetary field can be re-rendered with and
+        // without currency (which can happen as the currency can be set by an
+        // onchange)
+        assert.expect(8);
+
+        this.data.partner.onchanges = {
+            int_field: function (obj) {
+                obj.currency_id = obj.int_field ? 2 : null;
+            },
+        };
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                        '<field name="int_field"/>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</tree>',
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+        assert.strictEqual(list.$('div.o_field_widget[name=qux] input').length, 1,
+            "monetary field should have been rendered correctly (without currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span').length, 0,
+            "monetary field should have been rendered correctly (without currency)");
+
+        // set a value for int_field -> should set the currency and re-render qux
+        list.$('.o_field_widget[name=int_field]').click().val('7').trigger('input');
+        assert.strictEqual(list.$('div.o_field_widget[name=qux] input').length, 1,
+            "monetary field should have been re-rendered correctly (with currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span:contains(€)').length, 1,
+            "monetary field should have been re-rendered correctly (with currency)");
+        var $quxInput = list.$('.o_field_widget[name=qux] input');
+        $quxInput.click(); // check that the field is focusable
+        assert.strictEqual(document.activeElement, $quxInput[0],
+            "focus should be on the qux field's input");
+
+        // unset the value of int_field -> should unset the currency and re-render qux
+        list.$('.o_field_widget[name=int_field]').click().val('0').trigger('input');
+        $quxInput = list.$('div.o_field_widget[name=qux] input');
+        assert.strictEqual($quxInput.length, 1,
+            "monetary field should have been re-rendered correctly (without currency)");
+        assert.strictEqual(list.$('.o_field_widget[name=qux] span').length, 0,
+            "monetary field should have been re-rendered correctly (without currency)");
+        $quxInput.click(); // check that the field is still focusable
+        assert.strictEqual(document.activeElement, $quxInput[0],
+            "focus should be on the qux field's input");
+
+        list.destroy();
+    });
+
     QUnit.module('FieldInteger');
 
     QUnit.test('integer field when unset', function (assert) {
@@ -2024,7 +2249,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('integer field in form view with virtual id', function (assert) {
-        assert.expect(2);
+        assert.expect(1);
         var params = {
             View: FormView,
             model: 'partner',
@@ -2036,15 +2261,7 @@ QUnit.module('basic_fields', {
         var form = createView(params);
         assert.strictEqual(form.$('.o_field_widget').text(), "2-20170808020000",
             "Should display virtual id");
-        form.destroy();
 
-        params.res_id = this.data.partner.records[1].id = "2.65-20170808020000";
-        try {
-            form = createView(params);
-        } catch (error) {
-            assert.strictEqual(error.message, '"2.65-20170808020000" is not an integer or a virtual id',
-                "Should throw an exception because it's a wrong value");
-        }
         form.destroy();
     });
 

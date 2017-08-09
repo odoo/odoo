@@ -31,22 +31,22 @@
                     <filter string="My Followed Tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority','=',1)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority','in',[1, 2])]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                    <filter string="Overdue Activities" name="activities_overdue"
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
                         <filter string="Task" context="{'group_by':'name'}"/>
@@ -127,8 +127,7 @@
                         <div name="options_active" class="oe_edit_only">
                             <div>
                                 <field name="use_tasks" class="oe_inline"/>
-                                <label for="use_tasks" class="oe_inline" string="Tasks"/>
-                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as </span>
+                                <label for="use_tasks" class="oe_inline" string="Name of the tasks :"/>
                                 <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
                             </div>
                         </div>
@@ -161,8 +160,6 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_model" string="Incoming Emails create" class="oe_edit_only"/>
-                                <field name="alias_model" class="oe_inline oe_edit_only" nolabel="1"/>
                                 <field name="alias_contact" class="oe_inline oe_edit_only"
                                         string="Accept Emails From"/>
                             </group>
@@ -370,6 +367,7 @@ action = model.activate_sample_project()
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <header>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
                     </header>
@@ -406,7 +404,7 @@ action = model.activate_sample_project()
                         </group>
                         <group>
                             <field name="date_deadline"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -419,6 +417,8 @@ action = model.activate_sample_project()
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
                                     <field name="partner_id"/>
+                                    <field name="email_from"/>
+                                    <field name="email_cc"/>
                                     <field name="parent_id" groups="project.group_subtask_project"/>
                                     <field name="child_ids" invisible="1" />
                                     <field name="subtask_project_id" invisible="1" />
@@ -428,6 +428,14 @@ action = model.activate_sample_project()
                                 <group>
                                     <field name="date_assign" groups="base.group_no_one"/>
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                </group>
+                                <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
+                                    <field name="working_hours_open" string="Hours"/>
+                                    <field name="working_days_open" string="Days"/>
+                                </group>
+                                <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
+                                    <field name="working_hours_close" string="Hours"/>
+                                    <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
                         </page>
@@ -447,7 +455,7 @@ action = model.activate_sample_project()
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
@@ -458,7 +466,6 @@ action = model.activate_sample_project()
                     <field name="remaining_hours" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <field name="message_needaction_counter"/>
-                    <field name="tag_ids"/>
                     <field name="attachment_ids"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
@@ -484,7 +491,7 @@ action = model.activate_sample_project()
                             </div>
                             <div class="oe_kanban_content">
                                 <div>
-                                    <field name="tag_ids"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div>
                                     <strong><field name="name"/></strong>
@@ -493,6 +500,7 @@ action = model.activate_sample_project()
                                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
+                                    <t t-if="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                 </div>
                                 <div class="oe_kanban_bottom_left">
                                     <field name="priority" widget="priority"/>
@@ -627,7 +635,7 @@ action = model.activate_sample_project()
         </record>
 
         <record id="project_task_action_activity" model="ir.actions.act_window">
-            <field name="name">My Next Task Activities</field>
+            <field name="name">My Next Activities</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban,calendar</field>
@@ -651,7 +659,7 @@ action = model.activate_sample_project()
         </record>
 
         <menuitem id="project_task_menu_activity"
-            name="Next Task Activities"
+            name="Next Activities"
             parent="project.menu_project_management"
             action="project_task_action_activity"
             sequence="25"/>

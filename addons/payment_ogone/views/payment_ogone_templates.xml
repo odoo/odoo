@@ -56,6 +56,7 @@
         <template id="ogone_s2s_form">
             <form method="post" t-att-action="'/payment/ogone/s2s/create' if not json else '/payment/ogone/s2s/create_json'">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input t-if="verify_validity==True" type="hidden" name="verify_validity" value="1"/>
                 <div t-att-class="'row' if bootstrap_formatting else None">
                     <div t-att-class="'form-group col-md-8' if bootstrap_formatting else 'form-group'">
                         <label class="control-label" for="cc_number">Card number</label>

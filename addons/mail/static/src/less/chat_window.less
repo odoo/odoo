@@ -47,14 +47,18 @@
             .o-text-overflow();
         }
 
-        .o_chat_window_close, .o_chat_window_expand {
-            color: white;
-            padding: 3px;
-            margin-left: 5px;
-            &:hover {
-                background-color: darken(@odoo-brand-primary, 10%);
+        .o_chat_window_buttons {
+            .o-flex(0, 0, auto);
+            .o_chat_window_close, .o_chat_window_expand {
+                color: white;
+                padding: 3px;
+                margin-left: 5px;
+                &:hover {
+                    background-color: darken(@odoo-brand-primary, 10%);
+                }
             }
         }
+
     }
 
     .o_mail_thread {

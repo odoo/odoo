@@ -163,7 +163,9 @@ To declare a record in XML, the **record** notation (using *<record>*) is recomm
 - Try to group the record by model. In case of dependencies between
   action/menu/views, this convention may not be applicable.
 - Use naming convention defined at the next point
-- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``
+- The tag *<data>* is only used to set not-updatable data with ``noupdate=1``.
+  If there is only not-updatable data in the file, the ``noupdate=1`` can be
+  set on the ``<odoo>`` tag and do not set a ``<data>`` tag.
 
 .. code-block:: xml
 

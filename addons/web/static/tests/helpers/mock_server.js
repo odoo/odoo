@@ -94,6 +94,7 @@ var MockServer = Class.extend({
         args = JSON.parse(JSON.stringify(args));
         if (logLevel === 2) {
             console.log('%c[rpc] request ' + route, 'color: blue; font-weight: bold;', args);
+            args = JSON.parse(JSON.stringify(args));
         }
         return this._performRpc(route, args).then(function (result) {
             var resultString = JSON.stringify(result || false);
@@ -464,25 +465,7 @@ var MockServer = Class.extend({
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
         var domain = (args && args[1]) || _kwargs.args || [];
-        var dom = domain[0];
-        var records = this.data[model].records;
-        if (dom) {
-            records = _.filter(records, function (record) {
-                var value = record[dom[0]];
-                if (value instanceof Array) {
-                    value = value[0];
-                }
-                if (dom[1] === 'not in') {
-                    return !_.contains(dom[2], value);
-                } else if (dom[1] === 'in') {
-                    return _.contains(dom[2], value);
-                } else if (dom[1] === '==') {
-                    return dom[2] == value;
-                } else if (dom[1] === '!=') {
-                    return dom[2] != value;
-                }
-            });
-        }
+        var records = this._getRecords(model, domain);
         if (str.length) {
             records = _.filter(records, function (record) {
                 return record.display_name.indexOf(str) !== -1;
@@ -567,8 +550,10 @@ var MockServer = Class.extend({
                     } else {
                         result[fields[i]] = false;
                     }
+                } else if (field.type === 'one2many' || field.type === 'many2many') {
+                    result[fields[i]] = record[fields[i]] || [];
                 } else {
-                    result[fields[i]] = record[fields[i]];
+                    result[fields[i]] = record[fields[i]] || false;
                 }
             }
             return result;
@@ -629,7 +614,9 @@ var MockServer = Class.extend({
             var fieldName = groupByField.split(':')[0];
             var aggregateFunction = groupByField.split(':')[1] || 'month';
             if (fields[fieldName].type === 'date') {
-                if (aggregateFunction === 'day') {
+                if (!val) {
+                    return false;
+                } else if (aggregateFunction === 'day') {
                     return moment(val).format('YYYY-MM-DD');
                 } else {
                     return moment(val).format('MMMM YYYY');
@@ -959,6 +946,8 @@ var MockServer = Class.extend({
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
+                        ids = _.without(ids, command[1]);
+                    } else if (command[0] === 3) { // FORGET
                         ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
                         if (!_.contains(ids, command[1])) {

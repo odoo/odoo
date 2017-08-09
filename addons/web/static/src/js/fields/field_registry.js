@@ -41,6 +41,7 @@ registry
     .add('state_selection', basic_fields.StateSelectionWidget)
     .add('kanban_state_selection', basic_fields.StateSelectionWidget)
     .add('boolean_button', basic_fields.FieldBooleanButton)
+    .add('boolean_toggle', basic_fields.BooleanToggle)
     .add('statinfo', basic_fields.StatInfo)
     .add('percentpie', basic_fields.FieldPercentPie)
     .add('float_time', basic_fields.FieldFloatTime)
@@ -64,10 +65,10 @@ registry
     .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
     .add('one2many', relational_fields.FieldOne2Many)
     .add('statusbar', relational_fields.FieldStatus)
+    .add('reference', relational_fields.FieldReference)
     .add('one2many_list', relational_fields.FieldOne2Many);
 
 // Special fields
 registry
     .add('timezone_mismatch', special_fields.FieldTimezoneMismatch);
-
 });

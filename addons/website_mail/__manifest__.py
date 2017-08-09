@@ -11,9 +11,10 @@
     'data': [
         'views/website_mail_templates.xml',
         'data/mail_channel_data.xml',
+        'security/website_mail_security.xml',
     ],
     'qweb': [
-        'static/src/xml/chatter_message.xml'
+        'static/src/xml/website_mail.xml'
     ],
     'installable': True,
     'auto_install': True,

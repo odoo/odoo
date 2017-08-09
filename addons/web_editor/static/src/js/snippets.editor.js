@@ -4,6 +4,7 @@ odoo.define('web_editor.snippet.editor', function (require) {
 var Class = require('web.Class');
 var ajax = require('web.ajax');
 var core = require('web.core');
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 var editor = require('web_editor.editor');
 var animation = require('web_editor.snippets.animation');
@@ -98,7 +99,7 @@ data.Class = Widget.extend({
                     return $from.closest(selector, parentNode);
                 },
                 all: function ($from) {
-                    return $from ? cssFind($from, selector) : $(selector);
+                    return $from ? dom.cssFind($from, selector) : $(selector);
                 },
                 is: function ($from) {
                     return $from.is(selector);
@@ -121,30 +122,15 @@ data.Class = Widget.extend({
                     });
                 },
                 all: is_children ? function ($from) {
-                    return cssFind($from || self.$editable, selector);
+                    return dom.cssFind($from || self.$editable, selector);
                 } : function ($from) {
                     $from = $from || self.$editable;
-                    return $from.filter(selector).add(cssFind($from, selector));
+                    return $from.filter(selector).add(dom.cssFind($from, selector));
                 },
                 is: function ($from) {
                     return $from.is(selector);
                 }
             };
-        }
-
-        /**
-         * jQuery find function behavior is:
-         *      $('A').find('A B') <=> $('A A B')
-         * The searches behavior to find options' DOM needs to be
-         *      $('A').find('A B') <=> $('A B')
-         * This is what this function does.
-         *
-         * @param {jQuery} $from - the jQuery element(s) from which to search
-         * @param {string} selector - the CSS selector to match
-         * @returns {jQuery}
-         */
-        function cssFind($from, selector) {
-            return $from.find('*').filter(selector);
         }
     },
 
@@ -251,12 +237,25 @@ data.Class = Widget.extend({
                         $div.find('.oe_snippet_thumbnail_img').css('background-image', 'url(' + thumbnail + ')');
                     }
                     // end
+
+                    var moduleID = $snippet.data('moduleId');
+                    if (moduleID) {
+                        $snippet.addClass('o_snippet_install');
+                        var $installBtn = $('<a/>', {
+                            class: 'btn btn-primary btn-sm o_install_btn',
+                            target: '_blank',
+                            href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                            text: _t("Install"),
+                        });
+                        $div.append($installBtn);
+                    }
                 }
                 if (!$snippet.data("selector")) {
                     $("> *:not(.oe_snippet_thumbnail)", this).addClass('oe_snippet_body');
                 }
                 number++;
-            });
+            })
+            .not('[data-module-id]');
 
         // hide scroll if no snippets defined
         if (!number) {
@@ -713,20 +712,8 @@ data.Class = Widget.extend({
     activate_overlay_zones: function ($targets) {
         var self = this;
 
-        function is_visible($el) {
-            return     $el.css('display')    !== 'none'
-                    && $el.css('opacity')    !== '0'
-                    && $el.css('visibility') !== 'hidden';
-        }
-
         // filter out invisible elements
-        $targets = $targets.filter(function () { return is_visible($(this)); });
-
-        // filter out elements with invisible parents
-        $targets = $targets.filter(function () {
-            var parents = $(this).parents().filter(function () { return !is_visible($(this)); });
-            return parents.length === 0;
-        });
+        $targets = $targets.filter(':visible:hasVisibility:hasOpacity');
 
         $targets.each(function () {
             var $target = $(this);

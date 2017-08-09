@@ -5,6 +5,115 @@
 
 <div t-name="Loading" class="o_loading"/>
 
+<t t-name="WidgetLabel.tooltip">
+    <div class="oe_tooltip_string" t-if="widget.string">
+        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
+    </div>
+    <p t-if="widget.attrs.help || widget.field.help" class="oe_tooltip_help">
+        <t t-esc="widget.attrs.help || widget.field.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="field" t-if="widget.name">
+            <span class="oe_tooltip_technical_title">Field:</span>
+            <t t-esc="widget.name"/>
+        </li>
+        <li data-item="object">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="widget.model"/>
+        </li>
+        <li data-item="type">
+            <span class="oe_tooltip_technical_title">Type:</span>
+            <t t-esc="widget.field.type"/>
+        </li>
+        <li t-if="widget.attrs.widget" data-item="widget">
+            <span class="oe_tooltip_technical_title">Widget:</span>
+            <t t-esc="widget.attrs.widget"/>
+        </li>
+        <li t-if="widget.attrs.size || widget.field.size" data-item="size">
+            <span class="oe_tooltip_technical_title">Size:</span>
+            <t t-esc="widget.attrs.size || widget.field.size"/>
+        </li>
+        <li t-if="widget.attrs.context || widget.field.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="widget.attrs.context || widget.field.context"/>
+        </li>
+        <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
+            <span class="oe_tooltip_technical_title">Domain:</span>
+            <t t-esc="widget.attrs.domain || widget.field.domain"/>
+        </li>
+        <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="widget.attrs.modifiers"/>
+        </li>
+        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
+            <span class="oe_tooltip_technical_title">Change default:</span>
+            Yes
+        </li>
+        <li t-if="widget.attrs.on_change" data-item="on_change">
+            <span class="oe_tooltip_technical_title">On change:</span>
+            <t t-esc="widget.attrs.on_change"/>
+        </li>
+        <li t-if="widget.field and widget.field.relation" data-item="relation">
+            <span class="oe_tooltip_technical_title">Relation:</span>
+            <t t-esc="widget.field.relation"/>
+        </li>
+        <li t-if="widget.field and widget.field.selection" data-item="selection">
+            <span class="oe_tooltip_technical_title">Selection:</span>
+            <ul class="oe_tooltip_technical">
+                <li t-foreach="widget.field.selection" t-as="option">
+                    [<t t-esc="option[0]"/>]
+                    <t t-if="option[1]"> - </t>
+                    <t t-esc="option[1]"/>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</t>
+<t t-name="WidgetButton.tooltip">
+    <div class="oe_tooltip_string" t-if="debug || node.attrs.string">
+        <t t-if="debug">
+            Button
+            <t t-if="node.attrs.string">: </t>
+            <t t-if="!node.attrs.string"> (no string)</t>
+        </t>
+        <t t-esc="node.attrs.string"/>
+    </div>
+    <p t-if="node.attrs.help" class="oe_tooltip_help">
+        <t t-esc="node.attrs.help"/>
+    </p>
+    <ul t-if="debug" class="oe_tooltip_technical">
+        <li data-item="object">
+            <span class="oe_tooltip_technical_title">Object:</span>
+            <t t-esc="state.model"/>
+        </li>
+        <li t-if="node.attrs.context" data-item="context">
+            <span class="oe_tooltip_technical_title">Context:</span>
+            <t t-esc="node.attrs.context || widget.field.context"/>
+        </li>
+        <li t-if="node.attrs.modifiers and node.attrs.modifiers != '{}'" data-item="modifiers">
+            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <t t-esc="node.attrs.modifiers"/>
+        </li>
+        <li t-if="node.attrs.special" data-item="special">
+            <span class="oe_tooltip_technical_title">Special:</span>
+            <t t-esc="node.attrs.special"/>
+        </li>
+        <t t-set="button_type" t-value="node.attrs.type"/>
+        <li t-if="button_type" data-item="button_type">
+            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <t t-esc="button_type"/>
+        </li>
+        <li t-if="button_type === 'object'" data-item="button_method">
+            <span class="oe_tooltip_technical_title">Method:</span>
+            <t t-esc="node.attrs.name"/>
+        </li>
+        <li t-if="button_type === 'action'" data-item="button_action">
+            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <t t-esc="node.attrs.name"/>
+        </li>
+    </ul>
+</t>
+
 <t t-name="Notification">
     <div t-attf-class="o_notification #{className}" t-translation="off">
         <a t-if="widget.sticky" class="fa fa-times o_close" href="#"/>
@@ -151,7 +260,6 @@
             <li><a href="#" data-action="set_defaults">Set Defaults</a></li>
             <t t-if="view.controller.getSelectedIds().length === 1">
                 <li><a href="#" data-action="get_metadata">View Metadata</a></li>
-                <li><a href="#" data-action="print_workflow">Print Workflow</a></li>
             </t>
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
@@ -725,15 +833,11 @@
         t-att-autofocus="widget.attrs.autofocus"
         t-att-id="widget.idForLabel"/>
 </t>
-<t t-name="FieldRadio">
-    <span t-if="widget.mode === 'readonly'"/>
-
-    <div t-if="widget.mode !== 'readonly'" t-attf-class="o_field_radio #{widget.nodeOptions.horizontal ? 'o_horizontal' : 'o_vertical'}">
-        <div t-foreach="widget.values" t-as="value" class="o_radio_item">
-            <input type="radio" class="o_radio_input" t-att-id="widget.unique_id + '_' + value[0]"
-                   t-att-name="widget.unique_id" t-att-data-value="value[0]" t-att-data-index="value_index"/>
-            <label t-if="!widget.nodeOptions.no_radiolabel" class="o_form_label" t-att-for="widget.unique_id + '_' + value[0]"><t t-esc="value[1]"/></label>
-        </div>
+<t t-name="FieldRadio.button">
+    <div class="o_radio_item">
+        <input type="radio" class="o_radio_input" t-att-checked="checked ? true : undefined"
+            t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+        <label class="o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
     </div>
 </t>
 <t t-name="FieldMany2One">
@@ -754,9 +858,17 @@
         <button type="button" t-if="!widget.nodeOptions.no_open" class="fa fa-external-link btn btn-default o_external_button" tabindex="-1" draggable="false"/>
     </div>
 </t>
+<t t-name="FieldReference" t-extend="FieldMany2One">
+    <t t-jquery=".o_input_dropdown" t-operation="before">
+        <select class="o_input o_field_widget">
+            <option/>
+            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+        </select>
+    </t>
+</t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown o_tag_color_#{el.color || 10}" t-att-data-color="el.color || 10" t-att-data-index="el_index" t-att-data-id="el.id">
+        <span t-attf-class="badge dropdown o_tag_color_#{el[colorField] || 10}" t-att-data-color="el[colorField] || 10" t-att-data-index="el_index" t-att-data-id="el.id">
             <span class="o_badge_text"><t t-raw="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
@@ -1251,6 +1363,15 @@
             <li><a href="#" data-menu="account">My Odoo.com account</a></li>
             <li><a href="#" data-menu="logout">Log out</a></li>
         </ul>
+    </li>
+</t>
+
+<t t-name="SwitchCompanyMenu">
+    <li class="o_switch_company_menu">
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
+            <span t-attf-class="#{widget.isMobile ? 'fa fa-building-o' : 'oe_topbar_name'}"/> <span class="caret"/>
+        </a>
+        <ul class="dropdown-menu" role="menu"/>
     </li>
 </t>
 

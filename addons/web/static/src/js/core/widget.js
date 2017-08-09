@@ -1,6 +1,7 @@
 odoo.define('web.Widget', function (require) {
 "use strict";
 
+var ajax = require('web.ajax');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var ServicesMixin = require('web.ServicesMixin');
@@ -70,6 +71,15 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      */
     template: null,
     /**
+     * List of paths to xml files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {string[]}
+     */
+    xmlDependencies: null,
+
+    /**
      * Constructs the widget and sets its parent if a parent is given.
      *
      * @constructs openerp.Widget
@@ -94,13 +104,21 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
         this.setElement(this._make_descriptive());
     },
     /**
-     * Method called between init and start. Performs asynchronous calls required by start.
+     * Method called between @see init and @see start. Performs asynchronous
+     * calls required by the rendering and the start method.
      *
-     * This method should return a Deferred which is resolved when start can be executed.
+     * This method should return a Deferred which is resolved when start can be
+     * executed.
      *
-     * @return {jQuery.Deferred}
+     * @returns {Deferred}
      */
     willStart: function () {
+        if (this.xmlDependencies) {
+            var defs = _.map(this.xmlDependencies, function (xmlPath) {
+                return ajax.loadXML(xmlPath, core.qweb);
+            });
+            return $.when.apply($, defs);
+        }
         return $.when();
     },
     /**

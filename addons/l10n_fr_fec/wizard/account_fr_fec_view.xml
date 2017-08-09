@@ -5,11 +5,106 @@
     <field name="model">account.fr.fec</field>
     <field name="arch" type="xml">
         <form string="FEC File Generation">
-            <group>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="export_type" groups="base.group_no_one"/>
-            </group>
+            <notebook>
+                <page string="Options">
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="export_type" groups="base.group_no_one"/>
+                    </group>
+                </page>
+                <page string="Technical Info">
+                    <group>
+                        <div>
+                        The encoding of this text file is UTF-8. The structure of file is CSV separated by pipe '|'.
+                        </div>
+                    </group>
+                    <group>
+                        <table style="width:80%">
+                            <tr>
+                                <th>Technical Name</th>
+                                <th>Column</th>
+                                <th>Comment</th>
+                            </tr>
+                            <tr>
+                                <td>JournalCode</td>
+                                <td># 0</td>
+                            </tr>
+                            <tr>
+                                <td>JournalLib</td>
+                                <td>
+                                    # 1</td>
+                            </tr>
+                            <tr>
+                                <td>EcritureNum</td>
+                                <td># 2</td>
+                            </tr>
+                            <tr>
+                                <td>EcritureDate</td>
+                                <td>
+                                    # 3</td>
+                            </tr>
+                            <tr>
+                                <td>CompteNum</td>
+                                <td># 4</td>
+                            </tr>
+                            <tr>
+                                <td>CompteLib</td>
+                                <td># 5</td>
+                            </tr>
+                            <tr>
+                                <td>CompAuxNum</td>
+                                <td># 6</td>
+                                <td>We use partner.id</td>
+                            </tr>
+                            <tr>
+                                <td>CompAuxLib</td>
+                                <td># 7</td>
+                            </tr>
+                            <tr>
+                                <td>PieceRef</td>
+                                <td># 8</td>
+                            </tr>
+                            <tr>
+                                <td>PieceDate</td>
+                                <td># 9</td>
+                            </tr>
+                            <tr>
+                                <td>EcritureLib</td>
+                                <td># 10</td>
+                            </tr>
+                            <tr>
+                                <td>Debit</td>
+                                <td># 11</td>
+                            </tr>
+                            <tr>
+                                <td>Credit</td>
+                                <td># 12</td>
+                            </tr>
+                            <tr>
+                                <td>EcritureLet</td>
+                                <td># 13</td>
+                            </tr>
+                            <tr>
+                                <td>DateLet</td>
+                                <td># 14</td>
+                            </tr>
+                            <tr>
+                                <td>ValidDate</td>
+                                <td># 15</td>
+                            </tr>
+                            <tr>
+                                <td>Montantdevise</td>
+                                <td># 16</td>
+                            </tr>
+                            <tr>
+                                <td>Idevise</td>
+                                <td># 17</td>
+                            </tr>
+                        </table>
+                    </group>
+                </page>
+            </notebook>
             <footer>
                 <button string="Generate" name="generate_fec" type="object"
                     class="oe_highlight"/>

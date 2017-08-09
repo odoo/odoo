@@ -58,7 +58,7 @@ features whereas:
 .. warning::
 
     While Python 3 adds plenty of great features (keyword-only parameters,
-    generator delegation, pathlib, ...), you must *not *use them in Odoo
+    generator delegation, pathlib, ...), you must *not* use them in Odoo
     until Python 2 support is dropped
 
 Semantics changes

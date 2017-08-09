@@ -506,6 +506,7 @@ class Module(models.Model):
 
         self._cr.commit()
         env = api.Environment(self._cr, self._uid, self._context)
+        # pylint: disable=next-method-called
         config = self.next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
@@ -814,7 +815,7 @@ class Module(models.Model):
     @api.multi
     def check(self):
         for module in self:
-            if not module.description:
+            if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
 
     @api.model

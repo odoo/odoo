@@ -4,7 +4,7 @@
 import werkzeug.urls
 
 from odoo import http
-from odoo.addons.website.models.website import unslug
+from odoo.addons.http_routing.models.ir_http import unslug
 from odoo.tools.translate import _
 from odoo.http import request
 
@@ -73,7 +73,7 @@ class WebsiteCustomer(http.Controller):
                         'country_id_count': 0,
                         'country_id': (country.id, country.name)
                     })
-                countries.sort(key=lambda d: d['country_id'] and d['country_id'][1])
+                    countries.sort(key=lambda d: (d['country_id'] or (0, ""))[1])
 
         countries.insert(0, {
             'country_id_count': country_count,

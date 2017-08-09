@@ -85,7 +85,7 @@ class ResUsers(models.Model):
         # check that uninvited users may sign up
         if 'partner_id' not in values:
             if not literal_eval(get_param('auth_signup.allow_uninvited', 'False')):
-                raise SignupError('Signup is not allowed for uninvited users')
+                raise SignupError(_('Signup is not allowed for uninvited users'))
 
         assert values.get('login'), "Signup: no login given for new user"
         assert values.get('partner_id') or values.get('name'), "Signup: no name or partner given for new user"

@@ -3,6 +3,9 @@ odoo.define('web_editor.web_editor_tests', function (require) {
 
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
+var core = require('web.core');
+
+var _t = core._t;
 
 QUnit.module('web_editor', {
     beforeEach: function() {
@@ -85,6 +88,43 @@ QUnit.test('field html widget (with options inline-style)', function (assert) {
         form.destroy();
         done();
     }, 0);
+});
+
+QUnit.test('field html translatable', function (assert) {
+    assert.expect(3);
+
+    var multiLang = _t.database.multi_lang;
+    _t.database.multi_lang = true;
+
+    this.data['mass.mailing'].fields.body.translate = true;
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<field name="body" widget="html"/>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route, args) {
+            if (route === '/web/dataset/call_button' && args.method === 'translate_fields') {
+                assert.deepEqual(args.args, ['mass.mailing',1,'body',{}], "should call 'call_button' route");
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_form_field_html_text .o_field_translate').length, 0,
+        "should not have a translate button in readonly mode");
+
+    form.$buttons.find('.o_form_button_edit').click();
+    var $button = form.$('.oe_form_field_html_text .o_field_translate');
+    assert.strictEqual($button.length, 1, "should have a translate button");
+    $button.click();
+
+    form.destroy();
+    _t.database.multi_lang = multiLang;
 });
 
 QUnit.test('field html_frame widget', function (assert) {
