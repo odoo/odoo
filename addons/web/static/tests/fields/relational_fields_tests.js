@@ -1002,6 +1002,60 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: call button in sub view', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="product_id"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.strictEqual(event.data.env.model, 'product',
+                        'should call with correct model in env');
+                    assert.strictEqual(event.data.env.currentID, 37,
+                        'should call with correct currentID in env');
+                    assert.deepEqual(event.data.env.resIDs, [37],
+                        'should call with correct resIDs in env');
+                },
+            },
+            archs: {
+                'product,false,form': '<form string="Partners">' +
+                                        '<header>' +
+                                            '<button name="action" type="action" string="Just do it !"/>' +
+                                            '<button name="object" type="object" string="Just don\'t do it !"/>' +
+                                            '<field name="display_name"/>' +
+                                        '</header>' +
+                                      '</form>',
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('td.o_data_cell:first').click();  // edit first one2many line
+        form.$('.o_external_button').click();  // open product sub view in modal
+        $('button:contains("Just do it !")').click(); // click on action button
+        $('button:contains("Just don\'t do it !")').click(); // click on object button
+
+        form.destroy();
+    });
+
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
 
@@ -4036,9 +4090,9 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.deepEqual(event.data.res_ids, [2],
+                    assert.deepEqual(event.data.env.currentID, 2,
                         'should call with correct id');
-                    assert.strictEqual(event.data.model, 'partner',
+                    assert.strictEqual(event.data.env.model, 'partner',
                         'should call with correct model');
                     assert.strictEqual(event.data.action_data.name, 'method_name',
                         "should call correct method");
@@ -4080,9 +4134,9 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.deepEqual(event.data.res_ids, [2],
+                    assert.deepEqual(event.data.env.currentID, 2,
                         'should call with correct id');
-                    assert.strictEqual(event.data.model, 'partner',
+                    assert.strictEqual(event.data.env.model, 'partner',
                         'should call with correct model');
                     assert.strictEqual(event.data.action_data.name, 'method_name',
                         "should call correct method");
