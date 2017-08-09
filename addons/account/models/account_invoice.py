@@ -720,15 +720,6 @@ class AccountInvoice(models.Model):
         return '/mail/view?' + url_encode(params)
 
     @api.multi
-    def get_signup_url(self):
-        self.ensure_one()
-        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
-            action='/mail/view',
-            model=self._name,
-            res_id=self.id)[self.partner_id.id]
-
-
-    @api.multi
     def get_formview_id(self, access_uid=None):
         """ Update form view id of action to open the invoice """
         if self.type in ('in_invoice', 'in_refund'):
