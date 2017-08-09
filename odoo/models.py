@@ -168,7 +168,12 @@ class MetaModel(api.Meta):
 
 
 class NewId(object):
-    """ Pseudo-ids for new records. """
+    """ Pseudo-ids for new records, encapsulating an optional reference. """
+    __slots__ = ['ref']
+
+    def __init__(self, ref=None):
+        self.ref = ref
+
     def __bool__(self):
         return False
     __nonzero__ = __bool__
@@ -4445,14 +4450,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     #
 
     @api.model
-    def new(self, values={}):
+    def new(self, values={}, ref=None):
         """ new([values]) -> record
 
         Return a new record instance attached to the current environment and
         initialized with the provided ``value``. The record is *not* created
         in database, it only exists in memory.
+
+        One can pass a reference value to identify the record among other new
+        records. The reference is encapsulated in the ``id`` of the record.
         """
-        record = self.browse([NewId()])
+        record = self.browse([NewId(ref)])
         record._cache.update(record._convert_to_cache(values, update=True))
 
         if record.env.in_onchange:
@@ -4978,12 +4986,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         todo.append(name)
                         dirty.add(name)
 
-        # At the moment, the client does not support updates on a *2many field
-        # while this one is modified by the user.
-        if isinstance(field_name, pycompat.string_types) and \
-                self._fields[field_name].type in ('one2many', 'many2many'):
-            dirty.discard(field_name)
-
         # collect values from dirty fields
         result['value'] = {
             name: self._fields[name].convert_to_onchange(record[name], record, subfields[name])
@@ -4991,6 +4993,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
         return result
+
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
 collections.Sequence.register(BaseModel)

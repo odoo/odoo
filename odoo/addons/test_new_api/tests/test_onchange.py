@@ -157,6 +157,51 @@ class TestOnChange(common.TransactionCase):
             }),
         ])
 
+    def test_onchange_one2many_reference(self):
+        """ test the effect of onchange() on one2many fields with line references """
+        BODY = "What a beautiful day!"
+        USER = self.env.user
+        REFERENCE = "virtualid42"
+
+        field_onchange = self.Discussion._onchange_spec()
+        self.assertEqual(field_onchange.get('name'), '1')
+        self.assertEqual(field_onchange.get('messages'), '1')
+        self.assertItemsEqual(
+            strip_prefix('messages.', field_onchange),
+            ['author', 'body', 'name', 'size', 'important'],
+        )
+
+        # modify discussion name, and check that the reference of the new line
+        # is returned
+        values = {
+            'name': "Foo",
+            'categories': [],
+            'moderator': False,
+            'participants': [],
+            'messages': [
+                (0, REFERENCE, {
+                    'name': "[%s] %s" % ('', USER.name),
+                    'body': BODY,
+                    'author': USER.id,
+                    'size': len(BODY),
+                    'important': False,
+                }),
+            ],
+        }
+        self.env.invalidate_all()
+        result = self.Discussion.onchange(values, 'name', field_onchange)
+        self.assertIn('messages', result['value'])
+        self.assertItemsEqual(result['value']['messages'], [
+            (5,),
+            (0, REFERENCE, {
+                'name': "[%s] %s" % ("Foo", USER.name),
+                'body': BODY,
+                'author': USER.name_get()[0],
+                'size': len(BODY),
+                'important': False,
+            }),
+        ])
+
     def test_onchange_one2many_multi(self):
         """ test the effect of multiple onchange methods on one2many fields """
         partner = self.env.ref('base.res_partner_1')

@@ -2028,7 +2028,7 @@ class _RelationalMulti(_Relational):
             for command in value:
                 if isinstance(command, (tuple, list)):
                     if command[0] == 0:
-                        ids.add(comodel.new(command[2]).id)
+                        ids.add(comodel.new(command[2], command[1]).id)
                     elif command[0] == 1:
                         comodel.browse(command[1]).update(command[2])
                         ids.add(command[1])
@@ -2085,7 +2085,7 @@ class _RelationalMulti(_Relational):
         for record in value:
             vals = {name: convert(record[name], record) for name, convert in converters}
             if not record.id:
-                result.append((0, 0, vals))
+                result.append((0, record.id.ref or 0, vals))
             elif vals:
                 result.append((1, record.id, vals))
             else:
