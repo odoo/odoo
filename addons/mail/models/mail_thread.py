@@ -1673,6 +1673,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
+                'type': 'binary',
                 'datas_fname': cid or name,
                 'description': name,
                 'res_model': message_data['model'],
