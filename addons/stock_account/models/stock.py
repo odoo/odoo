@@ -58,7 +58,7 @@ class StockMoveLine(models.Model):
         super(StockMoveLine, self).write(vals)
         if 'qty_done' in vals:
             for move in self.mapped('move_id').filtered(lambda m: m.state == 'done'):
-                if move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage in ('internal', 'transit'):
+                if move._is_in_move():
                     move.value = move.quantity_done * move.price_unit
                 move.replay_valuation()
 
@@ -240,7 +240,7 @@ class StockMove(models.Model):
             cumulated_value = 0.0
             qty_available = 0.0
         for move in next_moves:
-            if move.location_dest_id.usage in ('internal', 'transit'):
+            if move._is_in_move():
                 qty_available += move.product_qty
             else:
                 qty_available -= move.product_qty
