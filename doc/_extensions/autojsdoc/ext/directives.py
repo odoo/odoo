@@ -4,7 +4,7 @@ import contextlib
 import fnmatch
 import io
 
-import re
+
 from docutils import nodes
 from docutils.parsers.rst import Directive
 from docutils.statemachine import StringList
@@ -12,7 +12,7 @@ from sphinx import addnodes
 from sphinx.ext.autodoc import members_set_option, bool_option, ALL
 
 from autojsdoc.ext.extractor import read_js
-from ..parser import jsdoc
+from ..parser import jsdoc, types
 
 
 @contextlib.contextmanager
@@ -433,11 +433,15 @@ def make_parameters(params, mod=None):
             ]
         yield p
 
+
+def _format_value(v):
+    if v == '|':
+        return nodes.emphasis(' or ', ' or ')
+    if v == ',':
+        return nodes.Text(', ', ', ')
+    return nodes.Text(v, v)
 def make_types(typespec, mod=None):
-    # "A or B" or "A | B"
-    # FIXME: handle literals
-    # FIXME: handle parametric types
-    def make_link(t):
+    def format_type(t):
         ref = addnodes.pending_xref(
             t, addnodes.literal_emphasis(t, t),
             refdomain='js', reftype='class', reftarget=t,
@@ -446,14 +450,14 @@ def make_types(typespec, mod=None):
             ref['js:module'] = mod
         return ref
 
-    types = (
-        make_link(t.strip())
-        for t in re.split(r'\b(?:or|\|)\b', typespec)
-    )
-    yield next(types)
-    for t in types:
-        yield nodes.emphasis(' or ', ' or ')
-        yield t
+    try:
+        return types.iterate(
+            types.parse(typespec),
+            format_type,
+            _format_value
+        )
+    except ValueError as e:
+        raise ValueError("%s in '%s'" % (e, typespec))
 
 class ObjectDocumenter(Documenter):
     def make_signature(self):

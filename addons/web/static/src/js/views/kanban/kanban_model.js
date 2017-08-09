@@ -183,8 +183,8 @@ var KanbanModel = BasicModel.extend({
      * Resequences records.
      *
      * @param {string} modelName
-     * @param {Array[integer]} resIDs the new sequence of ids
-     * @param {string]} parentID the localID of the parent
+     * @param {Array<integer>} resIDs the new sequence of ids
+     * @param {string} parentID the localID of the parent
      * @returns {Deferred<string>} resolves to the local id of the parent
      */
     resequence: function (modelName, resIDs, parentID) {
