@@ -15,6 +15,12 @@ _logger = logging.getLogger(__name__)
 # changelog https://stripe.com/docs/upgrades#api-changelog
 STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 
+# The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
+INT_CURRENCIES = [
+    'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYGí', 'RWF', 'KRW', 'VUV',
+    'VND', 'XOF'
+];
+
 
 class PaymentAcquirerStripe(models.Model):
     _inherit = 'payment.acquirer'
@@ -84,7 +90,7 @@ class PaymentTransactionStripe(models.Model):
     def _create_stripe_charge(self, acquirer_ref=None, tokenid=None, email=None):
         api_url_charge = 'https://%s/charges' % (self.acquirer_id._get_stripe_api_url())
         charge_params = {
-            'amount': int(self.amount*100),  # Stripe takes amount in cents (https://support.stripe.com/questions/which-zero-decimal-currencies-does-stripe-support)
+            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else self.amount*100),
             'currency': self.currency_id.name,
             'metadata[reference]': self.reference
         }

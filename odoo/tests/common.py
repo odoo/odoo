@@ -392,11 +392,17 @@ class HttpCase(TransactionCase):
         t0 = int(time.time())
         for thread in threading.enumerate():
             if thread.name.startswith('odoo.service.http.request.'):
+                thread.join_retry_count = 10
                 while thread.isAlive():
                     # Need a busyloop here as thread.join() masks signals
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
-                    time.sleep(0.05)
+                    thread.join_retry_count -= 1
+                    if thread.join_retry_count < 0:
+                        _logger.warning("Stop waiting for thread %s handling request for url %s",
+                                        thread.name, thread.url)
+                        break
+                    time.sleep(0.5)
                     t1 = int(time.time())
                     if t0 != t1:
                         _logger.info('remaining requests')
