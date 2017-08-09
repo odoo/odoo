@@ -823,7 +823,7 @@ class PosOrderLine(models.Model):
     def create(self, values):
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
-            config_id = self.env['pos.order'].browse(values['order_id']).session_id.config_id.id
+            config_id = self.env[self.order_id._name].browse(values['order_id']).session_id.config_id.id
             # HACK: sequence created in the same transaction as the config
             # cf TODO master is pos.config create
             # remove me saas-15
@@ -842,6 +842,11 @@ class PosOrderLine(models.Model):
         if not values.get('name'):
             # fallback on any pos.order sequence
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
+
+        # Preventing warnings when pos_blackbox sends additional stuff
+        # (bool 'pro_forma_finalized' and char 'note')
+        for field in set(values.keys()) - set(self._fields.keys()):
+            values.pop(field)
         return super(PosOrderLine, self).create(values)
 
     @api.depends('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
