@@ -99,6 +99,8 @@ class AccountChartTemplate(models.Model):
             "templates, this is useful when you want to generate accounts of this template only when loading its child template.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
     use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
+    cash_based_amt_at_payment_rate = fields.Boolean("Record amounts on cash basis tax accounts based on the payment rate instead of the invoice rate, in case of multi-currency", default=False)
+    cash_based_amt_at_payment_rate = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
         help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
             "of taxes. This last choice assumes that the set of tax defined on this template is complete")
@@ -679,6 +681,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
     sale_tax_rate = fields.Float(string='Sales Tax(%)')
     use_anglo_saxon = fields.Boolean(string='Use Anglo-Saxon Accounting', related='chart_template_id.use_anglo_saxon')
+    cash_based_amt_at_payment_rate = fields.Boolean("Record amounts on cash basis tax accounts based on the payment rate instead of the invoice rate, in case of multi-currency", related=chart_template_id.cash_based_amt_at_payment_rate)
     transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
@@ -875,6 +878,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
         self.company_id.write({'currency_id': self.currency_id.id,
                                'accounts_code_digits': self.code_digits,
                                'anglo_saxon_accounting': self.use_anglo_saxon,
+                               'cash_based_amt_at_payment_rate': self.cash_based_amt_at_payment_rate,
                                'bank_account_code_prefix': self.bank_account_code_prefix,
                                'cash_account_code_prefix': self.cash_account_code_prefix,
                                'chart_template_id': self.chart_template_id.id})

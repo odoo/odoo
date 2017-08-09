@@ -1571,9 +1571,14 @@ class AccountPartialReconcile(models.Model):
                 if not line.tax_exigible:
                     percentage_before = percentage_before_rec[move.id]
                     percentage_after = line._get_matched_percentage()[move.id]
+                    paid_percentage = percentage_after - percentage_before
                     #amount is the current cash_basis amount minus the one before the reconciliation
-                    amount = line.balance * percentage_after - line.balance * percentage_before
+                    amount = line.balance * paid_percentage
                     rounded_amt = line.company_id.currency_id.round(amount)
+                    counterpart_amt = rounded_amt
+                    if line.amount_currency and line.currency_id and line.company_id.cash_based_amt_at_payment_rate:
+                        #amount to consider in cash basis account has to be based on real money paid
+                        counterpart_amt = line.currency_id.compute(line.amount_currency * paid_percentage, line.company_id.currency_id)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
                     if line.tax_line_id and line.tax_line_id.use_cash_basis:
@@ -1586,7 +1591,7 @@ class AccountPartialReconcile(models.Model):
                             'credit': rounded_amt if rounded_amt > 0 else 0.0,
                             'account_id': line.account_id.id,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * paid_percentage) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
@@ -1594,16 +1599,20 @@ class AccountPartialReconcile(models.Model):
                         # Group by cash basis account and tax
                         self.env['account.move.line'].with_context(check_move_validity=False).create({
                             'name': line.name,
-                            'debit': rounded_amt if rounded_amt > 0 else 0.0,
-                            'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
+                            'debit': counterpart_amt if counterpart_amt > 0 else 0.0,
+                            'credit': abs(counterpart_amt) if counterpart_amt < 0 else 0.0,
                             'account_id': line.tax_line_id.cash_basis_account.id,
                             'tax_line_id': line.tax_line_id.id,
                             'tax_exigible': True,
-                            'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
+                            'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * paid_percentage) or 0.0,
                             'currency_id': line.currency_id.id,
                             'move_id': newly_created_move.id,
                             'partner_id': line.partner_id.id,
                         })
+                        if not float_is_zero(rounded_amt - counterpart_amt, precision_rounding=line.company_id.currency_id.rounding):
+                            vals = self._prepare_exchange_diff_move_line(rounded_amt - counterpart_amt, line.currency_id, 0.0, newly_created_move)
+                            self.env['account.move.line'].with_context(check_move_validity=False).create(vals)
+
                         if line.account_id.reconcile:
                             #setting the account to allow reconciliation will help to fix rounding errors
                             to_clear_aml |= line
