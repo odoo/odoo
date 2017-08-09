@@ -100,6 +100,64 @@ class StockMove(models.Model):
         for move in moves:
             move.value += value
 
+    @ api.model
+    def _get_in_base_domain(self, company_id=False):
+        domain = [
+            ('state', '=', 'done'),
+            ('location_id.company_id', '=', False),
+            ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id)
+        ]
+        return domain
+
+    @ api.model
+    def _get_out_base_domain(self, company_id=False):
+        domain = [
+            ('state', '=', 'done'),
+            ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+            ('location_dest_id.company_id', '=', False)
+        ]
+        return domain
+
+    @ api.model
+    def _get_all_base_domain(self, company_id=False):
+        domain = [
+            ('state', '=', 'done'),
+            '|',
+                '&',
+                    ('location_id.company_id', '=', False),
+                    ('location_dest_id.company_id', '=', company_id or self.env.user.company_id.id),
+                '&',
+                    ('location_id.company_id', '=', company_id or self.env.user.company_id.id),
+                    ('location_dest_id.company_id', '=', False)
+        ]
+        return domain
+
+    def _get_in_domain(self):
+        return [('product_id', '=', self.product_id.id)] + self._get_in_base_domain(company_id=self.company_id.id)
+
+    def _get_out_domain(self):
+        return [('product_id', '=', self.product_id.id)] + self._get_out_base_domain(company_id=self.company_id.id)
+
+    def _get_all_domain(self):
+        return [('product_id', '=', self.product_id.id)] + self._get_all_base_domain(company_id=self.company_id.id)
+
+    def _is_in(self):
+        """ Check if the move should be considered as entering the company so that the cost method
+        will be able to apply the correct logic.
+
+        :return: True if the move is entering the company else False
+        """
+        return not self.location_id.company_id and self.location_dest_id.company_id.id == self.company_id.id
+
+    def _is_out(self):
+        """ Check if the move should be considered as leaving the company so that the cost method
+        will be able to apply the correct logic.
+
+        :return: True if the move is leaving the company else False
+        """
+        return self.location_id.company_id.id == self.company_id.id and not self.location_dest_id.company_id
+
+
 #     def change_move_value_in_the_past(self, value):
 #         self.ensure_one()
 #         if self.product_id.cost_method == 'fifo':
@@ -154,15 +212,15 @@ class StockMove(models.Model):
         for move in self:
             #Should write move.price_unit here maybe, certainly on incoming
             if move.product_id.cost_method == 'average':
-                qty_available[move.product_id.id] = move.product_id.qty_available
+                qty_available[move.product_id.id] = move.product_id.with_context(company_owned=True).qty_available
         res = super(StockMove, self).action_done()
         for move in res:
-            if move.location_id.usage not in ('internal', 'transit') and move.location_dest_id.usage in ('internal', 'transit'):
+            if move._is_in():
                 if move.product_id.cost_method in ['fifo', 'average']:
                     if not move.price_unit:
                         move.price_unit = move._get_price_unit()
                     move.value = move.price_unit * move.product_qty
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
+                    move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
                     move.remaining_qty = move.product_qty
                     if move.product_id.cost_method == 'fifo':
                         # If you find an out with qty_remaining (because of negative stock), you can change it over there
@@ -184,7 +242,7 @@ class StockMove(models.Model):
                 else:
                     move.price_unit = move.product_id.standard_price
                     move.value = move.price_unit * move.product_qty
-            elif move.location_id.usage in ('internal', 'transit') and move.location_dest_id.usage not in ('internal', 'transit'):
+            elif move._is_out():
                 if move.product_id.cost_method == 'fifo':
                     qty_to_take = move.product_qty
                     tmp_value = 0
@@ -207,14 +265,14 @@ class StockMove(models.Model):
                     if qty_to_take > 0:
                         move.remaining_qty = qty_to_take # In case there are no candidates to match, put standard price on it
                     move.value = -tmp_value
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
+                    move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
                     move.last_done_qty = move.product_id.qty_available
                 elif move.product_id.cost_method == 'average':
                     curr_rounding = move.company_id.currency_id.rounding
-                    avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(not_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
+                    avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(exclude_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
                     move.value = float_round(-avg_price_unit * move.product_qty, precision_rounding=curr_rounding)
                     move.remaining_qty = 0
-                    move.cumulated_value = move.product_id._get_latest_cumulated_value(not_move=move) + move.value
+                    move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
                     move.last_done_qty = move.product_id.qty_available
                 elif move.product_id.cost_method == 'standard':
                     move.value = - move.product_id.standard_price * move.product_qty
