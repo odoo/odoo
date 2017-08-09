@@ -52,7 +52,6 @@ class Event(models.Model):
                     'price': ticket.price,
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
-            })
 
     @api.multi
     def _is_event_registrable(self):
