@@ -117,7 +117,7 @@
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
                 <div class="col-md-10 col-md-offset-1 mt16">
-                    <t t-call="website_mail.message_thread">
+                    <t t-call="portal.message_thread">
                         <t t-set="object" t-value="project"/>
                     </t>
                 </div>
@@ -235,7 +235,7 @@
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
                 <div class="col-md-10 col-md-offset-1 mt16">
-                    <t t-call="website_mail.message_thread">
+                    <t t-call="portal.message_thread">
                         <t t-set="object" t-value="task"/>
                     </t>
                 </div>
