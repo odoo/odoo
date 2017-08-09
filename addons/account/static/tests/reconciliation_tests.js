@@ -682,7 +682,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation title', function (assert) {
-        assert.expect(6);
+        assert.expect(3);
 
         var clientAction = new ReconciliationClientAction.StatementAction(null, this.params.options);
         testUtils.addMockEnvironment(clientAction, {
@@ -690,14 +690,11 @@ QUnit.module('account', {
         });
 
         clientAction.appendTo($('#qunit-fixture'));
-        assert.strictEqual(clientAction.$('h1.statement_name').text(), "BNK/2014/001", "Should display the statement name");
-        assert.strictEqual(clientAction.$('h1.statement_name:visible').length, 0, "Should hide the statement name title to edit the content");
-        assert.strictEqual(clientAction.$('.statement_name_input').length, 1, "Should show the edition field of statement name");
-        clientAction.$('.statement_name_input').val('BNK/2014/001-BB').trigger('input');
-        clientAction.$('.statement_name_input').trigger('blur');
-        assert.strictEqual(clientAction.$('.statement_name_input:visible').length, 0, "Should hide the edition field of statement name");
-        assert.strictEqual(clientAction.$('h1.statement_name').length, 1, "Should show the statement name");
-        assert.strictEqual(clientAction.$('h1.statement_name').text(), "BNK/2014/001-BB", "Should update the statement name");
+        assert.strictEqual(clientAction.$('.statement_name').val(), "BNK/2014/001", "Should display the statement name");
+        clientAction.$('.statement_name').val('BNK/2014/001-BB').trigger('input');
+        clientAction.$('.statement_name').trigger('change');
+        assert.strictEqual(clientAction.$('.statement_name').length, 1, "Should show the statement name");
+        assert.strictEqual(clientAction.$('.statement_name').val(), "BNK/2014/001-BB", "Should update the statement name");
 
         clientAction.destroy();
     });
