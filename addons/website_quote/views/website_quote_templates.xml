@@ -430,7 +430,7 @@
       <xpath expr="//div[@id='quote_content']" position="inside">
           <h1 class="page-header">History</h1>
           <!-- Options:Quotation Chatter: user can reply -->
-          <t t-call="website_mail.message_thread">
+          <t t-call="portal.message_thread">
             <t t-set="object" t-value="quotation"/>
             <t t-set="token_field" t-value="'access_token'"/>
           </t>

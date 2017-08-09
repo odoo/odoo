@@ -8,13 +8,13 @@ odoo.define('website_rating.thread', function(require) {
     var qweb = core.qweb;
     var _t = core._t;
 
-    var WebsiteMailThread = require('website_mail.thread').WebsiteMailThread;
+    var PortalChatter = require('portal.chatter').PortalChatter;
 
     /**
      * Extends Frontend Chatter to handle rating
      */
-    WebsiteMailThread.include({
-        events: _.extend({}, WebsiteMailThread.prototype.events, {
+    PortalChatter.include({
+        events: _.extend({}, PortalChatter.prototype.events, {
             "mousemove .stars i" : "_onMoveStar",
             "mouseleave .stars i" : "_onMoveOutStar",
             "click .stars" : "_onClickStar",
