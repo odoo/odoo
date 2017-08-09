@@ -152,7 +152,7 @@ function createAsyncView(params) {
     });
 
     // reproduce the DOM environment of views
-    var $web_client = $('<div>').addClass('o_web_client').appendTo($target);
+    var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
     var $control_panel = $('<div>').addClass('o_control_panel').appendTo($web_client);
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
     var $view_manager = $('<div>').addClass('o_view_manager_content').appendTo($content);
