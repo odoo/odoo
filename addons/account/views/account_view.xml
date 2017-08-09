@@ -941,12 +941,13 @@
             <field name="name">account.tax.tree</field>
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
-                <tree string="Account Tax">
+                <tree string="Account Tax" decoration-muted="not active">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type_tax_use"/>
                     <field name="description"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
         </record>
@@ -983,6 +984,9 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
+                    <separator/>
+                    <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
+                    <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
                     <group string="Group By">
                         <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Tax Application" domain="[]" context="{'group_by':'type_tax_use'}"/>
@@ -996,6 +1000,11 @@
             <field name="arch" type="xml">
                 <form string="Account Tax">
                     <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -1039,7 +1048,6 @@
                                     <field name="tag_ids" domain="[('applicability', '!=', 'accounts')]" widget="many2many_tags" context="{'default_applicability': 'taxes'}"/>
                                     <field name="analytic" attrs="{'invisible':[('amount_type','=', 'group')]}" groups="analytic.group_analytic_accounting" />
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="active" groups="base.group_no_one"/>
                                 </group>
                                 <group name="advanced_booleans">
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
@@ -1061,7 +1069,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="domain" eval="False"/> <!-- Force empty -->
-            <field name="context">{'search_default_sale': True, 'search_default_purchase': True}</field>
+            <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account_account_menu" sequence="1"/>

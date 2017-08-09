@@ -318,7 +318,7 @@ class AccountChartTemplate(models.Model):
         AccountTaxObj = self.env['account.tax']
 
         # Generate taxes from templates.
-        generated_tax_res = self.tax_template_ids._generate_tax(company)
+        generated_tax_res = self.with_context(active_test=False).tax_template_ids._generate_tax(company)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
 
         # Generating Accounts from templates.
