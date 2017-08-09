@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class BomStructureReport(models.AbstractModel):
-    _name = 'report.mrp.report_mrpbomstructure'
+    _name = 'report.mrp.mrp_bom_structure_report'
 
     def get_children(self, object, level=0):
         result = []
