@@ -549,6 +549,7 @@ class MailTemplate(models.Model):
                 'name': attachment[0],
                 'datas_fname': attachment[0],
                 'datas': attachment[1],
+                'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }
