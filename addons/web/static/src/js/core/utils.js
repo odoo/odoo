@@ -455,7 +455,34 @@ var utils = {
       });
       return Object.freeze(obj);
     },
-
+    getCursor: function (node) {
+        node = $(node)[0];
+        var offset = 0;
+        var length = 0;
+        if ('selectionStart' in node) {
+            offset = node.selectionStart;
+            length = node.selectionEnd - offset;
+        } else if ('selection' in document) {
+            node.focus();
+            var sel = document.selection.createRange();
+            length = document.selection.createRange().text.length;
+            sel.moveStart('character', -node.value.length);
+            offset = sel.text.length - length;
+        }
+        return { offset: offset, length: length };
+    },
+    setCursor: function (node, pos){
+        node = $(node).first().focus()[0];
+        if ('createTextRange' in node) {
+            var textRange = node.createTextRange();
+            textRange.collapse(true);
+            textRange.moveEnd(pos);
+            textRange.moveStart(pos);
+            textRange.select();
+        } else if ('setSelectionRange' in node) {
+            node.setSelectionRange(pos, pos);
+        }
+    },
 };
 
 return utils;

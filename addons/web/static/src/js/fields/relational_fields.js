@@ -24,6 +24,7 @@ var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
+var utils = require('web.utils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -895,11 +896,38 @@ var FieldX2Many = AbstractField.extend({
         this.lastInitialEvent = undefined;
         if (Object.keys(changes).length) {
             this.lastInitialEvent = ev;
-            this._setValue({
+            var def = this._setValue({
                 operation: 'UPDATE',
                 id: ev.data.dataPointID,
                 data: changes,
             });
+
+            // Correctly resets the cursor
+            var self = this;
+            var cursor, fieldName;
+            var editableId =  this.renderer.getEditableRecordID();
+            var datapoint = _.find(this.renderer.state.data, {id: editableId});
+            var ref = datapoint && datapoint.ref;
+            if ('DEBOUNCE' in ev.target) { // char, text, float, integer fields
+                cursor = utils.getCursor(ev.target.getFocusableElement());
+                fieldName = ev.target.name;
+            }
+            if (ref) {
+                def.then(function () {
+                    var nextEditableRecordID = self.renderer.getEditableRecordID();
+                    if (nextEditableRecordID && editableId !== nextEditableRecordID) {
+                        return;
+                    }
+                    var datapoint = _.find(self.renderer.state.data, {ref: ref});
+                    if (datapoint) {
+                        self.renderer.editRecord(datapoint.id);
+                        if (cursor) {
+                            var field = _.findWhere(self.renderer.allFieldWidgets[datapoint.id], {name: fieldName});
+                            utils.setCursor(field.getFocusableElement(), cursor.offset);
+                        }
+                    }
+                });
+            }
         }
     },
     /**

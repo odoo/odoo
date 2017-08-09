@@ -1005,7 +1005,7 @@ QUnit.module('relational_fields', {
                 obj.timmy,
                 [
                     [6, false, []],
-                    [0, false, {display_name: 'brandon is the new timmy', name: 'brandon'}]
+                    [0, obj.timmy[1][1], {display_name: 'brandon is the new timmy', name: 'brandon'}]
                 ],
                 "should have properly created the x2many command list");
             obj.int_field = obj.timmy.length;
@@ -2077,7 +2077,7 @@ QUnit.module('relational_fields', {
                                 "should send 46 commands (one for each record)");
                             assert.strictEqual(nbLinkCommands, 45,
                                 "should send a LINK_TO command for each existing record");
-                            assert.deepEqual(args.args[1].p[45], [0, false, {
+                            assert.deepEqual(args.args[1].p[45], [0, args.args[1].p[45][1], {
                                 display_name: 'new record',
                             }], "should sent a CREATE command for the new record");
                             break;
@@ -2095,10 +2095,10 @@ QUnit.module('relational_fields', {
                             assert.strictEqual(nbLinkCommands, 43,
                                 "should send a LINK_TO command for each existing record");
                             assert.deepEqual(args.args[1].p[43],
-                                [0, false, {display_name: 'new record page 1'}],
+                                [0, args.args[1].p[43][1], {display_name: 'new record page 1'}],
                                 "should sent correct CREATE command");
                             assert.deepEqual(args.args[1].p[44],
-                                [0, false, {display_name: 'new record page 2'}],
+                                [0, args.args[1].p[44][1], {display_name: 'new record page 2'}],
                                 "should sent correct CREATE command");
                             assert.deepEqual(args.args[1].p[45],
                                 [2, 11, false],
@@ -3294,7 +3294,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (method, args) {
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].p, [
-                        [0, false, {display_name: 'z'}],
+                        [0, args.args[1].p[0][1], {display_name: 'z'}],
                         [2, 2, false],
                     ], "correct commands should be sent");
                 }
@@ -3436,7 +3436,7 @@ QUnit.module('relational_fields', {
             },
             mockRPC: function (route, args) {
                 if (args.method === 'onchange') {
-                    assert.deepEqual(args.args[1].p, [[4, 2, false], [0, false, {product_id: 41}]],
+                    assert.deepEqual(args.args[1].p, [[4, 2, false], [0, args.args[1].p[1][1], {product_id: 41}]],
                         "should trigger onchange with correct parameters");
                 }
                 return this._super.apply(this, arguments);
@@ -3498,7 +3498,7 @@ QUnit.module('relational_fields', {
             mockRPC: function (route, args) {
                 rpcCount++;
                 if (args.method === 'write') {
-                    assert.deepEqual(args.args[1].p, [[0, false, {
+                    assert.deepEqual(args.args[1].p, [[0, args.args[1].p[0][1], {
                         display_name: false, int_field: 123, product_id: 41
                     }]]);
                 }
@@ -3736,7 +3736,7 @@ QUnit.module('relational_fields', {
                 if (args.method === 'default_get') {
                     var expected = counter === 0 ?
                         [[4, 2, false]] :
-                        [[4, 2, false], [0, false, {display_name: false, turtle_foo: 'hammer'}]];
+                        [[4, 2, false], [0, args.kwargs.context.turtles[1][1], {display_name: false, turtle_foo: 'hammer'}]];
                     assert.deepEqual(args.kwargs.context.turtles, expected,
                         "should have properly evaluated turtles key in context");
                     counter++;

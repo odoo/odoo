@@ -168,7 +168,12 @@ class MetaModel(api.Meta):
 
 
 class NewId(object):
-    """ Pseudo-ids for new records. """
+    """ Pseudo-ids for new records, encapsulating an optional reference. """
+    __slots__ = ['ref']
+
+    def __init__(self, ref=None):
+        self.ref = ref
+
     def __bool__(self):
         return False
     __nonzero__ = __bool__
@@ -1616,7 +1621,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
-        to the query if order should be computed against m2o field. 
+        to the query if order should be computed against m2o field.
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
         :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
@@ -1698,9 +1703,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
+            'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field
         }
@@ -1725,8 +1730,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
-            Helper method to format the data contained in the dictionary data by 
-            adding the domain corresponding to its values, the groupbys in the 
+            Helper method to format the data contained in the dictionary data by
+            adding the domain corresponding to its values, the groupbys in the
             context and by properly formatting the date/datetime values.
 
         :param data: a single group
@@ -1797,10 +1802,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
         :param list fields: list of fields present in the list view specified on the object
-        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+        :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
@@ -1808,7 +1813,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
-        :param bool lazy: if true, the results are only grouped by the first groupby and the 
+        :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
                 done in one call.
         :return: list of dictionaries(one dictionary for each record) containing:
@@ -1924,7 +1929,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
-            # in a sane way 
+            # in a sane way
             result = self._read_group_fill_results(
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
@@ -4458,14 +4463,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     #
 
     @api.model
-    def new(self, values={}):
+    def new(self, values={}, ref=None):
         """ new([values]) -> record
 
         Return a new record instance attached to the current environment and
         initialized with the provided ``value``. The record is *not* created
         in database, it only exists in memory.
+
+        One can pass a reference value to identify the record among other new
+        records. The reference is encapsulated in the ``id`` of the record.
         """
-        record = self.browse([NewId()])
+        record = self.browse([NewId(ref)])
         record._cache.update(record._convert_to_cache(values, update=True))
 
         if record.env.in_onchange:
@@ -4991,12 +4999,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         todo.append(name)
                         dirty.add(name)
 
-        # At the moment, the client does not support updates on a *2many field
-        # while this one is modified by the user.
-        if isinstance(field_name, pycompat.string_types) and \
-                self._fields[field_name].type in ('one2many', 'many2many'):
-            dirty.discard(field_name)
-
         # collect values from dirty fields
         result['value'] = {
             name: self._fields[name].convert_to_onchange(record[name], record, subfields[name])
@@ -5004,6 +5006,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         }
 
         return result
+
 collections.Set.register(BaseModel)
 # not exactly true as BaseModel doesn't have __reversed__, index or count
 collections.Sequence.register(BaseModel)
