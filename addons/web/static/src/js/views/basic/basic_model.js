@@ -3096,7 +3096,9 @@ var BasicModel = AbstractModel.extend({
      */
     _readGroup: function (list) {
         var self = this;
-        var fields = _.uniq(list.getFieldNames().concat(list.groupedBy));
+        var groupByField = list.groupedBy[0];
+        var rawGroupBy = groupByField.split(':')[0];
+        var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
         return this._rpc({
                 model: list.model,
                 method: 'read_group',
@@ -3107,8 +3109,6 @@ var BasicModel = AbstractModel.extend({
                 lazy: true,
             })
             .then(function (groups) {
-                var groupByField = list.groupedBy[0];
-                var rawGroupBy = groupByField.split(':')[0];
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });
