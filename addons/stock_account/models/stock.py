@@ -285,7 +285,7 @@ class StockMove(models.Model):
                         move.price_unit = move._get_price_unit()
                     move_value = move.price_unit * move.product_qty
                     move.write({'value': move_value, 
-                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) + move_value, 
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(exclude_move=move) + move_value, 
                                 'remaining_qty': move.product_qty, 
                                 'last_done_qty': move.product_id.with_context(internal=True).qty_available,})
                     if move.product_id.cost_method == 'fifo':
@@ -331,7 +331,7 @@ class StockMove(models.Model):
                         last_candidate = candidate
                     move.write({'value': -tmp_value,
                                 'price_unit': tmp_value / move.product_qty,
-                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) - tmp_value,
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(exclude_move=move) - tmp_value,
                                 'last_done_qty': move.product_id.with_context(internal=True).qty_available,
                                 'remaining_qty': qty_to_take if qty_to_take > 0 else 0.0, #TODO: price is 0 on it, because it is the easiest, but it might use the standard price e.g.
                                 'last_done_move_id': last_candidate and last_candidate.id or False,
@@ -339,11 +339,11 @@ class StockMove(models.Model):
                                 })
                 elif move.product_id.cost_method == 'average':
                     curr_rounding = move.company_id.currency_id.rounding
-                    avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(not_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
+                    avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(exclude_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
                     move_value = float_round(-avg_price_unit * move.product_qty, precision_rounding=curr_rounding)
                     move.write({'value': move_value,
                                 'price_unit': move_value / move.product_qty,
-                                'cumulated_value': move.product_id._get_latest_cumulated_value(not_move=move) + move_value,
+                                'cumulated_value': move.product_id._get_latest_cumulated_value(exclude_move=move) + move_value,
                                 'last_done_qty': move.product_id.with_context(internal=True).qty_available,
                                 })
                 else:
