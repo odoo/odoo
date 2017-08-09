@@ -67,7 +67,7 @@ class AccountMove(models.Model):
     def write(self, vals):
         has_been_posted = False
         for move in self:
-            if move.company_id.country_id.code == 'FR':
+            if move.company_id.country_id.code == 'FR' and move.journal_id.l10n_fr_b2c:
                 # write the hash and the secure_sequence_number when posting an account.move
                 if vals.get('state') == 'posted':
                     has_been_posted = True
@@ -82,7 +82,8 @@ class AccountMove(models.Model):
         # write the hash and the secure_sequence_number when posting an account.move
         if has_been_posted:
             for move in self.filtered(lambda m: m.company_id.country_id.code == 'FR' and
-                                      not (m.l10n_fr_secure_sequence_number or m.l10n_fr_hash)):
+                                                m.journal_id.l10n_fr_b2c and
+                                                not (m.l10n_fr_secure_sequence_number or m.l10n_fr_hash)):
                 new_number = move.company_id.l10n_fr_secure_sequence_id.next_by_id()
                 vals_hashing = {'l10n_fr_secure_sequence_number': new_number,
                                 'l10n_fr_hash': move._get_new_hash(new_number)}
@@ -92,8 +93,8 @@ class AccountMove(models.Model):
     def button_cancel(self):
         #by-pass the normal behavior/message that tells people can cancel a posted journal entry
         #if the journal allows it.
-        if self.company_id.country_id.code == 'FR':
-            raise UserError(_('You cannot modify a posted entry of a journal.'))
+        if self.company_id.country_id.code == 'FR' and self.journal_id.l10n_fr_b2c:
+            raise UserError(_('You cannot modify a posted entry of a business to customer journal.'))
         super(AccountMove, self).button_cancel()
 
     @api.model
@@ -133,7 +134,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
         if set(vals).intersection(LINE_FIELDS):
-            if any(l.company_id.country_id.code == 'FR' and l.move_id.state == 'posted' for l in self):
+            if any(l.company_id.country_id.code == 'FR' and l.move_id.state == 'posted' and l.journal_id.l10n_fr_b2c for l in self):
                 raise UserError(ERR_MSG % (self._name, ', '.join(LINE_FIELDS)))
         return super(AccountMoveLine, self).write(vals)
 
@@ -141,16 +142,34 @@ class AccountMoveLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
+    l10n_fr_b2c = fields.Boolean('This journal is used to record business to customer sales')
+
+    @api.onchange('type')
+    def _compute_b2c(self):
+        if not self.l10n_fr_b2c:
+            self.l10n_fr_b2c = self.company_id.country_id.code == 'FR' and self.type == "sale"
+
     @api.multi
     def write(self, vals):
         # restrict the operation in case we are trying to write a forbidden field
-        if self.company_id.country_id.code == 'FR' and vals.get('update_posted'):
-            raise UserError(ERR_MSG % (self._name, 'update_posted'))
+        if self.company_id.country_id.code == 'FR':
+            if vals.get('l10n_fr_b2c'):
+                vals['update_posted'] = False
+            if self.l10n_fr_b2c:
+                if vals.get('update_posted'):
+                    raise UserError(ERR_MSG % (self._name, 'update_posted'))
+                if vals.get('l10n_fr_b2c') is False:
+                    critical_domain = [('journal_id', '=', self.id),
+                                       '|', ('l10n_fr_hash', '!=', False), ('l10n_fr_secure_sequence_number', '!=', False)]
+                    if self.env['account.move'].search(critical_domain):
+                        raise UserError(ERR_MSG % (self._name, 'l10n_fr_b2c'))
         return super(AccountJournal, self).write(vals)
 
     @api.model
     def create(self, vals):
         # restrict the operation in case we are trying to set a forbidden field
-        if self.company_id.country_id.code == 'FR' and vals.get('update_posted'):
+        if self.company_id.country_id.code == 'FR'\
+           and vals.get('l10n_fr_b2c')\
+           and vals.get('update_posted'):
             raise UserError(ERR_MSG % (self._name, 'update_posted'))
         return super(AccountJournal, self).create(vals)
