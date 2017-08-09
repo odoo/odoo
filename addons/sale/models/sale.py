@@ -608,14 +608,6 @@ class SaleOrder(models.Model):
 
         return groups
 
-    @api.multi
-    def get_signup_url(self):
-        self.ensure_one()
-        return self.partner_id.with_context(signup_valid=True)._get_signup_url_for_action(
-            action='/mail/view',
-            model=self._name,
-            res_id=self.id)[self.partner_id.id]
-
 
 class SaleOrderLine(models.Model):
     _name = 'sale.order.line'
