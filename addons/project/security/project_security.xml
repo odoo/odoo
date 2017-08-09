@@ -96,5 +96,32 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+     <!-- Portal -->
+    <record id="project_project_rule_portal" model="ir.rule">
+        <field name="name">Project: portal users: portal and following</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="domain_force">[
+            '&amp;',
+                ('privacy_visibility', '=', 'portal'),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="project_task_rule_portal" model="ir.rule">
+        <field name="name">Project/Task: portal users: (portal and following project) or (portal and following task)</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="domain_force">[
+        '|',
+            '&amp;',
+                ('project_id.privacy_visibility', '=', 'portal'),
+                ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+            '&amp;',
+                ('project_id.privacy_visibility', '=', 'portal'),
+                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
 </data>
 </odoo>
