@@ -598,6 +598,11 @@ class AccountTaxTemplate(models.Model):
                 'cash_basis_account': tax.cash_basis_account.id,
             }
 
+        if any([tax.use_cash_basis for tax in self]):
+            # When a CoA is being installed automatically and if it is creating account tax(es) whose field `Use Cash Basis`(use_cash_basis) is set to True by default
+            # (exapmple of such CoA's are l10n_fr and l10n_mx) then in the `Accounting Settings` the option `Cash Basis` should be checked by default.
+            company.use_cash_basis = True
+
         return {
             'tax_template_to_tax': tax_template_to_tax,
             'account_dict': todo_dict

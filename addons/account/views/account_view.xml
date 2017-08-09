@@ -1053,7 +1053,8 @@
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="tax_adjustment"/>
-                                    <field name="use_cash_basis" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+                                    <field name="hide_use_cash_basis" invisible="1"/>
+                                    <field name="use_cash_basis" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_use_cash_basis', '=', False)]}"/>
                                     <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}"/>
                                 </group>
                             </group>

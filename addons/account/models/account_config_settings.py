@@ -60,6 +60,8 @@ class AccountConfigSettings(models.TransientModel):
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_l10n_eu_service = fields.Boolean(string="EU Digital Goods VAT")
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
+    use_cash_basis = fields.Boolean(string='Cash Basis', related='company_id.use_cash_basis')
+    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
 
     @api.model
     def get_values(self):
@@ -122,6 +124,21 @@ class AccountConfigSettings(models.TransientModel):
     def onchange_account_yodlee(self):
         if self.module_account_yodlee:
             self.module_account_plaid = True
+
+    @api.onchange('use_cash_basis')
+    def _onchange_use_cash_basis(self):
+        res = {}
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.env.user.company_id.id), ('use_cash_basis', '=', True)
+        ], limit=1)
+        if not self.use_cash_basis and tax:
+            self.use_cash_basis = True
+            res['warning'] = {
+                'title': _('Error!'),
+                'message': _('You cannot disable this setting because some of your taxes are cash basis. '
+                             'Modify your taxes first before disabling this setting.')
+            }
+        return res
 
     @api.model
     def create(self, values):

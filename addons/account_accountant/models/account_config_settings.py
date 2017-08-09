@@ -29,7 +29,3 @@ class AccountConfigSettings(models.TransientModel):
         related='company_id.transfer_account_id',
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
-    tax_cash_basis_journal_id = fields.Many2one(
-        'account.journal',
-        related='company_id.tax_cash_basis_journal_id',
-        string="Tax Cash Basis Journal",)
