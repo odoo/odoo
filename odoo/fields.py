@@ -978,8 +978,6 @@ class Field(object):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
-                if len(recs) > PREFETCH_MAX:
-                    recs = recs[:PREFETCH_MAX] | record
                 recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
@@ -2445,4 +2443,4 @@ class Id(Field):
 # imported here to avoid dependency cycle issues
 from odoo import SUPERUSER_ID
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, IdType, PREFETCH_MAX
+from .models import check_pg_name, BaseModel, IdType
