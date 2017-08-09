@@ -79,6 +79,7 @@ class TestStockValuation(TransactionCase):
     def test_fifo_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/fifo-method
         self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.product1.product_tmpl_id.valuation = 'real_time'
 
         # Beginning Inventory: 68 units @ 15.00 per unit
         move1 = self.env['stock.move'].create({
@@ -94,6 +95,9 @@ class TestStockValuation(TransactionCase):
         move1.action_assign()
         move1.move_line_ids.qty_done = 68.0
         move1.action_done()
+        Aml = self.env['account.move.line']
+        stock_valuation_account = Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0)]).account_id
+        stock_input_account = Aml.search([('product_id', '=', self.product1.id), ('credit', '>', 0)]).account_id
 
         self.assertEqual(move1.value, 1020.0)
         self.assertEqual(move1.cumulated_value, 1020.0)
@@ -134,6 +138,9 @@ class TestStockValuation(TransactionCase):
         move3.action_assign()
         move3.move_line_ids.qty_done = 94.0
         move3.action_done()
+        stock_output_account = Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0), 
+                                           ('account_id', '!=', stock_valuation_account.id)]).account_id
+
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
         # so its value should be -((68*15) + (26*15.5)) = -1423
@@ -243,8 +250,10 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move5.remaining_qty, 54.0)
         self.assertEqual(move6.remaining_qty, 0.0)  # unused in out moves
         self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
-        
         # Test what happens when we change the stock in the past
+        amls = Aml.search([('account_id', '=', stock_valuation_account.id), ('product_id', '=', self.product1.id)])
+        self.assertEqual(sum(x.debit and x.debit or -x.credit for x in amls), 891.0, 'Valuation Entries should sum to the stock value of 891')
+
         move3.quantity_done = 10
         self.assertEqual(move1.value, 1020.0)
         self.assertEqual(move2.value, 2170.0)
@@ -256,6 +265,8 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move7.cumulated_value, 2237.0)
         self.assertEqual(move7.last_done_qty, 138.0)
         move6.move_line_ids.qty_done = 120.0
+        amls = Aml.search([('account_id', '=', stock_output_account.id), ('product_id', '=', self.product1.id), ('credit', '>', 0)])
+        self.assertEqual(sum(x.credit for x in amls), 1346.0, 'Decreasing the quantity on an out is like a return and should credit the stock output account')
 
     def test_fifo_perpetual_2(self):
         # https://docs.google.com/spreadsheets/d/1NI0u9N1gFByXxYHfdiXuxQCrycXXOh76TpPQ3CWeyDw/edit?ts=58da749b#gid=0
