@@ -163,6 +163,8 @@ def application_unproxied(environ, start_response):
         del threading.current_thread().uid
     if hasattr(threading.current_thread(), 'dbname'):
         del threading.current_thread().dbname
+    if hasattr(threading.current_thread(), 'url'):
+        del threading.current_thread().url
 
     with odoo.api.Environment.manage():
         # Try all handlers until one returns some result (i.e. not None).
