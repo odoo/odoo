@@ -834,7 +834,7 @@ class PosOrderLine(models.Model):
     def create(self, values):
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
-            config_id = self.env['pos.order'].browse(values['order_id']).session_id.config_id.id
+            config_id = self.order_id.browse(values['order_id']).session_id.config_id.id
             # HACK: sequence created in the same transaction as the config
             # cf TODO master is pos.config create
             # remove me saas-15

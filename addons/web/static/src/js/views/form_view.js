@@ -941,7 +941,7 @@ var FormView = View.extend(common.FieldManagerMixin, {
         var self = this;
         return this.reload_mutex.exec(function() {
             if (self.dataset.index === null || self.dataset.index === undefined) {
-                self.trigger("previous_view");
+                self.do_action('reload');
                 return $.Deferred().reject().promise();
             }
             if (self.dataset.index < 0) {
