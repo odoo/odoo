@@ -253,10 +253,11 @@
                                 <field name="partner_id" domain="[('customer', '=', True)]" context="{'search_default_customer': 1}"/>
                                 <field name="email_from" invisible="1"/>
                                 <field name="phone" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="company_currency" invisible="1"/>
                                 <label for="planned_revenue"/>
                                 <div class="o_row">
                                     <field name="planned_revenue"/>
-                                    <field name="company_currency" options="{'no_create': True, 'no_open': True}"/>
                                 </div>
                                 <field name="priority" widget="priority"/>
                             </group>
