@@ -117,7 +117,7 @@ class PadCommon(models.AbstractModel):
     def _set_pad_value(self, vals):
         # Update the pad if the `pad_content_field` is modified
         for k, field in self._fields.iteritems():
-            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field):
+            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 company = self.env.user.sudo().company_id
                 myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
                 path = self[k].split('/p/')[1]
