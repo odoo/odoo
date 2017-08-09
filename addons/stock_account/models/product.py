@@ -166,15 +166,11 @@ class ProductProduct(models.Model):
         self.write({'standard_price': new_price})
         return True
 
-    def _get_latest_cumulated_value(self, not_move=False):
+    def _get_latest_cumulated_value(self, exclude_move=False):
         self.ensure_one()
-        # TODO: only filter on IN and OUT stock.move
-        domain = [
-            ('product_id', '=', self.id),
-            ('state', '=', 'done'),
-            ]
-        if not_move:
-            domain += [('id', '!=', not_move.id)]
+        domain = [('product_id', '=', self.id)] + self.env['stock.move']._get_all_base_domain()
+        if exclude_move:
+            domain += [('id', '!=', exclude_move.id)]
         latest = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
         if not latest:
             return 0.0
@@ -182,26 +178,14 @@ class ProductProduct(models.Model):
 
     def _get_candidates_out_move(self):
         self.ensure_one()
-        # TODO: filter at start of period
-        candidates = self.env['stock.move'].search([
-            ('product_id', '=', self.id),
-            ('location_dest_id.usage', 'not in', ('transit', 'internal')),
-            ('location_id.usage', 'in', ('transit', 'internal')),
-            ('remaining_qty', '>', 0),
-            ('state', '=', 'done')
-        ], order='date, id') #TODO: case
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_out_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
     def _get_candidates_move(self):
         self.ensure_one()
-        # TODO: filter at start of period
-        candidates = self.env['stock.move'].search([
-            ('product_id', '=', self.id),
-            ('location_dest_id.usage', 'in', ('transit', 'internal')),
-            ('location_id.usage', 'not in', ('transit', 'internal')),
-            ('remaining_qty', '>', 0),
-            ('state', '=', 'done')
-        ], order='date, id') #TODO: case where 
+        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
+        candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
     @api.multi

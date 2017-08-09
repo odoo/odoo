@@ -187,6 +187,65 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move6.remaining_qty, 0.0)  # unused in out moves
         self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
 
+        # send 10 units in our transit location, the valorisation should not be impacted
+        transit_location = self.env['stock.location'].search([
+            ('company_id', '=', self.env.user.company_id.id),
+            ('usage', '=', 'transit'),
+        ], limit=1)
+        move8 = self.env['stock.move'].create({
+            'name': 'Send 10 units in transit',
+            'location_id': self.stock_location.id,
+            'location_dest_id': transit_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move8.action_confirm()
+        move8.action_assign()
+        move8.move_line_ids.qty_done = 10.0
+        move8.action_done()
+
+        self.assertEqual(move8.value, 0.0)
+        self.assertEqual(move8.cumulated_value, 0.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 0)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move4.remaining_qty, 0.0)
+        self.assertEqual(move5.remaining_qty, 54.0)
+        self.assertEqual(move6.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move8.remaining_qty, 0.0)  # unused in internal moves
+
+        # Sale 10 units @ 16.5 per unit
+        move9 = self.env['stock.move'].create({
+            'name': 'Sale 10 units @ 16.5 per unit',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move9.action_confirm()
+        move9.action_assign()
+        move9.move_line_ids.qty_done = 10.0
+        move9.action_done()
+
+        # note: it' ll have to get 10 units from move5 so its value should
+        # be -(10*16.50) = -165
+        self.assertEqual(move9.value, -165.0)
+        self.assertEqual(move9.cumulated_value, 726.0)
+
+        self.assertEqual(move1.remaining_qty, 0)
+        self.assertEqual(move2.remaining_qty, 0)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move4.remaining_qty, 0.0)
+        self.assertEqual(move5.remaining_qty, 44.0)
+        self.assertEqual(move6.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
+        self.assertEqual(move8.remaining_qty, 0.0)  # unused in internal moves
+        self.assertEqual(move9.remaining_qty, 0.0)  # unused in out moves
+
     def test_fifo_perpetual_2(self):
         # https://docs.google.com/spreadsheets/d/1NI0u9N1gFByXxYHfdiXuxQCrycXXOh76TpPQ3CWeyDw/edit?ts=58da749b#gid=0
         self.product1.cost_method = 'fifo'
