@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
 
-from odoo.addons.portal.controllers.portal import CustomerPortal, get_records_pager
+from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
 
 
 class CustomerPortal(CustomerPortal):
@@ -63,7 +63,7 @@ class CustomerPortal(CustomerPortal):
         # count for pager
         quotation_count = SaleOrder.search_count(domain)
         # make pager
-        pager = request.pager(
+        pager = portal_pager(
             url="/my/quotes",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=quotation_count,
@@ -113,7 +113,7 @@ class CustomerPortal(CustomerPortal):
         # count for pager
         order_count = SaleOrder.search_count(domain)
         # pager
-        pager = request.pager(
+        pager = portal_pager(
             url="/my/orders",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=order_count,
