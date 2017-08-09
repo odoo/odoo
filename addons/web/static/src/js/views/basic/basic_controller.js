@@ -232,13 +232,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             return self.isDestroyed() ? $.when() : self.reload();
         };
         record = record || this.model.get(this.handle);
-        var recordID = record.data.id;
+
         this.trigger_up('execute_action', {
             action_data: _.extend({}, attrs, {
-                context: record.getContext({additionalContext: attrs.context || {}}),
+                context: record.getContext({additionalContext: attrs.context || {}}),
             }),
-            model: record.model,
-            res_ids: [recordID],
+            env: {
+                context: record.getContext(),
+                currentID: record.data.id,
+                model: record.model,
+                resIDs: record.res_ids,
+            },
             on_closed: function (reason) {
                 if (!_.isObject(reason)) {
                     reload(reason);

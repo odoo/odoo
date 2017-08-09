@@ -901,7 +901,7 @@ QUnit.module('Views', {
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.strictEqual(event.data.action_data.name, "post",
                 "should trigger execute_action with correct method name");
-            assert.deepEqual(event.data.res_ids, [2], "should have correct id in event data");
+            assert.deepEqual(event.data.env.currentID, 2, "should have correct id in event data");
             event.data.on_success();
             event.data.on_closed();
         });
@@ -954,7 +954,7 @@ QUnit.module('Views', {
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.step('execute_action');
-            assert.deepEqual(event.data.res_ids, [resID],
+            assert.deepEqual(event.data.env.currentID, resID,
                 "execute action should be done on correct record id");
             event.data.on_success();
             event.data.on_closed();
@@ -1004,7 +1004,7 @@ QUnit.module('Views', {
 
         testUtils.intercept(form, 'execute_action', function (event) {
             assert.step('execute_action');
-            assert.deepEqual(event.data.res_ids, [resID],
+            assert.deepEqual(event.data.env.currentID, resID,
                 "execute action should be done on correct record id");
             event.data.on_success();
             event.data.on_closed();
@@ -3561,8 +3561,9 @@ QUnit.module('Views', {
             },
             intercepts: {
                 execute_action: function (e) {
-                    assert.deepEqual(e.data.action_data.context, {test: 2},
-                        "button context should have been evaluated and given to the action, without previous context");
+                    assert.deepEqual(e.data.action_data.context, {
+                        'test': 2
+                    }, "button context should have been evaluated and given to the action, with magicc without previous context");
                 },
             },
         });
@@ -3595,8 +3596,8 @@ QUnit.module('Views', {
             },
             intercepts: {
                 execute_action: function (e) {
-                    assert.deepEqual(e.data.action_data.context, {},
-                        "button context should have been evaluated and given to the action, without previous context");
+                    assert.deepEqual(e.data.action_data.context, {
+                    }, "button context should have been evaluated and given to the action, with magic keys but without previous context");
                 },
             },
         });

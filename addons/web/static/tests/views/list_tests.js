@@ -1171,9 +1171,9 @@ QUnit.module('Views', {
             },
             intercepts: {
                 execute_action: function (event) {
-                    assert.deepEqual(event.data.res_ids, [1],
+                    assert.deepEqual(event.data.env.currentID, 1,
                         'should call with correct id');
-                    assert.strictEqual(event.data.model, 'foo',
+                    assert.strictEqual(event.data.env.model, 'foo',
                         'should call with correct model');
                     assert.strictEqual(event.data.action_data.name, 'button_action',
                         "should call correct method");
