@@ -33,7 +33,7 @@ class CrmTeam(models.Model):
             team_id = self.env['crm.team'].browse(self.env.context.get('default_team_id'))
         if not team_id:
             default_team_id = self.env.ref('sales_team.team_sales_department', raise_if_not_found=False)
-            if default_team_id and (self.env.context.get('default_crm_lead_type') != 'lead' or default_team_id.use_leads):
+            if default_team_id and (self.env.context.get('default_type') != 'lead' or default_team_id.use_leads):
                 team_id = default_team_id
         return team_id
 

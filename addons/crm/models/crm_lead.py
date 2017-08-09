@@ -278,8 +278,8 @@ class Lead(models.Model):
         # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
-        if vals.get('type') and not self._context.get('default_crm_lead_type'):
-            context['default_crm_lead_type'] = vals.get('type')
+        if vals.get('type') and not self._context.get('default_type'):
+            context['default_type'] = vals.get('type')
         if vals.get('team_id') and not self._context.get('default_team_id'):
             context['default_team_id'] = vals.get('team_id')
 
@@ -314,7 +314,7 @@ class Lead(models.Model):
         self.ensure_one()
         # set default value in context, if not already set (Put stage to 'new' stage)
         context = dict(self._context)
-        context.setdefault('default_crm_lead_type', self.type)
+        context.setdefault('default_type', self.type)
         context.setdefault('default_team_id', self.team_id.id)
         # Set date_open to today if it is an opp
         default = default or {}
@@ -822,7 +822,7 @@ class Lead(models.Model):
                 (False, 'graph')
             ],
             'type': 'ir.actions.act_window',
-            'context': {'default_crm_lead_type': 'opportunity'}
+            'context': {'default_type': 'opportunity'}
         }
 
     @api.multi
