@@ -9,11 +9,13 @@ class AccountChangeLockDate(models.TransientModel):
     _description = 'Change lock date'
 
     period_lock_date = fields.Date(
-        string='Date for Non-Advisers',
-        default=lambda self: self.env.user.company_id.period_lock_date)
+        string='Lock Date for Non-Advisers',
+        default=lambda self: self.env.user.company_id.period_lock_date,
+        help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(
-        string='Date for Fiscal Year',
-        default=lambda self: self.env.user.company_id.fiscalyear_lock_date)
+        string='Lock Date for All Users',
+        default=lambda self: self.env.user.company_id.fiscalyear_lock_date,
+        help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
     @api.multi
     def change_lock_date(self):
