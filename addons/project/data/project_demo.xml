@@ -67,6 +67,8 @@
             <field name="color">3</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="type_ids" eval="[(4, ref('project_stage_0')), (4, ref('project_stage_1')), (4, ref('project_stage_2')), (4, ref('project_stage_3'))]"/>
+            <field name="partner_id" ref="base.partner_demo_portal"/>
+            <field name="privacy_visibility">portal</field>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -424,6 +426,9 @@ Send it ASAP, its urgent.</field>
             <field name="message_type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
         </record>
+
+        <function model="project.project" name="message_subscribe"
+            eval="[ref('project.project_project_1')], [ref('base.partner_demo_portal')]"/>
 
     </data>
 </odoo>
