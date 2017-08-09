@@ -421,7 +421,7 @@ def make_desc_parameters(params):
 def make_parameters(params, mod=None):
     for param in params:
         name = param.name.strip().strip('[]')
-        p = nodes.paragraph('', '', addnodes.literal_strong(name, name))
+        p = nodes.paragraph('', '', nodes.strong(name, name))
         if param.type:
             p += nodes.Text(' (')
             p += make_types(param.type, mod=mod)

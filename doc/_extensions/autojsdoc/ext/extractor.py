@@ -4,7 +4,19 @@ import os
 
 import pyjsdoc
 import pyjsparser
-from sphinx.util import status_iterator
+
+try:
+    from sphinx.util import status_iterator
+    def it(app): return status_iterator
+except ImportError:
+    # 1.2: Builder.status_iterator
+    # 1.3: Application.status_iterator (with alias on Builder)
+    # 1.6: sphinx.util.status_iterator (with *deprecated* aliases on Application and Builder)
+    # 1.7: removed Application and Builder aliases
+    # => if no sphinx.util.status_iterator, fallback onto the builder one for
+    #    1.2 compatibility, remove this entirely if we ever require 1.6+
+    status_iterator = None
+    def it(app): return app.builder.status_iterator
 
 from ..parser import jsdoc, parser
 
@@ -32,7 +44,7 @@ def read_js(app, modules, symbols):
     ]
 
     modules.update((mod.name, mod) for mod in ABSTRACT_MODULES)
-    for name in status_iterator(files, "Parsing javascript files...", length=len(files)):
+    for name in it(app)(files, "Parsing javascript files...", length=len(files)):
         with io.open(name) as f:
             ast = pyjsparser.parse(f.read())
             modules.update(
