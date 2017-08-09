@@ -158,9 +158,9 @@ class Product(models.Model):
 
         if self.env.context.get('internal', False):
             company_id = self.env.user.company_id.id
-            return ([('location_id.usage', 'in', ('internal', 'transit')), ('company_id', '=', company_id)], 
-                    [('location_id.usage', 'not in', ('internal', 'transit')), ('location_dest_id.usage', 'in', ('internal', 'transit')), ('company_id', '=', company_id)],
-                    [('location_id.usage', 'in', ('internal', 'transit')), ('location_dest_id.usage', 'not in', ('internal', 'transit')), ('company_id', '=', company_id)])
+            return ([('location_id.company_id', '=', company_id)], 
+                    [('location_id.company_id', '=', False), ('location_dest_id.company_id', '=', company_id)],
+                    [('location_id.company_id', '=', company_id), ('location_dest_id.company_id', '=', False)])
 
         location_ids = []
         if self.env.context.get('location', False):
