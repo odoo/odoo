@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 class _LogTracer(object):
     def __init__(self, whitelist=None, blacklist=None, files=None, deep=False):
         self.profiles = {}
-        self.lines = []
         self.whitelist = whitelist
         self.blacklist = blacklist
         self.files = files
@@ -32,19 +31,19 @@ class _LogTracer(object):
             return self.tracer
 
         if self.files and frame.f_code.co_filename not in self.files:
-            return
+            return self.tracer
 
         in_self = frame.f_locals['self']
 
         if isinstance(in_self, (odoo.sql_db.Cursor, odoo.sql_db.TestCursor, odoo.sql_db.LazyCursor)):
-            return
+            return self.tracer
 
         model = getattr(in_self, '_name', None)
 
         if self.whitelist and model not in self.whitelist:
-            return
-        if model in self.blacklist:
-            return
+            return self.tracer
+        if model in self.blacklist and self.first_frame != frame.f_code:
+            return self.tracer
 
         if frame.f_code not in self.profiles:
             try:
@@ -54,7 +53,7 @@ class _LogTracer(object):
                     'filename': frame.f_code.co_filename,
                     'firstline': firstline,
                     'code': lines,
-                    'lines': {},
+                    'calls': [],
                     'nb': 0,
                 }
             except Exception:
@@ -64,27 +63,14 @@ class _LogTracer(object):
         if not frame.f_lineno:
             codeProfile['nb'] += 1
 
-        lineno = frame.f_lineno
-        if event == 'return':
-            lineno += 0.5
-
-        if lineno not in codeProfile['lines']:
-            codeProfile['lines'][lineno] = {
-                'code': codeProfile,
-                'infos': {},
-                'nb': 0,
-                'event': event
-            }
-        lineProfile = codeProfile['lines'][lineno]
-        lineProfile['nb'] += 1
-
         cr = getattr(in_self, '_cr', None)
-        lineProfile['infos'][codeProfile['nb']] = {
+        codeProfile['calls'].append({
+            'event': event,
+            'lineno': frame.f_lineno,
             'queries': cr and cr.sql_log_count,
-            'time': time.time()
-        }
-
-        self.lines.append(lineProfile)
+            'time': time.time(),
+            'callno': codeProfile['nb'],
+        })
 
         return self.tracer
 
@@ -146,41 +132,35 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
         log = ["\n%-10s%-10s%s\n" % ('calls', 'queries', 'ms')]
 
         for v in log_tracer.profiles.values():
-            sort_by_calls = {}
-            for lineno in v['lines']:
-                line = v['lines'][lineno]
-                for n in line['infos']:
-                    if n not in sort_by_calls:
-                        sort_by_calls[n] = {}
-                    sort_by_calls[n][lineno] = {
-                        'queries': line['infos'][n]['queries'],
-                        'time': line['infos'][n]['time'],
-                        'line': line,
-                    }
-                line.pop('infos')
-                line['nb_queries'] = 0
-                line['delay'] = 0
+            v['report'] = {}
+            l = len(v['calls'])
+            for k, call in enumerate(v['calls']):
+                if k+1 >= l:
+                    continue
 
-            for n in sort_by_calls:
-                linenos = sorted(sort_by_calls[n])
-                for k, lineno in enumerate(linenos):
-                    if k+1 < len(linenos):
-                        line = sort_by_calls[n][lineno]
-                        next_line = sort_by_calls[n][linenos[k+1]]
-                        if 'nb_queries' in line['line'] and next_line['time'] - line['time'] > 0:
-                            line['line']['nb_queries'] += next_line['queries'] - line['queries']
-                            line['line']['delay'] += next_line['time'] - line['time']
-                        else:
-                            line['line'].pop('nb_queries')
-                            line['line'].pop('delay')
+                if call['lineno'] not in v['report']:
+                    v['report'][call['lineno']] = {
+                        'nb_queries': 0,
+                        'delay': 0,
+                        'nb': 0,
+                    }
+                v['report'][call['lineno']]['nb'] += 1
+
+                n = k+1
+                while k+1 <= l and v['calls'][k+1]['callno'] != call['callno']:
+                    n += 1
+                if n >= l:
+                    continue
+                next_call = v['calls'][n]
+                if next_call['queries'] is not None:
+                    v['report'][call['lineno']]['nb_queries'] += next_call['queries'] - call.get('queries', 0)
+                v['report'][call['lineno']]['delay'] += next_call['time'] - call['time']
 
             queries = 0
             delay = 0
-            v['nb_queries'] = 0
-            v['delay'] = 0
-            for line in v['lines'].values():
-                queries += line.get('nb_queries', 0)
-                delay += line.get('delay', 0)
+            for call in v['report'].values():
+                queries += call['nb_queries']
+                delay += call['delay']
 
             if minimum_time and minimum_time > delay*1000:
                 continue
@@ -190,8 +170,8 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
             # todo: no color if output in a file
             log.append("\033[1;33m%s %s--------------------- %s, %s\033[1;0m\n\n" % (v['model'] or '', '-' * (15-len(v['model'] or '')), v['filename'], v['firstline']))
             for lineno, line in enumerate(v['code']):
-                if (lineno + v['firstline']) in v['lines']:
-                    data = v['lines'][lineno + v['firstline']]
+                if (lineno + v['firstline']) in v['report']:
+                    data = v['report'][lineno + v['firstline']]
                     log.append("%-10s%-10s%-10s%s" % (
                         str(data['nb']) if 'nb_queries' in data else '.',
                         str(data.get('nb_queries', '')),
@@ -202,7 +182,7 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
                     log.append(line[:-1])
                 log.append('\n')
 
-            log.append("%-10s%-10d%-10s\n\n" % (
+            log.append("\nTotal:\n%-10s%-10d%-10s\n\n" % (
                         str(data['nb']),
                         queries,
                         str(round(delay*100000)/100)))
