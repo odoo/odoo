@@ -24,6 +24,12 @@ class Event(models.Model):
     event_ticket_ids = fields.One2many('event.event.ticket', 'event_id', string='Event Ticket',
         default=lambda self: self._default_tickets(), copy=True)
 
+    @api.multi
+    def _is_event_registrable(self):
+        self.ensure_one()
+        if not self.event_ticket_ids:
+            return True
+        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
 
 class EventTicket(models.Model):
 

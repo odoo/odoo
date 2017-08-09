@@ -165,13 +165,11 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
-        if event.state == 'done':
-            return request.redirect("/event/%s" % slug(event))
-
         values = {
             'event': event,
             'main_object': event,
             'range': range,
+            'registrable': event._is_event_registrable()
         }
         return request.render("website_event.event_description_full", values)
 

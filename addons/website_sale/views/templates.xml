@@ -1206,11 +1206,11 @@
                                     <div class="clearfix" />
                                     <t t-if="mode == ('new', 'billing')">
                                         <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-md-6">
-                                            <label class="control-label font-weight-normal" for="company_name">Company Name</label>
+                                            <label class="control-label font-weight-normal label-optional" for="company_name">Company Name</label>
                                             <input type="text" name="company_name" class="form-control" t-att-value="'company_name' in checkout and checkout['company_name']" />
                                         </div>
                                         <div t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-md-6 div_vat">
-                                            <label class="control-label font-weight-normal" for="vat">TIN / VAT </label>
+                                            <label class="control-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
                                             <input type="text" name="vat" class="form-control" t-att-value="'vat' in checkout and checkout['vat']" />
                                         </div>
                                     </t>
@@ -1220,14 +1220,14 @@
                                         <input type="text" name="street" class="form-control" t-att-value="'street' in checkout and checkout['street']" />
                                     </div>
                                     <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-md-12 div_street2">
-                                        <label class="control-label" for="street2">Street 2</label>
+                                        <label class="control-label label-optional" for="street2">Street 2</label>
                                         <input type="text" name="street2" class="form-control" t-att-value="'street2' in checkout and checkout['street2']" />
                                     </div>
                                     <div class="clearfix" />
                                     <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
                                         <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
-                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <label class="control-label label-optional" for="zip">Zip Code</label>
                                             <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
@@ -1237,7 +1237,7 @@
                                     </div>
                                     <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
                                         <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-sm-4 div_zip">
-                                            <label class="control-label" for="zip">Zip Code</label>
+                                            <label class="control-label label-optional" for="zip">Zip Code</label>
                                             <input type="text" name="zip" class="form-control" t-att-value="'zip' in checkout and checkout['zip']" />
                                         </div>
                                     </t>
