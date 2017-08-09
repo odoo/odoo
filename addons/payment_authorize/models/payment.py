@@ -230,6 +230,7 @@ class TxAuthorize(models.Model):
             self.write({
                 'state': 'cancel',
                 'acquirer_reference': data.get('x_trans_id'),
+                'state_message': data.get('x_response_reason_text'),
             })
             return True
         else:
