@@ -17,7 +17,7 @@ from odoo.addons import decimal_precision as dp
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
 
@@ -119,10 +119,6 @@ class SaleOrder(models.Model):
     access_token = fields.Char(
         'Security Token', copy=False,
         default=_get_default_access_token)
-    website_url = fields.Char(
-        'Website URL', compute='_website_url',
-        help='The full URL to access the document using the customer portal.')
-
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('sent', 'Quotation Sent'),
@@ -170,9 +166,10 @@ class SaleOrder(models.Model):
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
 
-    def _website_url(self):
-        for so in self:
-            so.website_url = '/my/orders/%s' % (so.id)
+    def _compute_portal_url(self):
+        super(SaleOrder, self)._compute_portal_url()
+        for order in self:
+            order.portal_url = '/my/orders/%s' % (order.id)
 
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
@@ -588,14 +585,7 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).get_access_action(access_uid)
 
     def get_mail_url(self):
-        self.ensure_one()
-        params = {
-            'model': self._name,
-            'res_id': self.id,
-            'access_token': self.access_token,
-        }
-        params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
-        return '/mail/view?' + url_encode(params)
+        return self.get_share_url()
 
     @api.multi
     def _notification_recipients(self, message, groups):
