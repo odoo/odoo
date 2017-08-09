@@ -73,11 +73,12 @@ def pager(url, total, page=1, step=30, scope=5, url_args=None):
 
 
 def get_records_pager(ids, current):
-    if current.id in ids:
+    if current.id in ids and (hasattr(current, 'website_url') or hasattr(current, 'portal_url')):
+        attr_name = 'portal_url' if hasattr(current, 'portal_url') else 'website_url'
         idx = ids.index(current.id)
         return {
-            'prev_record': idx != 0 and current.browse(ids[idx - 1]).website_url,
-            'next_record': idx < len(ids) - 1 and current.browse(ids[idx + 1]).website_url
+            'prev_record': idx != 0 and getattr(current.browse(ids[idx - 1]), attr_name),
+            'next_record': idx < len(ids) - 1 and getattr(current.browse(ids[idx + 1]), attr_name),
         }
     return {}
 
