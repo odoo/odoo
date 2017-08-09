@@ -1781,6 +1781,32 @@ QUnit.module('Views', {
             "the add button should still be visible");
         kanban.destroy();
     });
+
+    QUnit.test('Project Kanban Progress Bar Test', function (assert) {
+        assert.expect(3);
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="product_id"/>' +
+                        "<progressbar field='foo' colors='{\"yop\": \"success\", \"blip\": \"danger\", \"gnap\": \"warning\"}'/>" +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="name"/><br/>' +
+                            '<field name="foo"/>' +
+                            '</div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+        kanban.appendTo('body');
+        assert.strictEqual(kanban.$('.o_kanban_counter').length, this.data.product.records.length, "Kanban counter should be created.");
+        var record_length = kanban.$('.o_kanban_group')[0];
+        assert.strictEqual(parseInt(kanban.$('.o_kanban_counter_side')[0].innerText), kanban.$('.o_kanban_group')[0].childNodes.length - 5, "Kanban counter should be display correct no of records");
+        kanban.$('.o_progress_success')[0].click();
+        assert.strictEqual(kanban.$('.oe_kanban_card_warning').css('opacity'),'0.5', "Kanban Record Opacity should be decrease");
+        kanban.destroy();
+    });
 });
 
 });

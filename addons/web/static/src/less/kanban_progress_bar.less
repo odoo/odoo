@@ -1,0 +1,234 @@
+@o-kanban-record-margin: 4px;
+@o-kanban-small-record-width: 240px;
+@o-kanban-header-height : 50px;
+@o-kanban-counter-font-size: 10px;
+@o-kanban-progress-success: @brand-success;
+@o-kanban-progress-warning: @brand-warning;
+@o-kanban-progress-crm_planned: @brand-primary;
+@o-kanban-progress-crm_today: @brand-success;
+
+
+
+.o-kanban-css-filter(@class, @accent-color) {
+    // Provide CSS reordering and highlight
+    &.o_kanban_group_show_@{class} {
+        @mix-soft: mix(@accent-color, @odoo-webclient-background-color, 5%);
+        @mix-full: mix(@accent-color, @odoo-webclient-background-color);
+
+        background-color: @mix-soft !important;
+        border-color: @mix-full;
+
+        .o_kanban_counter {
+            background-color: @mix-soft;
+            border-color: @mix-soft;
+        }
+
+        .o_progress_@{class} {
+            -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+            -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .o_kanban_record:not(.oe_kanban_card_@{class}){
+            order: 3;
+            opacity: 0.5;
+            box-shadow: none;
+            margin: @o-kanban-record-margin*0.5 @o-kanban-record-margin;
+            &:hover {
+              opacity: 1;
+            }
+        }
+
+        .o_kanban_load_more {
+            order: 2;
+            padding: @o-kanban-record-margin 0 @o-kanban-record-margin*2;
+        }
+
+        .oe_kanban_card_@{class} {
+            order: 1;
+            margin: 0 @o-kanban-record-margin @o-kanban-record-margin*2;
+        }
+
+        .o_kanban_counter.affix ~ .oe_kanban_card_@{class} {
+            margin-top: 20px + @o-kanban-record-margin*2;
+
+            & ~ .oe_kanban_card_@{class} {
+                margin-top: -@o-kanban-record-margin;
+            }
+        }
+    }
+}
+
+.o_kanban_group {
+    background-color: @odoo-webclient-background-color;
+    border: 1px solid transparent;
+    border-width: 0 1px;
+    .o_kanban_counter {
+        background-color: @odoo-webclient-background-color;
+        border-color: @odoo-webclient-background-color;
+    }
+    &:nth-child(odd) {
+        background-color: darken(@odoo-webclient-background-color, 3%);
+        .o_kanban_counter {
+            background-color: darken(@odoo-webclient-background-color, 3%);
+            border-color: darken(@odoo-webclient-background-color, 3%);
+        }
+        .o_kanban_header {
+            &.affix {
+                background-color: darken(@odoo-webclient-background-color, 3%);
+                border-color: darken(@odoo-webclient-background-color, 3%);
+            }
+        }
+    }
+
+}
+.o_kanban_view .o_kanban_group .o_kanban_header {
+    height: @o-kanban-header-height;
+}
+
+&.o_column_folded {
+    > .o_kanban_counter {
+        display: none!important;
+    }
+}
+
+.o_kanban_counter {
+    height: 18px;
+    margin-bottom: 10px;
+    position: relative;
+    box-sizing: content-box;
+    border-style: solid;
+    border-width: @o-kanban-record-margin 0;
+    margin: 0 @o-kanban-record-margin @o-kanban-record-margin;
+    .o-transition(box-shadow, 0.3s);
+
+
+    &.affix {
+        position: fixed;
+        width: @o-kanban-small-record-width - 2px;
+        margin: 0 0 0 -@o-kanban-record-margin;
+        border-width: @o-kanban-record-margin @o-kanban-record-margin*2;
+        box-shadow: 0 4px 4px -2px;
+        z-index: 1;
+        margin-top: @o-kanban-header-height;
+
+        & + .o_progressBar_ghost {
+            height: 86px;
+        }
+    }
+
+    .o_kanban_counter_progress {
+        display: inline-block;
+        background: fade(black, 7%);
+        padding: 1px;
+        box-shadow: none;
+        .size(85%, 100%);
+
+        .transition-off {
+            -webkit-transition: none;
+            -moz-transition: none;
+            -ms-transition: none;
+            -o-transition: none;
+            transition: none;
+        }
+
+        .progress-bar {
+            box-shadow: none;
+            cursor: pointer;
+
+            &.o_progress_success {
+                background-color: @brand-success;                
+            }
+            &.o_progress_danger {
+                background-color: lighten(desaturate(@brand-danger,12%), 2%);
+            }
+            &.o_progress_warning {
+                background-color: @brand-warning;
+            }
+            &.o_progress_crm_planned {
+                background-color: @o-kanban-progress-crm_planned;
+            }
+            &.o_progress_crm_today {
+                background-color: @brand-success;
+            }
+            // Be sure that a bar with data has a minimun width
+            &.o_bar_active {
+                min-width: 10px;
+            }
+        }
+
+        .o_kanban_counter_label {
+            font-size: @o-kanban-counter-font-size;
+            .user-select(none);
+            .o-position-absolute(0, auto, auto, @o-kanban-record-margin);
+        }
+    }
+
+    .o_kanban_counter_side {
+        color: @gray-dark @odoo-tooltip-background-color;
+        font-size: @o-kanban-counter-font-size*1.2;
+        font-weight: bold;
+        text-align: right;
+        &.o-kanban-grow {
+            .o-animation(grow, .4s, ease-in);
+        }
+    }
+
+    &.o_counter_number {
+        .o_kanban_counter_progress {
+            width: 80%;
+        }
+    }
+}
+.o_kanban_group {
+    .o_kanban_header {
+        &.affix {
+            position: fixed;
+            width: @o-kanban-small-record-width; 
+            z-index: 1;
+            background-color: @odoo-webclient-background-color;
+        }
+    }
+}
+&.o_kanban_group_show {
+    .o-flex-display(); //[TODO: (In Chrome) Flex generating random padding in header while filter on progressBar is active.]
+    .o-flex-flow(wrap, column);
+
+    .o_kanban_counter.affix {
+        & + .o_progressBar_ghost {
+            height: 64px;
+        }
+    }
+}
+    
+.o-kanban-css-filter(success, @o-kanban-progress-success);
+.o-kanban-css-filter(danger, @brand-danger);
+.o-kanban-css-filter(warning, @o-kanban-progress-warning);
+.o-kanban-css-filter(crm_planned, @o-kanban-progress-crm_planned);
+.o-kanban-css-filter(crm_today, @o-kanban-progress-crm_today);
+
+
+@-webkit-keyframes grow {
+  from {
+    -webkit-transform: scale3d(1, 1, 1)  translateZ(0);
+  }
+  50% {
+    -webkit-transform: scale3d(1.05, 1.05, 1.05)  translateZ(0);
+  }
+  to {
+    -webkit-transform: scale3d(1, 1, 1)  translateZ(0);
+  }
+}
+
+@keyframes grow {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
+  50% {
+    transform: scale3d(1.5, 1.5, 1.5);
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+
+}

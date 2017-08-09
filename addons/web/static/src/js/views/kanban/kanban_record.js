@@ -38,6 +38,7 @@ var KanbanRecord = Widget.extend({
         this.draggable = options.draggable;
         this.read_only_mode = options.read_only_mode;
         this.qweb = options.qweb;
+        this.barOptions = options.progressbar;
         this.subWidgets = {};
 
         this._setState(state);
@@ -64,6 +65,9 @@ var KanbanRecord = Widget.extend({
         _.invoke(_.pluck(this.subWidgets, '$el'), 'detach');
         this._setState(state);
         this._render();
+        if (this.barOptions) {
+            this.trigger_up('updateProgressBar');
+        }
     },
 
     //--------------------------------------------------------------------------
