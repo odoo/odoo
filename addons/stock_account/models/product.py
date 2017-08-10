@@ -73,11 +73,6 @@ class ProductTemplate(models.Model):
     def _set_cost_method(self):
         return self.write({'property_cost_method': self.cost_method})
 
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
-
     @api.multi
     def _get_product_accounts(self):
         """ Add the stock accounts related to product to the result of super()
@@ -113,11 +108,6 @@ class ProductProduct(models.Model):
         help="Calculated average cost")
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
-
-    @api.onchange('type')
-    def onchange_type_valuation(self):
-        # TO REMOVE IN MASTER
-        pass
 
     @api.multi
     def do_change_standard_price(self, new_price, account_id):
