@@ -520,7 +520,6 @@ class account_payment(models.Model):
             if counterpart_aml['credit']:
                 counterpart_aml['credit'] += debit_wo - credit_wo
             counterpart_aml['amount_currency'] -= amount_currency_wo
-        self.invoice_ids.register_payment(counterpart_aml)
 
         #Write counterpart lines
         if not self.currency_id != self.company_id.currency_id:
@@ -529,7 +528,12 @@ class account_payment(models.Model):
         liquidity_aml_dict.update(self._get_liquidity_move_line_vals(-amount))
         aml_obj.create(liquidity_aml_dict)
 
+        #validate the payment
         move.post()
+
+        #reconcile the invoice receivable/payable line(s) with the payment
+        self.invoice_ids.register_payment(counterpart_aml)
+
         return move
 
     def _create_transfer_entry(self, amount):
