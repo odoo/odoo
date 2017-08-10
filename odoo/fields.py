@@ -565,7 +565,7 @@ class Field(object):
         """ Traverse the fields of the related field `self` except for the last
         one, and return it as a pair `(last_record, last_field)`. """
         for name in self.related[:-1]:
-            record = record[name][:1]
+            record = record[name][:1].with_prefetch(record._prefetch)
         return record, self.related_field
 
     def _compute_related(self, records):
@@ -978,6 +978,7 @@ class Field(object):
                 self.compute_value(record)
             else:
                 recs = record._in_cache_without(self)
+                recs = recs.with_prefetch(record._prefetch)
                 self.compute_value(recs)
 
         else:
