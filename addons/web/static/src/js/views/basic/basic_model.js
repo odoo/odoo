@@ -649,7 +649,7 @@ var BasicModel = AbstractModel.extend({
         var element = this.localData[id];
 
         if (element.type === 'record') {
-            if ('currentId' in options && !options.currentId) {
+            if (!options.currentId && (('currentId' in options) || this.isNew(id))) {
                 var params = {
                     context: element.context,
                     fieldsInfo: element.fieldsInfo,
