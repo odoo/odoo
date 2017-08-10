@@ -848,7 +848,9 @@ class AccountInvoice(models.Model):
                 totlines = inv.with_context(ctx).payment_term_id.with_context(currency_id=company_currency.id, active_model='account.invoice', active_id=self.id).compute(total, date_invoice)[0][0]
                 res_amount_currency = total_currency
                 ctx['date'] = date_invoice
+                count = 0
                 for i, t in enumerate(totlines):
+                    count += 1
                     if inv.currency_id != company_currency:
                         amount_currency = company_currency.with_context(ctx).compute(t[1], inv.currency_id)
                     else:
@@ -861,7 +863,7 @@ class AccountInvoice(models.Model):
 
                     iml.append({
                         'type': 'dest',
-                        'name': name,
+                        'name': 'Cuota ' + str(count) + ' de ' + str(len(totlines)),
                         'price': t[1],
                         'account_id': inv.account_id.id,
                         'date_maturity': t[0],
