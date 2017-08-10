@@ -52,7 +52,7 @@ class Contract(models.Model):
     name = fields.Char('Contract Reference', required=True, track_visibility='onchange')
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', track_visibility='onchange', string="Department")
-    type_id = fields.Many2one('hr.contract.type', string="Contract Type", required=True,
+    type_id = fields.Many2one('hr.contract.type', string='Contract Type', required=True,
                               default=lambda self: self.env['hr.contract.type'].search([], limit=1),
                               track_visibility='onchange')
     job_id = fields.Many2one('hr.job', string='Job Title', track_visibility='onchange')
