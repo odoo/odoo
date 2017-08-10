@@ -11,4 +11,15 @@
             </td>
         </xpath>
     </template>
+
+    <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
+        <xpath expr="//li[contains(@class, 'o_print_button')]" position="after">
+            <!-- <li t-if="payment_request.state != 'paid' and payment_request.amount_total"> -->
+            <li>
+                <a class="btn btn-primary btn-lg">
+                    <i class="fa fa-arrow fa-3x" aria-hidden="true"/>Pay Now
+                </a>
+            </li>
+        </xpath>
+    </template>
 </odoo>
