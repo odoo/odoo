@@ -357,7 +357,8 @@ class WebsiteSale(http.Controller):
             values['suggested_products'] = _order._cart_accessories()
 
         if post.get('type') == 'popover':
-            return request.render("website_sale.cart_popover", values)
+            # force no-cache so IE11 doesn't cache this XHR
+            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
 
         if post.get('code_not_available'):
             values['code_not_available'] = post.get('code_not_available')
@@ -495,7 +496,7 @@ class WebsiteSale(http.Controller):
     def _checkout_form_save(self, mode, checkout, all_values):
         Partner = request.env['res.partner']
         if mode[0] == 'new':
-            partner_id = Partner.sudo().create(checkout)
+            partner_id = Partner.sudo().create(checkout).id
         elif mode[0] == 'edit':
             partner_id = int(all_values.get('partner_id', 0))
             if partner_id:

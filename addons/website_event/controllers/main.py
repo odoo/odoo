@@ -226,7 +226,7 @@ class WebsiteEventController(http.Controller):
     def registration_new(self, event, **post):
         tickets = self._process_tickets_details(post)
         if not tickets:
-            return request.redirect("/event/%s" % slug(event))
+            return False
         return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
 
     def _process_registration_details(self, details):
