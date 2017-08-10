@@ -218,11 +218,11 @@ class StockMove(models.Model):
 
     @api.multi
     def action_done(self):
-        qty_available = {}
-        for move in self:
-            #Should write move.price_unit here maybe, certainly on incoming
-            if move.product_id.cost_method == 'average':
-                qty_available[move.product_id.id] = move.product_id.with_context(company_owned=True).qty_available
+        average_price = {}
+        for move in self.filtered(lambda m: m.product_id.cost_method == 'average'):
+            # For the average costing method, the value depends of the quantity in stock at the
+            # moment of the transfer, so fetch the value before calling super.
+            average_price[move.product_id.id] = move.product_id.average_price
         res = super(StockMove, self).action_done()
         for move in res:
             if move._is_in():
@@ -231,8 +231,9 @@ class StockMove(models.Model):
                         move.price_unit = move._get_price_unit()
                     move.value = move.price_unit * move.product_qty
                     move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
-                    move.remaining_qty = move.product_qty
                     if move.product_id.cost_method == 'fifo':
+                        move.remaining_qty = move.product_qty
+
                         # If there are some OUT moves that we could not value in time, find them
                         # and value them now with this new IN move. After that, update the cumulated
                         # value along the moves done after the newly valued move.
@@ -281,7 +282,7 @@ class StockMove(models.Model):
                     move.last_done_qty = move.product_id.qty_available
                 elif move.product_id.cost_method == 'average':
                     curr_rounding = move.company_id.currency_id.rounding
-                    avg_price_unit = float_round(move.product_id._get_latest_cumulated_value(exclude_move=move) / qty_available[move.product_id.id], precision_rounding=curr_rounding)
+                    avg_price_unit = average_price[move.product_id.id]
                     move.value = float_round(-avg_price_unit * move.product_qty, precision_rounding=curr_rounding)
                     move.remaining_qty = 0
                     move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
