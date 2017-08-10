@@ -426,8 +426,8 @@ var loadXML = (function () {
             } else {
                 // There is nothing to load anymore, so resolve the
                 // "all the calls" deferred
-                allLoadingsDef.resolve();
                 isLoading = false;
+                allLoadingsDef.resolve();
             }
         }
     };
