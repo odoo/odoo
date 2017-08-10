@@ -416,8 +416,8 @@
                                         <i class="fa fa-2x">123..</i>
                                     </div>
                                     <!-- Date and Time -->
-                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
-                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
+                                    <div attrs="{'invisible': [('type', '!=', 'date')]}">
+                                        <p class="o_datetime">YYYY-MM-DD
                                             <i class="fa fa-calendar fa-2x"/>
                                         </p>
                                     </div>
@@ -490,7 +490,7 @@
                                         <field name="constr_mandatory" string="Mandatory Answer"/>
                                         <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
                                         <group>
                                             <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
                                         </group>
@@ -499,8 +499,8 @@
                                             <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                             <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
                                             <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
                                             <field name="validation_error_msg" colspan="4"/>
                                         </group>
                                     </div>
