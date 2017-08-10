@@ -1807,6 +1807,8 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
+                # take care of adding all existing even the edited ones
+                result[0][2].append(record.id)
                 values = {k: record._cache[k] for k in record._get_dirty()}
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
@@ -1819,15 +1821,17 @@ class _RelationalMulti(_Relational):
         # give all fields values, the client is responsible for figuring out
         # which fields are actually dirty
         fields = [(name, value._fields[name]) for name in (fnames or []) if name != 'id']
-        result = [(5,)]
+        result = [(6, 0, [])]
         for record in value:
             vals = {name: field.convert_to_onchange(record[name]) for name, field in fields}
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
+                # take care of adding all existing even the edited ones
+                result[0][2].append(record.id)
                 result.append((1, record.id, vals))
             else:
-                result.append((4, record.id))
+                result[0][2].append(record.id)
         return result
 
     def convert_to_export(self, value, env):
