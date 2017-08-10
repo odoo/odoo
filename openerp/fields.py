@@ -1807,6 +1807,8 @@ class _RelationalMulti(_Relational):
                 values = record._convert_to_write(values)
                 result.append((0, 0, values))
             elif record._is_dirty():
+                # take care of adding all existing even the edited ones
+                result[0][2].append(record.id)
                 values = {k: record._cache[k] for k in record._get_dirty()}
                 values = record._convert_to_write(values)
                 result.append((1, record.id, values))
@@ -1825,6 +1827,8 @@ class _RelationalMulti(_Relational):
             if not record.id:
                 result.append((0, 0, vals))
             elif vals:
+                # take care of adding all existing even the edited ones
+                result[0][2].append(record.id)
                 result.append((1, record.id, vals))
             else:
                 result[0][2].append(record.id)

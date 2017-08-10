@@ -140,7 +140,7 @@ class TestOnChange(common.TransactionCase):
         result = self.Discussion.onchange(values, 'name', field_onchange)
         self.assertIn('messages', result['value'])
         self.assertItemsEqual(result['value']['messages'], [
-            (6, 0, []),
+            (6, 0, [message.id]),
             (1, message.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': message.body,
@@ -191,7 +191,7 @@ class TestOnChange(common.TransactionCase):
         self.assertEqual(result['value'], {
             'name': partner.name,
             'lines': [
-                (6, 0, []),
+                (6, 0, [line.id]),
                 (1, line.id, {'name': partner.name, 'partner': (partner.id, partner.name)}),
                 (0, 0, {'name': partner.name, 'partner': (partner.id, partner.name)}),
             ],
@@ -229,7 +229,7 @@ class TestOnChange(common.TransactionCase):
         participants = discussion.participants + demo
         self.assertItemsEqual(
             result['value']['participants'],
-            ([(6, 0, [])] +
+            ([(6, 0, [user.id for user in participants])] +
              [(1, user.id, {'display_name': user.display_name}) for user in participants]),
         )
 
@@ -314,7 +314,7 @@ class TestOnChange(common.TransactionCase):
         # But here with commit 5676d81, we get value of: [(2, email.id)]
         self.assertEqual(
             result['value']['important_emails'],
-            [(6, 0, []),
+            [(6, 0, [email.id]),
              (1, email.id, {
                  'name': u'[Foo Bar] %s' % USER.name,
                  'body': email.body,
