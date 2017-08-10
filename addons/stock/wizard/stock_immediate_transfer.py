@@ -34,4 +34,6 @@ class StockImmediateTransfer(models.TransientModel):
                     move_line.qty_done = move_line.product_uom_qty
             else:
                 move.quantity_done = move.product_uom_qty
+        if self.pick_id.check_backorder():
+            return self.pick_id.action_generate_backorder_wizard()
         self.pick_id.do_transfer()

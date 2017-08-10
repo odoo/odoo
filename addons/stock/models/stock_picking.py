@@ -617,24 +617,27 @@ class Picking(models.Model):
 
         # Check backorder should check for other barcodes
         if self.check_backorder():
-            view = self.env.ref('stock.view_backorder_confirmation')
-            wiz = self.env['stock.backorder.confirmation'].create({'pick_id': self.id})
-            return {
-                'name': _('Create Backorder?'),
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.backorder.confirmation',
-                'views': [(view.id, 'form')],
-                'view_id': view.id,
-                'target': 'new',
-                'res_id': wiz.id,
-                'context': self.env.context,
-            }
+            return self.action_generate_backorder_wizard()
         self.action_done()
         return
 
     do_new_transfer = button_validate #TODO: replace later
+
+    def action_generate_backorder_wizard(self):
+        view = self.env.ref('stock.view_backorder_confirmation')
+        wiz = self.env['stock.backorder.confirmation'].create({'pick_id': self.id})
+        return {
+            'name': _('Create Backorder?'),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'stock.backorder.confirmation',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': wiz.id,
+            'context': self.env.context,
+        }
 
     def check_backorder(self):
         self.ensure_one()

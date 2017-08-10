@@ -2184,7 +2184,9 @@ class StockMove(TransactionCase):
         picking.action_assign()
         res_dict = picking.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
 
         self.assertEqual(len(picking.move_lines.move_line_ids), 1)
         self.assertEqual(picking.move_lines.quantity_done, 5.0)
