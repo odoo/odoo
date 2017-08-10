@@ -101,15 +101,15 @@ class TestSurvey(TransactionCase):
             self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
                 Validation function for type numerical_box is unable to notify if answer is violating the validation rules")
 
-    def test_05_question_datetime(self):
+    def test_05_question_date(self):
         question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'datetime', 'validation_required': True,
-            'validation_min_date': '2015-03-20 00:00:00', 'validation_max_date': '2015-03-25 00:00:00', 'validation_error_msg': "Error"})
+            'page_id': self.page1.id, 'question': 'Q0', 'type': 'date', 'validation_required': True,
+            'validation_min_date': '2015-03-20', 'validation_max_date': '2015-03-25', 'validation_error_msg': "Error"})
         answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-        results = [('2015-55-10', _('This is not a date/time')), ('2015-03-19 00:00:00', 'Error'), ('2015-03-26 00:00:00', 'Error')]
+        results = [('2015-55-10', _('This is not a date')), ('2015-03-19', 'Error'), ('2015-03-26', 'Error')]
         for i in range(len(results)):
             self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
-                Validation function for type datetime is unable to notify if answer is violating the validation rules")
+                Validation function for type date is unable to notify if answer is violating the validation rules")
 
     def test_06_survey_sharing(self):
         # Case-1: Executing action with correct data.
