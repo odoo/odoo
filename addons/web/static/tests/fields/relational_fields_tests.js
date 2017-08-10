@@ -5227,6 +5227,59 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('one2many: onchange that returns unknow field in list, but not in form', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.onchanges = {
+            name: function () {},
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="name"/>' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form string="Partners">' +
+                            '<field name="display_name"/>' +
+                            '<field name="timmy" widget="many2many_tags"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        value: {
+                            p: [[5], [0, 0, {display_name: 'new', timmy: [[5], [4, 12]]}]],
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "the one2many should contain one row");
+        assert.strictEqual(form.$('.o_field_widget[name="timmy"]').length, 0,
+            "timmy should not be displayed in the list view");
+
+        form.$('.o_data_row td:first').click(); // open the record
+
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"]').length, 1,
+            "timmy should be displayed in the form view");
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .badge').length, 1,
+            "m2mtags should contain one tag");
+        assert.strictEqual($('.modal .o_field_many2manytags[name="timmy"] .o_badge_text').text(),
+            'gold', "tag name should have been correctly loaded");
+
+        form.destroy();
+    });
+
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
