@@ -122,7 +122,7 @@ class PadCommon(models.AbstractModel):
 
         # Update the pad if the `pad_content_field` is modified
         for k, field in pycompat.items(self._fields):
-            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field):
+            if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 company = self.env.user.sudo().company_id
                 myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
                 path = self[k].split('/p/')[1]

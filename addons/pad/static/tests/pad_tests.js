@@ -193,5 +193,41 @@ QUnit.module('pad widget', {
         delete FieldPad.prototype.isPadConfigured;
     });
 
+    QUnit.test('pad widget is not considered dirty at edition', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch:'<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="description" widget="pad"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (!args.method) {
+                    return $.when(true);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                userName: "batman",
+            },
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        var def = form.canBeDiscarded();
+
+        assert.strictEqual($('.modal').length, 0,
+            "should have no confirmation modal opened");
+
+        assert.strictEqual(def.state(), 'resolved',
+            "can be discarded was succesfully resolved");
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
 
 });

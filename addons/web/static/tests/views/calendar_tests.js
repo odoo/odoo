@@ -789,7 +789,7 @@ QUnit.module('Views', {
         assert.strictEqual($event1Avatars.find('span').length, 0,
             "should not have a span for more attendees since there is only one");
 
-        var $event2Avatars = calendar.$('.fc-event:contains(All the day) .o_calendar_avatars');
+        var $event2Avatars = calendar.$('.fc-event:contains(All day) .o_calendar_avatars');
         assert.strictEqual($event2Avatars.find('img').length, 3, "should have 3 avatars");
         assert.strictEqual($event2Avatars.find('span').text(), '+2',
             "should indicate there are 2 more attendees that we don't show");
@@ -1033,6 +1033,46 @@ QUnit.module('Views', {
         assert.strictEqual(calendar.$('.fc-event').length, 5,
             "should display 5 events");
         calendar.destroy();
+    });
+
+    QUnit.test('events starting at midnight', function (assert) {
+        assert.expect(2);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: '<calendar mode="week" date_start="start"/>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // Click on Tuesday 12am
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body');
+        var top = calendar.$('.fc-axis:contains(12am)').offset().top + 5;
+        var left = calendar.$('.fc-day:eq(2)').offset().left + 5;
+        try {
+            testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+            testUtils.triggerPositionalMouseEvent(left, top, "mouseup");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test failed to simulate a click on the screen.' +
+                'Your screen is probably too small or your dev tools are open.');
+        }
+        assert.ok($('.modal-dialog.modal-sm').length,
+            "should open the quick create dialog");
+
+        // Creating the event
+        $('.modal-body input:first').val('new event in quick create').trigger('input');
+        $('.modal button.btn:contains(Create)').trigger('click').trigger('click');
+        assert.strictEqual(calendar.$('.fc-event:contains(new event in quick create)').length, 1,
+            "should display the new record");
+
+        calendar.destroy();
+        $view.remove();
     });
 });
 

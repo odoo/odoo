@@ -240,7 +240,7 @@ var KanbanModel = BasicModel.extend({
      */
     _readTooltipFields: function (list) {
         var self = this;
-        var groupedByField = list.fields[list.groupedBy[0]];
+        var groupedByField = list.fields[list.groupedBy[0].split(':')[0]];
         if (groupedByField.type !== 'many2one') {
             return $.when();
         }

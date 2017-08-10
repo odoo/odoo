@@ -357,7 +357,8 @@ class WebsiteSale(http.Controller):
             values['suggested_products'] = _order._cart_accessories()
 
         if post.get('type') == 'popover':
-            return request.render("website_sale.cart_popover", values)
+            # force no-cache so IE11 doesn't cache this XHR
+            return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
 
         return request.render("website_sale.cart", values)
 

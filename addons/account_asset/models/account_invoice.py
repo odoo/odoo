@@ -108,3 +108,6 @@ class AccountInvoiceLine(models.Model):
             elif invoice.type == 'in_invoice':
                 self.asset_category_id = self.product_id.product_tmpl_id.asset_category_id.id
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)
+
+    def get_invoice_line_account(self, type, product, fpos, company):
+        return product.asset_category_id.account_asset_id or super(AccountInvoiceLine, self).get_invoice_line_account(type, product, fpos, company)
