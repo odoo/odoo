@@ -13,6 +13,7 @@ from docutils import nodes, utils
 from docutils.parsers.rst import Directive, directives
 from docutils.parsers.rst.directives.body import LineBlock
 
+import sphinx
 import sphinx.roles
 from sphinx.domains import Domain
 
@@ -21,10 +22,14 @@ def setup(app):
     app.add_node(div, html=(
         lambda self, node: self.body.append(self.starttag(node, 'div')),
         lambda self, node: self.body.append('</div>\n')))
+    # override parameter was added for version sphinx >= 1.4
+    #  (None, None) is the default empty value to avoid
+    #  TypeError: 'bool' object is not iterable
+    override = True if sphinx.version_info >= (1, 4) else (None, None)
     app.add_node(address, html=(
         lambda self, node: self.body.append(self.starttag(node, 'address')),
         lambda self, node: self.body.append('</address>\n')
-    ), override=True) # docutils.nodes.address exists and is a bibliographic element
+    ), override=override) # docutils.nodes.address exists and is a bibliographic element
     app.add_node(cite, html=(visit_cite, depart_cite))
     for name, node in [('mark', mark), ('ins', insert), ('del', delete),
                        ('s', strikethrough), ('u', underline), ('small', small),
