@@ -275,8 +275,9 @@ class WebRequest(object):
         if self._cr:
             if exc_type is None and not self._failed:
                 self._cr.commit()
-                self.registry.signal_changes()
-            else:
+                if self.registry:
+                    self.registry.signal_changes()
+            elif self.registry:
                 self.registry.reset_changes()
             self._cr.close()
         # just to be sure no one tries to re-use the request
@@ -1426,6 +1427,7 @@ class Root(object):
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.app = self
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+            threading.current_thread().url = httprequest.url
 
             explicit_session = self.setup_session(httprequest)
             self.setup_db(httprequest)

@@ -383,7 +383,7 @@ var FieldTextHtml = AbstractField.extend({
      * @override
      */
     commitChanges: function () {
-        if (!this.loaded) {
+        if (!this.loaded || this.mode === 'readonly') {
             return;
         }
         // switch to WYSIWYG mode if currently in code mode to get all changes

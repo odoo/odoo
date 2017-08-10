@@ -55,7 +55,7 @@ var FieldPad = AbstractField.extend({
             // Guess what we decided...
             var url = {};
             url.toJSON = _.constant(this.url);
-            this._setValue(url);
+            this._setValue(url, {doNotSetDirty: true});
         }
 
         return this._super.apply(this, arguments);
