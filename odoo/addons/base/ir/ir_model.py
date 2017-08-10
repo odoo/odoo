@@ -615,6 +615,7 @@ class IrModelFields(models.Model):
                     raise UserError(_("Many2one %s on model %s does not exist!") % (vals['relation_field'], vals['relation']))
 
             self.pool.clear_manual_fields()
+            self.clear_caches()                     # for _existing_field_data()
 
             if vals['model'] in self.pool:
                 # setup models; this re-initializes model in registry
@@ -675,6 +676,7 @@ class IrModelFields(models.Model):
         res = super(IrModelFields, self).write(vals)
 
         self.pool.clear_manual_fields()
+        self.clear_caches()                         # for _existing_field_data()
 
         if column_rename:
             # rename column in database, and its corresponding index if present
