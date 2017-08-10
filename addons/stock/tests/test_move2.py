@@ -400,8 +400,8 @@ class TestSinglePicking(TestStockCommon):
 
         # self.assertEqual(move1.product_qty, 1.0)
         # self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 
@@ -455,8 +455,8 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(move1.product_qty, 1.0)
         self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 
@@ -503,8 +503,8 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(move1.product_qty, 1.0)
         self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 
