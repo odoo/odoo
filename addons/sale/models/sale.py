@@ -635,7 +635,7 @@ class SaleOrderLine(models.Model):
         return {
             'name': self.name,
             'origin': self.order_id.name,
-            'date_planned': datetime.strptime(self.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=self.customer_lead),
+            'date_planned': datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT) + timedelta(days=self.customer_lead),
             'product_id': self.product_id.id,
             'product_qty': self.product_uom_qty,
             'product_uom': self.product_uom.id,
