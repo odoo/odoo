@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.pycompat import izip
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
@@ -14,14 +14,13 @@ class StockMoveLine(models.Model):
     _description = "Packing Operation"
     _order = "result_package_id desc, id"
 
-
     picking_id = fields.Many2one(
         'stock.picking', 'Stock Picking',
         help='The stock operation where the packing has been made')
     move_id = fields.Many2one(
-        'stock.move', 'Stock Move', 
-        help="Change to a better name") 
-    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade") #might be a related with the move also --> no, because you can put them next to each other
+        'stock.move', 'Stock Move',
+        help="Change to a better name")
+    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
     product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
@@ -46,7 +45,6 @@ class StockMoveLine(models.Model):
     state = fields.Selection(related='move_id.state')
     consume_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'consume_line_id', 'produce_line_id', help="Technical link to see who consumed what. ")
     produce_line_ids = fields.Many2many('stock.move.line', 'stock_move_line_consume_rel', 'produce_line_id', 'consume_line_id', help="Technical link to see which line was produced with this. ")
-
 
     @api.one
     def _compute_location_description(self):
@@ -75,6 +73,13 @@ class StockMoveLine(models.Model):
         for `product_qty`, where the same write should set the `product_uom_qty` field instead, in order to
         detect errors. """
         raise UserError(_('The requested operation cannot be processed because of a programming error setting the `product_qty` field instead of the `product_uom_qty`.'))
+
+    @api.multi
+    @api.constrains('product_uom_qty')
+    def check_reserved_done_quantity(self):
+        for move_line in self:
+            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_rounding=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
+                raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
     @api.multi
     @api.onchange('product_id', 'product_uom_id')
@@ -313,6 +318,8 @@ class StockMoveLine(models.Model):
                         Quant._update_available_quantity(ml.product_id, ml.location_id, -taken_from_untracked_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id)
                         Quant._update_available_quantity(ml.product_id, ml.location_id, taken_from_untracked_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id)
                 Quant._update_available_quantity(ml.product_id, ml.location_dest_id, quantity, lot_id=ml.lot_id, package_id=ml.result_package_id, owner_id=ml.owner_id, in_date=in_date)
+        # Reset the reserved quantity as we just moved it to the destination location.
+        (self - ml_to_delete).with_context(bypass_reservation_update=True).write({'product_uom_qty': 0.00})
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None):
         """ When editing a done move line or validating one with some forced quantities, it is
