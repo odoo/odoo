@@ -63,6 +63,7 @@ var BasicView = AbstractView.extend({
      */
     _loadData: function () {
         if (this.recordID) {
+            var self = this;
             var record = this.model.get(this.recordID);
             var viewType = this.viewType;
             var viewFields = Object.keys(record.fieldsInfo[viewType]);
@@ -107,15 +108,27 @@ var BasicView = AbstractView.extend({
                     }
                 }
             });
-            if (fieldNames.length && !this.model.isNew(record.id)) {
-                return this.model.reload(this.recordID, {
-                    fieldNames: fieldNames,
-                    keepChanges: true,
-                    viewType: viewType,
+
+            var def;
+            if (fieldNames.length) {
+                // Some fields in the new view weren't in the previous one, so
+                // we might have stored changes for them (e.g. coming from
+                // onchange RPCs), that we haven't been able to process earlier
+                // (because those fields were unknow at that time). So we ask
+                // the model to process them.
+                def = this.model.applyRawChanges(record.id, viewType).then(function () {
+                    if (!self.model.isNew(record.id)) {
+                        return self.model.reload(record.id, {
+                            fieldNames: fieldNames,
+                            keepChanges: true,
+                            viewType: viewType,
+                        });
+                    }
                 });
-            } else {
-                return $.when(this.recordID);
             }
+            return $.when(def).then(function () {
+                return record.id;
+            });
         }
         return this._super.apply(this, arguments);
     },

@@ -186,6 +186,29 @@ var BasicModel = AbstractModel.extend({
         });
     },
     /**
+     * Onchange RPCs may return values for fields that are not in the current
+     * view. Those fields might even be unknown when the onchange returns (e.g.
+     * in x2manys, we only know the fields that are used in the inner view, but
+     * not those used in the potential form view opened in a dialog when a sub-
+     * record is clicked). When this happens, we can't infer their type, so the
+     * given value can't be processed. It is instead stored in the '_rawChanges'
+     * key of the record, without any processing. Later on, if this record is
+     * displayed in another view (e.g. the user clicked on it in the x2many
+     * list, and the record opens in a dialog), those changes that were left
+     * behind must be applied. This function applies changes stored in
+     * '_rawChanges' for a given viewType.
+     *
+     * @param {string} id local resource id of a record
+     * @param {string} viewType the current viewType
+     * @returns {Deferred -> string} resolves to the id of the record
+     */
+    applyRawChanges: function (recordID, viewType) {
+        var record = this.localData[recordID];
+        return this._applyOnChange(record._rawChanges, record, viewType).then(function () {
+            return record.id;
+        });
+    },
+    /**
      * Delete a list of records, then, if the records have a parent, reload it.
      *
      * @todo we should remove the deleted records from the localData
@@ -1093,17 +1116,29 @@ var BasicModel = AbstractModel.extend({
      * @param {Object} values the result of the onchange RPC (a mapping of
      *   fieldnames to their value)
      * @param {Object} record
+     * @param {string} [viewType] current viewType. If not set, we will assume
+     *   main viewType from the record
      * @returns {Deferred}
      */
-    _applyOnChange: function (values, record) {
+    _applyOnChange: function (values, record, viewType) {
         var self = this;
         var defs = [];
         var rec;
+        viewType = viewType || record.viewType;
         record._changes = record._changes || {};
         _.each(values, function (val, name) {
             var field = record.fields[name];
             if (!field) {
-                return; // ignore changes of unknown fields
+                // this field is unknown so we can't process it for now (it is not
+                // in the current view anyway, otherwise it wouldn't be unknown.
+                // we store its value without processing it, so that if we later
+                // on switch to another view in which this field is displayed,
+                // we could process it as we would know its type then.
+                // use case: an onchange sends a create command for a one2many,
+                // in the dict of values, there is a value for a field that is
+                // not in the one2many list, but that is in the one2many form.
+                record._rawChanges[name] = val;
+                return;
             }
 
             if (field.type === 'many2one' ) {
@@ -1132,7 +1167,7 @@ var BasicModel = AbstractModel.extend({
                 if (listId) {
                     list = self.localData[listId];
                 } else {
-                    var fieldInfo = record.fieldsInfo[record.viewType][name];
+                    var fieldInfo = record.fieldsInfo[viewType][name];
                     if (!fieldInfo) {
                         return; //ignore changes of x2many not in view
                     }
@@ -1142,7 +1177,7 @@ var BasicModel = AbstractModel.extend({
                         parentID: record.id,
                         static: true,
                         type: 'list',
-                        viewtype: fieldInfo.viewType,
+                        viewType: fieldInfo.viewType,
                     });
                 }
                 record._changes[name] = list.id;
@@ -2712,6 +2747,7 @@ var BasicModel = AbstractModel.extend({
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
+            _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
