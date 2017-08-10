@@ -46,7 +46,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.alias.mixin', 'mail.thread', 'portal.mixin']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -225,6 +225,11 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
+    def _compute_portal_url(self):
+        super(Project, self)._compute_portal_url()
+        for project in self:
+            project.portal_url = '/my/project/%s' % project.id
+
     @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
@@ -345,7 +350,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
@@ -449,8 +454,6 @@ class Task(models.Model):
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
 
-    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
-
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
@@ -491,9 +494,10 @@ class Task(models.Model):
             else:
                 task.kanban_state_label = task.legend_done
 
-    def _compute_website_url(self):
+    def _compute_portal_url(self):
+        super(Task, self)._compute_portal_url()
         for task in self:
-            task.website_url = '/my/task/%s' % task.id
+            task.portal_url = '/my/task/%s' % task.id
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
