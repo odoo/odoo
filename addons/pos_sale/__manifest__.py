@@ -15,7 +15,6 @@ This module adds a custom Sales Channel for the point of sale to be able to view
     'depends': ['point_of_sale', 'sale_management'],
     'data': [
         'data/pos_sale_data.xml',
-        'security/pos_sale_security.xml',
         'security/ir.model.access.csv',
         'views/sales_team_views.xml',
         'views/pos_config_views.xml',
