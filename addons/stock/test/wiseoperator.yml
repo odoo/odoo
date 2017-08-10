@@ -51,11 +51,11 @@
   !python {model: stock.picking, id: pick1_wise}: |
     self.do_transfer()
 - 
-  Check the system created 2 quants
+  Check the system created 3 quants
 - 
   !python {model: stock.quant, id: False}: |
     records = self.search([('product_id','=',ref('product_wise'))])
-    assert len(records.ids) == 2, "The number of quants created is not correct"
+    assert len(records.ids) == 3, "The number of quants created is not correct"
 - 
   Make a delivery order of 5 pieces to the customer
 - 
@@ -138,7 +138,8 @@
   Check there was no negative quant created by this picking
 - 
   !python {model: stock.quant, id: False}: |
-    records = self.search([('product_id','=',ref('product_wise')), ('quantity', '<', 0.0)])
+    records = self.search([('product_id','=',ref('product_wise')), ('quantity', '<', 0.0), ('location_id.id', '=',                      
+    ref('stock_location_stock'))])
     assert len(records.ids) == 0, 'This should not have created a negative quant'
 - 
   Check the other delivery order has changed its state back to partially available
@@ -149,10 +150,10 @@
   Process the second picking
 - 
   !python {model: stock.picking, id: delivery_order_wise2}: |
-    self.do_transfer()
+    self.action_done()
 - 
   Check all quants are in Customers and there are no negative quants anymore
 - 
   !python {model: stock.quant, id: False}: |
-    records = self.search([('product_id','=',ref('product_wise'))])
-    assert all([x.location_id.id==ref('stock_location_customers') and x.qty > 0.0 for x in records]), "Negative quant or wrong location detected"
+    records = self.search([('product_id','=',ref('product_wise')), ('location_id', '!=', ref('stock_location_suppliers'))])
+    assert all([x.location_id.id==ref('stock_location_customers') and x.quantity > 0.0 for x in records]), "Negative quant or wrong location detected"

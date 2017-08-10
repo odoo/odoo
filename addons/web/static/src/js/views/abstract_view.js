@@ -29,6 +29,7 @@ var ajax = require('web.ajax');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
+var Context = require('web.Context');
 
 var AbstractView = Class.extend({
     // name displayed in view switchers
@@ -152,9 +153,9 @@ var AbstractView = Class.extend({
         });
     },
     /**
-     * Returns the view model or create an instance of it if there is noney
+     * Returns the view model or create an instance of it if none
      *
-     * @param {Widget} parent the parent of the model
+     * @param {Widget} parent the parent of the model, if it has to be created
      * @return {Object} instance of the view model
      */
     getModel: function (parent) {
@@ -167,7 +168,7 @@ var AbstractView = Class.extend({
     /**
      * Returns the a new view renderer instance
      *
-     * @param {Widget} parent the parent of the model
+     * @param {Widget} parent the parent of the model, if it has to be created
      * @param {Object} state the information related to the rendered view
      * @return {Object} instance of the view renderer
      */
@@ -239,7 +240,7 @@ var AbstractView = Class.extend({
      * Loads the subviews for x2many fields when they are not inline
      *
      * @private
-     * @param {Widget} parent the parent of the model
+     * @param {Widget} parent the parent of the model, if it has to be created
      * @returns {Deferred}
      */
     _loadSubviews: function (parent) {

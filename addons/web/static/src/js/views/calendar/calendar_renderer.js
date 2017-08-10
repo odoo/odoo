@@ -322,10 +322,11 @@ return AbstractRenderer.extend({
                 element.addClass($render.attr('class'));
                 var display_hour = '';
                 if (!event.allDay) {
-                    display_hour = (event.start.format('HH:mm') === '00:00' ? event.r_start.format('HH:mm') : event.start.format('HH:mm')) + ' - ' +
-                        (event.end && event.end.format('HH:mm') !== '00:00' ? event.end.format('HH:mm') : event.r_end.format('HH:mm'));
+                    var start = event.r_start || event.start;
+                    var end = event.r_end || event.end;
+                    display_hour = start.format('HH:mm') + ' - ' + end.format('HH:mm');
                     if (display_hour === '00:00 - 00:00') {
-                        display_hour = _t('All the day');
+                        display_hour = _t('All day');
                     }
                 }
                 element.find('.fc-content .fc-time').text(display_hour);

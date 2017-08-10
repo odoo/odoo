@@ -120,7 +120,7 @@
       elif rec.package_id.name == 'Palneg 3' and rec.location_id.id == ref('stock_location_stock'):
         pallet_3_stock_qty += rec.quantity
       else:
-        assert False, "Unrecognized quant"
+        assert rec.location_id.id != ref('stock_location_stock'), "Unrecognized quant in stock"
     assert pallet_3_stock_qty == 50, "Should have 50 pieces in stock on pallet 3"
 -
   Create a picking for reconciling the negative quant
@@ -148,8 +148,9 @@
   Check the negative quant was reconciled
 -
   !python {model: stock.quant, id: False}: |
-    neg_quants = self.search([('product_id','=', ref('product_neg')), ('quantity', '<', 0)])
-    assert len(neg_quants.ids) == 0, "Negative quants should have been reconciled"
+    neg_quants = self.search([('product_id','=', ref('product_neg')), ('quantity', '<', 0), ('location_id.id', '!=',                      
+    ref('stock_location_suppliers'))])
+    assert len(neg_quants) == 0, "Negative quants should have been reconciled"
     pick = self.env['stock.picking'].browse(ref('delivery_reconcile'))
     customer_quant = self.search([
       ('product_id', '=', ref('product_neg')),

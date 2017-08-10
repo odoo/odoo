@@ -89,36 +89,48 @@ class MrpUnbuild(models.Model):
 
         consume_move = self._generate_consume_moves()[0]
         produce_moves = self._generate_produce_moves()
+
+        if any(produce_move.has_tracking != 'none' and not self.mo_id for produce_move in produce_moves):
+            raise UserError(_('You should specify a manufacturing order in order to find the correct tracked products.'))
+
         if consume_move.has_tracking != 'none':
             self.env['stock.move.line'].create({
                 'move_id': consume_move.id,
                 'lot_id': self.lot_id.id,
                 'qty_done': consume_move.product_uom_qty,
-                'product_qty': consume_move.product_uom_qty, 
+                'product_id': consume_move.product_id.id,
+                'product_uom_id': consume_move.product_uom.id,
                 'location_id': consume_move.location_id.id,
-                'location_dest_id': consume_move.location_dest_id.id,})
+                'location_dest_id': consume_move.location_dest_id.id,
+            })
         else:
             consume_move.quantity_done = consume_move.product_uom_qty
         consume_move.action_done()
-        original_quants = consume_move.quant_ids.mapped('consumed_quant_ids')
-        #TODO: needs to be replaced by checking the different stock.move.lots
 
+        # TODO: Will fail if user do more than one unbuild with lot on the same MO. Need to check what other unbuild has aready took
         for produce_move in produce_moves:
             if produce_move.has_tracking != 'none':
-                original = original_quants.filtered(lambda quant: quant.product_id == produce_move.product_id)
-                self.env['stock.move.line'].create({
-                    'move_id': produce_move.id,
-                    'lot_id': original.lot_id.id,
-                    'qty_done': produce_move.product_uom_qty,
-                    'product_qty': produce_move.product_uom_qty,
-                    'location_id': produce_move.location_id.id,
-                    'location_dest_id': produce_move.location_dest_id.id,
-                })
+                original_move = self.mo_id.move_raw_ids.filtered(lambda move: move.product_id == produce_move.product_id)
+                needed_quantity = produce_move.product_qty
+                for move_lines in original_move.mapped('move_line_ids'):
+                    # Iterate over all move_lines until we unbuilded the correct quantity.
+                    taken_quantity = min(needed_quantity, move_lines.qty_done)
+                    if taken_quantity:
+                        self.env['stock.move.line'].create({
+                            'move_id': produce_move.id,
+                            'lot_id': move_lines.lot_id.id,
+                            'qty_done': taken_quantity,
+                            'product_id': produce_move.product_id.id,
+                            'product_uom_id': move_lines.product_uom_id.id,
+                            'location_id': produce_move.location_id.id,
+                            'location_dest_id': produce_move.location_dest_id.id,
+                        })
+                        needed_quantity -= taken_quantity
             else:
                 produce_move.quantity_done = produce_move.product_uom_qty
         produce_moves.action_done()
-        produced_quant_ids = produce_moves.mapped('quant_ids').filtered(lambda quant: quant.qty > 0)
-        consume_move.quant_ids.sudo().write({'produced_quant_ids': [(6, 0, produced_quant_ids.ids)]})
+        produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
+        consume_move.move_line_ids.write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
 
         return self.write({'state': 'done'})
 

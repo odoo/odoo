@@ -668,7 +668,10 @@ class PurchaseOrderLine(models.Model):
                                 diff_qty += move.product_qty
                                 move.do_unreserve()
                                 move.state = 'draft'
+                                picking = move.picking_id
                                 move.unlink()
+                                if not picking.move_lines:
+                                    picking.unlink()
                     else:
                         raise UserError('You cannot decrease the ordered quantity below the received quantity.\n'
                                         'Create a return first.')

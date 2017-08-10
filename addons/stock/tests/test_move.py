@@ -70,9 +70,9 @@ class StockMove(TransactionCase):
         move1.action_done()
         self.assertEqual(move1.state, 'done')
         # no quants are created in the supplier location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.supplier_location), -100.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 100.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.supplier_location)), 0.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.supplier_location)), 1.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 1.0)
 
     def test_in_2(self):
@@ -111,9 +111,9 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'done')
 
         # no quants are created in the supplier location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.supplier_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.supplier_location), -5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 5.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product3, self.supplier_location)), 0.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product3, self.supplier_location)), 1.0)
         quants = self.env['stock.quant']._gather(self.product3, self.stock_location)
         self.assertEqual(len(quants), 1.0)
         for quant in quants:
@@ -160,11 +160,11 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.product_qty, 5)  # don't change reservation
         self.assertEqual(move1.state, 'done')
 
-        # no quants are created in the supplier location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.supplier_location), 0.0)
+        # Quant balance should result with 5 quant in supplier and stock
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.supplier_location), -5.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 5.0)
 
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.supplier_location)), 0.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product2, self.supplier_location)), 5.0)
         quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
         self.assertEqual(len(quants), 5.0)
         for quant in quants:
@@ -211,9 +211,9 @@ class StockMove(TransactionCase):
         # validation
         move1.action_done()
         self.assertEqual(move1.state, 'done')
-        # # no quants are created in the customer location
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 0.0)
-        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.customer_location)), 0.0)
+        # Check there is one quant in customer location
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 100.0)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.customer_location)), 1.0)
         # there should be no quant amymore in the stock location
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 0.0)
@@ -260,7 +260,7 @@ class StockMove(TransactionCase):
         # validation
         move1.action_done()
         self.assertEqual(move1.state, 'done')
-        # # no quants are created in the customer location
+        # no quants are created in the customer location since it's a consumable
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.customer_location), 0.0)
         self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.customer_location)), 0.0)
         # there should be no quant amymore in the stock location
@@ -2466,12 +2466,14 @@ class StockMove(TransactionCase):
         move2.action_done()
 
         initial_in_date_lot2 = self.env['stock.quant'].search([
+            ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot2.id),
         ]).in_date
 
         # Edit lot1's incoming date.
         quant_lot1 = self.env['stock.quant'].search([
+            ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
@@ -2508,6 +2510,7 @@ class StockMove(TransactionCase):
 
         # Check that lot1 correctly is back to stock with its right in_date
         quant_lot1 = self.env['stock.quant'].search([
+            ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
@@ -2516,6 +2519,7 @@ class StockMove(TransactionCase):
 
         # Check that lo2 is in pack with is right in_date
         quant_lot2 = self.env['stock.quant'].search([
+            ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot2.id),
         ])
@@ -2567,12 +2571,14 @@ class StockMove(TransactionCase):
         move2.action_done()
 
         initial_in_date_lot2 = self.env['stock.quant'].search([
+            ('location_id', '=', self.stock_location.id),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot2.id),
         ]).in_date
 
         # Edit lot1's incoming date.
         quant_lot1 = self.env['stock.quant'].search([
+            ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
             ('lot_id', '=', lot1.id),
         ])
@@ -2606,6 +2612,7 @@ class StockMove(TransactionCase):
         })
 
         quants = self.env['stock.quant'].search([
+            ('location_id.usage', '=', 'internal'),
             ('product_id', '=', self.product3.id),
         ])
         self.assertEqual(len(quants), 2)

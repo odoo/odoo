@@ -72,11 +72,12 @@
   !python {model: stock.picking, id: pick1}: |
     self.action_done()
 - 
-  Check the system created 3 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3
+  Check the system created 5 quants one with 120 pieces on pallet 1, one with 120 pieces on pallet 2 with lot A and 60 pieces on pallet 3 in stock
+  and 1 with -180 pieces and another with -120 piece lot A in supplier
 - 
   !python {model: stock.quant, id: False}: |
     quants = self.search([('product_id','=',ref('product1'))])
-    assert len(quants.ids) == 3, "The number of quants created is not correct"
+    assert len(quants.ids) == 5, "The number of quants created is not correct"
     for quant in quants:
       if quant.package_id.name == 'Pallet 1':
         assert quant.quantity == 120, "Should have 120 pieces on pallet 1"
@@ -137,7 +138,7 @@
       elif rec.package_id.name == 'Pallet 3' and rec.location_id.id == ref('stock_location_stock'):
         assert rec.quantity == 50, "Should have 50 pieces in stock on pallet 3"
       else:
-        assert False, "Unrecognized quant"
+        assert rec.location_id.id != ref('stock_location_stock'), "Unrecognized quant in stock"
 - 
   Check a backorder was created and on that backorder, prepare partial and process backorder
 - 

@@ -91,7 +91,7 @@ class account_abstract_payment(models.AbstractModel):
         total = 0
         for inv in self.invoice_ids:
             if inv.currency_id == payment_currency:
-                total += inv.residual_company_signed
+                total += inv.residual_signed
             else:
                 total += inv.company_currency_id.with_context(date=self.payment_date).compute(
                     inv.residual_company_signed, payment_currency)

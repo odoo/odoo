@@ -125,7 +125,7 @@ QUnit.test('basic rendering', function (assert) {
 });
 
 QUnit.test('click events are correctly triggered', function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     var form = createView({
         View: FormView,
@@ -146,8 +146,7 @@ QUnit.test('click events are correctly triggered', function (assert) {
         intercepts: {
             execute_action: function (event) {
                 var data = event.data;
-                assert.strictEqual(data.model, 'line', "should have correct model");
-                assert.deepEqual(data.res_ids, [4], "should have correct res_ids");
+                assert.strictEqual(data.env.model, 'line', "should have correct model");
                 assert.strictEqual(data.action_data.name, 'create_move',
                     "should call correct method");
             },

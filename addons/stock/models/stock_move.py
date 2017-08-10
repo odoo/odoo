@@ -121,6 +121,7 @@ class StockMove(models.Model):
              "its current stock) to gather products. If we want to chain moves and have this one to wait for the previous,"
              "this second option should be chosen.")
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
+    scrap_ids = fields.One2many('stock.scrap', 'move_id')
     procurement_id = fields.Many2one('procurement.order', 'Procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
     rule_id = fields.Many2one('procurement.rule', 'Procurement Rule', ondelete='restrict', help='The procurement rule that created this stock move')
@@ -430,8 +431,8 @@ class StockMove(models.Model):
             'res_id': self.id,
             'context': dict(
                 self.env.context,
-                show_lots_m2o=self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done'),  # able to create lots, whatever the value of ` use_create_lots`.
-                show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done',
+                show_lots_m2o=self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
+                show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
                 show_source_location=self.location_id.child_ids,
                 show_destination_location=self.location_dest_id.child_ids,
                 show_package=not self.location_id.usage == 'supplier',
@@ -440,14 +441,6 @@ class StockMove(models.Model):
 
     # Misc tools
     # ------------------------------------------------------------
-
-    def _filter_closed_moves(self):
-        """ Helper methods when having to avoid working on moves that are
-        already done or canceled. In a lot of cases you may handle a batch
-        of stock moves, some being already done / canceled, other being still
-        under computation. Instead of having to use filtered everywhere and
-        forgot some of them, use this tool instead. """
-        return self.filtered(lambda move: move.state not in ('done', 'cancel'))
 
     @api.multi
     def do_unreserve(self):
@@ -713,18 +706,18 @@ class StockMove(models.Model):
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
         """
+        assigned_moves = self.env['stock.move']
+        partially_available_moves = self.env['stock.move']
         for move in self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available']):
             if move.location_id.usage in ('supplier', 'inventory', 'production', 'customer')\
                     or move.product_id.type == 'consu':
                 # create the move line(s) but do not impact quants
                 if move.product_id.tracking == 'serial':
                     for i in range(0, int(move.product_qty)):
-                        move_line_id = self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
-                        move.write({'move_line_ids': [(4, move_line_id.id, 0)]})
+                        self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=1))
                 else:
-                    move_line_id = self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=move.product_qty))
-                    move.write({'move_line_ids': [(4, move_line_id.id, 0)]})
-                move.write({'state': 'assigned'})
+                    self.env['stock.move.line'].create(move._prepare_move_line_vals(quantity=move.product_qty))
+                assigned_moves |= move
             else:
                 if not move.move_orig_ids:
                     if move.procure_method == 'make_to_order':
@@ -736,9 +729,9 @@ class StockMove(models.Model):
                     need = move.product_qty - move.reserved_availability
                     taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, strict=False)
                     if need == taken_quantity:
-                        move.state = 'assigned'
+                        assigned_moves |= move
                     else:
-                        move.state = 'partially_available'
+                        partially_available_moves |= move
                 else:
                     # Check what our parents brought and what our siblings took in order to
                     # determine what we can distribute.
@@ -749,7 +742,6 @@ class StockMove(models.Model):
                     keys_in = ['location_dest_id', 'lot_id', 'result_package_id', 'owner_id']
                     grouped_move_lines_in = {}
                     for k, g in groupby(sorted(move_lines_in, key=itemgetter(*keys_in)), key=itemgetter(*keys_in)):
-                        # `qty_done` is in `ml.product_uom_id` and, as we will later increase the
                         qty_done = 0
                         for ml in g:
                             qty_done += ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
@@ -757,9 +749,12 @@ class StockMove(models.Model):
                     move_lines_out_done = (move.move_orig_ids.mapped('move_dest_ids') - move)\
                         .filtered(lambda m: m.state in ['done'])\
                         .mapped('move_line_ids')
-                    move_lines_out_reserved = (move.move_orig_ids.mapped('move_dest_ids') - move)\
-                        .filtered(lambda m: m.state in ['partially_available', 'assigned'])\
-                        .mapped('move_line_ids')
+                    # As we defer the write on the stock.move's state at the end of the loop, there
+                    # could be moves to consider in what our siblings already took.
+                    moves_out_siblings = move.move_orig_ids.mapped('move_dest_ids') - move
+                    moves_out_siblings_to_consider = moves_out_siblings & (assigned_moves + partially_available_moves)
+                    reserved_moves_out_siblings = moves_out_siblings.filtered(lambda m: m.state in ['partially_available', 'assigned'])
+                    move_lines_out_reserved = (reserved_moves_out_siblings | moves_out_siblings_to_consider).mapped('move_line_ids')
                     keys_out = ['location_id', 'lot_id', 'package_id', 'owner_id']
                     grouped_move_lines_out = {}
                     for k, g in groupby(sorted(move_lines_out_done, key=itemgetter(*keys_out)), key=itemgetter(*keys_out)):
@@ -782,11 +777,12 @@ class StockMove(models.Model):
                         need = move.product_qty - sum(move.move_line_ids.mapped('product_qty'))
                         taken_quantity = move._update_reserved_quantity(need, quantity, location_id, lot_id, package_id, owner_id)
                         if need - taken_quantity == 0.0:
-                            move.state = 'assigned'
+                            assigned_moves |= move
                             break
-                        if move.state != 'partially_available':
-                            move.state = 'partially_available'
-            self.mapped('picking_id')._check_entire_pack()
+                        partially_available_moves |= move
+        partially_available_moves.write({'state': 'partially_available'})
+        assigned_moves.write({'state': 'assigned'})
+        self.mapped('picking_id')._check_entire_pack()
 
     @api.multi
     def action_cancel(self):
@@ -910,6 +906,7 @@ class StockMove(models.Model):
                     })
                 picking.message_post('Backorder Created') #message needs to be improved
                 moves_to_backorder.write({'picking_id': backorder_picking.id})
+                moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
             moves_to_backorder.action_assign()
         return moves_todo
 

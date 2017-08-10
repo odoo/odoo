@@ -82,7 +82,7 @@ class MrpProductProduce(models.TransientModel):
         quantity = self.product_qty
         if float_compare(quantity, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('You should at least produce some quantity'))
-        for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.state not in ('done', 'cancel')):
+        for move in moves.filtered(lambda x: x.product_id.tracking == 'none' and x.quantity_done == 0 and x.state not in ('done', 'cancel')):
             if move.unit_factor:
                 rounding = move.product_uom.rounding
                 move.quantity_done += float_round(quantity * move.unit_factor, precision_rounding=rounding)

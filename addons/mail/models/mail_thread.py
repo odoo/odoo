@@ -950,13 +950,14 @@ class MailThread(models.AbstractModel):
 
         # Alias: check alias_contact settings
         if alias:
+            obj = None
             if thread_id:
                 obj = record_set[0]
-            elif alias.alias_parent_thread_id:
+            elif alias.alias_parent_model_id and alias.alias_parent_thread_id:
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
-            elif model and hasattr(record_set, '_alias_check_contact'):
+            elif model:
                 obj = self.env[model]
-            else:
+            if not hasattr(obj, '_alias_check_contact'):
                 obj = self.env['mail.alias.mixin']
             check_result = obj._alias_check_contact(message, message_dict, alias)
             if check_result is not True:
@@ -1727,6 +1728,7 @@ class MailThread(models.AbstractModel):
             data_attach = {
                 'name': name,
                 'datas': base64.b64encode(str(content)),
+                'type': 'binary',
                 'datas_fname': name,
                 'description': name,
                 'res_model': message_data['model'],

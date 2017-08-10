@@ -171,7 +171,9 @@ class ProductTemplate(models.Model):
 
             # Support context pricelists specified as display_name or ID for compatibility
             if isinstance(pricelist_id_or_name, basestring):
-                pricelist = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+                pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+                if pricelist_data:
+                    pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
             elif isinstance(pricelist_id_or_name, pycompat.integer_types):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
@@ -282,7 +284,7 @@ class ProductTemplate(models.Model):
         tools.image_resize_images(vals)
         template = super(ProductTemplate, self).create(vals)
         if "create_product_product" not in self._context:
-            template.create_variant_ids()
+            template.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         related_vals = {}
