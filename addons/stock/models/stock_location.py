@@ -69,7 +69,7 @@ class Location(models.Model):
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id')
+    @api.depends('name', 'location_id.name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
         name = self.name
