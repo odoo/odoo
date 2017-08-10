@@ -103,7 +103,7 @@ class AccountAnalyticLine(models.Model):
 
         # set the revenue and billable type according to the product and the SO line
         so_line_id = values.get('so_line') or self.so_line.id
-        so_line = self.env['sale.order.line'].browse(so_line_id) if so_line_id else self.env['sale.order.line'].browse()
+        so_line = self.env['sale.order.line'].browse(so_line_id).sudo() if so_line_id else self.env['sale.order.line'].browse().sudo()
         if so_line.product_id.type == 'service':
             # find the analytic account to convert revenue into its currency
             account_id = values.get('account_id') or self.account_id.id
