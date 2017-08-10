@@ -97,6 +97,15 @@ class AccountInvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
     _order = 'invoice_id, layout_category_id, sequence, id'
 
+    @api.depends('price_unit', 'discount', 'invoice_line_tax_ids', 'quantity',
+        'product_id', 'invoice_id.partner_id', 'invoice_id.currency_id', 'invoice_id.company_id',
+        'invoice_id.date_invoice')
+    def _compute_total_price(self):
+        for line in self:
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = line.invoice_line_tax_ids.compute_all(price, line.invoice_id.currency_id, line.quantity, product=line.product_id, partner=line.invoice_id.partner_id)
+            line.price_total = taxes['total_included']
+
     sale_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_invoice_rel',
@@ -106,3 +115,4 @@ class AccountInvoiceLine(models.Model):
     layout_category_sequence = fields.Integer(
         related='layout_category_id.sequence',
         string='Layout Sequence', store=True)
+    price_total = fields.Monetary(compute='_compute_total_price', string='Total Amount', store=True)
