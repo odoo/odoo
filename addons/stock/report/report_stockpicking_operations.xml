@@ -109,19 +109,12 @@
                                         </span>
                                     </td>
                                     <td t-if="has_serial_number">
-                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
-                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
-                                                <td>
-                                                    <span t-field="packlot.lot_id"/>
-                                                    <t t-if="not packlot.lot_id">
-                                                        <span t-field="packlot.lot_name"/>
-                                                    </t>
-                                                </td>
-                                                <td>
-                                                    <span t-field="packlot.qty"/> <t t-if="o.picking_type_id.use_existing_lots and o.state!='done'"> / <span t-field="packlot.qty_todo"/></t>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <td>
+                                            <span t-field="pack_operation.lot_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="pack_operation.qty_done"/> <t t-if="o.picking_type_id.use_existing_lots and o.state!='done'"> / <span t-field="pack_operation.ordered_qty"/></t>
+                                        </td>
                                     </td>
                                     <t t-if="o.picking_type_id.code != 'outgoing'"><td><span t-field="pack_operation.location_dest_id"/>
                                         <span t-if="pack_operation.result_package_id">:</span>
