@@ -1973,4 +1973,39 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('reload a new record', function (assert) {
+        assert.expect(6);
+
+        this.params.context = {};
+        this.params.fieldNames = ['product_id', 'category', 'product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super(route, args);
+            },
+        });
+
+        model.load(this.params).then(function (recordID) {
+            model.reload(recordID).then(function (recordID) {
+                assert.verifySteps(['default_get', 'default_get'],
+                    "two default_get RPCs should have been done");
+                var record = model.get(recordID);
+                assert.strictEqual(record.data.product_id, false,
+                    "m2o default value should be false");
+                assert.deepEqual(record.data.product_ids.data, [],
+                    "o2m default should be []");
+                assert.deepEqual(record.data.category.data, [],
+                    "m2m default should be []");
+            });
+        });
+
+        model.destroy();
+    });
+
+
 });});
