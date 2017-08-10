@@ -1178,6 +1178,14 @@ var BasicModel = AbstractModel.extend({
                     } else if (command[0] === 5) {
                         // DELETE ALL
                         list._changes = [{operation: 'REMOVE_ALL'}];
+                    } else if (command[0] === 6) {
+                        // REPLACE ALL WITH
+                        // equivalent DELTE ALL followed by a command
+                        // LINK TO for each ``id`` in the command.
+                        list._changes = [{operation: 'REMOVE_ALL'}];
+                        _.each(command[2], function(res_id){
+                            list._changes.push({operation: 'ADD', id: null, resID: res_id});
+                        });
                     }
                 });
                 if (shouldLoad) {
