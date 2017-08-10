@@ -37,7 +37,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(inventory.move_ids.location_dest_id, self.env.ref('stock.location_inventory'))  # Inventory loss
         self.assertEqual(inventory.move_ids.state, 'done')
         quants = self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.location_inventory'))
-        self.assertEqual(len(quants), 0)  # No quant created for inventory loss
+        self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
         # Check quantity of product in various locations: current, its parent, brother and other
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.lot_stock_id).quantity, 35.0)
@@ -67,9 +67,9 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(inventory.line_ids.product_id, self.product_1)
         self.assertEqual(inventory.line_ids.product_qty, 50.0)
 
-        # Check associated quants: 1 quant for the product and the quantity
+        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
         quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 1)
+        self.assertEqual(len(quant), 2)
         # print quant.name, quant.product_id, quant.location_id
         # TDE TODO: expand this test
 
@@ -225,9 +225,9 @@ class TestWarehouse(TestStockCommon):
         quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quants), 0)
 
-        # There should be no quant in the inventory loss location
+        # There should be one quant in the inventory loss location
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
-        self.assertEqual(len(quant), 0)
+        self.assertEqual(len(quant), 1)
 
 
 class TestResupply(TestStockCommon):

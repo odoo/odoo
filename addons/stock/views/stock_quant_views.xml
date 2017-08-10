@@ -48,7 +48,7 @@
                         <field name="owner_id" groups="stock.group_tracking_owner"/>
                     </group>
                     <group>
-                        <field name="in_date"/>
+                        <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
                     </group>
                 </group>
             </form>
@@ -68,7 +68,6 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
-                <field name="in_date"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -91,6 +90,7 @@
         <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_transit_loc': 1}</field>
         <field name="help">This analysis gives you a fast overview on the current stock level of your products and their current inventory value.</field>
     </record>
     <record model="ir.actions.act_window" id="product_template_open_quants"> <!-- Not used -->

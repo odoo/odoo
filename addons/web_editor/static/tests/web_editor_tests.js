@@ -188,4 +188,34 @@ QUnit.test('field htmlsimple does not crash when commitChanges is called in mode
     form.destroy();
 });
 
+QUnit.test('html_frame does not crash when saving in readonly', function (assert) {
+    // The 'Save' action may be triggered even in readonly (e.g. when clicking
+    // on a button in the form view)
+    assert.expect(0);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route) {
+            if (_.str.startsWith(route, '/test')) {
+                // manually call the callback to simulate that the iframe has
+                // been correctly loaded
+                window.odoo[$.deparam(route).callback + '_content'].call();
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.saveRecord(); // before the fix done in this commit, it crashed here
+    form.destroy();
+});
+
 });

@@ -649,7 +649,7 @@ var BasicModel = AbstractModel.extend({
         var element = this.localData[id];
 
         if (element.type === 'record') {
-            if ('currentId' in options && !options.currentId) {
+            if (!options.currentId && (('currentId' in options) || this.isNew(id))) {
                 var params = {
                     context: element.context,
                     fieldsInfo: element.fieldsInfo,
@@ -2310,12 +2310,20 @@ var BasicModel = AbstractModel.extend({
                 });
                 list = this._applyX2ManyOperations(list);
                 if (type === 'many2many' || list._forceM2MLink) {
+                    var relRecordCreated = _.filter(relRecordAdded, function (rec) {
+                        return typeof rec.res_id === 'string';
+                    });
+                    var realIDs = _.difference(list.res_ids, _.pluck(relRecordCreated, 'res_id'));
                     // deliberately generate a single 'replace' command instead
                     // of a 'delete' and a 'link' commands with the exact diff
                     // because 1) performance-wise it doesn't change anything
                     // and 2) to guard against concurrent updates (policy: force
                     // a complete override of the actual value of the m2m)
-                    commands[fieldName].push(x2ManyCommands.replace_with(list.res_ids));
+                    commands[fieldName].push(x2ManyCommands.replace_with(realIDs));
+                    _.each(relRecordCreated, function (relRecord) {
+                        var changes = self._generateChanges(relRecord, options);
+                        commands[fieldName].push(x2ManyCommands.create(changes));
+                    });
                     // generate update commands for records that have been
                     // updated (it may happen with editable lists)
                     _.each(relRecordUpdated, function (relRecord) {
@@ -2435,6 +2443,12 @@ var BasicModel = AbstractModel.extend({
      */
     _getDomain: function (element, options) {
         if (options && options.fieldName) {
+            if (element._domains[options.fieldName]) {
+                return Domain.prototype.stringToArray(
+                    element._domains[options.fieldName],
+                    this._getEvalContext(element, true)
+                );
+            }
             var viewType = options.viewType || element.viewType;
             var fieldInfo = element.fieldsInfo[viewType][options.fieldName];
             if (fieldInfo && fieldInfo.domain) {
@@ -2697,6 +2711,7 @@ var BasicModel = AbstractModel.extend({
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
+            _domains: {},
             aggregateValues: params.aggregateValues || {},
             context: params.context || {},
             count: params.count || res_ids.length,
@@ -2870,6 +2885,9 @@ var BasicModel = AbstractModel.extend({
 
                                 r._changes = _.defaults(value[2], r.data);
                                 for (var name in r._changes) {
+                                    if (r._changes[name] === null) {
+                                        continue;
+                                    }
                                     var isFieldInView = name in r.fields;
                                     if (isFieldInView && r.fields[name].type === 'many2one') {
                                         var rec = self._makeDataPoint({
@@ -3021,12 +3039,7 @@ var BasicModel = AbstractModel.extend({
                     record._warning = true;
                 }
                 if (result.domain) {
-                    var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
-                    for (var fieldName in result.domain) {
-                        if (fieldsInfo[fieldName]) {
-                            fieldsInfo[fieldName].domain = result.domain[fieldName];
-                        }
-                    }
+                    record._domains = _.extend(record._domains, result.domain);
                 }
                 return self._applyOnChange(result.value, record).then(function () {
                     return result;
@@ -3083,7 +3096,9 @@ var BasicModel = AbstractModel.extend({
      */
     _readGroup: function (list) {
         var self = this;
-        var fields = _.uniq(list.getFieldNames().concat(list.groupedBy));
+        var groupByField = list.groupedBy[0];
+        var rawGroupBy = groupByField.split(':')[0];
+        var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
         return this._rpc({
                 model: list.model,
                 method: 'read_group',
@@ -3094,8 +3109,6 @@ var BasicModel = AbstractModel.extend({
                 lazy: true,
             })
             .then(function (groups) {
-                var groupByField = list.groupedBy[0];
-                var rawGroupBy = groupByField.split(':')[0];
                 var previousGroups = _.map(list.data, function (groupID) {
                     return self.localData[groupID];
                 });

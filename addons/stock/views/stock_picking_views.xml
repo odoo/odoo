@@ -213,7 +213,7 @@
                     <button name="action_cancel" states="assigned,confirmed,partially_available,draft,waiting" string="Cancel" groups="base.group_user" type="object"/>
                     <field name="picking_type_code" invisible="1"/>
                     <button name="do_unreserve" string="Unreserve" groups="base.group_user" type="object" attrs="{'invisible': ['|', ('picking_type_code', '=', 'incoming'), ('state', 'not in', ('assigned', 'partially_available'))]}"/>
-                    <field name="show_operations" invisible="1"/>
+                    <field name="show_operations" invisible="1" readonly="1"/>
                     <field name="move_line_exist" invisible="1"/>
                     <field name="has_packages" invisible="1"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': ['|', '&amp;', ('picking_type_code', '!=', 'incoming'), ('state', 'in', ('draft', 'cancel', 'waiting')), '&amp;', ('picking_type_code', '=', 'incoming'), ('state', '!=', 'done')]}"/>
@@ -288,7 +288,7 @@
                                     <field name="picking_code" invisible="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="show_details_visible" invisible="1"/>
-                                    <field name="show_operations" invisible="1"/>
+                                    <field name="show_operations" invisible="1" readonly="1"/>
                                     <field name="additional" invisible="1"/>
 
                                     <field name="product_id" required="1" attrs="{'readonly': ['&amp;', ('state', '!=', 'draft'), ('additional', '=', False)]}"/>

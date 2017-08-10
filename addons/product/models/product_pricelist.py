@@ -113,8 +113,7 @@ class Pricelist(models.Model):
             uom_id = self._context['uom']
         if uom_id:
             # rebrowse with uom if given
-            product_ids = [item[0].id for item in products_qty_partner]
-            products = self.env['product.product'].with_context(uom=uom_id).browse(product_ids)
+            products = [item[0].with_context(uom=uom_id) for item in products_qty_partner]
             products_qty_partner = [(products[index], data_struct[1], data_struct[2]) for index, data_struct in enumerate(products_qty_partner)]
         else:
             products = [item[0] for item in products_qty_partner]

@@ -540,6 +540,7 @@ class AccountMoveLine(models.Model):
                         {2}
                     WHERE
                         a.reconcile IS TRUE
+                        AND l.full_reconcile_id is NULL
                         {3}
                         {4}
                         {5}
@@ -1628,30 +1629,15 @@ class AccountPartialReconcile(models.Model):
         }
         return self.env['account.move'].create(move_vals)
 
-    @api.model
-    def create(self, vals):
-        aml = []
-        if vals.get('debit_move_id', False):
-            aml.append(vals['debit_move_id'])
-        if vals.get('credit_move_id', False):
-            aml.append(vals['credit_move_id'])
-        # Get value of matched percentage from both move before reconciliating
-        lines = self.env['account.move.line'].browse(aml)
-        if lines[0].account_id.internal_type in ('receivable', 'payable'):
-            percentage_before_rec = lines._get_matched_percentage()
-        # Reconcile
-        res = super(AccountPartialReconcile, self).create(vals)
-        # if the reconciliation is a matching on a receivable or payable account, eventually create a tax cash basis entry
-        if lines[0].account_id.internal_type in ('receivable', 'payable'):
-            res.create_tax_cash_basis_entry(percentage_before_rec)
+    def _compute_partial_lines(self):
         if self._context.get('skip_full_reconcile_check'):
             #when running the manual reconciliation wizard, don't check the partials separately for full
             #reconciliation or exchange rate because it is handled manually after the whole processing
-            return res
+            return self
         #check if the reconcilation is full
         #first, gather all journal items involved in the reconciliation just created
-        partial_rec_set = OrderedDict.fromkeys([x for x in res])
-        aml_set = self.env['account.move.line']
+        partial_rec_set = OrderedDict.fromkeys([x for x in self])
+        aml_set = aml_to_balance = self.env['account.move.line']
         total_debit = 0
         total_credit = 0
         total_amount_currency = 0
@@ -1659,7 +1645,7 @@ class AccountPartialReconcile(models.Model):
         #possible to compute the exchange difference entry and it has to be done manually.
         currency = list(partial_rec_set)[0].currency_id
         maxdate = '0000-00-00'
-        aml_to_balance = self.env['account.move.line']
+
         for partial_rec in partial_rec_set:
             if partial_rec.currency_id != currency:
                 #no exchange rate entry will be created
@@ -1703,6 +1689,24 @@ class AccountPartialReconcile(models.Model):
                 'reconciled_line_ids': [(6, 0, aml_ids)],
                 'exchange_move_id': exchange_move_id,
             })
+
+    @api.model
+    def create(self, vals):
+        aml = []
+        if vals.get('debit_move_id', False):
+            aml.append(vals['debit_move_id'])
+        if vals.get('credit_move_id', False):
+            aml.append(vals['credit_move_id'])
+        # Get value of matched percentage from both move before reconciliating
+        lines = self.env['account.move.line'].browse(aml)
+        if lines[0].account_id.internal_type in ('receivable', 'payable'):
+            percentage_before_rec = lines._get_matched_percentage()
+        # Reconcile
+        res = super(AccountPartialReconcile, self).create(vals)
+        # if the reconciliation is a matching on a receivable or payable account, eventually create a tax cash basis entry
+        if lines[0].account_id.internal_type in ('receivable', 'payable'):
+            res.create_tax_cash_basis_entry(percentage_before_rec)
+        res._compute_partial_lines()
         return res
 
     @api.multi

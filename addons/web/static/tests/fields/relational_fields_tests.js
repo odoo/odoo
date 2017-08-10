@@ -922,6 +922,140 @@ QUnit.module('relational_fields', {
         });
     });
 
+    QUnit.test('list in form: create with one2many with many2one', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({p: [[0, 0, {display_name: 'new record'}]]});
+                } else if (args.method === 'name_get') {
+                    // This should not be called at all and thus is not accounted for
+                    // in the assert.expect. If this is called, you broke this test.
+                    assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
+                        "should not call name_get for the m2o inside o2m which has no value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('td.o_data_cell:first').text(), 'new record',
+            "should have created the new record in the o2m with the correct name");
+
+        form.destroy();
+    });
+
+    QUnit.test('list in form: default_get with x2many create', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges.timmy = function (obj) {
+            assert.deepEqual(
+                obj.timmy,
+                [
+                    [6, false, []],
+                    [0, false, {display_name: 'brandon is the new timmy', name: 'brandon'}]
+                ],
+                "should have properly created the x2many command list");
+            obj.int_field = obj.timmy.length;
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="timmy">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                        '<field name="int_field"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({timmy: [[0, 0, {display_name: 'brandon is the new timmy', name: 'brandon'}]]});
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('td.o_data_cell:first').text(), 'brandon is the new timmy',
+            "should have created the new record in the m2m with the correct name");
+        assert.strictEqual($('input.o_field_integer').val(), '2',
+            "should have called and executed the onchange properly");
+
+        form.destroy();
+    });
+
+    QUnit.test('list in form: call button in sub view', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.records[0].p = [2];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="product_id"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/get_formview_id') {
+                    return $.when(false);
+                }
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.strictEqual(event.data.env.model, 'product',
+                        'should call with correct model in env');
+                    assert.strictEqual(event.data.env.currentID, 37,
+                        'should call with correct currentID in env');
+                    assert.deepEqual(event.data.env.resIDs, [37],
+                        'should call with correct resIDs in env');
+                },
+            },
+            archs: {
+                'product,false,form': '<form string="Partners">' +
+                                        '<header>' +
+                                            '<button name="action" type="action" string="Just do it !"/>' +
+                                            '<button name="object" type="object" string="Just don\'t do it !"/>' +
+                                            '<field name="display_name"/>' +
+                                        '</header>' +
+                                      '</form>',
+            },
+        });
+
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('td.o_data_cell:first').click();  // edit first one2many line
+        form.$('.o_external_button').click();  // open product sub view in modal
+        $('button:contains("Just do it !")').click(); // click on action button
+        $('button:contains("Just don\'t do it !")').click(); // click on object button
+
+        form.destroy();
+    });
+
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
 
@@ -1414,6 +1548,115 @@ QUnit.module('relational_fields', {
         form.$('.o_field_widget[name=int_field]').val(2).trigger('input');
         // trigger a name_search (domain should be [['id', 'in', [10]]])
         form.$('.o_field_widget[name=trululu] input').click();
+
+        form.destroy();
+    });
+
+    QUnit.test('many2one in one2many: domain updated by an onchange', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = {
+            trululu: function () {},
+        };
+
+        var domain = [];
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="p">' +
+                        '<tree editable="bttom">' +
+                            '<field name="trululu"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({
+                        domain: {
+                            trululu: domain,
+                        },
+                    });
+                }
+                if (args.method === 'name_search') {
+                    assert.deepEqual(args.kwargs.args, domain,
+                        "sent domain should be correct");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        // add a first row with a specific domain for the m2o
+        domain = [['id', 'in', [10]]]; // domain for subrecord 1
+        form.$('.o_field_x2many_list_row_add a').click(); // triggers the onchange
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        // add a second row with another domain for the m2o
+        domain = [['id', 'in', [5]]]; // domain for subrecord 2
+        form.$('.o_field_x2many_list_row_add a').click(); // triggers the onchange
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        // check again the first row to ensure that the domain hasn't change
+        domain = [['id', 'in', [10]]]; // domain for subrecord 1 should have been kept
+        form.$('.o_data_row:first .o_data_cell').click();
+        form.$('.o_field_widget[name=trululu] input').click(); // triggers the name_search
+
+        form.destroy();
+    });
+
+    QUnit.test('updating a many2one from a many2many', function (assert) {
+        assert.expect(4);
+
+        this.data.turtle.records[1].turtle_trululu = 1;
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="turtle_trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</group>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'partner,false,form': '<form string="Trululu"><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    assert.deepEqual(args.args[0], [1], "should call get_formview_id with correct id");
+                    return $.when(false);
+                }
+                return this._super(route, args);
+            },
+        });
+
+        // Opening the modal
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_data_row td:contains(first record)').click();
+        form.$('.o_external_button').click();
+        assert.strictEqual($('.modal').length, 1,
+            "should have one modal in body");
+
+        // Changing the 'trululu' value
+        $('.modal input[name="display_name"]').val('test').trigger('input');
+        $('.modal button.btn-primary').click();
+
+        // Test whether the value has changed
+        assert.strictEqual($('.modal').length, 0,
+            "the modal should be closed");
+        assert.equal(form.$('.o_data_cell:contains(test)').text(), 'test',
+            "the partner name should have been updated to 'test'");
 
         form.destroy();
     });
@@ -3847,9 +4090,9 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.deepEqual(event.data.res_ids, [2],
+                    assert.deepEqual(event.data.env.currentID, 2,
                         'should call with correct id');
-                    assert.strictEqual(event.data.model, 'partner',
+                    assert.strictEqual(event.data.env.model, 'partner',
                         'should call with correct model');
                     assert.strictEqual(event.data.action_data.name, 'method_name',
                         "should call correct method");
@@ -3891,9 +4134,9 @@ QUnit.module('relational_fields', {
             res_id: 1,
             intercepts: {
                 execute_action: function (event) {
-                    assert.deepEqual(event.data.res_ids, [2],
+                    assert.deepEqual(event.data.env.currentID, 2,
                         'should call with correct id');
-                    assert.strictEqual(event.data.model, 'partner',
+                    assert.strictEqual(event.data.env.model, 'partner',
                         'should call with correct model');
                     assert.strictEqual(event.data.action_data.name, 'method_name',
                         "should call correct method");

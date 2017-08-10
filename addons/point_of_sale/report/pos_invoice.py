@@ -23,4 +23,4 @@ class PosInvoiceReport(models.AbstractModel):
             not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
             raise UserError(_('No link to an invoice for %s.') % ', '.join(not_invoiced_orders_names))
 
-        return self.env['ir.actions.report'].sudo().render_template('account.report_invoice', {'docs': self.env['account.invoice'].sudo().browse(ids_to_print)})
+        return {'docs': self.env['account.invoice'].sudo().browse(ids_to_print)}

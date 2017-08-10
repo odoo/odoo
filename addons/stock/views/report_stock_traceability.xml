@@ -5,7 +5,7 @@
         <t t-foreach="lines" t-as="a">
             <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
             <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
+            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
             <t t-set="domainClass" t-value="'o_stock_reports_domain_line'"/>
             <t t-if="a['unfoldable'] == false">
                 <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
@@ -30,10 +30,6 @@
                     </td>
                 </t>
             <td>
-                <t t-if="a.get('model') == 'stock.move.line'">
-                    <span t-if="a['stream'] == 'downstream'" class="o_stock_reports_stream text-muted" data-stream="upstream" title="Upstream Traceability"><i class="fa fa-arrow-up"></i></span>
-                    <span t-if="a['stream'] == 'upstream'" class="o_stock_reports_stream" data-stream="downstream" title="Downstream Traceability"><i class="fa fa-arrow-down"></i></span>
-                </t>
             </td>
             </tr>
         </t>
@@ -102,7 +98,7 @@
                             <t t-set="space_td" t-value="'margin-left: '+ str(a['level']) + 'px;'"/>
                             <t t-set="trclass" t-value="'o_stock_reports_default_style'"/>
                             <t t-if="a.get('model') == 'stock.move.line'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
-                            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level1'"/></t>
+                            <t t-if="a.get('model') == 'stock.quant'"><t t-set="trclass" t-value="'o_stock_reports_level0'"/></t>
                             <t t-set="column" t-value="0" />
                             <tr t-att-data-type="a['type']" t-att-data-stream="a['stream']" t-att-data-id="a['id']" t-att-data-model="a['model']" t-att-class="trclass">
                                 <t t-set="tdclass" t-value="''" />

@@ -12,12 +12,7 @@ class WebsiteEventSaleController(WebsiteEventController):
     @http.route(['/event/<model("event.event"):event>/register'], type='http', auth="public", website=True)
     def event_register(self, event, **post):
         event = event.with_context(pricelist=request.website.get_current_pricelist().id)
-        values = {
-            'event': event,
-            'main_object': event,
-            'range': range,
-        }
-        return request.render("website_event.event_description_full", values)
+        return super(WebsiteEventSaleController, self).event_register(event, **post)
 
     def _process_tickets_details(self, data):
         ticket_post = {}
