@@ -176,13 +176,17 @@ class ProductProduct(models.Model):
             return 0.0
         return latest.cumulated_value
 
-    def _get_candidates_out_move(self):
+    def _get_fifo_candidates_out_move(self):
+        """ Find OUT moves that were not valued in time because of negative stock.
+        """
         self.ensure_one()
         domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_out_base_domain()
         candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
 
-    def _get_candidates_move(self):
+    def _get_fifo_candidates_in_move(self):
+        """ Find IN moves that can be used to value OUT moves.
+        """
         self.ensure_one()
         domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
         candidates = self.env['stock.move'].search(domain, order='date, id')
@@ -205,7 +209,7 @@ class ProductProduct(models.Model):
             elif product.cost_method == 'average':
                 product.stock_value = product._get_latest_cumulated_value()
             elif product.cost_method == 'fifo': #Could also do same as for average, but it would lead to more rounding errors
-                moves = product._get_candidates_move()
+                moves = product._get_fifo_candidates_in_move()
                 value = 0
                 for move in moves:
                     value += move.remaining_qty * move.price_unit
