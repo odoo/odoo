@@ -386,8 +386,7 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move1.value, 900.0)
         self.assertEqual(move1.cumulated_value, 900.0)
-
-        self.assertEqual(move1.remaining_qty, 60.0)
+        self.assertEqual(move1.remaining_qty, 0.0)  # unusedin average move
 
         # Purchase 140 units @ 15.50 per unit
         move2 = self.env['stock.move'].create({
@@ -407,7 +406,7 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move2.value, 2170.0)
         self.assertEqual(move2.cumulated_value, 3070.0)
 
-        # Sale 190 units @ 15.00 per unit
+        # Sale 190 units @ 15.35 per unit
         move3 = self.env['stock.move'].create({
             'name': 'Sale 190 units @ 19.00 per unit',
             'location_id': self.stock_location.id,
@@ -456,7 +455,7 @@ class TestStockValuation(TransactionCase):
         move5.action_confirm()
         move5.action_assign()
         move5.move_line_ids.qty_done = 30.0
-        move5.action_done()
+        move5.with_context(debug=True).action_done()
 
         self.assertEqual(move5.value, -477.6)
         self.assertEqual(move5.cumulated_value, 795.9)  # fuck you, rounding
@@ -505,7 +504,7 @@ class TestStockValuation(TransactionCase):
             })]
         })
         move2.action_confirm()
-        move2.with_context(debug=True).action_done()
+        move2.action_done()
 
         self.assertEqual(move1.value, -600.0)
         self.assertEqual(move1.cumulated_value, -600.0)
@@ -542,3 +541,92 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move3.value, 500.0)
         self.assertEqual(move3.remaining_qty, 10.0)
         self.assertEqual(move3.cumulated_value, 250.0)
+
+    def test_average_negative_1(self):
+        """ Send goods that you don't have in stock and never received any unit.
+        """
+        self.product1.product_tmpl_id.cost_method = 'average'
+
+        # set a standard price
+        self.product1.standard_price = 99
+
+        # send 10 units that we do not have
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 0)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_average_negative_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1.action_confirm()
+        move1.force_assign()
+        move1.quantity_done = 10.0
+        move1.action_done()
+        self.assertEqual(move1.value, -990.0)  # as no move out were done for this product, fallback on the standard price
+        self.assertEqual(move1.cumulated_value, -990.0)
+        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
+
+    def test_average_negative_2(self):
+        """ Send goods that you don't have in stock but received and send some units before.
+        """
+        self.product1.product_tmpl_id.cost_method = 'average'
+
+        # set a standard price
+        self.product1.standard_price = 99
+
+        # Receives 10 produts at 10
+        move1 = self.env['stock.move'].create({
+            'name': '68 units @ 15.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'price_unit': 10,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1.action_done()
+
+        self.assertEqual(move1.value, 100.0)
+        self.assertEqual(move1.cumulated_value, 100.0)
+        self.assertEqual(move1.remaining_qty, 0.0)  # unused in average move
+
+        # send 10 products
+        move2 = self.env['stock.move'].create({
+            'name': 'Sale 94 units @ 19.00 per unit',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move2.action_confirm()
+        move2.action_assign()
+        move2.move_line_ids.qty_done = 10.0
+        move2.action_done()
+
+        self.assertEqual(move2.value, -100.0)
+        self.assertEqual(move2.cumulated_value, 0.0)
+        self.assertEqual(move2.remaining_qty, 0.0)  # unused in average move
+
+        # send 10 products again
+        move3 = self.env['stock.move'].create({
+            'name': 'Sale 94 units @ 19.00 per unit',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move3.action_confirm()
+        move3.force_assign()
+        move3.quantity_done = 10.0
+        move3.action_done()
+
+        self.assertEqual(move3.value, -100.0)  # as no move out were done for this product, fallback on latest cost
+        self.assertEqual(move3.cumulated_value, -100.0)
+        self.assertEqual(move3.remaining_qty, 0.0)  # unused in average move
