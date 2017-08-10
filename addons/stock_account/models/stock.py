@@ -92,13 +92,23 @@ class StockMove(models.Model):
                 return move.price_unit or self.product_id.standard_price
         return self.product_id.standard_price
 
-    def _update_future_cumulated_value(self, value):
+    def _update_fifo_future_cumulated_value(self, value):
+        """ This method is intended to be called on an OUT move that was not valued in time because
+        of negative stock with `value` argument representing its new value.
+        """
         self.ensure_one()
-        moves = self.search([('state', '=', 'done'), 
-                     ('date', '>',  self.date), 
-                     ('product_id', '=', self.product_id.id)])
+        domain = self._get_all_domain()
+        domain += [
+            '|',
+                ('date', '>', self.date),
+                '&',
+                    ('date', '=', self.date),
+                    ('id', '>', self.id)
+        ]
+        moves = self.search(domain, order='date, id')
         for move in moves:
-            move.value += value
+            # As `self` is always an out move, we decrease its value on the future moves.
+            move.cumulated_value -= value
 
     @ api.model
     def _get_in_base_domain(self, company_id=False):
@@ -223,20 +233,22 @@ class StockMove(models.Model):
                     move.cumulated_value = move.product_id._get_latest_cumulated_value(exclude_move=move) + move.value
                     move.remaining_qty = move.product_qty
                     if move.product_id.cost_method == 'fifo':
-                        # If you find an out with qty_remaining (because of negative stock), you can change it over there
-                        candidates_out = move.product_id._get_candidates_out_move()
+                        # If there are some OUT moves that we could not value in time, find them
+                        # and value them now with this new IN move. After that, update the cumulated
+                        # value along the moves done after the newly valued move.
+                        candidates_out = move.product_id._get_fifo_candidates_out_move()
                         qty_to_take = move.product_qty
                         for candidate in candidates_out:
                             if candidate.remaining_qty < qty_to_take:
-                                qty_taken_on_candidate = candidate.remaining_qty
+                                qty_taken_for_candidate = candidate.remaining_qty
                             else:
-                                qty_taken_on_candidate = qty_to_take
-                            candidate.remaining_qty -= qty_taken_on_candidate
-                            move.remaining_qty -= qty_taken_on_candidate
-                            qty_to_take -= qty_taken_on_candidate
-                            candidate.value += move.price_unit * qty_taken_on_candidate
-                            candidate.cumulated_value += move.price_unit * qty_taken_on_candidate
-                            candidate._update_future_cumulated_value(move.price_unit * qty_taken_on_candidate)
+                                qty_taken_for_candidate = qty_to_take
+                            candidate.remaining_qty -= qty_taken_for_candidate
+                            move.remaining_qty -= qty_taken_for_candidate
+                            qty_to_take -= qty_taken_for_candidate
+                            candidate.value -= move.price_unit * qty_taken_for_candidate
+                            candidate.cumulated_value -= move.price_unit * qty_taken_for_candidate
+                            candidate._update_fifo_future_cumulated_value(move.price_unit * qty_taken_for_candidate)
                             candidate.price_unit = candidate.value / candidate.product_qty
                     move.last_done_qty = move.product_id.qty_available
                 else:
@@ -246,7 +258,7 @@ class StockMove(models.Model):
                 if move.product_id.cost_method == 'fifo':
                     qty_to_take = move.product_qty
                     tmp_value = 0
-                    candidates = move.product_id._get_candidates_move()
+                    candidates = move.product_id._get_fifo_candidates_in_move()
                     last_candidate = False
                     for candidate in candidates:
                         if candidate.remaining_qty <= qty_to_take:

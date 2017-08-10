@@ -343,7 +343,7 @@
     self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
     original_out_move = self.env['stock.picking'].browse(ref('outgoing_fifo_shipment_neg')).move_lines[0]
     assert original_out_move.remaining_qty == 50.0, 'On the out move of 100, 50 still needs to be matched'
-    assert original_out_move.value == 2500, 'Value of the move should be 2500'
+    assert original_out_move.value == -2500, 'Value of the move should be -2500'
 - 
   Receive purchase order with 600 kg FIFO Ice Cream at 80 euro/kg
 - 
@@ -368,6 +368,6 @@
     picking = self.picking_ids[0]
     self.env['stock.immediate.transfer'].create({'pick_id': picking.id}).process()
     original_out_move = self.env['stock.picking'].browse(ref('outgoing_fifo_shipment_neg')).move_lines[0]
-    assert original_out_move.value == 6500.0, 'First original out move should have 6500 as value'
+    assert original_out_move.value == -6500.0, 'First original out move should have -6500 as value'
     assert original_out_move.product_id.stock_value == 12000.0, 'Stock Value should be 12000'
     assert original_out_move.product_id.qty_available == 150.0, 'Qty available should be 150'
