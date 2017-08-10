@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, pycompat
 from odoo.addons import decimal_precision as dp
 
 
@@ -183,14 +183,22 @@ class ProductProduct(models.Model):
         return candidates
 
     @api.multi
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     def _compute_average_price(self):
-        for product in self:
+        """ Compute the average price of a product.product according to the latest cumulated value
+        and the quantity that is in stock (for all the company owned locations, i.e. including the
+        warehouses transit ones). If nothing is in stick, we fallback first on the latest average
+        price on an out move used for this product then on the standard price.
+        """
+        for p_set, product in pycompat.izip(self, self.with_context(company_owned=True)):
             if product.qty_available > 0:
                 last_cumulated_value = product._get_latest_cumulated_value()
-                product.average_price = last_cumulated_value / product.qty_available
+                p_set.average_price = last_cumulated_value / product.qty_available
             else:
-                product.average_price = 0
-    
+                domain = [('product_id', '=', product.id), ('last_done_qty', '>', 0.0)] + self.env['stock.move']._get_all_base_domain()
+                move = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
+                p_set.average_price = move and move.cumulated_value / move.last_done_qty or product.standard_price
+
     @api.multi
     def _compute_stock_value(self):
         for product in self:
