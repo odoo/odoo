@@ -558,7 +558,7 @@
                 <tree string="Vendor Information">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="product_id" groups="product.group_product_variant"/>
+                    <field name="product_id" invisible="context.get('product_template_invisible_variant', False)"/>
                     <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="min_qty"/>
                     <field name="price" string="Price"/>
