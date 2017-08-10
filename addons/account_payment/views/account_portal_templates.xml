@@ -1,14 +1,14 @@
 <odoo>
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-    <xpath expr="//table[hasclass('o_my_status_table')]/thead/tr/th[last()]" position="before">
-        <th></th>
-    </xpath>
-    <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
-        <td>
-            <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.residual}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary">
-                <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
-            </a>
-        </td>
-      </xpath>
+        <xpath expr="//table[hasclass('o_my_status_table')]/thead/tr/th[last()]" position="before">
+            <th></th>
+        </xpath>
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
+            <td>
+                <a t-if="invoice.state == 'open'" t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.residual}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}" alt="Pay Now" class="btn btn-xs btn-primary">
+                    <i class="fa fa-arrow-circle-right"/><span class='hidden-xs'> Pay Now</span>
+                </a>
+            </td>
+        </xpath>
     </template>
 </odoo>
