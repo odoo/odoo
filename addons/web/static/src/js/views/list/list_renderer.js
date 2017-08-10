@@ -717,9 +717,26 @@ var ListRenderer = BasicRenderer.extend({
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
         if (!$(event.target).prop('special_click')) {
-            var id = $(event.currentTarget).data('id');
+            var id = $(event.currentTarget).data('id'),
+                action = this.arch.attrs.action,
+                action_type = this.arch.attrs.action_type;
+
             if (id) {
-                this.trigger_up('open_record', {id:id, target: event.target});
+                // call force action, when we click on cell into the tree view
+                if (action && action_type) {
+                    // trigger button for specific action
+                    // pass with attrs 'action' and 'action_type'
+                    this.trigger_up('button_clicked', {
+                        attrs: {
+                            name: action,
+                            type: action_type
+                        },
+                        // return current selected cell data/record
+                        record: _.find(this.state.data, function (data) {return data.id == id}),
+                    });
+                } else {
+                    this.trigger_up('open_record', {id:id, target: event.target});
+                }
             }
         }
     },
