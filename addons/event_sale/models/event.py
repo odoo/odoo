@@ -53,6 +53,12 @@ class Event(models.Model):
                 })
                 for ticket in self.event_type_id.event_ticket_ids]
 
+    @api.multi
+    def _is_event_registrable(self):
+        self.ensure_one()
+        if not self.event_ticket_ids:
+            return True
+        return all(self.event_ticket_ids.with_context(active_test=False).mapped(lambda t: t.product_id.active))
 
 class EventTicket(models.Model):
     _name = 'event.event.ticket'
