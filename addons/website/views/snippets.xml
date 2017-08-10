@@ -14,7 +14,7 @@
     </section>
 </template>
 
-<template id="s_banner" name="Banner">
+<template id="s_banner" name="Slider">
     <div id="myCarousel" class="carousel slide s_banner" data-interval="10000" style="height: 400px;">
         <!-- Indicators -->
         <ol class="carousel-indicators hidden">
@@ -25,12 +25,12 @@
                 <div class="container">
                     <div class="row content">
                         <div class="carousel-content col-md-4 col-md-offset-1 mt128 mb96">
-                            <h2>Your Banner Title</h2>
+                            <h2>Your Slide Title</h2>
                             <h4>Click to customize this text</h4>
                             <p><a href="/page/website.contactus" class="btn btn-warning btn-large">Contact us</a></p>
                         </div>
                         <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs mt48">
-                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Banner Odoo Image"/>
+                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
     </section>
 </template>
 
-<template id="s_big_message" name="Big message">
+<template id="s_big_message" name="Big Message">
     <section class="jumbotron s_big_message oe_img_bg oe_custom_bg" style="background-image: url('/web/image/website.s_background_image_01');">
         <div class="container">
             <div class="row">
@@ -459,7 +459,7 @@
     </section>
 </template>
 
-<template id="s_faq_collapse" name="Accordion">
+<template id="s_faq_collapse" name="FAQ">
     <section class="s_faq_collapse">
         <div class="container">
             <h2 class="page-header"> General Terms and Conditions / Service Policies </h2>
@@ -684,7 +684,7 @@
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                     <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
-                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
+                    <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_slider.png"/>
                 </div>
             </div>
 
