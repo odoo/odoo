@@ -19,6 +19,7 @@ Core mechanisms for the accounting modules. To display the menuitems, install th
         'data/account_data.xml',
         'views/account_menuitem.xml',
         'views/account_payment_view.xml',
+        'wizard/account_change_lock_date.xml',
         'wizard/account_reconcile_view.xml',
         'wizard/account_unreconcile_view.xml',
         'wizard/account_move_reversal_view.xml',
