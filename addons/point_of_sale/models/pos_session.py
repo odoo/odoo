@@ -93,7 +93,7 @@ class PosSession(models.Model):
 
     _sql_constraints = [('uniq_name', 'unique(name)', _("The name of this POS Session must be unique !"))]
 
-    @api.depends('cash_control', 'cash_journal_id', 'config_id.cash_control')
+    @api.depends('cash_control', 'cash_journal_id', 'config_id', 'statement_ids')
     def _compute_cash_all(self):
         for session in self:
             session.cash_journal_id = session.cash_register_id = session.cash_control = False
