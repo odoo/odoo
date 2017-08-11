@@ -164,6 +164,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row mt16 o_settings_container" attrs="{'invisible' : [('iface_customer_facing_display', '=', False)]}">
+                      <div class="col-xs-12 col-md-6 o_setting_box">
+                        <field name="customer_facing_display_html" widget="html_frame" nolabel="1" options="{'editor_url': '/point_of_sale/field/customer_facing_display_template'}"/>
+                      </div>
+                    </div>
                     <h2>Taxes</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-xs-12 col-md-6 o_setting_box" title="Choose a specific tax regime at the order depending on the kind of customer (tax exempt, onsite vs. takeaway, etc.).">
