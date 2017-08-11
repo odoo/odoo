@@ -482,3 +482,13 @@ class TestStockValuation(TransactionCase):
         
         move3.move_line_ids.qty_done = 90.0
         self.assertEqual(round(move5.cumulated_value, 1), 2340.4)
+        
+        
+        # Test changing from average to fifo cost method
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.assertEqual(move4.value, 1092.0, 'The value of the move 4')
+        self.assertEqual(move4.remaining_qty, 70.0, 'Remaining qty should be set')
+        
+        self.assertEqual(move2.value, 2178.0, 'The value of the move 2 should be a mix of existing price and the original price on the move')
+        self.assertEqual(move2.remaining_qty, 80.0, 'The remaining qty should be set to 80.0.')
+        self.assertEqual(move1.remaining_qty, 0.0, 'The remaining qty is 0.0')
