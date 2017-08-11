@@ -626,21 +626,21 @@ class IrActionsReport(models.Model):
                 # bypassed
                 raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-            html = self.with_context(context).render_qweb_html(wk_record_ids.ids, data=data)[0]
+        html = self.with_context(context).render_qweb_html(wk_record_ids.ids, data=data)[0]
 
-            # Ensure the current document is utf-8 encoded.
-            html = html.decode('utf-8')
+        # Ensure the current document is utf-8 encoded.
+        html = html.decode('utf-8')
 
-            bodies, res_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
+        bodies, res_ids, header, footer, specific_paperformat_args = self.with_context(context)._prepare_html(html)
 
-            pdf_content = self._run_wkhtmltopdf(
-                bodies,
-                header=header,
-                footer=footer,
-                landscape=context.get('landscape'),
-                specific_paperformat_args=specific_paperformat_args,
-                set_viewport_size=context.get('set_viewport_size'),
-            )
+        pdf_content = self._run_wkhtmltopdf(
+            bodies,
+            header=header,
+            footer=footer,
+            landscape=context.get('landscape'),
+            specific_paperformat_args=specific_paperformat_args,
+            set_viewport_size=context.get('set_viewport_size'),
+        )
         return self._post_pdf(save_in_attachment, pdf_content=pdf_content, res_ids=res_ids), 'pdf'
 
     @api.model
