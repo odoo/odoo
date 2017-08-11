@@ -1193,7 +1193,8 @@ registry.many2one = SnippetOption.extend({
         this.ID = +this.$target.data('oe-many2one-id');
 
         // create search button and bind search bar
-        this.$btn = $(qweb.render('web_editor.many2one.button'))
+        var options = this.$target.data('oeContactOptions');
+        this.$btn = $(qweb.render("web_editor.many2one.button", {'placeholder': options.placeholder}))
             .insertAfter(this.$overlay.find('.oe_options'));
 
         this.$ul = this.$btn.find('ul');
