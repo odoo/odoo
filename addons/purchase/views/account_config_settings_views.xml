@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.account_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div id="account_budget" position="before">
-                <div class="col-xs-12 col-md-6 o_setting_box" title="Allows you to specify an analytic account on purchase order lines.">
+                <div class="col-xs-12 col-md-6 o_setting_box" title="Allows you to specify an analytic account on purchase order lines." groups="account.group_account_user">
                     <div class="o_setting_left_pane">
                         <field name="group_analytic_account_for_purchases" class="oe_inline"/>
                     </div>

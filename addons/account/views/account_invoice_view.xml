@@ -238,7 +238,7 @@
                             <field name="number" class="oe_inline"  attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                                 <field name="sequence_number_next_prefix" class="oe_inline"/>
-                                <field name="sequence_number_next" class="oe_inline" required="1" style="width: 80px !important;"/>
+                                <field name="sequence_number_next" class="oe_inline" style="width: 80px !important;"/>
                             </div>
                         </h1>
                     </div>
@@ -294,7 +294,7 @@
                                                 <field name="tax_id" invisible="1"/>
                                                 <field name="sequence" invisible="1"/>
                                                 <field name="manual" invisible="1"/>
-                                                <field name="account_id" groups="account.group_account_invoice"/>
+                                                <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
                                                 <field name="amount"/>
                                                 <field name="currency_id" invisible="1"/>
@@ -316,7 +316,7 @@
                                 <field name="comment" placeholder="Additional notes..."/>
                             </div>
                         </page>
-                        <page string="Other Info">
+                        <page string="Other Info" name="other_info">
                             <group>
                                 <group>
                                     <field name="journal_id" groups="account.group_account_user" options="{'no_create': True}"
@@ -324,13 +324,13 @@
                                     <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
                                     <field name="user_id" string="Responsible"/>
                                     <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]"
-                                name="account_id" groups="account.group_account_manager"/>
+                                name="account_id" groups="account.group_account_user"/>
                                     <field name="name" invisible="1"/>
                                     <field name="payment_term_id" options="{'no_create': True}"/>
                                 </group>
                                 <group>
                                     <field name="fiscal_position_id" options="{'no_create': True}" placeholder="Auto-detect"/>
-                                    <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="date" domain="[('state', '=', 'draft'), ('company_id', '=', company_id)]" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 </group>
@@ -378,7 +378,7 @@
                         <div  attrs="{'invisible': [('sequence_number_next_prefix','=',False)]}">
                             <label string="Invoice Number:"/><br/>
                             <field name="sequence_number_next_prefix" class="oe_inline"/>
-                            <field name="sequence_number_next" class="oe_inline" required="1" style="width: 80px !important;"/>
+                            <field name="sequence_number_next" class="oe_inline" style="width: 80px !important;"/>
                         </div>
                     </h1>
                     <field name="type" invisible="1"/>
@@ -471,12 +471,12 @@
                                     <field name="journal_id" groups="account.group_account_user"
                                         options="{'no_create': True}" attrs="{'readonly':[('move_name','!=',False)]}"/>
                                     <field domain="[('company_id', '=', company_id),('internal_type','=', 'receivable'), ('deprecated', '=', False)]"
-                                        name="account_id" groups="account.group_account_manager"/>
+                                        name="account_id" groups="account.group_account_user"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     <field domain="[('partner_id.ref_company_ids', 'in', [company_id])]" name="partner_bank_id" invisible="1"/>
                                 </group>
                                 <group>
-                                    <field name="move_id" groups="account.group_account_manager" attrs="{'invisible': [('move_id', '=', False)]}"/>
+                                    <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="name"/>
                                 </group>
