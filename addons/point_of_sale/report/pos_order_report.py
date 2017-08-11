@@ -33,7 +33,7 @@ class PosOrderReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
-    pos_categ_id = fields.Many2one('pos.category', string='Public Category', readonly=True)
+    pos_categ_id = fields.Many2one('pos.category', string='PoS Category', readonly=True)
     stock_location_id = fields.Many2one('stock.location', string='Warehouse', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
