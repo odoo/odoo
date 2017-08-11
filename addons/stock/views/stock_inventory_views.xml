@@ -14,6 +14,40 @@
         </field>
     </record>
 
+    <record id="stock_inventory_line_tree2" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree2</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Inventory Details" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
+                <field name="product_id"  domain="[('type','=','product')]"/>
+                <field name="product_uom_id" string="UoM" groups="product.group_uom"/>
+                <field name="location_id" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
+                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
+                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
+                <field name="partner_id" groups="stock.group_tracking_owner"/>
+                <field name="theoretical_qty" readonly="1"/>
+                <field name="product_qty" string="Real Quantity"/>
+                <field name="state" invisible="1"/>
+                <field name="inventory_id" invisible="1"/>
+                <field name="inventory_location_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="stock_inventory_line_search" model="ir.ui.view">
+        <field name="name">stock.inventory.line.search</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Inventory Lines">
+                <field name="product_id"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                <field name="prod_lot_id" groups="stock.group_production_lot"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="partner_id" groups="stock.group_tracking_owner"/>
+            </search>
+        </field>
+    </record>
+
     <record id="view_inventory_filter" model="ir.ui.view">
         <field name="name">stock.inventory.filter</field>
         <field name="model">stock.inventory</field>
@@ -56,6 +90,19 @@
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
             </header>
             <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_inventory_line_tree"
+                        class="oe_stat_button"
+                        icon="fa-building-o"
+                        type="object"
+                        help="List view of lines"
+                        groups="base.group_no_one"
+                        states="confirm">
+                        <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Details</span>
+                        </div>
+                    </button>
+                </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name" placeholder="e.g. Annual inventory"/></h1>
@@ -181,5 +228,16 @@
           </p>
         </field>
     </record>
+
+    <record id="action_inventory_line_tree" model="ir.actions.act_window">
+        <field name="name">Inventory Lines</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.inventory.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="stock_inventory_line_tree2"/>
+        <field name="domain">[('inventory_id', '=', active_id)]</field>
+    </record>
+
     <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 </odoo>
