@@ -162,7 +162,7 @@ class SaleOrderLine(models.Model):
     @api.multi
     def _prepare_order_line_procurement(self, group_id=False):
         vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
-        date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
+        date_planned = datetime.strptime(self.order_id.date_order, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
         vals.update({
             'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
