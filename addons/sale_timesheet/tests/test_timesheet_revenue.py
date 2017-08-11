@@ -131,6 +131,8 @@ class TestSaleTimesheet(TestSale):
             'project_id': task_ordered.project_id.id,
         })
 
+        # check we don't compare apples and pears
+        self.assertEquals(timesheet1.company_currency_id, sale_order.currency_id, 'Currencies should not differ (%s vs %s)' % (timesheet1.company_currency_id.name, sale_order.currency_id.name))
         # check theorical revenue
         self.assertEquals(timesheet1.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")
         self.assertEquals(timesheet2.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")
