@@ -958,6 +958,45 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: create with one2many with many2one (version 2)', function (assert) {
+        // This test simulates the exact same scenario as the previous one,
+        // except that the value for the many2one is explicitely set to false,
+        // which is stupid, but this happens, so we have to handle it
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({p: [[0, 0, {display_name: 'new record', trululu: false}]]});
+                } else if (args.method === 'name_get') {
+                    // This should not be called at all and thus is not accounted for
+                    // in the assert.expect. If this is called, you broke this test.
+                    assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
+                        "should not call name_get for the m2o inside o2m which has no value");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('td.o_data_cell:first').text(), 'new record',
+            "should have created the new record in the o2m with the correct name");
+
+        form.destroy();
+    });
+
     QUnit.test('list in form: default_get with x2many create', function (assert) {
         assert.expect(3);
 
