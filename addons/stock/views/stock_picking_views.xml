@@ -277,7 +277,7 @@
                         <page string="Operations">
                             <field name="id" invisible="1"/>
                             <field name="move_lines" attrs="{'readonly': [('state', 'in', ('cancel', 'done'))]}" context="{'default_picking_id': id, 'form_view_ref':'stock.view_move_picking_form', 'address_in_id': partner_id, 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}">
-                                <tree decoration-danger="quantity_done > reserved_availability" decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
+                                <tree decoration-danger="state != 'done' and quantity_done > reserved_availability" decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
                                     <field name="name" invisible="1"/>
                                     <field name="date_expected" invisible="1"/>
                                     <field name="state" invisible="1" readonly="0"/>
