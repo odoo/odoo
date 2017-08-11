@@ -365,7 +365,7 @@ class account_voucher_line(models.Model):
             if product.description_purchase:
                 values['name'] += '\n' + product.description_purchase
         else:
-            values['price_unit'] = product.lst_price
+            values['price_unit'] = price_unit or product.lst_price
             taxes = product.taxes_id or account.tax_ids
             if product.description_sale:
                 values['name'] += '\n' + product.description_sale
@@ -375,7 +375,7 @@ class account_voucher_line(models.Model):
         if company and currency:
             if company.currency_id != currency:
                 if type == 'purchase':
-                    values['price_unit'] = product.standard_price
+                    values['price_unit'] = price_unit or product.standard_price
                 values['price_unit'] = values['price_unit'] * currency.rate
 
         return {'value': values, 'domain': {}}
