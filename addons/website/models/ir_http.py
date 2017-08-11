@@ -90,7 +90,8 @@ class Http(models.AbstractModel):
         return super(Http, cls)._get_default_lang()
 
     @classmethod
-    def _handle_exception(cls, exception, code=500):
+    def _handle_exception(cls, exception):
+        code = 500  # default code
         is_website_request = bool(getattr(request, 'is_frontend', False) and getattr(request, 'website', False))
         if not is_website_request:
             # Don't touch non website requests exception handling
