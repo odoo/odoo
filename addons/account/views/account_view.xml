@@ -165,7 +165,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" groups="group_account_manager" sequence="0"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu" groups="account.group_account_user" sequence="0"/>
 
         <act_window
             id="account.action_all_partner_invoices"
@@ -294,8 +294,8 @@
                                         </div>
                                     </group>
                                     <group>
-                                        <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" />
-                                        <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" />
+                                        <field name="default_debit_account_id" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
+                                        <field name="default_credit_account_id" domain="[('deprecated', '=', False)]" groups="account.group_account_user"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                     </group>
                                 </group>
@@ -307,7 +307,7 @@
                                         <field name="type_control_ids" widget="many2many_tags"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                     </group>
-                                    <group string="Miscellaneous">
+                                    <group string="Miscellaneous" groups="account.group_account_user">
                                         <field name="inbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="outbound_payment_method_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                         <field name="group_invoice_lines" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -324,7 +324,7 @@
                                         <field name="bank_id"/>
                                     </group>
                                     <group >
-                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
+                                        <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"  groups="account.group_account_user"/>
                                     </group>
                                 </group>
                             </page>
@@ -342,6 +342,7 @@
                 <tree string="Account Journal">
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
+                    <field name="bank_acc_number"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -375,7 +376,7 @@
                             <group string="Payables">
                                 <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
                             </group>
-                            <group name="bank_statement" string="Bank Statements">
+                            <group name="bank_statement" string="Bank Statements" groups="account.group_account_user">
                                 <label for="bank_statements_source"/>
                                 <div name="bank_source">
                                     <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
@@ -401,7 +402,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_bank_journal_form" id="menu_action_account_bank_journal_form" parent="account_account_menu" groups="group_account_manager" sequence="8"/>
+        <menuitem action="action_account_bank_journal_form" id="menu_action_account_bank_journal_form" parent="account_account_menu" groups="account.group_account_manager" sequence="8"/>
 
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
@@ -421,7 +422,7 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu" groups="group_account_manager"/>
+        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="account_account_menu" groups="account.group_account_manager"/>
 
         <act_window
            id="act_account_journal_2_account_bank_statement"
@@ -1024,7 +1025,7 @@
                                         <label string="%" class="oe_inline" attrs="{'invisible':[('amount_type','=','fixed')]}" />
                                     </div>
                                 </group>
-                                <group attrs="{'invisible':[('amount_type','=', 'group')]}">
+                                <group attrs="{'invisible':[('amount_type','=', 'group')]}" groups="account.group_account_user">
                                     <field name="account_id"/>
                                     <field name="refund_account_id"/>
                                 </group>
@@ -1052,10 +1053,10 @@
                                 <group name="advanced_booleans">
                                     <field name="price_include" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
-                                    <field name="tax_adjustment"/>
+                                    <field name="tax_adjustment" groups="account.group_account_user"/>
                                     <field name="hide_use_cash_basis" invisible="1"/>
-                                    <field name="use_cash_basis" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_use_cash_basis', '=', False)]}"/>
-                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}"/>
+                                    <field name="use_cash_basis" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_use_cash_basis', '=', False)]}" groups="account.group_account_user"/>
+                                    <field name="cash_basis_account" attrs="{'invisible': [('use_cash_basis', '=', False)], 'required': [('use_cash_basis', '=', True)]}" groups="account.group_account_user"/>
                                 </group>
                             </group>
                         </page>
@@ -1215,14 +1216,14 @@
             <field name="arch" type="xml">
                 <tree string="Journal Items" create="false">
                     <field name="date"/>
-                    <field name="move_id" required="0"/>
+                    <field name="move_id" required="0" groups="account.group_account_user"/>
                     <field name="journal_id" options='{"no_open":True}'/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]" groups="account.group_account_user"/>
+                    <field name="analytic_account_id" groups="account.group_account_user"/>
                     <field name="reconciled" invisible="1"/>
                     <field name="full_reconcile_id"/>
                     <field name="debit" sum="Total Debit"/>
@@ -1525,7 +1526,7 @@
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
-            groups="group_account_user"
+            groups="account.group_account_user"
             sequence="2"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
@@ -2080,10 +2081,32 @@
             <field name="view_id" ref="product_product_view_tree"/>
         </record>
 
+        <record id="product_product_action_sellable" model="ir.actions.act_window">
+            <field name="name">Sellable Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_filter_to_sell': 1}</field>
+            <field name="view_id" ref="product_product_view_tree"/>
+        </record>
+
+        <record id="product_product_action_purchasable" model="ir.actions.act_window">
+            <field name="name">Purchasable Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{'search_default_filter_to_purchase': 1}</field>
+            <field name="view_id" ref="product_product_view_tree"/>
+        </record>
+
+        <menuitem id="product_product_menu_sellable" name="Sellable Products" action="product_product_action_sellable" parent="account.menu_finance_receivables" sequence="100"/>
+
+        <menuitem id="product_product_menu_purchasable" name="Purchasable Products" action="product_product_action_purchasable" parent="account.menu_finance_payables" sequence="101"/>
+
         <menuitem id="product_configuration_menu" name="Products" parent="account.menu_finance_configuration" sequence="1"/>
         
-        <menuitem id="menu_product_product_action" name="Products" action="product_product_action" parent="product_configuration_menu" sequence="1"/>
-
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>

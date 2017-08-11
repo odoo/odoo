@@ -8,7 +8,7 @@
 Generates Intrastat XML report for declaration
 Based on invoices.
     """,
-    'depends': ['report_intrastat', 'sale_stock', 'account_accountant', 'l10n_be'],
+    'depends': ['report_intrastat', 'sale_stock', 'account', 'l10n_be'],
     'data': [
         'data/l10n_be_intrastat_chart_data.xml',
         'data/report.intrastat.code.csv',

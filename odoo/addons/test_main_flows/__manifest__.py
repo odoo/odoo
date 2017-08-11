@@ -8,7 +8,7 @@
 This mobule will test the main workflow of Odoo.
 It will install some main apps and will try to execute the most important actions.
 """,
-    'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase', 'mrp', 'account_accountant'],
+    'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase', 'mrp', 'account'],
     'data': [
         'views/templates.xml',
     ], 

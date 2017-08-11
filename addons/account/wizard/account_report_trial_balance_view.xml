@@ -30,7 +30,8 @@
     <menuitem id="menu_general_Balance_report"
         name="Trial Balance"
         parent="account.menu_finance_legal_statement"
-        action="action_account_balance_menu"/>
+        action="action_account_balance_menu"
+        groups="account.group_account_user"/>
 
     <record id="action_account_balance_report_values1" model="ir.values">
         <field name="model_id" ref="account.model_account_account" />
