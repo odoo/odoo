@@ -26,6 +26,9 @@
         }
         .o_kanban_card_upper_content {
             margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
+            .o_kanban_primary_left .btn-primary {
+                width: 100%;
+            }
         }
         .o_sales_team_kanban_graph_section {
             margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
@@ -106,6 +109,13 @@
         }
         .bottom_block {
             height: @odoo-horizontal-padding*2 + 20px;
+            .o_progressbar_value{
+                @media (max-width: @screen-xs-max) {
+                    border: 1px solid #8f8f8f;
+                    padding: 0px 3px;
+                    margin-left: 10px;
+                }
+            }
         }
     }
 
@@ -114,5 +124,11 @@
         .o_kanban_record {
             min-width: inherit;
         }
+    }
+    &.o_kanban_ungrouped {
+        @media (max-width: @screen-xs-max) {
+            padding: 5px;
+        }
+
     }
 }
