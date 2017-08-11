@@ -80,7 +80,26 @@ class TestStockValuation(TransactionCase):
         # http://accountingexplained.com/financial/inventories/fifo-method
         self.product1.product_tmpl_id.cost_method = 'fifo'
         self.product1.product_tmpl_id.valuation = 'real_time'
-
+        Account = self.env['account.account']
+        # Maybe the localization has not been installed yet
+        stock_input_account = Account.create({'name': 'Stock Input', 
+                                              'code': 'StockIn',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_output_account = Account.create({'name': 'Stock Output', 
+                                              'code': 'StockOut',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_valuation_account = Account.create({'name': 'Stock Valuation', 
+                                              'code': 'Stock Valuation',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_journal = self.env['account.journal'].create({'name': 'Stock Journal', 
+                                            'code': 'STJTEST',
+                                            'type': 'general'})
+        self.product1.categ_id.write({'property_stock_account_input_categ_id': stock_input_account.id,
+                                      'property_stock_account_output_categ_id': stock_output_account.id,
+                                      'property_stock_valuation_account_id': stock_valuation_account.id,
+                                      'property_stock_journal': stock_journal.id,
+                                      })
+        
         # Beginning Inventory: 68 units @ 15.00 per unit
         move1 = self.env['stock.move'].create({
             'name': '68 units @ 15.00 per unit',
@@ -95,9 +114,11 @@ class TestStockValuation(TransactionCase):
         move1.action_assign()
         move1.move_line_ids.qty_done = 68.0
         move1.action_done()
+        
+        # Check accounting entries
         Aml = self.env['account.move.line']
-        stock_valuation_account = Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0)]).account_id
-        stock_input_account = Aml.search([('product_id', '=', self.product1.id), ('credit', '>', 0)]).account_id
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0)]).account_id.id, stock_valuation_account.id, 'Problem valuation account entry')
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('credit', '>', 0)]).account_id.id, stock_input_account.id, 'Problem input account entry')
 
         self.assertEqual(move1.value, 1020.0)
         self.assertEqual(move1.cumulated_value, 1020.0)
@@ -138,8 +159,8 @@ class TestStockValuation(TransactionCase):
         move3.action_assign()
         move3.move_line_ids.qty_done = 94.0
         move3.action_done()
-        stock_output_account = Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0), 
-                                           ('account_id', '!=', stock_valuation_account.id)]).account_id
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0), 
+                                           ('account_id', '!=', stock_valuation_account.id)]).account_id.id, stock_output_account.id, 'Output account entry problem')
 
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
