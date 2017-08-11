@@ -88,7 +88,7 @@ var ChatterComposer = composer.BasicComposer.extend({
 
     /**
      * Get the list of selected suggested partners
-     * @returns Array() : list of 'recipient' selected partners (may not be created in db)
+     * @returns {Array} list of 'recipient' selected partners (may not be created in db)
      **/
     get_checked_suggested_partners: function () {
         var self = this;

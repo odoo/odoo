@@ -384,11 +384,9 @@ def check_parameters(documenter, doc):
     if not guessed:
         return
 
-    # TODO: eventually support/strip dash or colon between param name and description (possibly monkeypatch ParamDoc.__init__?)
-    # TODO: also strip trailing newline/whitespace from param name
     documented = {
         # param name can be of the form [foo.bar.baz=default]\ndescription
-        jsdoc.ParamDoc(text).name.strip().strip('[]').split('.')[0].split('=')[0]
+        jsdoc.ParamDoc(text).name.split('.')[0]
         for text in doc.get_as_list('param')
     }
     odd = documented - guessed
@@ -406,22 +404,21 @@ def check_parameters(documenter, doc):
 
 def make_desc_parameters(params):
     for p in params:
-        name = p.name.strip()
         # FIXME: extract sub-params to typedef (in body?)
-        if '.' in name:
+        if '.' in p.name:
             continue
 
-        if name.startswith('[') and name.startswith(']'):
-            n = name[1:-1]
-            yield addnodes.desc_optional(n, n)
-        else:
-            yield addnodes.desc_parameter(name, name)
-
+        node = addnodes.desc_parameter(p.name, p.name)
+        if p.optional:
+            node = addnodes.desc_optional('', '', node)
+        yield node
 
 def make_parameters(params, mod=None):
     for param in params:
-        name = param.name.strip().strip('[]')
-        p = nodes.paragraph('', '', nodes.strong(name, name))
+        p = nodes.paragraph('', '', nodes.strong(param.name, param.name))
+        if param.default is not None:
+            p += nodes.Text('=', '=')
+            p += nodes.emphasis(param.default, param.default)
         if param.type:
             p += nodes.Text(' (')
             p += make_types(param.type, mod=mod)
@@ -441,6 +438,7 @@ def _format_value(v):
         return nodes.Text(', ', ', ')
     return nodes.Text(v, v)
 def make_types(typespec, mod=None):
+    # TODO: in closure notation {type=} => optional, do we care?
     def format_type(t):
         ref = addnodes.pending_xref(
             t, addnodes.literal_emphasis(t, t),

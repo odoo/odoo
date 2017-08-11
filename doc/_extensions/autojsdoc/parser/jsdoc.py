@@ -7,7 +7,6 @@ import jinja2
 import pyjsdoc
 from pyjsdoc import (
     CommentDoc,
-    ParamDoc,
     parse_comment,
 )
 
@@ -18,6 +17,30 @@ def strip_stars(doc_comment):
     """
     return re.sub('\n\s*?\*[\t ]?', '\n', doc_comment[3:-2]).strip()
 
+class ParamDoc(pyjsdoc.ParamDoc):
+    """
+    Replace ParamDoc because FunctionDoc doesn't properly handle optional
+    params or default values (TODO: or compounds) if guessed_params is used
+
+    => augment paramdoc with "required" and "default" items to clean up name
+    """
+    def __init__(self, text):
+        super(ParamDoc, self).__init__(text)
+        self.doc = self.doc.strip().lstrip('-:').lstrip()
+        self.optional = False
+        self.default = None
+        self.name = self.name.strip()
+        if self.name.startswith('['):
+            self.name = self.name.strip('[]')
+            self.optional = True
+        if '=' in self.name:
+            self.name, self.default = self.name.rsplit('=', 1)
+    def to_dict(self):
+        d = super(ParamDoc, self).to_dict()
+        d['optional'] = self.optional
+        d['default'] = self.default
+        return d
+pyjsdoc.ParamDoc = ParamDoc
 class FunctionDoc(pyjsdoc.FunctionDoc):
     type = 'Function'
     def set_name(self, name):
