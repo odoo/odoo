@@ -296,7 +296,7 @@
                                     <field name="product_uom_qty" string="Initial Demand" attrs="{'readonly': [('is_initial_demand_editable', '=', False), ('state', '!=', 'draft')]}"/>
                                     <field name="product_uom" attrs="{'readonly': [('state', '!=', 'draft'), ('additional', '=', False)]}" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
                                     <field name="reserved_availability" string="Reserved"/>
-                                    <field name="quantity_done" string="Done" attrs="{'readonly': [('show_details_visible', '=', True)], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
+                                    <field name="quantity_done" string="Done" attrs="{'readonly': ['|', ('show_details_visible', '=', True), ('state', '=', 'cancel')], 'invisible': ['|', ('state', 'in', ['draft', 'confirmed', 'waiting']), ('show_operations', '=', True)]}"/>
                                     <button name="action_show_details" string="Register lots, packs, location" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                 </tree>
                             </field>
