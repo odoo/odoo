@@ -2007,5 +2007,25 @@ QUnit.module('Views', {
         model.destroy();
     });
 
+    QUnit.test('default_get with value false for a one2many', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.product_ids.default = false;
+        this.params.fieldNames = ['product_ids'];
+        this.params.res_id = undefined;
+        this.params.type = 'record';
+
+        var model = createModel({
+            Model: BasicModel,
+            data: this.data,
+        });
+
+        model.load(this.params).then(function (resultID) {
+            var record = model.get(resultID);
+            assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
+        });
+
+        model.destroy();
+    });
 
 });});

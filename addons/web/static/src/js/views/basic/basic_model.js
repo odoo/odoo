@@ -2895,6 +2895,7 @@ var BasicModel = AbstractModel.extend({
                         x2manyList._changes = [];
                         var many2ones = {};
                         var r;
+                        result[name] = result[name] || []; // handle false value
                         var isCommandList = result[name].length && _.isArray(result[name][0]);
                         if (!isCommandList) {
                             result[name] = [[6, false, result[name]]];
