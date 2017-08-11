@@ -71,5 +71,17 @@
         <record id="base.default_user" model="res.users">
             <field name="groups_id" eval="[(4,ref('point_of_sale.group_pos_manager'))]"/>
         </record>
+
+        <!-- user only gets to read his own pos (or start sessions) -->
+        <record id="pos_user_rule" model="ir.rule">
+            <field name="name">PoS User</field>
+            <field name="model_id" ref="model_pos_config"/>
+            <field name="domain_force">['|', ('cashier_ids','in', user.id), ('cashier_ids','=', False)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('group_pos_user'))]"/>
+        </record>
     </data>
 </odoo>

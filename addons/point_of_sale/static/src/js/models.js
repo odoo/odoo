@@ -268,7 +268,7 @@ exports.PosModel = Backbone.Model.extend({
                         user.role = 'cashier';
                     }
                 }
-                if (user.role) {
+                if (user.role && ((user.role === 'manager' || _.isEmpty(self.config.cashier_ids)) || (user.role === 'cashier' && _.contains(self.config.cashier_ids, user.id)))) {
                     pos_users.push(user);
                 }
                 // replace the current user with its updated version
