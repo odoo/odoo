@@ -25,9 +25,27 @@ Pricelists support:
 Pricelists preferences by product and/or partners.
 
 Print product labels with barcode.
+
+Unit of Measure Defaults:
+-------------------------
+
+Default units of measure can be configured in the `Languages` menu in settings.
+
+Fields that want to implement the language default should use the provided method,
+such as in the below example::
+
+   class MyModel(models.Model):
+       _name = 'my.model'
+       time_uom_id = fields.Many2one(
+           string='Time Units',
+           comodel_name='product.uom',
+           default=lambda s: s.env['res.lang'].default_uom_by_category('Time'),
+       )
+       
     """,
     'data': [
         'data/product_data.xml',
+        'data/res_lang_data.xml',
         'security/product_security.xml',
         'security/ir.model.access.csv',
         'wizard/product_price_list_views.xml',
