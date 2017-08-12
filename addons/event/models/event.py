@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytz
+from datetime import datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.addons.mail.models.mail_template import format_tz
@@ -138,15 +139,18 @@ class EventEvent(models.Model):
         'event.registration', 'event_id', string='Attendees',
         readonly=False, states={'done': [('readonly', True)]})
     # Date fields
-    date_tz = fields.Selection('_tz_get', string='Timezone', required=True, default=lambda self: self.env.user.tz or 'UTC')
+    date_tz = fields.Selection('_tz_get', string='Timezone Visibility', required=True, default=lambda self: self.env.user.tz)
+    timezone_type = fields.Selection(
+        [('unique', 'Show timezone in a unique timezone'), ('visitor', 'Show time in visitior\'s timezone')],
+        string='Timezone', required=True, default='visitor')
     date_begin = fields.Datetime(
-        string='Start Date', required=True,
+        string='Start Date', required=True, default=lambda self: fields.Datetime.now(),
         track_visibility='onchange', states={'done': [('readonly', True)]})
     date_end = fields.Datetime(
-        string='End Date', required=True,
+        string='End Date', required=True, default=lambda self: fields.Datetime.now(),
         track_visibility='onchange', states={'done': [('readonly', True)]})
-    date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
-    date_end_located = fields.Char(string='End Date Located', compute='_compute_date_end_tz')
+    date_begin_located = fields.Datetime(string='Start Date', compute='_compute_date_begin_tz', inverse="_inverse_date_begin_tz")
+    date_end_located = fields.Datetime(string='End Date', compute='_compute_date_end_tz', inverse="_inverse_date_end_tz")
 
     state = fields.Selection([
         ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
@@ -205,21 +209,42 @@ class EventEvent(models.Model):
     def _tz_get(self):
         return [(x, x) for x in pytz.all_timezones]
 
-    @api.one
-    @api.depends('date_tz', 'date_begin')
-    def _compute_date_begin_tz(self):
-        if self.date_begin:
-            self.date_begin_located = format_tz(self.with_context({'use_babel': True}).env, self.date_begin, tz=self.date_tz)
-        else:
-            self.date_begin_located = False
+    def _tz_to_offset(self, tz):
+        return tz and datetime.now(pytz.timezone(tz)).utcoffset().total_seconds() / 60 or False
 
-    @api.one
-    @api.depends('date_tz', 'date_end')
+    def _tz_offset(self, event_date, inverse=False):
+        user_tz_offset = self._tz_to_offset(self.env.user.tz)
+        event_tz_offset = self._tz_to_offset(self.date_tz)
+        if not inverse:
+            return fields.Datetime.from_string(event_date) + timedelta(minutes=(event_tz_offset-user_tz_offset))
+        return fields.Datetime.from_string(event_date) + timedelta(minutes=(user_tz_offset-event_tz_offset))
+
+    @api.depends('date_begin')
+    def _compute_date_begin_tz(self):
+        for event in self:
+            event.date_begin_located = event._tz_offset(event.date_begin)
+
+    def _inverse_date_begin_tz(self):
+        for event in self:
+            event.date_begin = event._tz_offset(event.date_begin_located, inverse=True)
+
+    @api.depends('date_end')
     def _compute_date_end_tz(self):
+        for event in self:
+            event.date_end_located = event._tz_offset(event.date_end)
+
+    def _inverse_date_end_tz(self):
+        for event in self:
+            event.date_end = event._tz_offset(event.date_end_located, inverse=True)
+
+    @api.onchange('date_tz')
+    def _onchange_date_tz(self):
+        event_tz_offset = self._tz_to_offset(self.date_tz)
+        user_tz_offset = self._tz_to_offset(self._context.get('tz'))
+        if self.date_begin:
+            self.date_begin = fields.Datetime.from_string(self.date_begin_located) + timedelta(minutes=-(event_tz_offset-user_tz_offset))
         if self.date_end:
-            self.date_end_located = format_tz(self.with_context({'use_babel': True}).env, self.date_end, tz=self.date_tz)
-        else:
-            self.date_end_located = False
+            self.date_end = fields.Datetime.from_string(self.date_end_located) + timedelta(minutes=-(event_tz_offset-user_tz_offset))
 
     @api.onchange('event_type_id')
     def _onchange_type(self):

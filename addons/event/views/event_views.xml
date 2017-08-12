@@ -227,8 +227,11 @@
                                 <field name="auto_confirm" groups="base.group_no_one"/>
                             </group>
                             <group>
-                                <field name="date_begin"/>
-                                <field name="date_end"/>
+                                <field name="date_begin" invisible="1"/>
+                                <field name="date_end" invisible="1"/>
+                                <field name="date_begin_located"/>
+                                <field name="date_end_located"/>
+                                <field name="timezone_type" widget='radio'/>
                                 <field name="date_tz"/>
                             </group>
                             <group>
@@ -294,6 +297,8 @@
                     <field name="country_id"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
+                    <field name="date_begin_located"/>
+                    <field name="date_end_located"/>
                     <field name="seats_unconfirmed"/>
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
@@ -320,14 +325,14 @@
                                         <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
                                         <t t-esc="record.date_begin.raw_value.getFullYear()"/>
                                     </div>
-                                    <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
+                                    <div><t t-esc="moment(record.date_begin_located.value).format('LT')"/></div>
                                 </div>
                                 <div class="o_event_right">
                                     <h4><field name="name"/></h4>
                                     <div>
                                         <t t-if="record.country_id.raw_value"> <b> <field name="country_id"/> </b> <br/> </t>
                                         <i class="fa fa-clock-o"/>
-                                        <b>To</b> <t t-esc="moment(record.date_end.raw_value).format('lll')"/>
+                                        <b>To</b> <t t-esc="moment(record.date_end_located.value).format('lll')"/>
                                     </div>
                                     <h4>
                                         <a name="%(act_event_registration_from_event)d" type="action">

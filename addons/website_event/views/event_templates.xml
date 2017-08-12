@@ -66,7 +66,16 @@
                                     </t>
                                 </div>
                                 <div>
-                                    <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span> <i>to</i> <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                                    <i class="fa fa-clock-o"></i>
+                                    <t t-set="tz" t-value="event.date_tz" />
+                                    <t t-if="event.timezone_type == 'unique'">
+                                        <span itemprop="startDate" t-field="event.date_begin_located" t-options='{"hide_seconds":"True"}'/> <i>to</i>
+                                        <span itemprop="endDate" t-field="event.date_end_located" t-options='{"hide_seconds":"True"}'/> (<span t-esc="event.date_tz"/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span itemprop="startDate" t-att-data-event-visitor-date="event.date_begin"/> <i>to</i>
+                                        <span itemprop="endDate" t-att-data-event-visitor-date="event.date_end"/> (<span class="o_visitor_timezone" t-esc="event.date_tz"/>)
+                                    </t>
                                 </div>
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
@@ -277,10 +286,17 @@
             <div class="text-center">
                 <small t-if="event.is_participating" class="label label-info">Participating</small>
             </div>
-            <h4 class="text-center text-muted">
-                <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
-                <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
-                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+            <h4 class="text-center text-muted o_event_visitor_date">
+                <i class="fa fa-clock-o"></i>
+                <t t-set="tz" t-value="event.date_tz" />
+                <t t-if="event.timezone_type == 'unique'">
+                    <span itemprop="startDate" t-field="event.date_begin_located" t-options='{"hide_seconds":"True"}'/> <i>to</i>
+                    <span itemprop="endDate" t-field="event.date_end_located" t-options='{"hide_seconds":"True"}'/> (<span t-esc="event.date_tz"/>)
+                </t>
+                <t t-else="">
+                    <span itemprop="startDate" t-att-data-event-visitor-date="event.date_begin" class="o_event_starting_date"/> <i>to</i>
+                    <span itemprop="endDate" t-att-data-event-visitor-date="event.date_end" class="o_event_ending_date"/> (<span class="o_visitor_timezone" t-esc="event.date_tz"/>)
+                </t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-options='{
@@ -363,8 +379,22 @@
                     <h4>When</h4>
                 </div>
                 <div class="panel-body">
-                    <i class="fa fa-clock-o"></i> From <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'> </span><br/>
-                    <i class="fa fa-clock-o"></i> To <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'> </span>
+                    <i class="fa fa-clock-o"></i>
+                    From
+                    <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}' t-att-data-event-visitor-date="event.date_begin" class="o_event_starting_date" />
+                    <br/>
+                    <i class="fa fa-clock-o"></i>
+                    To
+                    <span t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}' t-att-data-event-visitor-date="event.date_end" class="o_event_ending_date" />
+                    <br/>
+                    <t t-if="event.timezone_type != 'unique'">
+                        <div style="margin-top: 10px;">
+                            <form id="user_timezone" t-attf-action="/event/#{slug(event)}/registration/timezone" method="post">
+                                <i class="fa fa-arrow-right "></i>
+                                <a href="#" class="o_user_timezone"> Show time in another timezone </a>
+                            </form>
+                        </div>
+                    </t>
                 </div>
             </div>
 
@@ -725,5 +755,30 @@
     <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
         <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"></i><p>New Event</p></a></li>
     </xpath>
+</template>
+
+<!-- Timezone Selector Modal -->
+<template id="select_user_timezone" name="Select User Timezone">
+    <div id="modal_select_user_timezone" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 class="modal-title" id="myModalLabel"><strong>Select Your Timezone</strong></h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <select class="form-control" id="timezone-container"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <button class="btn btn-primary o_set_timezone_btn">Set Timezone</button>
+                        <button class="btn btn-default js_goto_event" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 </odoo>
