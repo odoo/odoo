@@ -27,7 +27,11 @@ if(!$('.website_forum').length) {
                 msg + '</div>');
             var vote_alert = $(ev.currentTarget).parent().find("#vote_alert");
             if (vote_alert.length == 0) {
-                $(ev.currentTarget).parent().append($warning);
+                if ($(ev.currentTarget).is('button')) {
+                    $(ev.currentTarget).parent().append($warning);
+                } else {
+                    $(ev.currentTarget).after($warning);
+                }
             }
         }
     });
