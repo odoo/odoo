@@ -569,7 +569,7 @@ class HrExpenseSheet(models.Model):
             raise ValidationError(_('You cannot have a positive and negative amounts on the same expense report.'))
 
     @api.one
-    @api.constrains('expense_line_ids')
+    @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):
         employee_ids = self.expense_line_ids.mapped('employee_id')
         if len(employee_ids) > 1 or (len(employee_ids) == 1 and employee_ids != self.employee_id):
