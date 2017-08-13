@@ -7,35 +7,31 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Gustavo Valverde <g.valverde02@gmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Carlos Eduardo Rodriguez Rossi <crodriguez@samemotion.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
-# Denis Ledoux <dle@odoo.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# David Perez <david@closemarketing.es>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 # Luis Pomar <luis.pomar@gmail.com>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Daniel Santibáñez Polanco <dansanti@gmail.com>, 2016
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
 # Martin Mendoza del Solar <martin@mendozadelsolar.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Juan Fernando Cano González <jfcano@nanobytes.es>, 2016
-# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2016
 # Kiko <kiko@comunitea.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2016
 # Cristian Salamea <ovnicraft@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Cristian Salamea <ovnicraft@gmail.com>, 2017\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,12 +87,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
 #: model:ir.model.fields,field_description:sale.field_product_template_sales_count
 msgid "# Sales"
-msgstr "Nº ventas"
+msgstr "# Ventas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_count
 msgid "# of Invoices"
-msgstr "Nº de facturas"
+msgstr "# de Facturas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_nbr
@@ -106,18 +102,18 @@ msgstr "# de líneas"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr "Nº de pedido de venta"
+msgstr "# de Pedidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
 msgid "# of Qty"
-msgstr "Nº de ctdad"
+msgstr "# de Ctdad"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
-msgstr "Nº de pedido de venta"
+msgstr "# de Pedido de Venta"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
@@ -135,7 +131,7 @@ msgid ""
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Presupuesto' or 'Pedido'} (Ref ${object.name or 'n/a' })"
+"'Cotización' or 'Pedido'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
@@ -343,17 +339,17 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>Posición fiscal:</strong>"
+msgstr "<strong>Posición Fiscal:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Payment Terms:</strong>"
-msgstr "<strong>Términos de pago:</strong>"
+msgstr "<strong>Términos de Pago:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr "<strong>Comercial:</strong>"
+msgstr "<strong>Vendedor:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
@@ -370,7 +366,7 @@ msgstr "<strong>Subtotal: </strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total Without Taxes</strong>"
-msgstr "<strong>Total base</strong>"
+msgstr "<strong>Total Sin Impuestos</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -415,7 +411,7 @@ msgstr "Direcciones"
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
 msgid "Addresses in Sales Orders"
-msgstr "Direcciones en los pedidos de venta"
+msgstr "Direcciones en Pedidos de Venta"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:153
@@ -447,7 +443,7 @@ msgid ""
 "Quotation menu)"
 msgstr ""
 "Permitir editar pedidos de ventas desde el menú 'Órdenes de Ventas' (no "
-"desde el menú de Presupuestos)"
+"desde el menú de Cotizaciones)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -489,7 +485,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_related_project_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
-msgstr "Cuenta analítica"
+msgstr "Cuenta Analítica"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -504,7 +500,7 @@ msgstr "Línea Analítica"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
 msgid "Analytic Tags"
-msgstr "Etiquetas analíticas"
+msgstr "Etiquetas Analíticas"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_config_settings_group_analytic_account_for_sales
@@ -550,7 +546,7 @@ msgstr "Por producto"
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salespersons
 msgid "By Salespersons"
-msgstr "Por comerciales"
+msgstr "Por Vendedores"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_salesteam
@@ -582,14 +578,14 @@ msgstr "Marcar esta casilla para gestionar facturas en este equipo de ventas."
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
 msgid "Check this box to manage quotations in this sales team."
 msgstr ""
-"Marque esta casilla para gestionar presupuestos en este equipo de ventas."
+"Marque esta casilla para gestionar cotizaciones en este equipo de ventas."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:39
 #, python-format
 msgid "Click here to add some lines to your quotations."
-msgstr "Haga clic aquí para agregar líneas a sus presupuestos."
+msgstr "Haga clic aquí para agregar líneas a su cotización."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -651,7 +647,7 @@ msgstr "Crear facturas"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr "Crea un Presupuesto, el primer paso de una nueva venta."
+msgstr "Crea una Cotización, el primer paso de una nueva venta."
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -871,7 +867,7 @@ msgstr "Mostrar incoterms en los Pedidos de Ventas y en facturas relacionadas"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Mostrar márgenes en presupuestos y pedidos de venta"
+msgstr "Mostrar márgenes en cotizaciones y pedidos de venta"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
@@ -913,7 +909,7 @@ msgstr "Depósito de %s%%"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Draft Quotation"
-msgstr "Presupuesto borrador"
+msgstr "Cotización Borrador"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -1232,7 +1228,7 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually "
 "points to the next logical actions in any screen.</i>"
 msgstr ""
-"Vamos a crear un nuevo presupuesto.<br/><i>Tenga en cuenta que los botones "
+"Vamos a crear una nueva cotización .<br/><i>Tenga en cuenta que los botones "
 "de colores suelen apuntar a las siguientes acciones lógicas en cualquier "
 "pantalla.</i>"
 
@@ -1241,7 +1237,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr "Echemos un vistazo a los presupuestos de este equipo de ventas."
+msgstr "Echemos un vistazo a las cotizaciones de este equipo de ventas."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1282,7 +1278,7 @@ msgid ""
 "the date automatically based on the template if online quotation is "
 "installed."
 msgstr ""
-"Indique manualmente la fecha de caducidad de su presupuesto (oferta), o se "
+"Indique manualmente la fecha de caducidad de su cotización (oferta), o se "
 "cargará la fecha automáticamente en función de la plantilla."
 
 #. module: sale
@@ -1343,7 +1339,7 @@ msgstr "Nuevo"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr "Nuevo Presupuesto"
+msgstr "Nueva Cotización"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
@@ -1377,8 +1373,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"Tenga en cuenta que una vez que una oferta se convierte en una orden de venta, se moverá\n"
-"                desde la lista de ofertas a la lista de ordenes de ventas."
+"Tenga en cuenta que una vez que la  cotización se convierta en una orden de venta, se moverá\n"
+"                desde la lista de cotizaciones a la lista de ordenes de ventas."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1396,7 +1392,7 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
-"Tenga en cuenta que una vez que un presupuesto se convierte en\n"
+"Tenga en cuenta que una vez que un cotización se convierte en\n"
 "pedido de venta, será movido desde la lista de presupuestos a la\n"
 "de pedidos de venta."
 
@@ -1434,13 +1430,13 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
-"Una vez que su presupuesto esté listo, puede guardarlo, imprimirlo o "
-"enviarlo por correo electrónico."
+"Una vez que su cotización esté listo, puede guardarlo, imprimirlo o enviarlo"
+" por correo electrónico."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
 msgid "Online Quotations"
-msgstr "Presupuestos en Línea"
+msgstr "Cotizaciones en Línea"
 
 #. module: sale
 #. openerp-web
@@ -1657,7 +1653,7 @@ msgstr "Imprimir"
 #. module: sale
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Print quotes or send by email"
-msgstr "Imprimir presupuesto o enviar por email"
+msgstr "Imprimir cotización o enviar por email"
 
 #. module: sale
 #: model:ir.model,name:sale.model_procurement_order
@@ -1765,44 +1761,44 @@ msgstr "Cantidad"
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
 msgid "Quotation"
-msgstr "Presupuesto"
+msgstr "Cotización"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr "Presupuesto # "
+msgstr "Cotización # "
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "Presupuesto / Pedido"
+msgstr "Cotización / Pedido"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr "Fecha de presupuesto:"
+msgstr "Fecha de Cotización:"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
-msgstr "Número de presupuesto"
+msgstr "Número de cotización"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Quotation Sent"
-msgstr "Presupuesto enviado"
+msgstr "Cotización Enviada"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Presupuesto confirmado"
+msgstr "Cotización confirmada"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr "Presupuesto enviado"
+msgstr "Cotización Enviada"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -1813,27 +1809,27 @@ msgstr "Presupuesto enviado"
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Quotations"
-msgstr "Presupuestos"
+msgstr "Cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Quotations & Sales"
-msgstr "Presupuestos y pedidos"
+msgstr "Cotizaciones y Pedidos"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "Análisis de presupuestos"
+msgstr "Análisis de cotizaciones"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr "Presupuestos enviados"
+msgstr "Cotizaciones Enviadas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Presupuestos y pedidos"
+msgstr "Cotizaciones y pedidos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
@@ -2021,7 +2017,7 @@ msgstr "Ventas a facturar"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr "Los comerciales no necesitan conocer los márgenes al presupuestar"
+msgstr "Los comerciales no necesitan conocer los márgenes al cotizar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -2031,7 +2027,7 @@ msgstr "Los comerciales no necesitan conocer los márgenes al presupuestar"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "Comercial"
+msgstr "Vendedor"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -2095,7 +2091,7 @@ msgstr "Enviar por correo electrónico"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
-"Envíe presupuestos que su cliente puede aprobar y pagar en línea (avanzado)"
+"Envíe cotizaciones que su cliente puede aprobar y pagar en línea (avanzado)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2118,7 +2114,7 @@ msgstr "Establecer un objetivo de facturación:"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr "Convertir a presupuesto"
+msgstr "Convertir a Cotización"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2351,7 +2347,7 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Este informe realiza un análisis de sus presupuestos y pedidos de venta. El "
+"Este informe realiza un análisis de sus cotizaciones y pedidos de venta. El "
 "análisis verifica los ingresos de sus ventas y las ordena por diferentes "
 "grupos de criterios (comercial, empresa, producto, etc.). Utilice este "
 "informe para realizar un análisis sobre sus ventas todavía no facturadas. Si"
@@ -2367,12 +2363,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Este informe realiza un análisis sobre sus presupuestos. El análisis "
-"comprueba sus ingresos por ventas y los ordena por diferentes criterios de "
-"agrupación (comercial, empresa, producto, etc). Use este informe para "
-"realizar un análisis de las ventas aún no facturadas. Si quiere analizar su "
-"volumen de negocios, debe usar el informe de análisis de facturas en la "
-"aplicación de Contabilidad"
+"Este informe realiza un análisis sobre sus cotización. El análisis comprueba"
+" sus ingresos por ventas y los ordena por diferentes criterios de agrupación"
+" (comercial, empresa, producto, etc). Use este informe para realizar un "
+"análisis de las ventas aún no facturadas. Si quiere analizar su volumen de "
+"negocios, debe usar el informe de análisis de facturas en la aplicación de "
+"Contabilidad"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -2501,7 +2497,7 @@ msgstr ""
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
 msgstr ""
-"Utilice este menú para acceder a presupuestos, ordenes de venta y clientes."
+"Utilice este menú para acceder a cotizaciones, ordenes de venta y clientes."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2575,7 +2571,7 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
-"¡No puede eliminar una oferta enviada o un pedido de cliente! Intente "
+"¡No puede eliminar una cotización enviada o un pedido de cliente! Intente "
 "cancelarlo antes."
 
 #. module: sale
@@ -2609,8 +2605,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
-"Sus próximas acciones deben fluir eficientemente: confirmar la oferta\n"
-"                en orden de venta, a continuación crear la factura y registrar el cobro."
+"Sus próximas acciones deben fluir eficientemente: confirme la Cotización\n"
+"en un Pedido de Venta, luego cree la factura y registre el Pago."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -2618,8 +2614,8 @@ msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "            to a Sale Order, then create the Invoice and collect the Payment."
 msgstr ""
-"Tu siguiente acción debería de fluir eficientemente: confirme el presupuesto"
-" a orden de venta, luego cree la factura y recoja el pago."
+"Tu siguiente acción debería de fluir eficientemente: confirme la Cotización "
+"a orden de venta, luego cree la factura y recoja el pago."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
