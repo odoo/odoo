@@ -360,7 +360,7 @@ class HrExpense(models.Model):
             except ValueError:
                 price = 1.0
         custom_values.update({
-            'name': product.default_code + ' ' + product.name,
+            'name': expense_description.strip(),
             'employee_id': employee.id,
             'product_id': product.id,
             'account_id': product.property_account_expense_id.id,
