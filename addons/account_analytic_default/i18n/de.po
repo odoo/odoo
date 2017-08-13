@@ -1,23 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
-# Fabian Liesch <fabian.liesch@gmail.com>, 2015
-# Ralf Hilgenstock <rh@dialoge.info>, 2015
-# Stefan Dyck <stefan.dyck@googlemail.com>, 2015
+# Martin Trigaux <mat@odoo.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-18 21:36+0000\n"
-"Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
-"Language: de\n"
+"POT-Creation-Date: 2017-02-15 09:49+0000\n"
+"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"Last-Translator: Fabian Liesch <fabian.liesch@gmail.com>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_analytic_default
@@ -35,7 +41,7 @@ msgstr "Konten"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Analytic Account"
-msgstr "Kostenstelle"
+msgstr "Analysekonto"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
@@ -73,12 +79,17 @@ msgstr "Bedingungen"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.account_config_settings_view_form_inherit_analytic_default
+msgid "Default Analytic Values"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
@@ -101,11 +112,6 @@ msgid "End Date"
 msgstr "Enddatum"
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "Buchungen"
-
-#. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
@@ -114,7 +120,7 @@ msgstr "Zeigt eine Liste mit Kostenstellen"
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Group By"
-msgstr "Gruppiere nach"
+msgstr "Gruppieren nach"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_id
@@ -124,7 +130,7 @@ msgstr "ID"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Rechnungszeile"
+msgstr "Rechungsposition"
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default___last_update
@@ -196,8 +202,8 @@ msgid ""
 "product, it will automatically take this as an analytic account)"
 msgstr ""
 "Wählen Sie das Produkt, welches diese Kostenstelle als Standard bei einer "
-"Buchung eintragen soll (z.B. bei einer Rechnung oder einem Auftrag soll dann "
-"diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende "
+"Buchung eintragen soll (z.B. bei einer Rechnung oder einem Auftrag soll dann"
+" diese Kostenstelle automatisch eingetragen werden, wenn das entsprechende "
 "Produkt ausgewählt wird)."
 
 #. module: account_analytic_default
@@ -221,19 +227,3 @@ msgstr "Startdatum"
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
 msgstr "Benutzer"
-
-#~ msgid "Expense Invoice Policy"
-#~ msgstr "Regeln zur Spesenabrechnung"
-
-#~ msgid ""
-#~ "If you invoice at cost, the expense will be invoiced on the sale order at "
-#~ "the cost of the analytic line;if you invoice at sales price, the price of "
-#~ "the product will be used instead."
-#~ msgstr ""
-#~ "Wenn Sie eine Rechnung über die Kosten erstellen, wird der Aufwand "
-#~ "abgerechnet über den Vertriebsauftrag basierend auf den Kosten der "
-#~ "analytischen Linie; Wenn sie die Rechnung über den Verkaufspreis "
-#~ "erstellen, wird stattdessen der Preis des Produkts verwendet werden."
-
-#~ msgid "Transfer"
-#~ msgstr "Lieferung vornehmen"

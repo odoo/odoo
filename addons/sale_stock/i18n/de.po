@@ -1,23 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_stock
-#
+# 
 # Translators:
-# Renko Spiekermann <renkosp@gmail.com>, 2015
-# Wolfgang Taferner, 2016
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Alexander Klockhaus <a.klockhaus@gmail.com>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~15\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-01-19 06:36+0000\n"
-"Last-Translator: Wolfgang Taferner\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
-"Language: de\n"
+"POT-Creation-Date: 2017-04-18 14:46+0000\n"
+"PO-Revision-Date: 2017-04-18 14:46+0000\n"
+"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
+msgid "<strong>Customer Reference:</strong>"
+msgstr "<strong>Kundenreferenz:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -26,37 +40,27 @@ msgid "<strong>Incoterms:</strong>"
 msgstr "<strong>Incoterms:</strong>"
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "Allow adding shipping costs"
-msgstr "Ermögliche hinzufügen von Versandkosten"
+#: model:ir.ui.menu,name:sale_stock.menu_aftersale
+msgid "After-Sale"
+msgstr "Kundendienst"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Allow setting manufacturing order properties per order line (advanced)"
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
-"Erlaube das Einstellen der Einstellungen eines Arbeitsauftrags pro "
-"Bestellzeile (erweitert)."
 
 #. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Allows you to tag sales order lines with properties."
-msgstr "Spezifikation der Produkt Merkmale in Auftragszeilen."
-
-#. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "Choose specific routes on sales order lines (advanced)"
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid ""
+"By default Odoo computes the expected delivery date this way: order date + "
+"highest customer lead time of products. With this option, you can set a "
+"specific delivery date on orders rather than setting lead times on products."
 msgstr ""
-"Ermöglichen Sie individuelle Routen für Auftragszeilen (für Fortgeschrittene)"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_default_picking_policy
-msgid "Default Shipping Policy"
-msgstr "Standard Auslieferungsbedingung"
 
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
@@ -74,13 +78,23 @@ msgid "Delivery"
 msgstr "Lieferung"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_sale_order_dates
+msgid "Delivery Date"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
 msgstr "Warenauslieferung"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_mrp_properties:0
-msgid "Don't use manufacturing properties (recommended as its easier)"
+#: model:res.groups,name:sale_stock.group_display_incoterm
+msgid "Display incoterms on Sales Order and related invoices"
+msgstr "Lieferbedingungen auf Angeboten und Rechnungen anzeigen"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Display incoterms on orders &amp; invoices"
 msgstr ""
 
 #. module: sale_stock
@@ -89,21 +103,10 @@ msgid "Enable Route on Sales Order Line"
 msgstr "Aktiviere Routenauswahl in Auftragszeilen"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_product_product_expense_policy
-msgid "Expense Invoice Policy"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_product_product_expense_policy
-msgid ""
-"If you invoice at cost, the expense will be invoiced on the sale order at "
-"the cost of the analytic line;if you invoice at sales price, the price of "
-"the product will be used instead."
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_invoice_incoterms_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_incoterm
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Incoterms"
 msgstr "Lieferbedingungen"
 
@@ -111,8 +114,8 @@ msgstr "Lieferbedingungen"
 #: model:ir.model.fields,help:sale_stock.field_account_invoice_incoterms_id
 msgid ""
 "Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-the-"
-"art transportation practices."
+"costs and responsibilities between buyer and seller and reflect state-of-"
+"the-art transportation practices."
 msgstr ""
 "Lieferbedingungen sind eine Zusammenfassung der Konditionen & Bedingungen, "
 "die z.B. auch eine Kostenaufteilung ermöglicht."
@@ -142,46 +145,44 @@ msgid "Invoice Line"
 msgstr "Rechungsposition"
 
 #. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_invoiced
+msgid "Invoicing"
+msgstr "Abrechnung"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,help:sale_stock.field_sale_config_settings_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_default_new_security_lead
+#: model:ir.model.fields,help:sale_stock.field_stock_config_settings_security_lead
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid ""
 "Margin of error for dates promised to customers. Products will be scheduled "
-"for procurement and delivery that many days earlier than the actual promised "
-"date, to cope with unexpected delays in the supply chain."
+"for procurement and delivery that many days earlier than the actual promised"
+" date, to cope with unexpected delays in the supply chain."
 msgstr ""
 "Toleranztage bei Zusagen für Lieferversprechen. Produkte werden um diesen "
-"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart "
-"um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach "
-"Kunde mit Vorsicht einsetzen!)"
+"Toleranzzeitraum (in Tagen) früher beschafft und ausgeliefert als vereinbart"
+" um unerwartetem Verzug in der Versorgungskette entgegen zu wirken. (Je nach"
+" Kunde mit Vorsicht einsetzen!)"
 
 #. module: sale_stock
-#: selection:sale.config.settings,group_route_so_lines:0
-msgid "No order specific routes like MTO or drop shipping"
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,module_delivery:0
-msgid "No shipping costs on sales orders"
-msgstr "Keine Liefergebühren auf Verkaufsaufträgen"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:156
+#: code:addons/sale_stock/models/sale_order.py:145
 #, python-format
 msgid "Not enough inventory!"
 msgstr "Nicht genug Bestand!"
 
 #. module: sale_stock
-#: code:addons/sale_stock/res_config.py:42
-#, python-format
-msgid "Only administrators can change the settings"
-msgstr "Nur ein Administrator darf Änderungen vornehmen"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
-msgid "Order Routing"
+msgid "Order-Specific Routes"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:167
+#: code:addons/sale_stock/models/sale_order.py:156
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestellte Menge verringert!"
@@ -202,20 +203,28 @@ msgid "Procurement"
 msgstr "Beschaffung"
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_procurement_group
+msgid "Procurement Requisition"
+msgstr "Bedarfsmeldung"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_product
-#, fuzzy
 msgid "Product"
-msgstr "Produktvorlage"
+msgstr "Produkt"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_tmpl_id
-msgid "Product Template"
-msgstr "Produktvorlage"
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid ""
+"Reserving products manually in delivery orders or by running the scheduler "
+"is advised to better manage priorities in case of long customer lead times "
+"or/and frequent stock-outs. By default, the scheduler runs automatically "
+"every 24 hours."
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_mrp_properties
-msgid "Properties on SO Lines"
-msgstr "Eigenschaften auf Auftragszeilen"
+#: model:ir.model,name:sale_stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Rücklieferschein"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -223,17 +232,18 @@ msgid "Route"
 msgstr "Route"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Routes for Sales Order Lines"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
 msgid "Sale Order"
 msgstr "Verkaufsauftrag"
 
 #. module: sale_stock
-#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
-msgid "Sale Order Lines"
-msgstr "Auftragspositionen"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
+#: model:ir.model.fields,field_description:sale_stock.field_stock_picking_sale_id
 msgid "Sales Order"
 msgstr "Verkaufsauftrag"
 
@@ -243,14 +253,35 @@ msgid "Sales Order Line"
 msgstr "Auftragsposition"
 
 #. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_location_route_form_view_inherit_sale_stock
+msgid "Sales Order Lines"
+msgstr "Verkaufsauftragpositionen"
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Statistik Verkaufsauftrag"
+msgstr "Statistik Verkaufsaufträge"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_security_lead
 msgid "Sales Safety Days"
 msgstr "Verkaufstoleranztage"
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "Schedule deliveries earlier to avoid delays"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
+msgid "Security Lead Time"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_new_security_lead
+msgid "Security Lead Time for Sales"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -258,25 +289,29 @@ msgid "Selectable on Sales Order Line"
 msgstr "Selektierbar in Auftragszeilen"
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship all products at once, without back orders"
-msgstr "Liefere alle Produkte auf einmal, kein Lieferrückstand"
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid "Set a delivery date on orders"
+msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_picking_policy:0
-msgid "Ship products when some are available, and allow back orders"
-msgstr "Liefere alle Produkte wenn verfügbar und erlaube Lieferrückstand"
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship all products at once"
+msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_module_delivery
-#: model:ir.ui.view,arch_db:sale_stock.view_sales_config_inherit_sale_stock
-msgid "Shipping"
-msgstr "Versand"
+#: selection:stock.config.settings,default_picking_policy:0
+msgid "Ship products as soon as available, with back orders"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Shipping Information"
 msgstr "Lieferadresse"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
+msgid "Shipping Management"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -289,14 +324,41 @@ msgid "Stock Move"
 msgstr "Lagerbuchung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:213
-#, python-format
-msgid "This product is packaged by %s %s. You should sell %s %s."
+#: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
+msgid ""
+"This allows to apply a special route on sales order lines (e.g. "
+"dropshipping, make-to-order) in case of unusual order scenario. To be "
+"available in sales orders, routes must have 'Sales Order Line' option "
+"checked in their setup form."
 msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:203
+#, python-format
+msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgstr ""
+"Dieses Produkt wird von %.2f %s verpackt. Sie sollten %.2f %s verkaufen."
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid "To Refund"
+msgstr "Zurückzuerstatten"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_stock_move_to_refund_so
+msgid "To Refund in SO"
+msgstr "Zurückzuerstatten im Verkaufsauftrag"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
+msgstr "Lieferung vornehmen"
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_stock_move_to_refund_so
+#: model:ir.model.fields,help:sale_stock.field_stock_return_picking_line_to_refund_so
+msgid ""
+"Trigger a decrease of the delivered quantity in the associated Sales Order"
 msgstr ""
 
 #. module: sale_stock
@@ -306,13 +368,23 @@ msgid "Warehouse"
 msgstr "Lager"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:212
+#: code:addons/sale_stock/models/sale_order.py:202
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:168
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to reserve sold products"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "When to start shipping"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:157
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -322,16 +394,31 @@ msgstr ""
 "manuell zu aktualisieren falls notwendig."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:157
+#: code:addons/sale_stock/models/sale_order.py:146
 #, python-format
 msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available!\n"
-"The stock on hand is %.2f %s."
+"You plan to sell %s %s but you only have %s %s available!\n"
+"The stock on hand is %s %s."
 msgstr ""
-"Sie möchten %.2f %s verkaufen, aber Sie haben nur %.2f %s verfügbar! Der "
-"Bestand beträgt %.2f %s."
+"Sie planen, %s %s zu verkaufen, aber Sie haben nur %s %s verfügbar! \n"
+"Der Lagerbestand ist %s %s."
+
+#. module: sale_stock
+#: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
+msgid "days"
+msgstr "Tage"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_config_settings
+msgid "stock.config.settings"
+msgstr "stock.config.settings"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_return_picking_line
+msgid "stock.return.picking.line"
+msgstr "Retouren Annahmelinie"

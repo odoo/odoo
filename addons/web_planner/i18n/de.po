@@ -1,22 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * web_planner
-#
+# 
 # Translators:
-# Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Wolfgang Taferner, 2016
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~14\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-02-16 10:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
-"Language: de\n"
+"POT-Creation-Date: 2017-02-15 09:50+0000\n"
+"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"Last-Translator: Renzo Meister <info@jamotion.ch>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: web_planner
@@ -26,14 +33,21 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:369
+#, python-format
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_data
@@ -52,17 +66,13 @@ msgstr "ID"
 
 #. module: web_planner
 #: model:ir.model.fields,help:web_planner.field_web_planner_active
-#, fuzzy
 msgid ""
 "If the active field is set to False, it will allow you to hide the planner. "
 "This change requires a refresh of your page."
 msgstr ""
-"Wenn das aktive Feld auf 'Falsch' gesetzt ist, kann der Planner verborgen "
-"werden. Die Änderung wird nach dem Aktualisieren der Seite wirksam."
 
 #. module: web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
-#, fuzzy
 msgid "Inactive"
 msgstr "Inaktiv"
 
@@ -83,7 +93,7 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:31
+#: code:addons/web_planner/static/src/js/web_planner_common.js:132
 #, python-format
 msgid "Mark As Done"
 msgstr "Als erledigt markieren"
@@ -96,21 +106,28 @@ msgstr "Menü"
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_name
 msgid "Name"
-msgstr "Bezeichnung"
+msgstr "Name"
 
 #. module: web_planner
 #. openerp-web
-#: code:addons/web_planner/static/src/xml/web_planner.xml:34
+#: code:addons/web_planner/static/src/js/web_planner_common.js:140
 #, python-format
-msgid "Next step"
-msgstr "Nächster Schritt"
+msgid "Next Step"
+msgstr ""
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:378
+#, python-format
+msgid "Odoo Enterprise"
+msgstr "Odoo Enterprise"
 
 #. module: web_planner
 #: model:ir.model,name:web_planner.model_web_planner
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_search
 #: model:ir.ui.view,arch_db:web_planner.web_planner_view_tree
 msgid "Planner"
-msgstr "Planner"
+msgstr "Planer"
 
 #. module: web_planner
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_planner_application
@@ -137,3 +154,10 @@ msgstr "Fortschritt in %"
 #: model:ir.model.fields,field_description:web_planner.field_web_planner_view_id
 msgid "Template"
 msgstr "Vorlage"
+
+#. module: web_planner
+#. openerp-web
+#: code:addons/web_planner/static/src/js/web_planner_common.js:360
+#, python-format
+msgid "Upgrade now"
+msgstr "Jetzt aktualisieren"
