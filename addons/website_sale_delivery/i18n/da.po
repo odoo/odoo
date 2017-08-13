@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# jonas jensen <j.jensen@tcomp.dk>, 2016
+# Sanne Kristensen <sanne@vkdata.dk>, 2016
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2016
-# Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
 msgid ""
 msgstr ""
@@ -29,7 +28,7 @@ msgid ""
 "updated after choosing a new delivery method\"> Delivery:</span>"
 msgstr ""
 "<span class=\"col-xs-6 text-right text-muted\" title=\"Delivery will be "
-"updated after choosing a new delivery method\"> Levering:</span>"
+"updated after choosing a new delivery method\"> Fragt:</span>"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_description
@@ -39,7 +38,7 @@ msgid ""
 "Customer Invoice/Refund"
 msgstr ""
 "Beskrivelse af varen, som du ønsker kunden skal se. Beskrivelsen kopieres "
-"til salgsordrer, leveringer og kundefaktura/kreditonotaer"
+"til enhver salgsordre, følgeseddel og kundefaktura/kreditnota"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_accessory_product_ids
@@ -80,7 +79,7 @@ msgstr "Advarsel om tilgængelighed"
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_delivery_carrier
 msgid "Carrier"
-msgstr "Transportør"
+msgstr "Fragtfirma"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_public_categ_ids
@@ -98,7 +97,7 @@ msgstr ""
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose your Delivery Method"
-msgstr "Vælg din leveringsmetode"
+msgstr "Vælg din fragtmetode"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -108,12 +107,12 @@ msgstr "Land"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_amount_delivery
 msgid "Delivery Amount"
-msgstr "Levering Beløb"
+msgstr "Fragtbeløb"
 
 #. module: website_sale_delivery
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr "Leveringsmåder"
+msgstr "Fragtmetoder"
 
 #. module: website_sale_delivery
 #: model:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -138,7 +137,7 @@ msgstr "Beskrivelse af tilbudet"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_website_sequence
 msgid "Determine the display order in the Website E-commerce"
-msgstr "Afgør visnings rækkefølgen i e-handels modulet"
+msgstr "Afgør visningsrækkefølgen i webshopmodulet"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_split_method
@@ -163,12 +162,12 @@ msgstr "Fil"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has an order line set for delivery"
-msgstr "Har opsat en ordrelinje til levering"
+msgstr "Har opsat en ordrelinje til fragt"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order_has_delivery
 msgid "Has delivery"
-msgstr "Har levering"
+msgstr "Har fragt"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_product_image_ids
@@ -192,7 +191,7 @@ msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
-"Der er ingen leveringsmetode tilgængelig for din nuværende ordre og "
+"Der er ingen fragtmetode tilgængelig for din nuværende ordre og "
 "leveringsadresse. Kontakt os for yderligere information."
 
 #. module: website_sale_delivery
@@ -237,7 +236,7 @@ msgstr "Antal bedømmelser"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier_rating_last_value
 msgid "Rating value: 0=Unhappy, 10=Happy"
-msgstr "Rating værdi: 0=ikke tilfreds, 10=tilfreds"
+msgstr "Bedømmelsesværdi: 0=ikke tilfreds, 10=tilfreds"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
@@ -297,12 +296,12 @@ msgstr "Synlig på hjemmeside"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_message_ids
 msgid "Website Comments"
-msgstr "Kommentarer fra hjemmeside"
+msgstr "Kommentarer fra websitet"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_public_categ_ids
 msgid "Website Product Category"
-msgstr "Hjemmeside produkt kategori"
+msgstr "Webshop produktkategori"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_sequence
@@ -327,9 +326,9 @@ msgstr "Meta title"
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_price
 msgid "Website price"
-msgstr "Hjemmeside pris"
+msgstr "Webshop pris"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier_website_public_price
 msgid "Website public price"
-msgstr "Websitets udgivede pris"
+msgstr "Publiseret pris på webshoppen"

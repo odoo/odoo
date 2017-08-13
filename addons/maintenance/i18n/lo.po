@@ -699,6 +699,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"ເລກກຳກັບທີ່ສາມາດເລືອກໄດ້ຂອງກະທູ້ (ແຖວຂໍ້ມູນ) "
+"ຊຶ່ງຂໍ້ຄວາມເຂົ້າທັງໝົດຈະໄດ້ຄັດຕິດມາ, ເຖິງແມ່ນວ່າເຂົາເຈົ້າບໍ່ໄດ້ຕອບກັບກໍຕາມ. "
+"ຖ້າຫາກຕັ້ງຕ່າໄວ້, ອັນນີ້ຈະປິດການສ້າງແຖວຂໍ້ມູນໃໝ່ ທັງໝົດ."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -713,17 +716,17 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Owner"
-msgstr ""
+msgstr "ເຈົ້າຂອງ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid "Parent Model"
-msgstr ""
+msgstr "ແບບບໍລິສັດແມ່"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "ເລກກຳກັບແຖວຂໍ້ມູນແມ່"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
@@ -732,6 +735,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"ຮູບແບບຂອງແມ່ທີ່ຖືນາມແຝງ. ແບບທີ່ຖືການອ້າງອິງນາມແຝງ "
+"ແມ່ນບໍ່ຈໍາເປັນຕ້ອງແມ່ນແບບທີ່ກໍານົດ ໂດຍ alias_model_id (ຕົວຢ່າງ: ໂຄງການ "
+"(parent_model) ແລະ ໜ້າວຽກ (model))"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -746,6 +752,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"ນະໂຍບາຍຂອງການສະແດງຂໍ້ຄວາມຢູ່ເທິງເອກະສານ ໃຫ້ນໍາໃຊ້ ປະຕູເມວລ໌ ນີ້.\n"
+"- ທຸກຄົນ: ທຸກຄົນສາມາດສະແດງ\n"
+"- ຄູ່ຮ່ວມງານ: ຄູ່ຮ່ວມງານທີ່ອະນຸຍາດໃຫ້ເທົ່ານັ້ນ\n"
+"- ຜູ້ຕິດຕາມ: ພຽງແຕ່ ຜູ້ຕິດຕາມຂອງເອກະສານທີ່ກ່ຽວຂ້ອງ ຫຼື ສະມາຊິກຂອງຊ່ອງຕໍ່ໄປນີ້ເທົ່ານັ້ນ\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -771,7 +781,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_priority
 msgid "Priority"
-msgstr ""
+msgstr "ບຸລິມະສິດ"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -786,7 +796,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid "Record Thread ID"
-msgstr ""
+msgstr "ເລກກຳກັບແຖວຂໍ້ມູນ"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -801,7 +811,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
-msgstr ""
+msgstr "ການລາຍງານ"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
@@ -897,7 +907,7 @@ msgstr ""
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
 msgid "Software"
-msgstr ""
+msgstr "ຊັອບແວຣ໌"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
@@ -908,7 +918,7 @@ msgstr "ຂັ້ນ"
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
-msgstr ""
+msgstr "ບາດກ້າວ"
 
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
@@ -938,7 +948,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_team_id
 msgid "Team"
-msgstr ""
+msgstr "ທີມງານ"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -962,6 +972,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"ນີ້ແມ່ນຮູບແບບ (ປະເພດເອກະສານ Odoo) ທີ່ ຊື່ແທນນີ້ກົງກັບ. ອີເມວຂາເຂົ້າ "
+"ທີ່ບໍ່ໄດ້ຕອບກັບ ໄປຍັງ ແຖວຂໍ້ມູນທີ່ມີຢູ່ "
+"ຈະເຮັດໃຫ້ເກີດການສ້າງແຖວຂໍ້ມູນໃໝ່ຂອງແບບນີ້ (ເຊັ່ນວຽກໂຄງການ)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
@@ -969,6 +982,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"ຊື່ຂອງ ຊື່ແທນອີເມວລ໌, ຕ.ຢ. ໃສ່ \"jobs\" ຖ້າທ່ານຕ້ອງການ ເອົາເປັນຊື່ແທນ "
+"ອີເມວລ໌ ຂອງ <jobs@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
@@ -978,6 +993,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"ເຈົ້າຂອງແຖວຂໍ້ມູນໄດ້ສ້າງຂຶ້ນໃນຂະນະທີ່ໄດ້ຮັບອີເມວໃນນາມຊື່ແທນນີ້. "
+"ຖ້າຊ່ອງຂໍ້ມູນນີ້ບໍ່ຖືກກໍານົດ "
+"ລະບົບຈະພະຍາຍາມຊອກຫາເຈົ້າຂອງທີ່ຖືກຕ້ອງໂດຍອີງໃສ່ທີ່ຢູ່ຜູ້ສົ່ງ (ຈາກ), "
+"ຫຼືຈະໃຊ້ບັນຊີ ຜູ້ບໍລິຫານ ຖ້າຫາກວ່າບໍ່ພົບຜູ້ໃຊ້ລະບົບສໍາລັບທີ່ຢູ່ນັ້ນ."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1045,7 +1064,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Unassigned"
-msgstr ""
+msgstr "ບໍ່ໄດ້ມອບໝາຍໃຫ້"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
@@ -1057,7 +1076,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມບໍ່ທັນໄດ້ອ່ານ"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
