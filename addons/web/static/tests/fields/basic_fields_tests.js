@@ -1054,8 +1054,8 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.ok(form.$('div.o_field_text').length, "should have a text area");
-        assert.strictEqual(form.$('div.o_field_text').text(), 'yop', 'should be "yop" in readonly');
+        assert.ok(form.$('.o_field_text').length, "should have a text area");
+        assert.strictEqual(form.$('.o_field_text').text(), 'yop', 'should be "yop" in readonly');
 
         form.$buttons.find('.o_form_button_edit').click();
 
@@ -1071,7 +1071,7 @@ QUnit.module('basic_fields', {
 
         form.$buttons.find('.o_form_button_save').click();
 
-        assert.strictEqual(form.$('div.o_field_text').text(), 'hello world',
+        assert.strictEqual(form.$('.o_field_text').text(), 'hello world',
             'should be "hello world" after save');
         form.destroy();
     });
@@ -1091,7 +1091,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $field = form.$('div.o_field_text');
+        var $field = form.$('.o_field_text');
 
         assert.strictEqual($field.outerHeight(), $field[0].scrollHeight,
             "text field should not have a scroll bar");
@@ -1191,6 +1191,31 @@ QUnit.module('basic_fields', {
             "text area should still have the focus");
 
         list.destroy();
+    });
+
+    // Firefox-specific
+    // Copying from <div style="white-space:pre-wrap"> does not keep line breaks
+    // See https://bugzilla.mozilla.org/show_bug.cgi?id=1390115
+    QUnit.test('copying text fields in RO mode should preserve line breaks', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="txt"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        // Copying from a div tag with white-space:pre-wrap doesn't work in Firefox
+        assert.strictEqual(form.$('[name="txt"]').prop("tagName").toLowerCase(), 'span',
+            "the field contents should be surrounded by a span tag");
     });
 
     QUnit.module('FieldBinary');
