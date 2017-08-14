@@ -38,19 +38,6 @@ class ProductTemplate(models.Model):
         company_dependent=True, domain=[('deprecated', '=', False)],
         help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
              "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used.")
-    average_price = fields.Float(
-        'Average Cost', compute='_compute_average_price',
-        digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="Average cost of the product, in the default unit of measure of the product.")
-
-    @api.multi
-    def _compute_average_price(self):
-        unique_variants = self.filtered(lambda template: len(template.product_variant_ids) == 1)
-        for template in unique_variants:
-            template.average_price = template.product_variant_ids.average_price
-        for template in (self - unique_variants):
-            template.average_price = 0.0
-
 
     @api.one
     @api.depends('property_valuation', 'categ_id.property_valuation')
@@ -100,12 +87,6 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    average_price = fields.Float(
-        'Average Cost', 
-        digits=dp.get_precision('Product Price'),
-        groups="base.group_user",
-        compute='_compute_average_price',
-        help="Calculated average cost")
     stock_value = fields.Float(
         'Value', compute='_compute_stock_value')
 
@@ -156,24 +137,6 @@ class ProductProduct(models.Model):
         self.write({'standard_price': new_price})
         return True
 
-    def _get_latest_cumulated_value(self, exclude_move=False):
-        self.ensure_one()
-        domain = [('product_id', '=', self.id)] + self.env['stock.move']._get_all_base_domain()
-        if exclude_move:
-            domain += [('id', '!=', exclude_move.id)]
-        latest = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
-        if not latest:
-            return 0.0
-        return latest.cumulated_value
-
-    def _get_fifo_candidates_out_move(self):
-        """ Find OUT moves that were not valued in time because of negative stock.
-        """
-        self.ensure_one()
-        domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_out_base_domain()
-        candidates = self.env['stock.move'].search(domain, order='date, id')
-        return candidates
-
     def _get_fifo_candidates_in_move(self):
         """ Find IN moves that can be used to value OUT moves.
         """
@@ -181,23 +144,6 @@ class ProductProduct(models.Model):
         domain = [('product_id', '=', self.id), ('remaining_qty', '>', 0.0)] + self.env['stock.move']._get_in_base_domain()
         candidates = self.env['stock.move'].search(domain, order='date, id')
         return candidates
-
-    @api.multi
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
-    def _compute_average_price(self):
-        """ Compute the average price of a product.product according to the latest cumulated value
-        and the quantity that is in stock (for all the company owned locations, i.e. including the
-        warehouses transit ones). If nothing is in stick, we fallback first on the latest average
-        price on an out move used for this product then on the standard price.
-        """
-        for p_set, product in pycompat.izip(self, self.with_context(company_owned=True)):
-            if product.qty_available > 0:
-                last_cumulated_value = product._get_latest_cumulated_value()
-                p_set.average_price = last_cumulated_value / product.qty_available
-            else:
-                domain = [('product_id', '=', product.id), ('last_done_qty', '>', 0.0)] + self.env['stock.move']._get_all_base_domain()
-                move = self.env['stock.move'].search(domain, order='date desc, id desc', limit=1)
-                p_set.average_price = move and move.cumulated_value / move.last_done_qty or product.standard_price
 
     @api.multi
     def _compute_stock_value(self):
