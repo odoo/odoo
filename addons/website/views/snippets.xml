@@ -741,6 +741,7 @@
 <template id="external_snippets" inherit_id="website.snippets" priority="8">
     <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/blocks/twitter_scroll.png"/>
+        <t t-install="website_form_editor" ent="True" string="Form Builder" t-thumbnail="/website/static/src/img/s_website_form.png"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t t-install="website_event" string="Local Events" t-thumbnail="/website/static/src/img/blocks/block_local_event.png"/>

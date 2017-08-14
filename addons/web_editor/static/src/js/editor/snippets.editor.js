@@ -3,6 +3,7 @@ odoo.define('web_editor.snippet.editor', function (require) {
 
 var core = require('web.core');
 var dom = require('web.dom');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 
@@ -501,6 +502,7 @@ var SnippetEditor = Widget.extend({
 var SnippetsMenu = Widget.extend({
     id: 'oe_snippets',
     activeSnippets: [],
+    xmlDependencies: ['/web/static/src/xml/enterprise_upgrade.xml'],
     custom_events: {
         activate_insertion_zones: '_onActivateInsertionZones',
         call_for_each_child_snippet: '_onCallForEachChildSnippet',
@@ -1017,6 +1019,47 @@ var SnippetsMenu = Widget.extend({
                 ));
                 $snippet.prepend($thumbnail);
 
+                if ($snippet.data('oe-ent')) {
+                    $snippet.addClass('o_snippet_install');
+                    var $installBtn = $('<a/>', {
+                        class: 'btn btn-primary btn-sm o_install_btn',
+                        click: function() {
+                            var message = $(core.qweb.render('EnterpriseUpgrade'));
+                            var buttons = [
+                                {
+                                    text: _t("Upgrade now"),
+                                    classes: 'btn-primary',
+                                    click: function() {
+                                        self._rpc({
+                                            model: 'res.users',
+                                            method: 'search_count',
+                                            args: [[["share", "=", false]]],
+                                        })
+                                        .then(function(data) {
+                                            window.open("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + data, "_blank");
+                                        });
+                                    },
+                                    close: true,
+                                },
+                                {
+                                    text: _t("Cancel"),
+                                    close: true,
+                                },
+                            ];
+                            new Dialog(this, {
+                                size: 'medium',
+                                buttons: buttons,
+                                $content: $('<div>', {
+                                    html: message,
+                                }),
+                                title: _t("Odoo Enterprise"),
+                            }).open();
+                        },
+                        text: _t("Install"),
+                    });
+                    $thumbnail.append($installBtn);
+                }
+
                 // Create the install button (t-install feature) if necessary
                 var moduleID = $snippet.data('moduleId');
                 if (moduleID) {
@@ -1030,7 +1073,7 @@ var SnippetsMenu = Widget.extend({
                     $thumbnail.append($installBtn);
                 }
             })
-            .not('[data-module-id]');
+            .not('[data-module-id], [data-oe-ent]');
 
         // Hide scroll if no snippets defined
         if (!this.$snippets.length) {
