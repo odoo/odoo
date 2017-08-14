@@ -148,35 +148,6 @@ def dependencies(ctx, module, files):
             print('    "%s" -> "%s";' % (node, dep))
     print('}')
 
-@autojsdoc.command()
-@click.argument('files', type=click.Path(exists=True), nargs=-1)
-@click.pass_context
-def extractor(ctx, files):
-    """ Extracts and prints module metadata
-    """
-    if not files:
-        print(ctx.get_help())
-
-    byname = {
-        mod.name: mod
-        for mod in ABSTRACT_MODULES
-    }
-    for modules in visit_files(files, ModuleMatcher, ctx.parent):
-        for mod in modules:
-            byname[mod.name] = mod
-
-    ctx.parent.logger.info("Modules parsed")
-    sorted_modules = pyjsdoc.topological_sort(
-        *pyjsdoc.build_dependency_graph(
-            list(byname.keys()),
-            byname
-        )
-    )
-    for name in sorted_modules:
-        mod = byname[name]
-        mod.post_process(byname)
-        print mod.as_text().encode('utf-8')
-
 try:
     autojsdoc.main(prog_name='autojsdoc')
 except Exception:

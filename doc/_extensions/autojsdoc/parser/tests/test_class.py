@@ -22,8 +22,8 @@ def test_classvar():
     assert cls.superclass.name == 'Class'
 
     assert cls.name == 'A'
-    assert cls.constructors == []
-    assert cls.methods == []
+    assert cls.constructor is None
+    assert cls.properties == []
     assert cls['doc'] == 'This is my class-kai'
 
 def test_classret():
@@ -40,8 +40,8 @@ def test_classret():
     assert type(cls) == jsdoc.ClassDoc
 
     assert cls.name == ''
-    assert cls.constructors == []
-    assert cls.methods == []
+    assert cls.constructor is None
+    assert cls.properties == []
     assert cls['doc'] == 'This is my class-kai'
 
 def test_methods():
@@ -65,25 +65,25 @@ def test_methods():
     });
     """)
     cls = mod.exports
-    assert len(cls.methods) == 3
-    assert len(cls.constructors) == 1
+    assert len(cls.properties) == 3
+    assert cls.constructor
     # assume methods are in source order
-    init = cls.methods[0]
-    assert init == cls.constructors[0]
+    [_, init] = cls.properties[0]
+    assert init == cls.constructor
     assert init.name == 'init'
     assert not init.is_private
     assert init.is_constructor
     [param] = init.params
     assert params(param) == ('parent', 'Widget', '')
 
-    itself = cls.methods[1]
+    [_, itself] = cls.properties[1]
     assert itself.name == 'itself'
     assert not itself.is_private
     assert not itself.is_constructor
     assert not itself.params
     assert params(itself.return_val) == ('', 'Widget', '')
 
-    _on = cls.methods[2]
+    [_, _on] = cls.properties[2]
     assert _on.name == '_onValidate'
     assert _on.is_private
     assert not _on.is_constructor
@@ -120,9 +120,10 @@ def test_mixin_implicit():
     cls = mod.exports
     [mixin] = cls.mixins
     assert type(mixin) == jsdoc.MixinDoc
-    assert params(mixin.properties[0]) == ('a', 'Function', '')
+    assert params(mixin.properties[0][1]) == ('a', 'Function', '')
+    assert params(mixin.get_property('a')) == ('a', 'Function', '')
 
-    assert params(cls.get_method('foo')) == ('foo', 'Function', '')
+    assert params(cls.get_property('foo')) == ('foo', 'Function', '')
 
 def test_instanciation():
     [A, a] = parse("""
@@ -155,7 +156,7 @@ def test_non_function_properties():
         });
     });
     """)
-    t = A.exports.get_method('template')
+    t = A.exports.get_property('template')
     assert type(t) == jsdoc.PropertyDoc
     assert params(t) == ('template', 'String', '')
     assert not t.is_private
@@ -190,10 +191,10 @@ def test_extend():
     """)
     cls = a.exports
     assert type(cls) == jsdoc.ClassDoc
-    a = cls.get_method('a')
+    a = cls.get_property('a')
     assert type(a) == jsdoc.PropertyDoc
     assert params(a) == ('a', 'Number', 'A property')
-    b = cls.get_method('b')
+    b = cls.get_property('b')
     assert type(b) == jsdoc.FunctionDoc
     assert params(b) == ('b', 'Function', 'A method')
 

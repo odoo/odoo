@@ -17,6 +17,8 @@ def test_single():
     assert mod.dependencies == {'other'}
     assert mod.exports is None
     assert mod.doc == "This is a super module!"
+    m = mod.get_property('other')
+    assert m.name == 'value', "property is exported value not imported module"
 
 def test_multiple():
     [mod1, mod2, mod3] = parse("""
@@ -67,8 +69,6 @@ def test_func():
     assert exports['sourcemodule'] is mod
 
     assert exports.name == ''
-    assert exports.member == ''
-    assert exports.exceptions == []
     assert exports.is_constructor == False
     assert exports.is_private == False
 
@@ -125,6 +125,7 @@ def test_bounce():
     it = m2.exports.get_property('Item')
     assert type(it) == jsdoc.ClassDoc
     assert it['sourcemodule'] is m1
+    assert sorted([n for n, _ in m1.properties]) == ['Class', 'Item']
 
 def test_reassign():
     [m] = parse("""

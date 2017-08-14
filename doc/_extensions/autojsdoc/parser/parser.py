@@ -39,7 +39,7 @@ class ModuleMatcher(Visitor):
             [module, func] = node['expression']['arguments']
             mod = jsdoc.parse_comments(node.get('comments'), jsdoc.ModuleDoc)
             # set module name
-            mod.parsed['module'] = module['value']
+            mod.set_name(module['value'])
             mod.parsed['sourcefile'] = self.filename
             self.result.append(mod)
 
@@ -73,8 +73,6 @@ def deref(item, prop=None):
 
         if isinstance(obj, (jsdoc.NSDoc, jsdoc.Unknown)):
             item = obj.get_property(item.property)
-        elif isinstance(obj, jsdoc.ClassDoc):
-            item = obj.get_method(item.property)
         elif isinstance(obj, dict):
             item = obj[item.property]
         elif isinstance(obj, jsdoc.PropertyDoc):
@@ -131,6 +129,8 @@ class RefProxy(object):
         self.__class__ = other.__class__
         self.__dict__ = other.__dict__
         return self
+    def set_name(self, name):
+        pass # ???
 class ModuleProxy(object):
     def __init__(self, name):
         self._name = name
@@ -142,6 +142,9 @@ class ModuleProxy(object):
         self.__class__ = m.__class__
         self.__dict__ = m.__dict__
         return self
+
+    def set_name(self, name):
+        pass # FIXME: ???
 
 jq = jsdoc.UnknownNS({
     'name': u'jQuery',
@@ -219,15 +222,23 @@ class ModuleExtractor(Visitor):
 
     def enter_BlockStatement(self, node):
         Hoistifier(self).visit(node)
+    def exit_BlockStatement(self, node):
+        for k, v in self.scope._namemap.items():
+            if k not in BASE_SCOPE:
+                self.module.add_member(k, self.scope._targets[v])
 
     def enter_VariableDeclaration(self, node):
         self.declaration = Declaration(comments=node.get('comments'))
     def enter_VariableDeclarator(self, node):
-        self.declaration.id = node['id']['name']
-        self.scope[self.declaration.id] = ValueExtractor(
-            self, self.declaration
-        ).visit(node['init'] or [])
-        self.declaration.id = None
+        # otherwise we've already hoisted the declaration so the variable
+        # already exist initialised to undefined, and ValueExtractor does not
+        # handle a None input node so it returns None which makes no sense
+        if node['init']:
+            self.declaration.id = node['id']['name']
+            self.scope[self.declaration.id] = ValueExtractor(
+                self, self.declaration
+            ).visit(node['init'] or [])
+            self.declaration.id = None
         return SKIP
     def exit_VariableDeclaration(self, node):
         self.declaration = None
@@ -272,7 +283,7 @@ class ModuleExtractor(Visitor):
                 t = deref(m2r(target['object'], self.scope.freeze()))
             except ValueError:
                 return # f'n extension of global libraries garbage
-            if not isinstance(t, jsdoc.ObjectDoc):
+            if not isinstance(t, jsdoc.NSDoc):
                 # function Foo(){}; Foo.prototype = bar
                 # fuck that yo
                 return
@@ -320,9 +331,8 @@ class ModuleExtractor(Visitor):
                 # TODO: note which module added these
                 for it in items:
                     if isinstance(it, dict):
-                        for member in it.values():
-                            member.parsed['member'] = t
-                            t.add_method(member)
+                        for n, member in it.items():
+                            t.add_member(n, member)
                     else:
                         t.parsed.setdefault('mixes', []).append(it.become(modules))
 
@@ -379,8 +389,8 @@ class ValueExtractor(Visitor):
     def enter_FunctionExpression(self, node):
         name, comments = astuple(self.declaration)
         self.result = jsdoc.parse_comments(comments, jsdoc.FunctionDoc)
-        name = node['id']['name'] if node['id'] else name
-        self._update_result_meta(name)
+        self.result.parsed['name'] = node['id'] and node['id']['name']
+        self._update_result_meta()
         self.result.parsed['guessed_params'] = [p['name'] for p in node['params']]
         return SKIP
 
@@ -397,7 +407,7 @@ class ValueExtractor(Visitor):
         return SKIP
 
     def enter_ObjectExpression(self, node):
-        self.result = obj = jsdoc.parse_comments(self.declaration.comments, jsdoc.ObjectDoc.from_parsed)
+        self.result = obj = jsdoc.parse_comments(self.declaration.comments)
         self._update_result_meta()
         for n, p in MemberExtractor(parent=self.parent).visit(node['properties']).items():
             obj.add_member(n, p)
@@ -436,9 +446,8 @@ class ValueExtractor(Visitor):
                 for item in items:
                     if isinstance(item, dict):
                         # methods/attributes
-                        for method in item.values():
-                            method.parsed['member'] = cls
-                            cls.add_method(method)
+                        for n, method in item.items():
+                            cls.add_member(n, method)
                     else:
                         cls.parsed.setdefault('mixes', []).append(item)
 
@@ -514,6 +523,6 @@ class Hoistifier(Visitor):
             jsdoc.FunctionDoc,
         )
         fn.parsed['sourcemodule'] = self.parent.module
-        fn.parsed['guessed_function'] = funcname
+        fn.parsed['name'] = funcname
         fn.parsed['guessed_params'] = [p['name'] for p in node['params']]
         return SKIP

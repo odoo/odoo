@@ -3,12 +3,7 @@ import re
 
 import collections
 
-import jinja2
 import pyjsdoc
-from pyjsdoc import (
-    CommentDoc,
-    parse_comment,
-)
 
 def strip_stars(doc_comment):
     """
@@ -41,11 +36,93 @@ class ParamDoc(pyjsdoc.ParamDoc):
         d['default'] = self.default
         return d
 pyjsdoc.ParamDoc = ParamDoc
-class FunctionDoc(pyjsdoc.FunctionDoc):
-    type = 'Function'
-    def set_name(self, name):
-        self.parsed['guessed_function'] = name
 
+class CommentDoc(pyjsdoc.CommentDoc):
+    namekey = object()
+    is_constructor = False
+
+    @property
+    def name(self):
+        return self[self.namekey] or self['name'] or self['guessed_name']
+    def set_name(self, name):
+        self.parsed['guessed_name'] = name
+
+    @property
+    def is_private(self):
+        return 'private' in self.parsed
+
+    def to_dict(self):
+        d = super(CommentDoc, self).to_dict()
+        d['name'] = self.name
+        return d
+
+class PropertyDoc(CommentDoc):
+    @classmethod
+    def from_param(cls, s):
+        return cls(ParamDoc(s).to_dict())
+
+    @property
+    def type(self):
+        return self['type'].strip('{}')
+
+    def to_dict(self):
+        d = super(PropertyDoc, self).to_dict()
+        d['type'] = self.type
+        d['is_private'] = self.is_private
+        return d
+
+class InstanceDoc(CommentDoc):
+    @property
+    def cls(self):
+        return self['cls']
+
+    def to_dict(self):
+        return dict(super(InstanceDoc, self).to_dict(), cls=self.cls)
+
+class LiteralDoc(CommentDoc):
+    @property
+    def type(self):
+        if self['type']:
+            return self['type']
+        valtype = type(self['value'])
+        if valtype is bool:
+            return 'Boolean'
+        elif valtype is float:
+            return 'Number'
+        elif valtype is type(u''):
+            return 'String'
+        return ''
+
+    @property
+    def value(self):
+        return self['value']
+
+    def to_dict(self):
+        d = super(LiteralDoc, self).to_dict()
+        d['type'] = self.type
+        d['value'] = self.value
+        return d
+
+class FunctionDoc(CommentDoc):
+    type = 'Function'
+    namekey = 'function'
+
+    @property
+    def is_constructor(self):
+        return self.name == 'init'
+
+    @property
+    def params(self):
+        tag_texts = self.get_as_list('param') + self.get_as_list('argument')
+        if self.get('guessed_params') is None:
+            return [ParamDoc(text) for text in tag_texts]
+        else:
+            param_dict = {}
+            for text in tag_texts:
+                param = ParamDoc(text)
+                param_dict[param.name] = param
+            return [param_dict.get(name) or ParamDoc('{} ' + name)
+                    for name in self.get('guessed_params')]
     @property
     def return_val(self):
         ret = self.get('return') or self.get('returns')
@@ -59,42 +136,54 @@ class FunctionDoc(pyjsdoc.FunctionDoc):
             return ParamDoc('{%s}  %s' % (type, ret))
         return ParamDoc(ret)
 
-    _template = """.. function:: {{ name }}
-{% if doc %}
+    def to_dict(self):
+        d = super(FunctionDoc, self).to_dict()
+        d['name'] = self.name
+        d['params'] = [param.to_dict() for param in self.params]
+        d['return_val']=  self.return_val.to_dict()
+        return d
 
-{{ doc | indent(4, true) }}
+class NSDoc(CommentDoc):
+    namekey = 'namespace'
+    def __init__(self, parsed_comment):
+        super(NSDoc, self).__init__(parsed_comment)
+        self.members = collections.OrderedDict()
+    def add_member(self, name, member):
+        """
+        :type name: str
+        :type member: CommentDoc
+        """
+        member.set_name(name)
+        self.members[name] = member
 
-{% endif %}
-{% for param in params %}
-    {% if param.doc or not param.type %}
-    :param {{ param.name|trim }}: {{ param.doc|indent(12) }}
-    {% endif %}
-    {% if param.type %}
-    :type {{ param.name|trim }}: {{ param.type }}
-    {% endif %}
-{% endfor %}
-{% if return_val %}
-    {% if return_val.doc %}
-    :returns: {{ return_val.doc }}
-    {% endif %}
-    {% if return_val.type %}
-    :rtype: {{ return_val.type|indent(12) }}
-    {% endif %}
-{% endif %}
-"""
+    @property
+    def properties(self):
+        if self.get('property'):
+            return [
+                (p.name, p)
+                for p in map(
+                    PropertyDoc.from_param,
+                    self.get_as_list('property')
+                )
+            ]
+        return self.members.items() or self['_members'] or []
 
-CommentDoc.is_constructor = False
-CommentDoc.is_private = property(lambda self: 'private' in self.parsed)
-CommentDoc.as_text = lambda self: jinja2.Template(
-    getattr(self, '_template', 'No template for {}'.format(type(self))),
-    trim_blocks=True,
-    lstrip_blocks=True,
-).render(self.to_dict(), type=type)
+    def has_property(self, name):
+        return self.get_property(name) is not None
 
-class ModuleDoc(CommentDoc):
-    """
-    Represents a toplevel module
-    """
+    def get_property(self, name):
+        return next((p for n, p in self.properties if n == name), None)
+
+    def to_dict(self):
+        d = super(NSDoc, self).to_dict()
+        d['properties'] = [(n, p.to_dict()) for n, p in self.properties]
+        return d
+
+class MixinDoc(NSDoc):
+    namekey = 'mixin'
+
+class ModuleDoc(NSDoc):
+    namekey = 'module'
     def __init__(self, parsed_comment):
         super(ModuleDoc, self).__init__(parsed_comment)
         #: callbacks to run with the modules mapping once every module is resolved
@@ -103,13 +192,6 @@ class ModuleDoc(CommentDoc):
     def post_process(self, modules):
         for callback in self._post_process:
             callback(modules)
-
-    @property
-    def name(self):
-        return self['module']
-
-    def set_name(self, name):
-        self.parsed['module'] = name
 
     @property
     def module(self):
@@ -135,49 +217,20 @@ class ModuleDoc(CommentDoc):
     def to_dict(self):
         vars = super(ModuleDoc, self).to_dict()
         vars['dependencies'] = self.dependencies
-        vars['name'] = self.name
         vars['exports'] = self.exports
         return vars
 
-    _template = """
-# Module: {{ name }}
-{% if doc %}
+class ClassDoc(NSDoc):
+    namekey = 'class'
+    @property
+    def constructor(self):
+        return self.get_property('init')
 
-{{ doc }}
-{% endif %}
-{%+ if dependencies %}
-## Depends On
-{% for dependency in dependencies %}
-    {{ dependency }}
-{% endfor %}
-{% endif %}
-{%+ if exports %}
-## Exports
-{{ exports.as_text() }}
-{% endif %}
-"""
+    @property
+    def superclass(self):
+        return self['extends'] or self['base']
 
-class ClassDoc(pyjsdoc.ClassDoc):
-    def set_name(self, name):
-        # FIXME: actually need to decouple namespace propnames and namespace values
-        # issue is if a class is created then added to a namespace and the
-        # class name and NS keys are different, the class gets given the ns
-        # key as name, which is problematic for e.g.
-        #     var C = Class.extend({});
-        #     var D = Class.extend({a_thing: C})
-        # we don't actually want C to become a_thing.
-        self.parsed['class'] = name
-    def to_dict(self):
-        d = super(ClassDoc, self).to_dict()
-        d['mixins'] = self.mixins
-        return d
-
-    def add_method(self, method):
-        if isinstance(method, FunctionDoc) and method.name == 'init':
-            method.parsed['constructor'] = True
-        super(ClassDoc, self).add_method(method)
-
-    def get_method(self, method_name, default=None):
+    def get_property(self, method_name):
         if method_name == 'extend':
             return FunctionDoc({
                 'doc': 'Create subclass for %s' % self.name,
@@ -186,211 +239,23 @@ class ClassDoc(pyjsdoc.ClassDoc):
         # FIXME: should ideally be a proxy namespace
         if method_name == 'prototype':
             return self
-        return super(ClassDoc, self).get_method(method_name, default)
+        return super(ClassDoc, self).get_property(method_name)
 
     @property
     def mixins(self):
         return self.get_as_list('mixes')
 
-    _template = """### {{ name or '<unnamed>' }} {% if extends %}(extends {{ extends.property or '<unnamed>' }}){% endif %}
-{%+ if doc %}
-{{ doc }}
-{% endif %}
-{%+ if mixins %}
-#### Mixes
-{% for mixin in mixins %}
-    {{ mixin }}
-{% endfor %}
-{% endif %}
-
-#### Methods
-{% for m in method %}
-.. function:: {{ m['name'] or m['guessed_name'] }}
-{% if m['doc'] %}
-
-{{ m['doc'] | indent(4, true) }}
-
-{% endif %}
-{% for param in m.params %}
-    {% if param.doc or not param.type %}
-    :param {{ param.name|trim }}: {{ param.doc|indent(12) }}
-    {% endif %}
-    {% if param.type %}
-    :type {{ param.name|trim }}: {{ param.type }}
-    {% endif %}
-{% endfor %}
-{% if m.return_val %}
-    {% if m.return_val.doc %}
-    :returns: {{ m.return_val.doc }}
-    {% endif %}
-    {% if m.return_val.type %}
-    :rtype: {{ m.return_val.type|indent(12) }}
-    {% endif %}
-{% endif %}
-
-{% endfor %}
-"""
-
-class PropertyDoc(pyjsdoc.CommentDoc):
-    @classmethod
-    def from_param(cls, s):
-        return cls(ParamDoc(s).to_dict())
-
-    @property
-    def name(self):
-        return self['guessed_name'] or self['name']
-
-    def set_name(self, name):
-        self.parsed['guessed_name'] = name
-
-    @property
-    def type(self):
-        return self['type'].strip('{}')
-
-    @property
-    def is_private(self):
-        return 'private' in self.parsed
-
     def to_dict(self):
-        d = super(PropertyDoc, self).to_dict()
-        d['name'] = self.name
-        d['type'] = self.type
-        d['is_private'] = self.is_private
+        d = super(ClassDoc, self).to_dict()
+        d['mixins'] = self.mixins
         return d
-
-class ObjectDoc(pyjsdoc.CommentDoc):
-    def __init__(self, parsed_comment):
-        super(ObjectDoc, self).__init__(parsed_comment)
-        self.members = collections.OrderedDict()
-
-    def set_name(self, name):
-        self.parsed['name'] = name
-
-    @classmethod
-    def from_parsed(cls, parsed):
-        if 'mixin' in parsed:
-            return MixinDoc(parsed)
-        return NSDoc(parsed)
-
-    @property
-    def is_mixin(self):
-        return False
-
-    @property
-    def is_namespace(self):
-        return False
-
-    def add_member(self, name, member):
-        self.members[name] = member
-
-    @property
-    def properties(self):
-        if self.get('property'):
-            return [
-                (p.name, p)
-                for p in map(
-                    PropertyDoc.from_param,
-                    self.get_as_list('property')
-                )
-            ]
-        return self.members.items() or self['_members'] or []
-    def has_property(self, name):
-        return self.get_property(name) is not None
-    def get_property(self, name):
-        return next((p for n, p in self.properties if n == name), None)
-
-    def to_dict(self):
-        d = super(ObjectDoc, self).to_dict()
-        d['properties'] = [(n, p.to_dict()) for n, p in self.properties]
-        return d
-
-    _template = """### {{ name }} ({{ nature }})
-{%+ if properties %}
-#### Properties:
-{% for name, property in properties %}
-.. attribute:: {{ name }} {% if property.type %}{{property.type}}{% endif %}
-
-{% if property.doc %}
-    {{ property.doc }}
-{% endif %}
-{% endfor %}
-{% endif %}
-"""
-
-class NSDoc(ObjectDoc):
-    @property
-    def name(self):
-        return self['name'] or '<Namespace>'
-    @property
-    def is_namespace(self):
-        return True
-
-    def to_dict(self):
-        d = super(NSDoc, self).to_dict()
-        d['nature'] = "Namespace"
-        return d
-
-
-class InstanceDoc(ObjectDoc):
-    @property
-    def name(self):
-        return self['name']
-    @property
-    def cls(self):
-        return self['cls']
 
 class UnknownNS(NSDoc):
     def get_property(self, name):
         return super(UnknownNS, self).get_property(name) or \
            UnknownNS({'name': '{}.{}'.format(self.name, name)})
 
-class MixinDoc(ObjectDoc):
-    @property
-    def name(self):
-        return self['name'] or '<Mixin>'
-    @property
-    def is_mixin(self):
-        return True
-
-    def to_dict(self):
-        d = super(MixinDoc, self).to_dict()
-        d['nature'] = "Mixin"
-        return d
-
-class LiteralDoc(pyjsdoc.CommentDoc):
-    @property
-    def name(self):
-        if self['name']:
-            return '<literal %s: %s>' % (self['name'], self['value'])
-        return '<literal %s>' % self['value']
-
-    def set_name(self, name):
-        self.parsed['name'] = name
-
-    @property
-    def type(self):
-        if self['type']:
-            return self['type']
-        valtype = type(self['value'])
-        if valtype is bool:
-            return 'Boolean'
-        elif valtype is float:
-            return 'Number'
-        elif valtype is type(u''):
-            return 'String'
-        return ''
-
-    @property
-    def value(self):
-        return self['value']
-
-    def to_dict(self):
-        d = super(LiteralDoc, self).to_dict()
-        d['type'] = self.type
-        return d
-
-
-class Unknown(pyjsdoc.CommentDoc):
+class Unknown(CommentDoc):
     @classmethod
     def from_(cls, source):
         def builder(parsed):
@@ -403,9 +268,6 @@ class Unknown(pyjsdoc.CommentDoc):
     def name(self):
         return self['name'] + ' ' + self['source']
 
-    def set_name(self, name):
-        self.parsed['name'] = name
-
     @property
     def type(self):
         return "Unknown"
@@ -413,7 +275,7 @@ class Unknown(pyjsdoc.CommentDoc):
     def get_property(self, p):
         return Unknown(dict(self.parsed, source=self.name, name=p + '<'))
 
-def parse_comments(comments, doctype):
+def parse_comments(comments, doctype=None):
     # find last comment which starts with a *
     docstring = next((
         c['value']
@@ -425,21 +287,19 @@ def parse_comments(comments, doctype):
     # block comment parser strips delimiters, but strip_stars fails without
     # them
     extract = '\n' + strip_stars('/*' + docstring + '\n*/')
-    parsed = parse_comment(extract, u'')
+    parsed = pyjsdoc.parse_comment(extract, u'')
+
+    if doctype == 'FunctionExpression':
+        doctype = FunctionDoc
+    elif doctype == 'ObjectExpression' or doctype is None:
+        doctype = guess
 
     if doctype is guess:
         return doctype(parsed)
 
-    if not callable(doctype):
-        doctype = NODETYPE_TO_DOCTYPE.get(doctype, PropertyDoc)
-
     # in case a specific doctype is given, allow overriding it anyway
     return guess(parsed, default=doctype)
 
-NODETYPE_TO_DOCTYPE = {
-    'FunctionExpression': FunctionDoc,
-    'ObjectExpression': ObjectDoc.from_parsed,
-}
 def guess(parsed, default=NSDoc):
     if 'class' in parsed:
         return ClassDoc(parsed)

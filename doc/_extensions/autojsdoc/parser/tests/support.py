@@ -24,7 +24,7 @@ def post(mods):
 BASE_MODULES = {
     'other': jsdoc.ModuleDoc({
         'module': 'other',
-        'exports': jsdoc.LiteralDoc({'value': "ok"}),
+        'exports': jsdoc.LiteralDoc({'name': 'value', 'value': "ok"}),
     }),
     'dep2': jsdoc.ModuleDoc({
         'module': 'dep2',
@@ -37,7 +37,7 @@ BASE_MODULES = {
     'Class': jsdoc.ModuleDoc({
         'module': 'Class',
         'exports': jsdoc.ClassDoc({
-            'class': 'Class',
+            'name': 'Class',
             'doc': "Base Class"
         }),
     }),
@@ -45,18 +45,16 @@ BASE_MODULES = {
         'module': 'mixins',
         'exports': jsdoc.NSDoc({
             'name': 'mixins',
-            '_members': jsdoc.ClassDoc({
-                'class': "Bob",
-            })
+            '_members': [
+                ('Bob', jsdoc.ClassDoc({'class': "Bob"})),
+            ]
         })
     }),
     'Mixin': jsdoc.ModuleDoc({
         'module': 'Mixin',
         'exports': jsdoc.MixinDoc({
             '_members': [
-                jsdoc.FunctionDoc({
-                    'function': 'a',
-                })
+                ('a', jsdoc.FunctionDoc({'function': 'a'})),
             ]
         })
     })

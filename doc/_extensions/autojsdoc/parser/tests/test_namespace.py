@@ -9,9 +9,7 @@ def test_empty():
         return {};
     });
     """)
-    assert isinstance(mod.exports, jsdoc.NSDoc)
-    assert mod.exports.is_namespace
-    assert not mod.exports.is_mixin
+    assert type(mod.exports) == jsdoc.NSDoc
     assert mod.exports.properties == []
 
 def test_inline():
@@ -76,8 +74,6 @@ def test_mixin():
     });
     """)
     assert isinstance(mod.exports, jsdoc.MixinDoc)
-    assert not mod.exports.is_namespace
-    assert mod.exports.is_mixin
     [(n, p)] = mod.exports.properties
     assert n == 'do_thing'
     assert params(p) == ('other', 'Function', '')
@@ -145,12 +141,12 @@ def test_extend_other():
 
     b = m.get_property('b')
     assert type(b) == jsdoc.ClassDoc
-    assert b.get_method('m_b')
+    assert b.get_property('m_b')
     assert b.doc == 'Class 1'
 
     c = m.get_property('c')
     assert type(c) == jsdoc.ClassDoc
-    assert c.get_method('m_c')
+    assert c.get_property('m_c')
     assert c.doc == 'Class 2'
 
 def test_ns_variables():
