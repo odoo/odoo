@@ -1374,6 +1374,8 @@ class ExportFormat(object):
             cookies={'fileToken': token})
 
 class CSVExport(ExportFormat, http.Controller):
+    # CSV needs raw data to correctly handle numbers and date values
+    raw_data = True
 
     @http.route('/web/export/csv', type='http', auth="user")
     @serialize_exception

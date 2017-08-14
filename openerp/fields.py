@@ -1177,6 +1177,11 @@ class Monetary(Field):
             return currency.round(float(value or 0.0))
         return float(value or 0.0)
 
+    def convert_to_export(self, value, env):
+        if value or value == 0.0:
+            return value if env.context.get('export_raw_data') else ustr(value)
+        return ''
+
 
 class _String(Field):
     """ Abstract class for string fields. """
