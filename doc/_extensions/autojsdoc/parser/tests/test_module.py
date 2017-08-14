@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from autojsdoc.parser import jsdoc
-from support import params, parse
+from support import params, parse, BASE_MODULES
 
 
 def test_single():
@@ -125,6 +125,19 @@ def test_bounce():
     it = m2.exports.get_property('Item')
     assert type(it) == jsdoc.ClassDoc
     assert it['sourcemodule'] is m1
+
+def test_reassign():
+    [m] = parse("""
+    odoo.define('m', function (require) {
+        var Class = require('Class');
+        /** local class */
+        var Class = Class.extend({});
+        return Class
+    });
+    """)
+    assert m.exports.doc == 'local class'
+    # can't use equality or identity so use class comment...
+    assert m.exports.superclass.doc == 'Base Class'
 
 def test_attr():
     [m1, m2] = parse("""

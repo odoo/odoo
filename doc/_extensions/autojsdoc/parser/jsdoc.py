@@ -84,7 +84,7 @@ class FunctionDoc(pyjsdoc.FunctionDoc):
 """
 
 CommentDoc.is_constructor = False
-CommentDoc.is_private = property(lambda self: 'private' in self.parsed) # TODO: or getattr(self, 'name', '').startswith('_') ?
+CommentDoc.is_private = property(lambda self: 'private' in self.parsed)
 CommentDoc.as_text = lambda self: jinja2.Template(
     getattr(self, '_template', 'No template for {}'.format(type(self))),
     trim_blocks=True,
@@ -123,6 +123,7 @@ class ModuleDoc(CommentDoc):
         """
         return self.get('dependency', None) or set()
 
+    # FIXME: modules should be namespaces, exports should be a ref to whatever is being exported (or maybe direct doc if there is no name for it?)
     @property
     def exports(self):
         """

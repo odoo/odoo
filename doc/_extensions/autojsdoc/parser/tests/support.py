@@ -37,7 +37,8 @@ BASE_MODULES = {
     'Class': jsdoc.ModuleDoc({
         'module': 'Class',
         'exports': jsdoc.ClassDoc({
-            'class': 'Class'
+            'class': 'Class',
+            'doc': "Base Class"
         }),
     }),
     'mixins': jsdoc.ModuleDoc({

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import collections
-import pprint
 
 from attr import attrs, Factory, attr, astuple
 
@@ -187,14 +186,39 @@ BASE_SCOPE = {
     'undefined': jsdoc.LiteralDoc({'name': u'undefined', 'value': None})
 }
 
+class Scope(object):
+    """
+    Add hoc scope versioning/SSA such that rebinding a symbol in a module
+    scope does not screw everything up e.g. "Foo = Foo.extend({})" should not
+    have the final Foo extending itself...
+    """
+    def __init__(self, mapping):
+        self._namemap = {}
+        self._targets = []
+        for k, v in mapping.items():
+            self[k] = v
+
+    def __setitem__(self, k, v):
+        self._namemap[k] = len(self._targets)
+        self._targets.append(v)
+
+    def freeze(self):
+        return {
+            k: self._targets[v]
+            for k, v in self._namemap.items()
+        }
+
 class ModuleExtractor(Visitor):
     def __init__(self, module, requirefunc):
         super(ModuleExtractor, self).__init__()
         self.module = module
         self.requirefunc = requirefunc
         self.result = ModuleContent()
-        self.scope = dict(BASE_SCOPE)
+        self.scope = Scope(BASE_SCOPE)
         self.declaration = None
+
+    def enter_BlockStatement(self, node):
+        Hoistifier(self).visit(node)
 
     def enter_VariableDeclaration(self, node):
         self.declaration = Declaration(comments=node.get('comments'))
@@ -216,7 +240,6 @@ class ModuleExtractor(Visitor):
     def exit_ExpressionStatement(self, node):
         self.declaration = None
     def enter_AssignmentExpression(self, node):
-
         target = node['left']
         if target['type'] == 'Identifier':
             self.declaration.id = target['name']
@@ -246,7 +269,7 @@ class ModuleExtractor(Visitor):
         @self.result.post.append
         def _augment_module(modules):
             try:
-                t = deref(m2r(target['object'], self.scope))
+                t = deref(m2r(target['object'], self.scope.freeze()))
             except ValueError:
                 return # f'n extension of global libraries garbage
             if not isinstance(t, jsdoc.ObjectDoc):
@@ -261,14 +284,8 @@ class ModuleExtractor(Visitor):
         return SKIP
 
     def enter_FunctionDeclaration(self, node):
-        funcname = node['id']['name']
-        self.scope[funcname] = fn = jsdoc.parse_comments(
-            node.get('comments'),
-            jsdoc.FunctionDoc,
-        )
-        fn.parsed['sourcemodule'] = self.module
-        fn.parsed['guessed_function'] = node['id']['name']
-        fn.parsed['guessed_params'] = [p['name'] for p in node['params']]
+        """ Already processed by hoistitifier
+        """
         return SKIP
 
     def enter_ReturnStatement(self, node):
@@ -292,7 +309,7 @@ class ModuleExtractor(Visitor):
                 'property': {'name': 'include'},
             }
         }):
-            target = RefProxy(m2r(node['callee']['object'], self.scope))
+            target = RefProxy(m2r(node['callee']['object'], self.scope.freeze()))
             target_name = utils._name(node['callee']['object'])
             items = ClassProcessor(self).visit(node['arguments'])
             @self.result.post.append
@@ -312,7 +329,7 @@ class ModuleExtractor(Visitor):
         return SKIP
 
     def refify(self, node, also=None):
-        it = m2r(node, self.scope)
+        it = m2r(node, self.scope.freeze())
         assert isinstance(it, ref), "Expected ref, got {}".format(it)
         px = RefProxy(it)
         @self.result.post.append
@@ -469,4 +486,34 @@ class MemberExtractor(Visitor):
             prop.parsed['private'] = True
         self.result[name] = prop
 
+        return SKIP
+
+class Hoistifier(Visitor):
+    """
+    Processor for variable and function declarations properly hoisting them
+    to the "top" of a module such that they are available with the relevant
+    value afterwards.
+    """
+    def __init__(self, parent):
+        super(Hoistifier, self).__init__()
+        self.parent = parent
+
+    def enter_generic(self, node):
+        return SKIP
+
+    # nodes to straight recurse into, others are just skipped
+    enter_BlockStatement = enter_VariableDeclaration = lambda self, node: None
+
+    def enter_VariableDeclarator(self, node):
+        self.parent.scope[node['id']['name']] = BASE_SCOPE['undefined']
+
+    def enter_FunctionDeclaration(self, node):
+        funcname = node['id']['name']
+        self.parent.scope[funcname] = fn = jsdoc.parse_comments(
+            node.get('comments'),
+            jsdoc.FunctionDoc,
+        )
+        fn.parsed['sourcemodule'] = self.parent.module
+        fn.parsed['guessed_function'] = funcname
+        fn.parsed['guessed_params'] = [p['name'] for p in node['params']]
         return SKIP
