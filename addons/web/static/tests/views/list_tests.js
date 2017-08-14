@@ -1322,12 +1322,13 @@ QUnit.module('Views', {
     });
 
     QUnit.test('list view with nested groups', function (assert) {
-        assert.expect(37);
+        assert.expect(42);
 
         this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1});
         this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 2});
 
         var nbRPCs = {readGroup: 0, searchRead: 0};
+        var envIDs = []; // the ids that should be in the environment during this test
 
         var list = createView({
             View: ListView,
@@ -1352,9 +1353,13 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             intercepts: {
-                switch_view:  function (event) {
+                switch_view: function (event) {
                     assert.strictEqual(event.data.res_id, 4,
                         "'switch_view' event has been triggered");
+                },
+                env_updated: function (event) {
+                    assert.deepEqual(event.data.ids, envIDs,
+                        "should notify the environment with the correct ids");
                 },
             },
         });
@@ -1398,6 +1403,7 @@ QUnit.module('Views', {
 
         // open subgroup
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = [4, 5]; // the opened subgroup contains these two records
         $openGroup.find('.o_group_header:nth(2)').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
@@ -1414,6 +1420,7 @@ QUnit.module('Views', {
 
         // sort by int_field (ASC) and check that open groups are still open
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = [5, 4]; // order of the records changed
         list.$('thead th:last').click();
         assert.strictEqual(nbRPCs.readGroup, 2, "should have done two read_groups");
         assert.strictEqual(nbRPCs.searchRead, 1, "should have done one search_read");
@@ -1427,6 +1434,7 @@ QUnit.module('Views', {
 
         // close first level group
         nbRPCs = {readGroup: 0, searchRead: 0};
+        envIDs = []; // the group being closed, there is no more record in the environment
         list.$('.o_group_header:first').click();
         assert.strictEqual(nbRPCs.readGroup, 0, "should have done no read_group");
         assert.strictEqual(nbRPCs.searchRead, 0, "should have done no search_read");

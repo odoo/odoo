@@ -35,12 +35,8 @@ var KanbanModel = BasicModel.extend({
         group.count++;
 
         // update the res_ids and count of the parent
-        var self = this;
-        var parent = this.localData[group.parentID];
-        parent.res_ids =  _.flatten(_.map(parent.data, function (dataPointID) {
-            return self.localData[dataPointID].res_ids;
-        }));
-        parent.count++;
+        this.localData[group.parentID].count++;
+        this._updateParentResIDs(group);
 
         return this._fetchRecord(new_record).then(function (result) {
             return result.id;
