@@ -3024,6 +3024,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.multi
     def _write(self, vals):
         # low-level implementation of write()
+        if not self:
+            return True
         self.check_field_access_rights('write', list(vals))
 
         cr = self._cr
@@ -4791,7 +4793,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # update records in batch when possible
             with recs.env.norecompute():
                 for vals, ids in pycompat.items(updates):
-                    recs.browse(ids)._write(dict(vals))
+                    target = recs.browse(ids)
+                    try:
+                        target._write(dict(vals))
+                    except MissingError:
+                        # retry without missing records
+                        target.exists()._write(dict(vals))
+
             # mark computed fields as done
             for f in fs:
                 recs._recompute_done(f)
