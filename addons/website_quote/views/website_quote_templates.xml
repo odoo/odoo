@@ -104,8 +104,7 @@
                     <t t-if="page_index == page_size - 1">
                         <t t-if="any([line.tax_id for line in quotation.order_line])">
                             <tr>
-                                <td></td><td></td><td></td><td></td>
-                                <td class="text-right"><strong>Subtotal:</strong></td>
+                                <td colspan="5" class="text-right"><strong>Total Without Taxes:</strong></td>
                                 <td class="text-right">
                                     <strong data-id="total_amount" t-field="quotation.amount_untaxed" t-options='{"widget": "monetary","display_currency": quotation.pricelist_id.currency_id}'/>
                                 </td>
