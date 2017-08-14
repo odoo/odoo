@@ -791,6 +791,7 @@ var FieldFloatTime = FieldFloat.extend({
 var FieldText = InputField.extend(TranslatableFieldMixin, {
     className: 'o_field_text',
     supportedFieldTypes: ['text'],
+    tagName: 'span',
 
     /**
      * @constructor
