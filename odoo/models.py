@@ -4781,8 +4781,12 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             ns = [f.name for f in fs if f.store]
             # evaluate fields, and group record ids by update
             updates = defaultdict(set)
-            for rec in recs.exists():
-                vals = rec._convert_to_write({n: rec[n] for n in ns})
+            for rec in recs:
+                try:
+                    vals = {n: rec[n] for n in ns}
+                except MissingError:
+                    continue
+                vals = rec._convert_to_write(vals)
                 updates[frozendict(vals)].add(rec.id)
             # update records in batch when possible
             with recs.env.norecompute():

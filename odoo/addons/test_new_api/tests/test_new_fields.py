@@ -202,6 +202,11 @@ class TestFields(common.TransactionCase):
         self.assertEqual(c.display_name, 'X / C')
         self.assertEqual(d.display_name, 'X / C / D')
 
+        # delete b; both c and d are deleted in cascade; c should also be marked
+        # to recompute, but recomputation should not fail...
+        b.unlink()
+        self.assertEqual((a + b + c + d).exists(), a)
+
     def test_12_cascade(self):
         """ test computed field depending on computed field """
         message = self.env.ref('test_new_api.message_0_0')
