@@ -3360,6 +3360,7 @@ var BasicModel = AbstractModel.extend({
                 list.data = data;
                 list.res_ids = ids;
             }
+            self._updateParentResIDs(list);
             return list;
         });
     },
