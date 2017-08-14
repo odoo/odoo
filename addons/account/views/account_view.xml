@@ -178,32 +178,28 @@
             name="Partner Ledger: Payable"
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_payable':1}"
-            src_model="res.partner"
-            view_mode="tree"/>
+            src_model="res.partner"/>
 
         <act_window
             id="act_account_partner_ledger_receivable"
             name="Partner Ledger: Receivable"
             res_model="account.move.line"
             context="{'search_default_partner_id':[active_id], 'search_default_unreconciled':1, 'search_default_receivable':1}"
-            src_model="res.partner"
-            view_mode="tree"/>
+            src_model="res.partner"/>
 
         <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
             context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
-            src_model="account.account"
-            view_mode="tree"/>
+            src_model="account.account"/>
 
         <act_window
             id="action_move_line_select"
             name="Journal Items"
             context="{'search_default_account_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account"
-            view_mode="tree"/>
+            src_model="account.account"/>
 
         <act_window
             id="action_move_select"
@@ -216,48 +212,42 @@
             name="Journal Items"
             context="{'search_default_user_type_id': [active_id]}"
             res_model="account.move.line"
-            src_model="account.account.type"
-            view_mode="tree"/>
+            src_model="account.account.type"/>
 
         <act_window
             id="action_move_line_select_by_partner"
             name="Journal Items"
             context="{'search_default_partner_id': [active_id]}"
             res_model="account.move.line"
-            src_model="res.partner"
-            view_mode="tree"/>
+            src_model="res.partner"/>
 
         <act_window
             id="act_account_tax_net"
             name="Net Tax Lines"
             res_model="account.move.line"
             context="{'search_default_tax_ids': [active_id]}"
-            src_model="account.tax"
-            view_mode="tree"/>
+            src_model="account.tax"/>
 
         <act_window
             id="act_account_tax_tax"
             name="Tax Lines"
             res_model="account.move.line"
             context="{'search_default_tax_line_id': [active_id]}"
-            src_model="account.tax"
-            view_mode="tree"/>
+            src_model="account.tax"/>
 
         <act_window
             id="act_account_tax_net_posted"
             name="Net Tax Lines (Posted)"
             res_model="account.move.line"
             context="{'search_default_tax_ids': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"
-            view_mode="tree"/>
+            src_model="account.tax"/>
 
         <act_window
             id="act_account_tax_tax_posted"
             name="Tax Lines (Posted)"
             res_model="account.move.line"
             context="{'search_default_tax_line_id': [active_id], 'search_default_posted': 1}"
-            src_model="account.tax"
-            view_mode="tree"/>
+            src_model="account.tax"/>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
