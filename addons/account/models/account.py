@@ -565,35 +565,47 @@ class AccountTax(models.Model):
     _name = 'account.tax'
     _description = 'Tax'
     _order = 'sequence'
+    _inherit = ['mail.thread']
 
     @api.model
     def _default_tax_group(self):
         return self.env['account.tax.group'].search([], limit=1)
 
-    name = fields.Char(string='Tax Name', required=True, translate=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
-    tax_adjustment = fields.Boolean(help='Set this field to true if this tax can be used in the tax adjustment wizard, used to manually fill some data in the tax declaration')
-    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, oldname='type',
+    name = fields.Char(string='Tax Name', required=True, translate=True, track_visibility='onchange')
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')],
+                                    string='Tax Scope', required=True, default="sale", 
+                                    track_visibility='onchange',
+                                    help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
+    tax_adjustment = fields.Boolean(track_visibility='onchange',
+                                    help='Set this field to true if this tax can be used in the tax adjustment wizard, used to manually fill some data in the tax declaration')
+    amount_type = fields.Selection(default='percent', string="Tax Computation", required=True, oldname='type', track_visibility='onchange',
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
-    active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
+    active = fields.Boolean(default=True, track_visibility='onchange',
+                            help="Set active to false to hide the tax without removing it.")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.user.company_id)
     children_tax_ids = fields.Many2many('account.tax', 'account_tax_filiation_rel', 'parent_tax', 'child_tax', string='Children Taxes')
     sequence = fields.Integer(required=True, default=1,
         help="The sequence field is used to define order in which the tax lines are applied.")
-    amount = fields.Float(required=True, digits=(16, 4))
-    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
-    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Refunds', ondelete='restrict',
-        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
-    description = fields.Char(string='Label on Invoices', translate=True)
+    amount = fields.Float(required=True, digits=(16, 4), track_visibility='onchange')
+    account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], 
+                                 track_visibility='onchange', string='Tax Account', ondelete='restrict',
+                                 help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
+    refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], 
+                                        string='Tax Account on Refunds', ondelete='restrict',
+                                        track_visibility='onchange',
+                                        help="Account that will be set on invoice tax lines for refunds. Leave empty to use the expense account.", oldname='account_paid_id')
+    description = fields.Char(string='Label on Invoices', translate=True, track_visibility='onchange')
     price_include = fields.Boolean(string='Included in Price', default=False,
-        help="Check this if the price you use on the product and invoices includes this tax.")
+                                   track_visibility='onchange',
+                                   help="Check this if the price you use on the product and invoices includes this tax.")
     include_base_amount = fields.Boolean(string='Affect Base of Subsequent Taxes', default=False,
-        help="If set, taxes which are computed after this one will be computed based on the price tax included.")
-    analytic = fields.Boolean(string="Include in Analytic Cost", help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
-    tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True)
+                                         track_visibility='onchange',
+                                         help="If set, taxes which are computed after this one will be computed based on the price tax included.")
+    analytic = fields.Boolean(string="Include in Analytic Cost", track_visibility='onchange',
+                              help="If set, the amount computed by this tax will be assigned to the same analytic account as the invoice line (if any)")
+    tag_ids = fields.Many2many('account.account.tag', 'account_tax_account_tag', string='Tags', track_visibility='onchange',
+                               help="Optional tags you may want to assign for custom reporting")
+    tax_group_id = fields.Many2one('account.tax.group', string="Tax Group", default=_default_tax_group, required=True, track_visibility='onchange')
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use)', 'Tax names must be unique !'),
