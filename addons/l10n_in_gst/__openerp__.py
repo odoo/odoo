@@ -21,6 +21,7 @@
         'views/report_templates.xml',
         'views/res_company_view.xml',
         'views/res_partner_views.xml',
+        'views/res_country_state_view.xml',
         'wizard/account_report_tax_payable_view.xml',
     ],
     'installable': True,

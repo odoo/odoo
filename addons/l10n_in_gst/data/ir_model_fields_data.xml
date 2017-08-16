@@ -31,4 +31,14 @@
         <field name="model_id" ref="base.model_res_company"/>
     </record>
 
+    <record model="ir.model.fields" id="country_state_tin_field">
+        <field name="name">x_tin</field>
+        <field name="field_description">TIN Number</field>
+        <field name="help">TIN number-first two digits</field>
+        <field name="ttype">char</field>
+        <field name="size">2</field>
+        <field name="state">manual</field>
+        <field name="model_id" ref="base.model_res_country_state"/>
+    </record>
+
 </odoo>
