@@ -3603,6 +3603,8 @@ class BaseModel(object):
     @api.multi
     def _write(self, vals):
         # low-level implementation of write()
+        if not self:
+            return True
         self.check_field_access_rights('write', list(vals))
 
         cr = self._cr
@@ -5341,13 +5343,23 @@ class BaseModel(object):
             ns = [f.name for f in fs if f.store]
             # evaluate fields, and group record ids by update
             updates = defaultdict(set)
-            for rec in recs.exists():
-                vals = rec._convert_to_write({n: rec[n] for n in ns})
+            for rec in recs:
+                try:
+                    vals = {n: rec[n] for n in ns}
+                except MissingError:
+                    continue
+                vals = rec._convert_to_write(vals)
                 updates[frozendict(vals)].add(rec.id)
             # update records in batch when possible
             with recs.env.norecompute():
                 for vals, ids in updates.iteritems():
-                    recs.browse(ids)._write(dict(vals))
+                    target = recs.browse(ids)
+                    try:
+                        target._write(dict(vals))
+                    except MissingError:
+                        # retry without missing records
+                        target.exists()._write(dict(vals))
+
             # mark computed fields as done
             map(recs._recompute_done, fs)
 
