@@ -19,10 +19,10 @@ class Currency(models.Model):
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
     name = fields.Char(string='Currency', size=3, required=True, help="Currency Code (ISO 4217)")
     symbol = fields.Char(help="Currency sign, to be used when printing amounts.", required=True)
-    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 6),
+    rate = fields.Float(compute='_compute_current_rate', string='Current Rate', digits=(12, 8),
                         help='The rate of the currency to the currency of rate 1.')
     rate_ids = fields.One2many('res.currency.rate', 'currency_id', string='Rates')
-    rounding = fields.Float(string='Rounding Factor', digits=(12, 6), default=0.01)
+    rounding = fields.Float(string='Rounding Factor', digits=(12, 8), default=0.01)
     decimal_places = fields.Integer(compute='_compute_decimal_places')
     active = fields.Boolean(default=True)
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
@@ -205,7 +205,7 @@ class CurrencyRate(models.Model):
 
     name = fields.Datetime(string='Date', required=True, index=True,
                            default=lambda self: fields.Date.today() + ' 00:00:00')
-    rate = fields.Float(digits=(12, 6), help='The rate of the currency to the currency of rate 1')
+    rate = fields.Float(digits=(12, 8), help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',
                                  default=lambda self: self.env.user.company_id)
