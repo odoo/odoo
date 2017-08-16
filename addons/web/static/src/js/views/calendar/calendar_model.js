@@ -65,12 +65,12 @@ return AbstractModel.extend({
                 end.startOf('day').add(-1, 'days');
             } else {
                 // default hours in the user's timezone
-                start.hours(7).add(-this.getSession().tzOffset, 'minutes');
-                end.hours(19).add(-this.getSession().tzOffset, 'minutes');
+                start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
+                end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
             }
         } else {
-            start.add(-this.getSession().tzOffset, 'minutes');
-            end.add(-this.getSession().tzOffset, 'minutes');
+            start.add(-this.getSession().getTZOffset(start), 'minutes');
+            end.add(-this.getSession().getTZOffset(end), 'minutes');
         }
 
         if (this.mapping.all_day) {
@@ -599,8 +599,8 @@ return AbstractModel.extend({
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
-        date_start.add(this.getSession().tzOffset, 'minutes');
-        date_stop.add(this.getSession().tzOffset, 'minutes');
+        date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
+        date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
 
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');

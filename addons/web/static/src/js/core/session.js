@@ -285,10 +285,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var result = _.extend({}, window.odoo.session_info);
         delete result.session_id;
         _.extend(this, result);
-        if (this.tzOffset === false) {
-            // send by server to have the user timezone and not the browser timezone
-            this.tzOffset = -new Date().getTimezoneOffset();
-        }
         return $.when();
     },
     check_session_id: function () {
@@ -409,6 +405,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix;
         return prefix + path + qs;
+    },
+    /**
+     * Returns the time zone difference (in minutes) from the current locale
+     * (host system settings) to UTC, for a given date. The offset is positive
+     * if the local timezone is behind UTC, and negative if it is ahead.
+     *
+     * @param {string || moment} date a valid string date or moment instance
+     * @returns {integer}
+     */
+    getTZOffset: function (date) {
+        return -new Date(date).getTimezoneOffset();
     },
 });
 

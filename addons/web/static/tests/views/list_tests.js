@@ -1271,7 +1271,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree><field name="date"/><field name="datetime"/></tree>',
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
