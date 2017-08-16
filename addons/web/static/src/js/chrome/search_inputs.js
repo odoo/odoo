@@ -232,7 +232,7 @@ var IntegerField = NumberField.extend(/** @lends instance.web.search.IntegerFiel
     error_message: _t("not a valid integer"),
     parse: function (value) {
         try {
-            return field_utils.parse.interger(value);
+            return field_utils.parse.integer(value);
         } catch (e) {
             return NaN;
         }
