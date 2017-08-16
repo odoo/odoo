@@ -113,6 +113,8 @@ class AccountInvoice(models.Model):
             default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
             if default_journal_id:
                 self.journal_id = default_journal_id
+            if self.env.context.get('default_currency_id'):
+                self.currency_id = self.env.context['default_currency_id']
         return res
 
     @api.model

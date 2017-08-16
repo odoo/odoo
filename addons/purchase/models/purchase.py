@@ -484,7 +484,12 @@ class PurchaseOrder(models.Model):
         result = action.read()[0]
 
         #override the context to get rid of the default filtering
-        result['context'] = {'type': 'in_invoice', 'default_purchase_id': self.id}
+        result['context'] = {'type': 'in_invoice',
+            'default_purchase_id': self.id,
+            'default_currency_id': self.currency_id.id,
+            'default_company_id': self.company_id.id,
+            'company_id': self.company_id.id
+        }
 
         if not self.invoice_ids:
             # Choose a default account journal in the same currency in case a new invoice is created
