@@ -91,7 +91,7 @@ class GoogleDrive(models.Model):
         request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, access_token)
         headers = {"Content-type": "application/x-www-form-urlencoded"}
         try:
-            req = requests.post(request_url, headers=headers, timeout=TIMEOUT)
+            req = requests.get(request_url, headers=headers, timeout=TIMEOUT)
             req.raise_for_status()
             parents_dict = req.json()
         except requests.HTTPError:
