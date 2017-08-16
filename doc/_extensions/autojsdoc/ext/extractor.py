@@ -27,11 +27,10 @@ def _get_roots(conf):
         return env_roots.split(':')
     return []
 
-def read_js(app, modules, symbols):
+def read_js(app, modules):
     """
     :type app: sphinx.application.Sphinx
     :type modules: Dict[str, jsdoc.ModuleDoc]
-    :type symbols: Dict[str, jsdoc.CommentDoc]
     """
     roots = map(os.path.normpath, app.config.js_roots or [os.path.join(app.confdir, '..')])
     files = [
@@ -52,20 +51,6 @@ def read_js(app, modules, symbols):
                 for mod in parser.ModuleMatcher(name).visit(ast)
             )
     _resolve_references(modules)
-
-    for mod in modules.values():
-        exports = symbols[mod.name] = mod.exports
-        graft(exports, symbols, prefix=mod.name)
-
-def graft(parent, items, prefix):
-    if isinstance(parent, jsdoc.ClassDoc):
-        for n, m in parent.properties:
-            items["%s.%s" % (prefix, n)] = m
-    elif type(parent) is jsdoc.NSDoc:
-        for name, p in parent.properties:
-            path = "%s.%s" % (prefix, name)
-            items[path] = p
-            graft(p, items, path)
 
 def _resolve_references(byname):
     # must be done in topological order otherwise the dependent can't
