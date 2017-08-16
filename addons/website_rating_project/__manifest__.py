@@ -10,8 +10,8 @@ This module display project customer satisfaction on your website.
 ==================================================================
     """,
     'depends': [
-        'website_project',
-        'rating_project'
+        'website',
+        'rating_project',
     ],
     'data': [
         'views/website_rating_project.xml',

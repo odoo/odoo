@@ -8,12 +8,8 @@ class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     @api.multi
-    def website_message_format(self):
-        result = super(MailMessage, self).website_message_format()
+    def _portal_message_format(self, field_list):
         # inlude rating value in data if requested
         if self._context.get('rating_include'):
-            message_data = self.read(['rating_value'])
-            message_tree = dict((m['id'], m['rating_value']) for m in message_data)
-            for message_vals in result:
-                message_vals['rating_value'] = message_tree.get(message_vals['id'], False)  # False for no rating
-        return result
+            field_list += ['rating_value']
+        return super(MailMessage, self)._portal_message_format(field_list)
