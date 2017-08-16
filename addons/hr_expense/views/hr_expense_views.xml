@@ -5,7 +5,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" decoration-bf="message_unread == True">
+                <tree string="Expenses" decoration-bf="message_unread == True" class="o_expense_tree">
                     <field name="currency_id" invisible="True"/>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date"/>
@@ -26,7 +26,7 @@
             <field name="model">hr.expense</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Expenses">
+                <form string="Expenses" class="o_expense_form">
                 <header>
                     <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,reported,done"/>
