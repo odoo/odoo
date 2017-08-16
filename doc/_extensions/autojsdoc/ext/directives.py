@@ -24,20 +24,20 @@ def addto(parent, newnode):
 
 
 def documenter_for(directive, modname, classname, doc):
-    if isinstance(doc, jsdoc.ClassDoc):
-        return ClassDocumenter(directive, modname, None, doc)
-    if isinstance(doc, jsdoc.NSDoc):
-        return NSDocumenter(directive, modname, None, doc)
-    if isinstance(doc, jsdoc.MixinDoc):
-        return MixinDocumenter(directive, modname, None, doc)
     if isinstance(doc, jsdoc.FunctionDoc):
         return FunctionDocumenter(directive, modname, classname, doc)
+    if isinstance(doc, jsdoc.ClassDoc):
+        return ClassDocumenter(directive, modname, None, doc)
+    if isinstance(doc, jsdoc.MixinDoc):
+        return MixinDocumenter(directive, modname, None, doc)
     if isinstance(doc, (jsdoc.PropertyDoc, jsdoc.LiteralDoc)):
         return PropertyDocumenter(directive, modname, classname, doc)
     if isinstance(doc, jsdoc.InstanceDoc):
         return InstanceDocumenter(directive, modname, classname, doc)
     if isinstance(doc, jsdoc.Unknown):
         return UnknownDocumenter(directive, None, None, doc)
+    if isinstance(doc, jsdoc.NSDoc):
+        return NSDocumenter(directive, modname, None, doc)
 
     raise TypeError("No documenter for %s" % type(doc))
 def doc_for(directive, modname, classname, doc):
@@ -75,6 +75,8 @@ def automodule_bound(app, modules, symbols):
             ]
             ret = []
             for name, mod in mods:
+                if mod.is_private:
+                    continue
                 if name != modname and not (mod.doc or mod.exports):
                     # this module has no documentation, no exports and was
                     # not specifically requested through automodule -> skip
@@ -118,19 +120,21 @@ class Documenter(object):
         )) as s:
             s['class'] = self._class or ''
 
+            s['ids'] = []
             if objname:
-                s['ids'] = [objname]
-                if prefixed:
-                    s['ids'].append(prefixed)
+                s['ids'].append(objname)
+            if prefixed:
+                s['ids'].append(prefixed)
 
             if objtype:
                 s += addnodes.desc_annotation(
                     objtype, objtype,
                     nodes.Text(' '),
                 )
-            if objname and objtype:
+
                 env = self._directive.state.document.settings.env
-                env.domaindata['js']['objects'][objname] = (env.docname, objtype)
+                if objname:
+                    env.domaindata['js']['objects'][objname] = (env.docname, objtype)
                 if prefixed:
                     env.domaindata['js']['objects'][prefixed] = (env.docname, objtype)
 
@@ -140,48 +144,91 @@ class Documenter(object):
             c += self.make_content()
         return [root]
 
-    @abc.abstractmethod
     def make_signature(self):
         """
         :rtype: List[nodes.Node]
         """
+        return [addnodes.desc_name(self._doc.name, self._doc.name)]
+
     @abc.abstractmethod
     def make_content(self):
         """
         :rtype: List[nodes.Node]
         """
 
-    def should_document(self, member):
+class NSDocumenter(Documenter):
+    objtype = 'namespace'
+    def make_content(self):
+        doc = self._doc
+        ret = nodes.section()
+        if doc.doc:
+            self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
+        ret += self.document_properties()
+        return ret.children
+
+    def should_document(self, member, name):
         """
         :type member: jsdoc.CommentDoc
         :rtype: bool
         """
         options = self._directive.options
-        member_name = member.name
 
         members = options.get('members')
         if members is not ALL:
             # if a member is requested by name, it's always documented
-            return member_name in members
+            return name in members
 
         # ctor params are merged into the class doc
         if member.is_constructor:
             return False
 
         # only document "private" members if option is set
-        if member.is_private and not options.get('private-members'):
+        if self.is_private(member, name) and not options.get('private-members'):
             return False
 
         # TODO: what if member doesn't have a description but has non-desc tags set?
+        # TODO: add @public to force documenting symbol? => useful for implicit typedef
         return bool(member.doc or options.get('undoc-members'))
 
-class ModuleDocumenter(Documenter):
+    def is_private(self, member, name):
+        return member.is_private
+
+    def document_properties(self):
+        ret = nodes.section()
+        # TODO: :member-order: [alphabetical | groupwise | bysource]
+        for (n, p) in self._doc.properties:
+            if not self.should_document(p, n):
+                continue
+            # FIXME: maybe should use property name as name inside?
+            ret += doc_for(self._directive, self._module, None, p)
+        return ret.children
+
+class ModuleDocumenter(NSDocumenter):
     objtype = 'module'
-    def make_signature(self):
-        return [addnodes.desc_name(self._doc.name, self._doc.name)]
     def make_content(self):
         doc = self._doc
         content = addnodes.desc_content()
+
+        if doc.exports or doc.dependencies:
+            with addto(content, nodes.field_list()) as fields:
+                if doc.exports:
+                    with addto(fields, nodes.field()) as field:
+                        field += nodes.field_name('Exports', 'Exports')
+                        with addto(field, nodes.field_body()) as body:
+                            ref = doc['exports'] # warning: not the same as doc.exports
+                            label = ref or '<anonymous>'
+                            link = addnodes.pending_xref(
+                                ref, nodes.paragraph(ref, label),
+                                refdomain='js',
+                                reftype='any',
+                                reftarget=ref,
+                            )
+                            link['js:module'] = doc.name
+                            body += link
+
+                if doc.dependencies:
+                    with addto(fields, nodes.field()) as field:
+                        self.make_dependencies(field, doc)
 
         self._directive.state.nested_parse(self._directive.content, 0, content)
 
@@ -189,17 +236,7 @@ class ModuleDocumenter(Documenter):
             # FIXME: source offset
             self._directive.state.nested_parse(to_list(doc.doc, source=doc['sourcefile']), 0, content)
 
-        if doc.dependencies:
-            with addto(content, nodes.field_list()) as fields:
-                with addto(fields, nodes.field()) as field:
-                    self.make_dependencies(field, doc)
-
-        # FIXME: document all elements in bodies based on :members:, undoc, private
-        # e.g. web.view_dialogs does not export ViewDialog but exports subclasses
-        # which looks weird
-        # => allow documenting all objects, then xref to the export
-        if doc.exports:
-            content += doc_for(self._directive, doc.name, None, doc.exports)
+        content += self.document_properties()
 
         return content
 
@@ -216,21 +253,41 @@ class ModuleDocumenter(Documenter):
                     )
                     deps += nodes.list_item(dep, ref)
 
+    def should_document(self, member, name):
+        # member can be Nothing?
+        if not member:
+            return False
+        modname = getattr(member['sourcemodule'], 'name', None)
+        doc = self._doc
 
-class ClassDocumenter(Documenter):
+        # always document exported symbol (regardless undoc, private, ...)
+        # otherwise things become... somewhat odd
+        if name == doc['exports']:
+            return True
+
+        # if doc['exports'] the module is exporting a "named" item which
+        # does not need to be documented twice, if not doc['exports'] it's
+        # exporting an anonymous item (e.g. object literal) which needs to
+        # be documented on its own
+        if name == '<exports>' and not doc['exports']:
+            return True
+
+        # TODO: :imported-members:
+        # FIXME: *directly* re-exported "foreign symbols"?
+        return (not modname or modname == doc.name) \
+               and super(ModuleDocumenter, self).should_document(member, name)
+
+
+class ClassDocumenter(NSDocumenter):
     objtype = 'class'
     def make_signature(self):
-        return [
-            addnodes.desc_name(self._doc.name, self._doc.name),
-            self.make_parameters(),
-        ]
-
-    def ctor(self):
-        return next(iter(self._doc.constructors), None)
+        sig = super(ClassDocumenter, self).make_signature()
+        sig.append(self.make_parameters())
+        return sig
 
     def make_parameters(self):
         params = addnodes.desc_parameterlist('', '')
-        ctor = self.ctor()
+        ctor = self._doc.constructor
         if ctor:
             params += make_desc_parameters(ctor.params)
 
@@ -239,22 +296,21 @@ class ClassDocumenter(Documenter):
     def make_content(self):
         doc = self._doc
         ret = nodes.section()
-        if doc.doc:
-            self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-
         if doc.superclass or doc.mixins:
             with addto(ret, nodes.field_list()) as fields:
                 fields += self.make_super()
                 fields += self.make_mixins()
                 fields += self.make_params()
 
-        for m in doc.methods:
-            if not self.should_document(m):
-                continue
+        if doc.doc:
+            self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
 
-            ret += doc_for(self._directive, self._module, self._doc.name, m)
+        ret += self.document_properties()
 
         return ret.children
+
+    def is_private(self, member, name):
+        return name.startswith('_') or super(ClassDocumenter, self).is_private(member, name)
 
     def make_super(self):
         doc = self._doc
@@ -291,7 +347,7 @@ class ClassDocumenter(Documenter):
         return ret
 
     def make_params(self):
-        ctor = self.ctor()
+        ctor = self._doc.constructor
         if not (ctor and ctor.params):
             return []
 
@@ -306,9 +362,7 @@ class InstanceDocumenter(Documenter):
     objtype = 'object'
     def make_signature(self):
         cls = self._doc.cls
-        ret = []
-        if self._doc.name:
-            ret.append(addnodes.desc_name(self._doc.name, self._doc.name))
+        ret = super(InstanceDocumenter, self).make_signature()
         if cls:
             super_ref = addnodes.pending_xref(
                 cls.name, nodes.Text(cls.name, cls.name),
@@ -333,13 +387,13 @@ class FunctionDocumenter(Documenter):
     def objtype(self):
         return 'method' if self._class else 'function'
     def make_signature(self):
-        ret = nodes.section('', addnodes.desc_name(self._doc.name, self._doc.name))
+        ret = super(FunctionDocumenter, self).make_signature()
         with addto(ret, addnodes.desc_parameterlist()) as params:
             params += make_desc_parameters(self._doc.params)
         retval = self._doc.return_val
         if retval.type or retval.doc:
-            ret += addnodes.desc_returns(retval.type or '*', retval.type  or '*')
-        return ret.children
+            ret.append(addnodes.desc_returns(retval.type or '*', retval.type  or '*'))
+        return ret
 
     def make_content(self):
         ret = nodes.section()
@@ -457,26 +511,8 @@ def make_types(typespec, mod=None):
     except ValueError as e:
         raise ValueError("%s in '%s'" % (e, typespec))
 
-class ObjectDocumenter(Documenter):
-    def make_signature(self):
-        if self._doc.name:
-            return [addnodes.desc_name(self._doc.name, self._doc.name)]
-        return []
-    def make_content(self):
-        doc = self._doc
-        ret = nodes.section()
-        if doc.doc:
-            self._directive.state.nested_parse(to_list(doc.doc), 0, ret)
-        # FIXME: xref when property is named/not inline
-        for (_, p) in doc.properties:
-            if not self.should_document(p):
-                continue
-            ret += doc_for(self._directive, self._module, None, p)
-        return ret.children
 
-class NSDocumenter(ObjectDocumenter):
-    objtype = 'namespace'
-class MixinDocumenter(ObjectDocumenter):
+class MixinDocumenter(NSDocumenter):
     objtype = 'mixin'
 
 # FIXME: add typedef support
@@ -484,7 +520,7 @@ class MixinDocumenter(ObjectDocumenter):
 class PropertyDocumenter(Documenter):
     objtype = 'attribute'
     def make_signature(self):
-        ret = [addnodes.desc_name(self._doc.name, self._doc.name)]
+        ret = super(PropertyDocumenter, self).make_signature()
         proptype = self._doc.type
         if proptype:
             typeref = addnodes.pending_xref(
@@ -505,7 +541,5 @@ class PropertyDocumenter(Documenter):
 
 class UnknownDocumenter(Documenter):
     objtype = 'unknown'
-    def make_signature(self):
-        return [addnodes.desc_name(self._doc.name, self._doc.name)]
     def make_content(self):
         return []

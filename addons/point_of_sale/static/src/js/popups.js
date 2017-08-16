@@ -135,21 +135,23 @@ var ConfirmPopupWidget = PopupWidget.extend({
 gui.define_popup({name:'confirm', widget: ConfirmPopupWidget});
 
 /**
- * A popup that allows the user to select one item from a list. 
+ * A popup that allows the user to select one item from a list.
  *
- * show_popup('selection',{
- *      title: "Popup Title",
- *      list: [
- *          { label: 'foobar',  item: 45 },
- *          { label: 'bar foo', item: 'stuff' },
- *      ],
- *      confirm: function(item) {
- *          // get the item selected by the user.
- *      },
- *      cancel: function(){
- *          // user chose nothing
- *      }
- *  });
+ * Example::
+ *
+ *    show_popup('selection',{
+ *        title: "Popup Title",
+ *        list: [
+ *            { label: 'foobar',  item: 45 },
+ *            { label: 'bar foo', item: 'stuff' },
+ *        ],
+ *        confirm: function(item) {
+ *            // get the item selected by the user.
+ *        },
+ *        cancel: function(){
+ *            // user chose nothing
+ *        }
+ *    });
  */
 
 var SelectionPopupWidget = PopupWidget.extend({

@@ -49,9 +49,10 @@ return {
     search_filters_registry: new Registry(),
     search_widgets_registry: new Registry(),
     /**
-     * @constant {String}
+     * @type {String}
      */
     csrf_token: odoo.csrf_token,
+    a_thing: 42,
 };
 
 });

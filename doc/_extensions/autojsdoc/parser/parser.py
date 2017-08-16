@@ -47,7 +47,7 @@ class ModuleMatcher(Visitor):
             require = None # a module can have no dependencies
             if func['params']:
                 require = func['params'][0]['name']
-            mod.parsed['dependency'], mod.parsed['exports'], post = ModuleExtractor(mod, require).visit(func['body'])
+            mod.parsed['dependency'], post = ModuleExtractor(mod, require).visit(func['body'])
             mod._post_process.extend(post)
         # don't recurse since we've fired off a sub-visitor for the
         # bits we're interested in
@@ -103,11 +103,9 @@ class Declaration(object):
 @attrs(slots=True)
 class ModuleContent(object):
     dependencies = attr(default=Factory(set))
-    exports = attr(default=None)
     post = attr(default=Factory(list))
     def __iter__(self):
         yield self.dependencies
-        yield self.exports
         yield self.post
 
 @attrs # needs dict as it's replacing a ModuleProxy
@@ -138,7 +136,7 @@ class ModuleProxy(object):
     # replace the ModuleProxy by the module's exports
     def become(self, modules):
         s = self
-        m = modules[self._name].exports or Nothing(self._name)
+        m = modules[self._name].get_property('<exports>') or Nothing(self._name)
         self.__class__ = m.__class__
         self.__dict__ = m.__dict__
         return self
@@ -302,9 +300,10 @@ class ModuleExtractor(Visitor):
     def enter_ReturnStatement(self, node):
         self.declaration = Declaration(comments=node.get('comments'))
         if node['argument']:
-            self.result.exports = ValueExtractor(
-                self, self.declaration
-            ).visit(node['argument'])
+            export = ValueExtractor(self, self.declaration).visit(node['argument'])
+            if isinstance(export, RefProxy):
+                self.module.parsed['exports'] = _name(export._ref)
+            self.scope['<exports>'] = export
         self.declaration = None
         return SKIP
 

@@ -24,38 +24,50 @@ def post(mods):
 BASE_MODULES = {
     'other': jsdoc.ModuleDoc({
         'module': 'other',
-        'exports': jsdoc.LiteralDoc({'name': 'value', 'value': "ok"}),
+        '_members': [
+            ('<exports>', jsdoc.LiteralDoc({'name': 'value', 'value': "ok"})),
+        ],
     }),
     'dep2': jsdoc.ModuleDoc({
         'module': 'dep2',
-        'exports': jsdoc.LiteralDoc({'value': 42.}),
+        '_members': [
+            ('<exports>', jsdoc.LiteralDoc({'value': 42.})),
+        ],
     }),
     'dep3': jsdoc.ModuleDoc({
         'module': 'dep3',
-        'exports': jsdoc.LiteralDoc({'value': 56.}),
+        '_members': [
+            ('<exports>', jsdoc.LiteralDoc({'value': 56.})),
+        ],
     }),
     'Class': jsdoc.ModuleDoc({
         'module': 'Class',
-        'exports': jsdoc.ClassDoc({
-            'name': 'Class',
-            'doc': "Base Class"
-        }),
+        '_members': [
+            ('<exports>', jsdoc.ClassDoc({
+                'name': 'Class',
+                'doc': "Base Class"
+            })),
+        ],
     }),
     'mixins': jsdoc.ModuleDoc({
         'module': 'mixins',
-        'exports': jsdoc.NSDoc({
-            'name': 'mixins',
-            '_members': [
-                ('Bob', jsdoc.ClassDoc({'class': "Bob"})),
-            ]
-        })
+        '_members': [
+            ('<exports>', jsdoc.NSDoc({
+                'name': 'mixins',
+                '_members': [
+                    ('Bob', jsdoc.ClassDoc({'class': "Bob"})),
+                ]
+            })),
+        ],
     }),
     'Mixin': jsdoc.ModuleDoc({
         'module': 'Mixin',
-        'exports': jsdoc.MixinDoc({
-            '_members': [
-                ('a', jsdoc.FunctionDoc({'function': 'a'})),
-            ]
-        })
+        '_members': [
+            ('<exports>', jsdoc.MixinDoc({
+                '_members': [
+                    ('a', jsdoc.FunctionDoc({'function': 'a'})),
+                ]
+            })),
+        ],
     })
 }

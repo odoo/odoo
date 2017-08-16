@@ -59,9 +59,9 @@ def read_js(app, modules, symbols):
 
 def graft(parent, items, prefix):
     if isinstance(parent, jsdoc.ClassDoc):
-        for m in parent.methods:
-            items["%s.%s" % (prefix, m.name)] = m
-    elif isinstance(parent, jsdoc.ObjectDoc):
+        for n, m in parent.properties:
+            items["%s.%s" % (prefix, n)] = m
+    elif type(parent) is jsdoc.NSDoc:
         for name, p in parent.properties:
             path = "%s.%s" % (prefix, name)
             items[path] = p

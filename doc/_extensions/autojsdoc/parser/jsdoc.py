@@ -45,7 +45,9 @@ class CommentDoc(pyjsdoc.CommentDoc):
     def name(self):
         return self[self.namekey] or self['name'] or self['guessed_name']
     def set_name(self, name):
-        self.parsed['guessed_name'] = name
+        # not great...
+        if name != '<exports>':
+            self.parsed['guessed_name'] = name
 
     @property
     def is_private(self):
@@ -205,14 +207,13 @@ class ModuleDoc(NSDoc):
         """
         return self.get('dependency', None) or set()
 
-    # FIXME: modules should be namespaces, exports should be a ref to whatever is being exported (or maybe direct doc if there is no name for it?)
     @property
     def exports(self):
         """
         Returns the actual item exported from the AMD module, can be a
         namespace, a class, a function, an instance, ...
         """
-        return self['exports']
+        return self.get_property('<exports>')
 
     def to_dict(self):
         vars = super(ModuleDoc, self).to_dict()

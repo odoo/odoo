@@ -67,7 +67,7 @@ var Action = core.Class.extend({
     },
     /**
      * Stores the DOM fragment of the action
-     * @param {jQuery} [fragment] the DOM fragment
+     * @param {jQuery} [$fragment] the DOM fragment
      */
     set_fragment: function($fragment) {
         this.$fragment = $fragment;

@@ -125,7 +125,7 @@ def test_bounce():
     it = m2.exports.get_property('Item')
     assert type(it) == jsdoc.ClassDoc
     assert it['sourcemodule'] is m1
-    assert sorted([n for n, _ in m1.properties]) == ['Class', 'Item']
+    assert sorted([n for n, _ in m1.properties]) == ['<exports>', 'Class', 'Item']
 
 def test_reassign():
     [m] = parse("""
