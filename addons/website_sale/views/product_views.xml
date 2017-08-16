@@ -69,7 +69,7 @@
             <group name="email_template_and_project"  position="before">
                 <group name="website" string="Website" >
                     <field name="website_url" invisible="1"/>
-                    <field name="public_categ_ids" widget="many2many_tags" string="Website Categories"/>
+                    <field name="public_categ_ids" widget="many2many_tags" string="eCommerce Categories"/>
                     <field name="alternative_product_ids" widget="many2many_tags"/>
                     <field name="accessory_product_ids" widget="many2many_tags"/>
                     <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
@@ -165,13 +165,13 @@
         <field name="field_parent" eval="False"/>
         <field name="arch" type="xml">
             <tree string="Product Public Categories">
-                <field name="sequence" invisible="1"/>
+                <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
             </tree>
         </field>
     </record>
     <record id="product_public_category_action" model="ir.actions.act_window">
-        <field name="name">Website Product Categories</field>
+        <field name="name">eCommerce Categories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">product.public.category</field>
         <field name="view_type">form</field>
