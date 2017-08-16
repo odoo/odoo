@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Allow timesheets", default=True)
+    allow_timesheets = fields.Boolean("Timesheets", default=True)
 
 class Task(models.Model):
     _inherit = "project.task"

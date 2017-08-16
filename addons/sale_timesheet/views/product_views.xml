@@ -10,7 +10,7 @@
                 <attribute name="attrs">{'invisible': [('type','!=','service')]}</attribute>
             </xpath>
             <field name="track_service" position="after">
-                <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('track_service', '!=', 'task')]}"
+                <field name="project_id" attrs="{'invisible':['|', ('type','!=','service'), ('track_service', '!=', 'task')]}" domain="[('project_type', '=', 'portal')]"
                     placeholder="Keep empty to get a new project per order..."
                 />
             </field>

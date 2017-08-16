@@ -180,12 +180,18 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', string='Show Project on dashboard',
         help="Whether this project should be displayed on the dashboard or not")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Gives label to tasks on project's kanban view.")
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Tasks of this project will be labelled this way in the Project Dashboard.")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
         default=lambda self: self.env.user.company_id.resource_calendar_id.id,
         help="Timetable working hours to adjust the gantt diagram report")
+    project_type = fields.Selection([
+            ('internal', _('Internal Project')),
+            ('portal', _('Customer Project'))
+        ],
+        string='Type', required=True,
+        default='internal')
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Tasks")
     task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Tasks")
@@ -223,6 +229,11 @@ class Project(models.Model):
         super(Project, self)._compute_portal_url()
         for project in self:
             project.portal_url = '/my/project/%s' % project.id
+
+    @api.onchange('project_type')
+    def _onchange_project_type(self):
+        if self.project_type == "internal":
+            self.partner_id = False
 
     @api.multi
     def map_tasks(self, new_project_id):
@@ -386,8 +397,7 @@ class Task(models.Model):
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Low'),
-        ('1', 'Normal'),
-        ('2', 'High')
+        ('1', 'Normal')
         ], default='0', index=True, string="Priority")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
@@ -425,15 +435,16 @@ class Task(models.Model):
         track_visibility='onchange',
         change_default=True)
     notes = fields.Text(string='Notes')
-    planned_hours = fields.Float(string='Initially Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.')
+    planned_hours = fields.Float(string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.')
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
         default=lambda self: self.env.uid,
         index=True, track_visibility='always')
     partner_id = fields.Many2one('res.partner',
-        string='Customer',
+        string='Author',
         default=_get_default_partner)
+    project_type = fields.Selection(related="project_id.project_type", string="Type", readonly=True)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one('res.company',
         string='Company',
@@ -899,6 +910,7 @@ class AccountAnalyticAccount(models.Model):
             project_values = {
                 'name': vals.get('name'),
                 'analytic_account_id': self.id,
+                'project_type': vals.get('project_type', 'internal'),
             }
             return Project.create(project_values).id
         return False

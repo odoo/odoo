@@ -8,11 +8,6 @@
             web_icon="project,static/description/icon.png"
             sequence="50"/>
 
-        <menuitem name="Search"
-            id="menu_project_management"
-            parent="menu_main_pm"
-            sequence="2" groups="base.group_no_one,group_project_user"/>
-
         <menuitem id="menu_project_config" name="Configuration" parent="menu_main_pm"
             sequence="100" groups="project.group_project_manager"/>
 
@@ -126,8 +121,6 @@
                         </h1>
                         <div name="options_active" class="oe_edit_only">
                             <div>
-                                <label for="label_tasks" class="oe_inline" string="Name of the tasks :"/>
-                                <field name="label_tasks" class="oe_inline oe_input_align"/>
                             </div>
                         </div>
                     </div>
@@ -136,9 +129,14 @@
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
+                                <label for="label_tasks" class="oe_edit_only" string="Task Label"/>
+                                <div class="oe_edit_only">
+                                    <field name="label_tasks" class="oe_inline oe_input_align" placeholder="e.g.Issues, Bookings, etc."/>
+                                </div>
+                                <field name="project_type" widget="radio"/>
                                 <field name="subtask_project_id" groups="project.group_subtask_project"/>
+                                <field name="partner_id" string="Customer" attrs="{'invisible': [('project_type', '!=', 'portal')]}" placeholder="Leave empty if each task is for a specific customer"/>
                                 <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" string="Customer"/>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">
@@ -203,7 +201,7 @@
                     <field name="active" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Contact"/>
+                    <field name="partner_id" string="Contact" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -249,6 +247,12 @@
                             <group>
                                 <field name="name" class="o_project_name oe_inline"
                                     string="Project Name" placeholder="e.g. Office Party"/>
+                                <label for="label_tasks" string="Task Label"/>
+                                <div>
+                                    <field name="label_tasks" class="oe_inline oe_input_align" placeholder="e.g.Issues, Bookings, etc."/>
+                                </div>
+                                <field name="project_type" widget="radio"/>
+                                <field name="partner_id" string="Customer" attrs="{'invisible': [('project_type', '!=', 'portal')]}" placeholder="Leave empty if each task is for a specific customer"/>
                                 <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                                 <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                     <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
@@ -426,9 +430,12 @@
                     <group>
                         <group>
                             <field name="project_id" domain="[('active', '=', True)]"/>
+                            <field name="parent_id" groups="project.group_subtask_project"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
+                            <field name="project_type" invisible="1"/>
+                            <field name="partner_id" attrs="{'invisible': [('project_type', '!=', 'portal')]}" invisible="1"/>
                             <field name="legend_blocked" invisible="1"/>
                             <field name="legend_normal" invisible="1"/>
                             <field name="legend_done" invisible="1"/>
@@ -436,6 +443,7 @@
                         <group>
                             <field name="date_deadline"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -443,30 +451,41 @@
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Extra Info">
+                        <page string="Extra Info" groups="base.group_no_one">
+                            <group invisible="1">
+                                <field name="email_from" invisible="1"/>
+                                <field name="email_cc" invisible="1"/>
+                                <field name="child_ids" invisible="1" />
+                                <field name="subtask_project_id" invisible="1" />
+                            </group>
                             <group>
-                                <group>
+                                <group string="Assignation" name="assignation">
+                                    <label string="Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}"/>
+                                    <div attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
+                                        <field name="working_days_open" class="oe_inline mr8"/>
+                                        <strong><span class="mr8">Days</span></strong>
+                                        <field name="working_hours_open" class="oe_inline mr8"/>
+                                        <strong><span>Hours</span></strong>
+                                    </div>
+                                    <label string="Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}"/>
+                                    <div attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
+                                        <field name="working_days_close" class="oe_inline mr8"/>
+                                        <strong><span class="mr8">Days</span></strong>
+                                        <field name="working_hours_close" class="oe_inline mr8"/>
+                                        <strong><span>Hours</span></strong>
+                                    </div>
+                                    <label string="Assigning Date" groups="base.group_no_one"/>
+                                    <div>
+                                        <field name="date_assign" groups="base.group_no_one"/>
+                                    </div>
+                                    <label string="Last Stage Update" groups="base.group_no_one"/>
+                                    <div>
+                                        <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                    </div>
+                                </group>
+                                <group string="Kanban View">
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id"/>
-                                    <field name="email_from"/>
-                                    <field name="email_cc" groups="base.group_no_one"/>
-                                    <field name="parent_id" groups="project.group_subtask_project"/>
-                                    <field name="child_ids" invisible="1" />
-                                    <field name="subtask_project_id" invisible="1" />
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="displayed_image_id" groups="base.group_no_one"/>
-                                </group>
-                                <group>
-                                    <field name="date_assign" groups="base.group_no_one"/>
-                                    <field name="date_last_stage_update" groups="base.group_no_one"/>
-                                </group>
-                                <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
-                                    <field name="working_hours_open" string="Hours"/>
-                                    <field name="working_days_open" string="Days"/>
-                                </group>
-                                <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
-                                    <field name="working_hours_close" string="Hours"/>
-                                    <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
                         </page>
@@ -580,21 +599,6 @@
             </field>
         </record>
 
-        <record id="project_task_view_tree_activity" model="ir.ui.view">
-            <field name="name">project.task.tree.activity</field>
-            <field name="model">project.task</field>
-            <field name="arch" type="xml">
-                <tree string="Next Activities" decoration-danger="activity_date_deadline &lt; current_date" default_order="activity_date_deadline">
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="activity_date_deadline"/>
-                    <field name="activity_type_id"/>
-                    <field name="activity_summary"/>
-                    <field name="stage_id"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="view_task_calendar" model="ir.ui.view">
             <field name="name">project.task.calendar</field>
             <field name="model">project.task</field>
@@ -666,22 +670,7 @@
             <field name="act_window_id" ref="action_view_task"/>
         </record>
 
-        <record id="project_task_action_activity" model="ir.actions.act_window">
-            <field name="name">My Next Activities</field>
-            <field name="res_model">project.task</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban,calendar</field>
-            <field name="view_id" ref="project_task_view_tree_activity"/>
-            <field name="context">{'search_default_activities_my':1}</field>
-            <field name="domain">[('activity_date_deadline', '!=', False)]</field>
-            <field name="help" type="html">
-                <p>
-                    Currently there are not any activity scheduled.
-                </p>
-            </field>
-        </record>
-
-        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="5"/>
+        <menuitem name="Tasks" id="menu_action_view_task" action="action_view_task" parent="menu_main_pm" sequence="2" groups="base.group_no_one,group_project_user"/>
 
         <record id="project_task_action_from_partner" model="ir.actions.act_window">
             <field name="name">Tasks</field>
@@ -689,12 +678,6 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-
-        <menuitem id="project_task_menu_activity"
-            name="Next Activities"
-            parent="project.menu_project_management"
-            action="project_task_action_activity"
-            sequence="25"/>
 
         <!-- Activity types config -->
         <record id="mail_activity_type_action_config_project_types" model="ir.actions.act_window">
@@ -848,7 +831,7 @@
         <menuitem action="open_task_type_form" id="menu_project_config_project" name="Stages" parent="menu_project_config" sequence="3" groups="base.group_no_one"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Dashboard" parent="menu_main_pm" sequence="1"/>
-        <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
+        <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="1"/>
 
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
