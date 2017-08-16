@@ -5,8 +5,6 @@ import json
 
 from odoo import models
 from odoo.http import request
-import pytz
-import datetime
 
 import odoo
 
@@ -26,7 +24,6 @@ class Http(models.AbstractModel):
         version_info = odoo.service.common.exp_version()
         return {
             "session_id": request.session.sid,
-            "tzOffset": self._context.get('tz') and datetime.datetime.now(pytz.timezone(self._context['tz'])).utcoffset().total_seconds() / 60 or False,
             "uid": request.session.uid,
             "is_system": request.env.user._is_system(),
             "is_superuser": request.env.user._is_superuser(),

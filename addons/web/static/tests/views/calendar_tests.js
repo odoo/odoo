@@ -440,7 +440,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
             mockRPC: function (route, args) {
                 if (args.method === "create") {
@@ -541,7 +543,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
             mockRPC: function (route, args) {
                 if (args.method === "create") {
@@ -664,7 +668,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
@@ -728,7 +734,9 @@ QUnit.module('Views', {
                 initialDate: initialDate,
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 

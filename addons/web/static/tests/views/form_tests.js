@@ -2849,7 +2849,9 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 

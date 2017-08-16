@@ -1589,7 +1589,9 @@ QUnit.module('basic_fields', {
               date_format: '%m/%d/%Y',
             },
             session: {
-                tzOffset: 120 // Should be ignored by date fields
+                getTZOffset: function () {
+                    return 120; // Should be ignored by date fields
+                },
             },
         });
 
@@ -1634,7 +1636,9 @@ QUnit.module('basic_fields', {
               date_format: '%m/%d/%Y',
             },
             session: {
-                tzOffset: -120 // Should be ignored by date fields
+                getTZOffset: function () {
+                    return -120; // Should be ignored by date fields
+                },
             },
         });
 
@@ -1663,7 +1667,9 @@ QUnit.module('basic_fields', {
                 date_format: '%m/%d/%Y',
             },
             session: {
-                tzOffset: 0
+                getTZOffset: function () {
+                    return 0;
+                },
             },
         });
 
@@ -1752,7 +1758,9 @@ QUnit.module('basic_fields', {
                 time_format: '%H:%M:%S',
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
@@ -1809,7 +1817,9 @@ QUnit.module('basic_fields', {
                 time_format: '%H:%M:%S',
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
@@ -1879,7 +1889,9 @@ QUnit.module('basic_fields', {
                 time_format: '%H:%M:%S',
             },
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
 
@@ -1924,7 +1936,9 @@ QUnit.module('basic_fields', {
                 time_format: '%H:%M:%S',
             },
             session: {
-                tzOffset: -240,
+                getTZOffset: function () {
+                    return -240;
+                },
             },
         });
 
@@ -1966,7 +1980,9 @@ QUnit.module('basic_fields', {
                 time_format: '%H:%M:%S',
             },
             session: {
-                tzOffset: -240,
+                getTZOffset: function () {
+                    return -240;
+                },
             },
         });
 

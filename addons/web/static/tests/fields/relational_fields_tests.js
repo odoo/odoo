@@ -1771,7 +1771,9 @@ QUnit.module('relational_fields', {
                 '</form>',
             res_id: 1,
             session: {
-                tzOffset: 120
+                getTZOffset: function () {
+                    return 120;
+                },
             },
         });
         assert.strictEqual(form.$('td:eq(0)').text(), "01/25/2017",

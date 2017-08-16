@@ -450,7 +450,7 @@ var FieldDateTime = FieldDate.extend({
      */
     _getValue: function () {
         var value = this.datewidget.getValue();
-        return value && value.add(-this.getSession().tzOffset, 'minutes');
+        return value && value.add(-this.getSession().getTZOffset(value), 'minutes');
     },
 
     /**
@@ -460,7 +460,7 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _makeDatePicker: function () {
-        var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
+        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
         return new datepicker.DateTimeWidget(this, {defaultDate: value});
     },
 
@@ -471,7 +471,7 @@ var FieldDateTime = FieldDate.extend({
      * @private
      */
     _renderEdit: function () {
-        var value = this.value && this.value.clone().add(this.getSession().tzOffset, 'minutes');
+        var value = this.value && this.value.clone().add(this.getSession().getTZOffset(this.value), 'minutes');
         this.datewidget.setValue(value);
         this.$input = this.datewidget.$input;
     },
