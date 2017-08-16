@@ -3743,6 +3743,60 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('one2manys (list editable) inside one2manys are saved correctly', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="p"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                "partner,false,form": '<form>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>'
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0].p,
+                        [[0, false, {
+                            p: [[0, false, {display_name: "xtv"}]],
+                        }]],
+                        "create should be called with the correct arguments");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // add a o2m subrecord
+        form.$('.o_field_x2many_list_row_add a').click();
+        $('.modal-body .o_field_one2many .o_field_x2many_list_row_add a').click();
+        $('.modal-body input').val('xtv').trigger('input');
+        $('.modal-footer button:first').click(); // save & close
+        assert.strictEqual($('.modal').length, 0,
+            "dialog should be closed");
+
+        var row = form.$('.o_field_one2many .o_list_view .o_data_row');
+        assert.strictEqual(row.children()[0].textContent, '1 record',
+            "the cell should contains the number of record: 1");
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        form.destroy();
+    });
+
     QUnit.test('*_view_ref in context are passed correctly', function (assert) {
         var done = assert.async();
         assert.expect(4);

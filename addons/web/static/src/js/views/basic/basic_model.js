@@ -777,13 +777,14 @@ var BasicModel = AbstractModel.extend({
                     if (newValue instanceof Array) {
                         rec._savePoint = newValue.slice(0);
                     } else {
-                        // save the viewType of edition, so that the correct readonly modifiers
-                        // can be evaluated when the record will be saved
-                        for (var fieldName in (rec._changes || {})) {
-                            rec._editionViewType[fieldName] = options.viewType;
-                        }
                         rec._savePoint = _.extend({}, newValue);
                     }
+                });
+
+                // save the viewType of edition, so that the correct readonly modifiers
+                // can be evaluated when the record will be saved
+                _.each((record._changes || {}), function (value, fieldName) {
+                    record._editionViewType[fieldName] = options.viewType;
                 });
             }
             var shouldReload = 'reload' in options ? options.reload : true;
