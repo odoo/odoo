@@ -3,7 +3,7 @@
 
     <template id="gst_report_saleorder_document_inherit" inherit_id="sale.report_saleorder_document">
         <xpath expr="//span[@t-field='l.name']" position="after">
-            <t t-if="l.product_id.x_hsn_code"><h6><strong class="ml16">HSN Code:</strong> <span t-field="l.product_id.x_hsn_code"/></h6></t>
+            <t t-if="l.product_id.x_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.x_hsn_code"/></h6></t>
         </xpath>
         <xpath expr="//p[@t-if='doc.partner_id.vat']" position="replace">
             <p t-if="doc.partner_id.x_gstin">GSTIN: <span t-field="doc.partner_id.x_gstin"/></p>

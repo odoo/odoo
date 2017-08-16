@@ -6,7 +6,7 @@
             <p t-if="o.sudo().partner_id.x_gstin">GSTIN: <span t-field="o.sudo().partner_id.x_gstin"/></p>
         </xpath>
         <xpath expr="//span[@t-field='pack_operation.product_id.description_picking']" position="after">
-            <t t-if="pack_operation.product_id and pack_operation.product_id.x_hsn_code"><h6><strong class="ml16">HSN Code:</strong> <span t-field="pack_operation.product_id.x_hsn_code"/></h6></t>
+            <t t-if="pack_operation.product_id and pack_operation.product_id.x_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="pack_operation.product_id.x_hsn_code"/></h6></t>
         </xpath>
     </template>
 
