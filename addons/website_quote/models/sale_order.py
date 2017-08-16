@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
     def _get_default_template(self):
         template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
         return template and template.active and template or False
-        
+
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
@@ -65,10 +65,11 @@ class SaleOrder(models.Model):
         'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', default=0, help="Require immediate payment by the customer when validating the order from the website quote")
+        (0, 'Online Signature'),
+        (1, 'Online Payment')], default=0, string='Confirmation Mode',
+        help="Choose how you want to confirm an order to launch the delivery process. You can either "
+             "request a digital signature or an upfront payment. With a digital signature, you can "
+             "request the payment when issuing the invoice.")
 
     @api.multi
     def copy(self, default=None):
@@ -211,10 +212,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _get_payment_type(self):
         self.ensure_one()
-        if self.require_payment == 2:
-            return 'form_save'
-        else:
-            return 'form'
+        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderOption(models.Model):
