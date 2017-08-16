@@ -96,9 +96,6 @@
     <menuitem id="product_catalog_variants" name="Product Variants"
         action="product.product_normal_action"
         parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
-    <menuitem id="menu_catalog_categories"
-        action="product_public_category_action"
-        parent="menu_catalog" sequence="3"/>
     <menuitem id="menu_catalog_pricelists" name="Pricelists"
         action="product.product_pricelist_action2"
         parent="menu_catalog" groups="product.group_sale_pricelist" sequence="4"/>
@@ -112,12 +109,15 @@
     <menuitem id="menu_ecommerce_payment_acquirers"
         action="payment.action_payment_acquirer"
         parent="menu_ecommerce_settings" name="Payment Acquirers" />
+    <menuitem id="menu_catalog_categories"
+        action="product_public_category_action"
+        parent="menu_product_settings" sequence="1"/>
     <menuitem id="menu_product_attribute_action"
         action="product.attribute_action"
-        parent="menu_product_settings"  groups="product.group_product_variant" sequence="1"/>
+        parent="menu_product_settings"  groups="product.group_product_variant" sequence="2"/>
     <menuitem id="menu_catalog_variants_action"
         action="product.variants_action"
-        parent="menu_product_settings" groups="product.group_product_variant" sequence="2"/>
+        parent="menu_product_settings" groups="product.group_product_variant" sequence="3"/>
 
     <record id="sale_order_view_form" model="ir.ui.view">
         <field name="name">sale.order.form</field>
