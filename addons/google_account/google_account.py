@@ -90,14 +90,17 @@ class google_service(osv.osv_memory):
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
 
-        try:
-            uri = self.get_uri_oauth(a='token')
-            data = werkzeug.url_encode(params)
+        if client_id and client_secret:
+            try:
+                uri = self.get_uri_oauth(a='token')
+                data = werkzeug.url_encode(params)
 
-            st, res, ask_time = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
-        except urllib2.HTTPError:
-            error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
-            raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
+                st, res, ask_time = self._do_request(cr, uid, uri, params=data, headers=headers, type='POST', preuri='', context=context)
+            except urllib2.HTTPError:
+                error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid")
+                raise self.pool.get('res.config.settings').get_config_warning(cr, error_msg, context=context)
+        else:
+            _logger.exception("Missing client_id and/or client_secret for the Google account - we cannot get data from Google!")
         return res
 
     def _refresh_google_token_json(self, cr, uid, refresh_token, service, context=None):  # exchange_AUTHORIZATION vs Token (service = calendar)
