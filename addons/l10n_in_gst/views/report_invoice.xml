@@ -3,7 +3,7 @@
 
     <template id="l10n_in_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//tbody[contains(@class, 'invoice_tbody')]/tr/td[1]" position="replace">
-            <td><span t-field="l.name"/><t t-if="l.product_id.x_hsn_code"><h6><strong class="ml16">HSN Code:</strong> <span t-field="l.product_id.x_hsn_code"/></h6></t></td>
+            <td><span t-field="l.name"/><t t-if="l.product_id.x_hsn_code"><h6><strong class="ml16">HSN/SAC Code:</strong> <span t-field="l.product_id.x_hsn_code"/></h6></t></td>
         </xpath>
         <xpath expr="//div[@name='invoice_address']//span[@t-if='o.partner_id.vat']" position="replace">
             <span t-if="o.partner_id.x_gstin">GSTIN: <span t-field="o.partner_id.x_gstin"/></span>
