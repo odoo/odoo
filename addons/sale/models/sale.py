@@ -133,6 +133,7 @@ class SaleOrder(models.Model):
     confirmation_date = fields.Datetime(string='Confirmation Date', readonly=True, index=True, help="Date on which the sales order is confirmed.", oldname="date_confirm")
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, index=True, track_visibility='always')
+    partner_name = fields.Char(related='partner_id.name', string="Partner Name", readonly=True)
     partner_invoice_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order.")
     partner_shipping_id = fields.Many2one('res.partner', string='Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order.")
 
@@ -598,6 +599,25 @@ class SaleOrder(models.Model):
                 group_data['has_button_access'] = True
 
         return groups
+
+    @api.multi
+    def name_get(self):
+        res = []
+        for order in self:
+            name = order.name
+            if order.partner_name:
+                name = '%s - %s' % (name, order.partner_name)
+            res.append((order.id, name))
+        return res
+
+    @api.model
+    def name_search(self, name='', args=None, operator='ilike', limit=100):
+        if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
+            return super(SaleOrder, self).name_search(name, args, operator, limit)
+        args = args or []
+        domain = ['|', ('name', operator, name), ('partner_name', operator, name)]
+        sale_orders = self.search(domain + args, limit=limit)
+        return sale_orders.name_get()
 
 
 class SaleOrderLine(models.Model):
