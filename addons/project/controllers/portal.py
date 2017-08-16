@@ -5,15 +5,16 @@ from collections import OrderedDict
 
 from odoo import http, _
 from odoo.http import request
-from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal
+from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal, pager as portal_pager
+
 from odoo.osv.expression import OR
 from odoo.tools import pycompat
 
 
-class WebsiteAccount(CustomerPortal):
+class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
-        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
+        values = super(CustomerPortal, self)._prepare_portal_layout_values()
         values.update({
             'project_count': request.env['project.project'].search_count([('privacy_visibility', '=', 'portal')]),
             'task_count': request.env['project.task'].search_count([('project_id.privacy_visibility', '=', 'portal')])
@@ -21,7 +22,7 @@ class WebsiteAccount(CustomerPortal):
         return values
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
-    def my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
+    def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
         values = self._prepare_portal_layout_values()
         Project = request.env['project.project']
         domain = [('privacy_visibility', '=', 'portal')]
@@ -41,7 +42,7 @@ class WebsiteAccount(CustomerPortal):
         # projects count
         project_count = Project.search_count(domain)
         # pager
-        pager = request.website.pager(
+        pager = portal_pager(
             url="/my/projects",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
             total=project_count,
@@ -64,17 +65,18 @@ class WebsiteAccount(CustomerPortal):
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby
         })
-        return request.render("website_project.my_projects", values)
+        return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<model("project.project"):project>'], type='http', auth="user", website=True)
-    def my_project(self, project=None, **kw):
-        vals = {'project': project, }
+    @http.route(['/my/project/<int:project_id>'], type='http', auth="user", website=True)
+    def portal_my_project(self, project_id=None, **kw):
+        project = request.env['project.project'].browse(project_id)
+        vals = {'project': project}
         history = request.session.get('my_projects_history', [])
         vals.update(get_records_pager(history, project))
-        return request.render("website_project.my_project", vals)
+        return request.render("project.portal_my_project", vals)
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
-    def my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
+    def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', **kw):
         values = self._prepare_portal_layout_values()
         domain = [('project_id.privacy_visibility', '=', 'portal')]
 
@@ -131,7 +133,7 @@ class WebsiteAccount(CustomerPortal):
         # task count
         task_count = request.env['project.task'].search_count(domain)
         # pager
-        pager = request.website.pager(
+        pager = portal_pager(
             url="/my/tasks",
             url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
             total=task_count,
@@ -158,11 +160,15 @@ class WebsiteAccount(CustomerPortal):
             'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
             'filterby': filterby,
         })
-        return request.render("website_project.my_tasks", values)
+        return request.render("project.portal_my_tasks", values)
 
-    @http.route(['/my/task/<model("project.task"):task>'], type='http', auth="user", website=True)
-    def my_task(self, task=None, **kw):
-        vals = {'task': task, 'user': request.env.user}
+    @http.route(['/my/task/<int:task_id>'], type='http', auth="user", website=True)
+    def portal_my_task(self, task_id=None, **kw):
+        task = request.env['project.task'].browse(task_id)
+        vals = {
+            'task': task,
+            'user': request.env.user
+        }
         history = request.session.get('my_tasks_history', [])
         vals.update(get_records_pager(history, task))
-        return request.render("website_project.my_task", vals)
+        return request.render("project.portal_my_task", vals)

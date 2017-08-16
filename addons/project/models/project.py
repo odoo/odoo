@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, AccessError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -46,7 +46,7 @@ class ProjectTaskType(models.Model):
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.alias.mixin', 'mail.thread', 'portal.mixin']
     _inherits = {'account.analytic.account': "analytic_account_id"}
     _order = "sequence, name, id"
     _period_number = 5
@@ -225,6 +225,11 @@ class Project(models.Model):
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
 
+    def _compute_portal_url(self):
+        super(Project, self)._compute_portal_url()
+        for project in self:
+            project.portal_url = '/my/project/%s' % project.id
+
     @api.multi
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
@@ -272,6 +277,30 @@ class Project(models.Model):
         return res
 
     @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to website for portal users
+        that can read the project. """
+        self.ensure_one()
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+
+        if user.share:
+            try:
+                record.check_access_rule('read')
+            except AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/project/%s' % self.id,
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(Project, self).get_access_action(access_uid)
+
+    @api.multi
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         """ Subscribe to all existing active tasks when subscribing to a project """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=subtype_ids, force=force)
@@ -291,6 +320,28 @@ class Project(models.Model):
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
 
     @api.multi
+    def _notification_recipients(self, message, groups):
+        groups = super(Project, self)._notification_recipients(message, groups)
+
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
+
+    @api.multi
+    def toggle_favorite(self):
+        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
+        for project in self:
+            if self.env.user in project.favorite_user_ids:
+                favorite_projects |= project
+            else:
+                not_fav_projects |= project
+
+        # Project User has no write access for project.
+        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
+        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
+
+    @api.multi
     def close_dialog(self):
         return {'type': 'ir.actions.act_window_close'}
 
@@ -299,7 +350,7 @@ class Task(models.Model):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_start, name, id"
 
@@ -383,7 +434,8 @@ class Task(models.Model):
         default=lambda self: self.env['res.company']._company_default_get())
     color = fields.Integer(string='Color Index')
     user_email = fields.Char(related='user_id.email', string='User Email', readonly=True)
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=lambda self: [('res_model', '=', self._name)], auto_join=True, string='Attachments')
+    attachment_ids = fields.One2many('ir.attachment', compute='_compute_attachment_ids', string="Main Attachments",
+        help="Attachment that don't come from message.")
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
     legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked Explanation', readonly=True)
@@ -401,6 +453,12 @@ class Task(models.Model):
     working_hours_close = fields.Float(compute='_compute_elapsed', string='Working hours to close', store=True, group_operator="avg")
     working_days_open = fields.Float(compute='_compute_elapsed', string='Working days to assign', store=True, group_operator="avg")
     working_days_close = fields.Float(compute='_compute_elapsed', string='Working days to close', store=True, group_operator="avg")
+
+    def _compute_attachment_ids(self):
+        for task in self:
+            attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
+            message_attachment_ids = self.mapped('message_ids.attachment_ids').ids  # from mail_thread
+            task.attachment_ids = list(set(attachment_ids) - set(message_attachment_ids))
 
     @api.multi
     @api.depends('create_date', 'date_end', 'date_assign')
@@ -435,6 +493,11 @@ class Task(models.Model):
                 task.kanban_state_label = task.legend_blocked
             else:
                 task.kanban_state_label = task.legend_done
+
+    def _compute_portal_url(self):
+        super(Task, self)._compute_portal_url()
+        for task in self:
+            task.portal_url = '/my/task/%s' % task.id
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -601,6 +664,30 @@ class Task(models.Model):
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
 
+    @api.multi
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to website for portal users
+        that can read the task. """
+        self.ensure_one()
+        user, record = self.env.user, self
+        if access_uid:
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.sudo(user)
+
+        if user.share:
+            try:
+                record.check_access_rule('read')
+            except AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/task/%s' % self.id,
+                    'target': 'self',
+                    'res_id': self.id,
+                }
+        return super(Task, self).get_access_action(access_uid)
+
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
@@ -647,7 +734,11 @@ class Task(models.Model):
                 'actions': project_actions,
             })
 
-        return [new_group] + groups
+        groups = [new_group] + groups
+        for group_name, group_method, group_data in groups:
+            group_data['has_button_access'] = True
+
+        return groups
 
     @api.model
     def message_get_reply_to(self, res_ids, default=None):

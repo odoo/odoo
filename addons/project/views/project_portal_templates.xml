@@ -32,7 +32,7 @@
         </xpath>
     </template>
 
-    <template id="my_projects" name="My Projects">
+    <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout">
             <h3>Projects
                 <t t-call="portal.portal_searchbar"/>
@@ -66,12 +66,12 @@
                 </table></div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
-                <t t-call="website.pager"/>
+                <t t-call="portal.pager"/>
             </div>
         </t>
     </template>
 
-    <template id="my_project" name="My Project">
+    <template id="portal_my_project" name="My Project">
         <t t-call="portal.portal_layout">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -117,7 +117,7 @@
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
                 <div class="col-md-10 col-md-offset-1 mt16">
-                    <t t-call="website_mail.message_thread">
+                    <t t-call="portal.message_thread">
                         <t t-set="object" t-value="project"/>
                     </t>
                 </div>
@@ -125,7 +125,7 @@
         </t>
     </template>
 
-    <template id="my_tasks" name="My Tasks">
+    <template id="portal_my_tasks" name="My Tasks">
         <t t-call="portal.portal_layout">
             <h3>Tasks
                 <t t-call="portal.portal_searchbar"/>
@@ -158,12 +158,12 @@
                 </table></div>
             </div>
             <div t-if="pager" class="o_portal_pager text-center">
-                <t t-call="website.pager"/>
+                <t t-call="portal.pager"/>
             </div>
         </t>
     </template>
 
-    <template id="my_task" name="My Task">
+    <template id="portal_my_task" name="My Task">
         <t t-call="portal.portal_layout">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -235,7 +235,7 @@
                     <h4><strong>Message and communication history</strong></h4>
                 </div>
                 <div class="col-md-10 col-md-offset-1 mt16">
-                    <t t-call="website_mail.message_thread">
+                    <t t-call="portal.message_thread">
                         <t t-set="object" t-value="task"/>
                     </t>
                 </div>

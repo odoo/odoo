@@ -4,7 +4,7 @@
 
         <record id="mail_message_rule_public" model="ir.rule">
             <field name="name">mail.message: portal/public: read published messages</field>
-            <field name="model_id" ref="model_mail_message"/>
+            <field name="model_id" ref="mail.model_mail_message"/>
             <field name="domain_force">[('website_published', '=', True)]</field>
             <field name="groups" eval="[(4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
         </record>
