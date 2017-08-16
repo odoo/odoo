@@ -110,8 +110,19 @@ class ReturnPicking(models.TransientModel):
                 returned_lines += 1
                 vals = self._prepare_move_default_values(return_line, new_picking)
                 r = return_line.move_id.copy(vals)
-                r.write({'move_orig_ids': [(4, return_line.move_id.id, False)]})
+                vals = {}
 
+                # +--------------------------------------------------------------------------------------------------------+
+                # |       picking_pick     <--Move Orig--    picking_pack     --Move Dest-->   picking_ship
+                # |              | returned_move_ids              ↑                                  | returned_move_ids
+                # |              ↓                                | return_line.move_id              ↓
+                # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
+                # +--------------------------------------------------------------------------------------------------------+
+                move_orig_to_link = return_line.move_id.move_dest_ids.mapped('returned_move_ids')
+                move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | return_line.move_id]
+                vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
+                r.write(vals)
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
