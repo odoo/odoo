@@ -30,7 +30,7 @@
                         </div>
                         <group>
                             <group>
-                               <label for="number_of_days"/>
+                               <label for="number_of_days" string="Quotation expires after"/>
                                <div id="number_of_days">
                                    <field name="number_of_days" class="oe_inline"/> days
                                </div>
@@ -92,7 +92,7 @@
                               </tree>
                             </field>
                         </page>
-                        <page string="Other Settings">
+                        <page string="Confirmation">
                             <group>
                                 <field name="require_payment" widget="radio"/>
                                 <field name="mail_template_id"/>
@@ -100,7 +100,8 @@
                         </page>
                         </notebook>
                         <field name="website_description" invisible="1"/>
-                        <field name="note" placeholder="These Terms &amp; Conditions will replace the default ones set in the Configuration menu." nolabel="1"/>
+                        <field name="note" nolabel="1"
+                            placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
                     </sheet>
                 </form>
             </field>
