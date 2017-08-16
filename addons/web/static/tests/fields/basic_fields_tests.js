@@ -1570,7 +1570,7 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.test('date field in form view', function (assert) {
+    QUnit.test('date field in form view (with positive time zone offset)', function (assert) {
         assert.expect(8);
 
         var form = createView({
@@ -1589,7 +1589,7 @@ QUnit.module('basic_fields', {
               date_format: '%m/%d/%Y',
             },
             session: {
-                tzOffset: 120
+                tzOffset: 120 // Should be ignored by date fields
             },
         });
 
@@ -1618,6 +1618,34 @@ QUnit.module('basic_fields', {
         form.$buttons.find('.o_form_button_save').click();
         assert.strictEqual(form.$('.o_field_date').text(), '02/22/2017',
             'the selected date should be displayed after saving');
+        form.destroy();
+    });
+
+    QUnit.test('date field in form view (with negative time zone offset)', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+              date_format: '%m/%d/%Y',
+            },
+            session: {
+                tzOffset: -120 // Should be ignored by date fields
+            },
+        });
+
+        assert.strictEqual(form.$('.o_field_date').text(), '02/03/2017',
+            'the date should be correctly displayed in readonly');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '02/03/2017',
+            'the date should be correct in edit mode');
+
         form.destroy();
     });
 
@@ -1870,6 +1898,89 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('datetime field with date/datetime widget (with day change)', function (assert) {
+        assert.expect(2);
+        
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].datetime = "2017-02-08 02:00:00"; // UTC
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="datetime"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="datetime" widget="date"/>' +
+                        '</form>' +
+                     '</field>' +
+                 '</form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                tzOffset: -240,
+            },
+        });
+
+        var expectedDateString = "02/07/2017 22:00:00"; // local time zone
+        assert.strictEqual(form.$('.o_field_widget[name=p] .o_data_cell').text(), expectedDateString,
+            'the datetime (datetime widget) should be correctly displayed in tree view');
+
+        // switch to form view
+        form.$('.o_field_widget[name=p] .o_data_row').click();
+        assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/07/2017',
+            'the datetime (date widget) should be correctly displayed in form view');
+
+        form.destroy();
+    });
+
+    QUnit.test('datetime field with date/datetime widget (without day change)', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].p = [2];
+        this.data.partner.records[1].datetime = "2017-02-08 10:00:00"; // without timezone
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="p">' +
+                        '<tree>' +
+                            '<field name="datetime"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="datetime" widget="date"/>' +
+                        '</form>' +
+                     '</field>' +
+                 '</form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                time_format: '%H:%M:%S',
+            },
+            session: {
+                tzOffset: -240,
+            },
+        });
+
+        var expectedDateString = "02/08/2017 06:00:00"; // with timezone
+        assert.strictEqual(form.$('.o_field_widget[name=p] .o_data_cell').text(), expectedDateString,
+            'the datetime (datetime widget) should be correctly displayed in tree view');
+
+        // switch to form view
+        form.$('.o_field_widget[name=p] .o_data_row').click();
+        assert.strictEqual($('.modal .o_field_date[name=datetime]').text(), '02/08/2017',
+            'the datetime (date widget) should be correctly displayed in form view');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldMonetary');
 
