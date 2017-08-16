@@ -533,6 +533,7 @@ var fontIconsDialog = Widget.extend({
         var final_classes = non_fa_classes.concat(this.get_fa_classes());
         if (this.media.tagName !== "SPAN") {
             var media = document.createElement('span');
+            media.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
             $(media).data($(this.media).data());
             $(this.media).replaceWith(media);
             this.media = media;
@@ -1106,6 +1107,9 @@ var LinkDialog = Dialog.extend({
             if (!is_link) {
                 if (sc.tagName) {
                     sc = dom.firstChild(so ? sc.childNodes[so] : sc);
+                    if (sc.data == dom.ZERO_WIDTH_NBSP_CHAR) {
+                        sc = sc.parentElement;
+                    }
                     so = 0;
                 } else if (so !== sc.textContent.length) {
                     if (sc === ec) {
@@ -1151,7 +1155,7 @@ var LinkDialog = Dialog.extend({
                 var text = "";
                 this.data.images = [];
                 for (var i=0; i<nodes.length; i++) {
-                    if (dom.ancestor(nodes[i], dom.isImg)) {
+                    if (dom.ancestor(nodes[i], dom.isImg) && nodes[i].data != dom.ZERO_WIDTH_NBSP_CHAR) {
                         this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
                         text += '[IMG]';
                     } else if (!is_link && i===0) {
@@ -1183,6 +1187,10 @@ var LinkDialog = Dialog.extend({
         }
         var val = $e.val();
         var label = this.$('#o_link_dialog_label_input').val() || val;
+        if (label.slice(-1) == dom.ZERO_WIDTH_NBSP_CHAR) {
+           label = label.replace(/'dom.ZERO_WIDTH_NBSP_CHAR'/g, '');
+           label = label.slice(0, -1);
+       }
 
         if (label && this.data.images) {
             for (var i=0; i<this.data.images.length; i++) {
