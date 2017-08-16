@@ -207,7 +207,7 @@ class CrmTeam(models.Model):
 
             for data_item in graph_data:
                 index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
-                values[index][y_field] = int(data_item.get('y_value'))
+                values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'month':
             for month in range(0, (end_date.month - start_date.month) % 12 + 1):
