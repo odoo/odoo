@@ -228,7 +228,7 @@ class test_selection(CreatorCase):
     def test_empty(self):
         self.assertEqual(
             self.export(False),
-            [[False]])
+            [['']])
 
     def test_value(self):
         """ selections export the *label* for their value

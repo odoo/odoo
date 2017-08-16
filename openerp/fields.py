@@ -1556,7 +1556,7 @@ class Selection(Field):
         for item in self._description_selection(env):
             if item[0] == value:
                 return item[1]
-        return False
+        return ''
 
 
 class Reference(Selection):
