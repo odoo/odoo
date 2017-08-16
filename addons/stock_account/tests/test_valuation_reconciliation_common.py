@@ -15,7 +15,7 @@ class ValuationReconciliationTestCase(AccountingTestCase):
         return self.env['product.category'].create({
             'name': 'Test category',
             'property_valuation': 'real_time',
-            'property_cost_method': 'real',
+            'property_cost_method': 'fifo',
             'property_stock_valuation_account_id': self.valuation_account.id,
             'property_stock_account_input_categ_id': self.input_account.id,
             'property_stock_account_output_categ_id': self.output_account.id,

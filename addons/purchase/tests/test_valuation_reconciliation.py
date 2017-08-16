@@ -8,6 +8,9 @@ import time
 from odoo.tools import float_utils
 from odoo.addons.stock_account.tests.test_valuation_reconciliation_common import ValuationReconciliationTestCase
 
+import logging
+_logger = logging.getLogger(__name__)
+
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def _create_product_category(self): #overridden to set a price difference account
@@ -22,7 +25,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         return self.env['product.category'].create({
             'name': 'Test category',
             'property_valuation': 'real_time',
-            'property_cost_method': 'real',
+            'property_cost_method': 'fifo',
             'property_stock_valuation_account_id': self.valuation_account.id,
             'property_stock_account_input_categ_id': self.input_account.id,
             'property_stock_account_output_categ_id': self.output_account.id,
@@ -72,12 +75,20 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
 
         self.assertEqual(float_utils.float_compare(invoice_line.debit - invoice_line.amount_residual,valuation_line.credit + valuation_line.amount_residual,self.currency_one.decimal_places), 0 , "The reconciled amount of invoice move line should match the stock valuation line.")
 
+    def receive_po(self, purchase_order):
+        purchase_order.picking_ids.action_confirm()
+        purchase_order.picking_ids.action_assign()
+        for picking in purchase_order.picking_ids:
+            for ml in picking.move_line_ids:
+                ml.qty_done = ml.product_qty
+        purchase_order.picking_ids.action_done()
+
     def test_shipment_invoice(self):
         """ Tests the case into which we receive the goods first, and then
         make the invoice.
         """
         purchase_order = self.create_purchase()
-        purchase_order.picking_ids.action_done()
+        self.receive_po(purchase_order)
 
         invoice = self.create_invoice_for_po(purchase_order)
         self.currency_rate.rate = 7.76435463
@@ -86,8 +97,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def test_invoice_shipment(self):
         """ Tests the case into which we make the invoice first, and then receive
-        the goods.
-        """
+        the goods."""
+
         purchase_order = self.create_purchase()
 
         invoice = self.create_invoice_for_po(purchase_order)
@@ -97,6 +108,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         self.currency_rate.rate = 13.834739702 # We test with a big change in the currency rate (which is pretty sound in a world where Trump rules the US)
 
         invoice.action_invoice_open()
-        purchase_order.picking_ids.action_done()
+        self.receive_po(purchase_order)
         self.check_reconciliation(invoice, purchase_order)
 

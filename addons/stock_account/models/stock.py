@@ -7,9 +7,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round, pycompat
 
-import logging
-_logger = logging.getLogger(__name__)
-
 
 class StockInventory(models.Model):
     _inherit = "stock.inventory"
@@ -469,6 +466,7 @@ class StockMove(models.Model):
                 'date': date,
                 'ref': self.picking_id.name})
             new_account_move.post()
+            self.stock_account_valuation_account_move_id = new_account_move
 
     def _account_entry_move(self):
         """ Accounting Valuation Entries """
@@ -506,6 +504,9 @@ class StockMove(models.Model):
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
             journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             self.with_context(force_company=self.company_id.id)._create_account_move_line(acc_src, acc_dest, journal_id)
+
+        if self.company_id.anglo_saxon_accounting:
+            self.reconcile_valuation_with_invoices()
 
     def _get_related_invoices(self): # To be overridden in purchase and sale
         return self.env['account.invoice']

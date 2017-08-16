@@ -214,7 +214,7 @@ class StockMove(models.Model):
         self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
 
     def _get_move_lines(self):
-        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
+        """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
         return self.move_line_ids
@@ -701,7 +701,7 @@ class StockMove(models.Model):
 
     @api.multi
     def action_assign(self):
-        """ Reserve stock moves by creating their stock move lines. A stock move is 
+        """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `product_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
         partially available.
@@ -815,7 +815,7 @@ class StockMove(models.Model):
         """ If the quantity done on a move exceeds its quantity todo, this method will create an
         extra move attached to a (potentially split) move line. If the previous condition is not
         met, it'll return an empty recordset.
-        
+
         The rationale for the creation of an extra move is the application of a potential push
         rule that will handle the extra quantities.
         """

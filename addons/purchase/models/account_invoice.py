@@ -154,7 +154,7 @@ class AccountInvoice(models.Model):
             for line in res:
                 if line.get('invl_id', 0) == i_line.id and reference_account_id == line['account_id']:
                     valuation_price_unit = i_line.product_id.uom_id._compute_price(i_line.product_id.standard_price, i_line.uom_id)
-                    interim_account_price = float_round(valuation_price_unit * line['quantity'], precision_digits=account_prec)
+                    interim_account_price = company_currency.round(valuation_price_unit * line['quantity'])
 
                     if i_line.product_id.cost_method != 'standard' and i_line.purchase_line_id:
                         #for average/fifo/lifo costing method, fetch real cost price from incomming moves

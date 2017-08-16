@@ -110,7 +110,7 @@ class AccountInvoice(models.Model):
             if invoice.company_id.anglo_saxon_accounting:
                 invoice_stock_moves_id_list = self._get_related_stock_moves().ids
                 for product in self._get_products_set():
-                    if product.valuation == 'real_time' and product.cost_method == 'real':
+                    if product.valuation == 'real_time' and product.cost_method == 'fifo':
                         # We first get the invoice's move lines ...
                         product_interim_account = invoice._get_anglosaxon_interim_account(product)
                         to_reconcile = self.env['account.move.line'].search([('move_id','=',invoice.move_id.id), ('product_id','=',product.id), ('account_id','=',product_interim_account.id), ('reconciled','=',False)])

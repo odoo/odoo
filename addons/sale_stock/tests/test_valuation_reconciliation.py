@@ -6,6 +6,7 @@ import time
 from odoo.tools import float_utils
 from odoo.addons.stock_account.tests.test_valuation_reconciliation_common import ValuationReconciliationTestCase
 
+
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def create_sale(self):
@@ -62,20 +63,37 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
 
         self.assertEqual(float_utils.float_compare(invoice_line.credit + invoice_line.amount_residual,valuation_line.debit - valuation_line.amount_residual,self.currency_one.decimal_places), 0 , "The reconciled amount of invoice move line should match the stock valuation line.")
 
+    def send_so(self, sale_order):
+        sale_order.picking_ids.action_confirm()
+        sale_order.picking_ids.action_assign()
+        for picking in sale_order.picking_ids:
+            for ml in picking.move_line_ids:
+                ml.qty_done = ml.product_qty
+        sale_order.picking_ids.action_done()
+
+    def create_move_for_product(self):
+        move1 = self.env['stock.move'].create({
+            'name': 'Initial stock',
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_id': self.test_product.id,
+            'product_uom': self.test_product.uom_id.id,
+            'product_uom_qty': 11,
+            'price_unit': 13,
+        })
+        move1.action_confirm()
+        move1.action_assign()
+        move1.move_line_ids.qty_done = 11
+        move1.action_done()
+
     def test_shipment_invoice(self):
         """ Tests the case into which we send the goods to the customer before
         making the invoice
         """
-
-        self.env['stock.quant'].create({
-            'product_id': self.test_product.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
-            'qty': 42,
-            'cost': 11,
-        })
+        self.create_move_for_product()
 
         sale_order = self.create_sale()
-        sale_order.picking_ids.action_done()
+        self.send_so(sale_order)
 
         invoice = self.create_invoice_for_so(sale_order)
         self.currency_rate.rate = 9.87366352
@@ -86,6 +104,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         """ Tests the case into which we make the invoice first, and then send
         the goods to our customer.
         """
+        self.create_move_for_product()
 
         sale_order = self.create_sale()
 
@@ -93,7 +112,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCase):
         self.currency_rate.rate = 0.974784
         invoice.action_invoice_open()
 
-        sale_order.picking_ids.action_done()
+        self.send_so(sale_order)
 
         self.check_reconciliation(invoice, sale_order)
 
