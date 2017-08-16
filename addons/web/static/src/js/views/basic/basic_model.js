@@ -2013,7 +2013,7 @@ var BasicModel = AbstractModel.extend({
         this._rpc({
                 model: domainModel,
                 method: 'search_count',
-                args: [Domain.prototype.stringToArray(domainValue)],
+                args: [Domain.prototype.stringToArray(domainValue) || []],
                 context: context
             })
             .then(_.identity, function (error, e) {
