@@ -140,6 +140,35 @@ QUnit.module('Views', {
         dialog.destroy();
     });
 
+    QUnit.test('SelectCreateDialog list view in readonly', function (assert) {
+        assert.expect(1);
+
+        var parent = createParent({
+            data: this.data,
+            archs: {
+                'partner,false,list':
+                    '<tree string="Partner" editable="bottom">' +
+                        '<field name="display_name"/>' +
+                        '<field name="foo"/>' +
+                    '</tree>',
+                'partner,false,search':
+                    '<search/>'
+            },
+        });
+
+        var dialog = new dialogs.SelectCreateDialog(parent, {
+            res_model: 'partner',
+        }).open();
+
+        // click on the first row to see if the list is editable
+        dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first').click();
+
+        assert.equal(dialog.$('.o_list_view tbody tr:first td:not(.o_list_record_selector):first input').length, 0,
+            "list view should not be editable in a SelectCreateDialog");
+
+        dialog.destroy();
+    });
+
 });
 
 });
