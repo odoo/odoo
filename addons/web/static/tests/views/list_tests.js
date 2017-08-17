@@ -2529,6 +2529,55 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test('grouped list view, indentation for empty group', function (assert) {
+        assert.expect(3);
+
+        this.data.foo.fields.priority = {
+            string: "Priority",
+            type: "selection",
+            selection: [[1, "Low"], [2, "Medium"], [3, "High"]],
+            default: 1,
+        };
+        this.data.foo.records.push({id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2});
+        this.data.foo.records.push({id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3});
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="id"/></tree>',
+            groupBy: ['priority', 'm2o'],
+            mockRPC: function (route, args) {
+                // Override of the read_group to display the row even if there is no record in it,
+                // to mock the behavihour of some fields e.g stage_id on the sale order.
+                if (args.method === 'read_group' && args.kwargs.groupby[0] === "m2o") {
+                    return $.when([
+                        {
+                            id: 8,
+                            m2o:[1,"Value 1"],
+                            m2o_count: 0
+                        }, {
+                            id: 2,
+                            m2o:[2,"Value 2"],
+                            m2o_count: 1
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // open the first group
+        list.$('.o_group_header:first').click();
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().length, 1,
+            "There should be an empty element creating the indentation for the subgroup.");
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).hasClass('fa'), true,
+            "The first element of the row name should have the fa class");
+        assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
+            "The first element of the row name should be a span");
+        list.destroy();
+    });
 });
 
 });
