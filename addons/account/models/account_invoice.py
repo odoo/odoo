@@ -605,7 +605,7 @@ class AccountInvoice(models.Model):
         credit_aml = self.pool.get('account.move.line').browse(cr, uid, credit_aml_id, context=context)
         inv = self.browse(cr, uid, id, context=context)
         if not credit_aml.currency_id and inv.currency_id != inv.company_id.currency_id:
-            credit_aml.with_context(allow_amount_currency=True).write({
+            credit_aml.with_context(allow_amount_currency=True, check_move_validity=False).write({
                 'amount_currency': inv.company_id.currency_id.with_context(date=credit_aml.date).compute(credit_aml.balance, inv.currency_id),
                 'currency_id': inv.currency_id.id})
         if credit_aml.payment_id:
