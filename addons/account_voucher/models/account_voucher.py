@@ -126,17 +126,19 @@ class AccountVoucher(models.Model):
 
     @api.onchange('partner_id', 'pay_now')
     def onchange_partner_id(self):
-        if self.pay_now == 'pay_now':
-            liq_journal = self.env['account.journal'].search([('type', 'in', ('bank', 'cash'))], limit=1)
-            self.account_id = liq_journal.default_debit_account_id \
-                if self.voucher_type == 'sale' else liq_journal.default_credit_account_id
+        if self.partner_id:
+            self.account_id = self.partner_id.property_account_receivable_id \
+                if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
         else:
-            if self.partner_id:
-                self.account_id = self.partner_id.property_account_receivable_id \
-                    if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
-            else:
-                self.account_id = self.journal_id.default_debit_account_id \
-                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
+            domain = [
+                ('deprecated', '=', False),
+                ('internal_type','=',
+                    (self.pay_now == 'pay_now' and 'liquidity'
+                        or
+                     self.voucher_type == 'purchase' and 'payable' or 'receivable')
+                )
+            ]
+            self.account_id = self.env['account.account'].search(domain, limit=1)
 
     @api.multi
     def proforma_voucher(self):
