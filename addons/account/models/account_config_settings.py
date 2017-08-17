@@ -66,10 +66,6 @@ class AccountConfigSettings(models.TransientModel):
     account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_opening_journal_id')
     account_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_opening_date')
     account_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_setup_opening_move_done')
-    #account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', related='company_id.account_opening_move_id')
-    #account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='company_id.account_opening_journal_id')
-    #account_opening_date = fields.Date(string='Accounting opening date', related='company_id.account_opening_date')
-    #account_setup_opening_move_done = fields.Boolean(string='Opening move set', compute='_compute_account_setup_opening_move_done')
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
 
     @api.model
