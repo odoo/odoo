@@ -17,10 +17,89 @@ class TestStockValuation(TransactionCase):
             'categ_id': self.env.ref('product.product_category_all').id,
         })
 
+    def test_fifo_negative_1(self):
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        # Beginning Inventory: 68 units @ 15.00 per unit
+        move1 = self.env['stock.move'].create({
+            'name': '50 out',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 50.0,
+            'price_unit': 0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.stock_location.id,
+                                      'location_dest_id': self.customer_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 50.0})]
+        })
+        move1.action_confirm()
+        move1.action_done()
+        
+        move2 = self.env['stock.move'].create({
+            'name': '40 in @15',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 40.0,
+            'price_unit': 15.0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.supplier_location.id,
+                                      'location_dest_id': self.stock_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 40.0})]
+        })
+        move2.action_confirm()
+        move2.action_done()
+        move3 = self.env['stock.move'].create({
+            'name': '20 in @25',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 20.0,
+            'price_unit': 25.0,
+            'move_line_ids': [(0, 0, {'product_id': self.product1.id,
+                                      'location_id': self.supplier_location.id,
+                                      'location_dest_id': self.stock_location.id,
+                                      'product_uom_id': self.uom_unit.id,
+                                      'qty_done': 20.0})]
+        })
+        move3.action_confirm()
+        move3.action_done()
+        
+        self.assertEqual(self.product1.stock_value, 250.0, 'Stock value should be 250')
+        self.assertEqual(move1.value, -850.0, 'Stock value should be -850')
+        self.assertEqual(move2.value, 600.0, 'Stock value should be 600')
+        self.assertEqual(move3.value, 500.0, 'Stock value should be 500')
+
+
     def test_fifo_perpetual_1(self):
         # http://accountingexplained.com/financial/inventories/fifo-method
         self.product1.product_tmpl_id.cost_method = 'fifo'
-
+        self.product1.product_tmpl_id.valuation = 'real_time'
+        Account = self.env['account.account']
+        # Maybe the localization has not been installed yet
+        stock_input_account = Account.create({'name': 'Stock Input', 
+                                              'code': 'StockIn',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_output_account = Account.create({'name': 'Stock Output', 
+                                              'code': 'StockOut',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_valuation_account = Account.create({'name': 'Stock Valuation', 
+                                              'code': 'Stock Valuation',
+                                              'user_type_id': self.env.ref('account.data_account_type_current_assets').id,})
+        stock_journal = self.env['account.journal'].create({'name': 'Stock Journal', 
+                                            'code': 'STJTEST',
+                                            'type': 'general'})
+        self.product1.categ_id.write({'property_stock_account_input_categ_id': stock_input_account.id,
+                                      'property_stock_account_output_categ_id': stock_output_account.id,
+                                      'property_stock_valuation_account_id': stock_valuation_account.id,
+                                      'property_stock_journal': stock_journal.id,
+                                      })
+        
         # Beginning Inventory: 68 units @ 15.00 per unit
         move1 = self.env['stock.move'].create({
             'name': '68 units @ 15.00 per unit',
@@ -35,6 +114,11 @@ class TestStockValuation(TransactionCase):
         move1.action_assign()
         move1.move_line_ids.qty_done = 68.0
         move1.action_done()
+        
+        # Check accounting entries
+        Aml = self.env['account.move.line']
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0)]).account_id.id, stock_valuation_account.id, 'Problem valuation account entry')
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('credit', '>', 0)]).account_id.id, stock_input_account.id, 'Problem input account entry')
 
         self.assertEqual(move1.value, 1020.0)
         self.assertEqual(move1.cumulated_value, 1020.0)
@@ -75,8 +159,9 @@ class TestStockValuation(TransactionCase):
         move3.action_assign()
         move3.move_line_ids.qty_done = 94.0
         move3.action_done()
+        self.assertEqual(Aml.search([('product_id', '=', self.product1.id), ('debit', '>', 0), 
+                                           ('account_id', '!=', stock_valuation_account.id)]).account_id.id, stock_output_account.id, 'Output account entry problem')
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
         # so its value should be -((68*15) + (26*15.5)) = -1423
@@ -186,6 +271,23 @@ class TestStockValuation(TransactionCase):
         self.assertEqual(move5.remaining_qty, 54.0)
         self.assertEqual(move6.remaining_qty, 0.0)  # unused in out moves
         self.assertEqual(move7.remaining_qty, 0.0)  # unused in out moves
+        # Test what happens when we change the stock in the past
+        amls = Aml.search([('account_id', '=', stock_valuation_account.id), ('product_id', '=', self.product1.id)])
+        self.assertEqual(sum(x.debit and x.debit or -x.credit for x in amls), 891.0, 'Valuation Entries should sum to the stock value of 891')
+
+        move3.quantity_done = 10
+        self.assertEqual(move1.value, 1020.0)
+        self.assertEqual(move2.value, 2170.0)
+        self.assertEqual(move3.value, -150.0)
+        self.assertEqual(move4.value, 640.0)
+        self.assertEqual(move5.value, 1287.0)
+        self.assertEqual(move6.value, -1769.0)
+        self.assertEqual(move7.value, -961.0)
+        self.assertEqual(move7.cumulated_value, 2237.0)
+        self.assertEqual(move7.last_done_qty, 138.0)
+        move6.move_line_ids.qty_done = 120.0
+        amls = Aml.search([('account_id', '=', stock_output_account.id), ('product_id', '=', self.product1.id), ('credit', '>', 0)])
+        self.assertEqual(sum(x.credit for x in amls), 1346.0, 'Decreasing the quantity on an out is like a return and should credit the stock output account')
 
     def test_fifo_perpetual_2(self):
         # https://docs.google.com/spreadsheets/d/1NI0u9N1gFByXxYHfdiXuxQCrycXXOh76TpPQ3CWeyDw/edit?ts=58da749b#gid=0
@@ -208,7 +310,6 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move1.value, 1000.0)
         self.assertEqual(move1.cumulated_value, 1000.0)
-
         self.assertEqual(move1.remaining_qty, 10.0)
 
         # in 10 @ 80
@@ -246,7 +347,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 15.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         # note: it' ll have to get 10 units from move1 and 5 from move2
         # so its value should be -((10*100) + (5*80)) = -1423
@@ -362,7 +462,6 @@ class TestStockValuation(TransactionCase):
         move3.move_line_ids.qty_done = 190.0
         move3.action_done()
 
-        self.assertEqual(move3.price_unit, 0.0)  # unused in out moves
 
         self.assertEqual(move3.value, -2916.5)
         self.assertEqual(move3.cumulated_value, 153.5)
@@ -401,5 +500,16 @@ class TestStockValuation(TransactionCase):
 
         self.assertEqual(move5.value, -477.6)
         self.assertEqual(move5.cumulated_value, 795.9)  # fuck you, rounding
-        # self.assertEqual(move5.cumulated_value, 796)
-
+        
+        move3.move_line_ids.qty_done = 90.0
+        self.assertEqual(round(move5.cumulated_value, 1), 2340.4)
+        
+        
+        # Test changing from average to fifo cost method
+        self.product1.product_tmpl_id.cost_method = 'fifo'
+        self.assertEqual(move4.value, 1092.0, 'The value of the move 4')
+        self.assertEqual(move4.remaining_qty, 70.0, 'Remaining qty should be set')
+        
+        self.assertEqual(move2.value, 2178.0, 'The value of the move 2 should be a mix of existing price and the original price on the move')
+        self.assertEqual(move2.remaining_qty, 80.0, 'The remaining qty should be set to 80.0.')
+        self.assertEqual(move1.remaining_qty, 0.0, 'The remaining qty is 0.0')

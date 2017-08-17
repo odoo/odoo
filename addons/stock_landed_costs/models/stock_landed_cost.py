@@ -8,18 +8,13 @@ from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
 from odoo.tools import pycompat
+from odoo.tools.float_utils import float_compare
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
     landed_cost_value = fields.Float('Landed Cost')
-    total_value = fields.Float('Total Value', compute='_compute_total_value')
-    
-    def _compute_total_value(self):
-        for move in self:
-            move.total_value = move.value + move.landed_cost_value
-
 
 class LandedCost(models.Model):
     _name = 'stock.landed.cost'
@@ -98,13 +93,16 @@ class LandedCost(models.Model):
             })
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 cost_to_add = line.additional_landed_cost
-                line.move_id.landed_cost_value += cost_to_add
-                
-#                 for quant in line.move_id.quant_ids:
-#                     if quant.location_id.usage != 'internal':
-#                         qty_out += quant.qty
-                line._create_accounting_entries(move, 0) #TODO: qty_out like you would do with the different moves
-                
+                old_value = line.move_id.product_id.stock_value
+                line.move_id.write({'landed_cost_value': line.move_id.landed_cost_value + cost_to_add,
+                                    'value': line.move_id.value + cost_to_add, 
+                                    'price_unit': (line.move_id.value + cost_to_add) / line.move_id.product_qty,})
+                line.move_id.replay()
+                line.move_id.product_id._compute_stock_value()
+                new_value = line.move_id.product_id.stock_value
+                diff = new_value - old_value
+                extra_cost = diff - cost_to_add
+                line._create_accounting_entries(move, diff, extra_cost)
             move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
             move.post()
@@ -132,7 +130,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('average', 'fifo'):
+            if move.product_id.cost_method not in ('average', 'fifo'):
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -283,10 +281,11 @@ class AdjustmentLines(models.Model):
     def _compute_final_cost(self):
         self.final_cost = self.former_cost + self.additional_landed_cost
 
-    def _create_accounting_entries(self, move, qty_out):
-        # TDE CLEANME: product chosen for computation ?
+    def _create_accounting_entries(self, move, diff, extra_cost):
         cost_product = self.cost_line_id.product_id
         if not cost_product:
+            return False
+        if self.product_id.valuation != 'real_time':
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
         debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
@@ -296,9 +295,9 @@ class AdjustmentLines(models.Model):
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.') % (cost_product.name))
 
-        return self._create_account_move_line(move, credit_account_id, debit_account_id, qty_out, already_out_account_id)
+        return self._create_account_move_line(move, credit_account_id, debit_account_id, diff, already_out_account_id, extra_cost)
 
-    def _create_account_move_line(self, move, credit_account_id, debit_account_id, qty_out, already_out_account_id):
+    def _create_account_move_line(self, move, credit_account_id, debit_account_id, diff, already_out_account_id, extra_cost):
         """
         Generate the account.move.line values to track the landed cost.
         Afterwards, for the goods that are already out of stock, we should create the out moves
@@ -313,7 +312,6 @@ class AdjustmentLines(models.Model):
         }
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
-        diff = self.additional_landed_cost
         if diff > 0:
             debit_line['debit'] = diff
             credit_line['credit'] = diff
@@ -323,47 +321,24 @@ class AdjustmentLines(models.Model):
             credit_line['debit'] = -diff
         AccountMoveLine.create(debit_line)
         AccountMoveLine.create(credit_line)
-
-        # Create account move lines for quants already out of stock
-        if qty_out > 0:
+        
+        # In anglo-saxon we need to deduct the COGS
+        if self.env.user.company_id.anglo_saxon_accounting and float_compare(extra_cost, 0.0, precision_rounding=self.env.user.company_id.currency_id.rounding) != 0.0:
             debit_line = dict(base_line,
-                              name=(self.name + ": " + str(qty_out) + _(' already out')),
-                              quantity=qty_out,
-                              account_id=already_out_account_id)
+                              name=(self.name + _(' already out')),
+                              quantity=1.0,
+                              account_id=credit_account_id)
             credit_line = dict(base_line,
-                               name=(self.name + ": " + str(qty_out) + _(' already out')),
-                               quantity=qty_out,
-                               account_id=debit_account_id)
-            diff = diff * qty_out / self.quantity
-            if diff > 0:
-                debit_line['debit'] = diff
-                credit_line['credit'] = diff
+                               name=(self.name + _(' already out')),
+                               quantity=1.0,
+                               account_id=already_out_account_id)
+            if extra_cost > 0:
+                debit_line['debit'] = extra_cost
+                credit_line['credit'] = extra_cost
             else:
                 # negative cost, reverse the entry
-                debit_line['credit'] = -diff
-                credit_line['debit'] = -diff
+                debit_line['credit'] = - extra_cost
+                credit_line['debit'] = - extra_cost
             AccountMoveLine.create(debit_line)
             AccountMoveLine.create(credit_line)
-
-            # TDE FIXME: oh dear
-            if self.env.user.company_id.anglo_saxon_accounting:
-                debit_line = dict(base_line,
-                                  name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                  quantity=qty_out,
-                                  account_id=credit_account_id)
-                credit_line = dict(base_line,
-                                   name=(self.name + ": " + str(qty_out) + _(' already out')),
-                                   quantity=qty_out,
-                                   account_id=already_out_account_id)
-
-                if diff > 0:
-                    debit_line['debit'] = diff
-                    credit_line['credit'] = diff
-                else:
-                    # negative cost, reverse the entry
-                    debit_line['credit'] = -diff
-                    credit_line['debit'] = -diff
-                AccountMoveLine.create(debit_line)
-                AccountMoveLine.create(credit_line)
-
         return True

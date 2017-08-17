@@ -225,6 +225,10 @@ class StockMoveLine(models.Model):
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
         res = super(StockMoveLine, self).write(vals)
+        if updates or 'qty_done' in vals:
+            for ml in self.filtered(lambda ml: ml.move_id.state == 'done'):
+                ml.move_id.product_uom_qty = ml.move_id.quantity_done
+                ml.product_uom_qty = ml.qty_done
         next_moves.do_unreserve()
         next_moves.action_assign()
         return res
