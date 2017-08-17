@@ -70,7 +70,7 @@ class StockPickingWave(models.Model):
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
-            return 'stock_picking_wave.mt_wave_state'
+            return 'stock_picking_batch.mt_wave_state'
         return super(StockPickingWave, self)._track_subtype(init_values)
 
 

@@ -13,12 +13,12 @@ This module adds the batch picking option in warehouse management
     'depends': ['stock'],
     'data': [
         'security/ir.model.access.csv',
-        'views/stock_picking_wave_views.xml',
-        'data/stock_picking_wave_data.xml',
-        'wizard/stock_picking_to_wave_views.xml',
+        'views/stock_picking_batch_views.xml',
+        'data/stock_picking_batch_data.xml',
+        'wizard/stock_picking_to_batch_views.xml',
     ],
     'demo': [
-        'data/stock_picking_wave_demo.xml',
+        'data/stock_picking_batch_demo.xml',
     ],
     'installable': True,
 }
