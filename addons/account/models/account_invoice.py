@@ -474,6 +474,9 @@ class AccountInvoice(models.Model):
         if p:
             rec_account = p.property_account_receivable_id
             pay_account = p.property_account_payable_id
+            if p.commercial_partner_id:
+                rec_account = p.commercial_partner_id.property_account_receivable_id
+                pay_account = p.commercial_partner_id.property_account_payable_id
             if not rec_account and not pay_account:
                 action = self.env.ref('account.action_account_config')
                 msg = _('Cannot find a chart of accounts for this company, You should configure it. \nPlease go to Account Configuration.')
