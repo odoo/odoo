@@ -17,8 +17,8 @@ STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 
 # The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
 INT_CURRENCIES = [
-    'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYGí', 'RWF', 'KRW', 'VUV',
-    'VND', 'XOF'
+    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYGí', u'RWF', u'KRW',
+    u'VUV', u'VND', u'XOF'
 ];
 
 
