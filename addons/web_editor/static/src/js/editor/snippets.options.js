@@ -275,6 +275,14 @@ var SnippetOption = Widget.extend({
      */
     _setActive: function () {
         var self = this;
+        this.$el.filter(".dropdown-submenu").find('a:first')
+            .off('mouseover')
+            .on('mouseover', function() {
+                var $menu = $(this.parentNode).find('.dropdown-menu');
+                // maxWidth is total width consume when the customize options is open.
+                var maxWidth = $(this.parentNode).offset().left + $(this.parentNode).outerWidth() + $menu.outerWidth();
+                maxWidth > $(window).width() ? $menu.css('left', -$menu.width()) : $menu.css('left', 100+'%');
+            });
         this.$el.find('[data-toggle-class], [data-select-class]')
             .addBack('[data-toggle-class], [data-select-class]')
             .removeClass('active')
