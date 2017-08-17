@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import abc
+import collections
 import contextlib
 import fnmatch
 import io
-
+import re
 
 from docutils import nodes
 from docutils.parsers.rst import Directive
@@ -196,6 +197,14 @@ class Documenter(object):
         :rtype: List[nodes.Node]
         """
 
+    def document_subtypes(self, subtypes):
+        docs = []
+        with with_mapping_value(self.directive.options, 'undoc-members', True):
+            for cls in subtypes:
+                docs += ClassDocumenter(self.directive, cls).generate(all_members=True)
+        return docs
+
+
 class NSDocumenter(Documenter):
     objtype = 'namespace'
     def make_content(self, all_members):
@@ -245,17 +254,32 @@ class NSDocumenter(Documenter):
             ret += documenter_for(self.directive, p).generate(all_members=True)
         return ret.children
 
+_NONE = object()
 @contextlib.contextmanager
-def with_temp(env, key, value):
-    env.temp_data[key] = value
+def with_mapping_value(mapping, key, value, restore_to=_NONE):
+    """ Sets ``key`` to ``value`` for the duration of the context.
+
+    If ``restore_to`` is not provided, restores ``key``'s old value
+    afterwards, removes it entirely if there was no value for ``key`` in the
+    mapping.
+
+    .. warning:: for defaultdict & similar mappings, may restore the default
+                 value (depends how the collections' .get behaves)
+    """
+    if restore_to is _NONE:
+        restore_to = mapping.get(key, _NONE)
+    mapping[key] = value
     try:
         yield
     finally:
-        env.temp_data[key] = ''
+        if restore_to is _NONE:
+            del mapping[key]
+        else:
+            mapping[key] = restore_to
 class ModuleDocumenter(NSDocumenter):
     objtype = 'module'
     def document_properties(self, all_members):
-        with with_temp(self.env, 'autojs:module', self.item.name):
+        with with_mapping_value(self.env.temp_data, 'autojs:module', self.item.name, ''):
             return super(ModuleDocumenter, self).document_properties(all_members)
 
     def make_content(self, all_members):
@@ -335,7 +359,7 @@ class ClassDocumenter(NSDocumenter):
     objtype = 'class'
 
     def document_properties(self, all_members):
-        with with_temp(self.env, 'autojs:class', self.item.name):
+        with with_mapping_value(self.env.temp_data, 'autojs:class', self.item.name, ''):
             return super(ClassDocumenter, self).document_properties(all_members)
 
     def make_signature(self):
@@ -354,16 +378,26 @@ class ClassDocumenter(NSDocumenter):
     def make_content(self, all_members):
         doc = self.item
         ret = nodes.section()
-        if doc.superclass or doc.mixins:
-            with addto(ret, nodes.field_list()) as fields:
-                fields += self.make_super()
-                fields += self.make_mixins()
-                fields += self.make_params()
+
+        ctor = self.item.constructor
+        params = subtypes = []
+        if ctor:
+            check_parameters(self, ctor)
+            params, subtypes = extract_subtypes(doc.name, ctor)
+
+        fields = nodes.field_list()
+        fields += self.make_super()
+        fields += self.make_mixins()
+        fields += self.make_params(params)
+        if fields.children:
+            ret += fields
 
         if doc.doc:
             self.directive.state.nested_parse(to_list(doc.doc), 0, ret)
 
         ret += self.document_properties(all_members)
+
+        ret += self.document_subtypes(subtypes)
 
         return ret.children
 
@@ -386,7 +420,6 @@ class ClassDocumenter(NSDocumenter):
             nodes.field_body(doc.superclass.name, sup_link),
         )
 
-
     def make_mixins(self):
         doc = self.item
         if not doc.mixins:
@@ -404,16 +437,14 @@ class ClassDocumenter(NSDocumenter):
                     mixins += nodes.list_item('', mixin_link)
         return ret
 
-    def make_params(self):
-        ctor = self.item.constructor
-        if not (ctor and ctor.params):
+    def make_params(self, params):
+        if not params:
             return []
 
         ret = nodes.field('', nodes.field_name('Parameters', 'Parameters'))
-        check_parameters(self, ctor)
         with addto(ret, nodes.field_body()) as body,\
              addto(body, nodes.bullet_list()) as holder:
-            holder += make_parameters(ctor.params, mod=self.modname)
+            holder += make_parameters(params, mod=self.modname)
         return ret
 
 class InstanceDocumenter(Documenter):
@@ -461,7 +492,7 @@ class FunctionDocumenter(Documenter):
 
         check_parameters(self, doc)
 
-        params = doc.params
+        params, subtypes = extract_subtypes(self.item.name, self.item)
         rdoc = doc.return_val.doc
         rtype = doc.return_val.type
         if params or rtype or rdoc:
@@ -484,7 +515,62 @@ class FunctionDocumenter(Documenter):
                         with addto(field, nodes.field_body()) as body, \
                              addto(body, nodes.paragraph()) as p:
                             p += make_types(rtype, mod=doc['sourcemodule'].name)
+
+        ret += self.document_subtypes(subtypes)
+
         return ret.children
+
+def pascal_case_ify(name):
+    """
+    Uppercase first letter of ``name``, or any letter following an ``_``. In
+    the latter case, also strips out the ``_``.
+
+    => key_for becomes KeyFor
+    => options becomes Options
+    """
+    return re.sub(r'(^|_)\w', lambda m: m.group(0)[-1].upper(), name)
+def extract_subtypes(parent_name, doc):
+    """ Extracts composite parameters (a.b) into sub-types for the parent
+    parameter, swaps the parent's type from whatever it is to the extracted
+    one, and returns the extracted type for inclusion into the parent.
+
+    :arg parent_name: name of the containing symbol (function, class), will
+                      be used to compose subtype names
+    :type parent_name: str
+    :type doc: FunctionDoc
+    :rtype: (List[ParamDoc], List[ClassDoc])
+    """
+    # map of {param_name: [ParamDoc]} (from complete doc)
+    subparams = collections.defaultdict(list)
+    for p in map(jsdoc.ParamDoc, doc.get_as_list('param')):
+        pair = p.name.split('.', 1)
+        if len(pair) == 2:
+            k, p.name = pair # remove prefix from param name
+            subparams[k].append(p)
+
+    # keep original params order as that's the order of formal parameters in
+    # the function signature
+    params = collections.OrderedDict((p.name, p) for p in doc.params)
+    subtypes = []
+    # now we can use the subparams map to extract "compound" parameter types
+    # and swap the new type for the original param's type
+    for param_name, subs in subparams.items():
+        typename = '%s%s' % (
+            pascal_case_ify(parent_name),
+            pascal_case_ify(param_name),
+        )
+        param = params[param_name]
+        param.type = typename
+        subtypes.append(jsdoc.ClassDoc({
+            'name': typename,
+            'doc': param.doc,
+            '_members': [
+                (sub.name, jsdoc.PropertyDoc(dict(sub.to_dict(), sourcemodule=doc['sourcemodule'])))
+                for sub in subs
+            ],
+            'sourcemodule': doc['sourcemodule'],
+        }))
+    return params.values(), subtypes
 
 def check_parameters(documenter, doc):
     """
@@ -505,18 +591,17 @@ def check_parameters(documenter, doc):
     if not odd:
         return
 
-    app = documenter._directive.env.app
+    app = documenter.directive.env.app
     app.warn("Found documented params %s not in formal parameter list "
              "of function %s in module %s (%s)" % (
         ', '.join(odd),
         doc.name,
-        documenter._module,
+        documenter.modname,
         doc['sourcemodule']['sourcefile'],
     ))
 
 def make_desc_parameters(params):
     for p in params:
-        # FIXME: extract sub-params to typedef (in body?)
         if '.' in p.name:
             continue
 
@@ -572,8 +657,6 @@ def make_types(typespec, mod=None):
 
 class MixinDocumenter(NSDocumenter):
     objtype = 'mixin'
-
-# FIXME: add typedef support
 
 class PropertyDocumenter(Documenter):
     objtype = 'attribute'

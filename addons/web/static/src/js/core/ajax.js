@@ -211,7 +211,7 @@ var loadJS = (function () {
  * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
  * @param {Function} [options.success] callback in case of download success
  * @param {Function} [options.error] callback in case of request error, provided with the error body
- * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
+ * @param {Function} [options.complete] called after both ``success`` and ``error`` callbacks have executed
  */
 function get_file(options) {
     // need to detect when the file is done downloading (not used

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import collections
 
+import pyjsdoc
 from attr import attrs, Factory, attr, astuple
 
 from . import jsdoc
@@ -224,6 +225,8 @@ class ModuleExtractor(Visitor):
         for k, v in self.scope._namemap.items():
             if k not in BASE_SCOPE:
                 self.module.add_member(k, self.scope._targets[v])
+        for t in TypedefMatcher(self).visit(node):
+            self.module.add_member(t.name, t)
 
     def enter_VariableDeclaration(self, node):
         self.declaration = Declaration(comments=node.get('comments'))
@@ -524,4 +527,26 @@ class Hoistifier(Visitor):
         fn.parsed['sourcemodule'] = self.parent.module
         fn.parsed['name'] = funcname
         fn.parsed['guessed_params'] = [p['name'] for p in node['params']]
+        return SKIP
+
+class TypedefMatcher(Visitor):
+    def __init__(self, parent):
+        super(TypedefMatcher, self).__init__()
+        self.parent = parent
+        self.result = []
+
+    enter_BlockStatement = lambda self, node: None
+    def enter_generic(self, node):
+        # just traverse all top-level statements, check their comments, and
+        # bail
+        for comment in node.get('comments') or []:
+            if '@typedef' in comment['value']:
+                extract = '\n' + jsdoc.strip_stars('/*' + comment['value'] + '\n*/')
+                parsed = pyjsdoc.parse_comment(extract, u'')
+                p = jsdoc.ParamDoc(parsed['typedef'])
+                parsed['name'] = p.name
+                parsed['sourcemodule'] = self.parent.module
+                # TODO: add p.type as superclass somehow? Builtin types not in scope :(
+                self.result.append(jsdoc.ClassDoc(parsed))
+
         return SKIP

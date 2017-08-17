@@ -21,10 +21,14 @@ class ParamDoc(pyjsdoc.ParamDoc):
     """
     def __init__(self, text):
         super(ParamDoc, self).__init__(text)
+        # param name and doc can be separated by - or :, strip it
         self.doc = self.doc.strip().lstrip('-:').lstrip()
         self.optional = False
         self.default = None
-        self.name = self.name.strip()
+        # there may not be a space between the param name and the :, in which
+        # case the : gets attached to the name, strip *again*
+        # TODO: formal @param/@property parser to handle this crap properly once and for all
+        self.name = self.name.strip().rstrip(':')
         if self.name.startswith('['):
             self.name = self.name.strip('[]')
             self.optional = True
@@ -60,8 +64,10 @@ class CommentDoc(pyjsdoc.CommentDoc):
 
 class PropertyDoc(CommentDoc):
     @classmethod
-    def from_param(cls, s):
-        return cls(ParamDoc(s).to_dict())
+    def from_param(cls, s, sourcemodule=None):
+        parsed = ParamDoc(s).to_dict()
+        parsed['sourcemodule'] = sourcemodule
+        return cls(parsed)
 
     @property
     def type(self):
@@ -115,7 +121,7 @@ class FunctionDoc(CommentDoc):
 
     @property
     def params(self):
-        tag_texts = self.get_as_list('param') + self.get_as_list('argument')
+        tag_texts = self.get_as_list('param')
         if self.get('guessed_params') is None:
             return [ParamDoc(text) for text in tag_texts]
         else:
@@ -163,9 +169,9 @@ class NSDoc(CommentDoc):
         if self.get('property'):
             return [
                 (p.name, p)
-                for p in map(
-                    PropertyDoc.from_param,
-                    self.get_as_list('property')
+                for p in (
+                    PropertyDoc.from_param(p, self['sourcemodule'])
+                    for p in self.get_as_list('property')
                 )
             ]
         return self.members.items() or self['_members'] or []
