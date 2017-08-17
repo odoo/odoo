@@ -116,10 +116,13 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data['metadata']['reference']
+        reference = data.get('metadata', {}).get('reference')
         if not reference:
-            error_msg = _('Stripe: invalid reply received from provider, missing reference')
-            _logger.error(error_msg, data['metadata'])
+            error_msg = _(
+                'Stripe: invalid reply received from provider, missing reference. Additional message: %s'
+                % data.get('error', {}).get('message', '')
+            )
+            _logger.error(error_msg)
             raise ValidationError(error_msg)
         tx = self.search([('reference', '=', reference)])
         if not tx:
