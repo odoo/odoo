@@ -503,8 +503,12 @@ class Challenge(models.Model):
 
             line_data['own_goal_id'] = False,
             line_data['goals'] = []
-
-            goals = Goals.search(domain, order="completeness desc, current desc")
+            if line.condition=='higher':
+                goals = Goals.search(domain, order="completeness desc, current desc")
+            else:
+                goals = Goals.search(domain, order="completeness desc, current asc")
+            import ipdb
+            ipdb.set_trace()
             for ranking, goal in enumerate(goals):
                 if user and goal.user_id == user:
                     line_data['own_goal_id'] = goal.id
