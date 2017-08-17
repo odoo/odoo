@@ -235,9 +235,11 @@ class Project(models.Model):
                     "- Periodical Rating: Email will be sent periodically\n\n"
                     "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks.", default="no", required=True)
     rating_status_period = fields.Selection([
-            ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
-            ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
-        ], 'Rating Frequency')
+        ('daily', 'Daily'), ('weekly', 'Weekly'), ('bimonthly', 'Twice a Month'),
+        ('monthly', 'Once a Month'), ('quarterly', 'Quarterly'), ('yearly', 'Yearly')
+    ], 'Rating Frequency')
+
+    portal_show_rating = fields.Boolean('Rating visible publicly', copy=False, oldname='website_published')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
@@ -405,6 +407,13 @@ class Project(models.Model):
     @api.multi
     def action_view_all_rating(self):
         """ return the action to see all the rating of the project, and activate default filters """
+        if self.portal_show_rating:
+            return {
+                'type': 'ir.actions.act_url',
+                'name': "Redirect to the Website Projcet Rating Page",
+                'target': 'self',
+                'url': "/project/rating/%s" % (self.id,)
+            }
         action = self.env['ir.actions.act_window'].for_xml_id('project', 'rating_rating_action_view_project_rating')
         action['name'] = _('Ratings of %s') % (self.name,)
         action_context = safe_eval(action['context']) if action['context'] else {}

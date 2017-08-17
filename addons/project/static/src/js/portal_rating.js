@@ -4,14 +4,14 @@ odoo.define('website_rating_project.rating', function (require) {
   var time = require('web.time');
   require('web.dom_ready');
 
-  if(!$('.o_website_rating_project').length) {
-      return $.Deferred().reject("DOM doesn't contain '.o_website_rating_project'");
+  if(!$('.o_portal_project_rating').length) {
+      return $.Deferred().reject("DOM doesn't contain '.o_portal_project_rating'");
   }
 
   /**
    * Rating popover with some informations
    */
-  $('.o_website_rating_project .o_rating_image').popover({
+  $('.o_portal_project_rating .o_rating_image').popover({
       placement: 'bottom',
       trigger: 'hover',
       html: 'true',
