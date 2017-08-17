@@ -1994,8 +1994,9 @@ var FieldDomain = AbstractField.extend({
         "click .o_field_domain_dialog_button": "_onDialogEditButtonClick",
     }),
     custom_events: _.extend({}, AbstractField.prototype.custom_events, {
-        "domain_changed": "_onDomainSelectorValueChange",
-        "domain_selected": "_onDomainSelectorDialogValueChange",
+        domain_changed: "_onDomainSelectorValueChange",
+        domain_selected: "_onDomainSelectorDialogValueChange",
+        open_record: "_onOpenRecord",
     }),
     /**
      * @constructor
@@ -2175,6 +2176,15 @@ var FieldDomain = AbstractField.extend({
      */
     _onDomainSelectorDialogValueChange: function (e) {
         this._setValue(Domain.prototype.arrayToString(e.data.domain));
+    },
+    /**
+     * Stops the propagation of the 'open_record' event, as we don't want the
+     * user to be able to open records from the list opened in a dialog.
+     *
+     * @param {OdooEvent} event
+     */
+    _onOpenRecord: function (event) {
+        event.stopPropagation();
     },
 });
 
