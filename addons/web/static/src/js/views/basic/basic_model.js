@@ -1576,15 +1576,17 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var model;
         var records = [];
+        var ids = [];
         list = this._applyX2ManyOperations(list);
-        var ids = _.map(list.data, function (localId) {
+        _.each(list.data, function (localId) {
             var record = self.localData[localId];
             var data = record._changes || record.data;
             var many2oneId = data[fieldName];
+            if (!many2oneId) { return; }
             var many2oneRecord = self.localData[many2oneId];
             records.push(many2oneRecord);
+            ids.push(many2oneRecord.res_id);
             model = many2oneRecord.model;
-            return many2oneRecord.res_id;
         });
         return this._rpc({
                 model: model,
