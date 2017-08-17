@@ -67,17 +67,13 @@ class OpeningAccountMoveWizard(models.TransientModel):
         unaffected_earnings_account = self.company_id.get_unaffected_earnings_account()
         balancing_line = self.opening_move_line_ids.filtered(lambda x: x.account_id == unaffected_earnings_account)
 
-        _logger.warn("--------ON CHANGE CALLED"+str(debit_difference)+str(credit_difference))
         if balancing_line:
             if not self.opening_move_line_ids == balancing_line and (debit_difference or credit_difference):
-                _logger.warn("MODIFY "+str(self.opening_move_line_ids.ids))
                 balancing_line.debit = credit_difference
                 balancing_line.credit = debit_difference
             else:
-                _logger.warn("DELETE "+str(self.opening_move_line_ids.ids))
                 self.opening_move_line_ids -= balancing_line
         elif debit_difference or credit_difference:
-            _logger.warn("ADD  "+str(self.opening_move_line_ids.ids))
             balancing_line = self.env['account.move.line'].new({
                         'name': 'Opening Move Automatic Balancing Line',
                         'move_id': self.company_id.account_opening_move_id.id,
