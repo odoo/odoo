@@ -1452,8 +1452,11 @@ class IrModelData(models.Model):
                         inherit_models.append(self.env[parent_model_name])
                         if parent_model_name in existing_parents:
                             continue
+                        full_id = xml_id + '_' + parent_model_name.replace('.', '_')
+                        if self.search_count([('name', '=', full_id), ('model', '=', parent_model_name)]):
+                            continue
                         self.sudo().create({
-                            'name': xml_id + '_' + parent_model_name.replace('.', '_'),
+                            'name': full_id,
                             'model': parent_model_name,
                             'module': module,
                             'res_id': record[parent_field].id,
