@@ -23,7 +23,7 @@ class Followers(models.Model):
         index=True, required=True, ondelete='cascade',
         help='Model of the followed resource')
     res_model = fields.Char(
-        'Related Document Model Name', index=True, readonly=True, related='res_model_id.model', store=True)
+        'Related Document Model Name', index=True, readonly=True, related='res_model_id.model', compute_sudo=True, store=True)
     res_id = fields.Integer(
         'Related Document ID', index=True, help='Id of the followed resource')
     partner_id = fields.Many2one(
