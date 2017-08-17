@@ -298,8 +298,16 @@ var SnippetOption = Widget.extend({
      * @param {Event} ev
      */
     _onLinkEnter: function (ev) {
-        var $li = $(ev.currentTarget).parent(':hasData');
-        if (!$li.length) {
+        var $li = $(ev.currentTarget).parent();
+        if ($li.is('.dropdown-submenu')) {
+            var $menu = $li.children('.dropdown-menu');
+            if ($menu.length) {
+                var menuRightPosition = $li.offset().left + $li.outerWidth() + $menu.outerWidth();
+                $menu.toggleClass('o_open_to_left', menuRightPosition > $(window).outerWidth());
+            }
+        }
+
+        if (!$li.is(':hasData')) {
             return;
         }
         this.__click = false;
