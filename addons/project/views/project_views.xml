@@ -152,6 +152,7 @@
                                     </p>
                                 </div>
                                 <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
+                                <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">

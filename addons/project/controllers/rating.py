@@ -7,13 +7,13 @@ from odoo import http
 from odoo.http import request
 
 
-class WebsiteRatingProject(http.Controller):
+class RatingProject(http.Controller):
 
     @http.route(['/project/rating/'], type='http', auth="public", website=True)
     def index(self, **kw):
         projects = request.env['project.project'].sudo().search([('rating_status', '!=', 'no'), ('portal_show_rating', '=', True)])
         values = {'projects': projects}
-        return request.render('website_rating_project.index', values)
+        return request.render('project.rating_index', values)
 
     def _calculate_period_partner_stats(self, project_id):
         # get raw data: number of rating by rated partner, by rating value, by period
@@ -85,7 +85,7 @@ class WebsiteRatingProject(http.Controller):
         if not ((project.rating_status != 'no') and project.portal_show_rating) and not user.sudo(user).has_group('project.group_project_manager'):
             raise NotFound()
 
-        return request.render('website_rating_project.project_rating_page', {
+        return request.render('project.rating_project_rating_page', {
             'project': project,
             'ratings': request.env['rating.rating'].sudo().search([('consumed', '=', True), ('parent_res_model', '=', 'project.project'), ('parent_res_id', '=', project_id)], order='write_date DESC', limit=50),
             'statistics': self._calculate_period_partner_stats(project_id),
