@@ -134,7 +134,7 @@ class AccountAccount(models.Model):
             # Else, if amount is zero, then nothing is to be done
 
             # Then, we automatically balance the opening move, to make sure it stays valid
-            self.company_id.auto_balance_opening_move()
+            self.company_id._auto_balance_opening_move()
 
     @api.model
     def default_get(self, default_fields):

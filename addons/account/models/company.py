@@ -55,7 +55,6 @@ Best Regards,''')
     account_opening_move_id = fields.Many2one(string='Opening journal entry', comodel_name='account.move', help="The journal entry containing all the opening journal items of this company's accounting.")
     account_opening_journal_id = fields.Many2one(string='Opening journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal when the opening moves of this company's accounting has been posted.")
     account_opening_date = fields.Date(string='Accounting opening date',default=_default_opening_date, related='account_opening_move_id.date', help="Date of the opening entries of this company's accounting.")
-    account_opening_move_balancing_line = fields.Many2one(string='Opening Move Balancing Line', comodel_name='account.move.line', help="The move line affecting the current year earnings account to balance this company's opening move, if such a line exists")
 
     #Fields marking the completion of a setup step
     account_setup_company_data_marked_done = fields.Boolean(string='Company setup marked as done', default=False, help="True iff the user has forced the completion of the company setup step.")
@@ -253,6 +252,7 @@ Best Regards,''')
             'target': 'new',
             'res_id': new_wizard.id,
             'views': [[view_id, 'form']],
+            'context': {'check_move_validity': False},
         }
 
     @api.model
@@ -313,27 +313,39 @@ Best Regards,''')
            })
        return rslt
 
-    def auto_balance_opening_move(self):
+    def get_opening_move_differences(self, opening_move_lines):
+        currency = self.currency_id
+        balancing_move_line = opening_move_lines.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
+
+        debits_sum = 0.0
+        credits_sum = 0.0
+        for line in opening_move_lines:
+            if line != balancing_move_line:
+                debits_sum += line.debit
+                credits_sum += line.credit
+
+        difference = abs(debits_sum - credits_sum)
+        rslt = {}
+        rslt['debit'] = (debits_sum > credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+        rslt['credit'] = (debits_sum < credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
+
+        return rslt
+
+
+    def _auto_balance_opening_move(self):
         """ Checks the opening_move of this company. If it has not been posted yet
         and is unbalanced, balances it with a automatic account.move.line in the
         current year earnings account.
         """
         if self.account_opening_move_id and self.account_opening_move_id.state == 'draft':
+            opening_differences = self.get_opening_move_differences(self.account_opening_move_id.line_ids)
+            credit_difference = opening_differences['credit']
+            debit_difference = opening_differences['debit']
+
             currency = self.currency_id
-            balancing_move_line = self.account_opening_move_balancing_line
+            balancing_move_line = self.account_opening_move_id.line_ids.filtered(lambda x: x.account_id == self.get_unaffected_earnings_account())
 
-            debits_sum = 0.0
-            credits_sum = 0.0
-            for line in self.account_opening_move_id.line_ids:
-                if line != balancing_move_line:
-                    debits_sum += line.debit
-                    credits_sum += line.credit
-
-            difference = abs(debits_sum - credits_sum)
-            debit_difference = (debits_sum > credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
-            credit_difference = (debits_sum < credits_sum) and float_round(difference, precision_rounding=currency.rounding) or 0.0
-
-            if float_is_zero(difference, precision_rounding=currency.rounding):
+            if float_is_zero(debit_difference + credit_difference, precision_rounding=currency.rounding):
                 if balancing_move_line: # zero difference and existing line : delete the line
                     balancing_move_line.unlink()
             else:
@@ -341,7 +353,7 @@ Best Regards,''')
                     balancing_move_line.write({'debit': credit_difference, 'credit': debit_difference})
                 else: # Non-zero difference and no existing line : create a new line
                     balancing_account = self.get_unaffected_earnings_account()
-                    self.account_opening_move_balancing_line = self.env['account.move.line'].create({
+                    self.env['account.move.line'].create({
                         'name': 'Opening Move Automatic Balancing Line',
                         'move_id': self.account_opening_move_id.id,
                         'account_id': balancing_account.id,

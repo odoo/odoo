@@ -52,21 +52,38 @@ class OpeningAccountMoveWizard(models.TransientModel):
     opening_move_line_ids = fields.One2many(string='Opening move lines', related="opening_move_id.line_ids")
     journal_id = fields.Many2one(string='Journal', comodel_name='account.journal', required=True, related='opening_move_id.journal_id')
     date = fields.Date(string='Opening Date', required=True, related='opening_move_id.date')
-    opening_move_balanced = fields.Boolean(string="Opening move balanced", compute="_compute_opening_move_balanced", help="Tells whether or not the opening move is balanced")
-
-    @api.depends('opening_move_line_ids.debit','opening_move_line_ids.credit')
-    def _compute_opening_move_balanced(self):
-        for record in self:
-            debits_sum = sum(line.debit for line in record.opening_move_line_ids)
-            credits_sum = sum(line.credit for line in record.opening_move_line_ids)
-            record.opening_move_balanced = float_compare(debits_sum, credits_sum, precision_rounding=record.opening_move_id.currency_id.rounding) == 0
 
     def validate(self):
         """ Called by this wizard's 'post' button.
         """
-        self.opening_move_id.post() # This will raise an error if we don't have debit = credit
+        self.opening_move_id.post()
 
-    def auto_balance(self):
-        """ Auto-balances the opening move, using current year earnings account.
-        """
-        self.company_id.auto_balance_opening_move()
+    @api.onchange('opening_move_line_ids','opening_move_line_ids')
+    def opening_move_line_ids_changed(self):
+        opening_differences = self.company_id.get_opening_move_differences(self.opening_move_line_ids)
+        credit_difference = opening_differences['credit']
+        debit_difference = opening_differences['debit']
+
+        unaffected_earnings_account = self.company_id.get_unaffected_earnings_account()
+        balancing_line = self.opening_move_line_ids.filtered(lambda x: x.account_id == unaffected_earnings_account)
+
+        _logger.warn("--------ON CHANGE CALLED"+str(debit_difference)+str(credit_difference))
+        if balancing_line:
+            if not self.opening_move_line_ids == balancing_line and (debit_difference or credit_difference):
+                _logger.warn("MODIFY "+str(self.opening_move_line_ids.ids))
+                balancing_line.debit = credit_difference
+                balancing_line.credit = debit_difference
+            else:
+                _logger.warn("DELETE "+str(self.opening_move_line_ids.ids))
+                self.opening_move_line_ids -= balancing_line
+        elif debit_difference or credit_difference:
+            _logger.warn("ADD  "+str(self.opening_move_line_ids.ids))
+            balancing_line = self.env['account.move.line'].new({
+                        'name': 'Opening Move Automatic Balancing Line',
+                        'move_id': self.company_id.account_opening_move_id.id,
+                        'account_id': unaffected_earnings_account.id,
+                        'debit': credit_difference,
+                        'credit': debit_difference,
+                        'company_id': self.company_id,
+                    })
+            self.opening_move_line_ids += balancing_line

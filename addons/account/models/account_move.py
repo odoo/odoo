@@ -15,7 +15,6 @@ from lxml import etree
 # Entries
 #----------------------------------------------------------
 
-
 class AccountMove(models.Model):
     _name = "account.move"
     _description = "Account Entry"
