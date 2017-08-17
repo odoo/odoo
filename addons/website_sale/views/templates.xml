@@ -1579,7 +1579,10 @@
 
     <template id="payment_confirmation_status">
         <div class="oe_website_sale_tx_status" t-att-data-order-id="order.id">
-            <div t-att-class="' panel ' + (order.payment_tx_id.state == 'pending' and 'panel-info') or (order.payment_tx_id.state == 'done' and 'panel-success') or 'panel-danger'">
+            <div t-att-class="'panel %s' % (
+                    (order.payment_tx_id.state == 'pending' and 'panel-info') or
+                    (order.payment_tx_id.state == 'done' and 'panel-success') or
+                    'panel-danger')">
                 <a groups="base.group_system" class="btn btn-primary pull-right" target="_blank"
                         t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', order.payment_acquirer_id.id, 'payment.action_payment_acquirer')">
                     <i class="fa fa-cog"></i>
