@@ -12,7 +12,7 @@ from werkzeug import urls, utils
 
 
 from odoo import models, fields, api, _
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr
 
 URL_REGEX = r'(\bhref=[\'"](?!mailto:)([^\'"]+)[\'"])'
 
@@ -165,7 +165,7 @@ class link_tracker(models.Model):
             create_vals['url'] = VALIDATE_URL(vals['url'])
 
         search_domain = []
-        for fname, value in pycompat.items(create_vals):
+        for fname, value in create_vals.items():
             search_domain.append((fname, '=', value))
 
         result = self.search(search_domain, limit=1)

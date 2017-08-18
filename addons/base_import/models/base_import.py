@@ -42,7 +42,7 @@ FILE_TYPE_DICT = {
 }
 EXTENSIONS = {
     '.' + ext: handler
-    for mime, (ext, handler, req) in pycompat.items(FILE_TYPE_DICT)
+    for mime, (ext, handler, req) in FILE_TYPE_DICT.items()
 }
 
 
@@ -114,7 +114,7 @@ class Import(models.TransientModel):
         }]
         model_fields = Model.fields_get()
         blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
-        for name, field in pycompat.items(model_fields):
+        for name, field in model_fields.items():
             if name in blacklist:
                 continue
             # an empty string means the field is deprecated, @deprecated must
@@ -127,7 +127,7 @@ class Import(models.TransientModel):
                     continue
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
-                           for attr, value in itertools.chain.from_iterable(pycompat.values(states))):
+                           for attr, value in itertools.chain.from_iterable(states.values())):
                     continue
             field_value = {
                 'id': name,
@@ -595,7 +595,7 @@ class Import(models.TransientModel):
     def _parse_import_data(self, data, import_fields, options):
         # Get fields of type date/datetime
         all_fields = self.env[self.res_model].fields_get()
-        for name, field in pycompat.items(all_fields):
+        for name, field in all_fields.items():
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)

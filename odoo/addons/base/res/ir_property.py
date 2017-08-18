@@ -217,7 +217,7 @@ class Property(models.Model):
                 prop.write({'value': value})
 
         # create new properties for records that do not have one yet
-        for ref, id in pycompat.items(refs):
+        for ref, id in refs.items():
             value = clean(values[id])
             if value != default_value:
                 self.create({

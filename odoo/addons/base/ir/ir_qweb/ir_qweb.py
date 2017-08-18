@@ -169,7 +169,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if field_options and 'monetary' in field_options:
             try:
                 options = "{'widget': 'monetary'"
-                for k, v in pycompat.items(json.loads(field_options)):
+                for k, v in json.loads(field_options).items():
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:

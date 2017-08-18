@@ -479,7 +479,7 @@ def logged(f):
         vector = ['Call -> function: %r' % f]
         for i, arg in enumerate(args):
             vector.append('  arg %02d: %s' % (i, pformat(arg)))
-        for key, value in pycompat.items(kwargs):
+        for key, value in kwargs.items():
             vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
         timeb4 = time.time()
@@ -908,7 +908,7 @@ def dumpstacks(sig=None, frame=None):
                                'dbname': getattr(th, 'dbname', 'n/a'),
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
-    for threadId, stack in pycompat.items(sys._current_frames()):
+    for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
         code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
                     (thread_info.get('name', 'n/a'),
@@ -960,7 +960,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in pycompat.items(self)))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization

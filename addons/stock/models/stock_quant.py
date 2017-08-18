@@ -5,7 +5,6 @@ from psycopg2 import OperationalError
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 from odoo.osv import expression
 
 
@@ -274,7 +273,7 @@ class QuantPackage(models.Model):
 
     @api.multi
     def name_get(self):
-        return list(pycompat.items(self._compute_complete_name()))
+        return list(self._compute_complete_name().items())
 
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """

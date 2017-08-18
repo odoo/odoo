@@ -91,7 +91,7 @@ class IrUiView(models.Model):
     @api.model
     def to_field_ref(self, el):
         # filter out meta-information inserted in the document
-        attributes = {k: v for k, v in pycompat.items(el.attrib)
+        attributes = {k: v for k, v in el.attrib.items()
                            if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
 

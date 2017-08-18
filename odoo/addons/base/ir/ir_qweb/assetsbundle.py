@@ -13,7 +13,7 @@ from odoo import fields, tools
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 import psycopg2
-from odoo.tools import func, misc, pycompat
+from odoo.tools import func, misc
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -320,7 +320,7 @@ class AssetsBundle(object):
                         if not asset._content and attachment.file_size > 0:
                             asset._content = None # file missing, force recompile
 
-                if any(asset._content is None for asset in pycompat.values(assets)):
+                if any(asset._content is None for asset in assets.values()):
                     outdated = True
 
                 if outdated:

@@ -3,8 +3,6 @@
 
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
-from odoo.tools import pycompat
-
 
 class WebsiteEvent(WebsiteEventController):
 
@@ -13,7 +11,7 @@ class WebsiteEvent(WebsiteEventController):
         registrations = super(WebsiteEvent, self)._process_registration_details(details)
         for registration in registrations:
             answer_ids = []
-            for key, value in pycompat.items(registration):
+            for key, value in registration.items():
                 if key.startswith('answer_ids-'):
                     answer_ids.append([4, int(value)])
             registration['answer_ids'] = answer_ids

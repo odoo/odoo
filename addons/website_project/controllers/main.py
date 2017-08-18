@@ -8,7 +8,6 @@ from odoo.http import request
 
 from odoo.addons.website_portal.controllers.main import website_account, get_records_pager
 from odoo.osv.expression import OR
-from odoo.tools import pycompat
 
 
 class WebsiteAccount(website_account):
@@ -156,7 +155,7 @@ class WebsiteAccount(website_account):
             'searchbar_inputs': searchbar_inputs,
             'search_in': search_in,
             'sortby': sortby,
-            'searchbar_filters': OrderedDict(sorted(pycompat.items(searchbar_filters))),
+            'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
         })
         return request.render("website_project.my_tasks", values)

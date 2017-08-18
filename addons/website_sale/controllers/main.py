@@ -12,8 +12,6 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website_form.controllers.main import WebsiteForm
 
-from odoo.tools import pycompat
-
 _logger = logging.getLogger(__name__)
 
 PPG = 20  # Products Per Page
@@ -78,10 +76,10 @@ class TableCompute(object):
             index += 1
 
         # Format table according to HTML needs
-        rows = sorted(pycompat.items(self.table))
+        rows = sorted(self.table.items())
         rows = [r[1] for r in rows]
         for col in range(len(rows)):
-            cols = sorted(pycompat.items(rows[col]))
+            cols = sorted(rows[col].items())
             x += len(cols)
             rows[col] = [r[1] for r in cols if r[1]]
 
@@ -373,7 +371,7 @@ class WebsiteSale(http.Controller):
         return request.redirect("/shop/cart")
 
     def _filter_attributes(self, **kw):
-        return {k: v for k, v in pycompat.items(kw) if "attribute" in k}
+        return {k: v for k, v in kw.items() if "attribute" in k}
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
@@ -491,7 +489,7 @@ class WebsiteSale(http.Controller):
             except ValidationError:
                 error["vat"] = 'error'
 
-        if [err for err in pycompat.items(error) if err == 'missing']:
+        if [err for err in error.items() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
@@ -517,7 +515,7 @@ class WebsiteSale(http.Controller):
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
         authorized_fields = request.env['ir.model']._get('res.partner')._get_form_writable_fields()
-        for k, v in pycompat.items(values):
+        for k, v in values.items():
             # don't drop empty value, it could be a field to reset
             if k in authorized_fields and v is not None:
                 new_values[k] = v
@@ -680,7 +678,7 @@ class WebsiteSale(http.Controller):
         # if form posted
         if 'post_values' in post:
             values = {}
-            for field_name, field_value in pycompat.items(post):
+            for field_name, field_value in post.items():
                 if field_name in request.env['sale.order']._fields and field_name.startswith('x_'):
                     values[field_name] = field_value
             if values:

@@ -12,9 +12,9 @@ from odoo.tools import ustr, pycompat
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
 def only_ref_fields(record):
-    return {k: v for k, v in pycompat.items(record) if k in REFERENCING_FIELDS}
+    return {k: v for k, v in record.items() if k in REFERENCING_FIELDS}
 def exclude_ref_fields(record):
-    return {k: v for k, v in pycompat.items(record) if k not in REFERENCING_FIELDS}
+    return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
@@ -43,7 +43,7 @@ class IrFieldsConverter(models.AbstractModel):
             if isinstance(error_params, pycompat.string_types):
                 error_params = sanitize(error_params)
             elif isinstance(error_params, dict):
-                error_params = {k: sanitize(v) for k, v in pycompat.items(error_params)}
+                error_params = {k: sanitize(v) for k, v in error_params.items()}
             elif isinstance(error_params, tuple):
                 error_params = tuple(sanitize(v) for v in error_params)
         return error_type(error_msg % error_params, error_args)
@@ -64,12 +64,12 @@ class IrFieldsConverter(models.AbstractModel):
 
         converters = {
             name: self.to_field(model, field, fromtype)
-            for name, field in pycompat.items(model._fields)
+            for name, field in model._fields.items()
         }
 
         def fn(record, log):
             converted = {}
-            for field, value in pycompat.items(record):
+            for field, value in record.items():
                 if field in REFERENCING_FIELDS:
                     continue
                 if not value:

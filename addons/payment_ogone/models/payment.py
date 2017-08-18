@@ -15,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT, pycompat
+from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 
@@ -142,7 +142,7 @@ class PaymentAcquirerOgone(models.Model):
                 ]
                 return key.upper() in keys
 
-        items = sorted((k.upper(), v) for k, v in pycompat.items(values))
+        items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
         shasign = sha1(sign).hexdigest()

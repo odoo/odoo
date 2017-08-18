@@ -9,7 +9,7 @@ import uuid
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import ormcache, pycompat
+from odoo.tools import ormcache
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -619,7 +619,7 @@ class Channel(models.Model):
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
-        return list(pycompat.values(channels_preview))
+        return list(channels_preview.values())
 
     #------------------------------------------------------
     # Commands

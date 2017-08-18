@@ -7,7 +7,7 @@ import time
 
 from itertools import groupby
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
@@ -665,7 +665,7 @@ class Picking(models.Model):
         self.ensure_one()
         moves = self.env['stock.move']
         for move_line in self.move_line_ids:
-            for product, remaining_qty in pycompat.items(move_line._get_remaining_prod_quantities()):
+            for product, remaining_qty in move_line._get_remaining_prod_quantities().items():
                 if float_compare(remaining_qty, 0, precision_rounding=product.uom_id.rounding) > 0:
                     vals = self._prepare_values_extra_move(move_line, product, remaining_qty)
                     moves |= moves.create(vals)

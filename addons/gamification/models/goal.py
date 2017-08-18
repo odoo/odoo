@@ -262,7 +262,7 @@ class Goal(models.Model):
         for goal in self:
             goals_by_definition.setdefault(goal.definition_id, []).append(goal)
 
-        for definition, goals in pycompat.items(goals_by_definition):
+        for definition, goals in goals_by_definition.items():
             goals_to_write = {}
             if definition.computation_mode == 'manually':
                 for goal in goals:
@@ -307,9 +307,9 @@ class Goal(models.Model):
                         subqueries.setdefault((start_date, end_date), {}).update({goal.id:safe_eval(definition.batch_user_expression, {'user': goal.user_id})})
 
                     # the global query should be split by time periods (especially for recurrent goals)
-                    for (start_date, end_date), query_goals in pycompat.items(subqueries):
+                    for (start_date, end_date), query_goals in subqueries.items():
                         subquery_domain = list(general_domain)
-                        subquery_domain.append((field_name, 'in', list(set(pycompat.values(query_goals)))))
+                        subquery_domain.append((field_name, 'in', list(set(query_goals.values()))))
                         if start_date:
                             subquery_domain.append((field_date_name, '>=', start_date))
                         if end_date:
@@ -353,7 +353,7 @@ class Goal(models.Model):
 
                         goals_to_write.update(goal._get_write_values(new_value))
 
-            for goal, values in pycompat.items(goals_to_write):
+            for goal, values in goals_to_write.items():
                 if not values:
                     continue
                 goal.write(values)

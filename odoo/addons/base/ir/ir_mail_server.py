@@ -318,7 +318,7 @@ class IrMailServer(models.Model):
             msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate()
         # Custom headers may override normal headers or provide additional ones
-        for key, value in pycompat.items(headers):
+        for key, value in headers.items():
             msg[pycompat.to_native(ustr(key))] = encode_header(value)
 
         if subtype == 'html' and not body_alternative:

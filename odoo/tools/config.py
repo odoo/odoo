@@ -55,7 +55,7 @@ def _deduplicate_loggers(loggers):
     # there are no duplicates within the output sequence
     return (
         '{}:{}'.format(logger, level)
-        for logger, level in pycompat.items(dict(it.split(':') for it in loggers))
+        for logger, level in dict(it.split(':') for it in loggers).items()
     )
 
 
@@ -527,9 +527,9 @@ class configmanager(object):
 
     def save(self):
         p = ConfigParser.RawConfigParser()
-        loglevelnames = dict(pycompat.izip(pycompat.values(self._LOGLEVELS), pycompat.keys(self._LOGLEVELS)))
+        loglevelnames = dict(pycompat.izip(self._LOGLEVELS.values(), self._LOGLEVELS))
         p.add_section('options')
-        for opt in sorted(pycompat.keys(self.options)):
+        for opt in sorted(self.options):
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
                 continue
             if opt in self.blacklist_for_save:
@@ -541,9 +541,9 @@ class configmanager(object):
             else:
                 p.set('options', opt, self.options[opt])
 
-        for sec in sorted(pycompat.keys(self.misc)):
+        for sec in sorted(self.misc):
             p.add_section(sec)
-            for opt in sorted(pycompat.keys(self.misc[sec])):
+            for opt in sorted(self.misc[sec]):
                 p.set(sec,opt,self.misc[sec][opt])
 
         # try to create the directories and write the file

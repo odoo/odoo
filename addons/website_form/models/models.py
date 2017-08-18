@@ -5,7 +5,6 @@ import itertools
 
 from odoo import models, fields, api
 from odoo.http import request
-from odoo.tools import pycompat
 
 
 class website_form_config(models.Model):
@@ -42,7 +41,7 @@ class website_form_model(models.Model):
             ])
         }
         return {
-            k: v for k, v in pycompat.items(self.get_authorized_fields(self.model))
+            k: v for k, v in self.get_authorized_fields(self.model).items()
             if k in included
         }
 
@@ -52,7 +51,7 @@ class website_form_model(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get()
 
-        for key, val in pycompat.items(model._inherits):
+        for key, val in model._inherits.items():
             fields_get.pop(val, None)
 
         # Unrequire fields with default values

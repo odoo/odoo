@@ -427,7 +427,7 @@ class BarcodeConverter(models.AbstractModel):
         barcode = self.env['ir.actions.report'].barcode(
             barcode_type,
             value,
-            **{key: value for key, value in pycompat.items(options) if key in ['width', 'height', 'humanreadable']})
+            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
         return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
 
     @api.model

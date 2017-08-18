@@ -11,11 +11,10 @@ from lxml import etree as ET, html
 from lxml.html import builder as h
 
 from odoo.tests import common
-from odoo.tools import pycompat
 
 
 def attrs(**kwargs):
-    return {'data-oe-%s' % key: str(value) for key, value in pycompat.items(kwargs)}
+    return {'data-oe-%s' % key: str(value) for key, value in kwargs.items()}
 
 
 class TestViewSaving(common.TransactionCase):

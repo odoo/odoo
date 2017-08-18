@@ -10,7 +10,7 @@ from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.procurement.models import procurement
 from odoo.exceptions import UserError
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_round, float_is_zero
 
 
@@ -595,7 +595,7 @@ class StockMove(models.Model):
         (move_waiting | move_create_proc).write({'state': 'waiting'})
 
         # assign picking in batch for all confirmed move that share the same details
-        for key, moves in pycompat.items(to_assign):
+        for moves in to_assign.values():
             moves.assign_picking()
         self._push_apply()
         return self

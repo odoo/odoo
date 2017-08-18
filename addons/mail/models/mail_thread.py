@@ -26,7 +26,6 @@ from werkzeug import url_encode
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.tools import pycompat
-from odoo.tools.pycompat import text_type
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -239,7 +238,7 @@ class MailThread(models.AbstractModel):
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
-        for key, val in pycompat.items(self._context):
+        for key, val in self._context.items():
             if key.startswith('default_') and key[8:] not in create_values:
                 create_values[key[8:]] = val
         thread.message_auto_subscribe(list(create_values), values=create_values)
@@ -389,7 +388,7 @@ class MailThread(models.AbstractModel):
                 always tracked fields and modified on_change fields
         """
         tracked_fields = []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if getattr(field, 'track_visibility', False):
                 tracked_fields.append(name)
 
@@ -417,10 +416,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     def _message_track_post_template(self, tracking):
-        if not any(change for rec_id, (change, tracking_value_ids) in pycompat.items(tracking)):
+        if not any(change for rec_id, (change, tracking_value_ids) in tracking.items()):
             return True
         templates = self._track_template(tracking)
-        for field_name, (template, post_kwargs) in pycompat.items(templates):
+        for field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
             if isinstance(template, pycompat.string_types):
@@ -451,7 +450,7 @@ class MailThread(models.AbstractModel):
         display_values_ids = []
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in pycompat.items(tracked_fields):
+        for col_name, col_info in tracked_fields.items():
             track_visibility = getattr(self._fields[col_name], 'track_visibility', 'onchange')
             initial_value = initial[col_name]
             new_value = getattr(self, col_name)
@@ -817,7 +816,7 @@ class MailThread(models.AbstractModel):
     def message_capable_models(self):
         """ Used by the plugin addon, based for plugin_outlook and others. """
         ret_dict = {}
-        for model_name, model in pycompat.items(self.env):
+        for model_name, model in self.env.items():
             if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
@@ -2057,7 +2056,7 @@ class MailThread(models.AbstractModel):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if name in auto_follow_fields and name in updated_fields and getattr(field, 'track_visibility', False) and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
@@ -2153,10 +2152,10 @@ class MailThread(models.AbstractModel):
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 
-        for pid, subtypes in pycompat.items(new_partners):
+        for pid, subtypes in new_partners.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(partner_ids=[pid], subtype_ids=subtypes, force=(subtypes != None))
-        for cid, subtypes in pycompat.items(new_channels):
+        for cid, subtypes in new_channels.items():
             subtypes = list(subtypes) if subtypes is not None else None
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 

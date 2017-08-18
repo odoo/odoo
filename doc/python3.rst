@@ -233,10 +233,7 @@ methods or functions having been *removed entirely*:
   .. important::
 
       When possible, use comprehensions (list, generator, ...) rather than
-      ``map`` or ``filter``, otherwise use the cross-version ``pycompat``
-      versions (``pycompat.imap``, ``pycompat.ifilter`` and
-      ``pycompat.izip``). The ``pycompat`` versions all return *iterators* and
-      may need to be wrapped in a ``list()`` call to yield a list.
+      ``map`` or ``filter``.
 
 * In Python 3, ``dict.keys``, ``dict.values`` and ``dict.items`` return
   *views* rather than lists, and the ``iter*`` and ``view*`` methods have
@@ -244,11 +241,9 @@ methods or functions having been *removed entirely*:
 
   .. important::
 
-      Prefer using :func:`odoo.tools.pycompat.keys`,
-      :func:`odoo.tools.pycompat.values` and :func:`odoo.tools.pycompat.items`
-      return cross-version iterators. When needing actual lists (e.g. to
-      modify a dictionary during iteration), wrap one of the calls above in a
-      ``list()``.
+      When the result of the above methods is used for more than a one-shot
+      loop (e.g. to be included in returned value), or when the dict needs
+      to be modified during iteration, wrap the calls in a ``list()``.
 
 builtins
 --------

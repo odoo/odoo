@@ -9,7 +9,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons import decimal_precision as dp
@@ -466,7 +465,7 @@ class MarketingCampaignWorkitem(models.Model):
         matching_workitems = []
         for id, res_id, model in res:
             workitem_map.setdefault(model, {}).setdefault(res_id, set()).add(id)
-        for model, id_map in pycompat.items(workitem_map):
+        for model, id_map in workitem_map.items():
             Model = self.env[model]
             condition_name[0] = Model._rec_name
             condition = [('id', 'in', list(id_map)), condition_name]

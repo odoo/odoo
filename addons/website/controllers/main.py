@@ -38,11 +38,11 @@ class QueryURL(object):
 
     def __call__(self, path=None, path_args=None, **kw):
         path = path or self.path
-        for key, value in pycompat.items(self.args):
+        for key, value in self.args.items():
             kw.setdefault(key, value)
         path_args = OrderedSet(path_args or []) | self.path_args
         paths, fragments = {}, []
-        for key, value in pycompat.items(kw):
+        for key, value in kw.items():
             if value and key in path_args:
                 if isinstance(value, models.BaseModel):
                     paths[key] = slug(value)

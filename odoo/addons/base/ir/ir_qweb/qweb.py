@@ -187,7 +187,7 @@ def foreach_iterator(base_ctx, enum, name):
     if isinstance(enum, Sized):
         ctx["%s_size" % name] = size = len(enum)
     if isinstance(enum, Mapping):
-        enum = pycompat.items(enum)
+        enum = enum.items()
     else:
         enum = pycompat.izip(*tee(enum))
     value_key = '%s_value' % name
@@ -240,7 +240,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in pycompat.items(self)))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 
 ####################################
@@ -527,7 +527,6 @@ class QWeb(object):
         """
         return ast.parse(dedent("""
             from collections import OrderedDict
-            from odoo.tools import pycompat
             from odoo.tools.pycompat import to_text, string_types
             from odoo.addons.base.ir.ir_qweb.qweb import escape, foreach_iterator
             """))
@@ -745,7 +744,7 @@ class QWeb(object):
             attrib = {}
             # If `el` introduced new namespaces, write them as attribute by using the
             # `attrib` dict.
-            for ns_prefix, ns_definition in set(pycompat.items(el.nsmap)) - set(pycompat.items(options['nsmap'])):
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
                 if ns_prefix is None:
                     attrib['xmlns'] = ns_definition
                 else:
@@ -754,9 +753,9 @@ class QWeb(object):
             # Etree will also remove the ns prefixes indirection in the attributes. As we only have
             # the namespace definition, we'll use an nsmap where the keys are the definitions and
             # the values the prefixes in order to get back the right prefix and restore it.
-            ns = itertools.chain(pycompat.items(options['nsmap']), pycompat.items(el.nsmap))
+            ns = itertools.chain(options['nsmap'].items(), el.nsmap.items())
             nsprefixmap = {v: k for k, v in ns}
-            for key, value in pycompat.items(el.attrib):
+            for key, value in el.attrib.items():
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
                     attrib['%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)] = value
@@ -774,7 +773,7 @@ class QWeb(object):
 
         if unqualified_el_tag == 't':
             return content
-        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in pycompat.items(attrib)]))
+        tag = u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in attrib.items()]))
         if unqualified_el_tag in self._void_elements:
             return [self._append(ast.Str(tag + '/>'))] + content
         else:
@@ -786,10 +785,10 @@ class QWeb(object):
         # Etree will also remove the ns prefixes indirection in the attributes. As we only have
         # the namespace definition, we'll use an nsmap where the keys are the definitions and
         # the values the prefixes in order to get back the right prefix and restore it.
-        nsprefixmap = {v: k for k, v in itertools.chain(pycompat.items(options['nsmap']), pycompat.items(el.nsmap))}
+        nsprefixmap = {v: k for k, v in itertools.chain(options['nsmap'].items(), el.nsmap.items())}
 
         nodes = []
-        for key, value in pycompat.items(el.attrib):
+        for key, value in el.attrib.items():
             if not key.startswith('t-'):
                 attrib_qname = etree.QName(key)
                 if attrib_qname.namespace:
@@ -804,7 +803,7 @@ class QWeb(object):
         We do not support namespaced dynamic attributes.
         """
         nodes = []
-        for name, value in pycompat.items(el.attrib):
+        for name, value in el.attrib.items():
             if name.startswith('t-attf-'):
                 nodes.append((name[7:], self._compile_format(value)))
             elif name.startswith('t-att-'):
@@ -830,7 +829,7 @@ class QWeb(object):
     def _compile_all_attributes(self, el, options, attr_already_created=False):
         """ Compile the attributes of the given elements into a list of AST nodes. """
         body = []
-        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in pycompat.items(el.attrib)):
+        if any(name.startswith('t-att') or not name.startswith('t-') for name, value in el.attrib.items()):
             if not attr_already_created:
                 attr_already_created = True
                 body.append(
@@ -871,7 +870,7 @@ class QWeb(object):
                     )))
 
         if attr_already_created:
-            # for name, value in pycompat.items(t_attrs):
+            # for name, value in t_attrs.items():
             #     if value or isinstance(value, basestring)):
             #         append(u' ')
             #         append(name)
@@ -882,11 +881,11 @@ class QWeb(object):
                 target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
                 iter=ast.Call(
                     func=ast.Attribute(
-                        value=ast.Name(id='pycompat', ctx=ast.Load()),
+                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
                         attr='items',
                         ctx=ast.Load()
                         ),
-                    args=[ast.Name(id='t_attrs', ctx=ast.Load())], keywords=[],
+                    args=[], keywords=[],
                     starargs=None, kwargs=None
                 ),
                 body=[ast.If(
@@ -943,7 +942,7 @@ class QWeb(object):
 
             # If `el` introduced new namespaces, write them as attribute by using the
             # `extra_attrib` dict.
-            for ns_prefix, ns_definition in set(pycompat.items(el.nsmap)) - set(pycompat.items(options['nsmap'])):
+            for ns_prefix, ns_definition in set(el.nsmap.items()) - set(options['nsmap'].items()):
                 if ns_prefix is None:
                     extra_attrib['xmlns'] = ns_definition
                 else:
@@ -952,7 +951,7 @@ class QWeb(object):
         if unqualified_el_tag == 't':
             return content
 
-        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in pycompat.items(extra_attrib)]))))]
+        body = [self._append(ast.Str(u'<%s%s' % (el_tag, u''.join([u' %s="%s"' % (name, escape(pycompat.to_text(value))) for name, value in extra_attrib.items()]))))]
         body.extend(self._compile_all_attributes(el, options, attr_already_created))
         if unqualified_el_tag in self._void_elements:
             body.append(self._append(ast.Str(u'/>')))
@@ -1457,7 +1456,7 @@ class QWeb(object):
                 # make the nsmap an ast dict
                 keys = []
                 values = []
-                for key, value in pycompat.items(options['nsmap']):
+                for key, value in options['nsmap'].items():
                     if isinstance(key, pycompat.string_types):
                         keys.append(ast.Str(s=key))
                     elif key is None:

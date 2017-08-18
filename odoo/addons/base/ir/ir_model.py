@@ -194,7 +194,7 @@ class IrModel(models.Model):
     @api.multi
     def write(self, vals):
         if '__last_update' in self._context:
-            self = self.with_context({k: v for k, v in pycompat.items(self._context) if k != '__last_update'})
+            self = self.with_context({k: v for k, v in self._context.items() if k != '__last_update'})
         if 'model' in vals and any(rec.model != vals['model'] for rec in self):
             raise UserError(_('Field "Model" cannot be modified on models.'))
         if 'state' in vals and any(rec.state != vals['state'] for rec in self):
@@ -766,7 +766,7 @@ class IrModelFields(models.Model):
             fields_data[field.name] = dict(params, id=record.id)
             return record
 
-        diff = {key for key, val in pycompat.items(params) if field_data[key] != val}
+        diff = {key for key, val in params.items() if field_data[key] != val}
         if diff:
             cr = self.env.cr
             # update the entry in this table
@@ -784,7 +784,7 @@ class IrModelFields(models.Model):
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
-        for field in pycompat.values(model._fields):
+        for field in model._fields.values():
             self._reflect_field(field)
 
         if not self.pool._init:
@@ -867,7 +867,7 @@ class IrModelFields(models.Model):
     def _add_manual_fields(self, model):
         """ Add extra fields on model. """
         fields_data = self._get_manual_field_data(model._name)
-        for name, field_data in pycompat.items(fields_data):
+        for name, field_data in fields_data.items():
             if name not in model._fields and field_data['state'] == 'manual':
                 field = self._instanciate(field_data)
                 if field:
@@ -1278,7 +1278,7 @@ class IrModelData(models.Model):
             model_id_name[xid.model][xid.res_id] = None
 
         # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in pycompat.items(model_id_name):
+        for model, id_name in model_id_name.items():
             try:
                 ng = self.env[model].browse(id_name).name_get()
                 id_name.update(ng)
@@ -1375,7 +1375,7 @@ class IrModelData(models.Model):
                 record = self.get_object(module, xml_id)
                 if record:
                     self.loads[(module, xml_id)] = (model, record.id)
-                    for parent_model, parent_field in pycompat.items(self.env[model]._inherits):
+                    for parent_model, parent_field in self.env[model]._inherits.items():
                         parent = record[parent_field]
                         parent_xid = '%s_%s' % (xml_id, parent_model.replace('.', '_'))
                         self.loads[(module, parent_xid)] = (parent_model, parent.id)
@@ -1430,7 +1430,7 @@ class IrModelData(models.Model):
         elif record:
             record.write(values)
             if xml_id:
-                for parent_model, parent_field in pycompat.items(record._inherits):
+                for parent_model, parent_field in record._inherits.items():
                     self.sudo().create({
                         'name': xml_id + '_' + parent_model.replace('.', '_'),
                         'model': parent_model,
@@ -1449,7 +1449,7 @@ class IrModelData(models.Model):
         elif mode == 'init' or (mode == 'update' and xml_id):
             existing_parents = set()            # {parent_model, ...}
             if xml_id:
-                for parent_model, parent_field in pycompat.items(record._inherits):
+                for parent_model, parent_field in record._inherits.items():
                     xid = self.sudo().search([
                         ('module', '=', module),
                         ('name', '=', xml_id + '_' + parent_model.replace('.', '_')),
@@ -1469,7 +1469,7 @@ class IrModelData(models.Model):
                 inherit_models = [record]
                 while inherit_models:
                     current_model = inherit_models.pop()
-                    for parent_model_name, parent_field in pycompat.items(current_model._inherits):
+                    for parent_model_name, parent_field in current_model._inherits.items():
                         inherit_models.append(self.env[parent_model_name])
                         if parent_model_name in existing_parents:
                             continue
@@ -1495,7 +1495,7 @@ class IrModelData(models.Model):
 
         if xml_id and record:
             self.loads[(module, xml_id)] = (model, record.id)
-            for parent_model, parent_field in pycompat.items(record._inherits):
+            for parent_model, parent_field in record._inherits.items():
                 parent_xml_id = xml_id + '_' + parent_model.replace('.', '_')
                 self.loads[(module, parent_xml_id)] = (parent_model, record[parent_field].id)
 

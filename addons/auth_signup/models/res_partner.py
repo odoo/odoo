@@ -8,8 +8,6 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import pycompat
-
 
 class SignupError(Exception):
     pass

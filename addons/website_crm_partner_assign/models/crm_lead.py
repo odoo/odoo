@@ -5,7 +5,6 @@ import random
 
 from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from odoo import api, fields, models, _
-from odoo.tools import pycompat
 
 
 class CrmLead(models.Model):
@@ -45,7 +44,7 @@ class CrmLead(models.Model):
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
-        for salesman_id, leads_ids in pycompat.items(salesmans_leads):
+        for salesman_id, leads_ids in salesmans_leads.items():
             leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
 

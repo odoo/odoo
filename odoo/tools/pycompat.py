@@ -27,10 +27,6 @@ if PY2:
 
     integer_types = (int, long)
 
-    keys = lambda d: iter(d.iterkeys())
-    values = lambda d: iter(d.itervalues())
-    items = lambda d: iter(d.iteritems())
-
     # noinspection PyUnresolvedReferences
     from itertools import imap, izip, ifilter
 
@@ -73,10 +69,6 @@ else:
         return str(source)
 
     integer_types = (int,)
-
-    keys = lambda d: iter(d.keys())
-    values = lambda d: iter(d.values())
-    items = lambda d: iter(d.items())
 
     imap = map
     izip = zip
