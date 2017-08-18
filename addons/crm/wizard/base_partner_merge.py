@@ -2,55 +2,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from email.utils import parseaddr
 import functools
-try:
-    from html.entities import entitydefs
-except ImportError:
-    from htmlentitydefs import entitydefs # pylint: disable=deprecated-module
 import itertools
 import logging
-import operator
 import psycopg2
-import re
-
-# Validation Library https://pypi.python.org/pypi/validate_email/1.1
-from .validate_email import validate_email
 
 from odoo import api, fields, models
 from odoo import SUPERUSER_ID, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 
 _logger = logging.getLogger('base.partner.merge')
-
-
-# http://www.php2python.com/wiki/function.html-entity-decode/
-def html_entity_decode_char(m, defs=entitydefs):
-    try:
-        return defs[m.group(1)]
-    except KeyError:
-        return m.group(0)
-
-
-def html_entity_decode(string):
-    pattern = re.compile("&(\w+?);")
-    return pattern.sub(html_entity_decode_char, string)
-
-
-def sanitize_email(email):
-    assert isinstance(email, pycompat.string_types) and email
-
-    result = re.subn(r';|/|:', ',', html_entity_decode(email or ''))[0].split(',')
-
-    emails = [parseaddr(email)[1]
-              for item in result
-              for email in item.split()]
-
-    return [email.lower()
-            for email in emails
-            if validate_email(email)]
-
 
 class MergePartnerLine(models.TransientModel):
 
@@ -271,7 +233,7 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item
         # get all fields that are not computed or x2many
         values = dict()
-        for column, field in pycompat.items(model_fields):
+        for column, field in model_fields.items():
             if field.type not in ('many2many', 'one2many') and field.compute is None:
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
@@ -409,7 +371,7 @@ class MergePartnerAutomatic(models.TransientModel):
         """
         return any(
             self.env[model].search_count([(field, 'in', aggr_ids)])
-            for model, field in pycompat.items(models)
+            for model, field in models.items()
         )
 
     @api.model
