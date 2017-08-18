@@ -107,7 +107,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation
 
         move1.action_done()
-        self.assertEqual(move_line.product_qty, 5)  # don't change reservation
+        self.assertEqual(move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
         # no quants are created in the supplier location
@@ -1607,7 +1607,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation when assgning a lot now
 
         move1.action_done()
-        self.assertEqual(move_line.product_qty, 5)  # don't change reservation
+        self.assertEqual(move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 0.0)
@@ -1671,8 +1671,8 @@ class StockMove(TransactionCase):
         self.assertEqual(untracked_move_line.product_qty, 3)  # don't change reservation
 
         move1.action_done()
-        self.assertEqual(untracked_move_line.product_qty, 3)  # don't change reservation
-        self.assertEqual(tracked_move_line.product_qty, 2)  # don't change reservation
+        self.assertEqual(untracked_move_line.product_qty, 0)  # change reservation to 0 for done move
+        self.assertEqual(tracked_move_line.product_qty, 0)  # change reservation to 0 for done move
         self.assertEqual(move1.state, 'done')
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product3, self.stock_location), 0.0)
@@ -1765,7 +1765,8 @@ class StockMove(TransactionCase):
 
         move1.move_line_ids.lot_id = lot2.id
 
-        self.assertEqual(move1.reserved_availability, 1.0)
+        # reserved_availability should always been 0 for done move.
+        self.assertEqual(move1.reserved_availability, 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot1), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location, lot_id=lot2), 0.0)
@@ -2183,7 +2184,9 @@ class StockMove(TransactionCase):
         picking.action_assign()
         res_dict = picking.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
 
         self.assertEqual(len(picking.move_lines.move_line_ids), 1)
         self.assertEqual(picking.move_lines.quantity_done, 5.0)

@@ -302,10 +302,11 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
-            self.payment_token_id.verified = True
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
-            if self.type == 'verification':
+            if self.type == 'validation':
                 self.s2s_do_refund()
 
             return True
@@ -454,7 +455,8 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
-            self.payment_token_id.verified = True
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -463,7 +465,7 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': tree.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
-            new_state = 'refunding' if self.type == 'validation' else 'pending'
+            new_state = 'refunding' if self.state == 'refunding' else 'pending'
             self.write({
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),

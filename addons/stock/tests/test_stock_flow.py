@@ -649,7 +649,9 @@ class TestStockFlow(TestStockCommon):
 
         res_dict = picking_in_B.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
 
         # -----------------------------------------------------------------------
         # Check incoming shipment
@@ -846,7 +848,9 @@ class TestStockFlow(TestStockCommon):
 
         res_dict = picking_out.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
 
         # ----------------------------------------------------------------------
         # Check product stock location quantity and quantity available.
@@ -927,7 +931,9 @@ class TestStockFlow(TestStockCommon):
         # Transfer Incoming shipment.
         res_dict = picking_in.button_validate()
         wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
-        wizard.process()
+        res_dict_for_back_order = wizard.process()
+        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id'))
+        backorder_wizard.process()
 
         # -----------------------------------------------------------------------
         # Check incoming shipment after transfer.

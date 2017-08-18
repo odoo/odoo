@@ -88,7 +88,8 @@ class StockMove(models.Model):
     @api.multi
     def action_cancel(self):
         if any(move.quantity_done for move in self): #TODO: either put in stock, or check there is a production order related to it
-            raise exceptions.UserError(_('You cannot cancel a stock move having already consumed material'))
+            raise exceptions.UserError(_('You cannot cancel a manufacturing order if you have already consumed material.\
+             If you want to cancel this MO, please change the consumed quantities to 0.'))
         return super(StockMove, self).action_cancel()
 
     @api.multi

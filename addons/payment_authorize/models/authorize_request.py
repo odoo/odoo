@@ -163,6 +163,33 @@ class AuthorizeAPI():
         res['name'] = response_profile.find('paymentProfile/payment/creditCard/cardNumber').text
         return res
 
+    def credit(self, token, amount, transaction_id):
+        """ Refund a payment for the given amount.
+
+        :param record token: the payment.token record that must be refunded.
+        :param str amount: transaction amount
+        :param str transaction_id: the reference of the transacation that is going to be refunded.
+
+        :return: a dict containing the response code, transaction id and transaction type
+        :rtype: dict
+        """
+        root = self._base_tree('createTransactionRequest')
+        tx = etree.SubElement(root, "transactionRequest")
+        etree.SubElement(tx, "transactionType").text = "refundTransaction"
+        etree.SubElement(tx, "amount").text = str(amount)
+        payment = etree.SubElement(tx, "payment")
+        credit_card = etree.SubElement(payment, "creditCard")
+        idx = token.name.find(' - ')
+        etree.SubElement(credit_card, "cardNumber").text = token.name[idx-4:idx] # shitty hack, but that's the only way to get the 4 last digits
+        etree.SubElement(credit_card, "expirationDate").text = "XXXX"
+        etree.SubElement(tx, "refTransId").text = transaction_id
+        response = self._authorize_request(root)
+        res = dict()
+        res['x_response_code'] = response.find('transactionResponse/responseCode').text
+        res['x_trans_id'] = transaction_id
+        res['x_type'] = 'refund'
+        return res
+
     # Transaction management
     def auth_and_capture(self, token, amount, reference):
         """Authorize and capture a payment for the given amount.

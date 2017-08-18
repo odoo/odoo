@@ -176,7 +176,7 @@
                             <field name="package_id" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
                             <field name="result_package_id" groups="stock.group_tracking_lot"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
-                            <field name="product_uom_qty" readonly="1"/>
+                            <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
                             <field name="qty_done"/>
                             <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="product.group_uom"/>
                         </tree>

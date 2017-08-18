@@ -28,6 +28,7 @@ class TestStockCommon(common.TransactionCase):
         self.supplier_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_suppliers')
         self.stock_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_stock')
         self.pack_location = self.ModelDataObj.xmlid_to_res_id('stock.location_pack_zone')
+        self.output_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_output')
         self.customer_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
         self.categ_unit = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_unit')
         self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_kgm')

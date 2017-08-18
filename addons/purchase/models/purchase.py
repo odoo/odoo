@@ -85,7 +85,6 @@ class PurchaseOrder(models.Model):
                 # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
                 # do some recursive search, but that could be prohibitive if not done correctly.
                 moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                moves = moves.filtered(lambda r: r.state != 'cancel')
                 pickings |= moves.mapped('picking_id')
             order.picking_ids = pickings
             order.picking_count = len(pickings)
@@ -666,12 +665,7 @@ class PurchaseOrderLine(models.Model):
                                 break
                             else:
                                 diff_qty += move.product_qty
-                                move.do_unreserve()
-                                move.state = 'draft'
-                                picking = move.picking_id
-                                move.unlink()
-                                if not picking.move_lines:
-                                    picking.unlink()
+                                move.action_cancel()
                     else:
                         raise UserError('You cannot decrease the ordered quantity below the received quantity.\n'
                                         'Create a return first.')
