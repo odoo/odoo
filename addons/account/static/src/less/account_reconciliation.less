@@ -176,7 +176,6 @@
                 vertical-align: top;
                 padding-right: 10px;
                 font-weight: bold;
-                white-space: nowrap;
             }
         }
 
@@ -219,7 +218,7 @@
             .o-transition(max-height, 250ms);
         }
         &[data-mode="match"] > .match {
-            max-height: 130px;
+            max-height: none;
             .o-transition(max-height, 400ms);
         }
         &[data-mode="create"] > .create {
