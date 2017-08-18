@@ -174,7 +174,7 @@ class StockQuant(models.Model):
                     if quant.quantity == 0 and quant.reserved_quantity == 0:
                         quant.unlink()
                     break
-            except OperationalError, e:
+            except OperationalError as e:
                 if e.pgcode == '55P03':  # could not obtain the lock
                     continue
                 else:
