@@ -120,10 +120,22 @@ var ViewEditor = Widget.extend({
         var debounceStoreEditorWidth = _.debounce(storeEditorWidth, 500);
 
         this._updateViewSelectDOM();
-        this.displayView(
-            this.options.initialViewID
-            || (typeof this.viewKey === "number" ? this.viewKey : _.findWhere(this.views, {xml_id: this.viewKey}).id)
-        );
+
+        var initResID;
+        if (this.options.initialViewID) {
+            initResID = this.options.initialViewID;
+        } else {
+            if (typeof this.viewKey === "number") {
+                initResID = this.viewKey;
+            } else {
+                var view = _.findWhere(this.views, {xml_id: this.viewKey});
+                if (!view) {
+                    view = _.findWhere(this.views, {key: this.viewKey});
+                }
+                initResID = view.id;
+            }
+        }
+        this.displayView(initResID);
 
         $(document).on("mouseup.ViewEditor", stopResizing.bind(this)).on("mousemove.ViewEditor", updateWidth.bind(this));
         if (this.options.position === 'left') {
