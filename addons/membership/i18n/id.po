@@ -5,7 +5,8 @@
 # Translators:
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2016
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2016
+# Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2016
 # Febrasari Almania <febrasari.almania@gmail.com>, 2016
 # William Surya Permana <zarambie_game@yahoo.com>, 2016
 # Deddy Ddr <deddy.ddr@gmail.com>, 2016
@@ -123,7 +124,7 @@ msgstr "Periksa apakah produk yang memenuhi syarat untuk keanggotaan."
 #. module: membership
 #: model:ir.actions.act_window,help:membership.action_membership_members
 msgid "Click to add a new Member"
-msgstr ""
+msgstr "Klik untuk menambahkan Anggota baru"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_company_id
@@ -346,11 +347,18 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
+"Ini menunjukkan status keanggotaan.\n"
+"-Bukan anggota: Anggota yang tidak diterapkan untuk keanggotaan apapun.\n"
+"-Anggota dibatalkan: Seorang anggota yang telah membatalkan keanggotaan nya.\n"
+"-Anggota lama: Anggota yang keanggotaannya telah kadaluarsa.\n"
+"-Menunggu anggota: Seorang anggota yang telah diterapkan untuk keanggotaan dan faktur yang akan dibuat.\n"
+"-Tagihan anggota: Anggota faktur yang telah dibuat.\n"
+"-Gaji anggota: Anggota yang telah membayar jumlah biaya keanggotaan."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date
 msgid "Join Date"
-msgstr "Join Date"
+msgstr "Tanggal bergabung"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice___last_update
@@ -508,13 +516,15 @@ msgid ""
 "Odoo helps you easily track all activities related to a member: \n"
 "                 Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
+"Odoo membantu Anda dengan mudah melacak semua aktivitas yang berhubungan dengan anggota: \n"
+"                 Status Keanggotaan Saat ini, Diskusi dan Sejarah Keanggotaan, dll."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr "Tua anggota"
+msgstr "Anggota lama"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -638,4 +648,4 @@ msgstr "Menunggu anggota"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "membership.membership_line"
-msgstr ""
+msgstr "membership.membership_line"
