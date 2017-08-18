@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import babel.messages.pofile
 import base64
-import csv
 import datetime
 import functools
 import glob
 import hashlib
 import imghdr
+import io
 import itertools
 import jinja2
 import json
@@ -22,7 +23,6 @@ import werkzeug.utils
 import werkzeug.wrappers
 import zlib
 from xml.etree import ElementTree
-from cStringIO import StringIO
 from werkzeug import url_decode
 
 
@@ -117,14 +117,11 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        url_redirect = r.base_url
+        url_redirect = werkzeug.urls.url_parse(r.base_url)
         if r.query_string:
-            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
-            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
-            url_redirect += '?' + r.query_string
-        response = werkzeug.utils.redirect(url_redirect, 302)
+            url_redirect = url_redirect.replace(query=r.query_string)
         request.session.db = db
-        abort_and_redirect(url_redirect)
+        abort_and_redirect(url_redirect.encode())
 
     # if db not provided, use the session one
     if not db and request.session.db and http.db_filter([request.session.db]):
@@ -1137,8 +1134,8 @@ class Binary(http.Controller):
                                    """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_base64 = str(row[0]).decode('base64')
-                        image_data = StringIO(image_base64)
+                        image_base64 = base64.b64decode(row[0])
+                        image_data = io.BytesIO(image_base64)
                         imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
                         response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
@@ -1388,32 +1385,22 @@ class CSVExport(ExportFormat, http.Controller):
         return base + '.csv'
 
     def from_data(self, fields, rows):
-        fp = StringIO()
-        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+        fp = io.BytesIO()
+        writer = pycompat.csv_writer(fp, quoting=1)
 
-        writer.writerow([name.encode('utf-8') for name in fields])
+        writer.writerow(fields)
 
         for data in rows:
             row = []
             for d in data:
-                if isinstance(d, unicode):
-                    try:
-                        d = d.encode('utf-8')
-                    except UnicodeError:
-                        pass
-                if d is False: d = None
-
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if type(d) is str and d.startswith(('=', '-', '+')):
+                if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
-                row.append(d)
+                row.append(pycompat.to_text(d))
             writer.writerow(row)
 
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
+        return fp.getvalue()
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values
@@ -1446,7 +1433,7 @@ class ExcelExport(ExportFormat, http.Controller):
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
-                if isinstance(cell_value, basestring):
+                if isinstance(cell_value, pycompat.string_types):
                     cell_value = re.sub("\r", " ", cell_value)
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style
@@ -1454,7 +1441,7 @@ class ExcelExport(ExportFormat, http.Controller):
                     cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
-        fp = StringIO()
+        fp = io.BytesIO()
         workbook.save(fp)
         fp.seek(0)
         data = fp.read()

@@ -154,7 +154,7 @@ class ProductProduct(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, basestring):
+            if isinstance(pricelist_id_or_name, pycompat.string_types):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
                     pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])

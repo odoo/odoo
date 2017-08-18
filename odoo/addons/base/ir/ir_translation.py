@@ -394,7 +394,7 @@ class IrTranslation(models.Model):
         # always pass unicode so we can remove the string encoding/decoding.
         if not lang:
             return tools.ustr(source or '')
-        if isinstance(types, basestring):
+        if isinstance(types, pycompat.string_types):
             types = (types,)
         if res_id:
             if isinstance(res_id, pycompat.integer_types):

@@ -583,7 +583,7 @@ class PaymentTransaction(models.Model):
         token = '%s%s%s' % (self.callback_model_id.model,
                             self.callback_res_id,
                             self.sudo().callback_method)
-        return hmac.new(str(secret), token, hashlib.sha256).hexdigest()
+        return hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha256).hexdigest()
 
     # --------------------------------------------------
     # FORM RELATED METHODS

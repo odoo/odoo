@@ -1,29 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
 import logging
 import PyPDF2
 import xml.dom.minidom
 import zipfile
 
-from StringIO import StringIO
-
 from odoo import api, models
 
 _logger = logging.getLogger(__name__)
 FTYPES = ['docx', 'pptx', 'xlsx', 'opendoc', 'pdf']
-
-# Keep function in case it is necessary to do toUnicode(buf.encode('ascii', 'replace'))
-def toUnicode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
 
 def textToString(element):
     buff = u""
@@ -41,7 +27,7 @@ class IrAttachment(models.Model):
     def _index_docx(self, bin_data):
         '''Index Microsoft .docx documents'''
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -57,7 +43,7 @@ class IrAttachment(models.Model):
         '''Index Microsoft .pptx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -75,7 +61,7 @@ class IrAttachment(models.Model):
         '''Index Microsoft .xlsx documents'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -91,7 +77,7 @@ class IrAttachment(models.Model):
         '''Index OpenDocument documents (.odt, .ods...)'''
 
         buf = u""
-        f = StringIO(bin_data)
+        f = io.BytesIO(bin_data)
         if zipfile.is_zipfile(f):
             try:
                 zf = zipfile.ZipFile(f)
@@ -107,8 +93,8 @@ class IrAttachment(models.Model):
         '''Index PDF documents'''
 
         buf = u""
-        if bin_data.startswith('%PDF-'):
-            f = StringIO(bin_data)
+        if bin_data.startswith(b'%PDF-'):
+            f = io.BytesIO(bin_data)
             try:
                 pdf = PyPDF2.PdfFileReader(f, overwriteWarnings=False)
                 for page in pdf.pages:

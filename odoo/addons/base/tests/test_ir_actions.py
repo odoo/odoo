@@ -64,7 +64,7 @@ class TestServerActions(TestServerActionsBase):
         # Test: ir_values created
         ir_values = self.env['ir.values'].search([('name', '=', 'Run TestAction')])
         self.assertEqual(len(ir_values), 1, 'ir_actions_server: create_action should have created an entry in ir_values')
-        self.assertEqual(ir_values.value, 'ir.actions.server,%s' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
+        self.assertEqual(ir_values.value, b'ir.actions.server,%d' % self.action.id, 'ir_actions_server: created ir_values should reference the server action')
         self.assertEqual(ir_values.model, 'res.partner', 'ir_actions_server: created ir_values should be linked to the action base model')
 
         # Do: remove contextual action

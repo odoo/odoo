@@ -39,7 +39,7 @@ def html_entity_decode(string):
 
 
 def sanitize_email(email):
-    assert isinstance(email, basestring) and email
+    assert isinstance(email, pycompat.string_types) and email
 
     result = re.subn(r';|/|:', ',', html_entity_decode(email or ''))[0].split(',')
 

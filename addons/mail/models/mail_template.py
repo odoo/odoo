@@ -45,7 +45,7 @@ def format_tz(env, dt, tz=False, format=False):
         return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
-        return ts.strftime(format)
+        return pycompat.text_type(ts.strftime(format))
     else:
         lang = env.context.get("lang")
         langs = env['res.lang']
@@ -54,9 +54,9 @@ def format_tz(env, dt, tz=False, format=False):
         format_date = langs.date_format or '%B-%d-%Y'
         format_time = langs.time_format or '%I-%M %p'
 
-        fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time).decode('utf-8')
-        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+        fdate = pycompat.text_type(ts.strftime(format_date))
+        ftime = pycompat.text_type(ts.strftime(format_time))
+        return u"%s %s%s" % (fdate, ftime, (u' (%s)' % tz) if tz else u'')
 
 def format_amount(env, amount, currency):
     fmt = "%.{0}f".format(currency.decimal_places)
@@ -306,8 +306,8 @@ class MailTemplate(models.Model):
         # form a tree
         root = lxml.html.fromstring(html)
         if not len(root) and root.text is None and root.tail is None:
-            html = '<div>%s</div>' % html
-            root = lxml.html.fromstring(html)
+            html = u'<div>%s</div>' % html
+            root = lxml.html.fromstring(html, encoding='unicode')
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         base = urls.url_parse(base_url)
@@ -324,12 +324,12 @@ class MailTemplate(models.Model):
         for node in root.iter():
             if node.tag == 'a' and node.get('href'):
                 node.set('href', _process_link(node.get('href')))
-            elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
+            elif node.tag == 'img' and not node.get('src', 'data').startswith(u'data'):
                 node.set('src', _process_link(node.get('src')))
 
-        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        html = lxml.html.tostring(root, pretty_print=False, method='html', encoding='unicode')
         # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-        if html.startswith('<div>') and html.endswith('</div>'):
+        if html.startswith(u'<div>') and html.endswith(u'</div>'):
             html = html[5:-6]
         return html
 

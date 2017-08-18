@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import logging
 
 from odoo import api, fields, models
@@ -103,7 +103,7 @@ class Employee(models.Model):
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     # resource and user
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')

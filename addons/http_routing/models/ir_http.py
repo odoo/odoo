@@ -4,7 +4,6 @@ import logging
 import os
 import re
 import unicodedata
-import werkzeug
 
 # optional python-slugify import (https://github.com/un33k/python-slugify)
 try:
@@ -12,11 +11,15 @@ try:
 except ImportError:
     slugify_lib = None
 
+import werkzeug.exceptions
+import werkzeug.urls
+import werkzeug.utils
+
 import odoo
 from odoo import api, models
 from odoo.addons.base.ir.ir_http import RequestUID, ModelConverter
 from odoo.http import request
-from odoo.tools import config, ustr
+from odoo.tools import config, ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -97,36 +100,32 @@ def unslug_url(s):
 # ------------------------------------------------------------
 
 def url_for(path_or_uri, lang=None):
-    if isinstance(path_or_uri, unicode):
-        path_or_uri = path_or_uri.encode('utf-8')
-    current_path = request.httprequest.path
-    if isinstance(current_path, unicode):
-        current_path = current_path.encode('utf-8')
-    location = path_or_uri.strip()
+    current_path = request.httprequest.path # should already be text
+    location = pycompat.to_text(path_or_uri).strip()
     force_lang = lang is not None
     url = werkzeug.urls.url_parse(location)
 
-    if request and not url.netloc and not url.scheme and (url.path or force_lang):
+    if not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(current_path, location)
 
-        lang = lang or request.context.get('lang')
+        lang = pycompat.to_text(lang or request.context.get('lang') or u'en_US')
         langs = [lg[0] for lg in request.env['ir.http']._get_language_codes()]
 
         if (len(langs) > 1 or force_lang) and is_multilang_url(location, langs):
-            ps = location.split('/')
+            ps = location.split(u'/')
             if ps[1] in langs:
                 # Replace the language only if we explicitly provide a language to url_for
                 if force_lang:
-                    ps[1] = lang.encode('utf-8')
+                    ps[1] = lang
                 # Remove the default language unless it's explicitly provided
                 elif ps[1] == request.env['ir.http']._get_default_lang().code:
                     ps.pop(1)
             # Insert the context language or the provided language
             elif lang != request.env['ir.http']._get_default_lang().code or force_lang:
-                ps.insert(1, lang.encode('utf-8'))
-            location = '/'.join(ps)
+                ps.insert(1, lang)
+            location = u'/'.join(ps)
 
-    return location.decode('utf-8')
+    return location
 
 
 def is_multilang_url(local_url, langs=None):
@@ -294,7 +293,7 @@ class IrHttp(models.AbstractModel):
         # locate the controller method
         try:
             if request.httprequest.method == 'GET' and '//' in request.httprequest.path:
-                new_url = request.httprequest.path.replace('//', '/') + '?' + request.httprequest.query_string
+                new_url = request.httprequest.path.replace('//', '/').encode('utf-8') + b'?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(new_url, 301)
             rule, arguments = cls._find_handler(return_rule=True)
             func = rule.endpoint
@@ -349,7 +348,7 @@ class IrHttp(models.AbstractModel):
                         path.insert(1, request.lang)
                     path = '/'.join(path) or '/'
                     request.routing_failed = False
-                    redirect = request.redirect(path + '?' + request.httprequest.query_string)
+                    redirect = request.redirect(path.encode('utf-8') + b'?' + request.httprequest.query_string)
                     redirect.set_cookie('frontend_lang', request.lang)
                     return redirect
                 elif url_lang:
@@ -402,11 +401,11 @@ class IrHttp(models.AbstractModel):
             return cls._handle_exception(e)
 
         if getattr(request, 'is_frontend_multilang', False) and request.httprequest.method in ('GET', 'HEAD'):
-            generated_path = werkzeug.url_unquote_plus(path)
-            current_path = werkzeug.url_unquote_plus(request.httprequest.path)
+            generated_path = werkzeug.urls.url_unquote_plus(path)
+            current_path = werkzeug.urls.url_unquote_plus(request.httprequest.path)
             if generated_path != current_path:
                 if request.lang != cls._get_default_lang().code:
                     path = '/' + request.lang + path
                 if request.httprequest.query_string:
-                    path += '?' + request.httprequest.query_string
+                    path = path.encode('utf-8') + b'?' + request.httprequest.query_string
                 return werkzeug.utils.redirect(path, code=301)
