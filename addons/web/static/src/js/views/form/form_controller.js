@@ -5,8 +5,6 @@ var BasicController = require('web.BasicController');
 var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var relational_fields = require('web.relational_fields');
-var basic_fields = require('web.basic_fields')
 var Sidebar = require('web.Sidebar');
 
 var _t = core._t;
@@ -476,13 +474,11 @@ var FormController = BasicController.extend({
         var self = this;
         var fieldWidgets = this.renderer.allFieldWidgets[this.handle];
         var display = function (field, value) {
-            var FieldMany2One = relational_fields.FieldMany2One;
-            var StateSelectionWidget = basic_fields.StateSelectionWidget;
             if (!value) { return value; }
-            if (field instanceof FieldMany2One) {
-                return field.m2o_value;
+            if (field.field.type === 'many2one') {
+                return field.value.data.display_name;
             }
-            if (field instanceof StateSelectionWidget) {
+            if (field.field.type === 'selection') {
                 return _(field.field.selection).find(function (option) {
                     return option[0] === value;
                 })[1];
@@ -491,17 +487,22 @@ var FormController = BasicController.extend({
         };
         var fields = _.chain(fieldWidgets)
             .map(function (field) {
-                var value = field.value.res_id || field.value;
+                var value = field.value;
                 // ignore fields which are empty, invisible, readonly, password field, o2m
                 // or m2m
                 if (!value
                         || field.attrs.invisible
                         || field.field.readonly
-                        || field.field.type === 'one2many'
-                        || field.field.type === 'many2many'
                         || field.field.type === 'binary'
                         || field.nodeOptions.isPassword) {
                     return false;
+                }
+                if(field.field.type === 'one2many'
+                    || field.field.type === 'many2many'){
+                    return false;
+                }
+                if(field.field.type === 'many2one'){
+                    value =  field.value.res_id;
                 }
                 return {
                     name: field.name,
@@ -516,7 +517,10 @@ var FormController = BasicController.extend({
         var conditions = _.chain(fieldWidgets)
             .filter(function (field) { return field.field.change_default; })
             .map(function (field) {
-                var value = field.value.res_id || field.value;
+                var value = field.value;
+                if(field.field.type === 'many2one'){
+                    value =  field.value.res_id;
+                }
                 return {
                     name: field.name,
                     string: field.string,
