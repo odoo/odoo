@@ -7,7 +7,7 @@ class ProjectTaskMergeWizard(models.TransientModel):
     _name = 'project.task.merge.wizard'
 
     task_ids = fields.Many2many('project.task', string="Tasks to Merge", required=True)
-    user_id = fields.Many2one('res.users', string="Assigned to", required=True)
+    user_id = fields.Many2one('res.users', string="Assigned to")
     create_new_task = fields.Boolean('Create a new task')
     target_task_name = fields.Char('New task name')
     target_project_id = fields.Many2one('project.project', string="Target Project")
