@@ -420,7 +420,8 @@ class ir_model_fields(osv.osv):
             if field.state == 'manual' and field.ttype == 'many2many':
                 rel_name = field.relation_table or model._fields[field.name].relation
                 tables_to_drop.add(rel_name)
-            model._pop_field(cr, uid, field.name, context=context)
+            if field.state == 'manual':
+                model._pop_field(cr, uid, field.name, context=context)
 
         if tables_to_drop:
             # drop the relation tables that are not used by other fields
