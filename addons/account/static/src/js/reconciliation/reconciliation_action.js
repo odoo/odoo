@@ -30,6 +30,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         validate_all_balanced: '_onValidate',
         change_name: '_onChangeName',
         close_statement: '_onCloseStatement',
+        load_more: '_onLoadMore',
     },
     config: {
         // used to instanciate the model
@@ -71,6 +72,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
                     'bank_statement_id': self.model.bank_statement_id,
                     'valuenow': self.model.valuenow,
                     'valuemax': self.model.valuemax,
+                    'defaultDisplayQty': self.model.defaultDisplayQty,
                     'title': self.title,
                 });
             });
@@ -89,12 +91,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
-        _.each(this.model.lines, function (line, handle) {
-            var widget = new self.config.LineRenderer(self, self.model, line);
-            widget.handle = handle;
-            self.widgets.push(widget);
-            widget.appendTo(self.$('.o_reconciliation_lines'));
-        });
+        this._renderLines();
         this._openFirstLine();
     },
 
@@ -135,6 +132,15 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     },
 
     /**
+     *
+     */
+    _loadMore: function(qty) {
+        var self = this;
+        return this.model.loadMore(qty).then(function () {
+            self._renderLines();
+        });
+    },
+    /**
      * sitch to 'match' the first available line
      *
      * @private
@@ -152,6 +158,24 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
         }
         return handle;
+    },
+    /**
+     * render line widget and append to view
+     *
+     * @private
+     */
+    _renderLines: function (){
+        var self = this;
+        var linesToDisplay = this.model.getStatementLines();
+        _.each(linesToDisplay, function (line, handle) {
+            var widget = new self.config.LineRenderer(self, self.model, line);
+            widget.handle = handle;
+            self.widgets.push(widget);
+            widget.appendTo(self.$('.o_reconciliation_lines'));
+        });
+        if (this.model.hasMoreLines() === false) {
+            this.renderer.hideLoadMoreButton();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -224,6 +248,14 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         });
     },
     /**
+     * Load more statement and render them
+     *
+     * @param {OdooEvent} event
+     */
+    _onLoadMore: function (event) {
+        return this._loadMore(this.model.defaultDisplayQty);
+    },
+    /**
      * call 'validate' or 'autoReconciliation' model method then destroy the
      * validated lines and update the action renderer with the new status bar 
      * values and notifications then open the first available line
@@ -246,7 +278,15 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
             });
             _.each(result.handles, function (handle) {
                 self._getWidget(handle).destroy();
+                var index = _.findIndex(self.widgets, function (widget) {return widget.handle===handle;});
+                self.widgets.splice(index, 1);
             });
+            // Get number of widget and if less than constant and if there are more to laod, load until constant
+            if (self.widgets.length < self.model.defaultDisplayQty 
+                && self.model.valuemax - self.model.valuenow >= self.model.defaultDisplayQty) {
+                var toLoad = self.model.defaultDisplayQty - self.widgets.length;
+                self._loadMore(toLoad);
+            }
             self._openFirstLine();
         });
     },
