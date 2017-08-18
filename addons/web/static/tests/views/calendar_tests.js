@@ -509,7 +509,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('create event with timezone in week mode with formViewDialog', function (assert) {
-        assert.expect(7);
+        assert.expect(8);
 
         this.data.event.records = [];
         this.data.event.onchanges = {
@@ -558,12 +558,8 @@ QUnit.module('Views', {
                     "should send the context to create events");
                 }
                 if (args.method === "write") {
-                    assert.deepEqual(args.args[1], {
-                          "allday": false,
-                          "start": "2016-12-12 06:00:00",
-                          "stop": "2016-12-12 08:00:00"
-                        },
-                    "should move the event");
+                    assert.deepEqual(args.args[1], expectedEvent,
+                        "should move the event");
                 }
                 return this._super(route, args);
             },
@@ -635,8 +631,25 @@ QUnit.module('Views', {
         left = pos.left + 5;
         top = pos.top + 5;
 
+        // Mode this event to another day
+        var expectedEvent = {
+          "allday": false,
+          "start": "2016-12-12 06:00:00",
+          "stop": "2016-12-12 08:00:00"
+        };
         testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
         left = calendar.$('.fc-day:eq(1)').offset().left + 5;
+        testUtils.triggerPositionalMouseEvent(left, top, "mousemove");
+        testUtils.triggerPositionalMouseEvent(left, top, "mouseup");
+
+        // Move to "All day"
+        expectedEvent = {
+          "allday": true,
+          "start": "2016-12-12 00:00:00",
+          "stop": "2016-12-12 00:00:00"
+        };
+        testUtils.triggerPositionalMouseEvent(left, top, "mousedown");
+        top = calendar.$('.fc-day:eq(1)').offset().top + 5;
         testUtils.triggerPositionalMouseEvent(left, top, "mousemove");
         testUtils.triggerPositionalMouseEvent(left, top, "mouseup");
 
@@ -709,6 +722,65 @@ QUnit.module('Views', {
                 id: 1
             },
             "the new record should have the utc datetime (quickCreate)");
+
+        calendar.destroy();
+        $view.remove();
+    });
+
+    QUnit.test('create all day event in week mode (no quickCreate)', function (assert) {
+        assert.expect(1);
+
+        this.data.event.records = [];
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'mode="week" '+
+                'quick_add="False" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            session: {
+                getTZOffset: function () {
+                    return 120;
+                },
+            },
+            intercepts: {
+                do_action: function (event) {
+                    assert.deepEqual(event.data.action.context, {
+                        "default_name": null,
+                        "default_start": "2016-12-14 05:00:00",
+                        "default_stop": "2016-12-15 17:00:00",
+                    },
+                    "should send the correct data to create events");
+                },
+            },
+        });
+
+        var $view = $('#qunit-fixture').contents();
+        $view.prependTo('body'); // => select with click position
+
+
+        var pos = calendar.$('.fc-bg td:eq(4)').offset();
+        try {
+            testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousedown");
+        } catch (e) {
+            calendar.destroy();
+            $view.remove();
+            throw new Error('The test fails to simulate a click in the screen. Your screen is probably too small or your dev tools is open.');
+        }
+        pos = calendar.$('.fc-bg td:eq(5)').offset();
+        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mousemove");
+        testUtils.triggerPositionalMouseEvent(pos.left+15, pos.top+15, "mouseup");
 
         calendar.destroy();
         $view.remove();
