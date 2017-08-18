@@ -21,7 +21,6 @@ var dialogs = require('web.view_dialogs');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
-var field_utils = require('web.field_utils');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
@@ -290,7 +289,7 @@ var FieldMany2One = AbstractField.extend({
     _reset: function () {
         this._super.apply(this, arguments);
         this.floating = false;
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.m2o_value = this._formatValue(this.value);
     },
     /**
      * @private
@@ -567,7 +566,7 @@ var KanbanFieldMany2One = AbstractField.extend({
     tagName: 'span',
     init: function () {
         this._super.apply(this, arguments);
-        this.m2o_value = field_utils.format.many2one(this.value);
+        this.m2o_value = this._formatValue(this.value);
     },
 
     //--------------------------------------------------------------------------
@@ -2023,7 +2022,8 @@ var FieldRadio = FieldSelection.extend({
  * `name_get` as data).
  */
 var FieldReference = FieldMany2One.extend({
-    supportedFieldTypes: ['reference'],
+    specialData: "_fetchSpecialReference",
+    supportedFieldTypes: ['char', 'reference'],
     template: 'FieldReference',
     events: _.extend({}, FieldMany2One.prototype.events, {
         'change select': '_onSelectionChange',
@@ -2036,22 +2036,8 @@ var FieldReference = FieldMany2One.extend({
 
         // needs to be copied as it is an unmutable object
         this.field = _.extend({}, this.field);
-        if (this.value) {
-            var model = null;
-            // The value of a Reference field can either be a string in the form
-            // of model,record_id or an object
-            if (typeof this.value === "string") {
-                var value = this.value.split(',');
-                model = value[0];
-                this.value = {
-                    res_id: parseInt(value[1]),
-                };
-            } else {
-                model = this.value.model;
-            }
 
-            this._setRelation(model);
-        }
+        this._setState();
     },
     /**
      * @override
@@ -2071,7 +2057,13 @@ var FieldReference = FieldMany2One.extend({
      * @override
      */
     _formatValue: function () {
-        return this.recordData.display_name;
+        var value;
+        if (this.field.type === 'char') {
+            value = this.record.specialData[this.name];
+        } else {
+            value = this.value;
+        }
+        return value && value.data && value.data.display_name || '';
     },
 
     /**
@@ -2097,8 +2089,10 @@ var FieldReference = FieldMany2One.extend({
      * @private
      */
     _reset: function () {
+        var value = this.$('select').val();
+        this._setState();
         this._super.apply(this, arguments);
-        this._setRelation(this.value && this.value.model);
+        this.$('select').val(this.value && this.value.model || value);
     },
     /**
      * Set `relation` key in field properties.
@@ -2109,6 +2103,19 @@ var FieldReference = FieldMany2One.extend({
     _setRelation: function (model) {
         // used to generate the search in many2one
         this.field.relation = model;
+    },
+    /**
+     * @private
+     */
+    _setState: function () {
+        if (this.field.type === 'char') {
+            // in this case, the value is stored in specialData instead
+            this.value = this.record.specialData[this.name];
+        }
+
+        if (this.value) {
+            this._setRelation(this.value.model);
+        }
     },
     /**
      * @override
