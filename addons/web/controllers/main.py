@@ -963,7 +963,7 @@ class Binary(http.Controller):
     def force_contenttype(self, headers, contenttype='image/png'):
         dictheaders = dict(headers)
         dictheaders['Content-Type'] = contenttype
-        return list(pycompat.items(dictheaders))
+        return list(dictheaders.items())
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
@@ -1216,7 +1216,7 @@ class Export(http.Controller):
         else:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
-        fields_sequence = sorted(pycompat.items(fields),
+        fields_sequence = sorted(fields.items(),
             key=lambda field: odoo.tools.ustr(field[1].get('string', '')))
 
         records = []
@@ -1227,7 +1227,7 @@ class Export(http.Controller):
                 if field.get('readonly'):
                     # If none of the field's states unsets readonly, skip the field
                     if all(dict(attrs).get('readonly', True)
-                           for attrs in pycompat.values(field.get('states', {}))):
+                           for attrs in field.get('states', {}).values()):
                         continue
             if not field.get('exportable', True):
                 continue
@@ -1319,7 +1319,7 @@ class Export(http.Controller):
         export_fields = [field.split('/', 1)[1] for field in fields]
         return (
             (prefix + '/' + k, prefix_string + '/' + v)
-            for k, v in pycompat.items(self.fields_info(model, export_fields)))
+            for k, v in self.fields_info(model, export_fields).items())
 
 class ExportFormat(object):
     raw_data = False

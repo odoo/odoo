@@ -15,8 +15,6 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_adyen.controllers.main import AdyenController
 
-from odoo.tools import pycompat
-
 _logger = logging.getLogger(__name__)
 
 
@@ -52,7 +50,7 @@ class AcquirerAdyen(models.Model):
         def signParams(parms):
             signing_string = ':'.join(
                 escapeVal(v)
-                for v in chain(pycompat.keys(parms), pycompat.values(parms))
+                for v in chain(parms.keys(), parms.values())
             )
             hm = hmac.new(hmac_key, signing_string.encode('utf-8'), hashlib.sha256)
             return base64.b64encode(hm.digest())
@@ -81,7 +79,7 @@ class AcquirerAdyen(models.Model):
 
         hmac_key = binascii.a2b_hex(self.adyen_skin_hmac_key.encode('ascii'))
         raw_values = {k: values.get(k.encode('ascii'), '') for k in keys if k in values}
-        raw_values_ordered = OrderedDict(sorted(pycompat.items(raw_values), key=lambda t: t[0]))
+        raw_values_ordered = OrderedDict(sorted(raw_values.items(), key=lambda t: t[0]))
 
         return signParams(raw_values_ordered)
 

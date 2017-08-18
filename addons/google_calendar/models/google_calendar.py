@@ -12,7 +12,7 @@ import pytz
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import exception_to_unicode, pycompat
+from odoo.tools import exception_to_unicode
 
 _logger = logging.getLogger(__name__)
 
@@ -25,15 +25,13 @@ class Meta(type):
     """ This Meta class allow to define class as a structure, and so instancied variable
         in __init__ to avoid to have side effect alike 'static' variable """
     def __new__(typ, name, parents, attrs):
-        methods = {k: v for k, v in pycompat.items(attrs)
-                       if callable(v)}
-        attrs = {k: v for k, v in pycompat.items(attrs)
-                     if not callable(v)}
+        methods = {k: v for k, v in attrs.items() if callable(v)}
+        attrs = {k: v for k, v in attrs.items() if not callable(v)}
 
         def init(self, **kw):
-            for key, val in pycompat.items(attrs):
+            for key, val in attrs.items():
                 setattr(self, key, val)
-            for key, val in pycompat.items(kw):
+            for key, val in kw.items():
                 assert key in attrs
                 setattr(self, key, val)
 
@@ -161,7 +159,7 @@ class SyncOperation(object):
     def __init__(self, src, info, **kw):
         self.src = src
         self.info = info
-        for key, val in pycompat.items(kw):
+        for key, val in kw.items():
             setattr(self, key, val)
 
     def __str__(self):
@@ -689,7 +687,7 @@ class GoogleCalendar(models.AbstractModel):
 
             my_google_attendees = CalendarAttendee.with_context(context_novirtual).search([
                 ('partner_id', '=', my_partner_id),
-                ('google_internal_event_id', 'in', pycompat.keys(all_event_from_google))
+                ('google_internal_event_id', 'in', all_event_from_google.keys())
             ])
             my_google_att_ids = my_google_attendees.ids
 
@@ -753,7 +751,7 @@ class GoogleCalendar(models.AbstractModel):
             ev_to_sync.OE.status = event.active
             ev_to_sync.OE.synchro = att.oe_synchro_date
 
-        for event in pycompat.values(all_event_from_google):
+        for event in all_event_from_google.values():
             event_id = event.get('id')
             base_event_id = event_id.rsplit('_', 1)[0]
 
@@ -788,7 +786,7 @@ class GoogleCalendar(models.AbstractModel):
         #      DO ACTION     #
         ######################
         for base_event in event_to_synchronize:
-            event_to_synchronize[base_event] = sorted(pycompat.items(event_to_synchronize[base_event]), key=operator.itemgetter(0))
+            event_to_synchronize[base_event] = sorted(event_to_synchronize[base_event].items(), key=operator.itemgetter(0))
             for current_event in event_to_synchronize[base_event]:
                 self.env.cr.commit()
                 event = current_event[1]  # event is an Sync Event !

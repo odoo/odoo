@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 class MakeProcurement(models.TransientModel):
@@ -51,8 +50,8 @@ class MakeProcurement(models.TransientModel):
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
-            for key, value in pycompat.items(self.onchange_product_id_dict(self.product_id.id)):
-                setattr(self, key, value)
+            for key, value in self.onchange_product_id_dict(self.product_id.id).items():
+                self[key] = value
 
     @api.model
     def create(self, values):

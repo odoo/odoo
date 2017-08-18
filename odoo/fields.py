@@ -340,7 +340,7 @@ class Field(MetaField('DummyField', (object,), {})):
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
         self._sequence = kwargs['_sequence'] = next(_global_seq)
-        args = {key: val for key, val in pycompat.items(kwargs) if val is not Default}
+        args = {key: val for key, val in kwargs.items() if val is not Default}
         self.args = args or EMPTY_DICT
         self._setup_done = None
 
@@ -369,7 +369,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Set all field attributes at once (with slot defaults). """
         # optimization: we assign slots only
         assign = object.__setattr__
-        for key, val in pycompat.items(self._slots):
+        for key, val in self._slots.items():
             assign(self, key, attrs.pop(key, val))
         if attrs:
             assign(self, '_attrs', attrs)
@@ -547,7 +547,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not getattr(self, attr):
                 setattr(self, attr, getattr(field, prop))
 
-        for attr, value in pycompat.items(field._attrs):
+        for attr, value in field._attrs.items():
             if attr not in self._attrs:
                 setattr(self, attr, value)
 
@@ -655,7 +655,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model = model0.env.get(field.comodel_name)
 
         # add self's model dependencies
-        for mname, fnames in pycompat.items(model0._depends):
+        for mname, fnames in model0._depends.items():
             model = model0.env[mname]
             for fname in fnames:
                 field = model._fields[fname]
@@ -1731,7 +1731,7 @@ class Selection(Field):
             if 'selection_add' in field.args:
                 # use an OrderedDict to update existing values
                 selection_add = field.args['selection_add']
-                self.selection = list(pycompat.items(OrderedDict(self.selection + selection_add)))
+                self.selection = list(OrderedDict(self.selection + selection_add).items())
 
     def _description_selection(self, env):
         """ return the selection list (pairs (value, label)); labels are
@@ -1893,7 +1893,7 @@ class Many2one(_Relational):
         super(Many2one, self)._setup_attrs(model, name)
         # determine self.delegate
         if not self.delegate:
-            self.delegate = name in pycompat.values(model._inherits)
+            self.delegate = name in model._inherits.values()
 
     def update_db(self, model, columns):
         comodel = model.env[self.comodel_name]

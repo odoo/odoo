@@ -8,7 +8,6 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 
-from odoo.tools import pycompat
 from odoo.tools.float_utils import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -21,7 +20,7 @@ def normalize_keys_upper(data):
     convert everything to upper case to be able to easily detected the presence
     of a parameter by checking the uppercase key only
     """
-    return {key.upper(): val for key, val in pycompat.items(data)}
+    return {key.upper(): val for key, val in data.items()}
 
 
 class AcquirerBuckaroo(models.Model):
@@ -73,7 +72,7 @@ class AcquirerBuckaroo(models.Model):
                     del values[key]
                     break
 
-            items = sorted(pycompat.items(values), key=lambda pair: pair[0].lower())
+            items = sorted(values.items(), key=lambda pair: pair[0].lower())
             sign = ''.join('%s=%s' % (k, urls.url_unquote_plus(v)) for k, v in items)
         else:
             sign = ''.join('%s=%s' % (k, get_value(k)) for k in keys)

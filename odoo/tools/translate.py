@@ -258,7 +258,7 @@ def translate_xml_node(node, callback, parse, serialize):
         append_content(result, translate_content(todo) if todo_has_text else todo)
 
         # translate the required attributes
-        for name, value in pycompat.items(result.attrib):
+        for name, value in result.attrib.items():
             if name in TRANSLATED_ATTRS:
                 result.set(name, translate_text(value) or value)
 
@@ -678,7 +678,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
-            for src, row in sorted(pycompat.items(grouped_rows)):
+            for src, row in sorted(grouped_rows.items()):
                 if not lang:
                     # translation template, so no translation value
                     row['translation'] = ''
@@ -692,7 +692,7 @@ def trans_export(lang, modules, buffer, format, cr):
                 module = row[0]
                 rows_by_module.setdefault(module, []).append(row)
             tmpdir = tempfile.mkdtemp()
-            for mod, modrows in pycompat.items(rows_by_module):
+            for mod, modrows in rows_by_module.items():
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
                 pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
@@ -1125,7 +1125,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
         # Then process the entries implied by the POT file (which is more
         # correct w.r.t. the targets) if some of them remain.
         pot_rows = []
-        for src, target in pycompat.items(pot_targets):
+        for src, target in pot_targets.items():
             if target.value:
                 for type, name, res_id in target.targets:
                     pot_rows.append((type, name, res_id, src, target.value, target.comments))

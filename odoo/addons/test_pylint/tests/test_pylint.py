@@ -8,7 +8,6 @@ except ImportError:
     pylint = None
 import subprocess
 from distutils.version import LooseVersion
-from os import devnull
 from os.path import join
 
 from odoo.tests.common import TransactionCase

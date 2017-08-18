@@ -845,7 +845,7 @@ actual arch.
 
         collect(arch, self.env[model_name])
 
-        for field, nodes in pycompat.items(field_nodes):
+        for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.env[field.model_name]
@@ -1102,12 +1102,12 @@ actual arch.
         Model = self.env[model]
         Node = self.env[node_obj]
 
-        for model_key, model_value in pycompat.items(Model._fields):
+        for model_key, model_value in Model._fields.items():
             if model_value.type == 'one2many':
                 if model_value.comodel_name == node_obj:
                     _Node_Field = model_key
                     _Model_Field = model_value.inverse_name
-                for node_key, node_value in pycompat.items(Node._fields):
+                for node_key, node_value in Node._fields.items():
                     if node_value.type == 'one2many':
                         if node_value.comodel_name == conn_obj:
                              # _Source_Field = "Incoming Arrows" (connected via des_node)
@@ -1184,7 +1184,7 @@ actual arch.
             xmlid_filter = "AND md.name IN %s"
             names = tuple(
                 name
-                for (xmod, name), (model, res_id) in pycompat.items(self.pool.model_data_reference_ids)
+                for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items()
                 if xmod == module and model == self._name
             )
             if not names:

@@ -694,7 +694,7 @@ class Module(models.Model):
         _logger.debug('Install from url: %r', urls)
         try:
             # 1. Download & unzip missing modules
-            for module_name, url in pycompat.items(urls):
+            for module_name, url in urls.items():
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
@@ -715,7 +715,7 @@ class Module(models.Model):
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             # 2a. Copy/Replace module source in addons path
-            for module_name, url in pycompat.items(urls):
+            for module_name, url in urls.items():
                 if module_name == OPENERP or not url:
                     continue    # OPENERP is special case, handled below, and no URL means local module
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
@@ -747,7 +747,7 @@ class Module(models.Model):
 
             self.update_list()
 
-            with_urls = [module_name for module_name, url in pycompat.items(urls) if url]
+            with_urls = [module_name for module_name, url in urls.items() if url]
             downloaded = self.search([('name', 'in', with_urls)])
             installed = self.search([('id', 'in', downloaded.ids), ('state', '=', 'installed')])
 

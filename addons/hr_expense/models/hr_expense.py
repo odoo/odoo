@@ -5,7 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import email_split, float_is_zero, pycompat
+from odoo.tools import email_split, float_is_zero
 
 from odoo.addons import decimal_precision as dp
 
@@ -243,7 +243,7 @@ class HrExpense(models.Model):
             expense.sheet_id.write({'account_move_id': move.id})
             if expense.payment_mode == 'company_account':
                 expense.sheet_id.paid_expense_sheets()
-        for move in pycompat.values(move_group_by_sheet):
+        for move in move_group_by_sheet.values():
             move.post()
         return True
 

@@ -203,7 +203,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _postprocess_args(cls, arguments, rule):
         """ post process arg to set uid on browse records """
-        for name, arg in list(pycompat.items(arguments)):
+        for name, arg in list(arguments.items()):
             if isinstance(arg, models.BaseModel) and arg._uid is UID_PLACEHOLDER:
                 arguments[name] = arg.sudo(request.uid)
                 if not arg.exists():

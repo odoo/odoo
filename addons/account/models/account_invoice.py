@@ -395,7 +395,7 @@ class AccountInvoice(models.Model):
             '_onchange_partner_id': ['account_id', 'payment_term_id', 'fiscal_position_id', 'partner_bank_id'],
             '_onchange_journal_id': ['currency_id'],
         }
-        for onchange_method, changed_fields in pycompat.items(onchanges):
+        for onchange_method, changed_fields in onchanges.items():
             if any(f not in vals for f in changed_fields):
                 invoice = self.new(vals)
                 getattr(invoice, onchange_method)()
@@ -516,7 +516,7 @@ class AccountInvoice(models.Model):
             tax_grouped = invoice.get_taxes_values()
 
             # Create new tax lines
-            for tax in pycompat.values(tax_grouped):
+            for tax in tax_grouped.values():
                 account_invoice_tax.create(tax)
 
         # dummy write on self to trigger recomputations
@@ -535,7 +535,7 @@ class AccountInvoice(models.Model):
     def _onchange_invoice_line_ids(self):
         taxes_grouped = self.get_taxes_values()
         tax_lines = self.tax_line_ids.filtered('manual')
-        for tax in pycompat.values(taxes_grouped):
+        for tax in taxes_grouped.values():
             tax_lines += tax_lines.new(tax)
         self.tax_line_ids = tax_lines
         return
@@ -886,7 +886,7 @@ class AccountInvoice(models.Model):
                 else:
                     line2[tmp] = l
             line = []
-            for key, val in pycompat.items(line2):
+            for key, val in line2.items():
                 line.append((0, 0, val))
         return line
 
@@ -1079,7 +1079,7 @@ class AccountInvoice(models.Model):
         result = []
         for line in lines:
             values = {}
-            for name, field in pycompat.items(line._fields):
+            for name, field in line._fields.items():
                 if name in MAGIC_COLUMNS:
                     continue
                 elif field.type == 'many2one':
@@ -1249,7 +1249,7 @@ class AccountInvoice(models.Model):
         for line in self.tax_line_ids:
             res.setdefault(line.tax_id.tax_group_id, 0.0)
             res[line.tax_id.tax_group_id] += line.amount
-        res = sorted(pycompat.items(res), key=lambda l: l[0].sequence)
+        res = sorted(res.items(), key=lambda l: l[0].sequence)
         res = [(l[0].name, l[1]) for l in res]
         return res
 

@@ -290,7 +290,7 @@ class WebRequest(object):
 
     def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
-        arguments ={k: v for k, v in pycompat.items(arguments)
+        arguments ={k: v for k, v in arguments.items()
                          if not k.startswith("_ignored_")}
         self.endpoint_arguments = arguments
         self.endpoint = endpoint
@@ -839,7 +839,7 @@ more details.
         """
         response = Response(data, headers=headers)
         if cookies:
-            for k, v in pycompat.items(cookies):
+            for k, v in cookies.items():
                 response.set_cookie(k, v)
         return response
 
@@ -880,7 +880,7 @@ class ControllerType(type):
         super(ControllerType, cls).__init__(name, bases, attrs)
 
         # flag old-style methods with req as first argument
-        for k, v in pycompat.items(attrs):
+        for k, v in attrs.items():
             if inspect.isfunction(v) and hasattr(v, 'original_func'):
                 # Set routing type on original functions
                 routing_type = v.routing.get('type')
@@ -1136,7 +1136,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         # NOTE we do not store files in the session itself to avoid loading them in memory.
         #      By storing them in the session store, we ensure every worker (even ones on other
         #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
-        for f in pycompat.values(req.files):
+        for f in req.files.values():
             storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
             path = os.path.join(root.session_store.path, storename)
             with open(path, 'w') as fp:
@@ -1154,7 +1154,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         try:
             if data:
                 # regenerate files filenames with the current session store
-                for name, (storename, filename, content_type) in pycompat.items(data['files']):
+                for name, (storename, filename, content_type) in data['files'].items():
                     path = os.path.join(root.session_store.path, storename)
                     files.add(name, (path, filename, content_type))
                 yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
@@ -1162,7 +1162,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 yield None
         finally:
             # cleanup files
-            for f, _, _ in pycompat.values(files):
+            for f, _, _ in files.values():
                 try:
                     os.unlink(f)
                 except IOError:

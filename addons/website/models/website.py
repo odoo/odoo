@@ -363,7 +363,7 @@ class Website(models.Model):
 
         def get_url_localized(router, lang):
             arguments = dict(request.endpoint_arguments)
-            for key, val in list(pycompat.items(arguments)):
+            for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):
                     arguments[key] = val.with_context(lang=lang)
             return router.build(request.endpoint, arguments)
@@ -496,7 +496,7 @@ class Website(models.Model):
         endpoint = rule.endpoint
         methods = endpoint.routing.get('methods') or ['GET']
 
-        converters = list(pycompat.values(rule._converters))
+        converters = list(rule._converters.values())
         if not ('GET' in methods
             and endpoint.routing['type'] == 'http'
             and endpoint.routing['auth'] in ('none', 'public')
@@ -541,7 +541,7 @@ class Website(models.Model):
             values = [{}]
             # converters with a domain are processed after the other ones
             convitems = sorted(
-                pycompat.items(converters),
+                converters.items(),
                 key=lambda x: hasattr(x[1], 'domain') and (x[1].domain != '[]'))
             for (i, (name, converter)) in enumerate(convitems):
                 newval = []
@@ -557,7 +557,7 @@ class Website(models.Model):
             for value in values:
                 domain_part, url = rule.build(value, append_unknown=False)
                 page = {'loc': url}
-                for key, val in pycompat.items(value):
+                for key, val in value.items():
                     if key.startswith('__'):
                         page[key[2:]] = val
                 if url in ('/sitemap.xml',):

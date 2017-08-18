@@ -5,8 +5,6 @@ from datetime import date
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
-
 
 class EmployeesYearlySalaryReport(models.AbstractModel):
     _name = 'report.l10n_in_hr_payroll.report_hryearlysalary'
@@ -99,7 +97,7 @@ class EmployeesYearlySalaryReport(models.AbstractModel):
 
     def salary_list(self, salaries):
         cat_salary_all = []
-        for category_name, amount in pycompat.items(salaries):
+        for category_name, amount in salaries.items():
             cat_salary = []
             total = 0.0
             cat_salary.append(category_name)

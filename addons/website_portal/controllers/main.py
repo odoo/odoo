@@ -4,7 +4,6 @@
 from odoo import http
 from odoo.http import request
 from odoo import tools
-from odoo.tools import pycompat
 from odoo.tools.translate import _
 from odoo.exceptions import ValidationError
 
@@ -134,7 +133,7 @@ class website_account(http.Controller):
                 error["vat"] = 'error'
 
         # error message for empty required fields
-        if [err for err in pycompat.values(error) if err == 'missing']:
+        if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         unknown = [k for k in data if k not in self.MANDATORY_BILLING_FIELDS + self.OPTIONAL_BILLING_FIELDS]

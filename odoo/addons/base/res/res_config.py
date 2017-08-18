@@ -9,7 +9,7 @@ from lxml import etree
 
 from odoo import api, models, registry, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
-from odoo.tools import ustr, pycompat
+from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
 
@@ -247,7 +247,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         :returns: a list of all installed modules in this installer
         :rtype: recordset (collection of Record)
         """
-        selectable = [name for name, field in pycompat.items(self._fields)
+        selectable = [name for name, field in self._fields.items()
                       if field.type == 'boolean']
         return self.env['ir.module.module'].search([('name', 'in', selectable),
                             ('state', 'in', ['to install', 'installed', 'to upgrade'])])
@@ -272,7 +272,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
         """
         base = set(module_name
                    for installer in self.read()
-                   for module_name, to_install in pycompat.items(installer)
+                   for module_name, to_install in installer.items()
                    if self._fields[module_name].type == 'boolean' and to_install)
 
         hooks_results = set()
@@ -282,7 +282,7 @@ class ResConfigInstaller(models.TransientModel, ResConfigModuleInstallationMixin
                 hooks_results.update(hook() or set())
 
         additionals = set(module
-                          for requirements, consequences in pycompat.items(self._install_if)
+                          for requirements, consequences in self._install_if.items()
                           if base.issuperset(requirements)
                           for module in consequences)
 
@@ -442,7 +442,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         ref = self.env.ref
 
         defaults, groups, modules, others = [], [], [], []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if name.startswith('default_') and hasattr(field, 'default_model'):
                 defaults.append((name, field.default_model, name[8:]))
             elif name.startswith('group_') and field.type in ('boolean', 'selection') and \

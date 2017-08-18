@@ -761,7 +761,7 @@ class GroupsView(models.Model):
             # determine sequence order: a group appears after its implied groups
             order = {g: len(g.trans_implied_ids & gs) for g in gs}
             # check whether order is total, i.e., sequence orders are distinct
-            if len(set(pycompat.values(order))) == len(gs):
+            if len(set(order.values())) == len(gs):
                 return (app, 'selection', gs.sorted(key=order.get))
             else:
                 return (app, 'boolean', gs)
@@ -775,7 +775,7 @@ class GroupsView(models.Model):
                 others += g
         # build the result
         res = []
-        for app, gs in sorted(pycompat.items(by_app), key=lambda it: it[0].sequence or 0):
+        for app, gs in sorted(by_app.items(), key=lambda it: it[0].sequence or 0):
             res.append(linearize(app, gs))
         if others:
             res.append((self.env['ir.module.category'], 'boolean', others))
@@ -815,7 +815,7 @@ class UsersView(models.Model):
         add, rem = [], []
         values1 = {}
 
-        for key, val in pycompat.items(values):
+        for key, val in values.items():
             if is_boolean_group(key):
                 (add if val else rem).append(get_boolean_group(key))
             elif is_selection_groups(key):

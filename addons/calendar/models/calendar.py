@@ -470,7 +470,7 @@ class Alarm(models.Model):
     name = fields.Char('Name', required=True)
     type = fields.Selection([('notification', 'Notification'), ('email', 'Email')], 'Type', required=True, default='email')
     duration = fields.Integer('Remind Before', required=True, default=1)
-    interval = fields.Selection(list(pycompat.items(_interval_selection)), 'Unit', required=True, default='hours')
+    interval = fields.Selection(list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer('Duration in minutes', compute='_compute_duration_minutes', store=True, help="Duration in minutes")
 
     @api.onchange('duration', 'interval')
@@ -1292,7 +1292,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_unread(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(pycompat.values(id_map)))
+        real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_unread()
         for event in self:
             if event.id == id_map[event.id]:
@@ -1304,7 +1304,7 @@ class Meeting(models.Model):
     @api.multi
     def _get_message_needaction(self):
         id_map = {x: calendar_id2real_id(x) for x in self.ids}
-        real = self.browse(set(pycompat.values(id_map)))
+        real = self.browse(set(id_map.values()))
         super(Meeting, real)._get_message_needaction()
         for event in self:
             if event.id == id_map[event.id]:

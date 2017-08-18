@@ -315,7 +315,7 @@ class IrValues(models.Model):
         for row in self._cr.dictfetchall():
             value = pickle.loads(row['value'])
             defaults.setdefault(row['name'], (row['id'], row['name'], value))
-        return list(pycompat.values(defaults))
+        return list(defaults.values())
 
     # use ormcache: this is called a lot by BaseModel.default_get()!
     @api.model
@@ -428,4 +428,4 @@ class IrValues(models.Model):
                 results[name] = (id, name, action_def)
             except (AccessError, MissingError):
                 continue
-        return sorted(pycompat.values(results))
+        return sorted(results.values())

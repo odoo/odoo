@@ -59,7 +59,7 @@ class LuxTaxGenerator:
             if tax_code in tax_codes:
                 raise RuntimeError('duplicate tax code %s' % tax_code)
             tax_codes[tax_code] = row['id']
-            writer.writerow([pycompat.to_text(v) for v in pycompat.values(row)])
+            writer.writerow([pycompat.to_text(v) for v in row.values()])
 
         # read taxes and add leaf tax codes
         new_tax_codes = {}  # id: parent_code
@@ -162,7 +162,7 @@ class LuxTaxGenerator:
                 cur_seq = seq
             writer.writerow([
                 pycompat.to_text(v)
-                for v in list(pycompat.values(row))[3:]
+                for v in list(row.values())[3:]
             ] + [cur_seq])
 
     def fiscal_pos_map_to_csv(self):
@@ -173,7 +173,7 @@ class LuxTaxGenerator:
         keys = next(fiscal_pos_map_iterator)
         writer.writerow(keys)
         for row in fiscal_pos_map_iterator:
-            writer.writerow([pycompat.to_text(s) for s in pycompat.values(row)])
+            writer.writerow([pycompat.to_text(s) for s in row.values()])
 
 
 if __name__ == '__main__':
