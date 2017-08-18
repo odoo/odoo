@@ -31,6 +31,30 @@
             </form>
         </template>
 
+        <template id="stripe_form">
+            <script src="https://checkout.stripe.com/checkout.js"></script>
+            <input type='hidden' name='stripe_image' t-att-value="acquirer.stripe_image_url"/>
+            <input type='hidden' name='merchant' t-att-value='acquirer.company_id.name'/>
+            <input type='hidden' name='amount' t-att-value="amount"/>
+            <input type="hidden" name='return_url' t-att-value='returndata'/>
+            <!--Order Information -->
+            <input type='hidden' name='invoice_num' t-att-value='reference'/>
+            <input type='hidden' name='currency' t-att-value='currency'/>
+            <input type='hidden' name='currency_id' t-att-value='currency_id'/>
+            <!-- Billing Information-->
+            <input type='hidden' name='name' t-att-value='name'/>
+            <input type='hidden' name='address_line1' t-att-value='address_line1'/>
+            <input type='hidden' name='address_city' t-att-value='address_city'/>
+            <input type='hidden' name='address_zip' t-att-value='address_zip'/>
+            <input type='hidden' name='address_country' t-att-value='address_country'/>
+            <input type='hidden' name='phone' t-att-value='phone'/>
+            <input type='hidden' name='email' t-att-value='email'/>
+            <input id="acquirer_stripe" type='hidden' name="acquirer" t-att-value="acquirer.id"/>
+            <input type='hidden' name="stripe_key" t-att-value="acquirer.stripe_publishable_key"/>
+            <!-- TBE TODO: Seems like the JS does something with the submit button, I need to check this out -->
+            <script type="text/javascript" src="/payment_stripe/static/src/js/stripe.js"></script>
+        </template>
+
         <template id="stripe_s2s_form">
             <input type="hidden" name="data_set" data-create-route="/payment/stripe/s2s/create_json_3ds"/>
             <div class="mt8">
@@ -55,12 +79,6 @@
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="clearfix"/>
             </div>
-        </template>
-
-        <template id="payment_stripe_redirect" name="Payment Stripe">
-            <script type="text/javascript">
-                window.location.href = '<t t-esc="return_url"/>';
-            </script>
         </template>
     </data>
 </odoo>
