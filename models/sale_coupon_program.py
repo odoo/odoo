@@ -4,7 +4,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
-from odoo.tools import pycompat
 
 
 class SaleCouponProgram(models.Model):
@@ -206,7 +205,7 @@ class SaleCouponProgram(models.Model):
         valid_programs = self.filtered(lambda program: not program.rule_products_domain)
         for program in self - valid_programs:
             ordered_rule_products_qty = sum(
-                qty for product, qty in pycompat.items(products_qties)
+                qty for product, qty in products_qties.items()
                 if program._is_valid_product(product)
             )
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
