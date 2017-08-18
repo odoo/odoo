@@ -367,7 +367,7 @@ QUnit.module('Views', {
         $quickCreate.find('input').val('new partner');
         $quickCreate.find('input').blur();
 
-        // When focus out the input containing value, should not delete the Quick Creation        
+        // When focus out the input containing value, should not delete the Quick Creation
         assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 1,
             "Blur should not have destroyed the quick create element");
         nbRecords = 5;
@@ -377,6 +377,59 @@ QUnit.module('Views', {
             "should have created a partner");
         assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
             "should have correct name");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create and edit in grouped mode', function (assert) {
+        assert.expect(6);
+
+        var newRecordID;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            mockRPC: function (route, args) {
+                var def = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    def.then(function (result) {
+                        newRecordID = result[0];
+                    });
+                }
+                return def;
+            },
+            groupBy: ['bar'],
+            intercepts: {
+                switch_view: function (event) {
+                    assert.strictEqual(event.data.mode, "edit",
+                        "should trigger 'open_record' event in edit mode");
+                    assert.strictEqual(event.data.res_id, newRecordID,
+                        "should open the correct record");
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column should contain one record");
+
+        // click to add and edit an element
+        var $quickCreate = kanban.$('.o_kanban_quick_create');
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+        $quickCreate = kanban.$('.o_kanban_quick_create');
+        $quickCreate.find('input').val('new partner');
+        $quickCreate.find('button.o_kanban_edit').click();
+
+        assert.strictEqual(this.data.partner.records.length, 5,
+            "should have created a partner");
+        assert.strictEqual(_.last(this.data.partner.records).name, "new partner",
+            "should have correct name");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column should now contain two records");
 
         kanban.destroy();
     });
