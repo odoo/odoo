@@ -900,7 +900,7 @@ QUnit.module('account', {
         widget.$('.create .quick_add button:contains(ATOS)').trigger('click');
 
         assert.strictEqual(widget.$('.accounting_view tbody .cell_label, .accounting_view tbody .cell_right').text().replace(/[\n\r\s$,]+/g, ' '),
-            "ATOS Banque1145.62Tax 20.00%229.12ATOS Frais26.71Tax 10.00% include2.67", "should display 4 lines");
+            " ATOS Banque 1145.62 Tax 20.00% 229.12 ATOS Frais 26.71 Tax 10.00% include 2.67", "should display 4 lines");
         assert.strictEqual(widget.$('.accounting_view tfoot .cell_label, .accounting_view tfoot .cell_left').text().replace(/[\n\r\s$,]+/g, ' '),
             "Create Write-off229.12", "should display the 'Create Write-off' line with value in left column");
 
