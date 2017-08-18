@@ -341,6 +341,9 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
      */
     _renderEdit: function () {
         var def = this._super.apply(this, arguments);
+        if (this.field.size && this.field.size > 0) {
+            this.$el.attr('maxlength', this.field.size);
+        }
         this.$el = this.$el.add(this._renderTranslateButton());
         return def;
     },
