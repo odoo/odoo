@@ -45,6 +45,62 @@ class TestPickShip(TestStockCommon):
         })
         return picking_pick, picking_client
 
+    def create_pick_pack_ship(self):
+        picking_ship = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        ship = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_ship.id,
+            'location_id': self.output_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        picking_pack = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        pack = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_pack.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.output_location,
+            'move_dest_ids': [(4, ship.id)],
+        })
+
+        picking_pick = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_pick.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'move_dest_ids': [(4, pack.id)],
+            'state': 'confirmed',
+        })
+        return picking_pick, picking_pack, picking_ship
+
     def test_mto_moves(self):
         """
             10 in stock, do pick->ship and check ship is assigned when pick is done, then backorder of ship
@@ -279,6 +335,178 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(picking_client.state, 'assigned')
         self.assertEqual(picking_client.move_lines.reserved_availability, 5.0)
 
+    def test_pick_ship_return(self):
+        """ Create pick and ship. Bring it ot the customer and then return
+        it to stock. This test check the state and the quantity after each move in
+        order to ensure that it is correct.
+        """
+        picking_pick, picking_ship = self.create_pick_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        customer_location = self.env['stock.location'].browse(self.customer_location)
+        self.productA.tracking = 'lot'
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '123456789'
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0, lot_id=lot)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick.action_done()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_ship.state, 'assigned')
+
+        picking_ship.action_assign()
+        picking_ship.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_ship.action_done()
+
+        customer_quantity = self.env['stock.quant']._get_available_quantity(self.productA, customer_location, lot_id=lot)
+        self.assertEqual(customer_quantity, 10, 'It should be one product in customer')
+
+        """ First we create the return picking for pick pinking.
+        Since we do not have created the return between customer and
+        output. This return should not be available and should only have
+        picking pick as origin move.
+        """
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        self.assertEqual(return_pick_picking.state, 'waiting')
+
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 10.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        self.assertEqual(return_ship_picking.state, 'assigned', 'Return ship picking should automatically be assigned')
+        """ We created the return for ship picking. The origin/destination
+        link between return moves should have been created during return creation.
+        """
+        self.assertTrue(return_ship_picking.move_lines in return_pick_picking.move_lines.mapped('move_orig_ids'),
+                        'The pick return picking\'s moves should have the ship return picking\'s moves as origin')
+
+        self.assertTrue(return_pick_picking.move_lines in return_ship_picking.move_lines.mapped('move_dest_ids'),
+                        'The ship return picking\'s moves should have the pick return picking\'s moves as destination')
+
+        return_ship_picking.move_lines[0].move_line_ids[0].write({
+            'qty_done': 10.0,
+            'lot_id': lot.id,
+        })
+        return_ship_picking.action_done()
+        self.assertEqual(return_ship_picking.state, 'done')
+        self.assertEqual(return_pick_picking.state, 'assigned')
+
+        customer_quantity = self.env['stock.quant']._get_available_quantity(self.productA, customer_location, lot_id=lot)
+        self.assertEqual(customer_quantity, 0, 'It should be one product in customer')
+
+        pack_quantity = self.env['stock.quant']._get_available_quantity(self.productA, pack_location, lot_id=lot)
+        self.assertEqual(pack_quantity, 0, 'It should be one product in pack location but is reserved')
+
+        # Should use previous move lot.
+        return_pick_picking.move_lines[0].move_line_ids[0].qty_done = 10.0
+        return_pick_picking.action_done()
+        self.assertEqual(return_pick_picking.state, 'done')
+
+        stock_quantity = self.env['stock.quant']._get_available_quantity(self.productA, stock_location, lot_id=lot)
+        self.assertEqual(stock_quantity, 10, 'The product is not back in stock')
+
+    def test_pick_pack_ship_return(self):
+        """ This test do a pick pack ship delivery to customer and then
+        return it to stock. Once everything is done, this test will check
+        if all the link orgini/destination between moves are correct.
+        """
+        picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.productA.tracking = 'serial'
+        lot = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '123456789'
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 1.0, lot_id=lot)
+
+        picking_pick.action_assign()
+        picking_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
+        picking_pick.action_done()
+
+        picking_pack.action_assign()
+        picking_pack.move_lines[0].move_line_ids[0].qty_done = 1.0
+        picking_pack.action_done()
+
+        picking_ship.action_assign()
+        picking_ship.move_lines[0].move_line_ids[0].qty_done = 1.0
+        picking_ship.action_done()
+
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_ship.ids, active_id=picking_ship.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_ship_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        return_ship_picking.move_lines[0].move_line_ids[0].write({
+            'qty_done': 1.0,
+            'lot_id': lot.id,
+        })
+        return_ship_picking.action_done()
+
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pack.ids, active_id=picking_pack.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pack_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        return_pack_picking.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pack_picking.action_done()
+
+        stock_return_picking = self.env['stock.return.picking']\
+            .with_context(active_ids=picking_pick.ids, active_id=picking_pick.ids[0])\
+            .create({})
+        stock_return_picking.product_return_moves.quantity = 1.0
+        stock_return_picking_action = stock_return_picking.create_returns()
+        return_pick_picking = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+
+        return_pick_picking.move_lines[0].move_line_ids[0].qty_done = 1.0
+        return_pick_picking.action_done()
+
+        # Now that everything is returned we will check if the return moves are correctly linked between them.
+        # +--------------------------------------------------------------------------------------------------------+
+        # |         -- picking_pick(1) -->       -- picking_pack(2) -->         -- picking_ship(3) -->
+        # | Stock                          Pack                         Output                          Customer
+        # |         <--- return pick(6) --      <--- return pack(5) --          <--- return ship(4) --
+        # +--------------------------------------------------------------------------------------------------------+
+        # Recaps of final link (MO = move_orig_ids, MD = move_dest_ids)
+        # picking_pick(1) : MO = (), MD = (2,6)
+        # picking_pack(2) : MO = (1), MD = (3,5)
+        # picking ship(3) : MO = (2), MD = (4)
+        # return ship(4) : MO = (3), MD = (5)
+        # return pack(5) : MO = (2, 4), MD = (6)
+        # return pick(6) : MO = (1, 5), MD = ()
+
+        self.assertEqual(len(picking_pick.move_lines.move_orig_ids), 0, 'Picking pick should not have origin moves')
+        self.assertEqual(set(picking_pick.move_lines.move_dest_ids.ids), set((picking_pack.move_lines | return_pick_picking.move_lines).ids))
+
+        self.assertEqual(set(picking_pack.move_lines.move_orig_ids.ids), set(picking_pick.move_lines.ids))
+        self.assertEqual(set(picking_pack.move_lines.move_dest_ids.ids), set((picking_ship.move_lines | return_pack_picking.move_lines).ids))
+
+        self.assertEqual(set(picking_ship.move_lines.move_orig_ids.ids), set(picking_pack.move_lines.ids))
+        self.assertEqual(set(picking_ship.move_lines.move_dest_ids.ids), set(return_ship_picking.move_lines.ids))
+
+        self.assertEqual(set(return_ship_picking.move_lines.move_orig_ids.ids), set(picking_ship.move_lines.ids))
+        self.assertEqual(set(return_ship_picking.move_lines.move_dest_ids.ids), set(return_pack_picking.move_lines.ids))
+
+        self.assertEqual(set(return_pack_picking.move_lines.move_orig_ids.ids), set((picking_pack.move_lines | return_ship_picking.move_lines).ids))
+        self.assertEqual(set(return_pack_picking.move_lines.move_dest_ids.ids), set(return_pick_picking.move_lines.ids))
+
+        self.assertEqual(set(return_pick_picking.move_lines.move_orig_ids.ids), set((picking_pick.move_lines | return_pack_picking.move_lines).ids))
+        self.assertEqual(len(return_pick_picking.move_lines.move_dest_ids), 0)
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
@@ -400,8 +628,8 @@ class TestSinglePicking(TestStockCommon):
 
         # self.assertEqual(move1.product_qty, 1.0)
         # self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 
@@ -455,8 +683,8 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(move1.product_qty, 1.0)
         self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 
@@ -503,8 +731,8 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(move1.product_qty, 1.0)
         self.assertEqual(move1.quantity_done, 1.0)
-        self.assertEqual(move1.reserved_availability, 1.0)
-        self.assertEqual(move1.move_line_ids.product_qty, 1.0)  # should keep the reservation
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(move1.move_line_ids.product_qty, 0.0)  # change reservation to 0 for done move
         self.assertEqual(move1.move_line_ids.qty_done, 1.0)
         self.assertEqual(move1.state, 'done')
 

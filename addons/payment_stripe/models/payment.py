@@ -71,7 +71,7 @@ class PaymentAcquirerStripe(models.Model):
             'acquirer_id': int(data['acquirer_id']),
             'partner_id': int(data['partner_id'])
         })
-        return payment_token.id
+        return payment_token
 
     @api.multi
     def stripe_s2s_form_validate(self, data):
@@ -82,6 +82,21 @@ class PaymentAcquirerStripe(models.Model):
             if not data.get(field_name):
                 return False
         return True
+
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        res = super(PaymentAcquirerStripe, self)._get_feature_support()
+        res['tokenize'].append('stripe')
+        return res
 
 
 class PaymentTransactionStripe(models.Model):
@@ -112,6 +127,29 @@ class PaymentTransactionStripe(models.Model):
         result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref)
         return self._stripe_s2s_validate_tree(result)
 
+
+    def _create_stripe_refund(self):
+        api_url_refund = 'https://%s/refunds' % (self.acquirer_id._get_stripe_api_url())
+
+        refund_params = {
+            'charge': self.acquirer_reference,
+            'amount': int(self.amount*100), # by default, stripe refund the full amount (we don't really need to specify the value)
+            'metadata[reference]': self.reference,
+        }
+
+        r = requests.post(api_url_refund,
+                            auth=(self.acquirer_id.stripe_secret_key, ''),
+                            params=refund_params,
+                            headers=STRIPE_HEADERS)
+        return r.json()
+
+    @api.multi
+    def stripe_s2s_do_refund(self, **kwargs):
+        self.ensure_one()
+        self.state = 'refunding'
+        result = self._create_stripe_refund()
+        return self._stripe_s2s_validate_tree(result)
+
     @api.model
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
@@ -135,18 +173,21 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state not in ('draft', 'pending'):
+        if self.state not in ('draft', 'pending', 'refunding'):
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         if status == 'succeeded':
+            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': 'done',
+                'state': new_state,
                 'date_validate': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
             self.execute_callback()
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             return True
         else:
             error = tree['error']['message']

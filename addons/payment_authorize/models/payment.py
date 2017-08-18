@@ -116,7 +116,7 @@ class PaymentAcquirerAuthorize(models.Model):
             'partner_id': int(data.get('partner_id'))
         }
         PaymentMethod = self.env['payment.token'].sudo().create(values)
-        return PaymentMethod.id
+        return PaymentMethod
 
     @api.multi
     def authorize_s2s_form_validate(self, data):
@@ -191,7 +191,7 @@ class TxAuthorize(models.Model):
 
     @api.multi
     def _authorize_form_validate(self, data):
-        if self.state == 'done':
+        if self.state in ['done', 'refunded']:
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
             return True
         status_code = int(data.get('x_response_code', '0'))
@@ -219,6 +219,9 @@ class TxAuthorize(models.Model):
                     'partner_id': self.partner_id.id,
                 })
                 self.payment_token_id = token_id
+
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             return True
         elif status_code == self._authorize_pending_tx_status:
             self.write({
@@ -254,6 +257,17 @@ class TxAuthorize(models.Model):
         return self._authorize_s2s_validate_tree(res)
 
     @api.multi
+    def authorize_s2s_do_refund(self):
+        self.ensure_one()
+        transaction = AuthorizeAPI(self.acquirer_id)
+        self.state = 'refunding'
+        if self.type == 'validation':
+            res = transaction.void(self.acquirer_reference)
+        else:
+            res = transaction.credit(self.payment_token_id, self.amount, self.acquirer_reference)
+        return self._authorize_s2s_validate_tree(res)
+
+    @api.multi
     def authorize_s2s_capture_transaction(self):
         self.ensure_one()
         transaction = AuthorizeAPI(self.acquirer_id)
@@ -273,8 +287,7 @@ class TxAuthorize(models.Model):
 
     @api.multi
     def _authorize_s2s_validate(self, tree):
-        self.ensure_one()
-        if self.state == 'done':
+        if self.state in ['done', 'refunded']:
             _logger.warning('Authorize: trying to validate an already validated tx (ref %s)' % self.reference)
             return True
         status_code = int(tree.get('x_response_code', '0'))
@@ -288,6 +301,10 @@ class TxAuthorize(models.Model):
                 })
                 if init_state != 'authorized':
                     self.execute_callback()
+
+                if self.payment_token_id:
+                    self.payment_token_id.verified = True
+
             if tree.get('x_type').lower() == 'auth_only':
                 self.write({
                     'state': 'authorized',
@@ -295,13 +312,19 @@ class TxAuthorize(models.Model):
                 })
                 self.execute_callback()
             if tree.get('x_type').lower() == 'void':
-                self.write({
-                    'state': 'cancel',
-                })
+                if self.type == 'validation' and self.state == 'refunding':
+                    self.write({
+                        'state': 'refunded',
+                    })
+                else:
+                    self.write({
+                        'state': 'cancel',
+                    })
             return True
         elif status_code == self._authorize_pending_tx_status:
+            new_state = 'refunding' if self.state == 'refunding' else 'pending'
             self.write({
-                'state': 'pending',
+                'state': new_state,
                 'acquirer_reference': tree.get('x_trans_id'),
             })
             return True
