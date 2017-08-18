@@ -712,35 +712,39 @@ var ViewEditor = Widget.extend({
 
         this.$lists.xml.select2('destroy');
         this.$lists.xml.select2({
-            formatResult: _formatDisplay,
-            formatSelection: _formatDisplay,
+            formatResult: _formatDisplay.bind(this, false),
+            formatSelection: _formatDisplay.bind(this, true),
         });
+        this.$lists.xml.data('select2').dropdown.addClass('o_ace_select2_dropdown');
         this.$lists.less.select2('destroy');
         this.$lists.less.select2({
-            formatResult: _formatDisplay,
-            formatSelection: _formatDisplay,
+            formatResult: _formatDisplay.bind(this, false),
+            formatSelection: _formatDisplay.bind(this, true),
         });
+        this.$lists.less.data('select2').dropdown.addClass('o_ace_select2_dropdown');
 
-        function _formatDisplay(data) {
+        function _formatDisplay(isSelected, data) {
             var $elem = $(data.element);
 
+            var text = data.text || '';
+            if (!isSelected) {
+                text = Array($elem.data('level')).join('-') + ' ' + text;
+            }
             var $div = $('<div/>',  {
-                text: data.text || '',
-                style: 'padding: 0 0 0 ' + (24 * $elem.data('level')) + 'px',
+                text: text,
+                class: 'o_ace_select2_result',
             });
 
             if ($elem.data('dirty') || $elem.data('customized')) {
                 $div.prepend($('<span/>', {
-                    class: 'fa fa-floppy-o ' + ($elem.data('dirty') ? 'text-warning' : 'text-success'),
-                    style: 'margin-right: 8px;',
+                    class: 'mr8 fa fa-floppy-o ' + ($elem.data('dirty') ? 'text-warning' : 'text-success'),
                 }));
             }
 
-            if (session.debug && $elem.data('debug')) {
+            if (!isSelected && session.debug && $elem.data('debug')) {
                 $div.append($('<span/>', {
                     text: ' (' + $elem.data('debug') + ')',
-                    class: 'text-muted',
-                    style: 'font-size: 80%',
+                    class: 'ml4 small text-muted',
                 }));
             }
 
