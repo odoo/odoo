@@ -522,8 +522,8 @@
                     <field name="number" string="Invoice" filter_domain="['|','|','|', ('number','ilike',self), ('origin','ilike',self), ('reference', 'ilike', self), ('partner_id', 'child_of', self)]"/>
                     <field name="journal_id" />
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
-                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
-                    <filter name="refunds" string="Credit Notes" domain="['&amp;', ('state','in',['open','paid']),('type','in',('out_refund','in_refund'))]"/>
+                    <filter name="invoices" string="Invoices" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_invoice','in_invoice'))]"/>
+                    <filter name="refunds" string="Credit Notes" domain="['&amp;', ('state','in',['draft','open','paid']),('type','in',('out_refund','in_refund'))]"/>
                     <separator/>
                     <filter name="unpaid" string="Not Paid" domain="[('state','=','open')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'open')]" help="Overdue invoices, maturity date passed"/>
@@ -554,6 +554,36 @@
                         <filter string="Due Date" context="{'group_by':'date_due'}"/>
                     </group>
                </search>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_inherit_invoices" model="ir.ui.view">
+            <field name="name">account.invoice.select.invoices</field>
+            <field name="model">account.invoice</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="filter[@name='invoices']" position="attributes">
+                        <attribute name="string">Not Draft</attribute>
+                    </xpath>
+                    <filter name="refunds" position="replace"/>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_inherit_credit_notes" model="ir.ui.view">
+            <field name="name">account.invoice.select.credit.notes</field>
+            <field name="model">account.invoice</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="filter[@name='refunds']" position="attributes">
+                        <attribute name="string">Not Draft</attribute>
+                    </xpath>
+                    <filter name="invoices" position="replace"/>
+                </data>
             </field>
         </record>
 
@@ -624,7 +654,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a customer invoice.
@@ -665,7 +695,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'default_type': 'out_refund', 'journal_type': 'sale'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a credit note.
@@ -703,7 +733,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter_inherit_invoices"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new vendor bill.
@@ -739,7 +769,7 @@
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'default_type': 'in_refund', 'journal_type': 'purchase'}</field>
-            <field name="search_view_id" ref="view_account_invoice_filter"/>
+            <field name="search_view_id" ref="view_account_invoice_filter_inherit_credit_notes"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to record a new vendor credit note.
