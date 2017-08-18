@@ -345,6 +345,12 @@ class IrTranslation(models.Model):
 
         # create missing translations
         for res_id in set(ids) - set(existing_ids):
+            # TODO: Remove this ugly fix, needed because es_419 lang is not
+            # supported by odoo yet.
+            # Remove this section after issue
+            # https://github.com/odoo/odoo/issues/18363 be solved.
+            if lang == 'es_419':
+                lang = self.env.user.company_id.partner_id.lang or 'en_US'
             self.create({
                 'lang': lang,
                 'type': tt,
