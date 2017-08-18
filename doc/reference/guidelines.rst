@@ -452,11 +452,8 @@ So, you can write ``if some_collection:`` instead of ``if len(some_collection):`
     # better
     for key in my_dict:
             "do something..."
-    # creates a temporary list
+    # accessing the key,value pair
     for key, value in my_dict.items():
-            "do something..."
-    # only iterates
-    for key, value in my_dict.iteritems():
             "do something..."
 
 - Use dict.setdefault

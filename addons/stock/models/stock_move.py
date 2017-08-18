@@ -767,7 +767,7 @@ class StockMove(models.Model):
                         grouped_move_lines_out[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
                     available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in.keys()}
                     # pop key if the quantity available amount to 0
-                    available_move_lines = dict((k, v) for k, v in available_move_lines.iteritems() if v)
+                    available_move_lines = dict((k, v) for k, v in available_move_lines.items() if v)
 
                     if not available_move_lines:
                         continue

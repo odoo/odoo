@@ -876,7 +876,7 @@ def trans_generate(lang, modules, cr):
                 for dummy, val in field.selection:
                     push_translation(module, 'selection', name, 0, val)
 
-        for field_name, field in record._fields.iteritems():
+        for field_name, field in record._fields.items():
             if field.translate:
                 name = model + "," + field_name
                 try:
