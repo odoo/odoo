@@ -718,6 +718,31 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('char field with size attribute', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.foo.size = 5; // max length
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<group><field name="foo"/></group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('input.o_field_widget').attr('maxlength'), '5',
+            "maxlength attribute should have been set correctly on the input");
+
+        form.destroy();
+    });
+
     QUnit.test('char field in editable list view', function (assert) {
         assert.expect(6);
 
