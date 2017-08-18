@@ -67,6 +67,12 @@
                 <xpath expr="//form/sheet" position="inside">
                     <a type="action" name="account.action_account_bank_journal_form" style="cursor:pointer;">You can define additional accounts here</a>
                 </xpath>
+                <xpath expr="//group[@name='receivables']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//group[@name='payables']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
                 <xpath expr="//form/sheet" position="after">
                     <footer>
                         <field name="account_setup_bank_data_marked_done" invisible="True"/>
@@ -144,7 +150,6 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id"/>
-                    <field name="company_id" readonly="1" groups="base.group_multi_company"/>
                     <field name="opening_debit"/>
                     <field name="opening_credit"/>
                 </tree>

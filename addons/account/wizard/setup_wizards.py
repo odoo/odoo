@@ -8,7 +8,7 @@ from odoo import api, fields, models
 
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 
-import logging
+import logging #TODO OCO
 _logger=logging.getLogger(__name__)
 
 class FinancialYearOpeningWizard(models.TransientModel):
@@ -67,13 +67,17 @@ class OpeningAccountMoveWizard(models.TransientModel):
         unaffected_earnings_account = self.company_id.get_unaffected_earnings_account()
         balancing_line = self.opening_move_line_ids.filtered(lambda x: x.account_id == unaffected_earnings_account)
 
+        _logger.warn("Papa a vu le fifi de lolo")
         if balancing_line:
             if not self.opening_move_line_ids == balancing_line and (debit_difference or credit_difference):
+                _logger.warn("Un jour, ils te rejoindront dans le soleil")
                 balancing_line.debit = credit_difference
                 balancing_line.credit = debit_difference
             else:
+                _logger.warn("coucou")
                 self.opening_move_line_ids -= balancing_line
         elif debit_difference or credit_difference:
+            _logger.warn("QUOUUUUWA ? "+str(debit_difference)+"   "+str(credit_difference))
             balancing_line = self.env['account.move.line'].new({
                         'name': 'Opening Move Automatic Balancing Line',
                         'move_id': self.company_id.account_opening_move_id.id,
@@ -83,3 +87,4 @@ class OpeningAccountMoveWizard(models.TransientModel):
                         'company_id': self.company_id,
                     })
             self.opening_move_line_ids += balancing_line
+        _logger.warn("Gne ?")

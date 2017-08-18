@@ -288,13 +288,13 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">                                    
-                                    <a type="object" t-if="journal_type == 'sale'" name="open_action" 
+                                <div class="col-xs-6">
+                                    <a type="object" t-if="journal_type == 'sale'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
-                                        <t t-esc="dashboard.number_waiting"/> Awaiting payments 
+                                        <t t-esc="dashboard.number_waiting"/> Awaiting payments
                                     </a>
-                                    
-                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action" 
+
+                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action"
                                     context="{'search_default_unpaid':1}" id="account_dashboard_purchase_pay_link">
                                         <t t-esc="dashboard.number_waiting"/> Payments to do
                                     </a>

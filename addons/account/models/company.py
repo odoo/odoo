@@ -149,7 +149,7 @@ Best Regards,''')
 
     @api.model
     def setting_init_bank_account_action(self):
-        """ Called by the 'Bank Account' button of the setup bar.
+        """ Called by the 'Bank Accounts' button of the setup bar.
         """
         current_company = self.env['res.company']._company_default_get()
         view_id = self.env.ref('account.setup_bank_journal_form').id
@@ -216,7 +216,7 @@ Best Regards,''')
             'view_mode': 'tree',
             'search_view_id': self.env.ref('account.view_account_search').id,
             'views': [[view_id, 'list']],
-            'domain': [('user_type_id','!=',self.env.ref('account.data_unaffected_earnings').id)] # We hide the current year earnings account as they are automatically computed.
+            'domain': [('user_type_id','!=',self.env.ref('account.data_unaffected_earnings').id), ('company_id','=',current_company.id)] # We hide the current year earnings account as it is automatically computed.
         }
 
     @api.model
