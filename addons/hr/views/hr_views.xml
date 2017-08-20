@@ -516,8 +516,8 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div>
-                                <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
                                         <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
