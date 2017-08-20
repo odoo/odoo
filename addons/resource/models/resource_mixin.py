@@ -5,7 +5,6 @@ from datetime import timedelta
 
 from odoo import api, fields, models
 
-
 class ResourceMixin(models.AbstractModel):
     _name = "resource.mixin"
     _description = 'Resource Mixin'
@@ -70,7 +69,7 @@ class ResourceMixin(models.AbstractModel):
         for day_intervals in calendar._iter_leave_intervals(from_datetime, to_datetime, self.resource_id.id):
             theoric_hours = self.get_day_work_hours_count(day_intervals[0][0].date(), calendar=calendar)
             leave_time = sum((interval[1] - interval[0] for interval in day_intervals), timedelta())
-            days_count += round((leave_time.total_seconds()/3600 / theoric_hours) * 4) / 4
+            days_count += round((leave_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
         return days_count
 
     def iter_leaves(self, from_datetime, to_datetime, calendar=None):

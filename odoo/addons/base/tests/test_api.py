@@ -482,7 +482,7 @@ class TestAPI(common.TransactionCase):
         ps = self.env['res.partner'].search([])
 
         # sort by model order
-        qs = ps[:len(ps) / 2] + ps[len(ps) / 2:]
+        qs = ps[:len(ps) // 2] + ps[len(ps) // 2:]
         self.assertEqual(qs.sorted().ids, ps.ids)
 
         # sort by name, with a function or a field name
