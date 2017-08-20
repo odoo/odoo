@@ -4,32 +4,33 @@
     @sale-table-spacing: 10px;
 
     .o_kanban_record {
-        span {
-            display: inline-block;
-        }
-        min-height: 250px;
+        // span {
+        //     display: inline-block;
+        // }
+        // min-height: 250px;
+        .o-flex(1, 1, 450px);
         @media (min-width: @screen-sm-min) {
-            min-width: 450px;
+            max-width: 500px;
         }
-        .o_dashboard_star {
-            font-size: 12px;
-
-            &.fa-star-o {
-                color: @odoo-main-color-muted;
-                &:hover {
-                    color: gold;
-                }
-            }
-            &.fa-star {
-                color: gold;
-            }
-        }
-        .o_kanban_card_upper_content {
-            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
-        }
+        // .o_dashboard_star {
+        //     font-size: 12px;
+        // 
+        //     &.fa-star-o {
+        //         color: @odoo-main-color-muted;
+        //         &:hover {
+        //             color: gold;
+        //         }
+        //     }
+        //     &.fa-star {
+        //         color: gold;
+        //     }
+        // }
+        // .o_kanban_card_upper_content {
+        //     margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
+        // }
         .o_sales_team_kanban_graph_section {
-            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
-            .o-position-absolute(@bottom: 0, @left: 0, @right: 0);
+            // margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
+            // .o-position-absolute(@bottom: 0, @left: 0, @right: 0);
             .o_graph_linechart {
                 > svg {
                     height: 80px;
@@ -84,28 +85,28 @@
                     g.nv-barsWrap {
                         g.nv-group.nv-series-0 {
                             g.nv-bar {
-                                fill: @odoo-brand-primary !important;
+                                // fill: @odoo-brand-primary !important;
                             }
                         }
                     }
 
                     // lower the graph a bit as it's too high
                     g.nvd3.nv-wrap {
-                        transform: translateY(10px);
+                        // transform: translateY(10px);
                     }
                     // X axis
                     g.nv-x.nv-axis .nv-axislabel{
-                        transform:translateY(-78px);
-                        font-weight: bold;
+                        // transform:translateY(-78px);
+                        // font-weight: bold;
                     }
                     g.nv-y.nv-axis {
-                        transform: translateY(10px);
+                        // transform: translateY(10px);
                     }
                 }
             }
         }
         .bottom_block {
-            height: @odoo-horizontal-padding*2 + 20px;
+            // height: @odoo-horizontal-padding*2 + 20px;
         }
     }
 
