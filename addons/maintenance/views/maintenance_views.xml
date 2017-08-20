@@ -743,8 +743,8 @@
                 <field name="todo_request_count_unscheduled"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div>
-                            <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
                                     <div class="o_primary">
                                         <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">

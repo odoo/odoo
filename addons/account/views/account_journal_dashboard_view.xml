@@ -12,7 +12,7 @@
                 <field name="kanban_dashboard"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
@@ -36,7 +36,7 @@
                     </t>
 
                     <t t-name="JournalTop">
-                        <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                        <div t-attf-class="o_kanban_card_header">
                             <div class="o_kanban_card_header_title">
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
