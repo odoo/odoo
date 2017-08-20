@@ -744,7 +744,7 @@ class Message(models.Model):
                     values['attachment_ids'].append((4, attachment.id))
                     data_to_url[key] = '/web/image/%s' % attachment.id
                 return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
-            values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'])
+            values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
         message = super(Message, self).create(values)
         message._invalidate_documents()
