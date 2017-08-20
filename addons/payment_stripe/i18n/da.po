@@ -51,9 +51,23 @@ msgid "Checkout Image URL"
 msgstr ""
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#, python-format
+msgid "Close"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
 msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
 msgstr "Bekræft <span class=\"fa fa-long-arrow-right\"/>"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#, python-format
+msgid "Error"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
@@ -76,6 +90,13 @@ msgid "Payment Transaction"
 msgstr "Betalings transaktion"
 
 #. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:43
+#, python-format
+msgid "Payment error"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
 msgid "Stripe publishable key"
 msgstr ""
@@ -94,7 +115,9 @@ msgstr ""
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:111
 #, python-format
-msgid "Stripe: invalid reply received from provider, missing reference"
+msgid ""
+"Stripe: invalid reply received from provider, missing reference. Additional "
+"message: %s"
 msgstr ""
 
 #. module: payment_stripe
