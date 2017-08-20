@@ -771,7 +771,7 @@ class WorkerHTTP(Worker):
             client, addr = self.multi.socket.accept()
             self.process_request(client, addr)
         except socket.error as e:
-            if e[0] not in (errno.EAGAIN, errno.ECONNABORTED):
+            if e.errno not in (errno.EAGAIN, errno.ECONNABORTED):
                 raise
 
     def start(self):
