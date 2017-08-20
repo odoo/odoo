@@ -11,7 +11,7 @@ from lxml import etree
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.ir.ir_qweb import QWebException
-from odoo.tools import pycompat, misc, ustr
+from odoo.tools import misc, ustr
 
 
 class TestQWebTField(TransactionCase):
@@ -406,7 +406,7 @@ class TestQWebNS(TransactionCase):
             ('cac', 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'),
             ('cbc', 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2'),
         }
-        self.assertEqual(set(pycompat.items(result_etree.nsmap)), expected_ns)
+        self.assertEqual(set(result_etree.nsmap.items()), expected_ns)
 
         # check that the t-call did its work
         cac_lines = result_etree.findall('.//cac:line', namespaces={'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2'})
@@ -484,7 +484,7 @@ class FileSystemLoader(object):
             if node.get('t-name') == name:
                 root = etree.Element('templates')
                 root.append(deepcopy(node))
-                arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+                arch = etree.tostring(root, encoding='unicode')
                 return arch
 
 

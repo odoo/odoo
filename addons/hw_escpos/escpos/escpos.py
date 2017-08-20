@@ -12,6 +12,8 @@ from hashlib import md5
 from PIL import Image
 from xml.etree import ElementTree as ET
 
+from odoo.tools import pycompat
+
 try:
     import jcconv
 except ImportError:
@@ -27,7 +29,7 @@ from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """
-    if isinstance(stuff,basestring):
+    if isinstance(stuff,pycompat.string_types):
         return stuff
     else:
         return str(stuff)
@@ -431,7 +433,7 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5(img).digest()
+        id = md5(img.encode('utf-8')).digest()
 
         if id not in self.img_cache:
             print('not in cache')

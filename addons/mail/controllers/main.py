@@ -7,14 +7,13 @@ import logging
 import psycopg2
 import werkzeug
 
-from operator import itemgetter
 from werkzeug import url_encode
 
 from odoo import api, http, registry, SUPERUSER_ID, _
 from odoo.addons.web.controllers.main import binary_content
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.tools import consteq, pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -102,7 +101,7 @@ class MailController(http.Controller):
         """ End-point to receive mail from an external SMTP server. """
         dbs = req.jsonrequest.get('databases')
         for db in dbs:
-            message = dbs[db].decode('base64')
+            message = base64.b64decode(dbs[db])
             try:
                 db_registry = registry(db)
                 with db_registry.cursor() as cr:
@@ -154,10 +153,10 @@ class MailController(http.Controller):
             'default': subtype.default,
             'internal': subtype.internal,
             'followed': subtype.id in followers.mapped('subtype_ids').ids,
-            'parent_model': subtype.parent_id and subtype.parent_id.res_model or False,
+            'parent_model': subtype.parent_id.res_model,
             'id': subtype.id
         } for subtype in subtypes]
-        subtypes_list = sorted(subtypes_list, key=itemgetter('parent_model', 'res_model', 'internal', 'sequence'))
+        subtypes_list = sorted(subtypes_list, key=lambda it: (it['parent_model'] or '', it['res_model'] or '', it['internal'], it['sequence']))
         return subtypes_list
 
     @http.route('/mail/view', type='http', auth='none')
@@ -183,7 +182,7 @@ class MailController(http.Controller):
             else:
                 # either a wrong message_id, either someone trying ids -> just go to messaging
                 return self._redirect_to_messaging()
-        elif res_id and isinstance(res_id, basestring):
+        elif res_id and isinstance(res_id, pycompat.string_types):
             res_id = int(res_id)
 
         return self._redirect_to_record(model, res_id, access_token)

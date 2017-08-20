@@ -430,7 +430,7 @@ class MassMailing(models.Model):
         secret = self.env["ir.config_parameter"].sudo().get_param(
             "database.secret")
         token = (self.env.cr.dbname, self.id, int(res_id), tools.ustr(email))
-        return hmac.new(str(secret), repr(token), hashlib.sha512).hexdigest()
+        return hmac.new(secret.encode('utf-8'), repr(token).encode('utf-8'), hashlib.sha512).hexdigest()
 
     def _compute_next_departure(self):
         cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall

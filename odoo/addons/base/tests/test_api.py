@@ -98,7 +98,7 @@ class TestAPI(common.TransactionCase):
         self.assertIsRecordset(user.groups_id, 'res.groups')
 
         partners = self.env['res.partner'].search([])
-        for name, field in pycompat.items(partners._fields):
+        for name, field in partners._fields.items():
             if field.type == 'many2one':
                 for p in partners:
                     self.assertIsRecord(p[name], field.comodel_name)
@@ -296,7 +296,7 @@ class TestAPI(common.TransactionCase):
         self.assertItemsEqual(partners.ids, country_id_cache)
 
         # partners' countries are ready for prefetching
-        country_ids = set(cid for cids in pycompat.values(country_id_cache) for cid in cids)
+        country_ids = set(cid for cids in country_id_cache.values() for cid in cids)
         self.assertTrue(len(country_ids) > 1)
         self.assertItemsEqual(country_ids, partners._prefetch['res.country'])
 
@@ -482,7 +482,7 @@ class TestAPI(common.TransactionCase):
         ps = self.env['res.partner'].search([])
 
         # sort by model order
-        qs = ps[:len(ps) / 2] + ps[len(ps) / 2:]
+        qs = ps[:len(ps) // 2] + ps[len(ps) // 2:]
         self.assertEqual(qs.sorted().ids, ps.ids)
 
         # sort by name, with a function or a field name

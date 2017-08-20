@@ -44,12 +44,12 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo.service.server import memory_info
-from odoo.service import security, model as service_model
-from odoo.tools.func import lazy_property
-from odoo.tools import ustr, consteq, frozendict, pycompat, unique
+from .service.server import memory_info
+from .service import security, model as service_model
+from .tools.func import lazy_property
+from .tools import ustr, consteq, frozendict, pycompat, unique
 
-from odoo.modules.module import module_manifest
+from .modules.module import module_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -162,8 +162,12 @@ def redirect_with_hash(url, code=303):
     # See extensive test page at http://greenbytes.de/tech/tc/httpredirects/
     if request.httprequest.user_agent.browser in ('firefox',):
         return werkzeug.utils.redirect(url, code)
+    # FIXME: decide whether urls should be bytes or text, apparently
+    # addons/website/controllers/main.py:91 calls this with a bytes url
+    # but addons/web/controllers/main.py:481 uses text... (blows up on login)
+    url = pycompat.to_text(url)
     if urls.url_parse(url, scheme='http').scheme not in ('http', 'https'):
-        url = 'http://' + url
+        url = u'http://' + url
     url = url.replace("'", "%27").replace("<", "%3C")
     return "<html><head><script>window.location = '%s' + location.hash;</script></head></html>" % url
 
@@ -286,7 +290,7 @@ class WebRequest(object):
 
     def set_handler(self, endpoint, arguments, auth):
         # is this needed ?
-        arguments ={k: v for k, v in pycompat.items(arguments)
+        arguments ={k: v for k, v in arguments.items()
                          if not k.startswith("_ignored_")}
         self.endpoint_arguments = arguments
         self.endpoint = endpoint
@@ -392,7 +396,7 @@ class WebRequest(object):
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
-        hm = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        hm = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return '%so%s' % (hm, max_ts)
 
     def validate_csrf(self, csrf):
@@ -416,7 +420,7 @@ class WebRequest(object):
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
-        hm_expected = hmac.new(str(secret), msg, hashlib.sha1).hexdigest()
+        hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
 def route(route=None, **kw):
@@ -510,7 +514,7 @@ def route(route=None, **kw):
             if isinstance(response, Response) or f.routing_type == 'json':
                 return response
 
-            if isinstance(response, basestring):
+            if isinstance(response, (bytes, pycompat.text_type)):
                 return Response(response)
 
             if isinstance(response, werkzeug.exceptions.HTTPException):
@@ -597,7 +601,7 @@ class JsonRequest(WebRequest):
             request = self.session.pop('jsonp_request_%s' % (request_id,), '{}')
         else:
             # regular jsonrpc2
-            request = self.httprequest.stream.read()
+            request = self.httprequest.stream.read().decode(self.httprequest.charset)
 
         # Read POST content or POST Form Data named "request"
         try:
@@ -761,7 +765,7 @@ class HttpRequest(WebRequest):
             req = request.httprequest
             if req.method == 'POST':
                 request.session.save_request_data()
-                redirect = '/web/proxy/post{r.path}?{r.query_string}'.format(r=req)
+                redirect = '/web/proxy/post{r.full_path}'.format(r=req)
             elif not request.params.get('noredirect'):
                 redirect = req.url
             if redirect:
@@ -835,7 +839,7 @@ more details.
         """
         response = Response(data, headers=headers)
         if cookies:
-            for k, v in pycompat.items(cookies):
+            for k, v in cookies.items():
                 response.set_cookie(k, v)
         return response
 
@@ -876,7 +880,7 @@ class ControllerType(type):
         super(ControllerType, cls).__init__(name, bases, attrs)
 
         # flag old-style methods with req as first argument
-        for k, v in pycompat.items(attrs):
+        for k, v in attrs.items():
             if inspect.isfunction(v) and hasattr(v, 'original_func'):
                 # Set routing type on original functions
                 routing_type = v.routing.get('type')
@@ -1132,7 +1136,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         # NOTE we do not store files in the session itself to avoid loading them in memory.
         #      By storing them in the session store, we ensure every worker (even ones on other
         #      servers) can access them. It also allow stale files to be deleted by `session_gc`.
-        for f in pycompat.values(req.files):
+        for f in req.files.values():
             storename = 'werkzeug_%s_%s.file' % (self.sid, uuid.uuid4().hex)
             path = os.path.join(root.session_store.path, storename)
             with open(path, 'w') as fp:
@@ -1150,7 +1154,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         try:
             if data:
                 # regenerate files filenames with the current session store
-                for name, (storename, filename, content_type) in pycompat.items(data['files']):
+                for name, (storename, filename, content_type) in data['files'].items():
                     path = os.path.join(root.session_store.path, storename)
                     files.add(name, (path, filename, content_type))
                 yield werkzeug.datastructures.CombinedMultiDict([data['form'], files])
@@ -1158,7 +1162,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 yield None
         finally:
             # cleanup files
-            for f, _, _ in pycompat.values(files):
+            for f, _, _ in files.values():
                 try:
                     os.unlink(f)
                 except IOError:
@@ -1380,13 +1384,13 @@ class Root(object):
         if isinstance(result, Response) and result.is_qweb:
             try:
                 result.flatten()
-            except(Exception) as e:
+            except Exception as e:
                 if request.db:
                     result = request.registry['ir.http']._handle_exception(e)
                 else:
                     raise
 
-        if isinstance(result, basestring):
+        if isinstance(result, (bytes, pycompat.text_type)):
             response = Response(result, mimetype='text/html')
         else:
             response = result
@@ -1554,7 +1558,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
 
     :param cache_timeout: the timeout in seconds for the headers.
     """
-    if isinstance(filepath_or_fp, (str, unicode)):
+    if isinstance(filepath_or_fp, pycompat.string_types):
         if not filename:
             filename = os.path.basename(filepath_or_fp)
         file = open(filepath_or_fp, 'rb')
@@ -1604,7 +1608,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
             mtime,
             size,
             adler32(
-                filename.encode('utf-8') if isinstance(filename, unicode)
+                filename.encode('utf-8') if isinstance(filename, pycompat.text_type)
                 else filename
             ) & 0xffffffff
         ))

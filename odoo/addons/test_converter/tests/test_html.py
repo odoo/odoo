@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import datetime
 import os
 
@@ -123,7 +123,7 @@ class TestCurrencyExport(TestExport):
             converted, u'<span class="oe_currency_value">\u20110.12</span>'
                        u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
     def test_currency_pre(self):
@@ -136,9 +136,9 @@ class TestCurrencyExport(TestExport):
         self.assertEqual(
             converted,
                       u'{symbol}\N{NO-BREAK SPACE}'
-                      '<span class="oe_currency_value">0.12</span>'.format(
+                      u'<span class="oe_currency_value">0.12</span>'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
     def test_currency_precision(self):
@@ -151,10 +151,10 @@ class TestCurrencyExport(TestExport):
 
         self.assertEqual(
             converted,
-                      '<span class="oe_currency_value">0.12</span>'
+                      u'<span class="oe_currency_value">0.12</span>'
                       u'\N{NO-BREAK SPACE}{symbol}'.format(
                 obj=obj,
-                symbol=currency.symbol.encode('utf-8')
+                symbol=currency.symbol
             ),)
 
 
@@ -213,25 +213,23 @@ class TestBinaryExport(TestBasicExport):
         with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
             content = f.read()
 
-        encoded_content = content.encode('base64')
+        encoded_content = base64.b64encode(content)
         value = converter.value_to_html(encoded_content, {})
 
         self.assertEqual(
-            value, '<img src="data:image/jpeg;base64,%s">' % (
-                encoded_content
-            ))
+            value, u'<img src="data:image/jpeg;base64,%s">' % encoded_content.decode('ascii'))
 
         with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(content.encode('base64'), {})
+            converter.value_to_html(base64.b64encode(content), {})
 
         with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
             content = f.read()
 
         with self.assertRaises(ValueError):
-            converter.value_to_html(content.encode('base64'), {})
+            converter.value_to_html(base64.b64encode(content), {})
 
 
 class TestSelectionExport(TestBasicExport):

@@ -4,6 +4,8 @@ import os.path
 
 from werkzeug import urls
 
+from odoo.tools import pycompat
+
 """
 * adds github_link(mode) context variable: provides URL (in relevant mode) of
   current document on github
@@ -99,7 +101,7 @@ def add_doc_link(app, pagename, templatename, context, doctree):
     # in Sphinx 1.3 it's possible to have mutliple source suffixes and that
     # may be useful in the future
     source_suffix = app.config.source_suffix
-    source_suffix = source_suffix if isinstance(source_suffix, basestring) else source_suffix[0]
+    source_suffix = source_suffix if isinstance(source_suffix, pycompat.string_types) else source_suffix[0]
     # can't use functools.partial because 3rd positional is line not mode
     context['github_link'] = lambda mode='edit': make_github_link(
         app, 'doc/%s%s' % (pagename, source_suffix), mode=mode)

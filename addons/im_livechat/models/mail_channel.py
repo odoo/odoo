@@ -2,8 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.tools import pycompat
-
 
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
@@ -78,7 +76,7 @@ class MailChannel(models.Model):
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
                 if last_msg:
                     channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
-        return list(pycompat.values(channel_infos_dict))
+        return list(channel_infos_dict.values())
 
     @api.model
     def channel_fetch_slot(self):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import csv
 import datetime
 import io
 import itertools
@@ -16,12 +15,6 @@ from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import ustr
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
-
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
 
 FIELDS_RECURSION_LIMIT = 2
 ERROR_PREVIEW_BYTES = 200
@@ -49,7 +42,7 @@ FILE_TYPE_DICT = {
 }
 EXTENSIONS = {
     '.' + ext: handler
-    for mime, (ext, handler, req) in pycompat.items(FILE_TYPE_DICT)
+    for mime, (ext, handler, req) in FILE_TYPE_DICT.items()
 }
 
 
@@ -121,7 +114,7 @@ class Import(models.TransientModel):
         }]
         model_fields = Model.fields_get()
         blacklist = models.MAGIC_COLUMNS + [Model.CONCURRENCY_CHECK_FIELD]
-        for name, field in pycompat.items(model_fields):
+        for name, field in model_fields.items():
             if name in blacklist:
                 continue
             # an empty string means the field is deprecated, @deprecated must
@@ -134,7 +127,7 @@ class Import(models.TransientModel):
                     continue
                 # states = {state: [(attr, value), (attr2, value2)], state2:...}
                 if not any(attr == 'readonly' and value is False
-                           for attr, value in itertools.chain.from_iterable(pycompat.values(states))):
+                           for attr, value in itertools.chain.from_iterable(states.values())):
                     continue
             field_value = {
                 'id': name,
@@ -214,9 +207,9 @@ class Import(models.TransientModel):
                 if cell.ctype is xlrd.XL_CELL_NUMBER:
                     is_float = cell.value % 1 != 0.0
                     values.append(
-                        unicode(cell.value)
+                        pycompat.text_type(cell.value)
                         if is_float
-                        else unicode(int(cell.value))
+                        else pycompat.text_type(int(cell.value))
                     )
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
@@ -268,14 +261,13 @@ class Import(models.TransientModel):
             # csv module expect utf-8, see http://docs.python.org/2/library/csv.html
             csv_data = csv_data.decode(encoding).encode('utf-8')
 
-        csv_iterator = csv.reader(
-            StringIO(csv_data),
+        csv_iterator = pycompat.csv_reader(
+            io.BytesIO(csv_data),
             quotechar=str(options['quoting']),
             delimiter=str(options['separator']))
 
         return (
-            [item.decode('utf-8') for item in row]
-            for row in csv_iterator
+            row for row in csv_iterator
             if any(x for x in row if x.strip())
         )
 
@@ -603,7 +595,7 @@ class Import(models.TransientModel):
     def _parse_import_data(self, data, import_fields, options):
         # Get fields of type date/datetime
         all_fields = self.env[self.res_model].fields_get()
-        for name, field in pycompat.items(all_fields):
+        for name, field in all_fields.items():
             if field['type'] in ('date', 'datetime') and name in import_fields:
                 # Parse date
                 index = import_fields.index(name)
@@ -611,11 +603,13 @@ class Import(models.TransientModel):
                 server_format = DEFAULT_SERVER_DATE_FORMAT if field['type'] == 'date' else DEFAULT_SERVER_DATETIME_FORMAT
 
                 if options.get('%s_format' % field['type'], server_format) != server_format:
-                    user_format = ustr(options.get('%s_format' % field['type'])).encode('utf-8')
+                    # datetime.str[fp]time takes *native strings* in both
+                    # versions, for both data and pattern
+                    user_format = pycompat.to_native(options.get('%s_format' % field['type']))
                     for num, line in enumerate(data):
                         if line[index]:
                             try:
-                                line[index] = dt.strftime(dt.strptime(ustr(line[index].strip()).encode('utf-8'), user_format), server_format)
+                                line[index] = dt.strftime(dt.strptime(pycompat.to_native(line[index].strip()), user_format), server_format)
                             except ValueError as e:
                                 raise ValueError(_("Column %s contains incorrect values. Error in line %d: %s") % (name, num + 1, e))
                             except Exception as e:
@@ -659,7 +653,7 @@ class Import(models.TransientModel):
         except ValueError as error:
             return [{
                 'type': 'error',
-                'message': unicode(error),
+                'message': pycompat.text_type(error),
                 'record': False,
             }]
 

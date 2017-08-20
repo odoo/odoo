@@ -12,8 +12,7 @@ from lxml import etree
 import yaml
 
 import odoo
-from . import assertion_report
-from . import yaml_tag, pycompat
+from . import assertion_report, pycompat, yaml_tag
 from .config import config
 from .misc import file_open, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo import SUPERUSER_ID
@@ -24,9 +23,6 @@ unsafe_eval = eval
 from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
-
-def encode(s):
-    return s.encode('utf8') if isinstance(s, unicode) else s
 
 class YamlImportException(Exception):
     pass
@@ -41,7 +37,7 @@ def _is_yaml_mapping(node, tag_constructor):
     return value
 
 def is_comment(node):
-    return isinstance(node, basestring)
+    return isinstance(node, pycompat.string_types)
 
 def is_assert(node):
     return isinstance(node, yaml_tag.Assert) \
@@ -87,7 +83,7 @@ def is_ir_set(node):
     return _is_yaml_mapping(node, yaml_tag.IrSet)
 
 def is_string(node):
-    return isinstance(node, basestring)
+    return isinstance(node, pycompat.string_types)
 
 class RecordDictWrapper(dict):
     """
@@ -202,7 +198,7 @@ class YamlInterpreter(object):
 
     def process_assert(self, node):
         if isinstance(node, dict):
-            assertion, expressions = next(pycompat.items(node))
+            assertion, expressions = list(node.items())[0]
         else:
             assertion, expressions = node, []
 
@@ -275,10 +271,10 @@ class YamlInterpreter(object):
         return record_dict
 
     def process_record(self, node):
-        record, fields = next(pycompat.items(node))
+        record, fields = list(node.items())[0]
         model = self.env[record.model]
         view_id = record.view
-        if view_id and (view_id is not True) and isinstance(view_id, basestring):
+        if view_id and (view_id is not True) and isinstance(view_id, pycompat.string_types):
             if '.' not in view_id:
                 view_id = self.module + '.' + view_id
             view_id = self.env.ref(view_id).id
@@ -358,7 +354,10 @@ class YamlInterpreter(object):
                         traverse(child, elems)
 
             elems = OrderedDict()
-            traverse(etree.fromstring(encode(view['arch'])), elems)
+            arch = view['arch']
+            if isinstance(arch, pycompat.text_type):
+                arch = arch.encode('utf-8')
+            traverse(etree.fromstring(arch), elems)
             return elems
 
         def is_readonly(field_elem):
@@ -377,7 +376,7 @@ class YamlInterpreter(object):
         def process_vals(fg, vals):
             """ sanitize the given field values """
             result = {}
-            for field_name, field_value in pycompat.items(vals):
+            for field_name, field_value in vals.items():
                 if field_name not in fg:
                     continue
                 if fg[field_name]['type'] == 'many2one' and isinstance(field_value, (tuple, list)):
@@ -398,7 +397,7 @@ class YamlInterpreter(object):
         def post_process(fg, elems, vals):
             """ filter out readonly fields from vals """
             result = {}
-            for field_name, field_value in pycompat.items(vals):
+            for field_name, field_value in vals.items():
                 if is_readonly(elems[field_name]):
                     continue
                 if fg[field_name]['type'] in ('one2many', 'many2many'):
@@ -444,7 +443,7 @@ class YamlInterpreter(object):
                 record_dict.update(process_vals(fg, result.get('value', {})))
 
             # fill in fields, and execute onchange where necessary
-            for field_name, field_elem in pycompat.items(elems):
+            for field_name, field_elem in elems.items():
                 assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                 if is_readonly(field_elem):
                     # skip readonly fields
@@ -474,7 +473,7 @@ class YamlInterpreter(object):
                 result = recs.onchange(dict(record_dict, **parent_values), field_name, onchange_spec)
                 record_dict.update(process_vals(fg, {
                     key: val
-                    for key, val in pycompat.items(result.get('value', {}))
+                    for key, val in result.get('value', {}).items()
                     if key not in fields        # do not shadow values explicitly set in yaml
                 }))
 
@@ -483,7 +482,7 @@ class YamlInterpreter(object):
         else:
             record_dict = {}
 
-        for field_name, expression in pycompat.items(fields):
+        for field_name, expression in fields.items():
             if record_dict.get(field_name):
                 continue
             field_value = self._eval_field(model, field_name, expression, parent=record_dict, default=False, context=context)
@@ -494,7 +493,7 @@ class YamlInterpreter(object):
         # should not be sent to create. This bug appears with not stored function fields in the new API.
         return {
             key: val
-            for key, val in pycompat.items(record_dict)
+            for key, val in record_dict.items()
             for field in [model._fields[key].base_field]
             if field.store or field.inverse
         }
@@ -580,11 +579,11 @@ class YamlInterpreter(object):
         self.sudo_env = self.env(user=SUPERUSER_ID)
 
     def process_python(self, node):
-        python, statements = next(pycompat.items(node))
+        python, statements = list(node.items())[0]
         assert python.model or python.id, "!python node must have attribute `model` or `id`"
         if python.id is None:
             record = self.env[python.model]
-        elif isinstance(python.id, basestring):
+        elif isinstance(python.id, pycompat.string_types):
             record = self.get_record(python.id)
         else:
             record = self.env[python.model].browse(python.id)
@@ -640,7 +639,7 @@ class YamlInterpreter(object):
         return args
 
     def process_function(self, node):
-        function, params = next(pycompat.items(node))
+        function, params = list(node.items())[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
         model = self.env[function.model]
@@ -770,9 +769,9 @@ class YamlInterpreter(object):
     def process_ir_set(self, node):
         if not self.mode == 'init':
             return False
-        _, fields = next(pycompat.items(node))
+        _, fields = list(node.items())[0]
         res = {}
-        for fieldname, expression in pycompat.items(fields):
+        for fieldname, expression in fields.items():
             if is_eval(expression):
                 value = safe_eval(expression.expression, self.eval_context)
             else:
@@ -878,7 +877,7 @@ class YamlInterpreter(object):
         elif not is_preceded_by_comment:
             if isinstance(node, dict):
                 msg = "Creating %s\n with %s"
-                args = next(pycompat.items(node))
+                args = list(node.items())[0]
                 self._log(msg, *args)
             else:
                 self._log(node)

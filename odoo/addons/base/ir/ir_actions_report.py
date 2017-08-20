@@ -10,6 +10,7 @@ from odoo.http import request
 
 import time
 import base64
+import io
 import logging
 import os
 import lxml.html
@@ -56,9 +57,9 @@ except (OSError, IOError):
 else:
     _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
     out, err = process.communicate()
-    match = re.search('([0-9.]+)', out)
+    match = re.search(b'([0-9.]+)', out)
     if match:
-        version = match.group(0)
+        version = match.group(0).decode('ascii')
         if LooseVersion(version) < LooseVersion('0.12.0'):
             _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
             wkhtmltopdf_state = 'upgrade'
@@ -464,20 +465,20 @@ class IrActionsReport(models.Model):
             if wkhtmltopdf_obj.header:
                 head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
                 temporary_files.append(head_file_path)
-                with closing(os.fdopen(head_file_fd, 'w')) as head_file:
+                with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
                     head_file.write(wkhtmltopdf_obj.header)
                 local_command_args.extend(['--header-html', head_file_path])
             if wkhtmltopdf_obj.footer:
                 foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
                 temporary_files.append(foot_file_path)
-                with closing(os.fdopen(foot_file_fd, 'w')) as foot_file:
+                with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                     foot_file.write(wkhtmltopdf_obj.footer)
                 local_command_args.extend(['--footer-html', foot_file_path])
 
             # Body stuff
             content_file_fd, content_file_path = tempfile.mkstemp(suffix='.html', prefix='report.body.tmp.')
             temporary_files.append(content_file_path)
-            with closing(os.fdopen(content_file_fd, 'w')) as content_file:
+            with closing(os.fdopen(content_file_fd, 'wb')) as content_file:
                 content_file.write(wkhtmltopdf_obj.content)
 
             try:

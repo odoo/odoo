@@ -29,7 +29,7 @@ from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.parse_version import parse_version
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.view_validation import valid_view
-from odoo.tools.translate import encode, xml_translate, TRANSLATED_ATTRS
+from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +110,7 @@ def get_view_arch_from_file(filename, xmlid):
         if node.tag == 'record':
             field = node.find('field[@name="arch"]')
             _fix_multiple_roots(field)
-            inner = ''.join([etree.tostring(child) for child in field.iterchildren()])
+            inner = u''.join([etree.tostring(child, encoding='unicode') for child in field.iterchildren()])
             return field.text + inner
         elif node.tag == 'template':
             # The following dom operations has been copied from convert.py's _tag_template()
@@ -120,7 +120,7 @@ def get_view_arch_from_file(filename, xmlid):
             else:
                 node.tag = 'data'
             node.attrib.pop('id', None)
-            return etree.tostring(node)
+            return etree.tostring(node, encoding='unicode')
     _logger.warning("Could not find view arch definition in file '%s' for xmlid '%s'", filename, xmlid)
     return None
 
@@ -233,7 +233,7 @@ actual arch.
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
                     arch_fs = False
-            view.arch = arch_fs or view.arch_db
+            view.arch = pycompat.to_text(arch_fs or view.arch_db)
 
     def _inverse_arch(self):
         for view in self:
@@ -269,7 +269,7 @@ actual arch.
             view.model_data_id = data['id']
 
     def _search_model_data_id(self, operator, value):
-        name = 'name' if isinstance(value, basestring) else 'id'
+        name = 'name' if isinstance(value, pycompat.string_types) else 'id'
         domain = [('model', '=', 'ir.ui.view'), (name, operator, value)]
         data = self.env['ir.model.data'].sudo().search(domain)
         return [('id', 'in', data.mapped('res_id'))]
@@ -313,7 +313,7 @@ actual arch.
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
         for view in self:
-            view_arch = etree.fromstring(encode(view.arch))
+            view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
             view_def = view.read_combined(['arch'])
             view_arch_utf8 = view_def['arch']
@@ -702,7 +702,7 @@ actual arch.
         # and apply inheritance
         arch = self.apply_view_inheritance(arch_tree, root.id, self.model)
 
-        return dict(view_data, arch=etree.tostring(arch, encoding='utf-8'))
+        return dict(view_data, arch=etree.tostring(arch, encoding='unicode'))
 
     def _apply_group(self, model, node, modifiers, fields):
         """Apply group restrictions,  may be set at view level or model level::
@@ -845,7 +845,7 @@ actual arch.
 
         collect(arch, self.env[model_name])
 
-        for field, nodes in pycompat.items(field_nodes):
+        for field, nodes in field_nodes.items():
             # if field should trigger an onchange, add on_change="1" on the
             # nodes referring to field
             model = self.env[field.model_name]
@@ -910,7 +910,7 @@ actual arch.
                                 not self._context.get(action, True) and is_base_model):
                             node.set(action, 'false')
 
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
+        arch = etree.tostring(node, encoding="unicode").replace('\t', '')
         for k in list(fields):
             if k not in fields_def:
                 del fields[k]
@@ -942,7 +942,7 @@ actual arch.
         arch_tree = etree.fromstring(arch)
         self.distribute_branding(arch_tree)
         root = E.templates(arch_tree)
-        arch = etree.tostring(root, encoding='utf-8', xml_declaration=True)
+        arch = etree.tostring(root, encoding='unicode')
         return arch
 
     @api.model
@@ -1102,12 +1102,12 @@ actual arch.
         Model = self.env[model]
         Node = self.env[node_obj]
 
-        for model_key, model_value in pycompat.items(Model._fields):
+        for model_key, model_value in Model._fields.items():
             if model_value.type == 'one2many':
                 if model_value.comodel_name == node_obj:
                     _Node_Field = model_key
                     _Model_Field = model_value.inverse_name
-                for node_key, node_value in pycompat.items(Node._fields):
+                for node_key, node_value in Node._fields.items():
                     if node_value.type == 'one2many':
                         if node_value.comodel_name == conn_obj:
                              # _Source_Field = "Incoming Arrows" (connected via des_node)
@@ -1184,7 +1184,7 @@ actual arch.
             xmlid_filter = "AND md.name IN %s"
             names = tuple(
                 name
-                for (xmod, name), (model, res_id) in pycompat.items(self.pool.model_data_reference_ids)
+                for (xmod, name), (model, res_id) in self.pool.model_data_reference_ids.items()
                 if xmod == module and model == self._name
             )
             if not names:

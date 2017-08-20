@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import os
 import re
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
-from odoo.tools import pycompat
 
 
 class Company(models.Model):
@@ -28,7 +27,7 @@ class Company(models.Model):
         return super(Company, self).copy(default)
 
     def _get_logo(self):
-        return open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
+        return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read())
 
     @api.model
     def _get_euro(self):
@@ -154,7 +153,7 @@ class Company(models.Model):
         if self.country_id:
             res['domain']['state_id'] = [('country_id', '=', self.country_id.id)]
         values = self.on_change_country(self.country_id.id)['value']
-        for fname, value in pycompat.items(values):
+        for fname, value in values.items():
             setattr(self, fname, value)
         return res
 

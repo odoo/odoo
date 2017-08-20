@@ -8,7 +8,6 @@ from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -106,7 +105,7 @@ class AuthSignupHome(Home):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
                 token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qcontext.get('token'))
-                for k, v in pycompat.items(token_infos):
+                for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")
