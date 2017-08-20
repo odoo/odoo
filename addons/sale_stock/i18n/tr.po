@@ -42,6 +42,7 @@ msgstr "Satış Sonrası"
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
+"Siparişlerde kalem bazında özel rotalar uygulayın (ör. Dropshipping, MTO)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
@@ -50,6 +51,9 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Varsayılan olarak, Odoo, beklenen teslimat tarihini şu şekilde hesaplar: \n"
+"sipariş tarihi + ürünlerin teslimat için güvenli tampon süreleri.\n"
+"Bu seçenekle, ürünler üzerinde güvenli teslimat tampon süreleri ayarlamak yerine siparişlerde net bir teslim tarihi belirleyebilirsiniz."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -165,7 +169,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Beklenen teslim tarihlerini ileriye taşıyın : "
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:145
@@ -176,7 +180,7 @@ msgstr "Yeterli stok yok!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Siparişe Özel Rotalar"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:156
@@ -217,6 +221,8 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Teslimat emirlerinde manuel olarak rezerve ederek veya stok planlayıcısını çalıştırmak, müşteri güvenli teslimat tampon süresinin uzun olması ve / veya stokların sık sık tükenmesi durumunda önceliklerin daha iyi yönetilmesini sağlar.\n"
+"Varsayılan olarak, stok planlayıcısı 24 saatte bir otomatik olarak çalışır."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
@@ -231,7 +237,7 @@ msgstr "Rota"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.sale_config_settings_view_form_inherit_sale_stock
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Satış Siparişi Satırı Özel Rotaları"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_order_id
@@ -268,17 +274,17 @@ msgstr "Satış Güvenlik Gün Süresi"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Gecikmeleri önlemek için teslimatları daha erken planlayın"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Teslimatlar İçin Güvenli Tampon Süre"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_new_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Satışların Teslimi İçin Güvenli Tampon Süre"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route_sale_selectable
@@ -293,12 +299,12 @@ msgstr "Siparişlerde bir teslim tarihi belirle"
 #. module: sale_stock
 #: selection:stock.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Tüm ürünleri tek seferde gönder"
 
 #. module: sale_stock
 #: selection:stock.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Hazır olan ürünleri teslimatı bölerek hemen gönder"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -308,7 +314,7 @@ msgstr "Sevkiyat Bilgileri"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_config_settings_default_picking_policy
 msgid "Shipping Management"
-msgstr ""
+msgstr "Sevkiyat Yönetimi"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_picking_policy
@@ -356,6 +362,8 @@ msgstr "Transfer"
 msgid ""
 "Trigger a decrease of the delivered quantity in the associated Sales Order"
 msgstr ""
+"Teslimatla ilişkili Satış Siparişi'ndeki teslim edilen miktarın otomatik "
+"olarak azaltılmasını tetikle"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_warehouse_id
@@ -372,12 +380,12 @@ msgstr "Uyarı"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Satılan ürünlerin ne zaman rezerve edileceği"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.stock_config_settings_view_form_inherit_sale_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Sevkıyatın ne zaman başlatılacağı"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:157
