@@ -433,7 +433,7 @@ class PreforkServer(CommonServer):
 
     def pipe_ping(self, pipe):
         try:
-            os.write(pipe[1], '.')
+            os.write(pipe[1], b'.')
         except IOError as e:
             if e.errno not in [errno.EAGAIN, errno.EINTR]:
                 raise
