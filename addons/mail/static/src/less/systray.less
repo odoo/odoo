@@ -3,11 +3,15 @@
     > a {
         opacity: 1;
         > i {
+            .o-transform(translateY(4px));
             font-size: larger;
         }
     }
     &.o_no_notification > a {
         opacity: 0.5;
+        > i {
+            .o-transform(translateY(0px));
+        }
         .o_notification_counter {
             display: none;
         }
@@ -21,9 +25,9 @@
         color: white;
         padding: 0em 0.3em;
         font-size: 0.7em;
-        top: 7%;
+        top: 19%;
         position: absolute;
-        margin: 0px 0px 0px 8px;
+        margin: 0px 0px 0px 6px;
     }
     .o_mail_navbar_dropdown {
         width: 350px;
