@@ -1,4 +1,4 @@
-// .o_kanban_view.o_kanban_dashboard.o_project_kanban {
+.o_kanban_view.o_kanban_dashboard.o_project_kanban {
 // 
 //     .o_kanban_record {
 //         .o-flex-display();
@@ -41,58 +41,60 @@
 //             margin: 0;
 //         }
 //     }
-// 
-//     .o_project_kanban_boxes {
-//         // width: 30%;
-//         .o-flex(0, 0, auto);
-// 
-//         .o-flex-display();
-//         .o-flex-flow(column, nowrap);
-// 
-//         > a:hover {
-//             text-decoration: none;
-//         }
-// 
-//         .o_value {
-//             font-size: x-large;
-//             color: white;
-//             display: block;
-//         }
-//         .o_label {
-//             color: white;
-//         }
-//         .o_needaction{
-//             position: absolute;
-//             top: 5px;
-//             right: 5px;
-//             color: white;
-//             font-size: small;
-//             opacity: 0.5;
-//             &:hover{
-//                 opacity:1;
-//             }
-//             &::before {
-//                 content: "\f086";
-//                 font: normal normal normal 14px/1 FontAwesome;
-//             }
-//         }
-// 
-//         .o_project_kanban_box {
-//             position: relative;
-//             text-align: center;
-//             padding: 0 0 0 0;
-//             .o-flex(1, 1, auto);
-//             .o-flex-display();
-//             .o-flex-flow(column, nowrap);
-//             .o-justify-content(center);
-//         }
-//         .o_project_kanban_box:nth-child(even) {
-//             background-color: grey;
-//         }
-//         .o_project_kanban_box:nth-child(odd) {
-//             background-color: @odoo-brand-optional;
-//         }
-//     }
+    .o_project_kanban_boxes {
+        .o-flex-display();
+        .o-flex-flow(row, nowrap);
+
+        .o_project_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            .o-flex(1, 1, auto);
+            .o-flex-display();
+            .o-flex-flow(row, nowrap);
+            .o-justify-content(center);
+
+            &:first-child {
+                .o-justify-content(flex-start);
+            }
+            &:last-child {
+                .o-justify-content(flex-end);
+            }
+
+            .o_value {
+                font-weight: bold;
+            }
+
+            > a {
+                color: @text-color;
+                font-weight: 500;
+
+                &:hover {
+                    text-decoration: none;
+                    color: @headings-color;
+                }
+
+                &.o_needaction{
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    opacity: 0.5;
+
+                    &:hover{
+                        opacity:1;
+                    }
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
+        }
+    }
 // }
 // 
 // .o_kanban_task_cover_image {
@@ -107,4 +109,5 @@
 //             box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
 //         }
 //     }
-// }
+
+}
