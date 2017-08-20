@@ -52,7 +52,7 @@ class View(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, basestring):
+        if isinstance(view_id, pycompat.string_types):
             if 'website_id' in self._context:
                 domain = [('key', '=', view_id), '|', ('website_id', '=', False), ('website_id', '=', self._context.get('website_id'))]
                 order = 'website_id'

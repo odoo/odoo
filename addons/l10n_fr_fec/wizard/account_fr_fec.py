@@ -4,11 +4,11 @@
 # Copyright (C) 2013-2015 Akretion (http://www.akretion.com)
 
 import base64
-import csv
-import StringIO
+import io
 
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
+from odoo.tools import pycompat
 
 
 class AccountFrFec(models.TransientModel):
@@ -86,24 +86,24 @@ class AccountFrFec(models.TransientModel):
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
         header = [
-            'JournalCode',    # 0
-            'JournalLib',     # 1
-            'EcritureNum',    # 2
-            'EcritureDate',   # 3
-            'CompteNum',      # 4
-            'CompteLib',      # 5
-            'CompAuxNum',     # 6  We use partner.id
-            'CompAuxLib',     # 7
-            'PieceRef',       # 8
-            'PieceDate',      # 9
-            'EcritureLib',    # 10
-            'Debit',          # 11
-            'Credit',         # 12
-            'EcritureLet',    # 13
-            'DateLet',        # 14
-            'ValidDate',      # 15
-            'Montantdevise',  # 16
-            'Idevise',        # 17
+            u'JournalCode',    # 0
+            u'JournalLib',     # 1
+            u'EcritureNum',    # 2
+            u'EcritureDate',   # 3
+            u'CompteNum',      # 4
+            u'CompteLib',      # 5
+            u'CompAuxNum',     # 6  We use partner.id
+            u'CompAuxLib',     # 7
+            u'PieceRef',       # 8
+            u'PieceDate',      # 9
+            u'EcritureLib',    # 10
+            u'Debit',          # 11
+            u'Credit',         # 12
+            u'EcritureLet',    # 13
+            u'DateLet',        # 14
+            u'ValidDate',      # 15
+            u'Montantdevise',  # 16
+            u'Idevise',        # 17
             ]
 
         company = self.env.user.company_id
@@ -114,8 +114,8 @@ class AccountFrFec(models.TransientModel):
             raise Warning(
                 _("FEC is for French companies only !"))
 
-        fecfile = StringIO.StringIO()
-        w = csv.writer(fecfile, delimiter='|')
+        fecfile = io.BytesIO()
+        w = pycompat.csv_writer(fecfile, delimiter='|')
         w.writerow(header)
 
         # INITIAL BALANCE
@@ -190,7 +190,7 @@ class AccountFrFec(models.TransientModel):
                     else:
                         listrow[11] = '0,00'
                         listrow[12] = str(-listrow_amount).replace('.', ',')
-            w.writerow([s.encode("utf-8") for s in listrow])
+            w.writerow(listrow)
         #if the unaffected earnings account wasn't in the selection yet: add it manually
         if (not unaffected_earnings_line
             and unaffected_earnings_results
@@ -201,7 +201,7 @@ class AccountFrFec(models.TransientModel):
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
-            w.writerow([s.encode("utf-8") for s in unaffected_earnings_results])
+            w.writerow(unaffected_earnings_results)
 
         # LINES
         sql_query = '''
@@ -266,8 +266,7 @@ class AccountFrFec(models.TransientModel):
             sql_query, (self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
-            listrow = list(row)
-            w.writerow([s.encode("utf-8") for s in listrow])
+            w.writerow(list(row))
 
         siren = company.vat[4:13]
         end_date = self.date_to.replace('-', '')

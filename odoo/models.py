@@ -148,7 +148,7 @@ class MetaModel(api.Meta):
             self.module_to_models[self._module].append(self)
 
         # check for new-api conversion error: leave comma after field definition
-        for key, val in pycompat.items(attrs):
+        for key, val in attrs.items():
             if type(val) is tuple and len(val) == 1 and isinstance(val[0], Field):
                 _logger.error("Trailing comma after field definition: %s.%s", self, key)
             if isinstance(val, Field):
@@ -173,7 +173,7 @@ class NewId(object):
         return False
     __nonzero__ = __bool__
 
-IdType = pycompat.integer_types + (str, unicode, NewId)
+IdType = pycompat.integer_types + pycompat.string_types + (NewId,)
 
 
 # maximum number of prefetched records
@@ -184,6 +184,7 @@ LOG_ACCESS_COLUMNS = ['create_uid', 'create_date', 'write_uid', 'write_date']
 MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS
 
 
+@pycompat.implements_to_string
 class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     """ Base class for Odoo models.
 
@@ -405,7 +406,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # determine inherited models
         parents = cls._inherit
-        parents = [parents] if isinstance(parents, basestring) else (parents or [])
+        parents = [parents] if isinstance(parents, pycompat.string_types) else (parents or [])
 
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
@@ -513,7 +514,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             cls._inherits.update(base._inherits)
 
-            for mname, fnames in pycompat.items(base._depends):
+            for mname, fnames in base._depends.items():
                 cls._depends[mname] = cls._depends.get(mname, []) + fnames
 
             for cons in base._constraints:
@@ -523,7 +524,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             cls._sql_constraints += base._sql_constraints
 
         cls._sequence = cls._sequence or (cls._table + '_id_seq')
-        cls._constraints = list(pycompat.values(cls._constraints))
+        cls._constraints = list(cls._constraints.values())
 
         # update _inherits_children of parent models
         for parent_name in cls._inherits:
@@ -769,7 +770,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except Exception as e:
-                message = (_('Unknown error during import:') + ' %s: %s' % (type(e), unicode(e)))
+                message = (_(u'Unknown error during import:') + u' %s: %s' % (type(e), e))
                 moreinfo = _('Resolve other errors first')
                 messages.append(dict(info, type='error', message=message, moreinfo=moreinfo))
                 # Failed for some reason, perhaps due to invalid data supplied,
@@ -874,7 +875,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :returns: a list of triplets of (id, xid, record)
         :rtype: list((int|None, str|None, dict))
         """
-        field_names = {name: field.string for name, field in pycompat.items(self._fields)}
+        field_names = {name: field.string for name, field in self._fields.items()}
         if self.env.lang:
             field_names.update(self.env['ir.translation'].get_field_string(self._name))
 
@@ -886,7 +887,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # processing of response, but injects human readable in message
             exc_vals = dict(base, record=record, field=field_names[field])
             record = dict(base, type=type, record=record, field=field,
-                          message=unicode(exception.args[0]) % exc_vals)
+                          message=pycompat.text_type(exception.args[0]) % exc_vals)
             if len(exception.args) > 1 and exception.args[1]:
                 record.update(exception.args[1])
             log(record)
@@ -1005,7 +1006,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         defaults = self._convert_to_write(defaults)
 
         # add default values for inherited fields
-        for model, names in pycompat.items(parent_fields):
+        for model, names in parent_fields.items():
             defaults.update(self.env[model].default_get(names))
 
         return defaults
@@ -1081,7 +1082,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :rtype: etree._Element
         """
         group = E.group(col="4")
-        for fname, field in pycompat.items(self._fields):
+        for fname, field in self._fields.items():
             if field.automatic:
                 continue
             elif field.type in ('one2many', 'many2many', 'text', 'html'):
@@ -1263,7 +1264,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # fallback on default views methods if no ir.ui.view could be found
             try:
                 arch_etree = getattr(self, '_get_default_%s_view' % view_type)()
-                result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
+                result['arch'] = etree.tostring(arch_etree, encoding='unicode')
                 result['type'] = view_type
                 result['name'] = 'default'
             except AttributeError:
@@ -1503,14 +1504,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # avoid overriding inherited values when parent is set
         avoid_models = {
             parent_model
-            for parent_model, parent_field in pycompat.items(self._inherits)
+            for parent_model, parent_field in self._inherits.items()
             if parent_field in values
         }
 
         # compute missing fields
         missing_defaults = {
             name
-            for name, field in pycompat.items(self._fields)
+            for name, field in self._fields.items()
             if name not in values
             if self._log_access and name not in MAGIC_COLUMNS
             if not (field.inherited and field.related_field.model_name in avoid_models)
@@ -1521,7 +1522,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # override defaults with the provided values, never allow the other way around
         defaults = self.default_get(list(missing_defaults))
-        for name, value in pycompat.items(defaults):
+        for name, value in defaults.items():
             if self._fields[name].type == 'many2many' and value and isinstance(value[0], pycompat.integer_types):
                 # convert a list of ids into a list of commands
                 defaults[name] = [(6, 0, value)]
@@ -1606,10 +1607,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if field.relational and groups._fold_name in groups._fields:
             fold = {group.id: group[groups._fold_name]
                     for group in groups.browse([key for key in result if key])}
-            for key, line in pycompat.items(result):
+            for key, line in result.items():
                 line['__fold'] = fold.get(key, False)
 
-        return list(pycompat.values(result))
+        return list(result.values())
 
     @api.model
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
@@ -1714,7 +1715,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         value = False if value is None else value
         gb = groupby_dict.get(key)
         if gb and gb['type'] in ('date', 'datetime') and value:
-            if isinstance(value, basestring):
+            if isinstance(value, pycompat.string_types):
                 dt_format = DEFAULT_SERVER_DATETIME_FORMAT if gb['type'] == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 value = datetime.datetime.strptime(value, dt_format)
             if gb['tz_convert']:
@@ -1821,7 +1822,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         result = self._read_group_raw(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
-        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
+        groupby = [groupby] if isinstance(groupby, pycompat.string_types) else list(OrderedSet(groupby))
         dt = [
             f for f in groupby
             if self._fields[f.split(':')[0]].type in ('date', 'datetime')
@@ -1843,9 +1844,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_raw(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         self.check_access_rights('read')
         query = self._where_calc(domain)
-        fields = fields or [f.name for f in pycompat.values(self._fields) if f.store]
+        fields = fields or [f.name for f in self._fields.values() if f.store]
 
-        groupby = [groupby] if isinstance(groupby, basestring) else list(OrderedSet(groupby))
+        groupby = [groupby] if isinstance(groupby, pycompat.string_types) else list(OrderedSet(groupby))
         groupby_list = groupby[:1] if lazy else groupby
         annotated_groupbys = [self._read_group_process_groupby(gb, query) for gb in groupby_list]
         groupby_fields = [g['field'] for g in annotated_groupbys]
@@ -1917,7 +1918,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
 
-        data = ({k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in pycompat.items(r)} for r in fetched_data)
+        data = ({k: self._read_group_prepare_data(k,v, groupby_dict) for k,v in r.items()} for r in fetched_data)
         result = [self._read_group_format_result(d, annotated_groupbys, groupby, domain) for d in data]
         if lazy:
             # Right now, read_group only fill results in lazy mode (by default).
@@ -2023,7 +2024,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # fields which were required but have been removed (or will be added by
         # another module)
         cr = self._cr
-        cols = [name for name, field in pycompat.items(self._fields)
+        cols = [name for name, field in self._fields.items()
                      if field.store and field.column_type]
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
@@ -2123,7 +2124,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 recs = self.with_context(active_test=False).search([])
                 recs._recompute_todo(field)
 
-            for field in pycompat.values(self._fields):
+            for field in self._fields.values():
                 if not field.store:
                     continue
 
@@ -2211,9 +2212,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Determine inherited fields. """
         # determine candidate inherited fields
         fields = {}
-        for parent_model, parent_field in pycompat.items(self._inherits):
+        for parent_model, parent_field in self._inherits.items():
             parent = self.env[parent_model]
-            for name, field in pycompat.items(parent._fields):
+            for name, field in parent._fields.items():
                 # inherited fields are implemented as related fields, with the
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
@@ -2226,13 +2227,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 )
 
         # add inherited fields that are not redefined locally
-        for name, field in pycompat.items(fields):
+        for name, field in fields.items():
             if name not in self._fields:
                 self._add_field(name, field)
 
     @api.model
     def _inherits_check(self):
-        for table, field_name in pycompat.items(self._inherits):
+        for table, field_name in self._inherits.items():
             field = self._fields.get(field_name)
             if not field:
                 _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
@@ -2245,7 +2246,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 field.ondelete = "cascade"
 
         # reflect fields with delegate=True in dictionary self._inherits
-        for field in pycompat.values(self._fields):
+        for field in self._fields.values():
             if field.type == 'many2one' and not field.related and field.delegate:
                 if not field.required:
                     _logger.warning("Field %s with delegate=True must be required.", field)
@@ -2333,7 +2334,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # set up fields
         bad_fields = []
-        for name, field in pycompat.items(cls._fields):
+        for name, field in cls._fields.items():
             try:
                 field.setup_full(self)
             except Exception:
@@ -2352,11 +2353,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # map each field to the fields computed with the same method
         groups = defaultdict(list)
-        for field in pycompat.values(cls._fields):
+        for field in cls._fields.values():
             if field.compute:
                 cls._field_computed[field] = group = groups[field.compute]
                 group.append(field)
-        for fields in pycompat.values(groups):
+        for fields in groups.values():
             compute_sudo = fields[0].compute_sudo
             if not all(field.compute_sudo == compute_sudo for field in fields):
                 _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
@@ -2369,7 +2370,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if isinstance(self, Model):
             # set up field triggers (on database-persisted models only)
-            for field in pycompat.values(cls._fields):
+            for field in cls._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.manual else ()
                 with tools.ignore(*exceptions):
@@ -2408,7 +2409,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         readonly = not (has_access('write') or has_access('create'))
 
         res = {}
-        for fname, field in pycompat.items(self._fields):
+        for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
             if field.groups and not self.user_has_groups(field.groups):
@@ -2420,7 +2421,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 description['states'] = {}
             if attributes:
                 description = {key: val
-                               for key, val in pycompat.items(description)
+                               for key, val in description.items()
                                if key in attributes}
             res[fname] = description
 
@@ -2531,7 +2532,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if self._context.get('prefetch_fields', True) and field.prefetch:
             fs.update(
                 f
-                for f in pycompat.values(self._fields)
+                for f in self._fields.values()
                 # select fields that can be prefetched
                 if f.prefetch
                 # discard fields with groups that the user may not access
@@ -2986,7 +2987,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
-        for key, val in pycompat.items(vals):
+        for key, val in vals.items():
             field = self._fields.get(key)
             if field:
                 if field.store or field.inherited:
@@ -3058,7 +3059,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         direct = []             # list of direcly updated columns
         has_trans = self.env.lang and self.env.lang != 'en_US'
         single_lang = len(self.env['res.lang'].get_installed()) <= 1
-        for name, val in pycompat.items(vals):
+        for name, val in vals.items():
             field = self._fields[name]
             if field and field.deprecated:
                 _logger.warning('Field %s.%s is deprecated: %s', self._name, name, field.deprecated)
@@ -3120,7 +3121,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # defaults in context must be removed when call a one2many or many2many
         rel_context = {key: val
-                       for key, val in pycompat.items(self._context)
+                       for key, val in self._context.items()
                        if not key.startswith('default_')}
 
         # call the 'write' method of fields which are not columns
@@ -3133,7 +3134,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # write inherited fields on the corresponding parent records
         unknown_fields = set(updend)
-        for parent_model, parent_field in pycompat.items(self._inherits):
+        for parent_model, parent_field in self._inherits.items():
             parent_ids = []
             for sub_ids in cr.split_for_in_conditions(self.ids):
                 query = "SELECT DISTINCT %s FROM %s WHERE id IN %%s" % (parent_field, self._table)
@@ -3257,7 +3258,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # split up fields into old-style and pure new-style ones
         old_vals, new_vals, unknown = {}, {}, []
-        for key, val in pycompat.items(vals):
+        for key, val in vals.items():
             field = self._fields.get(key)
             if field:
                 if field.store or field.inherited:
@@ -3294,7 +3295,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # data of parent records to create or update, by model
         tocreate = {
             parent_model: {'id': vals.pop(parent_field, None)}
-            for parent_model, parent_field in pycompat.items(self._inherits)
+            for parent_model, parent_field in self._inherits.items()
         }
 
         # list of column assignments defined as tuples like:
@@ -3309,7 +3310,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         upd_todo = []
         unknown_fields = []
         protected_fields = []
-        for name, val in list(pycompat.items(vals)):
+        for name, val in list(vals.items()):
             field = self._fields.get(name)
             if not field:
                 unknown_fields.append(name)
@@ -3325,7 +3326,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             _logger.warning('No such field(s) in model %s: %s.', self._name, ', '.join(unknown_fields))
 
         # create or update parent records
-        for parent_model, parent_vals in pycompat.items(tocreate):
+        for parent_model, parent_vals in tocreate.items():
             parent_id = parent_vals.pop('id')
             if not parent_id:
                 parent_id = self.env[parent_model].create(parent_vals).id
@@ -3334,13 +3335,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             vals[self._inherits[parent_model]] = parent_id
 
         # set boolean fields to False by default (to make search more powerful)
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if field.type == 'boolean' and field.store and name not in vals:
                 vals[name] = False
 
         # determine SQL values
         self = self.browse()
-        for name, val in pycompat.items(vals):
+        for name, val in vals.items():
             field = self._fields[name]
             if field.store and field.column_type:
                 column_val = field.convert_to_column(val, self, vals)
@@ -3372,7 +3373,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if self.env.lang and self.env.lang != 'en_US':
             # add translations for self.env.lang
-            for name, val in pycompat.items(vals):
+            for name, val in vals.items():
                 field = self._fields[name]
                 if field.store and field.column_type and field.translate is True:
                     tname = "%s,%s" % (self._name, name)
@@ -3420,7 +3421,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # defaults in context must be removed when call a one2many or many2many
             rel_context = {key: val
-                           for key, val in pycompat.items(self._context)
+                           for key, val in self._context.items()
                            if not key.startswith('default_')}
 
             # call the 'write' method of fields which are not columns
@@ -3725,11 +3726,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
-        whitelist = set(name for name, field in pycompat.items(self._fields) if not field.inherited)
+        whitelist = set(name for name, field in self._fields.items() if not field.inherited)
 
         def blacklist_given_fields(model):
             # blacklist the fields that are given by inheritance
-            for parent_model, parent_field in pycompat.items(model._inherits):
+            for parent_model, parent_field in model._inherits.items():
                 blacklist.add(parent_field)
                 if parent_field in default:
                     # all the fields of 'parent_model' are given by the record:
@@ -3738,17 +3739,17 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 else:
                     blacklist_given_fields(self.env[parent_model])
             # blacklist deprecated fields
-            for name, field in pycompat.items(model._fields):
+            for name, field in model._fields.items():
                 if field.deprecated:
                     blacklist.add(name)
 
         blacklist_given_fields(self)
 
         fields_to_copy = {name: field
-                          for name, field in pycompat.items(self._fields)
+                          for name, field in self._fields.items()
                           if field.copy and name not in default and name not in blacklist}
 
-        for name, field in pycompat.items(fields_to_copy):
+        for name, field in fields_to_copy.items():
             if field.type == 'one2many':
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
@@ -3786,7 +3787,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         old_wo_lang, new_wo_lang = (old + new).with_context(lang=None)
         Translation = old.env['ir.translation']
 
-        for name, field in pycompat.items(old._fields):
+        for name, field in old._fields.items():
             if not field.copy:
                 continue
 
@@ -3969,7 +3970,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         results = self._get_external_ids()
         return {key: val[0] if val else ''
-                for key, val in pycompat.items(results)}
+                for key, val in results.items()}
 
     # backwards compatibility
     get_xml_id = get_external_id
@@ -4342,7 +4343,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         target = self if update else self.browse([], self._prefetch)
         return {
             name: fields[name].convert_to_cache(value, target, validate=validate)
-            for name, value in pycompat.items(values)
+            for name, value in values.items()
             if name in fields
         }
 
@@ -4352,14 +4353,14 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         return {
             name: self._fields[name].convert_to_record(value, self)
-            for name, value in pycompat.items(values)
+            for name, value in values.items()
         }
 
     def _convert_to_write(self, values):
         """ Convert the ``values`` dictionary into the format of :meth:`write`. """
         fields = self._fields
         result = {}
-        for name, value in pycompat.items(values):
+        for name, value in values.items():
             if name in fields:
                 field = fields[name]
                 value = field.convert_to_cache(value, self, validate=False)
@@ -4396,7 +4397,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         if not func:
             return self                 # support for an empty path of fields
-        if isinstance(func, basestring):
+        if isinstance(func, pycompat.string_types):
             recs = self
             for name in func.split('.'):
                 recs = recs._mapped_func(operator.itemgetter(name))
@@ -4421,7 +4422,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             :param func: a function or a dot-separated sequence of field names
         """
-        if isinstance(func, basestring):
+        if isinstance(func, pycompat.string_types):
             name = func
             func = lambda rec: any(rec.mapped(name))
         return self.browse([rec.id for rec in self if func(rec)])
@@ -4438,7 +4439,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if key is None:
             recs = self.search([('id', 'in', self.ids)])
             return self.browse(reversed(recs._ids)) if reverse else recs
-        if isinstance(key, basestring):
+        if isinstance(key, pycompat.string_types):
             key = itemgetter(key)
         return self.browse(item.id for item in sorted(self, key=key, reverse=reverse))
 
@@ -4446,7 +4447,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def update(self, values):
         """ Update the records in ``self`` with ``values``. """
         for record in self:
-            for name, value in pycompat.items(values):
+            for name, value in values.items():
                 record[name] = value
 
     #
@@ -4523,7 +4524,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """
         if isinstance(item, BaseModel) and self._name == item._name:
             return len(item) == 1 and item.id in self._ids
-        elif isinstance(item, basestring):
+        elif isinstance(item, pycompat.string_types):
             return item in self._fields
         else:
             raise TypeError("Mixing apples and oranges: %s in %s" % (item, self))
@@ -4616,11 +4617,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     def __str__(self):
         return "%s%s" % (self._name, getattr(self, '_ids', ""))
-
-    def __unicode__(self):
-        return unicode(str(self))
-
-    __repr__ = __str__
+    def __repr__(self):
+        return str(self)
 
     def __hash__(self):
         if hasattr(self, '_ids'):
@@ -4640,7 +4638,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 rs = inst[10:20]            # subset of inst
                 nm = rs['name']             # name of first record in inst
         """
-        if isinstance(key, basestring):
+        if isinstance(key, pycompat.string_types):
             # important: one must call the field's getter
             return self._fields[key].__get__(self, type(self))
         elif isinstance(key, slice):
@@ -4694,7 +4692,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         if fnames is None:
             if ids is None:
                 return self.env.invalidate_all()
-            fields = list(pycompat.values(self._fields))
+            fields = list(self._fields.values())
         else:
             fields = [self._fields[n] for n in fnames]
 
@@ -4786,7 +4784,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 updates[frozendict(vals)].add(rec.id)
             # update records in batch when possible
             with recs.env.norecompute():
-                for vals, ids in pycompat.items(updates):
+                for vals, ids in updates.items():
                     recs.browse(ids)._write(dict(vals))
             # mark computed fields as done
             for f in fs:
@@ -4820,7 +4818,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if not result.get(names):
                     result[names] = node.attrib.get('on_change')
                 # traverse the subviews included in relational fields
-                for subinfo in pycompat.values(info['fields'][name].get('views', {})):
+                for subinfo in info['fields'][name].get('views', {}).values():
                     process(etree.fromstring(subinfo['arch']), subinfo, names)
             else:
                 for child in node:
@@ -4843,7 +4841,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 return
             if res.get('value'):
                 res['value'].pop('id', None)
-                self.update({key: val for key, val in pycompat.items(res['value']) if key in self._fields})
+                self.update({key: val for key, val in res['value'].items() if key in self._fields})
             if res.get('domain'):
                 result.setdefault('domain', {}).update(res['domain'])
             if res.get('warning'):
@@ -4972,7 +4970,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     record.mapped(field_seq)
 
                 # determine which fields have been modified
-                for name, oldval in pycompat.items(values):
+                for name, oldval in values.items():
                     field = self._fields[name]
                     newval = record[name]
                     if newval != oldval or (
@@ -4983,7 +4981,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # At the moment, the client does not support updates on a *2many field
         # while this one is modified by the user.
-        if isinstance(field_name, basestring) and \
+        if isinstance(field_name, pycompat.string_types) and \
                 self._fields[field_name].type in ('one2many', 'many2many'):
             dirty.discard(field_name)
 
@@ -5008,13 +5006,13 @@ class RecordCache(MutableMapping):
 
     def contains(self, field):
         """ Return whether `records[0]` has a value for ``field`` in cache. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         return self._recs.id in self._recs.env.cache[field]
 
     def __contains__(self, field):
         """ Return whether `records[0]` has a regular value for ``field`` in cache. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         dummy = SpecialValue(None)
         value = self._recs.env.cache[field].get(self._recs.id, dummy)
@@ -5022,7 +5020,7 @@ class RecordCache(MutableMapping):
 
     def get(self, field, default=None):
         """ Return the cached, regular value of ``field`` for `records[0]`, or ``default``. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         dummy = SpecialValue(None)
         value = self._recs.env.cache[field].get(self._recs.id, dummy)
@@ -5030,14 +5028,14 @@ class RecordCache(MutableMapping):
 
     def __getitem__(self, field):
         """ Return the cached value of ``field`` for `records[0]`. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         value = self._recs.env.cache[field][self._recs.id]
         return value.get() if isinstance(value, SpecialValue) else value
 
     def __setitem__(self, field, value):
         """ Assign the cached value of ``field`` for all records in ``records``. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         values = dict.fromkeys(self._recs._ids, value)
         self._recs.env.cache[field].update(values)
@@ -5048,7 +5046,7 @@ class RecordCache(MutableMapping):
         """
         if args and isinstance(args[0], SpecialValue):
             values = dict.fromkeys(self._recs._ids, args[0])
-            for name, field in pycompat.items(self._recs._fields):
+            for name, field in self._recs._fields.items():
                 if name != 'id':
                     self._recs.env.cache[field].update(values)
         else:
@@ -5056,7 +5054,7 @@ class RecordCache(MutableMapping):
 
     def __delitem__(self, field):
         """ Remove the cached value of ``field`` for all ``records``. """
-        if isinstance(field, basestring):
+        if isinstance(field, pycompat.string_types):
             field = self._recs._fields[field]
         field_cache = self._recs.env.cache[field]
         for id in self._recs._ids:
@@ -5066,7 +5064,7 @@ class RecordCache(MutableMapping):
         """ Iterate over the field names with a regular value in cache. """
         cache, id = self._recs.env.cache, self._recs.id
         dummy = SpecialValue(None)
-        for name, field in pycompat.items(self._recs._fields):
+        for name, field in self._recs._fields.items():
             if name != 'id' and not isinstance(cache[field].get(id, dummy), SpecialValue):
                 yield name
 

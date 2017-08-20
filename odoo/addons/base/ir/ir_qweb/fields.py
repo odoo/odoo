@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
+import base64
 import re
 from collections import OrderedDict
 from io import BytesIO
 from odoo import api, fields, models, _
 from PIL import Image
 import babel
-from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date
-from .qweb import unicodifier
+from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ def nl2br(string):
     :param str string:
     :rtype: unicode
     """
-    return unicodifier(string).replace(u'\n', u'<br>\n')
+    return pycompat.to_text(string).replace(u'\n', u'<br>\n')
 
 def html_escape(string, options):
     """ Automatically escapes content unless options['html-escape']
@@ -88,7 +88,7 @@ class FieldConverter(models.AbstractModel):
         Converts a single value to its HTML version/output
         :rtype: unicode
         """
-        return html_escape(unicodifier(value) or u'', options)
+        return html_escape(pycompat.to_text(value), options)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -123,7 +123,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
+        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', u'\u2011'))
 
 
 class FloatConverter(models.AbstractModel):
@@ -152,7 +152,7 @@ class FloatConverter(models.AbstractModel):
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
 
-        return unicodifier(formatted)
+        return pycompat.to_text(formatted)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -182,7 +182,7 @@ class DateTimeConverter(models.AbstractModel):
         lang = self.user_lang()
         locale = babel.Locale.parse(lang.code)
 
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
 
         value = fields.Datetime.context_timestamp(self, value)
@@ -200,7 +200,7 @@ class DateTimeConverter(models.AbstractModel):
         if options and options.get('hide_seconds'):
             pattern = pattern.replace(":ss", "").replace(":s", "")
 
-        return unicodifier(babel.dates.format_datetime(value, format=pattern, locale=locale))
+        return pycompat.to_text(babel.dates.format_datetime(value, format=pattern, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -223,7 +223,7 @@ class SelectionConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         if not value:
             return ''
-        return html_escape(unicodifier(options['selection'][value]) or u'', options)
+        return html_escape(pycompat.to_text(options['selection'][value]) or u'', options)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -252,7 +252,7 @@ class HTMLConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return unicodifier(value) or u''
+        return pycompat.to_text(value)
 
 
 class ImageConverter(models.AbstractModel):
@@ -269,15 +269,15 @@ class ImageConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        try:
-            image = Image.open(BytesIO(value.decode('base64')))
+        try: # FIXME: maaaaaybe it could also take raw bytes?
+            image = Image.open(BytesIO(base64.b64decode(value)))
             image.verify()
         except IOError:
             raise ValueError("Non-image binary fields can not be converted to HTML")
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return unicodifier('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value))
+        return u'<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii'))
 
 
 class MonetaryConverter(models.AbstractModel):
@@ -398,13 +398,13 @@ class RelativeDatetimeConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         locale = babel.Locale.parse(self.user_lang().code)
 
-        if isinstance(value, basestring):
+        if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
 
         # value should be a naive datetime in UTC. So is fields.Datetime.now()
         reference = fields.Datetime.from_string(options['now'])
 
-        return unicodifier(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
+        return pycompat.to_text(babel.dates.format_timedelta(value - reference, add_direction=True, locale=locale))
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -427,8 +427,8 @@ class BarcodeConverter(models.AbstractModel):
         barcode = self.env['ir.actions.report'].barcode(
             barcode_type,
             value,
-            **dict((key, value) for key, value in options.items() if key in ['width', 'height', 'humanreadable']))
-        return unicodifier('<img src="data:%s;base64,%s">' % ('png', barcode.encode('base64')))
+            **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable']})
+        return u'<img src="data:png;base64,%s">' % base64.b64encode(barcode).decode('ascii')
 
     @api.model
     def from_html(self, model, field, element):
@@ -481,4 +481,4 @@ class QwebView(models.AbstractModel):
 
         view = view.with_context(object=record)
 
-        return unicodifier(view.render(view._context, engine='ir.qweb'))
+        return pycompat.to_text(view.render(view._context, engine='ir.qweb'))

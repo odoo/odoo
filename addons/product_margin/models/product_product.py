@@ -4,7 +4,6 @@
 import time
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 class ProductProduct(models.Model):
@@ -139,6 +138,6 @@ class ProductProduct(models.Model):
             res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
             res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
             res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
-            for k, v in pycompat.items(res[val.id]):
+            for k, v in res[val.id].items():
                 setattr(val, k, v)
         return res

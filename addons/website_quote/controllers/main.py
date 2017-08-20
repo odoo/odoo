@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 import werkzeug
 
@@ -91,7 +92,7 @@ class sale_quote(http.Controller):
             return request.render('website.404')
         if Order.state != 'sent':
             return False
-        attachments = [('signature.png', sign.decode('base64'))] if sign else []
+        attachments = [('signature.png', base64.b64decode(sign))] if sign else []
         Order.action_confirm()
         message = _('Order signed by %s') % (signer,)
         _message_post_helper(message=message, res_id=order_id, res_model='sale.order', attachments=attachments, **({'token': token, 'token_field': 'access_token'} if token else {}))

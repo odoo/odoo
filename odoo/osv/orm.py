@@ -46,12 +46,12 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in pycompat.items(field.get("states",{})):
+    for state, modifs in field.get("states",{}).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
 
-    for attr, default_value in pycompat.items(default_values):
+    for attr, default_value in default_values.items():
         if state_exceptions[attr]:
             modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
         else:
@@ -125,7 +125,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 
 def test_modifiers(what, expected):
     modifiers = {}
-    if isinstance(what, basestring):
+    if isinstance(what, pycompat.string_types):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)

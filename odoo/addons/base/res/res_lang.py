@@ -8,7 +8,6 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
@@ -126,7 +125,7 @@ class Lang(models.Model):
             # For some locales, nl_langinfo returns a D_FMT/T_FMT that contains
             # unsupported '%-' patterns, e.g. for cs_CZ
             format = format.replace('%-', '%')
-            for pattern, replacement in pycompat.items(tools.DATETIME_FORMATS_MAP):
+            for pattern, replacement in tools.DATETIME_FORMATS_MAP.items():
                 format = format.replace(pattern, replacement)
             return str(format)
 

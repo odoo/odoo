@@ -9,7 +9,6 @@ from email.utils import formataddr
 from odoo import _, api, fields, models, modules, SUPERUSER_ID, tools
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
@@ -282,7 +281,7 @@ class Message(models.Model):
         partners = self.env['res.partner'].sudo()
         attachments = self.env['ir.attachment']
         trackings = self.env['mail.tracking.value']
-        for key, message in pycompat.items(message_tree):
+        for key, message in message_tree.items():
             if message.author_id:
                 partners |= message.author_id
             if message.subtype_id and message.partner_ids:  # take notified people of message with a subtype
@@ -446,7 +445,7 @@ class Message(models.Model):
     def _find_allowed_doc_ids(self, model_ids):
         IrModelAccess = self.env['ir.model.access']
         allowed_ids = set()
-        for doc_model, doc_dict in pycompat.items(model_ids):
+        for doc_model, doc_dict in model_ids.items():
             if not IrModelAccess.check(doc_model, 'read', False):
                 continue
             allowed_ids |= self._find_allowed_model_wise(doc_model, doc_dict)
@@ -607,17 +606,17 @@ class Message(models.Model):
         # Author condition (READ, WRITE, CREATE (private))
         author_ids = []
         if operation == 'read' or operation == 'write':
-            author_ids = [mid for mid, message in pycompat.items(message_values)
+            author_ids = [mid for mid, message in message_values.items()
                           if message.get('author_id') and message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
-            author_ids = [mid for mid, message in pycompat.items(message_values)
+            author_ids = [mid for mid, message in message_values.items()
                           if not message.get('model') and not message.get('res_id')]
 
         # Parent condition, for create (check for received notifications for the created message parent)
         notified_ids = []
         if operation == 'create':
             # TDE: probably clean me
-            parent_ids = [message.get('parent_id') for mid, message in pycompat.items(message_values)
+            parent_ids = [message.get('parent_id') for message in message_values.values()
                           if message.get('parent_id')]
             self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id, channel_partner.partner_id FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
@@ -630,37 +629,37 @@ class Message(models.Model):
                 ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
                 WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, parent_ids,))
             not_parent_ids = [mid[0] for mid in self._cr.fetchall() if any([mid[1], mid[2]])]
-            notified_ids += [mid for mid, message in pycompat.items(message_values)
+            notified_ids += [mid for mid, message in message_values.items()
                              if message.get('parent_id') in not_parent_ids]
 
         # Recipients condition, for read and write (partner_ids) and create (message_follower_ids)
         other_ids = set(self.ids).difference(set(author_ids), set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         if operation in ['read', 'write']:
-            notified_ids = [mid for mid, message in pycompat.items(message_values) if message.get('notified')]
+            notified_ids = [mid for mid, message in message_values.items() if message.get('notified')]
         elif operation == 'create':
-            for doc_model, doc_ids in pycompat.items(model_record_ids):
+            for doc_model, doc_ids in model_record_ids.items():
                 followers = self.env['mail.followers'].sudo().search([
                     ('res_model', '=', doc_model),
                     ('res_id', 'in', list(doc_ids)),
                     ('partner_id', '=', self.env.user.partner_id.id),
                     ])
                 fol_mids = [follower.res_id for follower in followers]
-                notified_ids += [mid for mid, message in pycompat.items(message_values)
+                notified_ids += [mid for mid, message in message_values.items()
                                  if message.get('model') == doc_model and message.get('res_id') in fol_mids]
 
         # CRUD: Access rights related to the document
         other_ids = other_ids.difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
-        for model, doc_ids in pycompat.items(model_record_ids):
+        for model, doc_ids in model_record_ids.items():
             DocumentModel = self.env[model]
             mids = DocumentModel.browse(doc_ids).exists()
             if hasattr(DocumentModel, 'check_mail_message_access'):
                 DocumentModel.check_mail_message_access(mids.ids, operation)  # ?? mids ?
             else:
                 self.env['mail.thread'].check_mail_message_access(mids.ids, operation, model_name=model)
-            document_related_ids += [mid for mid, message in pycompat.items(message_values)
+            document_related_ids += [mid for mid, message in message_values.items()
                                      if message.get('model') == model and message.get('res_id') in mids.ids]
 
         # Calculate remaining ids: if not void, raise an error
@@ -745,7 +744,7 @@ class Message(models.Model):
                     values['attachment_ids'].append((4, attachment.id))
                     data_to_url[key] = '/web/image/%s' % attachment.id
                 return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
-            values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'])
+            values['body'] = _image_dataurl.sub(base64_to_boundary, tools.ustr(values['body']))
 
         message = super(Message, self).create(values)
         message._invalidate_documents()

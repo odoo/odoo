@@ -8,7 +8,6 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -194,7 +193,7 @@ class BaseGengoTranslations(models.TransientModel):
         term_ids.write(vals)
         jobs = response.get('jobs', [])
         if jobs:
-            for t_id, job in pycompat.items(jobs):
+            for t_id, job in jobs.items():
                 self._update_terms_job(job)
 
         return

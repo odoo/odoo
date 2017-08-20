@@ -169,7 +169,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         if field_options and 'monetary' in field_options:
             try:
                 options = "{'widget': 'monetary'"
-                for k, v in pycompat.items(json.loads(field_options)):
+                for k, v in json.loads(field_options).items():
                     if k in ('display_currency', 'from_currency'):
                         options = "%s, '%s': %s" % (options, k, v)
                     else:
@@ -218,8 +218,8 @@ class IrQWeb(models.AbstractModel, QWeb):
         files = []
         remains = []
         for el in html.fragments_fromstring(template):
-            if isinstance(el, basestring):
-                remains.append(el)
+            if isinstance(el, pycompat.string_types):
+                remains.append(pycompat.to_text(el))
             elif isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
                 src = el.get('src', '')
@@ -243,10 +243,10 @@ class IrQWeb(models.AbstractModel, QWeb):
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
-                    remains.append(html.tostring(el))
+                    remains.append(html.tostring(el, encoding='unicode'))
             else:
                 try:
-                    remains.append(html.tostring(el))
+                    remains.append(html.tostring(el, encoding='unicode'))
                 except Exception:
                     # notYETimplementederror
                     raise NotImplementedError

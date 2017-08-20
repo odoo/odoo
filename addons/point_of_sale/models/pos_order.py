@@ -8,7 +8,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero, pycompat
+from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons import decimal_precision as dp
@@ -333,7 +333,7 @@ class PosOrder(models.Model):
 
             # round tax lines per order
             if rounding_method == 'round_globally':
-                for group_key, group_value in pycompat.items(grouped_data):
+                for group_key, group_value in grouped_data.items():
                     if group_key[0] == 'tax':
                         for line in group_value:
                             line['credit'] = cur.round(line['credit'])
@@ -351,7 +351,7 @@ class PosOrder(models.Model):
             order.write({'state': 'done', 'account_move': move.id})
 
         all_lines = []
-        for group_key, group_data in pycompat.items(grouped_data):
+        for group_key, group_data in grouped_data.items():
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move:  # In case no order was changed
@@ -1032,7 +1032,7 @@ class ReportSaleDetails(models.AbstractModel):
             'total_paid': user_currency.round(total),
             'payments': payments,
             'company_name': self.env.user.company_id.name,
-            'taxes': list(pycompat.values(taxes)),
+            'taxes': list(taxes.values()),
             'products': sorted([{
                 'product_id': product.id,
                 'product_name': product.name,
@@ -1041,7 +1041,7 @@ class ReportSaleDetails(models.AbstractModel):
                 'price_unit': price_unit,
                 'discount': discount,
                 'uom': product.uom_id.name
-            } for (product, price_unit, discount), qty in pycompat.items(products_sold)], key=lambda l: l['product_name'])
+            } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
     @api.multi

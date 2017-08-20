@@ -5,15 +5,13 @@ try:
     import configparser as ConfigParser
 except ImportError:
     import ConfigParser
-    
+
+import logging
 import optparse
 import os
 import sys
 import odoo
-import odoo.conf
-import odoo.loglevels as loglevels
-import logging
-import odoo.release as release
+from .. import release, conf, loglevels
 from . import appdirs, pycompat
 
 
@@ -57,7 +55,7 @@ def _deduplicate_loggers(loggers):
     # there are no duplicates within the output sequence
     return (
         '{}:{}'.format(logger, level)
-        for logger, level in pycompat.items(dict(it.split(':') for it in loggers))
+        for logger, level in dict(it.split(':') for it in loggers).items()
     )
 
 
@@ -398,10 +396,10 @@ class configmanager(object):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+            elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
-        if isinstance(self.options['log_handler'], basestring):
+        if isinstance(self.options['log_handler'], pycompat.string_types):
             self.options['log_handler'] = self.options['log_handler'].split(',')
         self.options['log_handler'].extend(opt.log_handler)
 
@@ -433,7 +431,7 @@ class configmanager(object):
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
             # ... or keep, but cast, the config file value.
-            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+            elif isinstance(self.options[arg], pycompat.string_types) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
                 self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.join(os.path.dirname(__file__), '..'))))
@@ -471,9 +469,9 @@ class configmanager(object):
         if opt.save:
             self.save()
 
-        odoo.conf.addons_paths = self.options['addons_path'].split(',')
+        conf.addons_paths = self.options['addons_path'].split(',')
 
-        odoo.conf.server_wide_modules = [
+        conf.server_wide_modules = [
             m.strip() for m in self.options['server_wide_modules'].split(',') if m.strip()
         ]
 
@@ -529,9 +527,9 @@ class configmanager(object):
 
     def save(self):
         p = ConfigParser.RawConfigParser()
-        loglevelnames = dict(pycompat.izip(pycompat.values(self._LOGLEVELS), pycompat.keys(self._LOGLEVELS)))
+        loglevelnames = dict(pycompat.izip(self._LOGLEVELS.values(), self._LOGLEVELS))
         p.add_section('options')
-        for opt in sorted(pycompat.keys(self.options)):
+        for opt in sorted(self.options):
             if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
                 continue
             if opt in self.blacklist_for_save:
@@ -543,9 +541,9 @@ class configmanager(object):
             else:
                 p.set('options', opt, self.options[opt])
 
-        for sec in sorted(pycompat.keys(self.misc)):
+        for sec in sorted(self.misc):
             p.add_section(sec)
-            for opt in sorted(pycompat.keys(self.misc[sec])):
+            for opt in sorted(self.misc[sec]):
                 p.set(sec,opt,self.misc[sec][opt])
 
         # try to create the directories and write the file
@@ -575,7 +573,7 @@ class configmanager(object):
 
     def __setitem__(self, key, value):
         self.options[key] = value
-        if key in self.options and isinstance(self.options[key], basestring) and \
+        if key in self.options and isinstance(self.options[key], pycompat.string_types) and \
                 key in self.casts and self.casts[key].type in optparse.Option.TYPE_CHECKER:
             self.options[key] = optparse.Option.TYPE_CHECKER[self.casts[key].type](self.casts[key], key, self.options[key])
 

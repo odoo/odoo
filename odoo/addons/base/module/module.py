@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from collections import defaultdict
 from operator import attrgetter
 import importlib
@@ -220,7 +221,7 @@ class Module(models.Model):
                 path = modules.module.get_module_icon(module.name)
             if path:
                 with tools.file_open(path, 'rb') as image_file:
-                    module.icon_image = image_file.read().encode('base64')
+                    module.icon_image = base64.b64encode(image_file.read())
 
     name = fields.Char('Technical Name', readonly=True, required=True, index=True)
     category_id = fields.Many2one('ir.module.category', string='Category', readonly=True, index=True)
@@ -644,7 +645,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], basestring) else values[key]
+                    updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]
                     if (old or updated) and updated != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
@@ -693,7 +694,7 @@ class Module(models.Model):
         _logger.debug('Install from url: %r', urls)
         try:
             # 1. Download & unzip missing modules
-            for module_name, url in pycompat.items(urls):
+            for module_name, url in urls.items():
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
@@ -714,7 +715,7 @@ class Module(models.Model):
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             # 2a. Copy/Replace module source in addons path
-            for module_name, url in pycompat.items(urls):
+            for module_name, url in urls.items():
                 if module_name == OPENERP or not url:
                     continue    # OPENERP is special case, handled below, and no URL means local module
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
@@ -746,7 +747,7 @@ class Module(models.Model):
 
             self.update_list()
 
-            with_urls = [module_name for module_name, url in pycompat.items(urls) if url]
+            with_urls = [module_name for module_name, url in urls.items() if url]
             downloaded = self.search([('name', 'in', with_urls)])
             installed = self.search([('id', 'in', downloaded.ids), ('state', '=', 'installed')])
 

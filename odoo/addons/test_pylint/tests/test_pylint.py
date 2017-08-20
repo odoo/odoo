@@ -8,7 +8,6 @@ except ImportError:
     pylint = None
 import subprocess
 from distutils.version import LooseVersion
-from os import devnull
 from os.path import join
 
 from odoo.tests.common import TransactionCase
@@ -40,6 +39,7 @@ class TestPyLint(TransactionCase):
         'old-ne-operator',
         'old-octal-operator',
         'parameter-unpacking',
+        'invalid-string-codec',
 
         'metaclass-assignment',
         'deprecated-module',
@@ -67,6 +67,10 @@ class TestPyLint(TransactionCase):
         'filter',
         'zip',
 
+        'basestring',
+        'unichr',
+        'unicode',
+
         'file',
         'reduce',
     ]
@@ -74,6 +78,8 @@ class TestPyLint(TransactionCase):
     BAD_MODULES = [
         'commands',
         'cPickle',
+        'csv',
+        'cStringIO',
         'md5',
         'urllib',
         'urllib2',
@@ -84,6 +90,7 @@ class TestPyLint(TransactionCase):
         'htmlentitydefs',
         'HTMLParser',
         'Queue',
+        'StringIO',
         'UserDict',
         'UserString',
         'UserList',

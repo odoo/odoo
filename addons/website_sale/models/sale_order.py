@@ -6,7 +6,6 @@ import random
 from odoo import api, models, fields, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -93,7 +92,7 @@ class SaleOrder(models.Model):
 
         # add untracked attributes in the name
         untracked_attributes = []
-        for k, v in pycompat.items(attributes):
+        for k, v in attributes.items():
             # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
             attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
             if attribute_value and not attribute_value.attribute_id.create_variant:

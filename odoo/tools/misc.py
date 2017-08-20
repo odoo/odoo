@@ -12,6 +12,8 @@ import datetime
 import subprocess
 import io
 import os
+
+import collections
 import passlib.utils
 import pickle as pickle_
 import re
@@ -28,7 +30,6 @@ from lxml import etree
 
 from .which import which
 import traceback
-import csv
 from operator import itemgetter
 
 try:
@@ -274,16 +275,12 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-
-    def isiterable(x):
-        return hasattr(x, "__iter__")
-
     r = []
     for e in list:
-        if isiterable(e):
-            r.extend(flatten(e))
-        else:
+        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
             r.append(e)
+        else:
+            r.extend(flatten(e))
     return r
 
 def reverse_enumerate(l):
@@ -405,14 +402,15 @@ def scan_languages():
     csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
     try:
         # read (code, name) from languages in base/res/res.lang.csv
-        result = []
-        with open(csvpath) as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        with open(csvpath, 'rb') as csvfile:
+            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
-            for row in reader:
-                result.append((ustr(row[code_index]), ustr(row[name_index])))
+            result = [
+                (row[code_index], row[name_index])
+                for row in reader
+            ]
     except Exception:
         _logger.error("Could not read %s", csvpath)
         result = []
@@ -465,7 +463,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,basestring):
+    if isinstance(sz,pycompat.string_types):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -481,7 +479,7 @@ def logged(f):
         vector = ['Call -> function: %r' % f]
         for i, arg in enumerate(args):
             vector.append('  arg %02d: %s' % (i, pformat(arg)))
-        for key, value in pycompat.items(kwargs):
+        for key, value in kwargs.items():
             vector.append('  kwarg %10s: %s' % (key, pformat(value)))
 
         timeb4 = time.time()
@@ -798,7 +796,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, basestring),\
+            assert isinstance(logger, pycompat.string_types),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -910,7 +908,7 @@ def dumpstacks(sig=None, frame=None):
                                'dbname': getattr(th, 'dbname', 'n/a'),
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
-    for threadId, stack in pycompat.items(sys._current_frames()):
+    for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
         code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
                     (thread_info.get('name', 'n/a'),
@@ -962,7 +960,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in pycompat.items(self)))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization
@@ -1073,7 +1071,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, (str, unicode)) and not value:
+    if isinstance(value, pycompat.string_types) and not value:
         return ''
 
     lang = env.user.company_id.partner_id.lang or 'en_US'
@@ -1108,7 +1106,7 @@ def format_date(env, value, lang_code=False, date_format=False):
         return ''
     if isinstance(value, datetime.datetime):
         value = value.date()
-    elif isinstance(value, basestring):
+    elif isinstance(value, pycompat.string_types):
         if len(value) < DATE_LENGTH:
             return ''
         value = value[:DATE_LENGTH]

@@ -3,7 +3,6 @@
 import time
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 
 class ReportFinancial(models.AbstractModel):
@@ -28,7 +27,7 @@ class ReportFinancial(models.AbstractModel):
             if where_clause.strip():
                 wheres.append(where_clause.strip())
             filters = " AND ".join(wheres)
-            request = "SELECT account_id as id, " + ', '.join(pycompat.values(mapping)) + \
+            request = "SELECT account_id as id, " + ', '.join(mapping.values()) + \
                        " FROM " + tables + \
                        " WHERE account_id IN %s " \
                             + filters + \
@@ -55,26 +54,26 @@ class ReportFinancial(models.AbstractModel):
             if report.type == 'accounts':
                 # it's the sum of the linked accounts
                 res[report.id]['account'] = self._compute_account_balance(report.account_ids)
-                for value in pycompat.values(res[report.id]['account']):
+                for value in res[report.id]['account'].values():
                     for field in fields:
                         res[report.id][field] += value.get(field)
             elif report.type == 'account_type':
                 # it's the sum the leaf accounts with such an account type
                 accounts = self.env['account.account'].search([('user_type_id', 'in', report.account_type_ids.ids)])
                 res[report.id]['account'] = self._compute_account_balance(accounts)
-                for value in pycompat.values(res[report.id]['account']):
+                for value in res[report.id]['account'].values():
                     for field in fields:
                         res[report.id][field] += value.get(field)
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
                 res2 = self._compute_report_balance(report.account_report_id)
-                for key, value in pycompat.items(res2):
+                for key, value in res2.items():
                     for field in fields:
                         res[report.id][field] += value[field]
             elif report.type == 'sum':
                 # it's the sum of the children of this account.report
                 res2 = self._compute_report_balance(report.children_ids)
-                for key, value in pycompat.items(res2):
+                for key, value in res2.items():
                     for field in fields:
                         res[report.id][field] += value[field]
         return res
@@ -86,11 +85,11 @@ class ReportFinancial(models.AbstractModel):
         res = self.with_context(data.get('used_context'))._compute_report_balance(child_reports)
         if data['enable_filter']:
             comparison_res = self.with_context(data.get('comparison_context'))._compute_report_balance(child_reports)
-            for report_id, value in pycompat.items(comparison_res):
+            for report_id, value in comparison_res.items():
                 res[report_id]['comp_bal'] = value['balance']
                 report_acc = res[report_id].get('account')
                 if report_acc:
-                    for account_id, val in pycompat.items(comparison_res[report_id].get('account')):
+                    for account_id, val in comparison_res[report_id].get('account').items():
                         report_acc[account_id]['comp_bal'] = val['balance']
 
         for report in child_reports:
@@ -115,7 +114,7 @@ class ReportFinancial(models.AbstractModel):
 
             if res[report.id].get('account'):
                 sub_lines = []
-                for account_id, value in pycompat.items(res[report.id]['account']):
+                for account_id, value in res[report.id]['account'].items():
                     #if there are accounts to display, we add them to the lines with a level equals to their level in
                     #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
                     #financial reports for Assets, liabilities...)

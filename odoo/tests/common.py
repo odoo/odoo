@@ -337,16 +337,16 @@ class HttpCase(TransactionCase):
                 s = phantom.stdout.read(1)
                 if not s:
                     break
-                buf.append(s)
+                buf.extend(s)
 
             # process lines
-            if '\n' in buf and (not buf.startswith('<phantomLog>') or '</phantomLog>' in buf):
-                if buf.startswith('<phantomLog>'):
-                    line = buf[12:buf.index('</phantomLog>')]
+            if b'\n' in buf and (not buf.startswith(b'<phantomLog>') or b'</phantomLog>' in buf):
+                if buf.startswith(b'<phantomLog>'):
+                    line = buf[12:buf.index(b'</phantomLog>')]
                     buf = bytearray()
                 else:
-                    line, buf = buf.split('\n', 1)
-                line = str(line)
+                    line, buf = buf.split(b'\n', 1)
+                line = bytes(line).decode('utf-8')
 
                 lline = line.lower()
                 if lline.startswith(("error", "server application error")):
@@ -355,11 +355,11 @@ class HttpCase(TransactionCase):
                         prefix = lline.index('error') + 6
                         _logger.error("phantomjs: %s", pformat(json.loads(line[prefix:])))
                     except ValueError:
-                        line_ = line.split('\n\n')
+                        line_ = lline.split('\n\n')
                         _logger.error("phantomjs: %s", line_[0])
                         # The second part of the log is for debugging
                         if len(line_) > 1:
-                            _logger.info("phantomjs: \n%s", line.split('\n\n', 1)[1])
+                            _logger.info("phantomjs: \n%s", lline.split('\n\n', 1)[1])
                         pass
                     break
                 elif lline.startswith("warning"):

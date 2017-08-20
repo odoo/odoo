@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import base64
 import json
 import lxml
@@ -547,9 +546,9 @@ class WebsiteForum(http.Controller):
         pager = request.website.pager(url="/forum/%s/users" % slug(forum), total=tag_count, page=page, step=step, scope=30)
         user_obj = User.sudo().search([('karma', '>', 1), ('website_published', '=', True)], limit=step, offset=pager['offset'], order='karma DESC')
         # put the users in block of 3 to display them as a table
-        users = [[] for i in range(len(user_obj) / 3 + 1)]
+        users = [[] for i in range(len(user_obj) // 3 + 1)]
         for index, user in enumerate(user_obj):
-            users[index / 3].append(user)
+            users[index // 3].append(user)
         searches['users'] = 'True'
 
         values = self._prepare_forum_values(forum=forum, searches=searches)
@@ -578,7 +577,7 @@ class WebsiteForum(http.Controller):
             img_path = modules.get_module_resource('web', 'static/src/img', 'placeholder.png')
             with open(img_path, 'rb') as f:
                 image = f.read()
-            content = image.encode('base64')
+            content = base64.b64encode(image)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)
         image_base64 = base64.b64decode(content)
@@ -712,7 +711,7 @@ class WebsiteForum(http.Controller):
             values['image'] = False
         elif kwargs.get('ufile'):
             image = kwargs.get('ufile').read()
-            values['image'] = image.encode('base64')
+            values['image'] = base64.b64encode(image)
 
         if request.uid == user.id:  # the controller allows to edit only its own privacy settings; use partner management for other cases
             values['website_published'] = kwargs.get('website_published') == 'True'

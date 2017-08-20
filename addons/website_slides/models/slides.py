@@ -3,6 +3,7 @@
 import requests
 from PIL import Image
 
+import base64
 import datetime
 import io
 import json
@@ -11,7 +12,7 @@ import re
 from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import image, pycompat
+from odoo.tools import image
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
 from odoo.addons.website.models.website import slug
@@ -322,8 +323,8 @@ class Slide(models.Model):
             values = res['values']
             if not values.get('document_id'):
                 raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in pycompat.items(values):
-                setattr(self, key, value)
+            for key, value in values.items():
+                self[key] = value
 
     # website
     date_published = fields.Datetime('Publish Date')
@@ -384,7 +385,7 @@ class Slide(models.Model):
             values['date_published'] = datetime.datetime.now()
         if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in pycompat.items(doc_data):
+            for key, value in doc_data.items():
                 values.setdefault(key, value)
         # Do not publish slide if user has not publisher rights
         if not self.user_has_groups('website.group_website_publisher'):
@@ -398,7 +399,7 @@ class Slide(models.Model):
     def write(self, values):
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in pycompat.items(doc_data):
+            for key, value in doc_data.items():
                 values.setdefault(key, value)
         if values.get('channel_id'):
             custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
@@ -498,13 +499,12 @@ class Slide(models.Model):
         try:
             response = requests.get(base_url, params=data)
             response.raise_for_status()
-            content = response.content
             if content_type == 'json':
-                result['values'] = json.loads(content)
+                result['values'] = response.json()
             elif content_type in ('image', 'pdf'):
-                result['values'] = content.encode('base64')
+                result['values'] = base64.b64encode(response.content)
             else:
-                result['values'] = content
+                result['values'] = response.content
         except requests.exceptions.HTTPError as e:
             result['error'] = e.response.content
         except requests.exceptions.ConnectionError as e:
@@ -565,7 +565,7 @@ class Slide(models.Model):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
             if vals.get('image'):
-                image = Image.open(io.BytesIO(vals['image'].decode('base64')))
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
                 width, height = image.size
                 if height > width:
                     return 'document'

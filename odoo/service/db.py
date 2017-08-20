@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import base64
 import json
 import logging
 import os
@@ -23,6 +23,7 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
+from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -160,7 +161,7 @@ def exp_dump(db_name, format):
     with tempfile.TemporaryFile() as t:
         dump_db(db_name, t, format)
         t.seek(0)
-        return t.read().encode('base64')
+        return base64.b64encode(t.read())
 
 def dump_db_manifest(cr):
     pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
@@ -215,7 +216,7 @@ def dump_db(db_name, stream, backup_format='zip'):
 def exp_restore(db_name, data, copy=False):
     data_file = tempfile.NamedTemporaryFile(delete=False)
     try:
-        data_file.write(data.decode('base64'))
+        data_file.write(base64.b64decode(data))
         data_file.close()
         restore_db(db_name, data_file.name, copy=copy)
     finally:
@@ -223,7 +224,7 @@ def exp_restore(db_name, data, copy=False):
     return True
 
 def restore_db(db, dump_file, copy=False):
-    assert isinstance(db, basestring)
+    assert isinstance(db, pycompat.string_types)
     if exp_db_exist(db):
         _logger.info('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")

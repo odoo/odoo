@@ -8,7 +8,7 @@ import pytz
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import html_escape as escape, html2plaintext, pycompat
+from odoo.tools import html_escape as escape, html2plaintext
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -68,14 +68,14 @@ class WebsiteEventTrackController(http.Controller):
     @http.route(['''/event/<model("event.event", "[('website_track','=',1)]"):event>/agenda'''], type='http', auth="public", website=True)
     def event_agenda(self, event, tag=None, **post):
         days_tracks = collections.defaultdict(lambda: [])
-        for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
+        for track in event.track_ids.sorted(lambda track: (track.date or '', bool(track.location_id))):
             if not track.date:
                 continue
             days_tracks[track.date[:10]].append(track)
 
         days = {}
         tracks_by_days = {}
-        for day, tracks in pycompat.items(days_tracks):
+        for day, tracks in days_tracks.items():
             tracks_by_days[day] = tracks
             days[day] = self._prepare_calendar(event, tracks)
 

@@ -12,8 +12,6 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.exceptions import ValidationError
 from odoo.addons.website_form.controllers.main import WebsiteForm
 
-from odoo.tools import pycompat
-
 _logger = logging.getLogger(__name__)
 
 PPG = 20  # Products Per Page
@@ -53,35 +51,35 @@ class TableCompute(object):
                 x = y = 1
 
             pos = minpos
-            while not self._check_place(pos % PPR, pos / PPR, x, y):
+            while not self._check_place(pos % PPR, pos // PPR, x, y):
                 pos += 1
             # if 21st products (index 20) and the last line is full (PPR products in it), break
             # (pos + 1.0) / PPR is the line where the product would be inserted
             # maxy is the number of existing lines
             # + 1.0 is because pos begins at 0, thus pos 20 is actually the 21st block
             # and to force python to not round the division operation
-            if index >= ppg and ((pos + 1.0) / PPR) > maxy:
+            if index >= ppg and ((pos + 1.0) // PPR) > maxy:
                 break
 
             if x == 1 and y == 1:   # simple heuristic for CPU optimization
-                minpos = pos / PPR
+                minpos = pos // PPR
 
             for y2 in range(y):
                 for x2 in range(x):
-                    self.table[(pos / PPR) + y2][(pos % PPR) + x2] = False
-            self.table[pos / PPR][pos % PPR] = {
+                    self.table[(pos // PPR) + y2][(pos % PPR) + x2] = False
+            self.table[pos // PPR][pos % PPR] = {
                 'product': p, 'x': x, 'y': y,
                 'class': " ".join(x.html_class for x in p.website_style_ids if x.html_class)
             }
             if index <= ppg:
-                maxy = max(maxy, y + (pos / PPR))
+                maxy = max(maxy, y + (pos // PPR))
             index += 1
 
         # Format table according to HTML needs
-        rows = sorted(pycompat.items(self.table))
+        rows = sorted(self.table.items())
         rows = [r[1] for r in rows]
         for col in range(len(rows)):
-            cols = sorted(pycompat.items(rows[col]))
+            cols = sorted(rows[col].items())
             x += len(cols)
             rows[col] = [r[1] for r in cols if r[1]]
 
@@ -373,7 +371,7 @@ class WebsiteSale(http.Controller):
         return request.redirect("/shop/cart")
 
     def _filter_attributes(self, **kw):
-        return {k: v for k, v in pycompat.items(kw) if "attribute" in k}
+        return {k: v for k, v in kw.items() if "attribute" in k}
 
     @http.route(['/shop/cart/update_json'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update_json(self, product_id, line_id=None, add_qty=None, set_qty=None, display=True):
@@ -491,7 +489,7 @@ class WebsiteSale(http.Controller):
             except ValidationError:
                 error["vat"] = 'error'
 
-        if [err for err in pycompat.items(error) if err == 'missing']:
+        if [err for err in error.items() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
 
         return error, error_message
@@ -517,7 +515,7 @@ class WebsiteSale(http.Controller):
     def values_postprocess(self, order, mode, values, errors, error_msg):
         new_values = {}
         authorized_fields = request.env['ir.model']._get('res.partner')._get_form_writable_fields()
-        for k, v in pycompat.items(values):
+        for k, v in values.items():
             # don't drop empty value, it could be a field to reset
             if k in authorized_fields and v is not None:
                 new_values[k] = v
@@ -680,7 +678,7 @@ class WebsiteSale(http.Controller):
         # if form posted
         if 'post_values' in post:
             values = {}
-            for field_name, field_value in pycompat.items(post):
+            for field_name, field_value in post.items():
                 if field_name in request.env['sale.order']._fields and field_name.startswith('x_'):
                     values[field_name] = field_value
             if values:
@@ -910,7 +908,7 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/get_unit_price'], type='json', auth="public", methods=['POST'], website=True)
     def get_unit_price(self, product_ids, add_qty, **kw):
         products = request.env['product.product'].with_context({'quantity': add_qty}).browse(product_ids)
-        return {product.id: product.website_price / add_qty for product in products}
+        return {product.id: product.website_price // add_qty for product in products}
 
     # ------------------------------------------------------
     # Edit

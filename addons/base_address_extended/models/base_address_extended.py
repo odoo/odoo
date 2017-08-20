@@ -5,7 +5,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 STREET_FIELDS = ('street_name', 'street_number', 'street_number2')
 
@@ -135,7 +134,7 @@ class Partner(models.Model):
                 vals[field_name] = street_raw
             # assign the values to the fields
             # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
-            for k, v in pycompat.items(vals):
+            for k, v in vals.items():
                 partner[k] = v
 
 

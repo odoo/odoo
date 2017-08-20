@@ -35,5 +35,5 @@ class Partner(models.Model):
             city_id_node = etree.fromstring(replacement_xml)
             city_node.getparent().replace(city_node, city_id_node)
 
-        arch = etree.tostring(doc)
+        arch = etree.tostring(doc, encoding='unicode')
         return arch

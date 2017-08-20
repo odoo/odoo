@@ -149,8 +149,8 @@ def initialize_sys_path():
             ad_paths.append(ad)
 
     if not hooked:
-        sys.meta_path.append(AddonsHook())
-        sys.meta_path.append(OdooHook())
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -434,7 +434,7 @@ def get_test_modules(module):
         mod = importlib.import_module('.tests', modpath)
     except Exception as e:
         # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
+        if not pycompat.text_type(e).startswith(u'No module named'):
             _logger.exception('Can not `import %s`.', module)
         return []
 

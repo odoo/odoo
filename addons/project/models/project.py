@@ -500,7 +500,7 @@ class Task(models.Model):
 
         _check_rec(eview)
 
-        res['arch'] = etree.tostring(eview)
+        res['arch'] = etree.tostring(eview, encoding='unicode')
 
         # replace reference of 'Hours' to 'Day(s)'
         for f in res['fields']:

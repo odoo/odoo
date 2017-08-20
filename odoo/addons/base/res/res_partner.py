@@ -61,7 +61,7 @@ class FormatAddressMixin(models.AbstractModel):
                     except ValueError:
                         return arch
                 address_node.getparent().replace(address_node, sub_view_node)
-            arch = etree.tostring(doc)
+            arch = etree.tostring(doc, encoding='unicode')
         return arch
 
 class PartnerCategory(models.Model):
@@ -337,7 +337,7 @@ class Partner(models.Model):
     @api.depends('name', 'email')
     def _compute_email_formatted(self):
         for partner in self:
-            partner.email_formatted = formataddr((partner.name, partner.email))
+            partner.email_formatted = formataddr((partner.name or u"False", partner.email or u"False"))
 
     @api.depends('is_company')
     def _compute_company_type(self):
@@ -665,7 +665,7 @@ class Partner(models.Model):
         return partners.id or self.name_create(email)[0]
 
     def _get_gravatar_image(self, email):
-        email_hash = hashlib.md5(email.lower()).hexdigest()
+        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
         url = "https://www.gravatar.com/avatar/" + email_hash
         try:
             res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
