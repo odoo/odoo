@@ -8,13 +8,13 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import pycompat
 from odoo.tools.translate import _
-from odoo.addons.portal.controllers.portal import get_records_pager, CustomerPortal
+from odoo.addons.portal.controllers.portal import get_records_pager, pager as portal_pager, CustomerPortal
 
 
-class WebsitePortal(CustomerPortal):
+class CustomerPortal(CustomerPortal):
 
     def _prepare_portal_layout_values(self):
-        values = super(WebsitePortal, self)._prepare_portal_layout_values()
+        values = super(CustomerPortal, self)._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         values['purchase_count'] = request.env['purchase.order'].search_count([
             '|',
@@ -64,7 +64,7 @@ class WebsitePortal(CustomerPortal):
         # count for pager
         purchase_count = PurchaseOrder.search_count(domain)
         # make pager
-        pager = request.website.pager(
+        pager = portal_pager(
             url="/my/purchase",
             url_args={'date_begin': date_begin, 'date_end': date_end},
             total=purchase_count,
@@ -92,7 +92,7 @@ class WebsitePortal(CustomerPortal):
             'filterby': filterby,
             'default_url': '/my/purchase',
         })
-        return request.render("website_portal_purchase.portal_my_purchase_orders", values)
+        return request.render("purchase.portal_my_purchase_orders", values)
 
     @http.route(['/my/purchase/<int:order_id>'], type='http', auth="user", website=True)
     def portal_my_purchase_order(self, order_id=None, **kw):
@@ -101,10 +101,10 @@ class WebsitePortal(CustomerPortal):
             order.check_access_rights('read')
             order.check_access_rule('read')
         except AccessError:
-            return request.render("website.403")
+            return request.redirect('/my')
         history = request.session.get('my_purchases_history', [])
         values = {
             'order': order.sudo(),
         }
         values.update(get_records_pager(history, order))
-        return request.render("website_portal_purchase.portal_my_purchase_order", values)
+        return request.render("purchase.portal_my_purchase_order", values)

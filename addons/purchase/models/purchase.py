@@ -163,6 +163,14 @@ class PurchaseOrder(models.Model):
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
+    website_url = fields.Char(
+        'Website URL', compute='_website_url',
+        help='The full URL to access the document through the website.')
+
+    def _website_url(self):
+        for order in self:
+            order.website_url = '/my/purchase/%s' % (order.id)
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []
@@ -595,6 +603,9 @@ class PurchaseOrderLine(models.Model):
     taxes_id = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
     product_uom = fields.Many2one('product.uom', string='Product Unit of Measure', required=True)
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, required=True)
+    product_image = fields.Binary(
+        'Product Image', related="product_id.image",
+        help="Non-stored related field to allow portal user to see the image of the product he has ordered")
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
