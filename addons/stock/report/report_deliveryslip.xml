@@ -68,63 +68,64 @@
                     </table>
                     <t t-set="backorder" t-value="False"/>
                     <table class="table table-condensed mt48" t-if="o.move_line_ids">
-                        <t t-set="has_serial_number" t-value="o.move_line_ids.filtered('pack_lot_ids')" groups="stock.group_production_lot"/>
+                        <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" groups="stock.group_production_lot"/>
                         <thead>
                             <tr>
                                 <th><strong>Product</strong></th>
                                 <th name="lot_serial" t-if="has_serial_number">
-                                    <span class="pull-left">Lot/Serial Number</span>
+                                    Lot/Serial Number
                                 </th>
                                 <th class="text-center"><strong>Ordered Quantity</strong></th>
-                                <th t-if="any([pack_operation.state == 'done' for pack_operation in o.move_line_ids])" class="text-right">
+                                <th t-if="any([move_line.state == 'done' for move_line in o.move_line_ids])" class="text-right">
                                         <strong>Delivered Quantity</strong>
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr t-foreach="o.move_line_ids" t-as="pack_operation">
+                            <tr t-foreach="o.move_line_ids" t-as="move_line">
                                 <td>
-                                    <span t-field="pack_operation.product_id"/>
+                                    <span t-field="move_line.product_id"/>
                                     <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="pack_operation.product_id.description_pickingout"/>
+                                        <span t-field="move_line.product_id.description_pickingout"/>
                                     </p>
                                     <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="pack_operation.product_id.description_pickingin"/>
+                                        <span t-field="move_line.product_id.description_pickingin"/>
                                     </p>
-                                    <t t-if="not pack_operation.product_id and pack_operation.package_id">
-                                        <span  t-field="pack_operation.package_id"/>
+                                    <t t-if="not move_line.product_id and move_line.package_id">
+                                        <span  t-field="move_line.package_id"/>
                                     </t>
                                 </td>
                                 <t t-if="has_serial_number">
-                                    <td t-if="pack_operation.pack_lot_ids">
-                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
-                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                   <td>
+                                        <table width="100%">
+                                            <tr>
                                                 <td>
-                                                    <span t-field="packlot.lot_id"/>
-                                                    <t t-if="not packlot.lot_id">
-                                                        <span t-field="packlot.lot_name"/>
+                                                     <span t-field="move_line.lot_id"/>
+                                                     <t t-if="not move_line.lot_id">
+                                                         <span t-field="move_line.lot_name"/>
+                                                     </t>
+                                                 </td>
+                                                 <td name="lot_qty">
+                                                     <t t-if="move_line.product_qty"> 
+                                                        <span t-field="move_line.product_qty"/>
                                                     </t>
-                                                </td>
-                                                <td name="lot_qty">
-                                                    <span t-field="packlot.qty"/>
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td>
-                                    <td t-if="not pack_operation.pack_lot_ids"/>
+                                  </td>
                                 </t>
                                 <td class="text-center">
-                                    <span t-if="pack_operation.package_id">:</span>
-                                    <span t-field="pack_operation.package_id"/>
-                                    <span t-field="pack_operation.ordered_qty"/>
-                                    <span t-field="pack_operation.product_uom_id"/>
+                                    <span t-field="move_line.package_id"/>
+                                    <span t-if="move_line.package_id">:</span>
+                                    <span t-field="move_line.ordered_qty"/>
+                                    <span t-field="move_line.product_uom_id"/>
                                 </td>
-                                <td class="text-right" t-if="pack_operation.state == 'done'">
-                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done">
+                                <td class="text-right" t-if="move_line.state == 'done'">
+                                    <t t-if="move_line.ordered_qty != move_line.qty_done">
                                         <t t-set="backorder" t-value="True"/>
                                     </t>
-                                    <span t-field="pack_operation.qty_done"/>
-                                    <span t-field="pack_operation.product_uom_id"/>
+                                    <span t-field="move_line.qty_done"/>
+                                    <span t-field="move_line.product_uom_id"/>
                                 </td>
                             </tr>
                         </tbody>
