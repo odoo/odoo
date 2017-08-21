@@ -41,6 +41,7 @@
 
         <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.pivot</field>
+            <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
                 <pivot string="Vehicles costs">
                     <field name="vehicle_id" type="row" groups="fleet.fleet_group_manager"/>
