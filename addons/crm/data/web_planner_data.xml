@@ -305,12 +305,12 @@
                                     </span>
                                 </div>
                                 <div class="panel-body">
-                                    <t t-if="not is_module_installed('website_subscription')">
+                                    <t t-if="not is_module_installed('sale_subscription')">
                                         <span class="text-muted">If you sell subscriptions (whether it's invoiced annually or monthly), activate the
-                                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'website_subscription')">Subscription Management</a> app.
+                                            <a t-att-href="prepare_backend_url('base.open_module_tree', 'form', 'sale_subscription')">Subscription Management</a> app.
                                         </span>
                                     </t>
-                                    <t t-if="is_module_installed('website_subscription')">
+                                    <t t-if="is_module_installed('sale_subscription')">
                                         <h4><strong>Subscriptions</strong></h4>
                                         <p>
                                             Use subscription for recurring billing.
